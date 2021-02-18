@@ -150,12 +150,8 @@ function makeHandlers({
         throw new Error('Please call cy.eyesOpen() before calling cy.eyesClose()');
       }
 
-      // only await it if we are in non-interactive mode
-      if (config.shared.isTextTerminal) {
-        await close();
-      } else {
-        close();
-      }
+      // not returning this promise because we don't to wait on it before responding to the client
+      close();
 
       resources = null;
       close = null;
