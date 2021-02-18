@@ -9,10 +9,12 @@ const pollingHandler = require('./pollingHandler');
 const errorDigest = require('./errorDigest');
 const {tests} = require('./runningTests');
 
-function setGlobalHooks(on, cypressConfig, {visualGridClient, logger}) {
+function setGlobalHooks(on, runConfig, {visualGridClient, logger}) {
   let waitForBatch;
 
   on('before:run', ({config}) => {
+    // console.log(!config.isTextTerminal);
+    runConfig.shared.isTextTerminal = config.isTextTerminal;
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,
       concurrency: config.concurrency,
@@ -33,12 +35,12 @@ function setGlobalHooks(on, cypressConfig, {visualGridClient, logger}) {
   });
 
   on('after:run', async ({config}) => {
-    const pollBatchEnd = pollingHandler(
-      waitForBatch.bind(null, tests, visualGridClient.closeBatch),
-      '',
-    );
-    const closeBatch = poll(async () => pollBatchEnd({args: undefined}));
     try {
+      const pollBatchEnd = pollingHandler(
+        waitForBatch.bind(null, tests, visualGridClient.closeBatch),
+        '',
+      );
+      const closeBatch = poll(async () => pollBatchEnd({args: undefined}));
       await closeBatch({args: undefined});
     } catch (e) {
       if (!!config.eyesFailCypressOnDiff) {

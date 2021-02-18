@@ -7,18 +7,18 @@ const getErrorsAndDiffs = require('./getErrorsAndDiffs');
 const processCloseAndAbort = require('./processCloseAndAbort');
 const errorDigest = require('./errorDigest');
 const makeHandlers = require('./handlers');
-const {getRunConfig} = require('./config');
+const {getConfig} = require('./config');
 
-const runConfig = getRunConfig();
-const logger = new Logger(runConfig.showLogs, 'eyes');
+const config = getConfig();
+const logger = new Logger(config.showLogs, 'eyes');
 
 const visualGridClient = makeVisualGridClient(
-  Object.assign(runConfig, {logger: (logger.extend && logger.extend('vgc')) || logger}),
+  Object.assign(config, {logger: (logger.extend && logger.extend('vgc')) || logger}),
 );
 
 const handlers = makeHandlers({
   logger,
-  runConfig,
+  config,
   visualGridClient,
   processCloseAndAbort,
   getErrorsAndDiffs,
@@ -27,5 +27,5 @@ const handlers = makeHandlers({
 
 const app = startApp({handlers, logger});
 const startServer = makeStartServer({app, logger});
-logger.log('eyes-cypress plugin running with config:', runConfig);
-module.exports = makePluginExport({startServer, runConfig, visualGridClient, logger});
+logger.log('eyes-cypress plugin running with config:', config);
+module.exports = makePluginExport({startServer, config, visualGridClient, logger});

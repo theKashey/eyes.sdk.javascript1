@@ -28,7 +28,7 @@ describe('pluginExport', () => {
   });
 
   it('works', async () => {
-    const pluginExport = makePluginExport({startServer, runConfig: {}, visualGridClient, logger});
+    const pluginExport = makePluginExport({startServer, config: {}, visualGridClient, logger});
 
     const __module = {
       exports: (_on, config) => {
@@ -67,7 +67,7 @@ describe('pluginExport', () => {
   });
 
   it('handles async module.exports', async () => {
-    const pluginExport = makePluginExport({startServer, runConfig: {}, visualGridClient});
+    const pluginExport = makePluginExport({startServer, config: {}, visualGridClient});
     const __module = {
       exports: async (_on, _config) => {
         await psetTimeout(0);
@@ -92,7 +92,7 @@ describe('pluginExport', () => {
   it('works with disabled eyes', async () => {
     const pluginExport = makePluginExport({
       startServer,
-      runConfig: {isDisabled: true},
+      config: {isDisabled: true},
       visualGridClient,
     });
     const __module = {
@@ -115,7 +115,7 @@ describe('pluginExport', () => {
   it('works with dont fail cypress on diff', async () => {
     const pluginExport = makePluginExport({
       startServer,
-      runConfig: {failCypressOnDiff: false},
+      config: {failCypressOnDiff: false},
       visualGridClient,
     });
     const __module = {
@@ -139,7 +139,7 @@ describe('pluginExport', () => {
   it('works with eyes timeout', async () => {
     const pluginExport = makePluginExport({
       startServer,
-      runConfig: {eyesTimeout: 1234},
+      config: {eyesTimeout: 1234},
       visualGridClient,
     });
     const __module = {
@@ -161,7 +161,7 @@ describe('pluginExport', () => {
   });
 
   it('works with eyes disableBrowserFetching', async () => {
-    const pluginExport = makePluginExport({startServer, runConfig: {disableBrowserFetching: true}});
+    const pluginExport = makePluginExport({startServer, config: {disableBrowserFetching: true}});
     const __module = {
       exports: () => ({bla: 'ret'}),
     };

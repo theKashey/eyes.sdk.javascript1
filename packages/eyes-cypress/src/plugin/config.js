@@ -8,9 +8,11 @@ const {
 } = require('@applitools/visual-grid-client');
 const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
+const getProp = GeneralUtils.getPropertyByPath;
 
-function getRunConfig() {
-  const config = Object.assign(
+function getConfig() {
+  const config = {};
+  const vgConfig = Object.assign(
     {agentId},
     ConfigUtils.getConfig({
       configParams: [
@@ -23,38 +25,33 @@ function getRunConfig() {
     }),
   );
 
-  const extraConfig = {};
-
-  if (config.failCypressOnDiff === '0') {
-    extraConfig.failCypressOnDiff = false;
+  if (vgConfig.failCypressOnDiff === '0') {
+    config.failCypressOnDiff = false;
   }
-  if (TypeUtils.isString(config.showLogs)) {
-    extraConfig.showLogs = config.showLogs === 'true' || config.showLogs === '1';
+  if (TypeUtils.isString(vgConfig.showLogs)) {
+    config.showLogs = vgConfig.showLogs === 'true' || vgConfig.showLogs === '1';
   }
 
-  if (
-    GeneralUtils.getPropertyByPath(config, 'viewport.height') &&
-    GeneralUtils.getPropertyByPath(config, 'viewport.width')
-  ) {
-    extraConfig.browser = config.viewport;
+  if (getProp(vgConfig, 'viewport.height') && getProp(vgConfig, 'viewport.width')) {
+    config.browser = vgConfig.viewport;
   }
-  if (GeneralUtils.getPropertyByPath(config, 'userAgent')) {
-    extraConfig.userAgent = config.userAgent;
+  if (getProp(vgConfig, 'userAgent')) {
+    config.userAgent = vgConfig.userAgent;
   }
 
-  return Object.assign(extraConfig, config);
+  return Object.assign({shared: {}}, vgConfig, config);
 }
 
-function getEyesConfig(runConfig) {
+function getEyesConfig(config) {
   return {
-    eyesIsDisabled: !!runConfig.isDisabled,
-    eyesBrowser: JSON.stringify(runConfig.browser),
-    eyesLayoutBreakpoints: JSON.stringify(runConfig.layoutBreakpoints),
+    eyesIsDisabled: !!config.isDisabled,
+    eyesBrowser: JSON.stringify(config.browser),
+    eyesLayoutBreakpoints: JSON.stringify(config.layoutBreakpoints),
     eyesFailCypressOnDiff:
-      runConfig.failCypressOnDiff === undefined ? true : !!runConfig.failCypressOnDiff,
-    eyesTimeout: runConfig.eyesTimeout,
-    eyesDisableBrowserFetching: !!runConfig.disableBrowserFetching,
+      config.failCypressOnDiff === undefined ? true : !!config.failCypressOnDiff,
+    eyesTimeout: config.eyesTimeout,
+    eyesDisableBrowserFetching: !!config.disableBrowserFetching,
   };
 }
 
-module.exports = {getRunConfig, getEyesConfig};
+module.exports = {getConfig, getEyesConfig};

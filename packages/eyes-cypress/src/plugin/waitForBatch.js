@@ -18,7 +18,7 @@ function makeWaitForBatch({
     const {failed, diffs, passed} = getErrorsAndDiffs(testResultsArr);
     await handleBatchResultsFile(testResultsArr);
 
-    if (concurrency == 1) {
+    if (Number(concurrency) === 1) {
       console.log(concurrencyMsg);
     }
 
