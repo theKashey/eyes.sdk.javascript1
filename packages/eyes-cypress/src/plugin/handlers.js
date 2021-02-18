@@ -151,7 +151,7 @@ function makeHandlers({
       }
 
       // not returning this promise because we don't to wait on it before responding to the client
-      close();
+      await close();
 
       resources = null;
       close = null;

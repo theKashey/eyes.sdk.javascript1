@@ -12,7 +12,7 @@ const {tests} = require('./runningTests');
 function setGlobalHooks(on, cypressConfig, {visualGridClient, logger}) {
   let waitForBatch;
 
-  on('before:run', async ({config}) => {
+  on('before:run', ({config}) => {
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,
       concurrency: config.concurrency,
