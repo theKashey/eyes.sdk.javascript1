@@ -8,7 +8,6 @@ const runningTests = require('./runningTests');
 
 function makeHandlers({
   config = {},
-  sharedConfig,
   visualGridClient,
   logger = console,
   processCloseAndAbort,
