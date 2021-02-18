@@ -11,6 +11,7 @@ const {tests} = require('./runningTests');
 
 function setGlobalHooks(on, cypressConfig, {visualGridClient, logger}) {
   let waitForBatch;
+
   on('before:run', async ({config}) => {
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,
@@ -18,7 +19,7 @@ function setGlobalHooks(on, cypressConfig, {visualGridClient, logger}) {
       processCloseAndAbort,
       getErrorsAndDiffs,
       errorDigest,
-      isInteractive: config.isInteractive,
+      isInteractive: !config.isTextTerminal,
       handleBatchResultsFile: makeHandleBatchResultsFile(config),
     });
     // TODO
