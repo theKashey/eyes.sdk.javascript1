@@ -1,9 +1,7 @@
 'use strict';
+const setGlobalRunHooks = require('./hooks');
 
-const setGlobalHooks = require('./hooks');
-const {getEyesConfig} = require('./config');
-
-function makePluginExport({startServer, config, visualGridClient, logger}) {
+function makePluginExport({startServer, eyesConfig, visualGridClient, logger}) {
   return function pluginExport(pluginModule) {
     let closeEyesServer;
     const pluginModuleExports = pluginModule.exports;
@@ -12,9 +10,8 @@ function makePluginExport({startServer, config, visualGridClient, logger}) {
       closeEyesServer = closeServer;
       const moduleExportsResult = await pluginModuleExports(...args);
       const [on] = args;
-      setGlobalHooks(on, config, {visualGridClient, logger});
-      const eyesConfig = getEyesConfig(config);
-      return Object.assign(eyesConfig, {eyesPort}, moduleExportsResult);
+      const eyesGlobalRunHooks = setGlobalRunHooks(on, {visualGridClient, logger});
+      return Object.assign({}, eyesConfig, {eyesPort}, eyesGlobalRunHooks, moduleExportsResult);
     };
     return function getCloseServer() {
       return closeEyesServer;

@@ -18,30 +18,29 @@ function getGlobalConfigProperty(prop) {
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
 
-if (!getGlobalConfigProperty('eyesIsDisabled')) {
+if (!getGlobalConfigProperty('eyesIsDisabled') && !getGlobalConfigProperty('eyesGlobalRunHooks')) {
   const batchEnd = poll(({timeout}) => {
     return sendRequest({command: 'batchEnd', data: {timeout}});
   });
 
-  if (getGlobalConfigProperty('isInteractive')) {
-    before(() => {
-      const userAgent = navigator.userAgent;
-      sendRequest({
-        command: 'batchStart',
-        data: {userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
-      });
+  console.log('global run hooks used');
+  before(() => {
+    const userAgent = navigator.userAgent;
+    sendRequest({
+      command: 'batchStart',
+      data: {userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
     });
+  });
 
-    after(() => {
-      cy.then({timeout: 86400000}, () => {
-        return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
-          if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
-            throw e;
-          }
-        });
+  after(() => {
+    cy.then({timeout: 86400000}, () => {
+      return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
+        if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
+          throw e;
+        }
       });
     });
-  }
+  });
 }
 
 let isCurrentTestDisabled;

@@ -1,6 +1,5 @@
+'use strict';
 const poll = require('../browser/poll');
-// const makeHandleCypressViewport = require('../browser/makeHandleCypressViewport');
-// const handleCypressViewport = makeHandleCypressViewport({cy});
 const makeWaitForBatch = require('./waitForBatch');
 const makeHandleBatchResultsFile = require('./makeHandleBatchResultsFile');
 const getErrorsAndDiffs = require('./getErrorsAndDiffs');
@@ -9,12 +8,10 @@ const pollingHandler = require('./pollingHandler');
 const errorDigest = require('./errorDigest');
 const {tests} = require('./runningTests');
 
-function setGlobalHooks(on, runConfig, {visualGridClient, logger}) {
+function setGlobalRunHooks(on, {visualGridClient, logger}) {
   let waitForBatch;
 
   on('before:run', ({config}) => {
-    // console.log(!config.isTextTerminal);
-    runConfig.shared.isTextTerminal = config.isTextTerminal;
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,
       concurrency: config.concurrency,
@@ -24,14 +21,6 @@ function setGlobalHooks(on, runConfig, {visualGridClient, logger}) {
       isInteractive: !config.isTextTerminal,
       handleBatchResultsFile: makeHandleBatchResultsFile(config),
     });
-    // TODO
-    // const userAgent = navigator.userAgent
-    // const viewport = {
-    //   width: getGlobalConfigProperty('viewportWidth'),
-    //   height: getGlobalConfigProperty('viewportHeight'),
-    // }
-    // let browser = getGlobalConfigProperty('eyesBrowser')
-    // handleCypressViewport(browser)
   });
 
   on('after:run', async ({config}) => {
@@ -48,6 +37,8 @@ function setGlobalHooks(on, runConfig, {visualGridClient, logger}) {
       }
     }
   });
+
+  return {eyesGlobalRunHooks: true};
 }
 
-module.exports = setGlobalHooks;
+module.exports = setGlobalRunHooks;

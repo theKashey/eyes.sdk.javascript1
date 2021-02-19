@@ -7,9 +7,9 @@ const getErrorsAndDiffs = require('./getErrorsAndDiffs');
 const processCloseAndAbort = require('./processCloseAndAbort');
 const errorDigest = require('./errorDigest');
 const makeHandlers = require('./handlers');
-const {getConfig} = require('./config');
+const makeConfig = require('./config');
 
-const config = getConfig();
+const {config, eyesConfig} = makeConfig();
 const logger = new Logger(config.showLogs, 'eyes');
 
 const visualGridClient = makeVisualGridClient(
@@ -28,4 +28,5 @@ const handlers = makeHandlers({
 const app = startApp({handlers, logger});
 const startServer = makeStartServer({app, logger});
 logger.log('eyes-cypress plugin running with config:', config);
-module.exports = makePluginExport({startServer, config, visualGridClient, logger});
+
+module.exports = makePluginExport({startServer, eyesConfig, visualGridClient, logger});

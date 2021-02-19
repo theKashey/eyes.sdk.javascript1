@@ -1,5 +1,4 @@
 'use strict';
-
 const {
   configParams,
   ConfigUtils,
@@ -10,8 +9,7 @@ const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
 const getProp = GeneralUtils.getPropertyByPath;
 
-function getConfig() {
-  const config = {};
+function makeConfig(baseConfig = {}) {
   const vgConfig = Object.assign(
     {agentId},
     ConfigUtils.getConfig({
@@ -26,24 +24,22 @@ function getConfig() {
   );
 
   if (vgConfig.failCypressOnDiff === '0') {
-    config.failCypressOnDiff = false;
+    baseConfig.failCypressOnDiff = false;
   }
   if (TypeUtils.isString(vgConfig.showLogs)) {
-    config.showLogs = vgConfig.showLogs === 'true' || vgConfig.showLogs === '1';
+    baseConfig.showLogs = vgConfig.showLogs === 'true' || vgConfig.showLogs === '1';
   }
 
   if (getProp(vgConfig, 'viewport.height') && getProp(vgConfig, 'viewport.width')) {
-    config.browser = vgConfig.viewport;
+    baseConfig.browser = vgConfig.viewport;
   }
   if (getProp(vgConfig, 'userAgent')) {
-    config.userAgent = vgConfig.userAgent;
+    baseConfig.userAgent = vgConfig.userAgent;
   }
 
-  return Object.assign({shared: {}}, vgConfig, config);
-}
+  const config = Object.assign(vgConfig, baseConfig);
 
-function getEyesConfig(config) {
-  return {
+  const eyesConfig = {
     eyesIsDisabled: !!config.isDisabled,
     eyesBrowser: JSON.stringify(config.browser),
     eyesLayoutBreakpoints: JSON.stringify(config.layoutBreakpoints),
@@ -52,6 +48,8 @@ function getEyesConfig(config) {
     eyesTimeout: config.eyesTimeout,
     eyesDisableBrowserFetching: !!config.disableBrowserFetching,
   };
+
+  return {config, eyesConfig};
 }
 
-module.exports = {getConfig, getEyesConfig};
+module.exports = makeConfig;

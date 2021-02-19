@@ -1,3 +1,5 @@
+'use strict';
+
 const runningTests = {
   tests: [],
   add(test) {
