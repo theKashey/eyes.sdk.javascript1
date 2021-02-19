@@ -26,7 +26,7 @@ describe('legacy hooks', () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
   });
 
-  it('works with older version without legacyHooks flag', async () => {
+  it('works with older versions without legacyHooks flag', async () => {
     try {
       await pexec(
         './node_modules/.bin/cypress run --headless --config testFiles=legacy-hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',

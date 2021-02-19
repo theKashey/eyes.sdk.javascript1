@@ -17,29 +17,30 @@ function getGlobalConfigProperty(prop) {
   const shouldParse = ['eyesBrowser', 'eyesLayoutBreakpoints'];
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
-
-if (!getGlobalConfigProperty('eyesIsDisabled') && getGlobalConfigProperty('eyesLegacyHooks')) {
-  const batchEnd = poll(({timeout}) => {
-    return sendRequest({command: 'batchEnd', data: {timeout}});
-  });
-
-  before(() => {
-    const userAgent = navigator.userAgent;
-    sendRequest({
-      command: 'batchStart',
-      data: {userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
+if (!getGlobalConfigProperty('eyesIsDisabled')) {
+  if (getGlobalConfigProperty('eyesLegacyHooks') || getGlobalConfigProperty('isInteractive')) {
+    const batchEnd = poll(({timeout}) => {
+      return sendRequest({command: 'batchEnd', data: {timeout}});
     });
-  });
 
-  after(() => {
-    cy.then({timeout: 86400000}, () => {
-      return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
-        if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
-          throw e;
-        }
+    before(() => {
+      const userAgent = navigator.userAgent;
+      sendRequest({
+        command: 'batchStart',
+        data: {userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
       });
     });
-  });
+
+    after(() => {
+      cy.then({timeout: 86400000}, () => {
+        return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
+          if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
+            throw e;
+          }
+        });
+      });
+    });
+  }
 }
 
 let isCurrentTestDisabled;
@@ -129,7 +130,7 @@ function fillDefaultBrowserName(browser) {
 
 function validateBrowser(browser) {
   if (!browser) return false;
-  if (Array.isArray(browser) && browser.length > 0) return browser;
-  if (!browser.width || !browser.height) return browser;
-  return false;
+  if (Array.isArray(browser)) return browser.length ? browser : false;
+  if (Object.keys(browser).length === 0) return false;
+  return browser;
 }
