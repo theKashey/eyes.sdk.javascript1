@@ -37,8 +37,6 @@ function setGlobalRunHooks(on, {visualGridClient, logger}) {
       }
     }
   });
-
-  return {eyesGlobalRunHooks: true};
 }
 
 module.exports = setGlobalRunHooks;

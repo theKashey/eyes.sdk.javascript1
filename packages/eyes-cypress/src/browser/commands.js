@@ -18,12 +18,11 @@ function getGlobalConfigProperty(prop) {
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
 
-if (!getGlobalConfigProperty('eyesIsDisabled') && !getGlobalConfigProperty('eyesGlobalRunHooks')) {
+if (!getGlobalConfigProperty('eyesIsDisabled') && getGlobalConfigProperty('eyesLegacyHooks')) {
   const batchEnd = poll(({timeout}) => {
     return sendRequest({command: 'batchEnd', data: {timeout}});
   });
 
-  console.log('global run hooks used');
   before(() => {
     const userAgent = navigator.userAgent;
     sendRequest({

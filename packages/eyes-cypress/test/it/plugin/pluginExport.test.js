@@ -52,7 +52,7 @@ describe('pluginExport', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesBrowser: undefined,
     });
 
@@ -64,7 +64,7 @@ describe('pluginExport', () => {
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
     });
@@ -87,7 +87,7 @@ describe('pluginExport', () => {
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
     });
@@ -111,7 +111,7 @@ describe('pluginExport', () => {
       eyesIsDisabled: true,
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
     });
@@ -134,7 +134,7 @@ describe('pluginExport', () => {
       eyesPort: 123,
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
@@ -159,7 +159,7 @@ describe('pluginExport', () => {
       eyesPort: 123,
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
@@ -180,7 +180,7 @@ describe('pluginExport', () => {
       eyesPort: 123,
       eyesDisableBrowserFetching: true,
       eyesLayoutBreakpoints: undefined,
-      eyesGlobalRunHooks: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
