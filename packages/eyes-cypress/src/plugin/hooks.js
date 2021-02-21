@@ -10,7 +10,7 @@ const {tests} = require('./runningTests');
 
 function setGlobalRunHooks(on, {visualGridClient, logger}) {
   let waitForBatch;
-  console.log('RUNNING GLOBALLY');
+
   on('before:run', ({config}) => {
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,

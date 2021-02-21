@@ -10,7 +10,7 @@ function makePluginExport({startServer, eyesConfig, visualGridClient, logger}) {
       closeEyesServer = closeServer;
       const moduleExportsResult = await pluginModuleExports(...args);
       const [on, config] = args;
-      console.log(config);
+
       if (config.experimentalRunEvents) {
         setGlobalRunHooks(on, {visualGridClient, logger});
         eyesConfig.eyesLegacyHooks = false;
