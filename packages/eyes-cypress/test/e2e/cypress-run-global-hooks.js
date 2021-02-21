@@ -5,9 +5,7 @@ const {promisify: p} = require('util');
 const path = require('path');
 const pexec = p(exec);
 const fs = require('fs');
-const {presult} = require('@applitools/functional-commons');
 const cypressConfig = require('../fixtures/testApp/cypress');
-const {expect} = require('chai');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
 const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-globalHooks');
@@ -42,20 +40,15 @@ describe('global hooks', () => {
     }
   });
 
-  it('fails without experimentalRunEvents flag', async () => {
+  it('does not fail without experimentalRunEvents flag', async () => {
     try {
       const config = {...cypressConfig, experimentalRunEvents: false};
       fs.writeFileSync(`${targetTestAppPath}/cypress.json`, JSON.stringify(config, 2, null));
-      const [err] = await presult(
-        pexec(
-          './node_modules/.bin/cypress run --headless --config testFiles=global-hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
-          {
-            maxBuffer: 10000000,
-          },
-        ),
-      );
-      expect(err.stdout).to.include(
-        'Error: The `before:run` event requires the experimentalRunEvents flag to be enabled',
+      await pexec(
+        './node_modules/.bin/cypress run --headless --config testFiles=global-hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        {
+          maxBuffer: 10000000,
+        },
       );
     } catch (ex) {
       console.error('Error during test!', ex.stdout);

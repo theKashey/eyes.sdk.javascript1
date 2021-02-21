@@ -1,6 +1,5 @@
 'use strict';
 const setGlobalRunHooks = require('./hooks');
-const CYPRESS_SUPPORTED_VERSION = '6.2.0';
 
 function makePluginExport({startServer, eyesConfig, visualGridClient, logger}) {
   return function pluginExport(pluginModule) {
@@ -11,11 +10,12 @@ function makePluginExport({startServer, eyesConfig, visualGridClient, logger}) {
       closeEyesServer = closeServer;
       const moduleExportsResult = await pluginModuleExports(...args);
       const [on, config] = args;
-      if (config.version >= CYPRESS_SUPPORTED_VERSION && !eyesConfig.eyesLegacyHooks) {
+      console.log(config);
+      if (config.experimentalRunEvents) {
         setGlobalRunHooks(on, {visualGridClient, logger});
-      } else {
-        eyesConfig.eyesLegacyHooks = true;
+        eyesConfig.eyesLegacyHooks = false;
       }
+
       return Object.assign({}, eyesConfig, {eyesPort}, moduleExportsResult);
     };
     return function getCloseServer() {

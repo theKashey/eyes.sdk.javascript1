@@ -12,7 +12,7 @@ describe('config', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesTimeout: undefined,
-      eyesLegacyHooks: false,
+      eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
     });
   });
@@ -27,7 +27,7 @@ describe('config', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesTimeout: undefined,
-      eyesLegacyHooks: false,
+      eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
     });
   });

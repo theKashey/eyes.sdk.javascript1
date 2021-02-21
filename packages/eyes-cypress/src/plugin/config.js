@@ -19,7 +19,6 @@ function makeConfig(baseConfig = {}) {
         'tapDirPath',
         'eyesTimeout',
         'disableBrowserFetching',
-        'legacyHooks',
       ],
     }),
   );
@@ -48,7 +47,7 @@ function makeConfig(baseConfig = {}) {
       config.failCypressOnDiff === undefined ? true : !!config.failCypressOnDiff,
     eyesTimeout: config.eyesTimeout,
     eyesDisableBrowserFetching: !!config.disableBrowserFetching,
-    eyesLegacyHooks: !!config.legacyHooks,
+    eyesLegacyHooks: true,
   };
 
   return {config, eyesConfig};
