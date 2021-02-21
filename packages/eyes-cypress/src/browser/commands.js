@@ -1,16 +1,17 @@
 /* global Cypress,cy,window,before,after,navigator */
 'use strict';
 const poll = require('./poll');
-const makeSend = require('./makeSend');
 const processPage = require('@applitools/dom-snapshot/dist/processPageCjs');
 const domSnapshotOptions = {dontFetchResources: Cypress.config('eyesDisableBrowserFetching')};
-const send = makeSend(Cypress.config('eyesPort'), window.fetch);
-const makeSendRequest = require('./sendRequest');
 const makeEyesCheckWindow = require('./eyesCheckWindow');
 const makeHandleCypressViewport = require('./makeHandleCypressViewport');
-const sendRequest = makeSendRequest(send);
-const eyesCheckWindow = makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions});
 const handleCypressViewport = makeHandleCypressViewport({cy});
+const makeSend = require('./makeSend');
+const send = makeSend(Cypress.config('eyesPort'), window.fetch);
+const makeSendRequest = require('./sendRequest');
+const sendRequest = makeSendRequest(send);
+
+const eyesCheckWindow = makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions});
 
 function getGlobalConfigProperty(prop) {
   const property = Cypress.config(prop);
