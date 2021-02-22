@@ -33,9 +33,9 @@ jobs:
           yarn
           yarn prepublish:setup
           yarn coverage:sandbox
-          cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
           echo "::endgroup::"
 
+          cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
           git branch -d $BRANCH
           git push origin --delete $BRANCH
     env:
