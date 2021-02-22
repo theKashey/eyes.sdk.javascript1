@@ -1,7 +1,7 @@
 # Change Log
 
 ## Unreleased
-
+- fix bug when setting the viewport size that prevented retries from working correctly and presented the user with an incorrect error message ([Trello](https://trello.com/c/xNCZNfPi))
 
 ## 12.14.10 - 2021/2/18
 
