@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.19.0 - 2021/2/22
+
 - fix remove timeout
 - updated to @applitools/visual-grid-client@15.5.22 (from 15.5.20)
 
