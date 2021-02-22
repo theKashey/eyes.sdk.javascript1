@@ -5,7 +5,6 @@ const makeHandlers = require('../../../src/plugin/handlers');
 const {PollingStatus} = require('../../../src/plugin/pollingHandler');
 const {promisify: p} = require('util');
 const psetTimeout = p(setTimeout);
-const {TIMEOUT_MSG} = makeHandlers;
 
 describe('handlers', () => {
   let handlers;
@@ -499,8 +498,6 @@ describe('handlers', () => {
       x => x,
       err => err,
     );
-    expect(result).to.be.an.instanceof(Error);
-    expect(result.message).to.equal(TIMEOUT_MSG(50));
 
     // IDLE ==> DONE
     resolveClose([]);

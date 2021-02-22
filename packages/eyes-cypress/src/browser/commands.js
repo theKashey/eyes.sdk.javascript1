@@ -19,8 +19,8 @@ function getGlobalConfigProperty(prop) {
 }
 
 if (!Cypress.config('eyesIsDisabled')) {
-  const batchEnd = poll(({timeout}) => {
-    return sendRequest({command: 'batchEnd', data: {timeout}});
+  const batchEnd = poll(() => {
+    return sendRequest({command: 'batchEnd'});
   });
 
   before(() => {
@@ -40,7 +40,7 @@ if (!Cypress.config('eyesIsDisabled')) {
 
   after(() => {
     cy.then({timeout: 86400000}, () => {
-      return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
+      return batchEnd().catch(e => {
         if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
           throw e;
         }

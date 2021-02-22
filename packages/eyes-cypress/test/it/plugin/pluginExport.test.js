@@ -49,7 +49,6 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
 
     const ret2 = await __module.exports(on, 'second');
@@ -62,7 +61,6 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
   });
 
@@ -85,7 +83,6 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
   });
 
@@ -105,7 +102,6 @@ describe('pluginExport', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
   });
 
@@ -125,27 +121,6 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
-    });
-  });
-
-  it('works with eyes timeout', async () => {
-    const pluginExport = makePluginExport({startServer, config: {eyesTimeout: 1234}});
-    const __module = {
-      exports: () => ({bla: 'ret'}),
-    };
-
-    pluginExport(__module);
-    const ret = await __module.exports();
-    expect(ret).to.eql({
-      bla: 'ret',
-      eyesPort: 123,
-      eyesDisableBrowserFetching: false,
-      eyesLayoutBreakpoints: undefined,
-      eyesIsDisabled: false,
-      eyesFailCypressOnDiff: true,
-      eyesBrowser: undefined,
-      eyesTimeout: 1234,
     });
   });
 
@@ -165,7 +140,6 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
   });
 });

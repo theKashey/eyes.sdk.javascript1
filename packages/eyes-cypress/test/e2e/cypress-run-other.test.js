@@ -6,7 +6,6 @@ const path = require('path');
 const pexec = p(exec);
 const fs = require('fs');
 const {expect} = require('chai');
-const {TIMEOUT_MSG} = require('../../src/plugin/handlers');
 const {msgText} = require('../../src/plugin/concurrencyMsg');
 const concurrencyMsg = msgText.substr(0, 100);
 
@@ -27,19 +26,6 @@ describe('eyes configurations', () => {
 
   after(async () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
-  });
-
-  it('considers timeout passed to close', async () => {
-    try {
-      await pexec(
-        './node_modules/.bin/cypress run --headless --config integrationFolder=cypress/integration-timeout,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
-        {
-          maxBuffer: 10000000,
-        },
-      );
-    } catch (ex) {
-      expect(ex.stdout).to.include(TIMEOUT_MSG(100));
-    }
   });
 
   it('works with disabled eyes', async () => {

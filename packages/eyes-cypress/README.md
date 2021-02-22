@@ -201,7 +201,6 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [The `applitools.config.js` file](#Method-3-The-applitoolsconfigjs-file)
 - [Configuring the browser](#Configuring-the-browser)
   - [Device emulation](#Device-emulation)
-- [Tests timeout](#Setting-a-timeout)
 - [IDE Code Completion](#Intelligent-Code-Completion)
   - [Triple slash directives](#1-Triple-slash-directives)
   - [Reference type declarations via `tsconfig`](#2-Reference-type-declarations-via-tsconfig)
@@ -692,12 +691,6 @@ Possible values for `iosVersion` are:
 - `'latest'` - the latest iOS version that's supported by the UFG
 - `'latest-1'` - one version prior to the latest version
 - `undefined` - the UFG's default
-
-## Setting a timeout
-
-At the end of the test run, Eyes-Cypress will wait for the results of all visual tests. There's a default timeout of 2 minutes between the end of the test run and the end of the visual tests (although it should not take so long normally!).
-
-It's possible to change that default by setting the configuration variable `eyesTimeout`, in one of the various ways to configure Cypress, as described in the [Cypress plugins documentation](https://docs.cypress.io/guides/references/configuration.html).
 
 ## Intelligent Code Completion
 
