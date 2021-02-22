@@ -33,7 +33,7 @@ jobs:
           yarn
           yarn prepublish:setup
           yarn coverage:sandbox
-          cat coverage-test-report.xml
+          cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
           echo "::endgroup::"
 
           git branch -d $BRANCH
