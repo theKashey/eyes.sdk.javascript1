@@ -336,21 +336,24 @@ _Specifying a value locally in the story takes precedence over the global config
 
 #### global
 
-When provided globally, `include` is a function that receives the story `kind` and `name`.
+When provided globally, `include` is a function that receives the story's `kind` and `name`, and `parameters`.
 These properties come from `storybook` and they represent the hierarchy of the stories:
-- `kind` - the stories directory and section, where applicable. Nested directory structures are allowed in `storybook`. These will be suffixed by `/`, while a section - that can hold many directories will be suffixed with a `|`.
-  for example: 
-  - story named `Button` in the `Components` directory - it's `kind` will be `Components`.
-  - story named `Button` in the `Components` directory under the `App` section - it's `kind` will be `App|Components`.
-  - story named `RadioButton` in the `Radio` subdirectory of the `Components` directory under the `App` section - it's `kind` will be `App|Components/Radio`.
+- `kind` - The stories directory and section, where applicable. Nested directory structures are allowed in `storybook`. These will be suffixed by `/`, while a section - that can hold many directories will be suffixed with a `|`.
+  For example: 
+  - Story named `Button` in the `Components` directory - its `kind` will be `Components`.
+  - Story named `Button` in the `Components` directory under the `App` section - its `kind` will be `App|Components`.
+  - Story named `RadioButton` in the `Radio` subdirectory of the `Components` directory under the `App` section - its `kind` will be `App|Components/Radio`.
 - `name` - the story name.
-  for example: 
-  - story named `Button` in the `Components` directory - it's `name` will be `Button`.   
-  
-You can filter by `kind`, `name`, a combination of both or any logic that will result in a `boolean`. For example: 
+  For example: 
+  - Story named `Button` in the `Components` directory - its `name` will be `Button`.
+- `parameters` - custom parameters that can specified in the story.
+
+More information can be found in the [Storybook docs - Naming components and hierarchy](https://storybook.js.org/docs/react/writing-stories/naming-components-and-hierarchy).
+
+You can filter by `kind`, `name`, `parameters`, a combination of them or any logic that will result in a `boolean`. For example:
 ```js
 // applitools.config.js
-{
+module.exports = {
   ...
   // given the example above
   // visually test only the stories in the 'Radio' subdirectory
@@ -360,7 +363,7 @@ You can filter by `kind`, `name`, a combination of both or any logic that will r
   ...
 }
 ```
-> NOTE you can use RegEx or any other method you'd like, as long as you return a `boolean` from this function
+> NOTE you can use regular expressions or any other method you'd like, as long as you return a `boolean` from this function
 
 #### component
 
