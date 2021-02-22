@@ -94,8 +94,8 @@ class EyesService {
       return this._eyes.getConfiguration()
     })
 
-    global.browser.addCommand('eyesGetAllTestResults', async () => {
-      return this._eyes.getRunner().getAllTestResults()
+    global.browser.addCommand('eyesGetAllTestResults', async (throwEx = true) => {
+      return this._eyes.getRunner().getAllTestResults(throwEx)
     })
   }
 
