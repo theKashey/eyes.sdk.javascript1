@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.17.0 - 2021/2/23
+
 - don't auto-populate the batch name when not specified ([Trello](https://trello.com/c/MGGJ3Rh8))
 - updated to @applitools/dom-snapshot@4.4.11 (from 4.4.10)
 - updated to @applitools/eyes-sdk-core@12.14.10 (from 12.14.6)
