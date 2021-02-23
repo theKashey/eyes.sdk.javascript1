@@ -66,12 +66,10 @@ describe('parsers', () => {
         {
           screenOrientation: 'portrait',
           deviceName: 'iPhone 4',
-          deviceId: 'iPhone_4',
         },
         {
           screenOrientation: 'landscape',
           deviceName: 'iPhone 4',
-          deviceId: 'iPhone_4',
         },
       ])
     })
