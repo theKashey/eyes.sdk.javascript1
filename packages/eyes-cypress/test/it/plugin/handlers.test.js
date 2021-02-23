@@ -6,7 +6,7 @@ const getErrorsAndDiffs = require('../../../src/plugin/getErrorsAndDiffs');
 const processCloseAndAbort = require('../../../src/plugin/processCloseAndAbort');
 const errorDigest = require('../../../src/plugin/errorDigest');
 
-describe('handlers', () => {
+describe.skip('handlers', () => {
   describe('batchStart', () => {
     let handlers, _vgcConfig;
 

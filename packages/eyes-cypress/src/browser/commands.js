@@ -18,35 +18,37 @@ function getGlobalConfigProperty(prop) {
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
 
-if (!Cypress.config('eyesIsDisabled')) {
-  const batchEnd = poll(() => {
-    return sendRequest({command: 'batchEnd'});
+if (!getGlobalConfigProperty('eyesIsDisabled')) {
+  const batchEnd = poll(({timeout}) => {
+    return sendRequest({command: 'batchEnd', data: {timeout}});
   });
 
-  before(() => {
-    const userAgent = navigator.userAgent;
-    const viewport = {
-      width: getGlobalConfigProperty('viewportWidth'),
-      height: getGlobalConfigProperty('viewportHeight'),
-    };
-    let browser = getGlobalConfigProperty('eyesBrowser');
-    handleCypressViewport(browser).then({timeout: 86400000}, () =>
-      sendRequest({
-        command: 'batchStart',
-        data: {viewport, userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
-      }),
-    );
-  });
+  if (getGlobalConfigProperty('isInteractive')) {
+    before(() => {
+      const userAgent = navigator.userAgent;
+      const viewport = {
+        width: getGlobalConfigProperty('viewportWidth'),
+        height: getGlobalConfigProperty('viewportHeight'),
+      };
+      let browser = getGlobalConfigProperty('eyesBrowser');
+      handleCypressViewport(browser).then({timeout: 86400000}, () =>
+        sendRequest({
+          command: 'batchStart',
+          data: {viewport, userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
+        }),
+      );
+    });
 
-  after(() => {
-    cy.then({timeout: 86400000}, () => {
-      return batchEnd().catch(e => {
-        if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
-          throw e;
-        }
+    after(() => {
+      cy.then({timeout: 86400000}, () => {
+        return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
+          if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
+            throw e;
+          }
+        });
       });
     });
-  });
+  }
 }
 
 let isCurrentTestDisabled;

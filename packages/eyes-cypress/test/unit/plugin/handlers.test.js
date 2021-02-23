@@ -32,11 +32,8 @@ describe('handlers', () => {
   }
 
   beforeEach(() => {
-    handlers = makeHandlers({
-      makeVisualGridClient: () => ({
-        openEyes: fakeOpenEyes,
-      }),
-    });
+    const visualGridClient = {openEyes: fakeOpenEyes};
+    handlers = makeHandlers({visualGridClient});
   });
 
   it('handles "open"', async () => {
@@ -64,11 +61,8 @@ describe('handlers', () => {
       ),
     ).to.be.an.instanceof(Error);
 
-    handlers = handlers = makeHandlers({
-      makeVisualGridClient: () => ({
-        openEyes: openEyesWithCloseRejection,
-      }),
-    });
+    const visualGridClient = {openEyes: openEyesWithCloseRejection, closeBatch: () => {}};
+    handlers = makeHandlers({visualGridClient});
     handlers.batchStart({});
     expect(
       await handlers.checkWindow({}).then(
@@ -101,11 +95,8 @@ describe('handlers', () => {
       ),
     ).to.be.an.instanceof(Error);
 
-    handlers = makeHandlers({
-      makeVisualGridClient: () => ({
-        openEyes: openEyesWithCloseRejection,
-      }),
-    });
+    const visualGridClient = {openEyes: openEyesWithCloseRejection, closeBatch: () => {}};
+    handlers = makeHandlers({visualGridClient});
     handlers.batchStart({});
     expect(
       await handlers.close().then(
@@ -402,15 +393,6 @@ describe('handlers', () => {
     expect((await close()).__test).to.equal('close_123');
   });
 
-  it('handles "batchStart"', () => {
-    let flag;
-    handlers = makeHandlers({
-      makeVisualGridClient: () => (flag = 'flag'),
-    });
-    handlers.batchStart({});
-    expect(flag).to.equal('flag');
-  });
-
   it('handles "batchEnd"', async () => {
     let resolveClose;
     const openEyes = async () => ({
@@ -423,9 +405,9 @@ describe('handlers', () => {
 
       abort: async () => {},
     });
-
+    const visualGridClient = {openEyes};
     handlers = makeHandlers({
-      makeVisualGridClient: () => ({openEyes}),
+      visualGridClient,
       processCloseAndAbort: async ({runningTests}) =>
         Promise.all(
           runningTests.map(async ({closePromise, abort}) =>
@@ -530,13 +512,12 @@ describe('handlers', () => {
   });
 
   it('error in openEyes should cause close to do nothing', async () => {
-    handlers = makeHandlers({
-      makeVisualGridClient: () => ({
-        openEyes: async () => {
-          throw new Error('open');
-        },
-      }),
-    });
+    const visualGridClient = {
+      openEyes: async () => {
+        throw new Error('open');
+      },
+    };
+    handlers = makeHandlers({visualGridClient});
     handlers.batchStart({});
     await handlers.open({}).catch(x => x);
     const err = await handlers.close().then(

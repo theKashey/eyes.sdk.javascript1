@@ -4,9 +4,10 @@ const {expect} = require('chai');
 const makePluginExport = require('../../../src/plugin/pluginExport');
 const {promisify: p} = require('util');
 const psetTimeout = p(setTimeout);
+const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client');
 
 describe('pluginExport', () => {
-  let prevEnv;
+  let prevEnv, visualGridClient, logger, on;
 
   async function startServer() {
     return {
@@ -15,6 +16,9 @@ describe('pluginExport', () => {
   }
 
   beforeEach(() => {
+    logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS, 'eyes');
+    on = (_event, _callback) => {};
+    visualGridClient = makeVisualGridClient({logger});
     prevEnv = process.env;
     process.env = {};
   });
@@ -24,7 +28,7 @@ describe('pluginExport', () => {
   });
 
   it('works', async () => {
-    const pluginExport = makePluginExport({startServer, config: {}});
+    const pluginExport = makePluginExport({startServer, runConfig: {}, visualGridClient, logger});
 
     const __module = {
       exports: (_on, config) => {
@@ -32,8 +36,6 @@ describe('pluginExport', () => {
         return {bla: `ret_${config}`};
       },
     };
-
-    const on = (_event, _callback) => {};
 
     let x;
 
@@ -65,16 +67,17 @@ describe('pluginExport', () => {
   });
 
   it('handles async module.exports', async () => {
-    const pluginExport = makePluginExport({startServer, config: {}});
+    const pluginExport = makePluginExport({startServer, runConfig: {}, visualGridClient});
     const __module = {
-      exports: async () => {
+      exports: async (_on, _config) => {
         await psetTimeout(0);
         return {bla: 'bla'};
       },
     };
 
+    const on = (_event, _callback) => {};
     pluginExport(__module);
-    const ret = await __module.exports(() => {});
+    const ret = await __module.exports(on, 'some');
     expect(ret).to.eql({
       bla: 'bla',
       eyesPort: 123,
@@ -87,13 +90,17 @@ describe('pluginExport', () => {
   });
 
   it('works with disabled eyes', async () => {
-    const pluginExport = makePluginExport({startServer, config: {isDisabled: true}});
+    const pluginExport = makePluginExport({
+      startServer,
+      runConfig: {isDisabled: true},
+      visualGridClient,
+    });
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports();
+    const ret = await __module.exports(on, 'some');
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -106,13 +113,17 @@ describe('pluginExport', () => {
   });
 
   it('works with dont fail cypress on diff', async () => {
-    const pluginExport = makePluginExport({startServer, config: {failCypressOnDiff: false}});
+    const pluginExport = makePluginExport({
+      startServer,
+      runConfig: {failCypressOnDiff: false},
+      visualGridClient,
+    });
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports();
+    const ret = await __module.exports(on, 'some');
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -121,17 +132,42 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
+      eyesTimeout: undefined,
     });
   });
 
-  it('works with eyes disableBrowserFetching', async () => {
-    const pluginExport = makePluginExport({startServer, config: {disableBrowserFetching: true}});
+  it('works with eyes timeout', async () => {
+    const pluginExport = makePluginExport({
+      startServer,
+      runConfig: {eyesTimeout: 1234},
+      visualGridClient,
+    });
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports();
+    const ret = await __module.exports(on, 'some');
+    expect(ret).to.eql({
+      bla: 'ret',
+      eyesPort: 123,
+      eyesDisableBrowserFetching: false,
+      eyesLayoutBreakpoints: undefined,
+      eyesIsDisabled: false,
+      eyesFailCypressOnDiff: true,
+      eyesBrowser: undefined,
+      eyesTimeout: 1234,
+    });
+  });
+
+  it('works with eyes disableBrowserFetching', async () => {
+    const pluginExport = makePluginExport({startServer, runConfig: {disableBrowserFetching: true}});
+    const __module = {
+      exports: () => ({bla: 'ret'}),
+    };
+
+    pluginExport(__module);
+    const ret = await __module.exports(on, 'some');
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,

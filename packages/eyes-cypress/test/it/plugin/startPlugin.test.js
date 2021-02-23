@@ -5,9 +5,10 @@ const fetch = require('../../util/fetchWithNoCAVerify');
 let startPlugin = require('../../../src/plugin/startPlugin');
 
 describe('start plugin', () => {
-  let getCloseServer, __module;
+  let getCloseServer, __module, on;
 
   beforeEach(() => {
+    on = (_event, _callback) => {};
     __module = {exports: () => {}};
     getCloseServer = startPlugin(__module);
   });
@@ -18,13 +19,13 @@ describe('start plugin', () => {
   });
 
   it('starts plugin server and patches module exports', async () => {
-    const {eyesPort} = await __module.exports();
+    const {eyesPort} = await __module.exports(on, 'test');
     const resp = await fetch(`https://localhost:${eyesPort}/hb`);
     expect(resp.status).to.equal(200);
   });
 
   it('patches module exports with correct pref', async () => {
-    const {eyesIsDisabled, eyesFailCypressOnDiff} = await __module.exports();
+    const {eyesIsDisabled, eyesFailCypressOnDiff} = await __module.exports(on, 'test');
     expect(eyesIsDisabled).to.be.false;
     expect(eyesFailCypressOnDiff).to.be.true;
   });
@@ -47,7 +48,7 @@ describe('start plugin', () => {
     });
 
     it('patches module exports with disabled eyes pref', async () => {
-      const {eyesIsDisabled} = await __module.exports();
+      const {eyesIsDisabled} = await __module.exports(on, 'test');
       expect(eyesIsDisabled).to.be.true;
     });
   });
@@ -70,8 +71,31 @@ describe('start plugin', () => {
     });
 
     it('patches module exports with dont fail on diff pref', async () => {
-      const {eyesFailCypressOnDiff} = await __module.exports();
+      const {eyesFailCypressOnDiff} = await __module.exports(on, 'test');
       expect(eyesFailCypressOnDiff).to.be.false;
+    });
+  });
+
+  describe('with eyes timeout ', () => {
+    before(() => {
+      process.env['APPLITOOLS_EYES_TIMEOUT'] = '1234';
+      delete require.cache[require.resolve('../../../src/plugin/startPlugin')];
+      startPlugin = require('../../../src/plugin/startPlugin');
+    });
+
+    beforeEach(() => {
+      __module = {exports: () => {}};
+      getCloseServer = startPlugin(__module);
+    });
+
+    after(() => {
+      delete process.env['APPLITOOLS_EYES_TIMEOUT'];
+      delete require.cache[require.resolve('../../../src/plugin/startPlugin')];
+    });
+
+    it('patches module exports with dont fail on diff pref', async () => {
+      const {eyesTimeout} = await __module.exports(on, 'test');
+      expect(eyesTimeout).to.be.equal('1234');
     });
   });
 });
