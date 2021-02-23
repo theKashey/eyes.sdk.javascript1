@@ -36,7 +36,7 @@ describe('handlers', () => {
       let _args;
       const handlers = makeHandlers({
         visualGridClient: {openEyes: args => (_args = args)},
-        config: {enablePatterns: false},
+        config: {},
         logger: console,
         processCloseAndAbort,
         getErrorsAndDiffs,
@@ -57,7 +57,7 @@ describe('handlers', () => {
           getIosDevicesSizes: () => (_args.ios = true),
           getEmulatedDevicesSizes: () => (_args.emulated = true),
         },
-        config: {enablePatterns: false},
+        config: {},
         logger: console,
         processCloseAndAbort,
         getErrorsAndDiffs,
