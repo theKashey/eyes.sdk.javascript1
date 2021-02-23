@@ -4,7 +4,7 @@ const putasset = require('putasset')
 
 const token = process.env.GH_TOKEN
 const owner = 'applitools'
-const repo = 'applitools-for-selenium-ide'
+const repo = 'eyes.sdk.javascript1'
 const manifest = require('../src/manifest.json')
 const tag = 'v' + manifest.version
 
@@ -18,17 +18,12 @@ if (!token)
   )
 
 // fetch changelog details
-const changelog = exec(
-  `sed '1,/${tag}/d;/## v/q' ./CHANGELOG.MD | sed '/^ *$/q'`,
-  {
-    encoding: 'utf8',
-  }
-).trim()
+const changelog = exec(`sed '1,/${tag}/d;/## v/q' ./CHANGELOG.MD | sed '/^ *$/q'`, {
+  encoding: 'utf8',
+}).trim()
 
 // zip build dir
-exec(
-  'cd build;zip -r applitools-for-selenium-ide.zip *;mv applitools-for-selenium-ide.zip ../'
-)
+exec('cd build;zip -r applitools-for-selenium-ide.zip *;mv applitools-for-selenium-ide.zip ../')
 log('Zipped build directory')
 
 // create release with changelog
@@ -41,9 +36,7 @@ grizzly(token, {
   prerelease: false,
 })
   .then(() => {
-    log(
-      `Release published on GitHub, url: https://github.com/${owner}/${repo}/releases/tag/${tag}`
-    )
+    log(`Release published on GitHub, url: https://github.com/${owner}/${repo}/releases/tag/${tag}`)
     // upload asset to release
     putasset(token, {
       owner,
