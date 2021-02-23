@@ -61,6 +61,7 @@ function makeHandlers({
     getIosDevicesSizes: () => visualGridClient.getIosDevicesSizes(),
     getEmulatedDevicesSizes: () => visualGridClient.getEmulatedDevicesSizes(),
     batchEnd: async () => {
+      logger.log(`[handlers] batchEnd`);
       return await pollBatchEnd();
     },
 

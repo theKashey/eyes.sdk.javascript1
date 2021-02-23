@@ -1,13 +1,7 @@
 'use strict';
-const {
-  configParams,
-  ConfigUtils,
-  GeneralUtils,
-  TypeUtils,
-} = require('@applitools/visual-grid-client');
+const {configParams, ConfigUtils, TypeUtils} = require('@applitools/visual-grid-client');
 const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
-const getProp = GeneralUtils.getPropertyByPath;
 
 function makeConfig() {
   const baseConfig = {};
@@ -21,12 +15,9 @@ function makeConfig() {
   if (vgConfig.failCypressOnDiff === '0') {
     baseConfig.failCypressOnDiff = false;
   }
+
   if (TypeUtils.isString(vgConfig.showLogs)) {
     baseConfig.showLogs = vgConfig.showLogs === 'true' || vgConfig.showLogs === '1';
-  }
-
-  if (getProp(vgConfig, 'viewport.height') && getProp(vgConfig, 'viewport.width')) {
-    baseConfig.browser = vgConfig.viewport;
   }
 
   const config = Object.assign(vgConfig, baseConfig);
