@@ -31,10 +31,6 @@ async function validateAndPopulateConfig({config, packagePath, logger}) {
     config.appName = packageJson.name;
   }
 
-  if (!config.batchName) {
-    config.batchName = config.appName;
-  }
-
   if (!config.storybookUrl) {
     try {
       config.storybookPort = await detect(config.storybookPort);
