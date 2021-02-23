@@ -39,6 +39,11 @@ const metadata = {
     name: 'test that was not emitted',
     skipEmit: true,
   },
+  TestThatWasEmittedButNotExecuted: {
+    isGeneric: true,
+    executionMode: 'bla',
+    name: 'test that was emitted but not executed',
+  },
 }
 describe('Report', () => {
   describe('JUnit XML Parser', () => {

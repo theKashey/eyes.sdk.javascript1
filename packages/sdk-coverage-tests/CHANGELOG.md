@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix bug with unskipped and unexecuted tests
 
 ## 2.3.7 - 2021/2/6
 
