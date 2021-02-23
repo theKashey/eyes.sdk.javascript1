@@ -18,7 +18,7 @@ describe('waitForBatch', () => {
     waitForBatch = makeWaitForBatch({
       logger: console,
       processCloseAndAbort: ({runningTests}) => runningTests,
-      concurrency: 1,
+      testConcurrency: 1,
       getErrorsAndDiffs: results => ({failed: [], diffs: [], passed: results}),
       errorDigest: () => null,
       handleBatchResultsFile: makeHandleBatchResultsFile({

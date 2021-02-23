@@ -9,17 +9,12 @@ const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
 const getProp = GeneralUtils.getPropertyByPath;
 
-function makeConfig(baseConfig = {}) {
+function makeConfig() {
+  const baseConfig = {};
   const vgConfig = Object.assign(
     {agentId},
     ConfigUtils.getConfig({
-      configParams: [
-        ...configParams,
-        'failCypressOnDiff',
-        'tapDirPath',
-        'eyesTimeout',
-        'disableBrowserFetching',
-      ],
+      configParams: [...configParams, 'failCypressOnDiff', 'tapDirPath', 'disableBrowserFetching'],
     }),
   );
 
@@ -33,9 +28,6 @@ function makeConfig(baseConfig = {}) {
   if (getProp(vgConfig, 'viewport.height') && getProp(vgConfig, 'viewport.width')) {
     baseConfig.browser = vgConfig.viewport;
   }
-  if (getProp(vgConfig, 'userAgent')) {
-    baseConfig.userAgent = vgConfig.userAgent;
-  }
 
   const config = Object.assign(vgConfig, baseConfig);
 
@@ -45,7 +37,6 @@ function makeConfig(baseConfig = {}) {
     eyesLayoutBreakpoints: JSON.stringify(config.layoutBreakpoints),
     eyesFailCypressOnDiff:
       config.failCypressOnDiff === undefined ? true : !!config.failCypressOnDiff,
-    eyesTimeout: config.eyesTimeout,
     eyesDisableBrowserFetching: !!config.disableBrowserFetching,
     eyesLegacyHooks: true,
   };

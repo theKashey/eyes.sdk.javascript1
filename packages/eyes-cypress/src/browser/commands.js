@@ -17,30 +17,30 @@ function getGlobalConfigProperty(prop) {
   const shouldParse = ['eyesBrowser', 'eyesLayoutBreakpoints'];
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
-if (!getGlobalConfigProperty('eyesIsDisabled')) {
-  if (getGlobalConfigProperty('eyesLegacyHooks') || getGlobalConfigProperty('isInteractive')) {
-    const batchEnd = poll(({timeout}) => {
-      return sendRequest({command: 'batchEnd', data: {timeout}});
-    });
+if (
+  !getGlobalConfigProperty('eyesIsDisabled') &&
+  (getGlobalConfigProperty('eyesLegacyHooks') || getGlobalConfigProperty('isInteractive'))
+) {
+  const batchEnd = poll(() => {
+    return sendRequest({command: 'batchEnd'});
+  });
 
-    before(() => {
-      const userAgent = navigator.userAgent;
-      sendRequest({
-        command: 'batchStart',
-        data: {userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
+  before(() => {
+    sendRequest({
+      command: 'batchStart',
+      data: {isInteractive: getGlobalConfigProperty('isInteractive')},
+    });
+  });
+
+  after(() => {
+    cy.then({timeout: 86400000}, () => {
+      return batchEnd().catch(e => {
+        if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
+          throw e;
+        }
       });
     });
-
-    after(() => {
-      cy.then({timeout: 86400000}, () => {
-        return batchEnd({timeout: getGlobalConfigProperty('eyesTimeout')}).catch(e => {
-          if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
-            throw e;
-          }
-        });
-      });
-    });
-  }
+  });
 }
 
 let isCurrentTestDisabled;
@@ -48,6 +48,7 @@ let isCurrentTestDisabled;
 Cypress.Commands.add('eyesOpen', function(args = {}) {
   Cypress.config('eyesOpenArgs', args);
   Cypress.log({name: 'Eyes: open'});
+  const userAgent = navigator.userAgent;
   const {title: testName} = this.currentTest || this.test;
   const {browser: eyesOpenBrowser, isDisabled} = args;
   const globalBrowser = getGlobalConfigProperty('eyesBrowser');
@@ -79,7 +80,7 @@ Cypress.Commands.add('eyesOpen', function(args = {}) {
   return handleCypressViewport(browser).then({timeout: 15000}, () =>
     sendRequest({
       command: 'open',
-      data: Object.assign({testName}, args, {browser}),
+      data: Object.assign({testName}, args, {browser, userAgent}),
     }),
   );
 });

@@ -43,9 +43,10 @@ function makeHandlers({
     batchStart: data => {
       logger.log('[handlers] batchStart with data', data);
       runningTests.reset();
+      const {testConcurrency} = config;
       const waitForBatch = makeWaitForBatch({
         logger: (logger.extend && logger.extend('waitForBatch')) || logger,
-        concurrency: config.testConcurrency,
+        testConcurrency,
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
@@ -54,15 +55,13 @@ function makeHandlers({
       });
       pollBatchEnd = pollingHandler(
         waitForBatch.bind(null, runningTests.tests, visualGridClient.closeBatch),
-        TIMEOUT_MSG,
       );
       return visualGridClient;
     },
     getIosDevicesSizes: () => visualGridClient.getIosDevicesSizes(),
     getEmulatedDevicesSizes: () => visualGridClient.getEmulatedDevicesSizes(),
-    batchEnd: async ({timeout} = {}) => {
-      logger.log(`[handlers] batchEnd, timeout=${timeout}`);
-      return await pollBatchEnd({timeout});
+    batchEnd: async () => {
+      return await pollBatchEnd();
     },
 
     putResource: (id, buffer) => {

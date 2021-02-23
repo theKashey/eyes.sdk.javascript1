@@ -99,7 +99,7 @@ describe('waitForBatch', () => {
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
-        concurrency: 1,
+        testConcurrency: 5,
         handleBatchResultsFile: results => results,
       });
 
@@ -122,7 +122,7 @@ describe('waitForBatch', () => {
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
-        concurrency: '1',
+        testConcurrency: '5',
         handleBatchResultsFile: results => results,
       });
 

@@ -48,7 +48,6 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesLegacyHooks: true,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
       version: '6.3.0',
     });
 
@@ -147,7 +146,6 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
-      eyesTimeout: undefined,
     });
   });
 
@@ -160,7 +158,7 @@ describe('pluginExport', () => {
     const __module = {
       exports: (_on, config) => {
         config.version = '6.3.0';
-        return {bla: 'ret', eyesTimeout: 1234};
+        return {bla: 'ret'};
       },
     };
 
@@ -175,7 +173,6 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
-      eyesTimeout: 1234,
     });
   });
 

@@ -29,7 +29,7 @@ describe('global hooks', () => {
   it('works with experimentalRunEvents flag', async () => {
     try {
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=global-hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },

@@ -11,7 +11,6 @@ describe('config', () => {
       eyesBrowser: undefined,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesTimeout: undefined,
       eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
     });
@@ -26,14 +25,8 @@ describe('config', () => {
       eyesBrowser: undefined,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesTimeout: undefined,
       eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
     });
-  });
-
-  it('should accept base config object', () => {
-    const {eyesConfig} = makeConfig({failCypressOnDiff: true});
-    expect(eyesConfig.eyesFailCypressOnDiff).to.be.true;
   });
 });

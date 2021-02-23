@@ -7,7 +7,6 @@ const pexec = p(exec);
 const fs = require('fs');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
-const legacyHooksCustomConfigPath = path.resolve(__dirname, '../fixtures/legacyHooks');
 const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-legacyHooks');
 
 describe('legacy hooks', () => {
@@ -49,7 +48,7 @@ describe('legacy hooks', () => {
         maxBuffer: 1000000,
       });
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=legacy-hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },

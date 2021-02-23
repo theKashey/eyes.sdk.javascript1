@@ -16,14 +16,13 @@ describe('handlers', () => {
             checkWindow: args => (_args = args),
           }),
         },
-        config: {enablePatterns: false},
+        config: {},
         logger: console,
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
       });
 
-      handlers.batchStart({});
       await handlers.open({});
       await handlers.checkWindow({useDom: true, enablePatterns: true, ignoreDisplacements: true});
       expect(_args.useDom).to.be.true;
@@ -43,7 +42,7 @@ describe('handlers', () => {
         getErrorsAndDiffs,
         errorDigest,
       });
-      handlers.batchStart({});
+
       const eyes = await handlers.open({enablePatterns: true});
       expect(_args.enablePatterns).to.be.true;
       expect(eyes).to.equal(_args);
