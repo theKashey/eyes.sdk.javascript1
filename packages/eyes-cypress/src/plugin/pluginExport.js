@@ -11,7 +11,6 @@ function makePluginExport({startServer, eyesConfig, visualGridClient, logger}) {
       closeEyesServer = closeServer;
       const moduleExportsResult = await pluginModuleExports(...args);
       const [on, config] = args;
-
       if (config.version >= CYPRESS_SUPPORTED_VERSION && !eyesConfig.eyesLegacyHooks) {
         setGlobalRunHooks(on, {visualGridClient, logger});
       } else {
