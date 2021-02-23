@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for iOS simulators
 - chore: add husky
 - updated to @applitools/dom-capture@7.2.6 (from 7.2.4)
 - updated to @applitools/dom-snapshot@4.0.0 (from 3.6.2)

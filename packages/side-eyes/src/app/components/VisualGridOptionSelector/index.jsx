@@ -16,6 +16,7 @@ export default class VisualGridOptionSelector extends React.Component {
     onSubmit: PropTypes.func.isRequired,
     customStyles: PropTypes.object.isRequired,
     isSearch: PropTypes.bool,
+    isMobile: PropTypes.bool,
   }
 
   constructor(props) {
@@ -31,8 +32,13 @@ export default class VisualGridOptionSelector extends React.Component {
     // in the parent component. Also because when the user closes the window
     // we discard the state, but selections from the parent component need to
     // persist into this window.
-    if (prevProps.selectedOptions !== this.props.selectedOptions || (!prevProps.modalIsOpen && this.props.modalIsOpen))
+    if (
+      prevProps.selectedOptions !== this.props.selectedOptions ||
+      (!prevProps.modalIsOpen && this.props.modalIsOpen)
+    ) {
       this.setState({ selectedOptions: [...this.props.selectedOptions] })
+      this.setState({ searchResults: undefined })
+    }
   }
 
   close() {
@@ -55,7 +61,7 @@ export default class VisualGridOptionSelector extends React.Component {
   }
 
   isOptionSelected(option) {
-    return !!this.state.selectedOptions.filter(selectedOption => selectedOption === option)[0]
+    return !!this.state.selectedOptions.find(selectedOption => selectedOption === option)
   }
 
   onSubmit() {
@@ -72,10 +78,11 @@ export default class VisualGridOptionSelector extends React.Component {
       distance: 100,
       maxPatternLength: 20,
       minMatchCharLength: 1,
+      keys: this.props.isMobile ? ['name'] : undefined,
     })
-    const result = fuse.search(pattern).map(r => r.matches[0].value)
+    const result = fuse.search(pattern).map(r => r.item)
     this.setState({
-      searchResults: pattern ? result : this.props.options,
+      searchResults: pattern ? result : undefined,
     })
   }
 
@@ -92,13 +99,42 @@ export default class VisualGridOptionSelector extends React.Component {
           ) : (
             undefined
           )}
-          <div className="selector">
-            <CheckList
-              items={this.state.searchResults ? this.state.searchResults : this.props.options}
-              optionSelected={this.isOptionSelected.bind(this)}
-              handleOptionChange={this.handleOptionChange.bind(this)}
-            />
-          </div>
+          {this.props.isMobile ? (
+            <React.Fragment>
+              <div className="selector">
+                <h4>Chrome Emulation</h4>
+                <CheckList
+                  items={
+                    this.state.searchResults
+                      ? this.state.searchResults.filter(option => option.type === 'emulator')
+                      : this.props.options.filter(option => option.type === 'emulator')
+                  }
+                  optionSelected={this.isOptionSelected.bind(this)}
+                  handleOptionChange={this.handleOptionChange.bind(this)}
+                />
+              </div>
+              <div className="selector">
+                <h4>iOS Simulation</h4>
+                <CheckList
+                  items={
+                    this.state.searchResults
+                      ? this.state.searchResults.filter(option => option.type === 'simulator')
+                      : this.props.options.filter(option => option.type === 'simulator')
+                  }
+                  optionSelected={this.isOptionSelected.bind(this)}
+                  handleOptionChange={this.handleOptionChange.bind(this)}
+                />
+              </div>
+            </React.Fragment>
+          ) : (
+            <div className="selector">
+              <CheckList
+                items={this.state.searchResults ? this.state.searchResults : this.props.options}
+                optionSelected={this.isOptionSelected.bind(this)}
+                handleOptionChange={this.handleOptionChange.bind(this)}
+              />
+            </div>
+          )}
         </div>
         <FlatButton className="confirm" type="submit" onClick={this.onSubmit.bind(this)}>
           Confirm

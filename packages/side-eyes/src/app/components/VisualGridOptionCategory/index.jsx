@@ -18,6 +18,7 @@ export default class VisualGridOptionCategory extends React.Component {
     removeOption: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     isSearch: PropTypes.bool,
+    isMobile: PropTypes.bool,
   }
 
   render() {
@@ -34,6 +35,7 @@ export default class VisualGridOptionCategory extends React.Component {
             onSubmit={this.props.onSubmit}
             customStyles={this.props.modalStyles}
             isSearch={this.props.isSearch}
+            isMobile={this.props.isMobile}
           />
         </div>
         {this.props.selectedOptions.length ? (

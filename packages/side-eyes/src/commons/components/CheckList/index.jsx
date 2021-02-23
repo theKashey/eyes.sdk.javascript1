@@ -12,11 +12,13 @@ export default class CheckList extends React.Component {
     return (
       <React.Fragment>
         {this.props.items.map(function(item) {
+          const itemName = typeof item === 'string' ? item : item.name
+          const itemKey = typeof item === 'string' ? itemName : `${itemName}-${item.type}`
           return (
-            <React.Fragment key={item}>
+            <React.Fragment key={itemKey}>
               <Checkbox
-                id={item}
-                label={item}
+                id={itemKey}
+                label={itemName}
                 checked={this.props.optionSelected(item)}
                 onChange={this.props.handleOptionChange.bind(this, item)}
               />
