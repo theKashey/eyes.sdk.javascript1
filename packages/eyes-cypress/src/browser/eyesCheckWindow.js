@@ -2,6 +2,7 @@
 'use strict';
 
 const getAllBlobs = require('./getAllBlobs');
+const getBrowserInfo = require('./getBrowserInfo');
 
 function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypress = cy}) {
   return function eyesCheckWindow(doc, args = {}) {
@@ -30,7 +31,7 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
       return browsers
         .reduce((widths, browser, index) => {
           return widths.then(widthsMap => {
-            return getBrowserInfo(browser).then(({name, width}) => {
+            return getBrowserInfo(browser, sendRequest).then(({name, width}) => {
               const requiredWidth = getBreakpointWidth(breakpoints, width);
               let groupedBrowsers = widthsMap[requiredWidth];
               if (!groupedBrowsers) {
@@ -91,24 +92,6 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
       });
     }
 
-    function getBrowserInfo(browser) {
-      if (browser.name) {
-        const {name, width} = browser;
-        return Promise.resolve({name, width});
-      } else {
-        const {deviceName, screenOrientation = 'portrait'} =
-          browser.iosDeviceInfo || browser.chromeEmulationInfo || browser;
-        const command = browser.iosDeviceInfo ? 'getIosDevicesSizes' : 'getEmulatedDevicesSizes';
-        return sendRequest({command}).then(devicesSizes => {
-          if (!devicesSizes.hasOwnProperty(deviceName)) {
-            handleDeviceError(deviceName);
-          }
-          const size = devicesSizes[deviceName][screenOrientation];
-          return {name: deviceName, ...size};
-        });
-      }
-    }
-
     function getBreakpointWidth(breakpoints, width) {
       if (!Array.isArray(breakpoints) || breakpoints.length === 0) return width;
       const sortedBreakpoints = Array.from(new Set(breakpoints)).sort((a, b) => (a < b ? 1 : -1));
@@ -140,21 +123,4 @@ function mapBlob({url, type, value}) {
   return {url, type: type || 'application/x-applitools-unknown', value};
 }
 
-function handleDeviceError(browser) {
-  const baseUrl =
-    'https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config';
-  const deviceName = browser.deviceName;
-  const category = browser.iosDeviceInfo
-    ? {
-        name: 'iOS',
-        url: `${baseUrl}/IosDeviceName.js`,
-      }
-    : {
-        name: 'emulated',
-        url: `${baseUrl}/DeviceName.js`,
-      };
-  throw new Error(
-    `'${deviceName}' does not exist in the list of ${category.name} devices.\nplease see the device list at: ${category.url}`,
-  );
-}
 module.exports = makeEyesCheckWindow;

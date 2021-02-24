@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix device emulation condition
 
 ## 3.19.0 - 2021/2/22
 
