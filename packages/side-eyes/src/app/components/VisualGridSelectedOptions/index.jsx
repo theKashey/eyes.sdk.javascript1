@@ -12,9 +12,15 @@ export default class VisualGridSelectedOptions extends React.Component {
     return (
       <div className="selected-options">
         {this.props.items.map(function(item) {
+          let itemName = typeof item === 'string' ? item : item.name
+          if (item.type) {
+            if (item.type === 'simulator') itemName = itemName += ' (iOS simulator)'
+            else if (item.type === 'emulator') itemName = itemName += ' (Chrome emulator)'
+          }
+          const itemKey = typeof item === 'string' ? itemName : `${itemName}-${item.type}`
           return (
-            <div className="option" key={item}>
-              <div className="option-text">{item}</div>
+            <div className="option" key={itemKey}>
+              <div className="option-text">{itemName}</div>
               <RemoveButton onClick={this.props.removeOption.bind(this, item)} />
             </div>
           )

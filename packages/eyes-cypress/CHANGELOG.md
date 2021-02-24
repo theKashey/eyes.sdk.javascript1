@@ -3,6 +3,15 @@
 ## Unreleased
 
 
+## 3.19.1 - 2021/2/24
+
+- fix device emulation condition
+
+## 3.19.0 - 2021/2/22
+
+- fix remove timeout
+- updated to @applitools/visual-grid-client@15.5.22 (from 15.5.20)
+
 ## 3.18.7 - 2021/2/2
 
 - fix documentation about setup of Applitools configuration

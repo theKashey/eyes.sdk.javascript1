@@ -359,6 +359,7 @@ class EyesContext {
         this._innerOffset = Location.ZERO
       } else {
         const scrollRootElement = await this.getScrollRootElement()
+        if (!scrollRootElement) return Location.ZERO
         this._innerOffset = await scrollRootElement.withRefresh(() =>
           EyesUtils.getInnerOffset(this._logger, this, scrollRootElement),
         )

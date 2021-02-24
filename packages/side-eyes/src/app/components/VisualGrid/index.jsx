@@ -6,7 +6,7 @@ import VisualGridOptionGroup from '../VisualGridOptionGroup'
 import VisualGridOptionCategory from '../VisualGridOptionCategory'
 import VisualGridViewports from '../VisualGridViewports'
 import DownloadConfig from '../DownloadConfig'
-import { browsers, experimentalBrowsers, viewportSizes, orientations, DeviceName } from './options'
+import { browsers, experimentalBrowsers, viewportSizes, orientations, DeviceList } from './options'
 import './style.css'
 
 const ALL_BROWSERS = [...browsers, ...experimentalBrowsers]
@@ -27,7 +27,7 @@ export default class VisualGrid extends React.Component {
         orientations: false,
       },
       projectSettings: { ...props.projectSettings },
-      devices: Object.values(DeviceName),
+      devices: DeviceList,
     }
   }
 
@@ -228,6 +228,7 @@ export default class VisualGrid extends React.Component {
               removeOption={this.removeDevice.bind(this)}
               onSubmit={this.saveDevices.bind(this)}
               isSearch={true}
+              isMobile={true}
             />
           </div>
           <div className="category device-orientations">

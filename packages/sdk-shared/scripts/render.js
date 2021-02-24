@@ -451,7 +451,7 @@ function argsToCheckConfig(args) {
     timeout: args.matchTimeout,
     isFully: args.fully,
     hooks: args.bcsHook
-      ? {beforeCaptureScreenshot: ['beforeCaptureScreenshot', args.bcsHook]}
+      ? {beforeCaptureScreenshot: args.bcsHook}
       : undefined,
   }
 }

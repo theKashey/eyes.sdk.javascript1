@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 12.14.11 - 2021/2/23
+
+- fix bug when setting the viewport size that prevented retries from working correctly and presented the user with an incorrect error message ([Trello](https://trello.com/c/xNCZNfPi))
+
+## 12.14.10 - 2021/2/18
+
+- updated to @applitools/screenshoter@3.0.5 (from 3.0.4)
+
+## 12.14.9 - 2021/2/16
+
+- handle contexts with no elements
+- updated to @applitools/screenshoter@3.0.4 (from 3.0.3)
 
 ## 12.14.8 - 2021/2/4
 

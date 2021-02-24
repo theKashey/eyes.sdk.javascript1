@@ -5,9 +5,6 @@ const makeWaitForBatch = require('./waitForBatch');
 const makeHandleBatchResultsFile = require('./makeHandleBatchResultsFile');
 const {GeneralUtils} = require('@applitools/visual-grid-client');
 
-const TIMEOUT_MSG = timeout =>
-  `Eyes-Cypress timed out after ${timeout}ms. The default timeout is 2 minutes. It's possible to increase this timeout by setting a the value of 'eyesTimeout' in Cypress configuration, e.g. for 3 minutes: Cypress.config('eyesTimeout', 180000)`;
-
 function makeHandlers({
   makeVisualGridClient,
   config = {},
@@ -81,17 +78,14 @@ function makeHandlers({
         isInteractive: GeneralUtils.getPropertyByPath(data, 'isInteractive'),
         handleBatchResultsFile: makeHandleBatchResultsFile(config),
       });
-      pollBatchEnd = pollingHandler(
-        waitForBatch.bind(null, runningTests, client.closeBatch),
-        TIMEOUT_MSG,
-      );
+      pollBatchEnd = pollingHandler(waitForBatch.bind(null, runningTests, client.closeBatch));
       return client;
     },
     getIosDevicesSizes: () => getIosDevicesSizes(),
     getEmulatedDevicesSizes: () => getEmulatedDevicesSizes(),
-    batchEnd: async ({timeout} = {}) => {
-      logger.log(`[handlers] batchEnd, timeout=${timeout}`);
-      return await pollBatchEnd({timeout});
+    batchEnd: async () => {
+      logger.log(`[handlers] batchEnd`);
+      return await pollBatchEnd();
     },
 
     putResource: (id, buffer) => {
@@ -227,4 +221,3 @@ function makeHandlers({
 }
 
 module.exports = makeHandlers;
-module.exports.TIMEOUT_MSG = TIMEOUT_MSG;

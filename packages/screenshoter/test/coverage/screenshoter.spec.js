@@ -25,10 +25,10 @@ describe('screenshoter', () => {
     return viewport()
   })
 
-  it.skip('take full page screenshot with "scroll" scrolling', () => {
+  it('take full page screenshot with "scroll" scrolling', () => {
     return fullPage({scrollingMode: 'scroll'})
   })
-  it.skip('take full page screenshot with "css" scrolling', () => {
+  it('take full page screenshot with "css" scrolling', () => {
     return fullPage({scrollingMode: 'css'})
   })
 
@@ -39,10 +39,10 @@ describe('screenshoter', () => {
     frame({scrollingMode: 'css'})
   })
 
-  it.skip('take full frame screenshot with "scroll" scrolling', () => {
+  it('take full frame screenshot with "scroll" scrolling', () => {
     return fullFrame({scrollingMode: 'scroll'})
   })
-  it.skip('take full frame screenshot with "css" scrolling', () => {
+  it('take full frame screenshot with "css" scrolling', () => {
     return fullFrame({scrollingMode: 'css'})
   })
 
@@ -81,10 +81,10 @@ describe('screenshoter', () => {
     return regionInFrame({scrollingMode: 'css'})
   })
 
-  it.skip('take full region in frame screenshot with "scroll" scrolling', () => {
+  it('take full region in frame screenshot with "scroll" scrolling', () => {
     return fullRegionInFrame({scrollingMode: 'scroll'})
   })
-  it.skip('take full region in frame screenshot with "css" scrolling', () => {
+  it('take full region in frame screenshot with "css" scrolling', () => {
     return fullRegionInFrame({scrollingMode: 'css'})
   })
 

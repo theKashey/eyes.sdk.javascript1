@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Ability to pass `throwEx` to `browser.eyesGetAllTestResults` in Eyes service
 
 ## 5.29.6 - 2021/2/4
 

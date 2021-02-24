@@ -3,6 +3,14 @@
 
 ## Unreleased
 
+
+ ## 3.0.5 - 2021/2/18
+
+- fix bug with wrong stitching due to fractional offset 
+
+## 3.0.4 - 2021/2/15
+
+- fix scaling issue
 - handle firefox buggy versions
 
 ## 3.0.3 - 2021/1/27
