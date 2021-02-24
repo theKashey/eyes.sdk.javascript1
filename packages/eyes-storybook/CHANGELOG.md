@@ -4,6 +4,7 @@
 
 - fix concurrency message condition
 - add `include` documentation
+- updated to @applitools/eyes-sdk-core@12.14.11 (from 12.14.10)
 
 ## 3.17.0 - 2021/2/23
 
