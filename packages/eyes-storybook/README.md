@@ -334,6 +334,39 @@ _Specifying a value locally in the story takes precedence over the global config
 
 ### `include`
 
+#### global
+
+When provided globally, `include` is a function that receives the story's `kind` and `name`, and `parameters`.
+These properties come from `storybook` and they represent the hierarchy of the stories:
+- `kind` - The stories directory and section, where applicable. Nested directory structures are allowed in `storybook`. These will be suffixed by `/`, while a section - that can hold many directories will be suffixed with a `|`.
+  For example: 
+  - Story named `Button` in the `Components` directory - its `kind` will be `Components`.
+  - Story named `Button` in the `Components` directory under the `App` section - its `kind` will be `App|Components`.
+  - Story named `RadioButton` in the `Radio` subdirectory of the `Components` directory under the `App` section - its `kind` will be `App|Components/Radio`.
+- `name` - the story name.
+  For example: 
+  - Story named `Button` in the `Components` directory - its `name` will be `Button`.
+- `parameters` - custom parameters that can specified in the story.
+
+More information can be found in the [Storybook docs - Naming components and hierarchy](https://storybook.js.org/docs/react/writing-stories/naming-components-and-hierarchy).
+
+You can filter by `kind`, `name`, `parameters`, a combination of them or any logic that will result in a `boolean`. For example:
+```js
+// applitools.config.js
+module.exports = {
+  ...
+  // given the example above
+  // visually test only the stories in the 'Radio' subdirectory
+  include: ({kind}) => {
+    return kind === 'App|Components/Radio'
+  }
+  ...
+}
+```
+> NOTE you can use regular expressions or any other method you'd like, as long as you return a `boolean` from this function
+
+#### component
+
 When `false`, the component will not be visually tested. For example:
 
 ```js
