@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- docs: add `include` documentation
+- fix concurrency message condition
+- add `include` documentation
 
 ## 3.17.0 - 2021/2/23
 
