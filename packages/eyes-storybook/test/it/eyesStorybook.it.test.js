@@ -198,8 +198,8 @@ describe('eyesStorybook', () => {
     const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
 
     // this is the important part, because it's not `true` then `parentBranchBaselineSavedBefore` should be sent in `startInfo`
-    delete config.ignoreGitMergeBase
-    
+    delete config.ignoreGitMergeBase;
+
     let results = await eyesStorybook({
       config: {
         serverUrl,
@@ -218,9 +218,11 @@ describe('eyesStorybook', () => {
       )}/${encodeURIComponent(testResults.getId())}`;
 
       const session = await fetch(sessionUrl).then(r => r.json());
-      expect(session.startInfo.parentBranchBaselineSavedBefore).to.match(/\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}:\d{2}\+\d{2}\:\d{2}/);
+      expect(session.startInfo.parentBranchBaselineSavedBefore).to.match(
+        /\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}:\d{2}\+\d{2}\:\d{2}/,
+      );
     }
-  })
+  });
 
   it('handles ignoreGitMergeBase', async () => {
     const {stream} = testStream();
@@ -231,7 +233,6 @@ describe('eyesStorybook', () => {
     const defaultConfig = {waitBeforeScreenshots: 50};
     const config = generateConfig({argv: {conf: configPath}, defaultConfig, externalConfigParams});
 
-    
     let results = await eyesStorybook({
       config: {
         serverUrl,
