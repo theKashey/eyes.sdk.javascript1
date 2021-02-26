@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.15.0 - 2021/2/26
+
 - add config flag to disable git merge base ([Trello](https://trello.com/c/d390Si2t))
 
 ## 12.14.11 - 2021/2/23
