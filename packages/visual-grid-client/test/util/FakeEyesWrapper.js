@@ -66,6 +66,7 @@ class FakeEyesWrapper extends EventEmitter {
     this._serverConnector = {deleteBatchSessions: () => {}}
     this._emulatedDevices = ['emulated device 1', 'emulated device 2']
     this._iosDevices = ['ios device 1', 'ios device 2']
+    this._configuration = {}
   }
 
   async open(...args) {
@@ -501,6 +502,14 @@ class FakeEyesWrapper extends EventEmitter {
 
   async getIosDevicesSizes() {
     return this._iosDevices
+  }
+
+  getIgnoreGitMergeBase() {
+    return this._configuration.ignoreGitMergeBase
+  }
+
+  setIgnoreGitMergeBase(input) {
+    this._configuration.ignoreGitMergeBase = input
   }
 }
 

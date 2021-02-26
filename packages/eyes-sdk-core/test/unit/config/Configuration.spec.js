@@ -144,6 +144,8 @@ describe('Configuration', () => {
       ]
     } else if (type === '_visualGridOptions') {
       modifiedValue = {polyfillAdoptedStyleSheets: true}
+    } else if (type === '_ignoreGitMergeBase') {
+      modifiedValue = true
     }
     return modifiedValue
   }

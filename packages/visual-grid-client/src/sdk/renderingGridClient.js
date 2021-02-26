@@ -87,6 +87,7 @@ function makeRenderingGridClient({
   dontCloseBatches,
   visualGridOptions,
   concurrentRendersPerTest = 1,
+  ignoreGitMergeBase,
 }) {
   if (saveDebugData) {
     deprecationWarning({deprecatedThing: 'saveDebugData', isDead: true})
@@ -216,6 +217,7 @@ function makeRenderingGridClient({
     userAgent,
     globalState,
     visualGridOptions,
+    ignoreGitMergeBase,
   }
 
   const openEyes = makeOpenEyes(openConfig)

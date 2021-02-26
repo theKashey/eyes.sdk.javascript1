@@ -59,48 +59,6 @@
     "@applitools/eyes-sdk-core" "12.14.2"
     "@applitools/visual-grid-client" "15.5.14"
 
-"@applitools/eyes-sdk-core@12.14.10":
-  version "12.14.10"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.10.tgz#868823be87d860c0c2cb1179eac60c220710923b"
-  integrity sha512-sGoAEARb7jE42B5ifPWBIXOH09/l9qxoNu9MV8dR0h8GyHzu/Py74TvxR5/3o+FHehOSmxVTwR70LCrAAWB+rA==
-  dependencies:
-    "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.4.11"
-    "@applitools/driver" "1.0.4"
-    "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/screenshoter" "3.0.5"
-    "@applitools/snippets" "2.1.1"
-    axios "0.21.1"
-    chalk "3.0.0"
-    cosmiconfig "6.0.0"
-    dateformat "3.0.3"
-    debug "4.2.0"
-    deepmerge "4.2.2"
-    png-async "0.9.4"
-    stack-trace "0.0.10"
-    tunnel "0.0.6"
-
-"@applitools/eyes-sdk-core@12.14.11":
-  version "12.14.11"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.11.tgz#85403b811870dcfc85366f27d9bf1e0f400ac0b0"
-  integrity sha512-4ic9c3zWf0MbbMtniMv1RWFzMcTo2kP2MDne3sjIjgmwwJ24rb1Pnrjn0rZ6t93hmMFpKfhmGEb7+uFYGWMtKw==
-  dependencies:
-    "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.4.11"
-    "@applitools/driver" "1.0.4"
-    "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/screenshoter" "3.0.5"
-    "@applitools/snippets" "2.1.1"
-    axios "0.21.1"
-    chalk "3.0.0"
-    cosmiconfig "6.0.0"
-    dateformat "3.0.3"
-    debug "4.2.0"
-    deepmerge "4.2.2"
-    png-async "0.9.4"
-    stack-trace "0.0.10"
-    tunnel "0.0.6"
-
 "@applitools/eyes-sdk-core@12.14.2":
   version "12.14.2"
   resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.14.2.tgz#aff255ee8a707e26a5929548e3c30138ffb76c33"
@@ -121,6 +79,10 @@
     png-async "0.9.4"
     stack-trace "0.0.10"
     tunnel "0.0.6"
+
+"@applitools/eyes-sdk-core@link:../eyes-sdk-core":
+  version "0.0.0"
+  uid ""
 
 "@applitools/functional-commons@1.6.0", "@applitools/functional-commons@^1.5.5":
   version "1.6.0"
@@ -282,24 +244,9 @@
     postcss-value-parser "4.1.0"
     throat "5.0.0"
 
-"@applitools/visual-grid-client@15.5.22":
-  version "15.5.22"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.5.22.tgz#6c0324dbe4cbd5ab458d19a592591f8ec159ef08"
-  integrity sha512-mUi8LHijmWPjVJ5t0NLNqa73EUlFz6bT81GWYeuDe5W44iJ2MfsViobwfVx+3/YNv0jf3e1fExUTDZ7zE4VdUQ==
-  dependencies:
-    "@applitools/eyes-sdk-core" "12.14.10"
-    "@applitools/functional-commons" "1.6.0"
-    "@applitools/http-commons" "2.4.3"
-    "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/jsdom" "1.0.2"
-    abort-controller "3.0.0"
-    chalk "3.0.0"
-    he "1.2.0"
-    lodash.mapvalues "4.6.0"
-    mime-types "2.1.27"
-    mkdirp "0.5.5"
-    postcss-value-parser "4.1.0"
-    throat "5.0.0"
+"@applitools/visual-grid-client@link:../visual-grid-client":
+  version "0.0.0"
+  uid ""
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.1"
