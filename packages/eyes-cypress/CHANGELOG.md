@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- set explicit timeout for eyesCheckWindow [trello](https://trello.com/c/5Thz1QFs)
 
 ## 3.19.1 - 2021/2/24
 
