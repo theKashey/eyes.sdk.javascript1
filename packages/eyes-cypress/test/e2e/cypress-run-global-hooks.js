@@ -28,8 +28,10 @@ describe('global hooks', () => {
 
   it('works with experimentalRunEvents flag', async () => {
     try {
+      const config = {...cypressConfig, experimentalRunEvents: true};
+      fs.writeFileSync(`${targetTestAppPath}/cypress.json`, JSON.stringify(config, 2, null));
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=simple.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },
@@ -45,7 +47,7 @@ describe('global hooks', () => {
       const config = {...cypressConfig, experimentalRunEvents: false};
       fs.writeFileSync(`${targetTestAppPath}/cypress.json`, JSON.stringify(config, 2, null));
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=simple.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },

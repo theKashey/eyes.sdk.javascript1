@@ -8,7 +8,7 @@ const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client')
 const makeConfig = require('../../../src/plugin/config');
 
 describe('pluginExport', () => {
-  let prevEnv, visualGridClient, logger, on, eyesConfig, __module;
+  let prevEnv, visualGridClient, logger, eyesConfig;
 
   async function startServer() {
     return {
@@ -18,17 +18,10 @@ describe('pluginExport', () => {
 
   beforeEach(() => {
     logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS, 'eyes');
-    on = (_event, _callback) => {};
     visualGridClient = makeVisualGridClient({logger});
     prevEnv = process.env;
     process.env = {};
     eyesConfig = makeConfig().eyesConfig;
-    __module = {
-      exports: (_on, config) => {
-        config.version = '6.3.0';
-        return config;
-      },
-    };
   });
 
   afterEach(() => {
@@ -37,52 +30,59 @@ describe('pluginExport', () => {
 
   it('sets eyesLegcyHooks', async () => {
     const pluginExport = makePluginExport({startServer, eyesConfig, visualGridClient, logger});
-
-    pluginExport(__module);
-    const ret = await __module.exports(on, {});
-    expect(ret).to.eql({
-      eyesPort: 123,
-      eyesDisableBrowserFetching: false,
-      eyesLayoutBreakpoints: undefined,
-      eyesFailCypressOnDiff: true,
-      eyesIsDisabled: false,
-      eyesLegacyHooks: true,
-      eyesBrowser: undefined,
-      version: '6.3.0',
-    });
-
-    __module = {
-      exports: (_on, config) => {
-        config.version = '6.0.0';
-        return {bla: 'blah'};
-      },
+    let __module = {
+      exports: () => ({bla: 'blah'}),
     };
+
     pluginExport(__module);
-    const ret2 = await __module.exports(on, {});
-    expect(ret2).to.eql({
+    const ret = await __module.exports(() => {}, {});
+    expect(ret).to.eql({
       bla: 'blah',
       eyesPort: 123,
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
+      eyesIsDisabled: false,
       eyesLegacyHooks: true,
+      eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
+    });
+
+    __module = {
+      exports: (_on, config) => {
+        config.version = '6.5.0';
+        config.experimentalRunEvents = true;
+        return config;
+      },
+    };
+
+    pluginExport(__module);
+    const ret2 = await __module.exports(() => {}, {});
+    expect(ret2).to.eql({
+      eyesPort: 123,
+      eyesDisableBrowserFetching: false,
+      eyesLayoutBreakpoints: undefined,
+      eyesFailCypressOnDiff: true,
+      eyesLegacyHooks: false,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
+      version: '6.5.0',
+      experimentalRunEvents: true,
     });
   });
 
   it('handles async module.exports', async () => {
     const pluginExport = makePluginExport({startServer, eyesConfig, visualGridClient});
     const __module = {
-      exports: async (_on, config) => {
+      exports: async () => {
         await psetTimeout(0);
-        config.version = '6.3.0';
         return {bla: 'bla'};
       },
     };
 
     pluginExport(__module);
-    const ret = await __module.exports(on, {});
+    const ret = await __module.exports(() => {}, {});
     expect(ret).to.eql({
       bla: 'bla',
       eyesPort: 123,
@@ -92,24 +92,23 @@ describe('pluginExport', () => {
       eyesLegacyHooks: true,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
     });
   });
 
   it('works with disabled eyes', async () => {
+    eyesConfig.eyesIsDisabled = true;
     const pluginExport = makePluginExport({
       startServer,
       eyesConfig,
       visualGridClient,
     });
     const __module = {
-      exports: (_on, config) => {
-        config.version = '6.3.0';
-        return {bla: 'ret', eyesIsDisabled: true};
-      },
+      exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports(on, {});
+    const ret = await __module.exports(() => {}, {});
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -119,15 +118,14 @@ describe('pluginExport', () => {
       eyesLegacyHooks: true,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
     });
   });
 
   it('works with dont fail cypress on diff', async () => {
+    eyesConfig.eyesFailCypressOnDiff = false;
     const __module = {
-      exports: (_on, config) => {
-        config.version = '6.3.0';
-        return {bla: 'ret', eyesFailCypressOnDiff: false};
-      },
+      exports: () => ({bla: 'ret'}),
     };
     const pluginExport = makePluginExport({
       startServer,
@@ -136,7 +134,7 @@ describe('pluginExport', () => {
     });
 
     pluginExport(__module);
-    const ret = await __module.exports(on, {});
+    const ret = await __module.exports(() => {}, {});
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -146,6 +144,7 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
     });
   });
 
@@ -156,14 +155,11 @@ describe('pluginExport', () => {
       visualGridClient,
     });
     const __module = {
-      exports: (_on, config) => {
-        config.version = '6.3.0';
-        return {bla: 'ret'};
-      },
+      exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports(on, {});
+    const ret = await __module.exports(() => {}, {});
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -173,20 +169,19 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
     });
   });
 
   it('works with eyes disableBrowserFetching', async () => {
+    eyesConfig.eyesDisableBrowserFetching = true;
     const pluginExport = makePluginExport({startServer, eyesConfig});
     const __module = {
-      exports: (_on, config) => {
-        config.version = '6.3.0';
-        return {bla: 'ret', eyesDisableBrowserFetching: true};
-      },
+      exports: () => ({bla: 'ret'}),
     };
 
     pluginExport(__module);
-    const ret = await __module.exports(on, {});
+    const ret = await __module.exports(() => {}, {});
     expect(ret).to.eql({
       bla: 'ret',
       eyesPort: 123,
@@ -196,6 +191,7 @@ describe('pluginExport', () => {
       eyesIsDisabled: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
     });
   });
 });

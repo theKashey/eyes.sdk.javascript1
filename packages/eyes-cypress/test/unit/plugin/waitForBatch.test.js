@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const makeWaitForBatch = require('../../../src/plugin/waitForBatch');
 const {concurrencyMsg} = require('../../../src/plugin/concurrencyMsg');
 const {presult} = require('@applitools/functional-commons');
-const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client');
+const {Logger} = require('@applitools/visual-grid-client');
 
 function getErrorsAndDiffs(testResultsArr) {
   return testResultsArr.reduce(
@@ -31,13 +31,11 @@ function processCloseAndAbort({runningTests}) {
 }
 
 describe('waitForBatch', () => {
-  let visualGridClient, logger, waitForBatch;
+  let logger, waitForBatch;
   beforeEach(() => {
     logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS, 'eyes');
-    visualGridClient = makeVisualGridClient({logger});
     waitForBatch = makeWaitForBatch({
       logger,
-      visualGridClient,
       processCloseAndAbort,
       getErrorsAndDiffs,
       errorDigest,

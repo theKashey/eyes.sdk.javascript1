@@ -1,6 +1,5 @@
 {
     "chromeWebSecurity": true,
     "video":false,
-    "nodeVersion":"system",
-    "experimentalRunEvents": true
+    "nodeVersion":"system"
 }

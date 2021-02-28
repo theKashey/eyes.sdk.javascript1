@@ -10,7 +10,9 @@ function setGlobalRunHooks(on, {visualGridClient, logger}) {
   let waitForBatch;
 
   on('before:run', ({config}) => {
-    const {isTextTerminal, testConcurrency} = config;
+    console.log('config', config);
+    const {isTextTerminal, eyesTestConcurrency: testConcurrency} = config;
+    console.log(testConcurrency);
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,
       testConcurrency,

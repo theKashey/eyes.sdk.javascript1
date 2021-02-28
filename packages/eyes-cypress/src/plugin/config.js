@@ -2,25 +2,33 @@
 const {configParams, ConfigUtils, TypeUtils} = require('@applitools/visual-grid-client');
 const {version: packageVersion} = require('../../package.json');
 const agentId = `eyes-cypress/${packageVersion}`;
+const DEFAULT_TEST_CONCURRENCY = 5;
 
 function makeConfig() {
-  const baseConfig = {};
-  const vgConfig = Object.assign(
+  const config = Object.assign(
     {agentId},
     ConfigUtils.getConfig({
-      configParams: [...configParams, 'failCypressOnDiff', 'tapDirPath', 'disableBrowserFetching'],
+      configParams: [
+        ...configParams,
+        'failCypressOnDiff',
+        'tapDirPath',
+        'disableBrowserFetching',
+        'testConcurrency',
+      ],
     }),
   );
 
-  if (vgConfig.failCypressOnDiff === '0') {
-    baseConfig.failCypressOnDiff = false;
+  if (config.failCypressOnDiff === '0') {
+    config.failCypressOnDiff = false;
   }
 
-  if (TypeUtils.isString(vgConfig.showLogs)) {
-    baseConfig.showLogs = vgConfig.showLogs === 'true' || vgConfig.showLogs === '1';
+  if (TypeUtils.isString(config.showLogs)) {
+    config.showLogs = config.showLogs === 'true' || config.showLogs === '1';
   }
 
-  const config = Object.assign(vgConfig, baseConfig);
+  if (TypeUtils.isString(config.testConcurrency)) {
+    config.testConcurrency = Number(config.testConcurrency);
+  }
 
   const eyesConfig = {
     eyesIsDisabled: !!config.isDisabled,
@@ -30,6 +38,7 @@ function makeConfig() {
       config.failCypressOnDiff === undefined ? true : !!config.failCypressOnDiff,
     eyesDisableBrowserFetching: !!config.disableBrowserFetching,
     eyesLegacyHooks: true,
+    eyesTestConcurrency: config.testConcurrency || DEFAULT_TEST_CONCURRENCY,
   };
 
   return {config, eyesConfig};

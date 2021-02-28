@@ -3,6 +3,7 @@ const {describe, it, beforeEach} = require('mocha');
 const {expect} = require('chai');
 const makeHandlers = require('../../../src/plugin/handlers');
 const {PollingStatus} = require('../../../src/plugin/pollingHandler');
+const runningTests = require('../../../src/plugin/runningTests');
 const {promisify: p} = require('util');
 const psetTimeout = p(setTimeout);
 
@@ -385,12 +386,23 @@ describe('handlers', () => {
     });
   });
 
-  it('handles "close"', async () => {
+  it('handles "batchStart"', async () => {
+    runningTests.add({test: 'test'});
     handlers.batchStart({});
-    const {checkWindow, close} = await handlers.open({__test: 123});
+    expect(runningTests.tests).to.deep.equal([]);
+  });
 
-    expect((await checkWindow()).__test).to.equal('checkWindow_123');
-    expect((await close()).__test).to.equal('close_123');
+  it('handles "close"', async () => {
+    let flag;
+    const open = () => ({checkWindow: async x => x, close: () => (flag = 'flag')});
+    const visualGridClient = {
+      openEyes: open,
+    };
+    handlers = makeHandlers({visualGridClient});
+    handlers.batchStart({});
+    await handlers.open({accessibilityValidation: ''});
+    await handlers.close();
+    expect(flag).to.equal('flag');
   });
 
   it('handles "batchEnd"', async () => {

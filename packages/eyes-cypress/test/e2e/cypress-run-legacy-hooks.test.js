@@ -31,7 +31,7 @@ describe('legacy hooks', () => {
     });
     try {
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=simple.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },
@@ -48,7 +48,7 @@ describe('legacy hooks', () => {
         maxBuffer: 1000000,
       });
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=hooks.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=simple.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },

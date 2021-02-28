@@ -13,6 +13,7 @@ describe('config', () => {
       eyesFailCypressOnDiff: true,
       eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
+      eyesTestConcurrency: 5,
     });
   });
 
@@ -27,6 +28,7 @@ describe('config', () => {
       eyesFailCypressOnDiff: true,
       eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
+      eyesTestConcurrency: 5,
     });
   });
 });
