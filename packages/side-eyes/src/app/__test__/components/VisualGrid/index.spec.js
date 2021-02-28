@@ -5,12 +5,24 @@ import Normal from '../../../containers/Normal'
 import uuidv4 from 'uuid/v4'
 jest.mock('../../../../IO/storage')
 import { waitForCompletion } from '../../../../IO/storage'
-import { updateBrowserNamesForBackwardsCompatibility } from '../../../components/VisualGrid/options'
+import {
+  updateBrowserNamesForBackwardsCompatibility,
+  transformLegacySelectedDeviceOptions,
+} from '../../../components/VisualGrid/options'
 
 describe('Visual grid options utils', () => {
   it('supports browsername backwards compatibility', () => {
     const browsers = ['Chrome', 'Edge', 'Firefox']
     expect(updateBrowserNamesForBackwardsCompatibility(browsers)).toEqual(['Chrome', 'Edge Legacy', 'Firefox'])
+  })
+  it('supports backwards compatibility for device name options stored as strings', () => {
+    const options1 = ['iPhone 1', 'iPhone 2']
+    expect(transformLegacySelectedDeviceOptions(options1)).toEqual([
+      { name: 'iPhone 1', type: 'emulator' },
+      { name: 'iPhone 2', type: 'emulator' },
+    ])
+    const options2 = [{ name: 'iPhone 1', type: 'simulator' }]
+    expect(transformLegacySelectedDeviceOptions(options2)).toEqual([{ name: 'iPhone 1', type: 'simulator' }])
   })
 })
 

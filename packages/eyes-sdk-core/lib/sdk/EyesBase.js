@@ -1694,7 +1694,9 @@ class EyesBase {
       if (!this._renderingInfoPromise) {
         this._renderingInfoPromise = this.getAndSaveRenderingInfo()
       }
-      this._scmMergeBaseTimePromise = this.handleScmMergeBaseTime()
+
+      if (!this._configuration.getIgnoreGitMergeBase())
+        this._scmMergeBaseTimePromise = this.handleScmMergeBaseTime()
 
       await this._sessionEventHandlers.testStarted(await this.getAUTSessionId())
 
@@ -2004,7 +2006,9 @@ class EyesBase {
     this._logger.verbose(`Application environment is ${appEnvironment}`)
     await this._sessionEventHandlers.initEnded()
 
-    const parentBranchBaselineSavedBefore = await this._scmMergeBaseTimePromise
+    let parentBranchBaselineSavedBefore
+    if (this._scmMergeBaseTimePromise)
+      parentBranchBaselineSavedBefore = await this._scmMergeBaseTimePromise
 
     this._sessionStartInfo = new SessionStartInfo({
       agentId: this.getFullAgentId(),

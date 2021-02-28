@@ -4,6 +4,10 @@
 
 - use global cypress hooks with `experimentalRunEvents` flag
 
+## 3.19.1 - 2021/2/24
+
+- fix device emulation condition
+
 ## 3.19.0 - 2021/2/22
 
 - fix remove timeout

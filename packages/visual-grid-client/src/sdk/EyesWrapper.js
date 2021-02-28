@@ -189,6 +189,10 @@ class EyesWrapper extends EyesBase {
   async _getAndSaveBatchInfoFromServer(batchId) {
     return this._getBatchInfoWithCache(batchId)
   }
+
+  async setIgnoreGitMergeBase(input) {
+    this._configuration.setIgnoreGitMergeBase(input)
+  }
 }
 
 module.exports = EyesWrapper

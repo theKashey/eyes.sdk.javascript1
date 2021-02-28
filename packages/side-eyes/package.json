@@ -1,6 +1,6 @@
 {
   "name": "applitools-for-selenium-ide",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "repository": "git@github.com:applitools/applitools-for-selenium-ide.git",
   "private": true,
   "scripts": {
@@ -26,7 +26,6 @@
     "release": "(./scripts/deploy.js && node scripts/gh-release.js && yarn release:amo && yarn release:cws);exit 0;",
     "release:amo": "cd build && web-ext-submit",
     "release:cws": "cd build && webstore upload --auto-publish",
-    "preversion": "bongo preversion",
     "version": "node scripts/version.js && git add src/manifest.json && bongo version"
   },
   "jest": {
@@ -70,6 +69,7 @@
     "html-webpack-plugin": "^2.30.1",
     "husky": "^4.3.7",
     "jest": "^24.9.0",
+    "null-loader": "^4.0.1",
     "patch-package": "^5.1.1",
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
@@ -83,8 +83,7 @@
     "url-loader": "^2.0.1",
     "web-ext-submit": "^3.1.1",
     "webpack": "^3.5.6",
-    "webpack-dev-server": "^2.8.2",
-    "null-loader": "^4.0.1"
+    "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
     "@applitools/dom-capture": "11.0.1",

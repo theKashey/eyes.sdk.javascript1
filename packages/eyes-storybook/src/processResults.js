@@ -4,8 +4,9 @@ const chalk = require('chalk');
 const {TestResultsError, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
 const uniq = require('./uniq');
 const concurrencyMsg = require('./concurrencyMsg');
+const defaultConfig = require('./defaultConfig');
 
-function processResults({results = [], totalTime, concurrency}) {
+function processResults({results = [], totalTime, testConcurrency}) {
   let outputStr = '\n';
   const formatter = new TestResultsFormatter();
 
@@ -78,7 +79,7 @@ function processResults({results = [], totalTime, concurrency}) {
     outputStr += `\n${seeDetailsStr}\nTotal time: ${Math.round(totalTime / 1000)} seconds\n`;
   }
 
-  if (concurrency == 10) {
+  if (Number(testConcurrency) === defaultConfig.testConcurrency) {
     outputStr += `\n${concurrencyMsg}\n`;
   }
 

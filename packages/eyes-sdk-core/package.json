@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "12.14.10",
+  "version": "12.15.0",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "2.1.1",
     "@applitools/sdk-release-kit": "0.13.0",
-    "@applitools/visual-grid-client": "15.5.21",
+    "@applitools/visual-grid-client": "15.5.22",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",

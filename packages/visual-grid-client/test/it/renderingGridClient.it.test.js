@@ -69,4 +69,18 @@ describe('renderingGridClient', () => {
     const result = await getIosDevicesSizes()
     expect(result).to.eql(['ios device 1', 'ios device 2'])
   })
+
+  it('handles ignoreGitMergeBase', async () => {
+    const wrapper = createFakeWrapper('http://some_url')
+    expect(wrapper.getIgnoreGitMergeBase()).to.be.undefined
+    const {openEyes} = makeRenderingGridClient({
+      apiKey,
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+      appName,
+      renderWrapper: wrapper,
+      ignoreGitMergeBase: true,
+    })
+    await openEyes({wrappers: [wrapper]})
+    expect(wrapper.getIgnoreGitMergeBase()).to.be.true
+  })
 })
