@@ -148,31 +148,6 @@ describe('pluginExport', () => {
     });
   });
 
-  it('works with eyes timeout', async () => {
-    const pluginExport = makePluginExport({
-      startServer,
-      eyesConfig,
-      visualGridClient,
-    });
-    const __module = {
-      exports: () => ({bla: 'ret'}),
-    };
-
-    pluginExport(__module);
-    const ret = await __module.exports(() => {}, {});
-    expect(ret).to.eql({
-      bla: 'ret',
-      eyesPort: 123,
-      eyesDisableBrowserFetching: false,
-      eyesLayoutBreakpoints: undefined,
-      eyesLegacyHooks: true,
-      eyesIsDisabled: false,
-      eyesFailCypressOnDiff: true,
-      eyesBrowser: undefined,
-      eyesTestConcurrency: 5,
-    });
-  });
-
   it('works with eyes disableBrowserFetching', async () => {
     eyesConfig.eyesDisableBrowserFetching = true;
     const pluginExport = makePluginExport({startServer, eyesConfig});
