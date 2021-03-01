@@ -1,0 +1,1 @@
+export default function snap(stdout: string, name?: string): Promise<void>;
