@@ -51,7 +51,7 @@ describe('JS layout', () => {
   });
 
   it('should not hit the cypress default command timeout', () => {
-    cy.visit('https://apple.com/');
+    cy.visit('http://localhost:5555/breakpoints.html');
     cy.eyesOpen({
       appName: 'JS layout',
       testName: 'testing js layout support in cypress',
