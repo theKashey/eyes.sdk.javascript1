@@ -49,4 +49,20 @@ describe('JS layout', () => {
     cy.eyesCheckWindow('layoutBreakpoints = true');
     cy.eyesClose();
   });
+
+  it.only('should not hit the cypress default command timeout', () => {
+    cy.visit('https://apple.com/');
+    cy.eyesOpen({
+      appName: 'JS layout',
+      testName: 'testing js layout support in cypress',
+      browser: [
+        {name: 'chrome', width: 1000, height: 800},
+        {iosDeviceInfo: {deviceName: 'iPad (7th generation)'}},
+        {chromeEmulationInfo: {deviceName: 'Pixel 4 XL'}},
+      ],
+      layoutBreakpoints: true,
+    });
+    cy.eyesCheckWindow('cypress default command timeout');
+    cy.eyesClose();
+  });
 });
