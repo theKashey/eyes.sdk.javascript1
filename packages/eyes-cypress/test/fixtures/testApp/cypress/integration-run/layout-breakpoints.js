@@ -50,7 +50,7 @@ describe('JS layout', () => {
     cy.eyesClose();
   });
 
-  it.only('should not hit the cypress default command timeout', () => {
+  it('should not hit the cypress default command timeout', () => {
     cy.visit('https://apple.com/');
     cy.eyesOpen({
       appName: 'JS layout',
