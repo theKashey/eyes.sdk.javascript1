@@ -259,10 +259,11 @@ class EyesClassic extends EyesCore {
 
     for (const context of this._context.path) {
       const scrollRootElement = await context.getScrollRootElement()
-      await scrollRootElement.preservePosition(positionProvider)
-
-      if (shouldHideScrollbars) {
-        await scrollRootElement.hideScrollbars()
+      if (scrollRootElement) {
+        await scrollRootElement.preservePosition(positionProvider)
+        if (shouldHideScrollbars) {
+          await scrollRootElement.hideScrollbars()
+        }
       }
     }
 
@@ -272,10 +273,12 @@ class EyesClassic extends EyesCore {
       let currentContext = this._context
       while (currentContext) {
         const scrollRootElement = await currentContext.getScrollRootElement()
-        if (shouldHideScrollbars) {
-          await scrollRootElement.restoreScrollbars()
+        if (scrollRootElement) {
+          if (shouldHideScrollbars) {
+            await scrollRootElement.restoreScrollbars()
+          }
+          await scrollRootElement.restorePosition(positionProvider)
         }
-        await scrollRootElement.restorePosition(positionProvider)
         currentContext = currentContext.parent
       }
       this._context = await originalContext.focus()

@@ -55,6 +55,9 @@ function makeImage(data) {
     async toPng() {
       return toPng(await image)
     },
+    async toFile(path) {
+      return toFile(await image, path)
+    },
   }
 }
 
@@ -92,6 +95,13 @@ async function toPng(image) {
   })
 }
 
+async function toFile(image, path) {
+  const buffer = await toPng(image)
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, buffer, err => (err ? reject(err) : resolve()))
+  })
+}
+
 function extractPngSize(buffer) {
   return buffer.slice(12, 16).toString('ascii') === 'IHDR'
     ? {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
@@ -110,8 +120,8 @@ async function scale(image, scaleRatio) {
 async function resize(image, size) {
   const dst = {
     data: Buffer.alloc(size.height * size.width * 4),
-    width: size.height,
-    height: size.width,
+    width: size.width,
+    height: size.height,
   }
 
   if (dst.width > image.width || dst.height > image.height) {
@@ -191,31 +201,34 @@ async function rotate(image, degrees) {
   return image
 }
 
-async function copy(image1, image2, offset) {
+async function copy(dstImage, srcImage, offset) {
+  const offsetX = Math.round(offset.x)
+  const offsetY = Math.round(offset.y)
+
   // Fix the problem when src image was out of dst image and pixels was copied to wrong position in dst image.
   const maxHeight =
-    offset.y + image2.height <= image1.height ? image2.height : image1.height - offset.y
-  const maxWidth = offset.x + image2.width <= image1.width ? image2.width : image1.width - offset.x
-  for (let y = 0; y < maxHeight; y += 1) {
-    const dstY = offset.y + y
-    const srcY = y
+    offsetY + srcImage.height <= dstImage.height ? srcImage.height : dstImage.height - offsetY
+  const maxWidth =
+    offsetX + srcImage.width <= dstImage.width ? srcImage.width : dstImage.width - offsetX
 
-    for (let x = 0; x < maxWidth; x += 1) {
-      const dstX = offset.x + x
-      const srcX = x
+  for (let srcY = 0; srcY < maxHeight; srcY += 1) {
+    const dstY = offsetY + srcY
+
+    for (let srcX = 0; srcX < maxWidth; srcX += 1) {
+      const dstX = offsetX + srcX
 
       // Since each pixel is composed of 4 values (RGBA) we multiply each index by 4.
-      const dstIndex = (dstY * image1.width + dstX) * 4
-      const srcIndex = (srcY * image2.width + srcX) * 4
+      const dstIndex = (dstY * dstImage.width + dstX) * 4
+      const srcIndex = (srcY * srcImage.width + srcX) * 4
 
-      image1.data[dstIndex] = image2.data[srcIndex]
-      image1.data[dstIndex + 1] = image2.data[srcIndex + 1]
-      image1.data[dstIndex + 2] = image2.data[srcIndex + 2]
-      image1.data[dstIndex + 3] = image2.data[srcIndex + 3]
+      dstImage.data[dstIndex] = srcImage.data[srcIndex]
+      dstImage.data[dstIndex + 1] = srcImage.data[srcIndex + 1]
+      dstImage.data[dstIndex + 2] = srcImage.data[srcIndex + 2]
+      dstImage.data[dstIndex + 3] = srcImage.data[srcIndex + 3]
     }
   }
 
-  return image1
+  return dstImage
 }
 
 function _interpolateCubic(x0, x1, x2, x3, t) {

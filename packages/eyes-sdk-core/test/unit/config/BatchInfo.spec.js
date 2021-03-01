@@ -55,6 +55,19 @@ describe('BatchInfo', () => {
     assert.strictEqual(batch.getStartedAt(), batch2.getStartedAt())
   })
 
+  it('supports custom properties', () => {
+    const properties = [{name: 'custom_prop', value: 'custom value'}]
+    const batch = new BatchInfo({
+      id: 'id',
+      name: 'hello',
+      properties,
+      sequenceName: 'bla',
+    })
+    const anotherBatch = new BatchInfo().setProperties(properties)
+    assert.deepStrictEqual(batch.getProperties(), properties)
+    assert.deepStrictEqual(anotherBatch.getProperties(), properties)
+  })
+
   it('should use APPLITOOLS_BATCH_NOTIFY env variable', async function() {
     process.env.APPLITOOLS_BATCH_NOTIFY = 'true'
     let batchInfo = new BatchInfo()

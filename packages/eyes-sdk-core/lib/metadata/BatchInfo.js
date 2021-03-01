@@ -9,8 +9,9 @@ class BatchInfo {
    * @param {string} info.id
    * @param {string} info.name
    * @param {Date|string} info.startedAt
+   * @param {array} info.properties
    */
-  constructor({id, name, startedAt} = {}) {
+  constructor({id, name, startedAt, properties} = {}) {
     if (startedAt && !(startedAt instanceof Date)) {
       startedAt = DateTimeUtils.fromISO8601DateTime(startedAt)
     }
@@ -18,6 +19,7 @@ class BatchInfo {
     this._id = id
     this._name = name
     this._startedAt = startedAt
+    this._properties = properties
   }
 
   /**
@@ -60,6 +62,20 @@ class BatchInfo {
    */
   setStartedAt(value) {
     this._startedAt = value
+  }
+
+  /**
+   * @return {array}
+   */
+  getProperties() {
+    return this._properties
+  }
+
+  /**
+   * @param {array} value
+   */
+  setProperties(value) {
+    this._properties = value
   }
 
   /**

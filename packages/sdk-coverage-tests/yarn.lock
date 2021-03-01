@@ -7,61 +7,43 @@
   resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.6.0.tgz#ea850c4f7832fcb6396b79b35faccac69f6482a9"
   integrity sha512-fwiF0CbeYHDEOTD/NKaFgaI8LvRcGYG2GaJJiRwcedKko16sQ8F3TK5wXfj2Ytjf+8gjwHwsEEX550z3yvDWxA==
 
-"@applitools/sdk-coverage-tests@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.1.3.tgz#447f53de1a9cc3c00fa1cadbe6cae319151afced"
-  integrity sha512-Z49Bdsz6r5hVpGPnVd59+mti6PpK3x/npubOWk0Q73fG3C2J1MBsW8k+CLGf5+bzYdqDD9ZZmwMLcU4jX3fFAw==
+"@applitools/sdk-coverage-tests@2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.6.tgz#a9e94ad44bd0b3da2612653e4ceba02414547d01"
+  integrity sha512-HyduEWG0Wlp+ILy51G/KlQR0pkQ0AxODteHMA8LxiPnfYu7JXsquPzhj8CLCEaDnxTMqRMug/Co5EuIcC8Djhw==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
+    "@babel/core" "7.12.10"
     axios "0.20.0"
     chai "4.2.0"
     chai-as-promised "7.1.1"
     chalk "4.1.0"
+    handlebars "4.7.6"
     micromatch "4.0.2"
     node-fetch "2.6.1"
+    sync-fetch "0.3.0"
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-release-kit@^0.10.6":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.10.6.tgz#e6359148f64f8d812509dac2a1850a89eb8cfd7c"
-  integrity sha512-1UMYXeRaHVi++ZYTQ+A9BhfQ51DGdO9AzKwRQFWgHYe7IV3W/Gptkdl42vOo0wk68KfQvgv13eXk6S9oyaoBuQ==
+"@applitools/sdk-release-kit@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.0.tgz#cc8295a1f5d19b2d5a0177c149d355f7fcecab54"
+  integrity sha512-dQgCwkvULl1qGKNWwnoUEnee9oqD1J9h3VuF+w5r7vh+sxF2uXOX4Win5HGieI1h3EFIAcpwqoAjXSkijRW6ZQ==
   dependencies:
-    "@applitools/sdk-shared" "0.5.18"
+    "@applitools/sdk-shared" "0.8.6"
     chalk "3.0.0"
     lodash.pickby "4.6.0"
     micromatch "4.0.2"
     node-fetch "2.6.0"
     yargs "15.0.2"
 
-"@applitools/sdk-shared@0.5.18":
-  version "0.5.18"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.5.18.tgz#c1deaf338596cdf33a21705434b982fcc4d57a4c"
-  integrity sha512-ogDS02Scyr0/Y/yZh2r1CL4NHK7L9RYksparCRBMNOaCwNDxcpAvX9jqzanYZxB2igVir7OLVC2fdsrEpduVaQ==
+"@applitools/sdk-shared@0.8.6":
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.6.tgz#689caace31a2e72c372bcc4136d00ddfbcfa24c3"
+  integrity sha512-4w0OQwu/nHn4TqGvb44bhN8T/gj+KmWdyeGqujnkjiYwBMhLwvMfMdlKS9dTUCy+sZL0Iv2LUtRXpUcMK9gXdw==
   dependencies:
     "@applitools/functional-commons" "1.6.0"
-    "@applitools/sdk-coverage-tests" "2.1.3"
-    chai "4.2.0"
-    chai-as-promised "7.1.1"
-    chalk "3.0.0"
-    cookie-parser "1.4.5"
-    cors "2.8.5"
-    express "4.17.1"
-    filenamify "4.1.0"
-    handlebars "4.7.6"
-    morgan "1.10.0"
-    ncp "2.0.0"
-    node-fetch "2.6.1"
-    prettier "1.18.2"
-    yargs "15.3.1"
-
-"@applitools/sdk-shared@0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.6.1.tgz#21e5e6407e61bcff32494195fe1f78722dea046a"
-  integrity sha512-EW+IqWDSF3RxfWmJuaRHZZzjQiMQsCsXZp4xcFxlNWya9Zin9JgEimWG6nakHGZRuSLt9vKqKsC4Dh8QAOATiQ==
-  dependencies:
-    "@applitools/functional-commons" "1.6.0"
-    "@applitools/sdk-coverage-tests" "2.1.3"
+    "@applitools/sdk-coverage-tests" "2.3.6"
     chai "4.2.0"
     chai-as-promised "7.1.1"
     chalk "3.0.0"

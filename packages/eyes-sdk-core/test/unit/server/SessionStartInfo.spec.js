@@ -33,7 +33,6 @@ describe('SessionStartInfo', () => {
       new Date('2017-07-29T09:01:00.000Z'),
       'someBatchId',
     )
-
     const sessionStartInfo = new SessionStartInfo({
       agentId: 'agent',
       appIdOrName: 'some app',

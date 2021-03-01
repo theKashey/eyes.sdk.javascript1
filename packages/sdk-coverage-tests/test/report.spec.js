@@ -19,17 +19,30 @@ const metadata = {
   TestCheckWindow: {
     isGeneric: true,
     executionMode: 'css',
-    name: 'TestCheckWindow',
+    name: 'test check window with css',
   },
   TestCheckWindow_VG: {
     isGeneric: true,
     executionMode: 'visualgrid',
-    name: 'TestCheckWindow',
+    name: 'test check window with vg',
+    skip: true,
   },
   TestCheckWindow_Scroll: {
     isGeneric: true,
     executionMode: 'scroll',
-    name: 'TestCheckWindow',
+    name: 'test check window with scroll',
+    skip: true,
+  },
+  TestThatWasNotEmitted: {
+    isGeneric: true,
+    executionMode: 'bla',
+    name: 'test that was not emitted',
+    skipEmit: true,
+  },
+  TestThatWasEmittedButNotExecuted: {
+    isGeneric: true,
+    executionMode: 'bla',
+    name: 'test that was emitted but not executed',
   },
 }
 describe('Report', () => {
@@ -89,43 +102,46 @@ describe('Report', () => {
     assert.deepStrictEqual(convertSdkNameToReportName('eyes.webdriverio.javascript4'), 'js_wdio_4')
     assert.deepStrictEqual(convertSdkNameToReportName('eyes-images'), 'js_images')
   })
-  it(`should omit skipped testcases`, () => {
-    const altXmlResult = loadFixture('single-suite-skipped-test.xml')
-    const result = convertJunitXmlToResultSchema({junit: altXmlResult})
-    assert.deepStrictEqual(result.length, 0)
-  })
-  it(`should omit skipped testcases with multiple testcases`, () => {
-    const altXmlResult = loadFixture('single-suite-multiple-tests-with-skipped.xml')
-    const result = convertJunitXmlToResultSchema({junit: altXmlResult, metadata: {}})
-    assert.deepStrictEqual(result.length, 3)
-  })
   it('should convert xml report to QA report schema as JSON', () => {
     assert.deepStrictEqual(convertJunitXmlToResultSchema({junit, metadata}), [
       {
-        test_name: 'TestCheckWindow',
-        parameters: {
-          browser: 'chrome',
-          mode: 'visualgrid',
-        },
-        passed: false,
-        isGeneric: true,
-      },
-      {
-        test_name: 'TestCheckWindow',
+        test_name: 'test check window with css',
         parameters: {
           browser: 'chrome',
           mode: 'css',
         },
         passed: true,
+        isSkipped: false,
         isGeneric: true,
       },
       {
-        test_name: 'TestCheckWindow',
+        test_name: 'test check window with vg',
+        parameters: {
+          browser: 'chrome',
+          mode: 'visualgrid',
+        },
+        passed: undefined,
+        isSkipped: true,
+        isGeneric: true,
+      },
+      {
+        test_name: 'test check window with scroll',
         parameters: {
           browser: 'chrome',
           mode: 'scroll',
         },
-        passed: true,
+        passed: undefined,
+        isSkipped: true,
+        isGeneric: true,
+      },
+      {
+        test_name: 'test that was not emitted',
+        parameters: {
+          browser: 'chrome',
+          mode: 'bla',
+        },
+        passed: undefined,
+        isSkipped: true,
         isGeneric: true,
       },
     ])
@@ -138,31 +154,44 @@ describe('Report', () => {
       sandbox: false,
       results: [
         {
-          test_name: 'TestCheckWindow',
-          isGeneric: true,
-          parameters: {
-            browser: 'chrome',
-            mode: 'visualgrid',
-          },
-          passed: false,
-        },
-        {
-          test_name: 'TestCheckWindow',
-          isGeneric: true,
+          test_name: 'test check window with css',
           parameters: {
             browser: 'chrome',
             mode: 'css',
           },
           passed: true,
+          isSkipped: false,
+          isGeneric: true,
         },
         {
-          test_name: 'TestCheckWindow',
+          test_name: 'test check window with vg',
+          parameters: {
+            browser: 'chrome',
+            mode: 'visualgrid',
+          },
+          passed: undefined,
+          isSkipped: true,
           isGeneric: true,
+        },
+        {
+          test_name: 'test check window with scroll',
           parameters: {
             browser: 'chrome',
             mode: 'scroll',
           },
-          passed: true,
+          passed: undefined,
+          isSkipped: true,
+          isGeneric: true,
+        },
+        {
+          test_name: 'test that was not emitted',
+          parameters: {
+            browser: 'chrome',
+            mode: 'bla',
+          },
+          passed: undefined,
+          isSkipped: true,
+          isGeneric: true,
         },
       ],
       id: undefined,
@@ -178,31 +207,44 @@ describe('Report', () => {
         sandbox: false,
         results: [
           {
-            test_name: 'TestCheckWindow',
-            isGeneric: true,
-            parameters: {
-              browser: 'chrome',
-              mode: 'visualgrid',
-            },
-            passed: false,
-          },
-          {
-            test_name: 'TestCheckWindow',
-            isGeneric: true,
+            test_name: 'test check window with css',
             parameters: {
               browser: 'chrome',
               mode: 'css',
             },
             passed: true,
+            isSkipped: false,
+            isGeneric: true,
           },
           {
-            test_name: 'TestCheckWindow',
+            test_name: 'test check window with vg',
+            parameters: {
+              browser: 'chrome',
+              mode: 'visualgrid',
+            },
+            passed: undefined,
+            isSkipped: true,
             isGeneric: true,
+          },
+          {
+            test_name: 'test check window with scroll',
             parameters: {
               browser: 'chrome',
               mode: 'scroll',
             },
-            passed: true,
+            passed: undefined,
+            isSkipped: true,
+            isGeneric: true,
+          },
+          {
+            test_name: 'test that was not emitted',
+            parameters: {
+              browser: 'chrome',
+              mode: 'bla',
+            },
+            passed: undefined,
+            isSkipped: true,
+            isGeneric: true,
           },
         ],
         id: '111111',

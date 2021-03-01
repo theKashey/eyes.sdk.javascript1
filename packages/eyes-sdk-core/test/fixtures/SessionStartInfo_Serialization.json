@@ -8,6 +8,7 @@
   "batchInfo": {
     "id": "someBatchId",
     "name": "some batch",
+    "properties": [],
     "startedAt": "2017-07-29T09:01:00.000Z",
     "notifyOnCompletion": false
   },

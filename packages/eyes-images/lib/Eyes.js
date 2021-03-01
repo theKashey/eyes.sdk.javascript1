@@ -12,6 +12,7 @@ const {
   NullRegionProvider,
   EyesSimpleScreenshot,
   GeneralUtils,
+  Location,
 } = require('@applitools/eyes-sdk-core')
 
 const {Target} = require('./fluent/Target')
@@ -191,7 +192,7 @@ class Eyes extends EyesBase {
       } else if (checkSettings.getImageProvider()) {
         this._screenshotProvider = checkSettings.getImageProvider()
       } else {
-        this._screenshot = await this._normalizeImage(checkSettings)
+        this._screenshot = await this._normalizeImageFromCheckSettings(checkSettings)
 
         if (!this._viewportSizeHandler.get()) {
           await this.setViewportSize(this._screenshot.getSize())
@@ -216,12 +217,71 @@ class Eyes extends EyesBase {
     }
   }
 
+  async extractText(regions) {
+    if (!TypeUtils.isArray(regions)) regions = [regions]
+
+    const extractTextInputs = []
+
+    for (const userRegion of regions) {
+      const region = {...userRegion}
+
+      const screenshot = await this._normalizeImage(region.image)
+
+      if (!region.target) {
+        region.target = {
+          left: 0,
+          top: 0,
+          width: screenshot.getWidth(),
+          height: screenshot.getHeight(),
+        }
+      }
+
+      await this.getAndSaveRenderingInfo()
+      const screenshotUrl = await this._serverConnector.uploadScreenshot(
+        GeneralUtils.guid(),
+        await screenshot.getImageBuffer(),
+      )
+      extractTextInputs.push({
+        screenshotUrl,
+        region: {...region.target, expected: region.hint},
+        minMatch: region.minMatch,
+        language: region.language,
+      })
+    }
+
+    const results = await Promise.all(
+      extractTextInputs.map(input => this._serverConnector.extractText(input)),
+    )
+
+    return results.reduce((strs, result) => strs.concat(result), [])
+  }
+
+  async extractTextRegions(config) {
+    ArgumentGuard.notNull(config.patterns, 'patterns')
+
+    const screenshot = await this._normalizeImage(config.image)
+
+    await this.getAndSaveRenderingInfo()
+    const screenshotUrl = await this._serverConnector.uploadScreenshot(
+      GeneralUtils.guid(),
+      await screenshot.getImageBuffer(),
+    )
+
+    return this._serverConnector.extractTextRegions({
+      screenshotUrl,
+      patterns: config.patterns,
+      ignoreCase: config.ignoreCase,
+      firstOnly: config.firstOnly,
+      language: config.language,
+    })
+  }
+
   /**
    * @private
    * @param {ImagesCheckSettings} checkSettings - The settings to use when checking the image.
    * @return {Promise<MutableImage>}
    */
-  async _normalizeImage(checkSettings) {
+  async _normalizeImageFromCheckSettings(checkSettings) {
     if (checkSettings.getMutableImage()) {
       return checkSettings.getMutableImage()
     }
@@ -237,6 +297,25 @@ class Eyes extends EyesBase {
     if (checkSettings.getImagePath()) {
       try {
         const data = await FileUtils.readToBuffer(checkSettings.getImagePath())
+        return new MutableImage(data)
+      } catch (err) {
+        throw new EyesError(`Can't read image [${err.message}]`)
+      }
+    }
+
+    throw new EyesError("Can't recognize supported image from checkSettings.")
+  }
+
+  async _normalizeImage(image) {
+    if (image instanceof MutableImage) {
+      return image
+    } else if (TypeUtils.isBuffer(image)) {
+      return new MutableImage(image)
+    } else if (TypeUtils.isBase64(image)) {
+      return new MutableImage(image)
+    } else if (TypeUtils.isString(image)) {
+      try {
+        const data = await FileUtils.readToBuffer(image)
         return new MutableImage(data)
       } catch (err) {
         throw new EyesError(`Can't read image [${err.message}]`)
@@ -369,7 +448,7 @@ class Eyes extends EyesBase {
    * @inheritDoc
    */
   async getImageLocation() {
-    return this._imageLocation
+    return this._imageLocation || Location.ZERO
   }
 
   /**

@@ -23,7 +23,6 @@ const EyesDriverOperationError = require('../errors/EyesDriverOperationError')
  * @return {RectangleSize} viewport size
  */
 async function getViewportSize(logger, context) {
-  logger.verbose('EyesUtils.getViewportSize()')
   let size
   if (!context.driver.isNative) {
     size = await context.execute(snippets.getViewportSize)
@@ -37,7 +36,6 @@ async function getViewportSize(logger, context) {
       }
     }
   }
-  logger.verbose('Done! Viewport size: ', size)
   return new RectangleSize(size)
 }
 /**
@@ -50,47 +48,67 @@ async function setViewportSize(logger, context, requiredViewportSize) {
   ArgumentGuard.notNull(requiredViewportSize, 'requiredViewportSize')
   // First we will set the window size to the required size.
   // Then we'll check the viewport size and increase the window size accordingly.
-  logger.verbose(`setViewportSize(${requiredViewportSize})`)
+  logger.verbose(
+    `EyesUtils.setViewportSize(): called with a requiredViewportSize of ${JSON.stringify(
+      requiredViewportSize,
+    )}`,
+  )
 
   let actualViewportSize = await getViewportSize(logger, context)
-  logger.verbose(`Initial viewport size: ${actualViewportSize}`)
+  logger.verbose(
+    `EyesUtils.setViewportSize(): initial viewport size: ${JSON.stringify(actualViewportSize)}`,
+  )
   // If the viewport size is already the required size
   if (actualViewportSize.equals(requiredViewportSize)) return true
 
   // We move the window to (0,0) to have the best chance to be able to
   // set the viewport size as requested.
   await context.driver.setWindowRect({x: 0, y: 0}).catch(err => {
-    logger.verbose('Warning: Failed to move the browser window to (0,0)', err)
+    logger.verbose(
+      'EyesUtils.setViewportSize(): Warning: Failed to move the browser window to (0,0)',
+      err,
+    )
   })
 
   let actualWindowSize = await context.driver.getWindowRect()
   actualViewportSize = await getViewportSize(logger, context)
-  logger.verbose(`actualWindowSize: ${actualWindowSize}, actualViewportSize: ${actualViewportSize}`)
+  logger.verbose(
+    `EyesUtils.setViewportSize(): actualWindowSize: ${JSON.stringify(
+      actualWindowSize,
+    )}, actualViewportSize: ${JSON.stringify(actualViewportSize)}`,
+  )
 
   const sleep = 3000
   let retries = 3
 
-  while (retries >= 0) {
+  while (retries >= 1) {
     const requiredWindowSize = new RectangleSize(
       actualWindowSize.getWidth() +
         (requiredViewportSize.getWidth() - actualViewportSize.getWidth()),
       actualWindowSize.getHeight() +
         (requiredViewportSize.getHeight() - actualViewportSize.getHeight()),
     )
-    logger.verbose(`Attempt to set window size to ${requiredWindowSize}. Retries left: ${retries}`)
+    logger.verbose(
+      `EyesUtils.setViewportSize(): Attempt to set window size to calculated window size of ${JSON.stringify(
+        requiredWindowSize,
+      )}. Retries left: ${retries}`,
+    )
     await context.driver.setWindowRect(requiredWindowSize)
     await GeneralUtils.sleep(sleep)
     actualViewportSize = await getViewportSize(logger, context)
     if (requiredViewportSize.equals(actualViewportSize)) return true
     logger.verbose(
-      `Attempt to set viewport size to ${requiredViewportSize} failed. actualViewportSize=${actualViewportSize}`,
+      `EyesUtils.setViewportSize(): Attempt to set viewport size to ${JSON.stringify(
+        requiredViewportSize,
+      )} failed. actualViewportSize=${JSON.stringify(actualViewportSize)}`,
     )
-    actualWindowSize = requiredWindowSize
     retries -= 1
   }
 
   logger.verbose(
-    `Failed attempt to set viewport size. actualViewportSize=${actualViewportSize}, requiredViewportSize=${requiredViewportSize}. Trying again...`,
+    `EyesUtils.setViewportSize(): Failed attempt to set viewport size. actualViewportSize=${JSON.stringify(
+      actualViewportSize,
+    )}, requiredViewportSize=${JSON.stringify(requiredViewportSize)}. Trying again...`,
   )
 
   throw new Error('Failed to set viewport size!')

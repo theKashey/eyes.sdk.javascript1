@@ -57,7 +57,7 @@ test('eyes.checkWindow fully (implicit default)', async t => {
 })
 test('eyes.checkWindow fully (target: window)', async t => {
   await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-  await eyes.open({t, appName: 'eyes-testcafe', testName: 'legacy api test: checkWindow viewport'})
+  await eyes.open({t, appName: 'eyes-testcafe', testName: 'legacy api test: checkWindow fully'})
   await eyes.checkWindow({target: 'window'})
   await eyes.close(true)
 })

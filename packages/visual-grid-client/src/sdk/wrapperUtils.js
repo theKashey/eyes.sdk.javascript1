@@ -57,6 +57,7 @@ function configureWrappers({
   useDom,
   enablePatterns,
   ignoreDisplacements,
+  ignoreGitMergeBase,
 }) {
   for (let i = 0, ii = wrappers.length; i < ii; i++) {
     const wrapper = wrappers[i]
@@ -91,6 +92,7 @@ function configureWrappers({
     ignoreBaseline !== undefined && wrapper.setIgnoreBaseline(ignoreBaseline)
     serverUrl !== undefined && wrapper.setServerUrl(serverUrl)
     agentId !== undefined && wrapper.setBaseAgentId(agentId)
+    ignoreGitMergeBase !== undefined && wrapper.setIgnoreGitMergeBase(ignoreGitMergeBase)
   }
 }
 

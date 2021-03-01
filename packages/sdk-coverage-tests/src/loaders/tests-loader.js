@@ -60,8 +60,6 @@ async function testsLoader({
   overrideTests,
   ignoreSkip,
   ignoreSkipEmit,
-  emitSkipped,
-  emitOnly = [],
 }) {
   const {tests, testsConfig} = await loadTests(testsPath)
   overrideTests = overrideTests || (await loadOverrides(overrides))
@@ -82,7 +80,7 @@ async function testsLoader({
     return tests
   }, [])
 
-  return filterTests(normalizedTests, {emitOnly, emitSkipped, ignoreSkipEmit})
+  return normalizedTests
 
   function normalizeTest(test) {
     test.config = test.config || {}
@@ -91,26 +89,27 @@ async function testsLoader({
     test.page = test.page && testsConfig.pages[test.page]
     return test
   }
+}
 
-  function filterTests(tests, {emitOnly, emitSkipped, ignoreSkipEmit}) {
-    if (emitOnly.length > 0) {
-      return tests.filter(test => {
-        return emitOnly.some(pattern => {
-          if (pattern.startsWith('/') && pattern.endsWith('/')) {
-            const regexp = new RegExp(pattern.slice(1, -1), 'i')
-            return regexp.test(test.name)
-          }
-          return test.name === pattern
-        })
+function filterTests(tests, {emitOnly = [], emitSkipped, ignoreSkipEmit}) {
+  if (emitOnly.length > 0) {
+    return tests.filter(test => {
+      return emitOnly.some(pattern => {
+        if (pattern.startsWith('/') && pattern.endsWith('/')) {
+          const regexp = new RegExp(pattern.slice(1, -1), 'i')
+          return regexp.test(test.name)
+        }
+        return test.name === pattern
       })
-    } else {
-      return tests.filter(test => {
-        return (ignoreSkipEmit || !test.skipEmit) && (emitSkipped || !test.skip)
-      })
-    }
+    })
+  } else {
+    return tests.filter(test => {
+      return (ignoreSkipEmit || !test.skipEmit) && (emitSkipped || !test.skip)
+    })
   }
 }
 
 exports.loadTests = loadTests
 exports.transformTests = transformTests
 exports.testsLoader = testsLoader
+exports.filterTests = filterTests

@@ -142,19 +142,23 @@ class EyesScreenshot {
       screenshotType || (await EyesScreenshot.getScreenshotType(this._image, this._eyes))
     this._context = this._eyes._context
 
-    // TODO this throws exception on mobile native apps
-    this._currentFrameScrollPosition = await this._context
-      .getInnerOffset()
-      .catch(() => Location.ZERO)
+    this._currentFrameScrollPosition = await this._context.getInnerOffset()
+
+    this._logger.verbose('currentFrameScrollPosition', this._currentFrameScrollPosition)
 
     this._frameLocationInScreenshot = this._context.isMain
       ? Location.ZERO
       : await this._context.getLocationInViewport()
     this._frameSize = await this._context.getClientSize()
 
-    this._logger.verbose('Calculating frame window...')
     this._frameRect = new Region(this._frameLocationInScreenshot, this._frameSize)
+    this._logger.verbose(
+      `Calculating frame window: frameRect=${
+        this._frameRect
+      } | image=${this._image.getWidth()}x${this._image.getHeight()}`,
+    )
     this._frameRect.intersect(new Region(0, 0, this._image.getWidth(), this._image.getHeight()))
+    this._logger.verbose('frameRect after intersection:', this._frameRect)
     if (this._frameRect.isSizeEmpty()) {
       throw new Error('Got empty frame window for screenshot!')
     }

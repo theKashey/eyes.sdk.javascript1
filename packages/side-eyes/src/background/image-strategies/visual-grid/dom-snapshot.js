@@ -5,6 +5,7 @@ export async function getSnapshot(tabId) {
   removeCrossOriginIframes(snapshot)
   snapshot.resourceContents = mapResourceContents(snapshot)
   mapFrameResourceContents(snapshot.frames)
+  delete snapshot.blobs
 
   return snapshot
 }

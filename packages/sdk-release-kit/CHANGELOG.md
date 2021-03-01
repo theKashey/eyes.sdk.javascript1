@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+
+## 0.13.0 - 2021/2/4
+
+- make postversion command just "postversion" (instead of having two command names) - fixes logging for postversion
+
+## 0.12.2 - 2021/2/2
+
+- add logging to postversion
+- updated to @applitools/sdk-shared@0.8.6 (from 0.8.5)
+
+## 0.12.1 - 2021/1/27
+
 - chore: add husky
 
 ## 0.12.0 - 2021/1/20

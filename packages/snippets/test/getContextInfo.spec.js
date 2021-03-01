@@ -12,9 +12,10 @@ describe('getContextInfo', () => {
     }
 
     async function mapResult(result) {
-      const properties = Array.from(await result.getProperties(), ([_, value]) =>
-        value._objectType === 'node' ? value.asElement() : value.jsonValue(),
-      )
+      const properties = Array.from(await result.getProperties(), ([_, value]) => {
+        const [__, type] = value.toString().split('@')
+        return type === 'node' ? value.asElement() : value.jsonValue()
+      })
       return Promise.all(properties)
     }
 

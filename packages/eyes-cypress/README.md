@@ -72,7 +72,7 @@ Add this file to your project with either:
 
 In order to authenticate via the Applitools server, you need to supply the Eyes-Cypress SDK with the API key you got from Applitools. Read more about how to obtain the API key [here](https://applitools.com/docs/topics/overview/obtain-api-key.html).
 
-To do this, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
+To do so, set the environment variable `APPLITOOLS_API_KEY` to the API key before running your tests.
 For example, on Linux/Mac:
 
 ```bash
@@ -92,11 +92,28 @@ It's also possible to specify the API key in the `applitools.config.js` file. Th
 ```js
 module.exports = {
   apiKey: 'YOUR_API_KEY',
-  ...
+  // ...
 }
 ```
 
 See the [Advanced configuration](#method-3-the-applitoolsconfigjs-file) section below for more information on using the config file.
+
+### Eyes server URL (optional)
+
+In case the Eyes server is deployed at a location different than https://eyes.applitools.com, then it should be configured similarly to the Applitools API key above. To obtain the server url of your Applitools Eyes dashboard just copy the origin of its url (for example https://MY_COMPANYY.applitools.com).
+
+```bash
+export APPLITOOLS_SERVER_URL=<YOUR_SERVER_URL>
+```
+
+It's also possible to specify the server URL in the `applitools.config.js` file. The property name is `serverUrl`. For example:
+
+```js
+module.exports = {
+  serverUrl: 'YOUR_SERVER_URL',
+  // ...
+}
+```
 
 ## Usage
 
@@ -184,7 +201,6 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [The `applitools.config.js` file](#Method-3-The-applitoolsconfigjs-file)
 - [Configuring the browser](#Configuring-the-browser)
   - [Device emulation](#Device-emulation)
-- [Tests timeout](#Setting-a-timeout)
 - [IDE Code Completion](#Intelligent-Code-Completion)
   - [Triple slash directives](#1-Triple-slash-directives)
   - [Reference type declarations via `tsconfig`](#2-Reference-type-declarations-via-tsconfig)
@@ -431,8 +447,6 @@ cy.eyesCheckWindow({matchLevel: 'Layout'})
 
 The different matchLevels are specified here:  https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/MatchLevel.js
 
-<!-- TODO uncomment when polyfillAdoptedStyleSheets feature is released
-
 ##### `visualGridOptions`
 
 An object that specifies options to configure renderings on the Ultrafast grid.
@@ -447,7 +461,6 @@ cy.eyesCheckWindow({
   }
 })
 ```
--->
 
 #### Close
 
@@ -678,12 +691,6 @@ Possible values for `iosVersion` are:
 - `'latest'` - the latest iOS version that's supported by the UFG
 - `'latest-1'` - one version prior to the latest version
 - `undefined` - the UFG's default
-
-## Setting a timeout
-
-At the end of the test run, Eyes-Cypress will wait for the results of all visual tests. There's a default timeout of 2 minutes between the end of the test run and the end of the visual tests (although it should not take so long normally!).
-
-It's possible to change that default by setting the configuration variable `eyesTimeout`, in one of the various ways to configure Cypress, as described in the [Cypress plugins documentation](https://docs.cypress.io/guides/references/configuration.html).
 
 ## Intelligent Code Completion
 

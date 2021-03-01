@@ -10,7 +10,7 @@ const {lint} = require('../lint')
 const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
-const {gitAdd, gitCommit, gitPushWithTags, isChanged} = require('../git')
+const {gitAdd, gitCommit, gitPushWithTags, isChanged, gitStatus} = require('../git')
 const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
 
 yargs
@@ -64,16 +64,26 @@ yargs
     await gitAdd('CHANGELOG.md')
   })
   .command(
-    ['postversion, post-version'],
+    ['postversion'],
     'Supportive steps to after a package has been versioned',
     {
       recipient: {alias: 'r', type: 'string'},
       skipReleaseNotification: {alias: 'sr', type: 'boolean'},
     },
     async args => {
-      await gitPushWithTags()
-      if (!args.skipReleaseNotification) {
-        await sendReleaseNotification(args.cwd, args.recipient)
+      try {
+        console.log('[bongo postversion] pushing with tags')
+        await gitPushWithTags()
+        if (args.skipReleaseNotification) {
+          console.log('[bongo postversion] skipping release notification')
+        } else if (!args.skipReleaseNotification) {
+          console.log('[bongo postversion] sending release notification')
+          await sendReleaseNotification(args.cwd, args.recipient)
+          console.log('[bongo postversion] release notification sent')
+        }
+        console.log('[bongo postversion] done!')
+      } catch (err) {
+        console.log(chalk.yellow(err.message))
       }
     },
   )
@@ -135,8 +145,11 @@ yargs
       upgradeAll: {type: 'boolean', default: false},
     },
     async args => {
+      console.log('[bongo deps] running...')
       await deps(args)
+      console.log('[bongo deps] updated deps. now committing...')
       await commitFiles(args)
+      console.log('[bongo deps] done')
     },
   )
   .demandCommand(1, 'exit')
@@ -166,18 +179,22 @@ async function deps({cwd, upgradeAll}) {
 
 async function commitFiles({cwd, skipCommit}) {
   if (!skipCommit) {
+    console.log('[bongo] commit files running...\n', (await gitStatus()).stdout)
     const files = ['package.json', 'CHANGELOG.md', 'yarn.lock']
     for (const file of files) {
       // git add fails when trying to add files that weren't changed
       if (await isChanged(file)) {
+        console.log(`[bongo] git add changed file: ${file}`)
         await gitAdd(file)
       }
     }
 
     // git commit fails when trying to commit files that weren't changed
+    console.log(`[bongo] committing changed files:\n${(await gitStatus()).stdout}`)
     if (await isChanged(...files)) {
       const pkgName = JSON.parse(fs.readFileSync(path.resolve(cwd, 'package.json'))).name
       await gitCommit(`[auto commit] ${pkgName}: upgrade deps`)
+      console.log(`[bongo] actually committed files`)
     }
   }
 }

@@ -2,7 +2,39 @@
 
 ## Unreleased
 
+
+## 3.18.0 - 2021/2/26
+
+- support `ignoreGitMergeBase`
+- updated to @applitools/eyes-sdk-core@12.15.0 (from 12.14.11)
+- updated to @applitools/visual-grid-client@15.6.0 (from 15.5.22)
+
+## 3.17.1 - 2021/2/24
+
+- fix concurrency message condition
+- add `include` documentation
+- updated to @applitools/eyes-sdk-core@12.14.11 (from 12.14.10)
+
+## 3.17.0 - 2021/2/23
+
+- don't auto-populate the batch name when not specified ([Trello](https://trello.com/c/MGGJ3Rh8))
+- updated to @applitools/dom-snapshot@4.4.11 (from 4.4.10)
+- updated to @applitools/eyes-sdk-core@12.14.10 (from 12.14.6)
+- updated to @applitools/visual-grid-client@15.5.22 (from 15.5.19)
+
+## 3.16.5 - 2021/1/31
+
+- updated to @applitools/dom-snapshot@4.4.10 (from 4.4.9)
+- updated to @applitools/eyes-sdk-core@12.14.6 (from 12.14.5)
+- updated to @applitools/visual-grid-client@15.5.19 (from 15.5.17)
+
+## 3.16.4 - 2021/1/31
+
 - chore: add husky
+- updated to @applitools/dom-snapshot@4.4.9 (from 4.4.7)
+- updated to @applitools/eyes-puppeteer@1.4.3 (from 1.4.2)
+- updated to @applitools/eyes-sdk-core@12.14.5 (from 12.13.4)
+- updated to @applitools/visual-grid-client@15.5.17 (from 15.5.10)
 
 ## 3.16.3 - 2021/1/15
 

@@ -197,6 +197,7 @@ describe('EyesBase', () => {
         batchInfo: {
           name: 'batchName',
           id: 'batchId',
+          properties: [],
           notifyOnCompletion: true,
           batchSequenceName: 'sequenceName',
           startedAt: '2020-11-03T07:46:55.859Z',

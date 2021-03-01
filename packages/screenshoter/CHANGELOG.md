@@ -3,8 +3,33 @@
 
 ## Unreleased
 
+
+ ## 3.0.5 - 2021/2/18
+
+- fix bug with wrong stitching due to fractional offset 
+
+## 3.0.4 - 2021/2/15
+
+- fix scaling issue
+- handle firefox buggy versions
+
+## 3.0.3 - 2021/1/27
+
+- no changes
+- updated to @applitools/utils@1.0.1 (from 1.0.0)
+- updated to @applitools/utils@1.0.1 (from 1.0.0)
+## 3.0.2 - 2021/1/27
+
+- no changes
+## 3.0.1 - 2021/1/27
+- no changes
+## 3.0.0 - 2021/1/26
+
+- `crop`, `scale` and `rotate` now should be placed in `stabilization` object
+- rename `context` to `frames`
+- rename `isFully` to `fully`
+- integrate dom-capture
 - chore: add husky
-- add `Galaxy S20` device name to enum
 - fix bug when screenshots on iPad were taken with Safari navigation bar and iOS status bar
 
 ## 2.1.1 - 2021/1/15

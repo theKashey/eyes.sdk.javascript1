@@ -27,6 +27,14 @@ describe('getElementContentSize', () => {
       const size = await page.evaluate(getElementContentSize, [element])
       assert.deepStrictEqual(size, {width: 294, height: 294})
     })
+
+    it('return size of translated html element', async () => {
+      await page.goto(url)
+      page.evaluate(() => (document.documentElement.style.transform = 'translate(-10px, -11px)'))
+      const element = await page.$('html')
+      const size = await page.evaluate(getElementContentSize, [element])
+      assert.deepStrictEqual(size, {width: 3000, height: 3000})
+    })
   })
 
   for (const name of ['internet explorer', 'ios safari']) {
@@ -57,6 +65,14 @@ describe('getElementContentSize', () => {
         const element = await driver.$('#static')
         const size = await driver.execute(getElementContentSize, [element])
         assert.deepStrictEqual(size, {width: 294, height: 294})
+      })
+
+      it('return size of translated html element', async () => {
+        await driver.url(url)
+        driver.execute('document.documentElement.style.transform = "translate(-10px, -11px)"')
+        const element = await driver.$('html')
+        const size = await driver.execute(getElementContentSize, [element])
+        assert.deepStrictEqual(size, {width: 3000, height: 3000})
       })
     })
   }

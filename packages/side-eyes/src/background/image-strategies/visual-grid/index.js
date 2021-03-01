@@ -1,9 +1,12 @@
 import { getSnapshot } from './dom-snapshot'
 
 export function buildCheckUsingVisualGrid(eyes, tabId) {
-  return async (params = {}) =>
+  return async (params = {}) => {
+    const snapshot = await getSnapshot(tabId)
     eyes.checkWindow({
-      ...(await getSnapshot(tabId)),
+      url: snapshot.url,
+      snapshot,
       ...params,
     })
+  }
 }

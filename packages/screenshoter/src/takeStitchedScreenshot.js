@@ -2,30 +2,24 @@ const utils = require('@applitools/utils')
 const makeImage = require('./image')
 const makeTakeScreenshot = require('./takeScreenshot')
 const saveScreenshot = require('./saveScreenshot')
-const scrollIntoViewport = require('./scrollIntoViewport')
 
-async function takeStitchedImage({
+async function takeStitchedScreenshot({
   logger,
   context,
   scroller,
   region,
-  rotate,
-  crop,
-  scale,
   overlap = 50,
   wait,
+  stabilization,
   debug = {},
 }) {
   logger.verbose('Taking full image of...')
 
-  const scrollerState = await scroller.getState()
   const scrollerRegion = utils.geometry.region({x: 0, y: 0}, await scroller.getSize())
   logger.verbose(`Scroller size: ${scrollerRegion}`)
 
-  await scrollIntoViewport({logger, context, scroller, region})
-
   const driver = context.driver
-  const takeScreenshot = makeTakeScreenshot({logger, driver, rotate, crop, scale, debug})
+  const takeScreenshot = makeTakeScreenshot({logger, driver, stabilization, debug})
 
   const initialOffset = region ? utils.geometry.location(region) : {x: 0, y: 0}
   const actualOffset = await scroller.moveTo(initialOffset)
@@ -108,8 +102,6 @@ async function takeStitchedImage({
     }
   }
 
-  await scroller.restoreState(scrollerState)
-
   logger.verbose(`Extracted entire size: ${region}`)
   logger.verbose(`Actual stitched size: ${stitchedSize}`)
 
@@ -127,4 +119,4 @@ async function takeStitchedImage({
   return {image: composition, region: cropRegion}
 }
 
-module.exports = takeStitchedImage
+module.exports = takeStitchedScreenshot

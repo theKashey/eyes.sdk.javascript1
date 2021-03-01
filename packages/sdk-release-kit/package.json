@@ -1,6 +1,6 @@
 {
   "name": "@applitools/sdk-release-kit",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "engines": {
     "node": ">=10.0.0"
   },
@@ -36,7 +36,7 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
-    "@applitools/sdk-shared": "0.8.5",
+    "@applitools/sdk-shared": "0.8.6",
     "chalk": "3.0.0",
     "lodash.pickby": "4.6.0",
     "micromatch": "4.0.2",

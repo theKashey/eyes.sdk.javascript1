@@ -65,6 +65,7 @@ function makeOpenEyes({
   wrappers: _wrappers,
   visualGridOptions: _visualGridOptions,
   concurrentRendersPerTest,
+  ignoreGitMergeBase,
 }) {
   return async function openEyes({
     testName,
@@ -210,6 +211,7 @@ function makeOpenEyes({
       ignoreBaseline,
       serverUrl,
       agentId,
+      ignoreGitMergeBase,
     })
 
     if (!globalState.batchStore.hasCloseBatch()) {

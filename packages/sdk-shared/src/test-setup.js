@@ -90,6 +90,18 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
+  'iPhone 11 Pro Max': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      appiumVersion: '1.18.3',
+      deviceName: 'iPhone 11 Pro Max Simulator',
+      deviceOrientation: 'portrait',
+      platformVersion: '14.0',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
   'iPhone XS': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -213,6 +225,21 @@ const BROWSERS = {
     options: {
       name: 'Safari 12',
       seleniumVersion: '3.4.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'firefox-48': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      legacy: {
+        browserName: 'firefox',
+        platform: 'Windows 10',
+        version: '48.0',
+      },
+    },
+    options: {
+      name: 'Firefox 48',
       ...SAUCE_CREDENTIALS,
     },
   },

@@ -248,6 +248,9 @@ class Configuration {
     /** @type {number} */
     this._abortIdleTestTimeout = undefined
 
+    /** @type {boolean} */
+    this._ignoreGitMergeBase = undefined
+
     if (configuration) {
       this.mergeConfig(configuration)
     }
@@ -1336,6 +1339,16 @@ class Configuration {
     return this
   }
 
+  getIgnoreGitMergeBase() {
+    return this._ignoreGitMergeBase
+  }
+
+  setIgnoreGitMergeBase(input) {
+    ArgumentGuard.isBoolean(input, 'ignoreGitMergeBase')
+    this._ignoreGitMergeBase = input
+    return this
+  }
+
   /**
    * @param {Configuration|object} other
    */
@@ -1391,6 +1404,7 @@ class Configuration {
       ignoreDisplacements: this.getIgnoreDisplacements(),
       accessibilitySettings: this.getAccessibilityValidation(),
       visualGridOptions: this.getVisualGridOptions(),
+      ignoreGitMergeBase: this.getIgnoreGitMergeBase(),
     }
   }
 

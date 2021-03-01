@@ -436,26 +436,30 @@ class EyesCore extends EyesBase {
               height: region.target.height,
             }
           : region.target,
-        isFully: true,
+        fully: true,
+        dom: true,
         hideScrollbars: false, // because otherwise DOM will not be aligned with image // this._configuration.getHideScrollbars(),
         hideCaret: this._configuration.getHideCaret(),
         scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
         overlap: this._configuration.getStitchOverlap(),
         wait: this._configuration.getWaitBeforeScreenshots(),
-        crop:
-          this._cutProviderHandler.get() instanceof NullCutProvider
-            ? null
-            : this._cutProviderHandler.get().toObject(),
-        scale:
-          this._scaleProviderHandler.get() instanceof NullScaleProvider
-            ? null
-            : this._scaleProviderHandler.get().getScaleRatio(),
+        stabilization: {
+          crop:
+            this._cutProviderHandler.get() instanceof NullCutProvider
+              ? null
+              : this._cutProviderHandler.get().toObject(),
+          scale:
+            this._scaleProviderHandler.get() instanceof NullScaleProvider
+              ? null
+              : this._scaleProviderHandler.get().getScaleRatio(),
+        },
         debug: {
           path:
             this._debugScreenshotsProvider instanceof NullDebugScreenshotProvider
               ? null
               : this._debugScreenshotsProvider.getPath(),
         },
+        takeDomCapture: () => takeDomCapture(this._logger, this._context),
       })
 
       if (region.hint === undefined && !Region.isRegionCompatible(region.target)) {
@@ -470,11 +474,10 @@ class EyesCore extends EyesBase {
         }
       }
 
-      const domCapture = await takeDomCapture(this._logger, this._context)
       await this.getAndSaveRenderingInfo()
       const [screenshotUrl, domUrl] = await Promise.all([
         this._serverConnector.uploadScreenshot(GeneralUtils.guid(), await screenshot.image.toPng()),
-        this._serverConnector.postDomSnapshot(GeneralUtils.guid(), domCapture),
+        this._serverConnector.postDomSnapshot(GeneralUtils.guid(), screenshot.dom),
       ])
       extractTextInputs.push({
         domUrl,
@@ -508,32 +511,35 @@ class EyesCore extends EyesBase {
     const screenshot = await screenshoter({
       logger: this._logger,
       driver,
+      dom: true,
       hideScrollbars: false,
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
       overlap: this._configuration.getStitchOverlap(),
       wait: this._configuration.getWaitBeforeScreenshots(),
-      crop:
-        this._cutProviderHandler.get() instanceof NullCutProvider
-          ? null
-          : this._cutProviderHandler.get().toObject(),
-      scale:
-        this._scaleProviderHandler.get() instanceof NullScaleProvider
-          ? null
-          : this._scaleProviderHandler.get().getScaleRatio(),
+      stabilization: {
+        crop:
+          this._cutProviderHandler.get() instanceof NullCutProvider
+            ? null
+            : this._cutProviderHandler.get().toObject(),
+        scale:
+          this._scaleProviderHandler.get() instanceof NullScaleProvider
+            ? null
+            : this._scaleProviderHandler.get().getScaleRatio(),
+      },
       debug: {
         path:
           this._debugScreenshotsProvider instanceof NullDebugScreenshotProvider
             ? null
             : this._debugScreenshotsProvider.getPath(),
       },
+      takeDomCapture: () => takeDomCapture(this._logger, this._context),
     })
 
-    const domCapture = await takeDomCapture(this._logger, this._context)
     await this.getAndSaveRenderingInfo()
     const [screenshotUrl, domUrl] = await Promise.all([
       this._serverConnector.uploadScreenshot(GeneralUtils.guid(), await screenshot.image.toPng()),
-      this._serverConnector.postDomSnapshot(GeneralUtils.guid(), domCapture),
+      this._serverConnector.postDomSnapshot(GeneralUtils.guid(), screenshot.dom),
     ])
 
     return this._serverConnector.extractTextRegions({

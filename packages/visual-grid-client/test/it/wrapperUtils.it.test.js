@@ -49,4 +49,15 @@ describe('wrapperUtils', () => {
     })
     expect(wrapper._configuration.getBatch().getNotifyOnCompletion()).to.be.true
   })
+
+  it('sets ignoreGitMergeBase', () => {
+    let wrapper = new EyesWrapper()
+    configureWrappers({
+      wrappers: [wrapper],
+      browsers,
+      ignoreGitMergeBase: true,
+      userAgents,
+    })
+    expect(wrapper._configuration.getIgnoreGitMergeBase()).to.be.true
+  })
 })
