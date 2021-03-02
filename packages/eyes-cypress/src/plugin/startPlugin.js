@@ -1,12 +1,5 @@
 'use strict';
-
-const {
-  makeVisualGridClient,
-  configParams,
-  ConfigUtils,
-  Logger,
-  TypeUtils,
-} = require('@applitools/visual-grid-client');
+const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client');
 const makeStartServer = require('./server');
 const makePluginExport = require('./pluginExport');
 const {startApp} = require('./app');
@@ -14,34 +7,26 @@ const getErrorsAndDiffs = require('./getErrorsAndDiffs');
 const processCloseAndAbort = require('./processCloseAndAbort');
 const errorDigest = require('./errorDigest');
 const makeHandlers = require('./handlers');
-const {version: packageVersion} = require('../../package.json');
-const agentId = `eyes-cypress/${packageVersion}`;
+const makeConfig = require('./config');
 
-const config = Object.assign(
-  {agentId},
-  ConfigUtils.getConfig({
-    configParams: [...configParams, 'failCypressOnDiff', 'tapDirPath', 'disableBrowserFetching'],
-  }),
-);
-if (config.failCypressOnDiff === '0') {
-  config.failCypressOnDiff = false;
-}
-if (TypeUtils.isString(config.showLogs)) {
-  config.showLogs = config.showLogs === 'true' || config.showLogs === '1';
-}
-
+const {config, eyesConfig} = makeConfig();
 const logger = new Logger(config.showLogs, 'eyes');
+
+const visualGridClient = makeVisualGridClient(
+  Object.assign(config, {logger: (logger.extend && logger.extend('vgc')) || logger}),
+);
+
 const handlers = makeHandlers({
   logger,
   config,
-  makeVisualGridClient,
+  visualGridClient,
   processCloseAndAbort,
   getErrorsAndDiffs,
   errorDigest,
 });
+
 const app = startApp({handlers, logger});
 const startServer = makeStartServer({app, logger});
-
 logger.log('eyes-cypress plugin running with config:', config);
 
-module.exports = makePluginExport({startServer, config});
+module.exports = makePluginExport({startServer, eyesConfig, visualGridClient, logger});

@@ -18,25 +18,19 @@ function getGlobalConfigProperty(prop) {
   const shouldParse = ['eyesBrowser', 'eyesLayoutBreakpoints'];
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
-
-if (!Cypress.config('eyesIsDisabled')) {
+if (
+  !getGlobalConfigProperty('eyesIsDisabled') &&
+  (getGlobalConfigProperty('eyesLegacyHooks') || getGlobalConfigProperty('isInteractive'))
+) {
   const batchEnd = poll(() => {
     return sendRequest({command: 'batchEnd'});
   });
 
   before(() => {
-    const userAgent = navigator.userAgent;
-    const viewport = {
-      width: getGlobalConfigProperty('viewportWidth'),
-      height: getGlobalConfigProperty('viewportHeight'),
-    };
-    let browser = getGlobalConfigProperty('eyesBrowser');
-    handleCypressViewport(browser).then({timeout: 86400000}, () =>
-      sendRequest({
-        command: 'batchStart',
-        data: {viewport, userAgent, isInteractive: getGlobalConfigProperty('isInteractive')},
-      }),
-    );
+    sendRequest({
+      command: 'batchStart',
+      data: {isInteractive: getGlobalConfigProperty('isInteractive')},
+    });
   });
 
   after(() => {
@@ -55,8 +49,18 @@ let isCurrentTestDisabled;
 Cypress.Commands.add('eyesOpen', function(args = {}) {
   Cypress.config('eyesOpenArgs', args);
   Cypress.log({name: 'Eyes: open'});
+  const userAgent = navigator.userAgent;
   const {title: testName} = this.currentTest || this.test;
-  const {browser, isDisabled} = args;
+  const {browser: eyesOpenBrowser, isDisabled} = args;
+  const globalBrowser = getGlobalConfigProperty('eyesBrowser');
+  const defaultBrowser = {
+    width: getGlobalConfigProperty('viewportWidth'),
+    height: getGlobalConfigProperty('viewportHeight'),
+    name: 'chrome',
+  };
+
+  const browser =
+    validateBrowser(eyesOpenBrowser) || validateBrowser(globalBrowser) || defaultBrowser;
 
   if (Cypress.config('eyesIsDisabled') && isDisabled === false) {
     throw new Error(
@@ -74,15 +78,10 @@ Cypress.Commands.add('eyesOpen', function(args = {}) {
     }
   }
 
-  function fillDefaultBrowserName(browser) {
-    if (!browser.name && !browser.iosDeviceInfo && !browser.chromeEmulationInfo) {
-      browser.name = 'chrome';
-    }
-  }
   return handleCypressViewport(browser).then({timeout: 15000}, () =>
     sendRequest({
       command: 'open',
-      data: Object.assign({testName}, args),
+      data: Object.assign({testName}, args, {browser, userAgent}),
     }),
   );
 });
@@ -124,3 +123,16 @@ Cypress.Commands.add('eyesClose', () => {
   }
   return sendRequest({command: 'close'});
 });
+
+function fillDefaultBrowserName(browser) {
+  if (!browser.name && !browser.iosDeviceInfo && !browser.chromeEmulationInfo) {
+    browser.name = 'chrome';
+  }
+}
+
+function validateBrowser(browser) {
+  if (!browser) return false;
+  if (Array.isArray(browser)) return browser.length ? browser : false;
+  if (Object.keys(browser).length === 0) return false;
+  return browser;
+}

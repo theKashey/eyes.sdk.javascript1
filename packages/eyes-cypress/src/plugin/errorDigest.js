@@ -14,6 +14,7 @@ const formatByStatus = {
   },
   Unresolved: {
     color: 'yellow',
+    chalkFunction: chalk.ansi256(214),
     symbol: '\u26A0',
     title: tests => `Diffs detected - ${tests} tests`,
   },
@@ -23,36 +24,42 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: diff errors', diffs);
   logger.log('errorDigest: test errors', failed);
 
-  const testLink = diffs.length ? `\n${indent()}See details at: ${diffs[0].getUrl()}` : '';
+  const testResultsUrl = diffs.length
+    ? colorify(diffs[0].getUrl(), 'reset', chalk.ansi256(86))
+    : '';
+  const seeDetails = testResultsUrl ? 'See details at:' : '';
+  const testResultsPrefix = `\n${indent()}${seeDetails}`;
+  const footer = testResultsUrl ? `${colorify(testResultsPrefix)} ${testResultsUrl}` : '';
   return (
-    'Eyes-Cypress detected diffs or errors during execution of visual tests:' +
+    colorify('Eyes-Cypress detected diffs or errors during execution of visual tests.') +
+    colorify(` ${seeDetails} ${testResultsUrl}`) +
     testResultsToString(passed, 'Passed') +
     testResultsToString(diffs, 'Unresolved') +
     testResultsToString(failed, 'Failed') +
-    `${testLink}`
+    footer +
+    '\n\n'
   );
 
   function testResultsToString(testResultsArr, category) {
-    const {color, title, symbol} = formatByStatus[category];
+    const {color, title, symbol, chalkFunction} = formatByStatus[category];
     const results = testResultsArr.reduce((acc, testResults) => {
       if (!testResults.isEmpty) {
         const error = hasError(testResults) ? stringifyError(testResults) : undefined;
         acc.push(
-          `${colorify(symbol, color)} ${colorify(
-            error || stringifyTestResults(testResults),
-            'reset',
-          )}`,
+          `${colorify(symbol, color)} ${colorify(error || stringifyTestResults(testResults))}`,
         );
       }
       return acc;
     }, []);
 
-    const coloredTitle = results.length ? colorify(title(results.length), color) : '';
+    const coloredTitle = results.length
+      ? colorify(title(results.length), color, chalkFunction)
+      : '';
     return testResultsSection(coloredTitle, results);
   }
 
-  function colorify(msg, color) {
-    return isInteractive ? msg : chalk[color](msg);
+  function colorify(msg, color = 'reset', chalkFunction = chalk[color]) {
+    return isInteractive ? msg : chalkFunction(msg);
   }
 }
 

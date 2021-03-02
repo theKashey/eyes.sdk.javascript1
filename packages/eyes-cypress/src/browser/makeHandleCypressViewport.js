@@ -13,7 +13,7 @@ const makeHandleCypressViewport = ({cy}) => {
       browser.width !== undefined &&
       browser.height !== undefined
     ) {
-      rv = rv.viewport(browser.width, browser.height);
+      rv = rv.viewport(browser.width, browser.height, {log: false});
     }
     return rv;
   };

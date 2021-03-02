@@ -4,7 +4,7 @@ const flatten = require('lodash.flatten');
 
 function makeWaitForBatch({
   logger,
-  concurrency,
+  testConcurrency,
   processCloseAndAbort,
   getErrorsAndDiffs,
   errorDigest,
@@ -18,7 +18,7 @@ function makeWaitForBatch({
     const {failed, diffs, passed} = getErrorsAndDiffs(testResultsArr);
     await handleBatchResultsFile(testResultsArr);
 
-    if (concurrency == 1) {
+    if (Number(testConcurrency) === 5) {
       console.log(concurrencyMsg);
     }
 

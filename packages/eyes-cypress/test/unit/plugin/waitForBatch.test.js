@@ -4,6 +4,7 @@ const {expect} = require('chai');
 const makeWaitForBatch = require('../../../src/plugin/waitForBatch');
 const {concurrencyMsg} = require('../../../src/plugin/concurrencyMsg');
 const {presult} = require('@applitools/functional-commons');
+const {Logger} = require('@applitools/visual-grid-client');
 
 function getErrorsAndDiffs(testResultsArr) {
   return testResultsArr.reduce(
@@ -30,13 +31,16 @@ function processCloseAndAbort({runningTests}) {
 }
 
 describe('waitForBatch', () => {
-  const logger = process.env.APPLITOOLS_SHOW_LOGS ? console : {log: () => {}};
-  const waitForBatch = makeWaitForBatch({
-    logger,
-    processCloseAndAbort,
-    getErrorsAndDiffs,
-    errorDigest,
-    handleBatchResultsFile: results => results,
+  let logger, waitForBatch;
+  beforeEach(() => {
+    logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS, 'eyes');
+    waitForBatch = makeWaitForBatch({
+      logger,
+      processCloseAndAbort,
+      getErrorsAndDiffs,
+      errorDigest,
+      handleBatchResultsFile: results => results,
+    });
   });
 
   it("returns test count when there's no error", async () => {
@@ -93,7 +97,7 @@ describe('waitForBatch', () => {
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
-        concurrency: 1,
+        testConcurrency: 5,
         handleBatchResultsFile: results => results,
       });
 
@@ -116,7 +120,7 @@ describe('waitForBatch', () => {
         processCloseAndAbort,
         getErrorsAndDiffs,
         errorDigest,
-        concurrency: '1',
+        testConcurrency: '5',
         handleBatchResultsFile: results => results,
       });
 
