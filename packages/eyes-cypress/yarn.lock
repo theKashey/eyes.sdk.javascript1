@@ -177,10 +177,10 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/snaptdout@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@applitools/snaptdout/-/snaptdout-1.0.0.tgz#b3614244850dbb67e0aa240320c301a1e16f2432"
-  integrity sha512-DrASeRFutMTaAMMFlNQ7LOf4hqO6g/oOrQfj9i5/C0tduOrP3a1GV0Uc67Hga1jMHUwu8HIXq20fkYy+qTGdPA==
+"@applitools/snaptdout@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@applitools/snaptdout/-/snaptdout-1.0.1.tgz#d33ab8e8750bb6de3d643af92d4fcdaa99df79af"
+  integrity sha512-hP/SBrWl3xkj0K8sJD4hu9PbFeegJDyJUT7teytx0oe+RAVb6h7OxfFwGyshq49t73zIQ5c10kuM7pnQ2LnQTw==
 
 "@applitools/snippets@2.1.1":
   version "2.1.1"
