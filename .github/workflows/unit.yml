@@ -1,0 +1,34 @@
+
+name: unit test a package
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "name"
+        required: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: test ${{github.event.inputs.name}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: |
+          echo "::group::test ${{github.event.inputs.name}}"
+          cd "packages/${{github.event.inputs.name}}"
+          yarn
+          yarn test:unit
+          echo "::endgroup::"
+    env:
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
