@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+
+# JetBrains
+.idea
+
+# Dependency directory
+node_modules
+
+# Other
+.DS_Store
+.eslintcache
+*.swp
+*~
+.tmp-changelogs.html
+*.log
+tmp
+.env
+.vscode
+typings
+
+# sdk-release-kit
+.bongo
+
+# sdk-coverage-tests
+**/test/generic/
+**/generated/
+coverage-test-report.xml
+coverage-tests-metadata.json
+
+# yarn
+.yarn
+
+# Docker
+docker-compose.yaml
+
+# other
+tags
+support
+eyes-testcafe-bak
+
+# generated
+dist
+types
+docs
+doc
+bin
