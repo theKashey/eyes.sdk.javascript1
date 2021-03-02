@@ -1,5 +1,13 @@
 'use strict';
-const chalk = require('chalk');
+
+const colors = {
+  green: '\x1b[32m',
+  red: '\x1b[31m',
+  teal: '\x1b[38;5;86m',
+  yellow: '\x1b[33m',
+  orange: '\x1b[38;5;214m',
+  reset: '\x1b[0m',
+};
 
 const formatByStatus = {
   Passed: {
@@ -13,8 +21,7 @@ const formatByStatus = {
     title: tests => `Errors - ${tests} tests`,
   },
   Unresolved: {
-    color: 'yellow',
-    chalkFunction: chalk.ansi256(214),
+    color: 'orange',
     symbol: '\u26A0',
     title: tests => `Diffs detected - ${tests} tests`,
   },
@@ -24,9 +31,7 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: diff errors', diffs);
   logger.log('errorDigest: test errors', failed);
 
-  const testResultsUrl = diffs.length
-    ? colorify(diffs[0].getUrl(), 'reset', chalk.ansi256(86))
-    : '';
+  const testResultsUrl = diffs.length ? colorify(diffs[0].getUrl(), 'teal') : '';
   const seeDetails = testResultsUrl ? 'See details at:' : '';
   const testResultsPrefix = `\n${indent()}${seeDetails}`;
   const footer = testResultsUrl ? `${colorify(testResultsPrefix)} ${testResultsUrl}` : '';
@@ -58,8 +63,8 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
     return testResultsSection(coloredTitle, results);
   }
 
-  function colorify(msg, color = 'reset', chalkFunction = chalk[color]) {
-    return isInteractive ? msg : chalkFunction(msg);
+  function colorify(msg, color = 'reset') {
+    return isInteractive ? msg : `${colors[color]}${msg}${colors.reset}`;
   }
 }
 
