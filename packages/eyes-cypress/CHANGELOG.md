@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.20.0 - 2021/3/2
+
 - use global cypress hooks with `experimentalRunEvents` flag
 - updated to @applitools/visual-grid-client@15.6.0 (from 15.5.22)
 
