@@ -31,12 +31,13 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: test errors', failed);
 
   const testResultsUrl = diffs.length ? colorify(diffs[0].getUrl(), 'teal') : '';
-  const seeDetails = testResultsUrl ? 'See details at:' : '';
-  const testResultsPrefix = `\n${indent()}${seeDetails}`;
-  const footer = testResultsUrl ? `${colorify(testResultsPrefix)} ${testResultsUrl}` : '';
+  const testResultsPrefix = testResultsUrl ? 'See details at:' : '';
+  const footer = testResultsUrl
+    ? `\n${indent()}${colorify(testResultsPrefix)} ${testResultsUrl}`
+    : '';
   return (
     colorify('Eyes-Cypress detected diffs or errors during execution of visual tests.') +
-    colorify(` ${seeDetails} ${testResultsUrl}`) +
+    colorify(` ${testResultsPrefix} ${testResultsUrl}`) +
     testResultsToString(passed, 'Passed') +
     testResultsToString(diffs, 'Unresolved') +
     testResultsToString(failed, 'Failed') +
