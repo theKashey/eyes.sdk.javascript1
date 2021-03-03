@@ -305,32 +305,8 @@ async function type(driver, element, keys) {
 async function waitUntilDisplayed(_driver, element, timeout) {
   await element.with({visibilityCheck: true, timeout})
 }
-// NOTE:
-// This is an interim solution until it's properly implemented in core
-async function getWindowRect(driver) {
-  const rect = await executeScript(
-    driver,
-    'return {x: window.screenX, y: screenY, width: window.outerWidth, height: window.outerHeight}',
-  )
-  // ensure there is a width and height
-  if (rect && rect.width && rect.height) return rect
-  const defaultRect = {width: 1024, height: 768}
-  await setWindowRect(driver, defaultRect)
-  return await getWindowRect(driver)
-}
-// NOTE:
-// This is an interim solution until it's properly implemented in core
-async function setWindowRect(driver, {_x, _y, width, height} = {}) {
-  if (width && height) {
-    await driver.resizeWindow(width, height)
-    await executeScript(
-      driver,
-      `if (!window.outerWidth && !window.outerHeight) {
-    window.outerWidth = ${width}
-    window.outerHeight = ${height}
-  }`,
-    )
-  }
+async function setViewportSize(driver, {width, height}) {
+  await driver.resizeWindow(width, height)
 }
 async function getDriverInfo(_driver) {
   return {}
@@ -358,8 +334,7 @@ exports.takeScreenshot = takeScreenshot
 exports.click = click
 exports.type = type
 exports.waitUntilDisplayed = waitUntilDisplayed
-exports.getWindowRect = getWindowRect
-exports.setWindowRect = setWindowRect
+exports.setViewportSize = setViewportSize
 exports.hover = hover
 // no-op for coverage-tests
 exports.build = () => {

@@ -248,6 +248,7 @@ test('eyes failTestcafeOnDiff true', async t => {
 test('should load applitools.config.js', async t => {
   const configPath = path.join(__dirname, 'applitools.config.js')
   const eyes = new Eyes({configPath})
+  await t.resizeWindow(2000, 1000)
   await eyes.open({
     t,
     appName: 'eyes-testcafe',

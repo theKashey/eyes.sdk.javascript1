@@ -269,25 +269,14 @@ test('getElementRect (DOM Node snapshot)', async driver => {
   assert.ok(Number.isInteger(Math.floor(rect.width)))
   assert.ok(Number.isInteger(Math.floor(rect.height)))
 })
-test('getWindowRect', async driver => {
-  const rect = await spec.getWindowRect(driver)
-  assert.ok(Number.isInteger(rect.width))
-  assert.ok(Number.isInteger(rect.height))
-})
-// TODO look into different behavior when running on Linux (e.g., in GH Actions)
-// re: https://github.com/applitools/eyes.sdk.javascript1/runs/1671342571?check_suite_focus=true#step:4:4084
-test.skip('setWindowRect (width, height)', async driver => {
-  const expectedRect = {x: 0, y: 0, width: 500, height: 500}
-  await spec.setWindowRect(driver, expectedRect)
-  const actualRect = await spec.getWindowRect(driver)
+test('setViewportSize (width, height)', async driver => {
+  const expectedRect = {width: 500, height: 500}
+  await spec.setViewportSize(driver, expectedRect)
+  const actualRect = await driver.eval(() => ({
+    width: window.innerWidth, // eslint-disable-line no-undef
+    height: window.innerHeight, // eslint-disable-line no-undef
+  }))
   assert.deepStrictEqual(actualRect, expectedRect)
-})
-test.skip('setWindowRect (x, y)', async driver => {
-  const expectedPosition = {x: 0, y: 10}
-  await spec.setWindowRect(driver, expectedPosition)
-  const actualPosition = await spec.getWindowRect(driver)
-  assert.deepStrictEqual(actualPosition.x, expectedPosition.x)
-  assert.deepStrictEqual(actualPosition.y, expectedPosition.y)
 })
 test('Eyes integration', async driver => {
   const eyes = new Eyes()

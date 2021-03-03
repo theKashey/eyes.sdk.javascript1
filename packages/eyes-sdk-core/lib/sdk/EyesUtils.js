@@ -22,7 +22,7 @@ const EyesDriverOperationError = require('../errors/EyesDriverOperationError')
  * @param {EyesContext} context
  * @return {RectangleSize} viewport size
  */
-async function getViewportSize(logger, context) {
+async function getViewportSize(_logger, context) {
   let size
   if (!context.driver.isNative) {
     size = await context.execute(snippets.getViewportSize)
