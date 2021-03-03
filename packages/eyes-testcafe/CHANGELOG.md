@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.12.6 - 2021/3/3
+
 - fix bug that prevented window resizing from working reliably ([Trello](https://trello.com/c/xNCZNfPi))
 - updated to @applitools/eyes-sdk-core@12.15.0 (from 12.14.10)
 - updated to @applitools/visual-grid-client@15.6.0 (from 15.5.20)
