@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.20.1 - 2021/3/3
+
 - fix footer message formatting in test results
 
 ## 3.20.0 - 2021/3/2
