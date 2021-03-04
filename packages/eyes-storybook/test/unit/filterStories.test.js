@@ -53,4 +53,31 @@ describe('filterStories', () => {
     const config = {include: ({name}) => name === 'aaa'};
     expect(filterStories({stories, config})).to.eql([]);
   });
+
+  it('filter by story title when using a function', () => {
+    const stories = [
+      {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {eyes: {variationUrlParam: 'var1'}}},
+    ];
+    const config = {
+      include: story => {
+        return story.storyTitle === 'bbb: aaa [var1]';
+      },
+    };
+    expect(filterStories({stories, config})).to.eql(stories);
+  });
+
+  it('filter by story title when using a string', () => {
+    const stories = [{name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {}}];
+    const config = {include: 'bbb: aaa'};
+    expect(filterStories({stories, config})).to.eql(stories);
+  });
+
+  it('filter by story title when using a regex string', () => {
+    const stories = [
+      {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {}},
+      {name: 'aaa', kind: 'ccc', bla: 'kuku', parameters: {}},
+    ];
+    const config = {include: /bbb: */};
+    expect(filterStories({stories, config})).to.eql(stories.slice(0, 1));
+  });
 });
