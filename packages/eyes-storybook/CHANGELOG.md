@@ -2,8 +2,11 @@
 
 ## Unreleased
 
-- support passing a string or regex to the include configuration
 
+
+## 3.19.0 - 2021/3/4
+
+- support passing a string or regex to the include configuration
 
 ## 3.18.0 - 2021/2/26
 
