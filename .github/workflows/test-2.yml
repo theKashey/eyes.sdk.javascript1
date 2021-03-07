@@ -1,4 +1,4 @@
-name: Coverage test a package
+name: Coverage test a package 2
 
 on:
   workflow_dispatch:
