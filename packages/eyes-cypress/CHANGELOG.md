@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- use snaptdout as dev dependency
 
 ## 3.20.1 - 2021/3/3
 
