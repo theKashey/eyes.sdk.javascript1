@@ -11,11 +11,12 @@ function getTranslateOffset([
         /^translate\s*\(\s*(\-?[\d, \.]+)px\s*(,\s*(-?[\d, \.]+)px)?\s*\)/,
       )
       if (!match) {
-        throw new Error(`Can't parse CSS transition: ${transform}!`)
+        translates.push({x: 0, y: 0})
+      } else {
+        const x = match[1]
+        const y = match[3] !== undefined ? match[3] : 0
+        translates.push({x: Math.round(-parseFloat(x)), y: Math.round(-parseFloat(y))})
       }
-      const x = match[1]
-      const y = match[3] !== undefined ? match[3] : 0
-      translates.push({x: Math.round(-parseFloat(x)), y: Math.round(-parseFloat(y))})
     }
     return translates
   }, [])
@@ -25,7 +26,7 @@ function getTranslateOffset([
   if (!isSameOffsets) {
     throw new Error('Got different css positions!')
   }
-  return translates[0] || {x: 0, y: 0}
+  return translates[0]
 }
 
 module.exports = getTranslateOffset

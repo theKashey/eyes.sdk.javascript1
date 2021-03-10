@@ -141,11 +141,8 @@ class EyesScreenshot {
     this._screenshotType =
       screenshotType || (await EyesScreenshot.getScreenshotType(this._image, this._eyes))
     this._context = this._eyes._context
-    try {
-      this._currentFrameScrollPosition = await this._context.getInnerOffset()
-    } catch (error) {
-      this._currentFrameScrollPosition = {x: 0, y: 0}
-    }
+    
+    this._currentFrameScrollPosition = await this._context.getInnerOffset()
 
     this._logger.verbose('currentFrameScrollPosition', this._currentFrameScrollPosition)
 
