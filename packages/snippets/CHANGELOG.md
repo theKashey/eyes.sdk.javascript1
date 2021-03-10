@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- fix exception thrown in getInnerOffset [Trello](https://trello.com/c/duAwaupv)
 
 ## 2.1.1 - 2021/1/26
 
