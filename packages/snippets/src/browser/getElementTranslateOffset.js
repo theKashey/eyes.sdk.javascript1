@@ -26,7 +26,7 @@ function getTranslateOffset([
   if (!isSameOffsets) {
     throw new Error('Got different css positions!')
   }
-  return translates[0] || {x: 0, y: 0};
+  return translates[0] || {x: 0, y: 0}
 }
 
 module.exports = getTranslateOffset
