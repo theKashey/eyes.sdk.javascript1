@@ -33,9 +33,7 @@ describe('getElementTranslateOffset', () => {
 
     it('no throw', async () => {
       await page.goto(url)
-      await page.evaluate(
-        () => (document.documentElement.style.transform = 'none'),
-      )
+      await page.evaluate(() => (document.documentElement.style.transform = 'none'))
       const offset = await page.evaluate(getElementTranslateOffset)
       assert.deepStrictEqual(offset, {x: 0, y: 0})
     })
