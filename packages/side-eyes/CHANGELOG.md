@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix error that was preventing classic stitch mode from capturing a screenshot ([Trello](https://trello.com/c/6oVADkSf))
 
 ## 1.12.0 - 2021/2/23
 
