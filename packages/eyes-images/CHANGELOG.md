@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fix: update getScreenshot to support the correct return type when performing a full page stitch ([Trello](https://trello.com/c/6oVADkSf))
+- updated to @applitools/eyes-sdk-core@12.15.0 (from 12.14.10)
 
 ## 4.19.0 - 2021/2/22
 
