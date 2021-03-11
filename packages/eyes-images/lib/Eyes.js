@@ -419,8 +419,8 @@ class Eyes extends EyesBase {
    */
   async getScreenshot() {
     if (this._screenshotProvider) {
-      const {image} = await this._screenshotProvider.getImage()
-      return new EyesSimpleScreenshot(image)
+      const screenshot = await this._screenshotProvider.getImage()
+      return new EyesSimpleScreenshot(screenshot.image || screenshot)
     }
 
     if (this._screenshot) {
