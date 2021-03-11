@@ -1,7 +1,7 @@
 const assert = require('assert')
 const {getElementRect} = require('../dist/index')
 
-describe.skip('getElementRect', () => {
+describe('getElementRect', () => {
   const url = 'https://applitools.github.io/demo/TestPages/SnippetsTestPage/'
 
   describe('chrome', () => {
