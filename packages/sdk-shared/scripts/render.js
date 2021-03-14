@@ -450,9 +450,7 @@ function argsToCheckConfig(args) {
     ignoreDisplacements: args.ignoreDisplacements,
     timeout: args.matchTimeout,
     isFully: args.fully,
-    hooks: args.bcsHook
-      ? {beforeCaptureScreenshot: args.bcsHook}
-      : undefined,
+    hooks: args.bcsHook ? {beforeCaptureScreenshot: args.bcsHook} : undefined,
   }
 }
 
