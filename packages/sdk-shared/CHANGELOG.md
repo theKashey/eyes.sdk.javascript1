@@ -2,8 +2,12 @@
 
 ## Unreleased
 
+
+## 0.8.7 - 2021/3/14
+
 - use latest selenium chrome
 - add husky hooks
+- updated to @applitools/sdk-coverage-tests@2.3.8 (from 2.3.3)
 
 ## 0.8.5 - 2021/1/11
 
