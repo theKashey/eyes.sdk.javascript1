@@ -6,7 +6,7 @@ function generateDockerComposeConfig({saveToDisk, platform = process.platform} =
     version: '3.4',
     services: {
       chrome: {
-        image: 'selenium/standalone-chrome:3.141.59-20201010',
+        image: 'selenium/standalone-chrome',
         volumes: ['/dev/shm:/dev/shm'],
         ...generateNetworkConfigForPlatform(platform),
       },

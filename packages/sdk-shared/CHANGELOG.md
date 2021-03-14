@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- chore: add husky
+- use latest selenium chrome
+- add husky hooks
 
 ## 0.8.5 - 2021/1/11
 
