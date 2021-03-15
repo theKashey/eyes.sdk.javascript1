@@ -82,7 +82,7 @@ For code export the eyes-selenium equivalent for each language is used (although
 
 There’s a build script that webpacks everything and outputs it into a build directory.
 
-You can then load this artifact into the browser as a developer extension (e.g., [in Chrome](https://developer.chrome.com/extensions/getstarted#unpacked), [in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/)). You can also do incremental builds by appending the --watch argument (e.g., `yarn build --watch`).
+You can then load this artifact into the browser as a developer extension (e.g., [in Chrome](https://developer.chrome.com/extensions/getstarted#unpacked), [in Firefox](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/)). You can also do incremental builds by appending the `--watch` argument (e.g., `yarn build --watch`).
 
 ### Test
 
@@ -90,7 +90,7 @@ Automated testing options for browser extensions (at least end-to-end) are quite
 
 For instance, to verify that the state management of the visual grid options picker, jsdom and react-testing-library were used to construct some user flow tests. Also, there is strong test coverage of code-export thanks to the use of fixtures (a.k.a. snapshots in Jest).
 
-It’s worth notng that for the most part, the tests are laid out in __test__ folders alongside the source code that they verify. The e2e tests used to verify code-export in Docker containers is the exception, since it lives in the tests directory in the root of the package.
+It’s worth noting that for the most part, the tests are laid out in __test__ folders alongside the source code that they verify. The e2e tests used to verify code-export in Docker containers is the exception, since it lives in the tests directory in the root of the package.
 
 You can run all of the unit and integration tests with `yarn test`. You can also do incremental test runs with `yarn test --watch`.
 
@@ -99,6 +99,10 @@ Otherwise, you will need to verify functionality by hand. Some examples of this 
 - verify behavior by running some tests with various settings
 - re-save a SIDE project file (to get the latest emitted code) and running it with the command-line runner to verify it works
 perform a code export in Selenium IDE to verify it works and contains Eyes code
+
+### Debug
+
+It's possible to debug the extension with the `debugger` keyword. Place it in the part of the extension's code base that you're working in, build the extension (or wait for the watcher to rebuild if you're using `yarn build --watch`), and reload the extension in the browser. Then open the devtools for the part of the extension where you set the breakpoint (e.g., the devtools panel for the application under test, or by opening the devtools panel for the extension's background page). When you run the application (e.g., click play in SIDE), and the `debugger` keyword will act as a breakpoint.
 
 ### Version
 
