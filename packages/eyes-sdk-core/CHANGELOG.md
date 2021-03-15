@@ -3,6 +3,7 @@
 ## Unreleased
 
 - support enablePatterns & useDom configuration options in checkSettings when running on the visual grid ([Trello](https://trello.com/c/QCK2xDlS))
+- updated to @applitools/dom-snapshot@4.4.13 (from 4.4.12)
 
 ## 12.15.2 - 2021/3/11
 
