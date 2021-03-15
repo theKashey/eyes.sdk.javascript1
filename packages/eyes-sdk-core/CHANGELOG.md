@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix setViewportSize
 ## 12.16.1 - 2021/3/15
 
 - updated to @applitools/dom-snapshot@4.4.14 (from 4.4.13)

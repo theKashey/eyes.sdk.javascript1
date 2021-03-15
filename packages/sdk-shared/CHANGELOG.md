@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- skip baseline test
 ## 0.8.7 - 2021/3/14
 
 - use latest selenium chrome
