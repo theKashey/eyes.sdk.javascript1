@@ -4,7 +4,7 @@ const cwd = process.cwd()
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
 const {testSetup} = require('../..')
 
-describe('baselineBranchName', () => {
+describe.skip('baselineBranchName', () => {
   let driver, destroy, eyes
   before(async () => {
     ;[driver, destroy] = await spec.build({browser: 'chrome'})
@@ -14,7 +14,7 @@ describe('baselineBranchName', () => {
     await destroy()
     await eyes.abortIfNotClosed()
   })
-  it.skip('works', async () => {
+  it('works', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld')
     eyes.setBaselineBranchName('branchDoesntExist')
     await eyes.open(driver, 'baseline branch name', 'works')

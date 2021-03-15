@@ -102,6 +102,7 @@ async function setViewportSize(logger, context, requiredViewportSize) {
         requiredViewportSize,
       )} failed. actualViewportSize=${JSON.stringify(actualViewportSize)}`,
     )
+    actualWindowSize = requiredWindowSize
     retries -= 1
   }
 
