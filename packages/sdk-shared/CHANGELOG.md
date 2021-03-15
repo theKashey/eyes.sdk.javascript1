@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+
+## 0.8.8 - 2021/3/15
+
+- skip baseline test
 - skip baseline test
 ## 0.8.7 - 2021/3/14
 
