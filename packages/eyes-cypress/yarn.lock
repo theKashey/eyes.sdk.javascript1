@@ -25,6 +25,16 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
+"@applitools/dom-snapshot@4.4.13":
+  version "4.4.13"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.4.13.tgz#ec5d16be201ec8c9088340024d8a0cf480258107"
+  integrity sha512-2kL7e4mX9xi/jVnJTi2pn0kM0T9sP5hB2K3U5kz1duxcqqPeM2zGoGkYqns9DHoeDqHJ3jS/CzVNsMVqJPvu7A==
+  dependencies:
+    "@applitools/dom-shared" "1.0.5"
+    "@applitools/functional-commons" "1.6.0"
+    css-tree "1.0.0-alpha.39"
+    pako "1.0.11"
+
 "@applitools/driver@1.0.4":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@applitools/driver/-/driver-1.0.4.tgz#3b730807e8c4914c291d30e3fd5c6012797caa95"
@@ -144,6 +154,24 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
+"@applitools/sdk-coverage-tests@2.3.8":
+  version "2.3.8"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.8.tgz#684e43ce8d155adfa395e8f5a19a999ef4c4f0ec"
+  integrity sha512-6GnImU/+0iaySJjxljC616D/hFN0L+KXCdoP9Y9gVbeh1odQvG2TQeW75rq0RO2LjrwBAXDxCzMoT33zLloJkw==
+  dependencies:
+    "@azure/storage-blob" "12.2.0-preview.1"
+    "@babel/core" "7.12.10"
+    axios "0.20.0"
+    chai "4.2.0"
+    chai-as-promised "7.1.1"
+    chalk "4.1.0"
+    handlebars "4.7.6"
+    micromatch "4.0.2"
+    node-fetch "2.6.1"
+    sync-fetch "0.3.0"
+    xml-js "1.6.11"
+    yargs "16.0.3"
+
 "@applitools/sdk-release-kit@0.13.0":
   version "0.13.0"
   resolved "https://registry.npmjs.org/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.0.tgz#cc8295a1f5d19b2d5a0177c149d355f7fcecab54"
@@ -163,6 +191,27 @@
   dependencies:
     "@applitools/functional-commons" "1.6.0"
     "@applitools/sdk-coverage-tests" "2.3.6"
+    chai "4.2.0"
+    chai-as-promised "7.1.1"
+    chalk "3.0.0"
+    cookie-parser "1.4.5"
+    cors "2.8.5"
+    express "4.17.1"
+    filenamify "4.1.0"
+    handlebars "4.7.6"
+    morgan "1.10.0"
+    ncp "2.0.0"
+    node-fetch "2.6.1"
+    prettier "1.18.2"
+    yargs "15.3.1"
+
+"@applitools/sdk-shared@0.8.7":
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.7.tgz#17a63cde5861bb57cf931835c37ad082fb17bc98"
+  integrity sha512-Ec/GHfSqQDywIkKpz6Iv+IAWs7RlyJ6AyXjzvjiuIwMYHDWI6r2F8XGjEfna0uITerECGmsGUgC6NxCDXZLrXA==
+  dependencies:
+    "@applitools/functional-commons" "1.6.0"
+    "@applitools/sdk-coverage-tests" "2.3.8"
     chai "4.2.0"
     chai-as-promised "7.1.1"
     chalk "3.0.0"
