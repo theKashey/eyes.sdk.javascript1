@@ -31,7 +31,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.16.1",
+    "@applitools/eyes-sdk-core": "12.16.2",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.3",
     "@applitools/isomorphic-fetch": "3.0.0",
@@ -51,7 +51,7 @@
   "devDependencies": {
     "@applitools/dom-snapshot": "4.4.14",
     "@applitools/sdk-release-kit": "0.13.0",
-    "@applitools/sdk-shared": "0.8.7",
+    "@applitools/sdk-shared": "0.8.8",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "chai-uuid": "^1.0.6",

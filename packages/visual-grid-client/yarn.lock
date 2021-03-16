@@ -33,10 +33,10 @@
     "@applitools/snippets" "2.1.1"
     "@applitools/utils" "1.0.1"
 
-"@applitools/eyes-sdk-core@12.16.1":
-  version "12.16.1"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.16.1.tgz#cb86f3d0c18458494183f0d8da6813f5bb216f6b"
-  integrity sha512-TkAKmOijQbpwD1nv0QGoX0/6KtFAA9GFIBfoYw9eOtzO2ZRWgTYthp4CvsQayISLYI1x9TuvAEyXl31LINyTow==
+"@applitools/eyes-sdk-core@12.16.2":
+  version "12.16.2"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.16.2.tgz#d9438e28d0a5bde36b4136949bbcd8a66026f460"
+  integrity sha512-v5/3KzD9ZPTA7UVNKxokxdQJE3G0uPcXH6rV8F3tmzteVwOBGio4yhwTwktnAmOvYyZG4Xv4aNhJ+YBkWMFcNQ==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.4.14"
@@ -195,10 +195,10 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/sdk-shared@0.8.7":
-  version "0.8.7"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.7.tgz#17a63cde5861bb57cf931835c37ad082fb17bc98"
-  integrity sha512-Ec/GHfSqQDywIkKpz6Iv+IAWs7RlyJ6AyXjzvjiuIwMYHDWI6r2F8XGjEfna0uITerECGmsGUgC6NxCDXZLrXA==
+"@applitools/sdk-shared@0.8.8":
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-shared/-/sdk-shared-0.8.8.tgz#cb611248cf9528034549d79ba1121040cabace33"
+  integrity sha512-nbVHIXbRXuoxofg3MAsAjO0yMoi4JpG95n3uOLRJf9WNAbPi6Fk32mtZdJ9lF5UoCM2Sy0WnKgO++Wa9WNXnMQ==
   dependencies:
     "@applitools/functional-commons" "1.6.0"
     "@applitools/sdk-coverage-tests" "2.3.8"
