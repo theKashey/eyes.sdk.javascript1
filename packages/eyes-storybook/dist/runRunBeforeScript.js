@@ -112,7 +112,7 @@ function __runRunBeforeScript(...args) {
 
   var getClientAPI_1 = getClientAPI;
 
-  function runRunBeforeScript(index) {
+  function getStoryIndex(index) {
     let api;
     try {
       api = getClientAPI_1();
@@ -121,9 +121,20 @@ function __runRunBeforeScript(...args) {
         console.log('error cannot get story', index);
         return;
       }
-      return story.parameters.eyes.runBefore({rootEl: document.getElementById('root'), story});
+      return story;
     } catch (ex) {
       return {message: ex.message, version: api ? api.version : undefined};
+    }
+  }
+
+  var getStoryByIndex = getStoryIndex;
+
+  function runRunBeforeScript(index) {
+    try {
+      let story = getStoryByIndex(index);
+      return story.parameters.eyes.runBefore({rootEl: document.getElementById('root'), story});
+    } catch (ex) {
+      return {message: ex.message};
     }
   }
 
