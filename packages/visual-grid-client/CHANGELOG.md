@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/jsdom@1.0.3 (from 1.0.2)
 
 
 ## 15.6.2 - 2021/3/16
