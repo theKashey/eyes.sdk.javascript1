@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 5.29.7 - 2021/3/17
+
 - Ability to pass `throwEx` to `browser.eyesGetAllTestResults` in Eyes service
 - updated to @applitools/eyes-sdk-core@12.16.2 (from 12.14.8)
 - updated to @applitools/visual-grid-client@15.6.3 (from 15.5.21)
