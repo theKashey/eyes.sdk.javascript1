@@ -2,6 +2,9 @@
 
 ## Unreleased
  - added runAfter hook 
+- updated to @applitools/dom-snapshot@4.4.14 (from 4.4.11)
+- updated to @applitools/eyes-sdk-core@12.16.2 (from 12.15.0)
+- updated to @applitools/visual-grid-client@15.6.3 (from 15.6.0)
 
 
 ## 3.19.0 - 2021/3/4
