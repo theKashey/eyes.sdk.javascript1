@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.20.1 - 2021/3/17
+
 - Handle story parameters with circular reference better
 
   ## 3.20.0 - 2021/3/17
