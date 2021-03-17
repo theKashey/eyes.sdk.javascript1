@@ -37,7 +37,7 @@ describe('getStories', () => {
           {
             name: 'background color',
             kind: 'Button',
-            parameters: {eyes: {runBefore: '__func', runAfter: '__func'}},
+            parameters: {...parameters, eyes: {runBefore: '__func', runAfter: '__func'}},
           },
           {
             name: 'with text',
