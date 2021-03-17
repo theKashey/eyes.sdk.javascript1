@@ -7,7 +7,7 @@ const {Logger} = require(cwd)
 const {Driver} = require(path.resolve(cwd, 'src/sdk'))
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
 // eslint-disable-next-line node/no-missing-require
-const {takeDomCapture} = require(require.resolve('@applitools/eyes-sdk-core', cwd))
+const {takeDomCapture} = require(require.resolve('@applitools/eyes-sdk-core', {paths: [cwd]}))
 
 ;(async function main() {
   const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
@@ -19,7 +19,7 @@ const {takeDomCapture} = require(require.resolve('@applitools/eyes-sdk-core', cw
 
   // const url = '...'
   // await spec.visit(driver, url)
-  const url = await driver.getUrl()
+  const url = await eyesDriver.getUrl()
   console.log(url)
 
   const domStr = await takeDomCapture(logger, eyesDriver.mainContext)
