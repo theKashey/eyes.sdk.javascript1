@@ -248,8 +248,10 @@ class MutableImage {
     const srcImageBmp = await srcImage.getImageData()
     let width = srcImage.getWidth()
     let height = srcImage.getHeight()
-    const maxWidth = this.getWidth() - dx
-    const maxHeight = this.getHeight() - dy
+    const roundX = Math.round(dx)
+    const roundY = Math.round(dy)
+    const maxWidth = this.getWidth() - roundX
+    const maxHeight = this.getHeight() - roundY
 
     if (maxWidth < width) {
       width = maxWidth
@@ -261,7 +263,7 @@ class MutableImage {
 
     ImageUtils.copyPixels(
       this._imageBmp,
-      {x: dx, y: dy},
+      {x: roundX, y: roundY},
       srcImageBmp,
       {x: 0, y: 0},
       {width, height},
