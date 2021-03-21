@@ -21,15 +21,13 @@ jobs:
           echo "::group::test ${{github.event.inputs.name}}"
             cd "packages/${{github.event.inputs.name}}"
             yarn
-            echo hello >> hello.txt
-            # yarn prepublish:setup
-            # yarn coverage:sandbox
+            yarn prepublish:setup
+            yarn coverage:sandbox
           echo "::endgroup::"
       - uses: actions/upload-artifact@v2
         with:
           name: coverage-tests-metadata.json
           path: |
-            packages/${{github.event.inputs.name}}/hello.txt
             packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
             packages/${{github.event.inputs.name}}/coverage-test-report.xml
     env:
