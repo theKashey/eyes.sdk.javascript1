@@ -15,10 +15,10 @@ describe('MutableImage', () => {
       const width = image.getWidth()
       const height = image.getHeight()
       const stitched = MutableImage.newImage(width, height)
-
-      // without Math.round the resulting image is blank
+      // simulate a position with fractions
       await stitched.copyRasterData(11.1, 22.2, image)
-
+      // since the region will be positioned a bit off:
+      // crop and compare it to verify an image was created
       const cropped = await stitched.crop(
         new Region(
           new Location(100, 200),
