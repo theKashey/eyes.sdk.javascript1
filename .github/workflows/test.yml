@@ -18,25 +18,12 @@ jobs:
         with:
           node-version: 14
       - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          echo "::group::create temp branch"
-          DATE=$(date +%F_%H-%M)
-          BRANCH="${{github.event.inputs.name}}_$DATE"
-          git checkout -b $BRANCH
-          git push -u origin $BRANCH
-          echo "::endgroup::"
-
           echo "::group::test ${{github.event.inputs.name}}"
-          cd "packages/${{github.event.inputs.name}}"
-          yarn
-          yarn prepublish:setup
-          yarn coverage:sandbox
+            cd "packages/${{github.event.inputs.name}}"
+            yarn
+            yarn prepublish:setup
+            yarn coverage:sandbox
           echo "::endgroup::"
-
-          git branch -d $BRANCH
-          git push origin --delete $BRANCH
       - uses: actions/upload-artifact@v2
         with:
           name: coverage-tests-metadata.json
