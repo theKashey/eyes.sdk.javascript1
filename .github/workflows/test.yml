@@ -35,7 +35,6 @@ jobs:
           yarn coverage:sandbox
           echo "::endgroup::"
 
-          # cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
           git branch -d $BRANCH
           git push origin --delete $BRANCH
       - uses: actions/upload-artifact@v2
