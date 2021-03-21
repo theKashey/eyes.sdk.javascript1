@@ -38,6 +38,10 @@ jobs:
           cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
           git branch -d $BRANCH
           git push origin --delete $BRANCH
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-metadata.json
+          path: ./coverage-tests-metadata.json
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
