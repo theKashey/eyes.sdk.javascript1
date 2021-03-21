@@ -29,9 +29,9 @@ jobs:
         with:
           name: coverage-tests-metadata.json
           path: |
-            "packages/${{github.event.inputs.name}}/hello.txt"
-            "packages/${{github.event.inputs.name}}/coverage-tests-metadata.json"
-            "packages/${{github.event.inputs.name}}/coverage-test-report.xml"
+            packages/${{github.event.inputs.name}}/hello.txt
+            packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
+            packages/${{github.event.inputs.name}}/coverage-test-report.xml
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
