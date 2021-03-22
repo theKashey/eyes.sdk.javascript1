@@ -26,7 +26,7 @@ jobs:
           echo "::endgroup::"
       - uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-metadata.json
+          name: coverage-tests-report
           path: |
             packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
             packages/${{github.event.inputs.name}}/coverage-test-report.xml
