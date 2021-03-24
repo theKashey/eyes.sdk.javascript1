@@ -32,6 +32,7 @@ jobs:
 
           echo "::group::test ${{github.event.inputs.name}}"
           yarn install --cwd "packages/sdk-shared"
+          echo $PWD
           cd "packages/${{github.event.inputs.name}}"
           yarn link --include ${{github.event.inputs.links}} --build --install
           yarn
