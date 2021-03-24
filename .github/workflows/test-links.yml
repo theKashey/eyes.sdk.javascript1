@@ -31,8 +31,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::test ${{github.event.inputs.name}}"
-          cd "packages/sdk-shared"
-          yarn
+          yarn install --cwd "packages/sdk-shared"
           cd "packages/${{github.event.inputs.name}}"
           yarn link --include ${{github.event.inputs.links}} --build --install
           yarn
