@@ -20,7 +20,6 @@
   "scripts": {
     "lint": "eslint . --ext .js",
     "test": "mocha 'test/**/*.spec.js'",
-    "build": "tsc src/coverage-tests/api.ts",
     "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
