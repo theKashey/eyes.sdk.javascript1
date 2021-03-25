@@ -2,6 +2,7 @@
 const BrowserType = require('../config/BrowserType')
 const Configuration = require('../config/Configuration')
 const TypeUtils = require('../utils/TypeUtils')
+const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const TestResultsFormatter = require('../TestResultsFormatter')
 const CorsIframeHandler = require('../capture/CorsIframeHandler')
@@ -207,9 +208,11 @@ class EyesVisualGrid extends EyesCore {
       await this.setViewportSize(vs)
     }
 
-    const {checkWindow, close, abort} = await openEyes(
-      this._configuration.toOpenEyesConfiguration(),
-    )
+    const openParams = this._configuration.toOpenEyesConfiguration()
+    const {checkWindow, close, abort} = await openEyes({
+      ...openParams,
+      agentRunId: `${openParams.testName}--${GeneralUtils.randomAlphanumeric(10)}`,
+    })
 
     this._isOpen = true
     this._checkWindowCommand = checkWindow

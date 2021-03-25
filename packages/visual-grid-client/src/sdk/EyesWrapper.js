@@ -193,6 +193,10 @@ class EyesWrapper extends EyesBase {
   async setIgnoreGitMergeBase(input) {
     this._configuration.setIgnoreGitMergeBase(input)
   }
+
+  setAgentRunId(value) {
+    this.agentRunId = value
+  }
 }
 
 module.exports = EyesWrapper

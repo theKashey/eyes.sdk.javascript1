@@ -58,6 +58,7 @@ function configureWrappers({
   enablePatterns,
   ignoreDisplacements,
   ignoreGitMergeBase,
+  agentRunId,
 }) {
   for (let i = 0, ii = wrappers.length; i < ii; i++) {
     const wrapper = wrappers[i]
@@ -93,6 +94,7 @@ function configureWrappers({
     serverUrl !== undefined && wrapper.setServerUrl(serverUrl)
     agentId !== undefined && wrapper.setBaseAgentId(agentId)
     ignoreGitMergeBase !== undefined && wrapper.setIgnoreGitMergeBase(ignoreGitMergeBase)
+    agentRunId !== undefined && wrapper.setAgentRunId(agentRunId)
   }
 }
 

@@ -52,6 +52,7 @@ class SessionStartInfo {
     render,
     properties,
     agentSessionId,
+    agentRunId,
     timeout,
   } = {}) {
     ArgumentGuard.notNullOrEmpty(agentId, 'agentId')
@@ -83,6 +84,7 @@ class SessionStartInfo {
     this._properties = properties
     this._concurrencyVersion = 2
     this._agentSessionId = agentSessionId
+    this._agentRunId = agentRunId
     this._timeout = timeout
   }
 

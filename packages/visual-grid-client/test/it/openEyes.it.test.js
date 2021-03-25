@@ -1141,6 +1141,7 @@ Received: 'firefox-1'.`,
       ignoreBaseline: 'ignoreBaseline',
       browser: [{deviceName: 'device1'}, {deviceName: 'device2'}, {}],
       agentId: 'agentId',
+      agentRunId: 'agentRunId',
       batchNotify: true,
     })
 
@@ -1164,6 +1165,7 @@ Received: 'firefox-1'.`,
       expect(wrapper.serverUrl).to.equal('serverUrl')
       expect(wrapper.baseAgentId).to.equal('agentId')
       expect(wrapper.batch.getNotifyOnCompletion()).to.be.true
+      expect(wrapper.agentRunId).to.equal('agentRunId')
     }
 
     expect(wrappers[0].deviceInfo).to.equal('device1 (Chrome emulation)')

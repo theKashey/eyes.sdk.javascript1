@@ -511,6 +511,10 @@ class FakeEyesWrapper extends EventEmitter {
   setIgnoreGitMergeBase(input) {
     this._configuration.ignoreGitMergeBase = input
   }
+
+  setAgentRunId(value) {
+    this.agentRunId = value
+  }
 }
 
 module.exports = FakeEyesWrapper

@@ -2032,6 +2032,7 @@ class EyesBase {
       properties: this._configuration.getProperties(),
       agentSessionId: GeneralUtils.guid(),
       timeout: this._configuration.getAbortIdleTestTimeout(),
+      agentRunId: this.agentRunId,
     })
 
     this._logger.verbose('Starting server session...')

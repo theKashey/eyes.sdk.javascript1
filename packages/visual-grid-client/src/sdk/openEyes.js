@@ -104,6 +104,7 @@ function makeOpenEyes({
     ignoreBaseline = _ignoreBaseline,
     notifyOnCompletion,
     visualGridOptions = _visualGridOptions,
+    agentRunId,
   }) {
     logger.verbose(`openEyes: testName=${testName}, browser=`, browser)
 
@@ -212,6 +213,7 @@ function makeOpenEyes({
       serverUrl,
       agentId,
       ignoreGitMergeBase,
+      agentRunId,
     })
 
     if (!globalState.batchStore.hasCloseBatch()) {
