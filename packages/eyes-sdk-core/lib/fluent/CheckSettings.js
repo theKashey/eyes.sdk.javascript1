@@ -42,6 +42,8 @@ class CheckSettings {
     this._stitchContent = false
     /** @type {string} */
     this._renderId = undefined
+    /** @type {string} */
+    this._variantId = undefined
 
     this._timeout = timeout
     this._targetRegion = region ? new Region(region) : undefined
@@ -110,6 +112,15 @@ class CheckSettings {
    */
   getRenderId() {
     return this._renderId
+  }
+
+  variantId(variantId) {
+    this._variantId = variantId
+    return this
+  }
+
+  getVariantId() {
+    return this._variantId
   }
 
   /**

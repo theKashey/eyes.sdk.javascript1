@@ -32,6 +32,7 @@ class ImageMatchOptions {
     forceMatch,
     imageMatchSettings,
     source,
+    variantId,
   } = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
@@ -48,6 +49,7 @@ class ImageMatchOptions {
     this._forceMatch = forceMatch
     this._imageMatchSettings = imageMatchSettings
     this._source = source
+    this._variantId = variantId
   }
 
   /**

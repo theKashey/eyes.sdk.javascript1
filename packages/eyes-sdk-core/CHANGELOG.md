@@ -3,6 +3,7 @@
 ## Unreleased
 
 - support `agentRunId`
+- support `variantId`
 
 ## 12.16.3 - 2021/3/22
 

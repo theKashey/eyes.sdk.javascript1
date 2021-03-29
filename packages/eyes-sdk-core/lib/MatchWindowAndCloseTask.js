@@ -35,7 +35,16 @@ class MatchWindowAndCloseTask extends MatchWindowTask {
    * @param {ImageMatchSettings} imageMatchSettings - The settings to use.
    * @return {Promise<TestResults>} - The match result.
    */
-  async performMatch(userInputs, appOutput, name, renderId, ignoreMismatch, imageMatchSettings) {
+  async performMatch(
+    userInputs,
+    appOutput,
+    name,
+    renderId,
+    ignoreMismatch,
+    imageMatchSettings,
+    source,
+    variantId,
+  ) {
     // Prepare match model.
     const options = new Options({
       name,
@@ -46,6 +55,8 @@ class MatchWindowAndCloseTask extends MatchWindowTask {
       forceMismatch: false,
       forceMatch: false,
       imageMatchSettings,
+      source,
+      variantId,
     })
     const data = new MatchWindowAndCloseData({
       startInfo: this._startInfo,
