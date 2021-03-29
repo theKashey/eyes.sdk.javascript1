@@ -4,6 +4,7 @@
 
 - support `agentRunId`
 - support `variantId`
+- updated to @applitools/eyes-sdk-core@12.17.0 (from 12.16.3)
 
 ## 15.6.4 - 2021/3/22
 
