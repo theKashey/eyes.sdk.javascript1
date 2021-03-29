@@ -59,6 +59,13 @@ jobs:
           git merge $BRANCH
           git push origin master
           echo "::endgroup::"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report
+          retention-days: 30
+          path: |
+            packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
+            packages/${{github.event.inputs.name}}/coverage-test-report.xml
     env:
       CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
       APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
