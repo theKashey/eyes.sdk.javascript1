@@ -20,10 +20,16 @@ class ImagesCheckSettings extends CheckSettings {
     this._imageUrl = url
     this._imageProvider = null
 
-    /** @type {RectangleSize} */ this._imageSize = undefined
-    /** @type {string} */ this._domString = undefined
-    /** @type {Location} */ this._imageLocation = undefined
-    /** @type {boolean} */ this._ignoreMismatch = false
+    /** @type {RectangleSize} */
+    this._imageSize = undefined
+    /** @type {string} */
+    this._domString = undefined
+    /** @type {Location} */
+    this._imageLocation = undefined
+    /** @type {boolean} */
+    this._ignoreMismatch = false
+    /** @type {string} */
+    this._variantId = undefined
   }
 
   /**
@@ -196,6 +202,15 @@ class ImagesCheckSettings extends CheckSettings {
   region(region) {
     super.updateTargetRegion(region)
     return this
+  }
+
+  variantId(variantId) {
+    this._variantId = variantId
+    return this
+  }
+
+  getVariantId() {
+    return this._variantId
   }
 }
 

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support `variantId` in checkSettings
 
 ## 4.19.1 - 2021/3/11
 
