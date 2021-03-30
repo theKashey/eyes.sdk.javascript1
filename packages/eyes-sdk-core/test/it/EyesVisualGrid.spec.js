@@ -98,8 +98,7 @@ describe('EyesVisualGrid', async () => {
     )
   })
 
-  // TODO unskip after releasing vgc
-  it.skip('should populate agentRunId', async () => {
+  it('should populate agentRunId', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await eyes.check()
     const results = await eyes.close()
