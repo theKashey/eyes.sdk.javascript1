@@ -33,7 +33,6 @@ const STRING_CONFIGS = [
   '_hostAppInfo',
   '_hostOSInfo',
   '_deviceInfo',
-  '_variantId',
 ]
 
 const BOOLEAN_CONFIGS = [
@@ -183,7 +182,6 @@ describe('Configuration', () => {
       configuration.setMatchLevel(MatchLevel.Layout)
       configuration.setLayoutBreakpoints(true)
       configuration.setDisableBrowserFetching(true)
-      configuration.setVariantId('variant-id')
 
       const configurationCopy = new Configuration(configuration)
 
@@ -208,7 +206,6 @@ describe('Configuration', () => {
 
       assert.strictEqual(configuration.getDisplayName(), 'test name1')
       assert.strictEqual(configurationCopy.getDisplayName(), 'test name2')
-      assert.strictEqual(configurationCopy.getVariantId(), 'variant-id')
     })
 
     it('from object', () => {

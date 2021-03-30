@@ -251,9 +251,6 @@ class Configuration {
     /** @type {boolean} */
     this._ignoreGitMergeBase = undefined
 
-    /** @type {string} */
-    this._variantId = undefined
-
     if (configuration) {
       this.mergeConfig(configuration)
     }
@@ -1349,16 +1346,6 @@ class Configuration {
   setIgnoreGitMergeBase(input) {
     ArgumentGuard.isBoolean(input, 'ignoreGitMergeBase')
     this._ignoreGitMergeBase = input
-    return this
-  }
-
-  getVariantId() {
-    return this._variantId
-  }
-
-  setVariantId(input) {
-    ArgumentGuard.isString(input, 'variantId')
-    this._variantId = input
     return this
   }
 
