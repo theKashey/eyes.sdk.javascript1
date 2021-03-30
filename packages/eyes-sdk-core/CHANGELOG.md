@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- remove `variantId` from configuration
 
 ## 12.17.0 - 2021/3/29
 
