@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `api` parameter to test object in bongo report
 
 ## 2.3.8 - 2021/2/23
 

@@ -18,7 +18,13 @@ async function createTestMetaData(tests, {metaDir = '', pascalizeTests = true} =
   fs.mkdirSync(targetDirectory, {recursive: true})
 
   const meta = tests.reduce((meta, test) => {
-    const data = {isGeneric: true, name: test.group, skip: test.skip, skipEmit: test.skipEmit}
+    const data = {
+      isGeneric: true,
+      name: test.group,
+      skip: test.skip,
+      skipEmit: test.skipEmit,
+      api: test.api,
+    }
     if (test.config) {
       if (test.config.stitchMode) data.executionMode = test.config.stitchMode.toLowerCase()
       else if (test.vg) data.executionMode = 'visualgrid'
