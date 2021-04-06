@@ -56,17 +56,17 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.16.0",
-    "@applitools/visual-grid-client": "15.6.0",
+    "@applitools/eyes-sdk-core": "12.17.2",
+    "@applitools/visual-grid-client": "15.7.1",
     "rimraf": "3.0.2"
   },
   "peerDependencies": {
     "testcafe": "^1.7.1"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^2.3.8",
+    "@applitools/sdk-coverage-tests": "^2.3.9",
     "@applitools/sdk-release-kit": "^0.13.0",
-    "@applitools/sdk-shared": "^0.8.7",
+    "@applitools/sdk-shared": "^0.8.8",
     "eslint": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
