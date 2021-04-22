@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-nightwatch",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Applitools Eyes SDK for Nightwatch.js",
   "keywords": [
     "eyes-nightwatch",
