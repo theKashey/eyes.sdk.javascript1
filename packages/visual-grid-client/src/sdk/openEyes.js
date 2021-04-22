@@ -74,12 +74,12 @@ function makeOpenEyes({
     userAgent = _userAgent,
     appName = _appName,
     browser = _browser,
+    batch = _batch,
+    batchId,
+    batchName,
     batchSequenceName,
     batchSequence,
-    batchName,
-    batchId,
     batchNotify,
-    batch = _batch,
     properties = _properties,
     baselineBranchName = _baselineBranchName,
     baselineBranch = _baselineBranch,
@@ -355,6 +355,7 @@ function mergeBatchProperties({batch, batchId, batchName, batchSequence, batchNo
     name: batchName !== undefined ? batchName : batch.getName(),
     sequenceName: batchSequence !== undefined ? batchSequence : batch.getSequenceName(),
     notifyOnCompletion: batchNotify !== undefined ? batchNotify : batch.getNotifyOnCompletion(),
+    properties: batch.getProperties(),
     isGeneratedId,
   })
 }

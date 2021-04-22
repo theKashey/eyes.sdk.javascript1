@@ -50,10 +50,11 @@ function makeRenderingGridClient({
   browser = {width: 1024, height: 768},
   apiKey,
   saveDebugData,
+  batch,
+  batchId,
+  batchName,
   batchSequenceName,
   batchSequence,
-  batchName,
-  batchId,
   properties,
   baselineBranchName,
   baselineBranch,
@@ -169,12 +170,14 @@ function makeRenderingGridClient({
     getAllResources,
   })
 
-  const batch = new BatchInfo({
-    name: batchName,
-    id: batchId,
-    sequenceName: batchSequence,
-    notifyOnCompletion: batchNotify,
-  })
+  const batchInfo = batch
+    ? new BatchInfo(batch)
+    : new BatchInfo({
+        name: batchName,
+        id: batchId,
+        sequenceName: batchSequence,
+        notifyOnCompletion: batchNotify,
+      })
 
   const globalState = _globalState || makeGlobalState({logger})
 
@@ -182,7 +185,7 @@ function makeRenderingGridClient({
     appName,
     browser,
     apiKey,
-    batch,
+    batch: batchInfo,
     properties,
     baselineBranch,
     baselineEnvName,

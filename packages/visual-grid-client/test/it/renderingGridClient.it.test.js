@@ -31,6 +31,28 @@ describe('renderingGridClient', () => {
     expect(batchId).to.equal(batchId2)
   })
 
+  it('sets a new batch with properties', async () => {
+    const wrapper = createFakeWrapper('http://some_url')
+    const batchProperties = [
+      {name: 'prop1', value: 'value1'},
+      {name: 'prop2', value: 'value2'},
+    ]
+    const {openEyes} = makeRenderingGridClient({
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      appName,
+      renderWrapper: wrapper,
+      batch: {
+        name: 'batch name',
+        properties: batchProperties,
+      },
+    })
+
+    await openEyes({wrappers: [wrapper]})
+
+    expect(wrapper.getBatch().toJSON().properties).to.equal(batchProperties)
+  })
+
   it('validates presence of apiKey when openEyes and not at the creation of the client', async () => {
     const wrapper = createFakeWrapper('http://some_url')
     const {openEyes} = makeRenderingGridClient({
