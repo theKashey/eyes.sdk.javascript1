@@ -214,20 +214,21 @@ async function hover(driver, element, {x, y} = {}) {
 //// #endregion
 //
 // #region TESTING
-function createBrowserOptions(browserName, argsArray = []) {
+function createBrowserOptions(capabilities, argsArray = []) {
   const browserOptionsNames = {
     chrome: 'goog:chromeOptions',
     firefox: 'moz:firefoxOptions',
   }
-  const browserOption = browserOptionsNames[browserName]
+  const browserOption = browserOptionsNames[capabilities.browserName]
   if (!browserOption) return
   const browserOptions = {
     [browserOption]: {
-      w3c: browserName === 'chrome' ? false : undefined,
+      ...capabilities[browserOption],
+      w3c: capabilities.browserName === 'chrome' ? false : undefined,
       args: argsArray,
     },
   }
-  return browserName === 'firefox' ? {alwaysMatch: browserOptions} : browserOptions
+  return capabilities.browserName === 'firefox' ? {alwaysMatch: browserOptions} : browserOptions
 }
 async function build(env) {
   // config prep
@@ -252,7 +253,7 @@ async function build(env) {
   conf.test_settings.default.desiredCapabilities = Object.assign(
     {},
     testSetupConfig.capabilities,
-    createBrowserOptions(testSetupConfig.browser, [
+    createBrowserOptions(testSetupConfig.capabilities, [
       testSetupConfig.headless ? '--headless' : '//--headless',
     ]),
   )

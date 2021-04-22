@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix spec.build for testing
 
 ## 1.5.2 - 2021/1/29
 
