@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 2.28.0 - 2021/4/22
+
 - add TestResults export from main
 - updated to @applitools/eyes-sdk-core@12.17.2 (from 12.14.2)
 - updated to @applitools/visual-grid-client@15.8.0 (from 15.5.14)
