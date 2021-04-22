@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-testcafe",
-  "version": "1.12.8",
+  "version": "1.13.0",
   "description": "Applitools Eyes SDK for TestCafe",
   "main": "index-short.js",
   "types": "./ts/index.d.ts",
@@ -57,7 +57,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "@applitools/eyes-sdk-core": "12.17.2",
-    "@applitools/visual-grid-client": "15.7.1",
+    "@applitools/visual-grid-client": "15.8.0",
     "rimraf": "3.0.2"
   },
   "peerDependencies": {
