@@ -371,4 +371,10 @@ describe('Report', () => {
       },
     ])
   })
+
+  it('should handle skipped test with <skipped /> tag', () => {
+    const junit = loadFixture('single-suite-skipped-test.xml')
+    const results = convertJunitXmlToResultSchema({junit, metadata})
+    assert.strictEqual(results[results.length - 1].isSkipped, true)
+  })
 })

@@ -3,10 +3,14 @@ const {logDebug} = require('../log')
 
 function convertJunitXmlToResultSchema({junit, browser, metadata}) {
   const tests = parseJunitXmlForTests(junit)
+
   logDebug(tests)
   const allTests = tests.reduce((acc, test) => {
     const name = parseBareTestName(test._attributes.name)
-    acc[name] = metadata[name] || {skip: Number(test._attributes.time) === 0, ...test}
+    acc[name] = metadata[name] || {
+      skip: Number(test._attributes.time) === 0 || test.hasOwnProperty('skipped'),
+      ...test,
+    }
     return acc
   }, metadata)
 
