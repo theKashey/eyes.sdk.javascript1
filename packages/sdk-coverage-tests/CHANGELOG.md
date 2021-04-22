@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- include custom tests in report
 
 ## 2.3.9 - 2021/4/1
 
