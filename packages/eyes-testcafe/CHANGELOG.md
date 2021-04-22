@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fix types for eyes open
+- updated to @applitools/visual-grid-client@15.8.1 (from 15.8.0)
 
 ## 1.13.0 - 2021/4/22
 
