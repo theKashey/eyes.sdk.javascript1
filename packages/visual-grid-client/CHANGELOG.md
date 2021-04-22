@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 15.8.0 - 2021/4/22
+
 - added support for batch properties
 
 ## 15.7.1 - 2021/4/6
