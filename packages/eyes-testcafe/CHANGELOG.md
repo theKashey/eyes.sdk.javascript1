@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix types for eyes open
 
 ## 1.13.0 - 2021/4/22
 

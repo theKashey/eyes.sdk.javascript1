@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix types for eyes open
 
 ## 15.8.0 - 2021/4/22
 

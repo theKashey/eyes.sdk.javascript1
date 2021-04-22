@@ -5,7 +5,7 @@ declare namespace Eyes {
     namespace Testcafe {
       interface OpenOptions extends Omit<Eyes.Open.Options, 'accessibilitySettings'> {
         t: TestController
-        accessibilityValidation: AccessibilitySettings
+        accessibilityValidation?: AccessibilitySettings
       }
   
       interface Selector {

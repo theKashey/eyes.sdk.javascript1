@@ -1,4 +1,3 @@
-
 declare namespace Eyes {
   export namespace Open {
     interface Options {
@@ -6,7 +5,7 @@ declare namespace Eyes {
        * Your app name.
        * Default value: undefined
        */
-      appName?:string
+      appName?: string
 
       /**
        * Test name.
@@ -20,181 +19,186 @@ declare namespace Eyes {
        * It could be a different size and also a different browser.
        * Default value: { width: 800, height: 600, name: 'chrome' }
        */
-      browser?:ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo|
-              (ChromeEmulationInfo|EmulationInfo|DesktopBrowserInfo|IosDeviceInfo)[]
+      browser?:
+        | ChromeEmulationInfo
+        | EmulationInfo
+        | DesktopBrowserInfo
+        | IosDeviceInfo
+        | (ChromeEmulationInfo | EmulationInfo | DesktopBrowserInfo | IosDeviceInfo)[]
 
       /**
        * Provides ability to group tests into batches.
        * Read more about batches here: https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html
        * Default value: random
        */
-      batchId?:string
+      batchId?: string
 
       /**
        * Provides a name to the batch (for display purpose only).
        * Default value: The name of the first test in the batch
        */
-      batchName?:string
+      batchName?: string
 
       /**
        * DEPRECATED, use batchSequence.
        */
-      batchSequenceName?:string
+      batchSequenceName?: string
 
       /**
        * Name for managing batch statistics.
        * Default value: undefined
        */
-      batchSequence?:string
+      batchSequence?: string
 
       /**
        * The name of the environment of the baseline.
        * Default value: undefined
        */
-      baselineEnvName?:string
+      baselineEnvName?: string
 
       /**
        * A name for the environment in which the application under test is running.
        * Default value: undefined
        */
-      envName?:string
+      envName?: string
 
       /**
        * Whether to ignore or the blinking caret or not when comparing images.
        * Default value: false
        */
-      ignoreCaret?:boolean
+      ignoreCaret?: boolean
 
       /**
        * The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match.
        * Read more about match levels https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels .
        * Default value: Strict
        */
-      matchLevel?:'Strict'|'Exact'|'Layout'|'Content'
+      matchLevel?: 'Strict' | 'Exact' | 'Layout' | 'Content'
 
       /**
        * DEPRECATED, use baselineBranch.
        */
-      baselineBranchName?:string
+      baselineBranchName?: string
 
       /**
        * The name of the baseline branch.
        * Default value: undefined
        */
-      baselineBranch?:string
+      baselineBranch?: string
 
       /**
        * DEPRECATED, use parentBranch.
        */
-      parentBranchName?:string
+      parentBranchName?: string
 
       /**
        * Sets the branch under which new branches are created.
        * Default value: undefined
        */
-      parentBranch?:string
+      parentBranch?: string
 
       /**
        * DEPRECATED, use branch.
        */
-      branchName?:string
+      branchName?: string
 
       /**
        * Sets the branch name.
        * Default value: undefined
        */
-      branch?:string
+      branch?: string
 
       /**
        * Set whether or not different baselines should be updated or not.
        * Default value: false
        */
-      saveDiffs?:boolean
+      saveDiffs?: boolean
 
       /**
        * Set whether or not failed tests are saved by default.
        * Default value: false
        */
-      saveFailedTests?:boolean
+      saveFailedTests?: boolean
 
       /**
        * Set whether or not new tests are saved by default.
        * Default value: false
        */
-      saveNewTests?:boolean
+      saveNewTests?: boolean
 
       /**
        * Custom properties for the eyes test. The format is an array of objects with name/value properties.
        * Default value: undefined
        * @example [{name: 'My prop', value:'My value'}]
        */
-      properties?:{name:string, value:any}[]
+      properties?: {name: string; value: any}[]
 
       /**
        * Default value: false
        */
-      compareWithParentBranch?:boolean
+      compareWithParentBranch?: boolean
 
       /**
        * Default value: false
        */
-      ignoreBaseline?:boolean
+      ignoreBaseline?: boolean
 
       /**
        * The accessibility level to use for the screenshots
        * Default value: 'None'
        */
-      accessibilitySettings?:AccessibilitySettings
+      accessibilitySettings?: AccessibilitySettings
 
       /**
        * DEPRECATED, use batchNotify.
        */
-      notifyOnCompletion?:boolean
+      notifyOnCompletion?: boolean
 
       /**
        * Set wether batch completion notifications should be sent.
        * Default value: false
        */
-      batchNotify?:boolean
+      batchNotify?: boolean
 
       /**
        * Disable all eyes functionality.
        * Default value: false
        */
-      isDisabled?:boolean
+      isDisabled?: boolean
 
       /**
        * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
        * Default value: false
        */
-      ignoreDisplacements?:boolean
+      ignoreDisplacements?: boolean
     }
 
     interface DesktopBrowserInfo {
-      height:number
-      width:number
-      name?:'chrome'                       |
-           'firefox'                       |
-           'edgechromium'                  |
-           'edgelegacy'                    |
-           'ie10'                          |
-           'ie11'                          |
-           'ie'                            |
-           'safari'                        |
-           'chrome-one-version-back'       |
-           'chrome-two-versions-back'      |
-           'firefox-one-version-back'      |
-           'firefox-two-versions-back'     |
-           'safari-one-version-back'       |
-           'safari-two-versions-back'      |
-           'edgechromium-one-version-back' |
-           'edgechromium-two-versions-back'
+      height: number
+      width: number
+      name?:
+        | 'chrome'
+        | 'firefox'
+        | 'edgechromium'
+        | 'edgelegacy'
+        | 'ie10'
+        | 'ie11'
+        | 'ie'
+        | 'safari'
+        | 'chrome-one-version-back'
+        | 'chrome-two-versions-back'
+        | 'firefox-one-version-back'
+        | 'firefox-two-versions-back'
+        | 'safari-one-version-back'
+        | 'safari-two-versions-back'
+        | 'edgechromium-one-version-back'
+        | 'edgechromium-two-versions-back'
     }
 
     interface EmulationInfo {
       deviceName: string
-      screenOrientation?: 'portrait'|'landscape'
-      name?:string
+      screenOrientation?: 'portrait' | 'landscape'
+      name?: string
     }
 
     interface ChromeEmulationInfo {
@@ -203,24 +207,26 @@ declare namespace Eyes {
 
     interface IosDeviceInfo {
       iosDeviceInfo: {
-        screenOrientation?: 'portrait'|'landscapeLeft'|'landscapeRight'
-        deviceName: 'iPhone 11 Pro'                         |
-                    'iPhone 11 Pro Max'                     |
-                    'iPhone 11'                             |
-                    'iPhone XR'                             |
-                    'iPhone Xs'                             |
-                    'iPhone X'                              |
-                    'iPhone 8'                              |
-                    'iPhone 7'                              |
-                    'iPad Pro (12.9-inch) (3rd generation)' |
-                    'iPad (7th generation)'                 |
-                    'iPad Air (2nd generation)                              '
+        screenOrientation?: 'portrait' | 'landscapeLeft' | 'landscapeRight'
+        iosVersion?: 'latest' | 'latest-1'
+        deviceName:
+          | 'iPhone 11 Pro'
+          | 'iPhone 11 Pro Max'
+          | 'iPhone 11'
+          | 'iPhone XR'
+          | 'iPhone Xs'
+          | 'iPhone X'
+          | 'iPhone 8'
+          | 'iPhone 7'
+          | 'iPad Pro (12.9-inch) (3rd generation)'
+          | 'iPad (7th generation)'
+          | 'iPad Air (2nd generation)'
       }
     }
   }
 
-  type AccessibilityLevel = "AA"|"AAA"
-  type AccessibilityGuidelinesVersion = "WCAG_2_0"|"WCAG_2_1"
+  type AccessibilityLevel = 'AA' | 'AAA'
+  type AccessibilityGuidelinesVersion = 'WCAG_2_0' | 'WCAG_2_1'
 
   interface AccessibilitySettings {
     level: AccessibilityLevel
@@ -242,83 +248,86 @@ declare namespace Eyes {
        * If set then the captured image is of the parts of the page,
        * use this parameter with region or selector for specifying the areas to captured.
        */
-      target?: 'window'|'region'
+      target?: 'window' | 'region'
 
       /**
        * In case target is window, if fully is true (default) then the snapshot is of the entire page,
        * if fully is false then snapshot is of the viewport.
        */
-      fully?:boolean
+      fully?: boolean
 
       /**
        * In case target is region, this should be the actual css or xpath selector to an element,
        * and the screenshot would be the content of that element.
        */
-      selector?:string|Selector
+      selector?: string | Selector
 
       /**
        * In case target is region, this should be an object describing the region's coordinates for capturing the image.
        */
-      region?:Region
+      region?: Region
 
       /**
        * A single or an array of regions to ignore when checking for visual differences.
        */
-      ignore?:Region|Selector|(Region|Selector)[]
+      ignore?: Region | Selector | (Region | Selector)[]
 
       /**
        * A single or an array of floating regions to ignore when checking for visual differences.
        * More information about floating regions can be
        * found in https://help.applitools.com/hc/en-us/articles/360006915292-Testing-of-floating-UI-elements .
        */
-      floating?:FloatingRegion|FloatingSelector|(FloatingRegion|FloatingSelector)[]
+      floating?: FloatingRegion | FloatingSelector | (FloatingRegion | FloatingSelector)[]
 
       /**
        * A single or an array of regions to match as layout level.
        * See: https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels
        */
-      layout?:Region|Selector|(Region|Selector)[]
+      layout?: Region | Selector | (Region | Selector)[]
 
       /**
        * A single or an array of regions to match as content level.
        * See: https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels
        */
-      content?:Region|Selector|(Region|Selector)[]
+      content?: Region | Selector | (Region | Selector)[]
 
       /**
        * A single or an array of regions to match as strict level.
        * See: https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels
        */
-      strict?:Region|Selector|(Region|Selector)[]
+      strict?: Region | Selector | (Region | Selector)[]
 
       /**
        * A single or an array of regions to perform accessibility checks.
        */
-      accessibility?:AccessibilityRegion|AccessibilitySelector|(AccessibilityRegion|AccessibilitySelector)[]
+      accessibility?:
+        | AccessibilityRegion
+        | AccessibilitySelector
+        | (AccessibilityRegion | AccessibilitySelector)[]
 
       /**
        * A set of scripts to be run by the browser during the rendering.
        * It is intended to be used as a means to alter the page's state and structure at the time of rendering.
        * An object with the following properties:
        */
-      scriptHooks?:{beforeCaptureScreenshot:string}
+      scriptHooks?: {beforeCaptureScreenshot: string}
 
       /**
        * A flag to specify whether a capture of DOM and CSS should be taken when rendering the screenshot.
        * The default value is true. This should only be modified to troubleshoot unexpected behavior,
        * and not for normal production use.
        */
-      sendDom?:boolean
+      sendDom?: boolean
 
       /**
        * Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches.
        * Default value: false
        */
-      ignoreDisplacements?:boolean
+      ignoreDisplacements?: boolean
     }
 
     interface Selector {
-      type?:'css'|'xpath'
+      type?: 'css' | 'xpath'
       selector: string
     }
 
@@ -343,7 +352,12 @@ declare namespace Eyes {
       maxRightOffset: number
     }
 
-    type AccessibilityType = "IgnoreContrast"|"RegularText"|"LargeText"|"BoldText"|"GraphicalObject"
+    type AccessibilityType =
+      | 'IgnoreContrast'
+      | 'RegularText'
+      | 'LargeText'
+      | 'BoldText'
+      | 'GraphicalObject'
 
     interface AccessibilityRegion extends Region {
       accessibilityType: AccessibilityType
