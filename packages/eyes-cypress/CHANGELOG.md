@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 3.21.0 - 2021/4/22
+
+- updated to @applitools/dom-snapshot@4.5.0 (from 4.4.14)
+- updated to @applitools/visual-grid-client@15.8.0 (from 15.6.2)
+
 ## 3.20.4 - 2021/3/17
 
 - set explicit timeout for eyesCheckWindow [trello](https://trello.com/c/5Thz1QFs)
