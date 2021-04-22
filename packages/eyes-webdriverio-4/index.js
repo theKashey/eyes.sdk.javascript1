@@ -20,6 +20,7 @@ exports.FileLogHandler = core.FileLogHandler
 exports.BatchInfo = core.BatchInfo
 exports.BrowserType = core.BrowserType
 exports.DeviceName = core.DeviceName
+exports.TestResults = core.TestResults
 exports.ScreenOrientation = core.ScreenOrientation
 exports.IosDeviceName = core.IosDeviceName
 exports.IosVersion = core.IosVersion
