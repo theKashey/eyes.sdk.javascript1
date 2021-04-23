@@ -62,7 +62,7 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
       configuration.getEnablePatterns(),
     ),
     useDom: TypeUtils.getOrDefault(checkSettings.getUseDom(), configuration.getUseDom()),
-    variantId: checkSettings.getVariantId(),
+    variationGroupId: checkSettings.getVariationGroupId(),
   }
 
   if (config.target === 'region') {

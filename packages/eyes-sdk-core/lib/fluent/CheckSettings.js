@@ -43,7 +43,7 @@ class CheckSettings {
     /** @type {string} */
     this._renderId = undefined
     /** @type {string} */
-    this._variantId = undefined
+    this._variationGroupId = undefined
 
     this._timeout = timeout
     this._targetRegion = region ? new Region(region) : undefined
@@ -114,13 +114,13 @@ class CheckSettings {
     return this._renderId
   }
 
-  variantId(variantId) {
-    this._variantId = variantId
+  variationGroupId(variationGroupId) {
+    this._variationGroupId = variationGroupId
     return this
   }
 
   getVariantId() {
-    return this._variantId
+    return this._variationGroupId
   }
 
   /**

@@ -75,7 +75,7 @@ describe('MatchWindowTask', () => {
       const imageMatchSettings = 'imageMatchSettings'
       const renderId = 'renderId'
       const source = 'source'
-      const variantId = 'variantId'
+      const variationGroupId = 'variationGroupId'
 
       /*** When ***/
 
@@ -87,7 +87,7 @@ describe('MatchWindowTask', () => {
         ignoreMismatch,
         imageMatchSettings,
         source,
-        variantId,
+        variationGroupId,
       )
 
       await GeneralUtils.sleep(0)
@@ -120,7 +120,7 @@ describe('MatchWindowTask', () => {
             userInputs,
             name,
             imageMatchSettings,
-            variantId,
+            variationGroupId,
           },
         },
       })

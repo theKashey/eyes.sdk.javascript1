@@ -193,7 +193,7 @@ class CheckSettings {
     /** @private @type {number[]|boolean} */
     this._layoutBreakpoints = undefined
     /** @private @type {string} */
-    this._variantId = undefined
+    this._variationGroupId = undefined
   }
   /**
    * Create check settings from an object
@@ -300,8 +300,8 @@ class CheckSettings {
     if (object.disableBrowserFetching) {
       settings.disableBrowserFetching()
     }
-    if (object.variantId) {
-      settings.variantId(object.variantId)
+    if (object.variationGroupId) {
+      settings.variationGroupId(object.variationGroupId)
     }
     return settings
   }
@@ -983,12 +983,12 @@ class CheckSettings {
     return this._disableBrowserFetching
   }
 
-  variantId(variantId) {
-    this._variantId = variantId
+  variationGroupId(variationGroupId) {
+    this._variationGroupId = variationGroupId
     return this
   }
-  getVariantId() {
-    return this._variantId
+  getVariationGroupId() {
+    return this._variationGroupId
   }
 
   /**

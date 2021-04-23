@@ -43,7 +43,7 @@ class MatchWindowAndCloseTask extends MatchWindowTask {
     ignoreMismatch,
     imageMatchSettings,
     source,
-    variantId,
+    variationGroupId,
   ) {
     // Prepare match model.
     const options = new Options({
@@ -56,7 +56,7 @@ class MatchWindowAndCloseTask extends MatchWindowTask {
       forceMatch: false,
       imageMatchSettings,
       source,
-      variantId,
+      variantId: variationGroupId,
     })
     const data = new MatchWindowAndCloseData({
       startInfo: this._startInfo,

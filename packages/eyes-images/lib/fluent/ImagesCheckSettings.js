@@ -29,7 +29,7 @@ class ImagesCheckSettings extends CheckSettings {
     /** @type {boolean} */
     this._ignoreMismatch = false
     /** @type {string} */
-    this._variantId = undefined
+    this._variationGroupId = undefined
   }
 
   /**
@@ -204,13 +204,13 @@ class ImagesCheckSettings extends CheckSettings {
     return this
   }
 
-  variantId(variantId) {
-    this._variantId = variantId
+  variationGroupId(variationGroupId) {
+    this._variationGroupId = variationGroupId
     return this
   }
 
   getVariantId() {
-    return this._variantId
+    return this._variationGroupId
   }
 }
 

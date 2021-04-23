@@ -20,7 +20,7 @@ function createCheckSettings({
   ignoreDisplacements,
   renderId,
   matchLevel,
-  variantId,
+  variationGroupId,
 }) {
   const checkSettings = new CheckSettings(0)
   setEachRegion(ignore, checkSettings.ignoreRegions.bind(checkSettings))
@@ -73,8 +73,8 @@ function createCheckSettings({
   if (matchLevel !== undefined) {
     checkSettings.matchLevel(matchLevel)
   }
-  if (variantId !== undefined) {
-    checkSettings.variantId(variantId)
+  if (variationGroupId !== undefined) {
+    checkSettings.variationGroupId(variationGroupId)
   }
 
   return checkSettings
