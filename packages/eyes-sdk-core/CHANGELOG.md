@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- rename `variantId` to `variationGroupId`
 
 ## 12.17.2 - 2021/4/6
 
