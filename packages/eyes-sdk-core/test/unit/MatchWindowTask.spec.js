@@ -120,7 +120,7 @@ describe('MatchWindowTask', () => {
             userInputs,
             name,
             imageMatchSettings,
-            variationGroupId,
+            variantId: variationGroupId,
           },
         },
       })
