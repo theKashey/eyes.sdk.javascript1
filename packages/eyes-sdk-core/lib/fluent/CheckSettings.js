@@ -119,7 +119,7 @@ class CheckSettings {
     return this
   }
 
-  getVariantId() {
+  getVariationGroupId() {
     return this._variationGroupId
   }
 

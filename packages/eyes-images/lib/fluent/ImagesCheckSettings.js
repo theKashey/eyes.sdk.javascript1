@@ -209,7 +209,7 @@ class ImagesCheckSettings extends CheckSettings {
     return this
   }
 
-  getVariantId() {
+  getVariationGroupId() {
     return this._variationGroupId
   }
 }
