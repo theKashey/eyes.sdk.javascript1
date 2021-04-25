@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.17.4 - 2021/4/25
+
 - fix `variationGroupId`
 
 ## 12.17.3 - 2021/4/23
