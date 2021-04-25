@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix `variationGroupId`
 
 ## 12.17.3 - 2021/4/23
 
