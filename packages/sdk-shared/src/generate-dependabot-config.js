@@ -11,8 +11,12 @@ const skipList = ['eyes-universal-poc', 'eyes-leanft', 'eyes-images-legacy', 'ey
     .map(package => `  - package-ecosystem: "npm"
     directory: "/packages/${package}"
     schedule:
-      interval: "daily"`)
+      interval: "daily"
+    allowed_updates:
+      - match:
+        update_type: "security"`)
     .join('\n')
     const fileContent = `version: 2\nupdates:\n${packagesStr}`
     await fs.writeFile(path.join(__dirname,'../../../.github/dependabot.yml'), fileContent);
 })()
+
