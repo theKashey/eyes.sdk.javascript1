@@ -15,10 +15,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.5.tgz#d67d9bd8c2c612da6dd9dcdea2b08f9630b22a3a"
   integrity sha512-O2zgnnqVi3/Atq7EQjURLa73XNaDFJCj8wHht6WQtxIv1EWYnPutNTmnJSKwK7FnbJAg65OVjZylcz4EezyYZA==
 
-"@applitools/dom-snapshot@4.4.14":
-  version "4.4.14"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.4.14.tgz#cd3f7d369b702be7f5bdc82405f541432bcd66a5"
-  integrity sha512-jI+G2y/85tTXFlMUG6LOKIaW4wLGZ0kgh7Ieb3VVu8OATWOWSpF8ZfIvOq5E3GWJ/KEQzOYvh5aPuEscDcpVCw==
+"@applitools/dom-snapshot@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.0.tgz#7169db6a0c52816105cc4e8738277a0b42661375"
+  integrity sha512-Sm3zE1pzvYGpgt31VxpVlH1QgS4OeeDIIF4temiTnM+x7RePYlaeMbN4kQylapwgMbiAuZOdrtUsgmqq2eRFdg==
   dependencies:
     "@applitools/dom-shared" "1.0.5"
     "@applitools/functional-commons" "1.6.0"
@@ -33,13 +33,13 @@
     "@applitools/snippets" "2.1.1"
     "@applitools/utils" "1.0.1"
 
-"@applitools/eyes-sdk-core@12.16.3":
-  version "12.16.3"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.16.3.tgz#c3d01fc4f34883e649fb4ff76dec4d07f172efc6"
-  integrity sha512-rEHSCQxsffx2OnKOPo0x9eQ+u39shqlHmSkRfhunPhlqgaCpi2RHgAVBtxNLP9qyFFki76bljqKI2ke4w9WTEA==
+"@applitools/eyes-sdk-core@12.17.4":
+  version "12.17.4"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.17.4.tgz#6ad03ac0a0ad73bcba4789bec5086199d13bc482"
+  integrity sha512-/SsO4dXi1gmjR+sbsyzPCdy1cVAj1Zel9V+WcagbUIJa8IBtLGJaE7E6GbcNnBRjl3/2gHEwvQf4u6tPmXQppw==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.4.14"
+    "@applitools/dom-snapshot" "4.5.0"
     "@applitools/driver" "1.0.4"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/screenshoter" "3.0.5"
@@ -144,10 +144,28 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-coverage-tests@2.3.8", "@applitools/sdk-coverage-tests@^2.3.8":
+"@applitools/sdk-coverage-tests@2.3.8":
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.8.tgz#684e43ce8d155adfa395e8f5a19a999ef4c4f0ec"
   integrity sha512-6GnImU/+0iaySJjxljC616D/hFN0L+KXCdoP9Y9gVbeh1odQvG2TQeW75rq0RO2LjrwBAXDxCzMoT33zLloJkw==
+  dependencies:
+    "@azure/storage-blob" "12.2.0-preview.1"
+    "@babel/core" "7.12.10"
+    axios "0.20.0"
+    chai "4.2.0"
+    chai-as-promised "7.1.1"
+    chalk "4.1.0"
+    handlebars "4.7.6"
+    micromatch "4.0.2"
+    node-fetch "2.6.1"
+    sync-fetch "0.3.0"
+    xml-js "1.6.11"
+    yargs "16.0.3"
+
+"@applitools/sdk-coverage-tests@^2.3.11":
+  version "2.3.11"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.11.tgz#3d43851837e607cfa7dbf06c66dffe2b1f7097f4"
+  integrity sha512-E/NoP2ilKJ2SxblJjcSTrNe3M+SAcgyzvfOn6X22dO5BtHWCrs0dAip30ydWD8/hfRX3IbP4RSFedqOhaIJoAQ==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"
@@ -243,12 +261,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.0.1.tgz#13d4cc0d2a964c8cca838e8ba8306f1e4512a006"
   integrity sha512-Zj+fmrCcExPp1KagDa6bIHS9L6WEdFBbjFgjweZTQoWGnW8dbvcC0OmoVxdbO5+hXN5qAnRVsVG9Cs6QdWqfvQ==
 
-"@applitools/visual-grid-client@15.6.4":
-  version "15.6.4"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.6.4.tgz#d64428155d5b09b25d71c40e3a5af0a16730a8a2"
-  integrity sha512-kjD3RCY1ZtusT2wvHe6157Azafb3XWhAMqYLJx3gaUUd2fqksosgGoKJCr+IJPXd9hScN2dqNLQkM6tUwiqrAA==
+"@applitools/visual-grid-client@15.8.2":
+  version "15.8.2"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.2.tgz#2f50cf7228cb132ba1dd3629b7c4069001675a9f"
+  integrity sha512-UkTihealYXvsAC78n7a0OY6d6tKjaVmpsmvWKqtQ28RMFHIyAPiI4+LAdnjh+gYYYZHUUo2OZNTrWo6jHmuRVw==
   dependencies:
-    "@applitools/eyes-sdk-core" "12.16.3"
+    "@applitools/eyes-sdk-core" "12.17.4"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.3"
     "@applitools/isomorphic-fetch" "3.0.0"
