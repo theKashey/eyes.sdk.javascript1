@@ -124,7 +124,7 @@ describe('testWindow', () => {
           _targetRegion: undefined,
           _timeout: 0,
           _useDom: undefined,
-          _variantId: undefined,
+          _variationGroupId: undefined,
         },
         closeAfterMatch: true,
         throwEx: true,
