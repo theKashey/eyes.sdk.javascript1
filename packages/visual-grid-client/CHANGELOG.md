@@ -3,6 +3,7 @@
 ## Unreleased
 
 - rename `variantId` to `variationGroupId`
+- updated to @applitools/eyes-sdk-core@12.17.4 (from 12.17.2)
 
 ## 15.8.1 - 2021/4/22
 
