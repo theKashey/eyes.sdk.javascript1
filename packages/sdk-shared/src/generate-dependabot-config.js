@@ -10,8 +10,7 @@ const skipList = ['eyes-universal-poc', 'eyes-leanft', 'eyes-images-legacy', 'ey
     .filter(package => !skipList.includes(package) && !package.startsWith('.'))
     .map(package => `  - package-ecosystem: "npm"
     directory: "/packages/${package}"
-    schedule:
-      interval: "daily"
+    update_schedule: "live"
     allowed_updates:
       - match:
         update_type: "security"`)
