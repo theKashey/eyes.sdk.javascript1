@@ -73,6 +73,7 @@
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.13.0",
     "@applitools/sdk-shared": "0.8.8",
+    "@applitools/snaptdout": "^1.0.1",
     "@storybook/addon-options": "^5.2.8",
     "@storybook/react": "^5.2.8",
     "@testing-library/dom": "^5.6.1",

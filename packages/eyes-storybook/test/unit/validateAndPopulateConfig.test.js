@@ -11,6 +11,7 @@ const {
   missingAppNameAndPackageJsonFailMsg,
   missingAppNameInPackageJsonFailMsg,
 } = require('../../src/errMessages');
+const snap = require('@applitools/snaptdout');
 
 describe('validateAndPopulateConfig', () => {
   it('throws error on missing apiKey', async () => {
@@ -145,5 +146,22 @@ describe('validateAndPopulateConfig', () => {
       bla: true,
       args: ['something', '--disable-dev-shm-usage'],
     });
+  });
+
+  it('shows a warning message when using fakeIE flag with no IE browsers in the config', async () => {
+    let warningMessage;
+    const originConsoleLog = console.log;
+    const config = {
+      apiKey: 'bla',
+      storybookUrl: 'url',
+      appName: 'bla',
+      runInDocker: true,
+      browser: [{name: 'chrome'}],
+      fakeIE: true,
+    };
+    console.log = txt => (warningMessage = txt);
+    await validateAndPopulateConfig({config});
+    await snap(warningMessage, 'warning message fakeIE');
+    console.log = originConsoleLog;
   });
 });

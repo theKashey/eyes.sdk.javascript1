@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- run on fake user agent for IE
 
 ## 3.21.0 - 2021/4/22
 

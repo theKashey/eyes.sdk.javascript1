@@ -1,10 +1,21 @@
-const {describe, it, _before, _after} = require('mocha');
+const {describe, it, before, after} = require('mocha');
+const testStorybook = require('../util/testStorybook');
 const {expect} = require('chai');
 const path = require('path');
 const {delay: _psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
 
 describe('eyes-storybook', () => {
+  let closeStorybook;
+  before(async () => {
+    closeStorybook = await testStorybook({
+      port: 9001,
+      storybookConfigDir: path.resolve(__dirname, '../fixtures/jsLayoutStorybook'),
+    });
+  });
+
+  after(async () => await closeStorybook());
+
   it('renders with layout breakpoints in config', async () => {
     const [err, result] = await presult(
       sh(

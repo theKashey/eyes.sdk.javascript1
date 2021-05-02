@@ -1,13 +1,16 @@
 const {presult} = require('@applitools/functional-commons');
 const browserLog = require('./browserLog');
+const fakeIE = require('./fakeIE');
 
-function makeInitPage({iframeUrl, config, browser, logger}) {
+function makeInitPage({iframeUrl, config, browser, logger, getTransitiongIntoIE, getRenderIE}) {
   return async function initPage({pageId, pagePool}) {
     logger.log('initializing puppeteer page number ', pageId);
     const page = await browser.newPage();
+
     if (config.viewportSize) {
       await page.setViewport(config.viewportSize);
     }
+
     if (config.showLogs) {
       browserLog({
         page,
@@ -18,22 +21,25 @@ function makeInitPage({iframeUrl, config, browser, logger}) {
         },
       });
     }
-    page.on('error', async err => {
-      logger.log(`Puppeteer error for page ${pageId}:`, err);
-      pagePool.removePage(pageId);
-      const {pageId: newPageId} = await pagePool.createPage();
-      pagePool.addToPool(newPageId);
-    });
+
     page.on('close', async () => {
-      if (pagePool.isInPool(pageId)) {
+      if (!getTransitiongIntoIE() && pagePool.isInPool(pageId)) {
         logger.log(
           `Puppeteer page closed [page ${pageId}] while still in page pool, creating a new one instead`,
         );
-        pagePool.removePage(pageId);
-        const {pageId} = await pagePool.createPage();
-        pagePool.addToPool(pageId);
+        await pagePool.removeAndAddPage(pageId);
       }
     });
+
+    page.on('error', async err => {
+      logger.log(`Puppeteer error for page ${pageId}:`, err);
+      await pagePool.removeAndAddPage(pageId);
+    });
+
+    if (getRenderIE()) {
+      await fakeIE({logger, page, pageId});
+    }
+
     const [err] = await presult(page.goto(iframeUrl, {timeout: config.readStoriesTimeout}));
     if (err) {
       logger.log(`error navigating to iframe.html`, err);
@@ -41,6 +47,7 @@ function makeInitPage({iframeUrl, config, browser, logger}) {
         throw err;
       }
     }
+
     return page;
   };
 }

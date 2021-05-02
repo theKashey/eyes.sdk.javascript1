@@ -6,5 +6,6 @@ test/fixtures/crossOriginIframeStorybook
 test/fixtures/jsLayoutStorybook
 test/fixtures/jsLayoutStorybookLocal
 test/fixtures/customFont
+test/fixtures/fakeIE
 dist
 logs

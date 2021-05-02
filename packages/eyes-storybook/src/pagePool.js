@@ -7,6 +7,7 @@ function createPagePool({initPage, logger}) {
   let currWaitOnFreePage = Promise.resolve();
   const pagePool = {
     getFreePage,
+    removeAndAddPage,
     createPage: async () => {
       const fullPageObj = await createPage();
       fullPageObjs.push(fullPageObj);
@@ -28,9 +29,23 @@ function createPagePool({initPage, logger}) {
       const fullPageObj = fullPageObjs.find(p => p.pageId === pageId);
       return fullPageObj && fullPageObj.isInPool();
     },
+    drain: async () => {
+      // only call pagePool.drain if you KNOW all pages are free
+      logger.log('[page pool] draining pool');
+      for (const {page, pageId} of [...fullPageObjs]) {
+        await page.close();
+        await removeAndAddPage(pageId);
+      }
+    },
   };
 
   return pagePool;
+
+  async function removeAndAddPage(pageId) {
+    pagePool.removePage(pageId);
+    const {pageId: newPageId} = await pagePool.createPage();
+    pagePool.addToPool(newPageId);
+  }
 
   async function getFreePage() {
     logger.log(`[page pool] waiting for free page`);
@@ -43,6 +58,7 @@ function createPagePool({initPage, logger}) {
           return p;
         }),
     );
+
     const fullPageObj = await currWaitOnFreePage;
     fullPageObj.occupyPage();
     logger.log(`[page pool] free page found: ${fullPageObj.pageId}`);

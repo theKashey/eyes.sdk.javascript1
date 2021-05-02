@@ -3,6 +3,7 @@ const getStoryUrl = require('./getStoryUrl');
 const getStoryTitle = require('./getStoryTitle');
 const ora = require('ora');
 const {presult} = require('@applitools/functional-commons');
+const {shouldRenderIE} = require('./shouldRenderIE');
 
 function makeRenderStories({
   getStoryData,
@@ -18,16 +19,17 @@ function makeRenderStories({
 }) {
   let newPageIdToAdd;
 
-  return async function renderStories(stories) {
+  return async function renderStories(stories, config) {
     let doneStories = 0;
-
-    const spinner = ora({text: `Done 0 stories out of ${stories.length}`, stream});
-    spinner.start();
-
     const allTestResults = [];
     let allStoriesPromise = Promise.resolve();
     let currIndex = 0;
 
+    const spinner = ora({
+      text: updateSpinnerText(0, stories.length),
+      stream,
+    });
+    spinner.start();
     prepareNewPage();
 
     await processStoryLoop();
@@ -81,6 +83,7 @@ function makeRenderStories({
               .close()
               .catch(e => logger.log(`stale [page ${pageId}] already closed: ${e.message}`));
             const newPageObj = await pagePool.createPage();
+
             logger.log(`new page ${newPageObj.pageId} created ad hoc. trying it out`);
             const [newError, newStoryData] = await presult(
               getStoryData({
@@ -107,6 +110,7 @@ function makeRenderStories({
             snapshot: storyData,
             url: storyUrl,
             story,
+            config,
           });
 
           return onDoneStory(testResults, story);
@@ -129,8 +133,12 @@ function makeRenderStories({
       allTestResults.every(didTestPass) ? spinner.succeed() : spinner.fail();
     }
 
+    function updateSpinnerText(number, length) {
+      return `Done ${number} stories out of ${length} ${shouldRenderIE(config) ? '(IE)' : ''}`;
+    }
+
     function onDoneStory(resultsOrErr, story) {
-      spinner.text = `Done ${++doneStories} stories out of ${stories.length}`;
+      spinner.text = updateSpinnerText(++doneStories, stories.length);
       const title = getStoryTitle(story);
       allTestResults.push({title, resultsOrErr});
       return {title, resultsOrErr};
@@ -159,6 +167,7 @@ function makeRenderStories({
       }
 
       logger.log(`[prepareNewPage] setting new page for replacement: ${pageId}`);
+
       newPageIdToAdd = pageId;
     }
   };

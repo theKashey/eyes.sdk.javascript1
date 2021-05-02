@@ -5,6 +5,7 @@ const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
 const {delay: psetTimeout, presult} = require('@applitools/functional-commons');
 const {version} = require('../../package.json');
+const snap = require('@applitools/snaptdout');
 
 describe('eyes-storybook', () => {
   let closeTestServer, showLogsOrig;
@@ -46,62 +47,10 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
+      .replace(/\d+(?:\.\d+)+/, version)
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
-    expect(normalizedStdout).to.equal(
-      `Using @applitools/eyes-storybook version ${version}.
-
-
-Ignoring parameters for story: "with some emoji Button" since they are not serilizable. Error: "Converting circular structure to JSON
-    --> starting at object with constructor 'Object'
-    --- property 'inner' closes the circle"
-
-See details at <some_url>
-
-[EYES: TEST RESULTS]:
-
-Button with-space yes-indeed: a yes-a b [Chrome] [1024x768] - Passed
-Button with-space yes-indeed/nested with-space yes: b yes-a b [Chrome] [1024x768] - Passed
-Button with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome] [1024x768] - Passed
-Button: background color [Chrome] [1024x768] - Passed
-Button: with some emoji [Chrome] [1024x768] - Passed
-Button: with text [Chrome] [1024x768] - Passed
-Image: image [Chrome] [1024x768] - Passed
-Interaction: Popover [Chrome] [1024x768] - Passed
-Nested: story 1 [Chrome] [1024x768] - Passed
-Nested/Component: story 1.1 [Chrome] [1024x768] - Passed
-Nested/Component: story 1.2 [Chrome] [1024x768] - Passed
-Responsive UI: Red/green [Chrome] [1024x768] - Passed
-RTL: local RTL config [Chrome] [1024x768] - Passed
-RTL: local RTL config [rtl] [Chrome] [1024x768] - Passed
-RTL: should also do RTL [Chrome] [1024x768] - Passed
-RTL: should also do RTL [rtl] [Chrome] [1024x768] - Passed
-SOME section|Nested/Component: story 1.1 [Chrome] [1024x768] - Passed
-SOME section|Nested/Component: story 1.2 [Chrome] [1024x768] - Passed
-Text: appears after a delay [Chrome] [1024x768] - Passed
-Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b [Chrome] [1024x768] - Passed
-
-
-No differences were found!
-See details at <some_url>
-Total time: <some_time> seconds
-
-
-Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.
-This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.
-If your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.
-Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.
-
-
-`,
-    );
-
-    expect(stderr).to.equal(`- Starting storybook server
-✔ Storybook was started
-- Reading stories
-✔ Reading stories
-- Done 0 stories out of 20
-✔ Done 20 stories out of 20
-`);
+    await snap(normalizedStdout, 'stdout');
+    await snap(stderr, 'stderr');
   });
 
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
@@ -113,15 +62,9 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-
-    expect(results[0].stdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
-
-
-`);
-
-    expect(results[0].stderr).to.equal(`- Reading stories
-✖ Error when reading stories: could not determine storybook version in order to extract stories
-`);
+    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    await snap(stdout, 'undetermined version stdout');
+    await snap(results[0].stderr, 'undetermined version stderr');
   });
 
   it('fails with proper message when failing to get stories because of navigation timeout', async () => {
@@ -133,15 +76,9 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
     const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-
-    expect(results[0].stdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
-
-
-`);
-
-    expect(results[0].stderr).to.equal(`- Reading stories
-✖ Error when loading storybook. Navigation Timeout Exceeded: 10ms exceeded
-`);
+    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    await snap(stdout, 'navigation timeout stdout');
+    await snap(results[0].stderr, 'navigation timeout stderr');
   });
 
   it('fails with proper message when failing to get stories because storybook is loading too slowly', async () => {
@@ -156,15 +93,9 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-
-    expect(results[0].stdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
-
-
-`);
-
-    expect(results[0].stderr).to.equal(`- Reading stories
-✖ Error when reading stories: storybook is loading for too long
-`);
+    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    await snap(stdout, 'too slowly stdout');
+    await snap(results[0].stderr, 'too slowly stderr');
   });
 
   it('renders multi browser versions', async () => {
@@ -189,39 +120,10 @@ Need a higher concurrency in your account? Email us @ sdr@applitools.com with yo
         'See details at <some_url>',
       )
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+      .replace(/\d+(?:\.\d+)+/, version)
       .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1]');
 
-    expect(normalizedStdout).to.equal(`Using @applitools/eyes-storybook version ${version}.
-
-
-See details at <some_url>
-
-[EYES: TEST RESULTS]:
-
-Single category: Single story [Chrome] [640x480] - Passed
-Single category: Single story [Chrome] [640x480] - Passed
-Single category: Single story [Firefox] [640x480] - Passed
-
-
-No differences were found!
-See details at <some_url>
-Total time: <some_time> seconds
-
-
-Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.
-This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.
-If your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.
-Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.
-
-
-`);
-
-    expect(stderr).to.equal(`- Starting storybook server
-✔ Storybook was started
-- Reading stories
-✔ Reading stories
-- Done 0 stories out of 1
-✔ Done 1 stories out of 1
-`);
+    await snap(normalizedStdout, 'multi browser stdout');
+    await snap(stderr, 'multi browser stderr');
   });
 });

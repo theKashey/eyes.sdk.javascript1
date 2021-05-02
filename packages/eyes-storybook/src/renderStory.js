@@ -2,8 +2,8 @@
 const getStoryTitle = require('./getStoryTitle');
 const {deprecationWarning} = require('@applitools/eyes-sdk-core').GeneralUtils;
 
-function makeRenderStory({config, logger, testWindow, performance, timeItAsync}) {
-  return function renderStory({story, snapshot, url}) {
+function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
+  return function renderStory({config, story, snapshot, url}) {
     const {name, kind, parameters} = story;
     const title = getStoryTitle({name, kind, parameters});
     const eyesOptions = (parameters && parameters.eyes) || {};
@@ -41,6 +41,7 @@ function makeRenderStory({config, logger, testWindow, performance, timeItAsync})
 
     const openParams = {
       testName: title,
+      browser: config.browser,
       properties: [
         {name: 'Component name', value: kind},
         {name: 'State', value: name},

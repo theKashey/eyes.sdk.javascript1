@@ -3,12 +3,12 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const makeRenderStories = require('../../src/renderStories');
-const getStoryTitle = require('../../src/getStoryTitle');
 const testStream = require('../util/testStream');
 const createPagePool = require('../../src/pagePool');
 const {delay} = require('@applitools/functional-commons');
 const logger = require('../util/testLogger');
 const puppeteer = require('puppeteer');
+const snap = require('@applitools/snaptdout');
 
 const waitForQueuedRenders = () => {};
 
@@ -26,10 +26,85 @@ describe('renderStories', () => {
       logger,
     });
 
-    const results = await renderStories([]);
+    const results = await renderStories([], {});
 
     expect(results).to.eql([]);
-    expect(getEvents()).to.eql(['- Done 0 stories out of 0\n', '✔ Done 0 stories out of 0\n']);
+    await snap(getEvents().join(''), 'empty');
+  });
+
+  it('differentiates IE from non IE with different message', async () => {
+    const pagePool = createPagePool({
+      logger,
+      initPage: async ({pageId}) => ({evaluate: async () => pageId + 1}),
+    });
+    pagePool.addToPool((await pagePool.createPage()).pageId);
+
+    const getStoryData = async ({story, storyUrl, page}) => {
+      await delay(10);
+      return `snapshot_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`;
+    };
+
+    const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
+
+    const storybookUrl = 'http://something';
+    const {stream, getEvents} = testStream();
+
+    const renderStories = makeRenderStories({
+      getStoryData,
+      waitForQueuedRenders,
+      renderStory,
+      storybookUrl,
+      logger,
+      stream,
+      pagePool,
+    });
+
+    const stories = [{name: 's1', kind: 'k1'}];
+
+    await renderStories(stories, {
+      bla: true,
+      fakeIE: true,
+      browser: [{name: 'ie'}],
+    });
+
+    await snap(getEvents().join(''), 'IE rendering msg');
+  });
+
+  it('does not show IE if no flag was provided', async () => {
+    const pagePool = createPagePool({
+      logger,
+      initPage: async ({pageId}) => ({evaluate: async () => pageId + 1}),
+    });
+    pagePool.addToPool((await pagePool.createPage()).pageId);
+
+    const getStoryData = async ({story, storyUrl, page}) => {
+      await delay(10);
+      return `snapshot_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`;
+    };
+
+    const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
+
+    const storybookUrl = 'http://something';
+    const {stream, getEvents} = testStream();
+
+    const renderStories = makeRenderStories({
+      getStoryData,
+      waitForQueuedRenders,
+      renderStory,
+      storybookUrl,
+      logger,
+      stream,
+      pagePool,
+    });
+
+    const stories = [{name: 's1', kind: 'k1'}];
+
+    await renderStories(stories, {
+      bla: true,
+      browser: [{name: 'chrome'}, {name: 'ie'}],
+    });
+
+    await snap(getEvents().join(''), 'rendering msg');
   });
 
   it('returns results from renderStory', async () => {
@@ -71,13 +146,14 @@ describe('renderStories', () => {
       {name: 's7', kind: 'k7'},
     ];
 
-    const results = await renderStories(stories);
+    const results = await renderStories(stories, {bla: true});
 
     const expectedResults = await Promise.all(
       stories.map(async (story, i) => {
         const storyUrl = `http://something/iframe.html?eyes-storybook=true&selectedKind=${story.kind}&selectedStory=${story.name}`;
         const page = i % 3 === 0 ? 1 : i % 3 === 1 ? 2 : 3;
         return {
+          config: {bla: true},
           snapshot: `snapshot_${story.name}_${story.kind}_${storyUrl}_${page}`,
           story,
           url: storyUrl,
@@ -93,7 +169,7 @@ describe('renderStories', () => {
         .sort((a, b) => a.snapshot.localeCompare(b.snapshot)),
     ).to.eql(expectedResults);
 
-    expect(getEvents()).to.eql(['- Done 0 stories out of 7\n', '✔ Done 7 stories out of 7\n']);
+    await snap(getEvents().join(''), 'results');
   });
 
   it('passes waitBeforeScreenshot to getStoryData', async () => {
@@ -124,9 +200,10 @@ describe('renderStories', () => {
       pagePool,
     });
 
-    const results = await renderStories([
-      {name: 's1', kind: 'k1', parameters: {eyes: {waitBeforeScreenshot: 'wait_some_value'}}},
-    ]);
+    const results = await renderStories(
+      [{name: 's1', kind: 'k1', parameters: {eyes: {waitBeforeScreenshot: 'wait_some_value'}}}],
+      {},
+    );
 
     expect(_waitBeforeScreenshot).to.eql('wait_some_value');
     expect(results[0].title).to.eql('k1: s1');
@@ -165,15 +242,13 @@ describe('renderStories', () => {
     });
 
     const story = {name: 's1', kind: 'k1'};
-    const results = await renderStories([story]);
+    const results = await renderStories([story], {});
 
     expect(results[0].title).to.eql('k1: s1');
     expect(results[0].resultsOrErr).to.be.an.instanceOf(Error);
-    expect(results[0].resultsOrErr.message).to.equal(
-      `[page 0] Failed to get story data for "${getStoryTitle(story)}". Error: bla`,
-    );
 
-    expect(getEvents()).to.eql(['- Done 0 stories out of 1\n', '✖ Done 1 stories out of 1\n']);
+    await snap(results[0].resultsOrErr.message, 'err message');
+    await snap(getEvents().join(''), 'getStoryData err');
   });
 
   it('returns errors from renderStory', async () => {
@@ -202,12 +277,12 @@ describe('renderStories', () => {
     });
 
     const story = {name: 's1', kind: 'k1'};
-    const results = await renderStories([story]);
+    const results = await renderStories([story], {});
     expect(results[0].title).to.eql('k1: s1');
     expect(results[0].resultsOrErr).to.be.an.instanceOf(Error);
     expect(results[0].resultsOrErr.message).to.equal('bla');
 
-    expect(getEvents()).to.eql(['- Done 0 stories out of 1\n', '✖ Done 1 stories out of 1\n']);
+    await snap(getEvents().join(''), 'renderStory err');
   });
 
   describe('with puppeteer', () => {
@@ -247,12 +322,13 @@ describe('renderStories', () => {
         });
 
         const story = {name: 's1', kind: 'k1'};
-        const results = await renderStories([story]);
+        const results = await renderStories([story], {hello: 'world'});
 
         const storyUrl = `http://something/iframe.html?eyes-storybook=true&selectedKind=${story.kind}&selectedStory=${story.name}`;
         expect(results[0].title).to.eql('k1: s1');
         expect(results.map(({resultsOrErr}) => resultsOrErr[0].arg)).to.eql([
           {
+            config: {hello: 'world'},
             story,
             url: storyUrl,
             snapshot:
@@ -260,7 +336,7 @@ describe('renderStories', () => {
           },
         ]);
 
-        expect(getEvents()).to.eql(['- Done 0 stories out of 1\n', '✔ Done 1 stories out of 1\n']);
+        await snap(getEvents().join(''), 'pptr page close');
       } finally {
         await browser.close();
       }
@@ -320,10 +396,11 @@ describe('renderStories', () => {
         });
 
         const story = {name: 's1', kind: 'k1'};
-        const results = await renderStories([story, story]);
+        const results = await renderStories([story, story], {});
 
         const storyUrl = `http://something/iframe.html?eyes-storybook=true&selectedKind=${story.kind}&selectedStory=${story.name}`;
         const expectedStory = {
+          config: {},
           story,
           url: storyUrl,
           snapshot:
@@ -339,7 +416,7 @@ describe('renderStories', () => {
         expect(resultsOrErr1).not.to.be.an.instanceOf(Error);
         expect(resultsOrErr1[0].arg).to.eql(expectedStory);
 
-        expect(getEvents()).to.eql(['- Done 0 stories out of 2\n', '✔ Done 2 stories out of 2\n']);
+        await snap(getEvents().join(''), 'pttr page corrupted');
       } finally {
         await browser.close();
       }

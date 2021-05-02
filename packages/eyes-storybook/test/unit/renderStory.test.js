@@ -20,11 +20,14 @@ describe('renderStory', () => {
   it('passes correct parameters to testWindow - basic', async () => {
     const testWindow = async x => x;
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
     const story = {name: 'name', kind: 'kind'};
     const title = getStoryTitle(story);
     const results = await renderStory({
       story,
+      config: {
+        browser: [{name: 'chrome', width: 800, height: 600}],
+      },
       snapshot: 'snapshot',
       url: 'url',
     });
@@ -41,6 +44,7 @@ describe('renderStory', () => {
           {name: 'Component name', value: 'kind'},
           {name: 'State', value: 'name'},
         ],
+        browser: [{name: 'chrome', width: 800, height: 600}],
         testName: title,
       },
       throwEx: false,
@@ -50,7 +54,7 @@ describe('renderStory', () => {
   it('passes correct parameters to testWindow - local configuration', async () => {
     const testWindow = async x => x;
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
 
     const eyesOptions = {
       ignoreRegions: 'ignore',
@@ -73,8 +77,7 @@ describe('renderStory', () => {
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
     const title = getStoryTitle(story);
 
-    const results = await renderStory({story});
-
+    const results = await renderStory({story, config: {}});
     deleteUndefinedPropsRecursive(results);
 
     const {ignoreDisplacements, properties} = eyesOptions;
@@ -126,7 +129,6 @@ describe('renderStory', () => {
     };
 
     const renderStory = makeRenderStory({
-      config: globalConfig,
       logger,
       testWindow,
       performance,
@@ -136,7 +138,7 @@ describe('renderStory', () => {
     const story = {name: 'name', kind: 'kind'};
     const title = getStoryTitle(story);
 
-    const results = await renderStory({story});
+    const results = await renderStory({story, config: globalConfig});
 
     deleteUndefinedPropsRecursive(results);
 
@@ -181,7 +183,6 @@ describe('renderStory', () => {
     };
 
     const renderStory = makeRenderStory({
-      config: globalConfig,
       logger,
       testWindow,
       performance,
@@ -209,7 +210,7 @@ describe('renderStory', () => {
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
     const title = getStoryTitle(story);
 
-    const results = await renderStory({story});
+    const results = await renderStory({story, config: globalConfig});
 
     deleteUndefinedPropsRecursive(results);
 
@@ -252,11 +253,11 @@ describe('renderStory', () => {
   it('sets performance timing', async () => {
     const testWindow = async x => x;
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
 
     const story = {name: 'name', kind: 'kind'};
     const title = getStoryTitle(story);
-    await renderStory({story});
+    await renderStory({story, config: {}});
     expect(performance[title]).not.to.equal(undefined);
   });
 
@@ -266,15 +267,15 @@ describe('renderStory', () => {
       throw new Error('bla');
     };
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
-    const [{message}] = await presult(renderStory({story: {}}));
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
+    const [{message}] = await presult(renderStory({story: {}, config: {}}));
     expect(message).to.equal('bla');
   });
 
   it('passes local ignore param for backward compatibility', async () => {
     const testWindow = async x => x;
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
     const story = {
       name: 'name',
       kind: 'kind',
@@ -285,7 +286,7 @@ describe('renderStory', () => {
       },
     };
     const title = getStoryTitle(story);
-    const results = await renderStory({story});
+    const results = await renderStory({story, config: {}});
 
     deleteUndefinedPropsRecursive(results);
 
@@ -307,7 +308,7 @@ describe('renderStory', () => {
   it('ignoreRegions take precedence over ignore param', async () => {
     const testWindow = async x => x;
 
-    const renderStory = makeRenderStory({config: {}, logger, testWindow, performance, timeItAsync});
+    const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
     const story = {
       name: 'name',
       kind: 'kind',
@@ -319,7 +320,7 @@ describe('renderStory', () => {
       },
     };
     const title = getStoryTitle(story);
-    const results = await renderStory({story});
+    const results = await renderStory({story, config: {}});
 
     deleteUndefinedPropsRecursive(results);
 

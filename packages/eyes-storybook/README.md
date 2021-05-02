@@ -19,6 +19,7 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
   * [Previous browser versions](#previous-browser-versions)
   * [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
   * [Device emulation](#device-emulation)
+  * [Faking IE Browser](#faking-ie-browser)
 - [Per component configuration](#per-component-configuration)
   * [`include`](#include)
   * [`variations`](#variations)
@@ -318,6 +319,16 @@ Possible values for `iosVersion` are:
 - `'latest'` - the latest iOS version that's supported by the UFG
 - `'latest-1'` - one version prior to the latest version
 - `undefined` - the UFG's default
+
+## Faking IE Browser
+
+Some pages render differently on Internet Explorer and as such, it may be important to take the dom-snapshot while running on a fake IE browser using the ultrafast grid.
+
+Using the `fakeIE` flag - you can render the stories on a chrome masquerading as IE.
+
+We do this by simulating the `userAgent` and `documentMode` of the page - making the page believe it is being rendered on IE.
+
+There is a small performance impact when using fake IE tests - since the browser needs to fake IE for each story it renders.
 
 ## Per component configuration
 

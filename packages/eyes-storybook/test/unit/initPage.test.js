@@ -22,7 +22,8 @@ describe('init page', () => {
     const config = {
       viewportSize: {width: 400, height: 600},
     };
-    const initPage = makeInitPage({iframeUrl, config, browser, logger});
+
+    const initPage = makeInitPage({iframeUrl, config, browser, logger, getRenderIE: () => false});
 
     const page = await initPage({pageId: 0});
 
@@ -31,7 +32,13 @@ describe('init page', () => {
   });
 
   it('handles page error by removing errored page from page pool and replacing it with newly created page', async () => {
-    const initPage = makeInitPage({iframeUrl: 'about:blank', config: {}, browser, logger});
+    const initPage = makeInitPage({
+      iframeUrl: 'about:blank',
+      config: {},
+      browser,
+      logger,
+      getRenderIE: () => false,
+    });
     let counter = 0;
     const pagePool = {
       pages: [],
@@ -49,7 +56,7 @@ describe('init page', () => {
       },
     };
     const page = await initPage({pageId: counter, pagePool});
-    pagePool.addToPool(counter++);
+    pagePool.addToPool(++counter);
     page.emit('error', new Error('bla'));
     await new Promise(r => setTimeout(r, 200)); // TODO yuck! but I just didn't have time and energy to invest in wiring the promise-based pagePool with the event-based browser
     expect(pagePool.pages).to.eql([1]);

@@ -18,6 +18,9 @@ const createPagePool = require('./pagePool');
 const getClientAPI = require('../dist/getClientAPI');
 const {takeDomSnapshots} = require('@applitools/eyes-sdk-core');
 const {Driver} = require('@applitools/eyes-puppeteer');
+const {refineErrorMessage} = require('./errMessages');
+const {splitConfigsByBrowser} = require('./shouldRenderIE');
+const executeRenders = require('./executeRenders');
 
 const CONCURRENT_PAGES = 3;
 
@@ -29,6 +32,8 @@ async function eyesStorybook({
   outputStream = process.stderr,
 }) {
   let memoryTimeout;
+  let renderIE = false;
+  let transitioning = false;
   takeMemLoop();
   logger.log('eyesStorybook started');
   const {storybookUrl, waitBeforeScreenshot, readStoriesTimeout, reloadPagePerStory} = config;
@@ -45,6 +50,7 @@ async function eyesStorybook({
   logger.log('browser launched');
   const page = await browser.newPage();
   const userAgent = await page.evaluate('navigator.userAgent');
+
   const {
     testWindow,
     closeBatch,
@@ -58,8 +64,14 @@ async function eyesStorybook({
     logger: logger.extend('vgc'),
   });
 
-  const initPage = makeInitPage({iframeUrl, config, browser, logger});
-
+  const initPage = makeInitPage({
+    iframeUrl,
+    config,
+    browser,
+    logger,
+    getTransitiongIntoIE,
+    getRenderIE,
+  });
   const pagePool = createPagePool({initPage, logger});
 
   const doTakeDomSnapshots = async ({page, layoutBreakpoints}) => {
@@ -87,7 +99,6 @@ async function eyesStorybook({
       logger.log(`master tab: ${text}`);
     },
   });
-
   try {
     const [stories] = await Promise.all(
       [getStoriesWithSpinner()].concat(
@@ -108,8 +119,8 @@ async function eyesStorybook({
       takeDomSnapshots: doTakeDomSnapshots,
       waitBeforeScreenshot,
     });
+
     const renderStory = makeRenderStory({
-      config,
       logger: logger.extend('renderStory'),
       testWindow,
       performance,
@@ -120,28 +131,40 @@ async function eyesStorybook({
     const renderStories = makeRenderStories({
       getStoryData,
       renderStory,
+      getClientAPI,
       storybookUrl,
       logger,
       stream: outputStream,
       waitForQueuedRenders: globalState.waitForQueuedRenders,
       storyDataGap: config.storyDataGap,
       pagePool,
-      getClientAPI,
     });
 
     logger.log('finished creating functions');
 
+    const configs = splitConfigsByBrowser(config);
+
     const [error, results] = await presult(
-      timeItAsync('renderStories', () => renderStories(storiesIncludingVariations)),
+      executeRenders({
+        renderStories,
+        setRenderIE,
+        setTransitioningIntoIE,
+        configs,
+        stories: storiesIncludingVariations,
+        pagePool,
+        logger,
+        timeItAsync,
+      }),
     );
 
     const [closeBatchErr] = await presult(closeBatch());
+
     if (closeBatchErr) {
       logger.log('failed to close batch', closeBatchErr);
     }
 
     if (error) {
-      const msg = refineErrorMessage({prefix: 'Error in renderStories:', error});
+      const msg = refineErrorMessage({prefix: 'Error in executeRenders:', error});
       logger.log(error);
       throw new Error(msg);
     } else {
@@ -152,11 +175,6 @@ async function eyesStorybook({
     logger.log('perf results', performance);
     await browser.close();
     clearTimeout(memoryTimeout);
-  }
-
-  function takeMemLoop() {
-    logger.log(memoryLog(process.memoryUsage()));
-    memoryTimeout = setTimeout(takeMemLoop, 30000);
   }
 
   async function getStoriesWithSpinner() {
@@ -216,8 +234,25 @@ async function eyesStorybook({
     return stories;
   }
 
-  function refineErrorMessage({prefix, error}) {
-    return `${prefix} ${error.message.replace('Evaluation failed: ', '')}`;
+  function takeMemLoop() {
+    logger.log(memoryLog(process.memoryUsage()));
+    memoryTimeout = setTimeout(takeMemLoop, 30000);
+  }
+
+  function getRenderIE() {
+    return renderIE;
+  }
+
+  function setRenderIE(value) {
+    renderIE = value;
+  }
+
+  function setTransitioningIntoIE(value) {
+    transitioning = value;
+  }
+
+  function getTransitiongIntoIE() {
+    return transitioning;
   }
 }
 

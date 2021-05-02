@@ -1,0 +1,98 @@
+{
+  "stdout": [
+    "Using @applitools/eyes-storybook version 3.20.2.",
+    "",
+    "",
+    "Ignoring parameters for story: \"with some emoji Button\" since they are not serilizable. Error: \"Converting circular structure to JSON",
+    "    --> starting at object with constructor 'Object'",
+    "    --- property 'inner' closes the circle\"",
+    "",
+    "[EYES: TEST RESULTS]:",
+    "",
+    "Test is finished but no results returned.",
+    "",
+    "",
+    "Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.",
+    "This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.",
+    "If your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.",
+    "Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.",
+    "",
+    "",
+    ""
+  ],
+  "stderr": [
+    "- Starting storybook server",
+    "✔ Storybook was started",
+    "- Reading stories",
+    "✔ Reading stories",
+    ""
+  ],
+  "undetermined version stdout": [
+    "Using @applitools/eyes-storybook version 3.20.2.",
+    "",
+    "",
+    ""
+  ],
+  "undetermined version stderr": [
+    "- Reading stories",
+    "✖ Error when reading stories: could not determine storybook version in order to extract stories",
+    ""
+  ],
+  "navigation timeout stdout": [
+    "Using @applitools/eyes-storybook version 3.20.2.",
+    "",
+    "",
+    ""
+  ],
+  "navigation timeout stderr": [
+    "- Reading stories",
+    "✖ Error when loading storybook. Navigation Timeout Exceeded: 10ms exceeded",
+    ""
+  ],
+  "too slowly stdout": [
+    "Using @applitools/eyes-storybook version 3.20.2.",
+    "",
+    "",
+    ""
+  ],
+  "too slowly stderr": [
+    "- Reading stories",
+    "✖ Error when reading stories: storybook is loading for too long",
+    ""
+  ],
+  "multi browser stdout": [
+    "Using @applitools/eyes-storybook version 3.20.2.",
+    "",
+    "",
+    "See details at <some_url>",
+    "",
+    "[EYES: TEST RESULTS]:",
+    "",
+    "Single category: Single story [Chrome] [640x480] - Passed",
+    "Single category: Single story [Chrome] [640x480] - Passed",
+    "Single category: Single story [Firefox] [640x480] - Passed",
+    "",
+    "",
+    "No differences were found!",
+    "See details at <some_url>",
+    "Total time: <some_time> seconds",
+    "",
+    "",
+    "Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.",
+    "This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.",
+    "If your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.",
+    "Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.",
+    "",
+    "",
+    ""
+  ],
+  "multi browser stderr": [
+    "- Starting storybook server",
+    "✔ Storybook was started",
+    "- Reading stories",
+    "✔ Reading stories",
+    "- Done 0 stories out of 1 ",
+    "✔ Done 1 stories out of 1 ",
+    ""
+  ]
+}
