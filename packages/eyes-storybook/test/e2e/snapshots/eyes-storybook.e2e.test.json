@@ -47,7 +47,7 @@
   ],
   "navigation timeout stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when loading storybook. net::ERR_CONNECTION_REFUSED at http://localhost:9001",
+    "\u001b[31m✖\u001b[39m Error when loading storybook. Navigation Timeout Exceeded: 10ms exceeded",
     ""
   ],
   "too slowly stdout": [
