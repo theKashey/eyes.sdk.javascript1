@@ -46,7 +46,7 @@ class StorybookConnector extends EventEmitter {
       if (this._isWindows) {
         spawn('taskkill', ['/pid', this._childProcess.pid, '/f', '/t']);
       } else {
-        process.kill(-this._childProcess.pid);
+        process.kill(this._childProcess.pid);
       }
     } catch (e) {
       this._logger.log("Can't kill child (Storybook) process.", e);

@@ -41,9 +41,12 @@ describe('eyes-storybook', () => {
         ),
       );
       const stdout = err ? err.stdout : result.stdout;
-      //const stderr = err ? err.stderr : result.stderr;
       const output = stdout
         .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
+        .replace(
+          /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+          'See details at <some_url>',
+        )
         .replace(version, '<version>');
       await snap(output, 'cors');
     } finally {
