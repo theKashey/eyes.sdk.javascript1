@@ -68,7 +68,8 @@
     "lodash.pick": "4.4.0",
     "ora": "3.4.0",
     "puppeteer": "1.20.0",
-    "yargs": "15.4.1"
+    "yargs": "15.4.1",
+    "strip-ansi": "6.0.0"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.13.0",
@@ -98,7 +99,6 @@
     "react-dom": "^16.12.0",
     "rollup": "^1.28.0",
     "rollup-plugin-commonjs": "^10.1.0",
-    "strip-ansi": "6",
     "ua-parser-js": "^0.7.21"
   },
   "husky": {
