@@ -8,7 +8,7 @@
   },
   "scripts": {
     "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
-    "test:unit": "FORCE_COLOR=2 mocha --no-timeouts 'test/unit/**/*.test.js'",
+    "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
     "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
     "test:e2e": "TERM=xterm mocha --no-timeouts 'test/e2e/**/*.test.js'",
     "lint": "eslint '**/*.js'",
