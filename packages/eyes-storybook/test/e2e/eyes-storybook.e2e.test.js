@@ -47,7 +47,7 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
-
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
     await snap(normalizedStdout, 'stdout');
     await snap(stderr, 'stderr');
@@ -76,7 +76,9 @@ describe('eyes-storybook', () => {
     const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-    const stdout = results[0].stdout.replace(version, '<version>');
+    const stdout = results[0].stdout
+      .replace(version, '<version>')
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>');
     await snap(stdout, 'navigation timeout stdout');
     await snap(results[0].stderr, 'navigation timeout stderr');
   });
@@ -119,6 +121,7 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(version, '<version>')
       .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1]');

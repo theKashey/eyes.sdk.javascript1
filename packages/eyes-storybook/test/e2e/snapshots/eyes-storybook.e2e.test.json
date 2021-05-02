@@ -2,30 +2,15 @@
   "stdout": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "/Users/talhayut/projects/eyes.sdk.javascript1/packages/eyes-storybook/node_modules/.bin/start-storybook",
-    "\u001b[31m\u001b[39m",
-    "\u001b[31mIgnoring parameters for story: \"with some emoji Button\" since they are not serilizable. Error: \"Converting circular structure to JSON\u001b[39m",
-    "\u001b[31m    --> starting at object with constructor 'Object'\u001b[39m",
-    "\u001b[31m    --- property 'inner' closes the circle\"\u001b[39m",
-    "",
-    "[EYES: TEST RESULTS]:",
-    "",
-    "Test is finished but no results returned.",
-    "",
-    "\u001b[33m\u001b[39m",
-    "\u001b[33mImportant notice: Your Applitools visual tests are currently running with a concurrency value of 5.\u001b[39m",
-    "\u001b[33mThis means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.\u001b[39m",
-    "\u001b[33mIf your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.\u001b[39m",
-    "\u001b[33mNeed a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.\u001b[39m",
-    "\u001b[33m\u001b[39m",
+    "<story-book path>",
     "",
     ""
   ],
   "stderr": [
     "- Starting storybook server",
-    "\u001b[32m✔\u001b[39m Storybook was started",
+    "✔ Storybook was started",
     "- Reading stories",
-    "\u001b[32m✔\u001b[39m Reading stories",
+    "✖ Error when loading storybook. Navigation failed because browser has disconnected!",
     ""
   ],
   "undetermined version stdout": [
@@ -36,7 +21,7 @@
   ],
   "undetermined version stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when reading stories: could not determine storybook version in order to extract stories",
+    "✖ Error when reading stories: could not determine storybook version in order to extract stories",
     ""
   ],
   "navigation timeout stdout": [
@@ -47,7 +32,7 @@
   ],
   "navigation timeout stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when loading storybook. net::ERR_CONNECTION_REFUSED at http://localhost:9001",
+    "✖ Error when loading storybook. net::ERR_CONNECTION_REFUSED at http://localhost:9001",
     ""
   ],
   "too slowly stdout": [
@@ -58,43 +43,43 @@
   ],
   "too slowly stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when reading stories: storybook is loading for too long",
+    "✖ Error when reading stories: storybook is loading for too long",
     ""
   ],
   "multi browser stdout": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "/Users/talhayut/projects/eyes.sdk.javascript1/packages/eyes-storybook/node_modules/.bin/start-storybook",
+    "<story-book path>",
     "",
     "See details at <some_url>",
     "",
     "[EYES: TEST RESULTS]:",
     "",
-    "Single category: Single story [Chrome] [640x480] - \u001b[32mPassed\u001b[39m",
-    "Single category: Single story [Chrome] [640x480] - \u001b[32mPassed\u001b[39m",
-    "Single category: Single story [Firefox] [640x480] - \u001b[32mPassed\u001b[39m",
+    "Single category: Single story [Chrome] [640x480] - Passed",
+    "Single category: Single story [Chrome] [640x480] - Passed",
+    "Single category: Single story [Firefox] [640x480] - Passed",
     "",
-    "\u001b[32m\u001b[39m",
-    "\u001b[32mNo differences were found!\u001b[39m",
+    "",
+    "No differences were found!",
     "See details at <some_url>",
     "Total time: <some_time> seconds",
     "",
-    "\u001b[33m\u001b[39m",
-    "\u001b[33mImportant notice: Your Applitools visual tests are currently running with a concurrency value of 5.\u001b[39m",
-    "\u001b[33mThis means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.\u001b[39m",
-    "\u001b[33mIf your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.\u001b[39m",
-    "\u001b[33mNeed a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.\u001b[39m",
-    "\u001b[33m\u001b[39m",
+    "",
+    "Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.",
+    "This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.",
+    "If your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.",
+    "Need a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.",
+    "",
     "",
     ""
   ],
   "multi browser stderr": [
     "- Starting storybook server",
-    "\u001b[32m✔\u001b[39m Storybook was started",
+    "✔ Storybook was started",
     "- Reading stories",
-    "\u001b[32m✔\u001b[39m Reading stories",
+    "✔ Reading stories",
     "- Done 0 stories out of 1 ",
-    "\u001b[32m✔\u001b[39m Done 1 stories out of 1 ",
+    "✔ Done 1 stories out of 1 ",
     ""
   ]
 }
