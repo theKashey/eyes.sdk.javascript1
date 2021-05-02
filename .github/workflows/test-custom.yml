@@ -23,6 +23,7 @@ jobs:
           node-version: 14
       - run: |
           echo "::group::test ${{github.event.inputs.name}}"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           cd "packages/${{github.event.inputs.name}}"
           yarn
           yarn ${{github.event.inputs.command}}
