@@ -3,6 +3,7 @@ const path = require('path');
 const {presult} = require('@applitools/functional-commons');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
 const snap = require('@applitools/snaptdout');
+const {version} = require('../../package.json');
 
 describe('fake ie', () => {
   it('fake ie in storybook', async () => {
@@ -18,8 +19,13 @@ describe('fake ie', () => {
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
-    const splittedResult = stdout.split('\n');
-    const testResult = `${splittedResult[7]}\n${splittedResult[8]}`;
-    await snap(testResult, 'fake ie');
+    const output = stdout
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
+      .replace(
+        /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+        'See details at <some_url>',
+      )
+      .replace(version, '<version>');
+    await snap(output, 'fake ie');
   });
 });

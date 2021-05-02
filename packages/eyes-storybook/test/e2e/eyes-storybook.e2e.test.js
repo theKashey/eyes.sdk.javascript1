@@ -22,7 +22,7 @@ describe('eyes-storybook', () => {
 
   after(async () => {
     await closeTestServer();
-    process.env.APPLITOOLS_SHOW_LOGS = showLogsOrig;
+    process.env.APPLITOOLS_SHOW_LOGS = '';
   });
 
   it('renders test storybook', async () => {

@@ -1,9 +1,10 @@
 const {describe, it, before, after} = require('mocha');
 const testStorybook = require('../util/testStorybook');
-const {expect} = require('chai');
 const path = require('path');
 const {delay: _psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
+const snap = require('@applitools/snaptdout');
+const version = require('../../package.json');
 
 describe('eyes-storybook', () => {
   let closeStorybook;
@@ -30,10 +31,15 @@ describe('eyes-storybook', () => {
     );
     const stdout = err ? err.stdout : result.stdout;
     //const stderr = err ? err.stderr : result.stderr;
-
-    expect(stdout.replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')).to.include(
-      'JS Layout: JS Layout page [Chrome] [1000x800] - Passed\nJS Layout: JS Layout page [Safari 14.0] [810x1080] - Passed\nJS Layout: JS Layout page [Chrome] [412x869] - Passed\n\n\nNo differences were found!',
-    );
+    const output = stdout
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+      .replace(
+        /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+        'See details at <some_url>',
+      )
+      .replace(version, '<version>');
+    await snap(output, 'layout breakpoints config');
   });
 
   it('renders with layout breakpoints in story parameters', async () => {
@@ -49,10 +55,16 @@ describe('eyes-storybook', () => {
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
+    const output = stdout
+      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
+      .replace(
+        /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+        'See details at <some_url>',
+      )
+      .replace(version, '<version>');
     //const stderr = err ? err.stderr : result.stderr;
 
-    expect(stdout.replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')).to.include(
-      'JS Layout: JS Layout page [Chrome] [1000x800] - Passed\nJS Layout: JS Layout page [Safari 14.0] [810x1080] - Passed\nJS Layout: JS Layout page [Chrome] [412x869] - Passed\nJS Layout: JS Layout page without specifying layoutBreakpoints [Chrome] [1000x800] - Passed\nJS Layout: JS Layout page without specifying layoutBreakpoints [Safari 14.0] [810x1080] - Passed\nJS Layout: JS Layout page without specifying layoutBreakpoints [Chrome] [412x869] - Passed\n\n\nNo differences were found!',
-    );
+    await snap(output, 'layoutBreakpoints in story params');
   });
 });

@@ -1,5 +1,5 @@
 {
-  "cors": [
+  "visual grid options": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
     "<story-book path>",
@@ -8,7 +8,7 @@
     "",
     "[EYES: TEST RESULTS]:",
     "",
-    "Cross-origin iframe: Single story [Chrome] [640x480] - \u001b[32mPassed\u001b[39m",
+    "custom font: w/o font hinting [Chrome 90.0] [640x480] - \u001b[32mPassed\u001b[39m",
     "",
     "\u001b[32m\u001b[39m",
     "\u001b[32mNo differences were found!\u001b[39m",

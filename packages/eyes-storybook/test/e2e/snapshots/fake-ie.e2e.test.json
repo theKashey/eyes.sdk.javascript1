@@ -1,10 +1,28 @@
 {
-  "mfake ie": [
-    "Fake IE: Fake IE Page [Chrome 90.0] [800x600] - Passed",
-    "Fake IE: Fake IE Page [IE 11.0] [800x600] - Passed"
-  ],
   "fake ie": [
+    "Using @applitools/eyes-storybook version <version>.",
+    "",
+    "<story-book path>",
+    "",
+    "See details at <some_url>",
+    "",
     "[EYES: TEST RESULTS]:",
+    "",
+    "Fake IE: Fake IE Page [Chrome 90.0] [800x600] - \u001b[32mPassed\u001b[39m",
+    "Fake IE: Fake IE Page [IE 11.0] [800x600] - \u001b[32mPassed\u001b[39m",
+    "",
+    "\u001b[32m\u001b[39m",
+    "\u001b[32mNo differences were found!\u001b[39m",
+    "See details at <some_url>",
+    "Total time: 32 seconds",
+    "",
+    "\u001b[33m\u001b[39m",
+    "\u001b[33mImportant notice: Your Applitools visual tests are currently running with a concurrency value of 5.\u001b[39m",
+    "\u001b[33mThis means that only up to 5 visual tests can run in parallel, and therefore the execution might be slower.\u001b[39m",
+    "\u001b[33mIf your Applitools license supports a higher concurrency level, learn how to configure it here: https://www.npmjs.com/package/@applitools/eyes-storybook#concurrency.\u001b[39m",
+    "\u001b[33mNeed a higher concurrency in your account? Email us @ sdr@applitools.com with your required concurrency level.\u001b[39m",
+    "\u001b[33m\u001b[39m",
+    "",
     ""
   ]
 }

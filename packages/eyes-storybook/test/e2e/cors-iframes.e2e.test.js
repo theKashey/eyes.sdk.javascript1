@@ -48,6 +48,7 @@ describe('eyes-storybook', () => {
           /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
           'See details at <some_url>',
         )
+        .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
         .replace(version, '<version>');
       await snap(output, 'cors');
     } finally {
