@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.0 - 2021/5/2
+
 - render on fake IE browser
 - updated to @applitools/eyes-puppeteer@1.6.0 (from 1.4.3)
 - updated to @applitools/eyes-sdk-core@12.17.4 (from 12.17.2)
