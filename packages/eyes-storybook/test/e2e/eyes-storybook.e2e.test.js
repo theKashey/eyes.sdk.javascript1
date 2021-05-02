@@ -40,14 +40,14 @@ describe('eyes-storybook', () => {
 
     const stdout = err ? err.stdout : result.stdout;
     const stderr = err ? err.stderr : result.stderr;
-
     const normalizedStdout = stdout
       .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
+      .replace(version, '<version>')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
-      .replace(/\d+(?:\.\d+)+/, version)
+
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
     await snap(normalizedStdout, 'stdout');
     await snap(stderr, 'stderr');
@@ -62,7 +62,7 @@ describe('eyes-storybook', () => {
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    const stdout = results[0].stdout.replace(version, '<version>');
     await snap(stdout, 'undetermined version stdout');
     await snap(results[0].stderr, 'undetermined version stderr');
   });
@@ -76,7 +76,7 @@ describe('eyes-storybook', () => {
     const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    const stdout = results[0].stdout.replace(version, '<version>');
     await snap(stdout, 'navigation timeout stdout');
     await snap(results[0].stderr, 'navigation timeout stderr');
   });
@@ -93,7 +93,7 @@ describe('eyes-storybook', () => {
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-    const stdout = results[0].stdout.replace(/\d+(?:\.\d+)+/, version);
+    const stdout = results[0].stdout.replace(version, '<version>');
     await snap(stdout, 'too slowly stdout');
     await snap(results[0].stderr, 'too slowly stderr');
   });
@@ -120,7 +120,7 @@ describe('eyes-storybook', () => {
         'See details at <some_url>',
       )
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
-      .replace(/\d+(?:\.\d+)+/, version)
+      .replace(version, '<version>')
       .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1]');
 
     await snap(normalizedStdout, 'multi browser stdout');

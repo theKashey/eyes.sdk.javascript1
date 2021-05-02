@@ -1,7 +1,8 @@
 {
   "stdout": [
-    "Using @applitools/eyes-storybook version 3.20.2.",
+    "Using @applitools/eyes-storybook version <version>.",
     "",
+    "/Users/talhayut/projects/eyes.sdk.javascript1/packages/eyes-storybook/node_modules/.bin/start-storybook",
     "",
     "Ignoring parameters for story: \"with some emoji Button\" since they are not serilizable. Error: \"Converting circular structure to JSON",
     "    --> starting at object with constructor 'Object'",
@@ -27,42 +28,10 @@
     "✔ Reading stories",
     ""
   ],
-  "undetermined version stdout": [
-    "Using @applitools/eyes-storybook version 3.20.2.",
-    "",
-    "",
-    ""
-  ],
-  "undetermined version stderr": [
-    "- Reading stories",
-    "✖ Error when reading stories: could not determine storybook version in order to extract stories",
-    ""
-  ],
-  "navigation timeout stdout": [
-    "Using @applitools/eyes-storybook version 3.20.2.",
-    "",
-    "",
-    ""
-  ],
-  "navigation timeout stderr": [
-    "- Reading stories",
-    "✖ Error when loading storybook. Navigation Timeout Exceeded: 10ms exceeded",
-    ""
-  ],
-  "too slowly stdout": [
-    "Using @applitools/eyes-storybook version 3.20.2.",
-    "",
-    "",
-    ""
-  ],
-  "too slowly stderr": [
-    "- Reading stories",
-    "✖ Error when reading stories: storybook is loading for too long",
-    ""
-  ],
   "multi browser stdout": [
-    "Using @applitools/eyes-storybook version 3.20.2.",
+    "Using @applitools/eyes-storybook version <version>.",
     "",
+    "/Users/talhayut/projects/eyes.sdk.javascript1/packages/eyes-storybook/node_modules/.bin/start-storybook",
     "",
     "See details at <some_url>",
     "",

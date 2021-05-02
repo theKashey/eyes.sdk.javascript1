@@ -1,6 +1,7 @@
 'use strict';
 const {spawn} = require('child_process');
 const EventEmitter = require('events');
+const stripAnsi = require('strip-ansi');
 
 class StorybookConnector extends EventEmitter {
   constructor({
@@ -70,9 +71,10 @@ class StorybookConnector extends EventEmitter {
       };
 
       const successMessageListener = str => {
-        const isReady = str.match(
+        const isReady = stripAnsi(str).match(
           /Storybook \d{1,2}\.\d{1,2}\.\d{1,2}(-.+)? started|Storybook started on =>/,
         );
+
         if (isReady) {
           clearTimeout(timeoutID);
           removeListeners();
@@ -88,7 +90,7 @@ class StorybookConnector extends EventEmitter {
       const timeoutID = setTimeout(
         reject,
         timeout,
-        `Storybook din't start after ${minutes} min waiting.`,
+        `Storybook didn't start after ${minutes} min waiting.`,
       );
     });
   }
@@ -110,8 +112,10 @@ class StorybookConnector extends EventEmitter {
       args.push('--ci');
     }
     this._logger.log(`${this._storybookPath} ${args.join(' ')}`);
-    this._childProcess = spawn(this._storybookPath, args, {detached: !this._isWindows});
+    this._childProcess = spawn(this._storybookPath, args, {detached: false});
     this._addListeners();
+
+    console.log(this._storybookPath);
 
     this._childProcess.once('exit', code => {
       if (!code) return;

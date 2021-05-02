@@ -1,9 +1,10 @@
 const {describe, it, _before, _after} = require('mocha');
-const {expect} = require('chai');
 const path = require('path');
 const testServer = require('@applitools/sdk-shared/src/run-test-server');
 const {delay: _psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
+const snap = require('@applitools/snaptdout');
+const {version} = require('../../package.json');
 
 describe('eyes-storybook', () => {
   it('renders cross-origin iframes', async () => {
@@ -41,10 +42,10 @@ describe('eyes-storybook', () => {
       );
       const stdout = err ? err.stdout : result.stdout;
       //const stderr = err ? err.stderr : result.stderr;
-
-      expect(stdout.replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')).to.include(
-        'Cross-origin iframe: Single story [Chrome] [640x480] - Passed',
-      );
+      const output = stdout
+        .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
+        .replace(version, '<version>');
+      await snap(output, 'cors');
     } finally {
       await closeServerA();
       await closeServerB();
