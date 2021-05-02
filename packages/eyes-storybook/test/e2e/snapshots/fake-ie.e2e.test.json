@@ -14,7 +14,7 @@
     "\u001b[32m\u001b[39m",
     "\u001b[32mNo differences were found!\u001b[39m",
     "See details at <some_url>",
-    "Total time: 32 seconds",
+    "Total time: <some_time> seconds",
     "",
     "\u001b[33m\u001b[39m",
     "\u001b[33mImportant notice: Your Applitools visual tests are currently running with a concurrency value of 5.\u001b[39m",

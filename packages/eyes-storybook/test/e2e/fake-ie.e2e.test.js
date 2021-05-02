@@ -21,6 +21,7 @@ describe('fake ie', () => {
     const stdout = err ? err.stdout : result.stdout;
     const output = stdout
       .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',

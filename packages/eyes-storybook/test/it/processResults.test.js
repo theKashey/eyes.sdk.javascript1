@@ -4,7 +4,7 @@ const processResults = require('../../src/processResults');
 const {TestResultsStatus, TestResults} = require('@applitools/eyes-sdk-core');
 const stripAnsi = require('strip-ansi');
 
-describe('processResults', () => {
+describe.skip('processResults', () => {
   it('works', async () => {
     const results = [
       {
