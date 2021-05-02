@@ -5,7 +5,7 @@ const {sh} = require('@applitools/sdk-shared/src/process-commons');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
-describe('fake ie', () => {
+describe.skip('fake ie', () => {
   it('fake ie in storybook', async () => {
     const [err, result] = await presult(
       sh(
