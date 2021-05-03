@@ -2,9 +2,10 @@ const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const processResults = require('../../src/processResults');
 const {TestResultsStatus, TestResults} = require('@applitools/eyes-sdk-core');
-const stripAnsi = require('strip-ansi');
+const snap = require('@applitools/snaptdout');
+process.env.FORCE_COLOR = 2;
 
-describe.skip('processResults', () => {
+describe('processResults', () => {
   it('works', async () => {
     const results = [
       {
@@ -86,9 +87,10 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button2 [Chrome] [10x20] - \u001b[32mPassed\u001b[39m\n\nMy Component | Button1 [Firefox] [100x200] - \u001b[38;2;255;165;0mUnresolved\u001b[39m\n\n\u001b[38;2;255;165;0m\u001b[39m\n\u001b[38;2;255;165;0mA total of 1 difference was found.\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(
+      outputStr.replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds'),
+      'single diff',
+    );
     expect(exitCode).to.eql(1);
   });
 
@@ -122,9 +124,10 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button1 [Firefox] [100x200] - \u001b[38;2;255;165;0mUnresolved\u001b[39m\nMy Component | Button2 [Chrome] [10x20] - \u001b[38;2;255;165;0mUnresolved\u001b[39m\n\n\u001b[38;2;255;165;0m\u001b[39m\n\u001b[38;2;255;165;0mA total of 2 differences were found.\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(
+      outputStr.replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds'),
+      'multi diff',
+    );
     expect(exitCode).to.eql(1);
   });
 
@@ -149,9 +152,7 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button2 [Chrome] [10x20] - \u001b[32mPassed\u001b[39m\n\nMy Component | Button1 - \u001b[31mFailed\u001b[39m some error messgae !\n\u001b[31m\u001b[39m\n\u001b[31mA total of 1 story failed for unexpected error.\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(outputStr, 'single err');
     expect(exitCode).to.eql(1);
   });
 
@@ -177,9 +178,7 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button2 [Chrome] [10x20] - \u001b[32mPassed\u001b[39m\n\nMy Component | Button1 - \u001b[31mFailed\u001b[39m some error messgae !\nMy Component | Button2 - \u001b[31mFailed\u001b[39m another error messgae !\n\u001b[31m\u001b[39m\n\u001b[31mA total of 2 stories failed for unexpected errors.\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(outputStr, 'multi err');
     expect(exitCode).to.eql(1);
   });
 
@@ -208,9 +207,10 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button2 [Chrome] [10x20] - \u001b[38;2;255;165;0mUnresolved\u001b[39m\n\nMy Component | Button1 - \u001b[31mFailed\u001b[39m some error messgae !\nMy Component | Button3 - \u001b[31mFailed\u001b[39m some error messgae !\n\u001b[31m\u001b[39m\n\u001b[31mA total of 1 difference was found and 2 stories failed for unexpected errors.\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(
+      outputStr.replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds'),
+      'diffs and errors',
+    );
     expect(exitCode).to.eql(1);
   });
 
@@ -231,9 +231,7 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput =
-      '\nSee details at https://eyes.com/results\n\n[EYES: TEST RESULTS]:\n\nMy Component | Button2 [Chrome] [10x20] - \u001b[32mPassed\u001b[39m\n\n\u001b[32m\u001b[39m\n\u001b[32mNo differences were found!\u001b[39m\nSee details at https://eyes.com/results\nTotal time: 10 seconds\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(outputStr, 'no diff no errors');
     expect(exitCode).to.eql(0);
   });
 
@@ -245,8 +243,7 @@ describe.skip('processResults', () => {
       },
     ];
     const {outputStr, exitCode} = processResults({results, totalTime: 10000, concurrency: 1});
-    const expectedOutput = '\n[EYES: TEST RESULTS]:\n\nTest is finished but no results returned.\n';
-    expect(outputStr).to.eql(process.env.CI ? stripAnsi(expectedOutput) : expectedOutput);
+    await snap(outputStr, 'empty');
     expect(exitCode).to.eql(1);
   });
 

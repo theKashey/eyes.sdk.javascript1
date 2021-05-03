@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+const chalk = require('./chalkify');
 const boxen = require('boxen');
 console.log(
   boxen(

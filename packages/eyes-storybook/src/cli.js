@@ -15,7 +15,7 @@ const handleJsonFile = require('./handleJsonFile');
 const handleTapFile = require('./handleTapFile');
 const handleXmlFile = require('./handleXmlFile');
 const {presult} = require('@applitools/functional-commons');
-const chalk = require('chalk');
+const chalk = require('./chalkify');
 const {performance, timeItAsync} = makeTiming();
 
 (async function() {

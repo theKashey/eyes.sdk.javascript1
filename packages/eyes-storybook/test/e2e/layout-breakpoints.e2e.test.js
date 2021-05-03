@@ -4,7 +4,7 @@ const path = require('path');
 const {delay: _psetTimeout, presult} = require('@applitools/functional-commons');
 const {sh} = require('@applitools/sdk-shared/src/process-commons');
 const snap = require('@applitools/snaptdout');
-const version = require('../../package.json');
+const {version} = require('../../package.json');
 
 describe('eyes-storybook', () => {
   let closeStorybook;

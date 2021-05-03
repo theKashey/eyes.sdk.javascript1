@@ -17,20 +17,15 @@ const fetch = require('node-fetch');
 const snap = require('@applitools/snaptdout');
 
 describe('eyesStorybook', () => {
-  let closeStorybook;
+  let closeStorybook, closeTestServer;
   before(async () => {
     closeStorybook = await testStorybook({port: 9001});
-  });
-  after(async () => {
-    await closeStorybook();
-  });
-
-  let closeTestServer;
-  before(async () => {
     closeTestServer = (await testServer({port: 7272})).close;
   });
+
   after(async () => {
     await closeTestServer();
+    await closeStorybook();
   });
 
   let serverUrl, closeEyesServer;
@@ -314,6 +309,7 @@ describe('eyesStorybook', () => {
       )}/${encodeURIComponent(testResults.getId())}`;
 
       const session = await fetch(sessionUrl).then(r => r.json());
+      console.log(session.startInfo);
       expect(session.startInfo.parentBranchBaselineSavedBefore).to.match(
         /\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}:\d{2}\+\d{2}\:\d{2}/,
       );

@@ -1,5 +1,5 @@
 'use strict';
-const chalk = require('chalk');
+const chalk = require('./chalkify');
 
 const missingApiKeyFailMsg = `
 ${chalk.red('Environment variable APPLITOOLS_API_KEY is not set.')}

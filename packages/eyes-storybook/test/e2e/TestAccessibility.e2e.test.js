@@ -19,7 +19,8 @@ const snap = require('@applitools/snaptdout');
 describe('eyes-storybook accessibility', () => {
   let closeStorybook, closeTestServer;
   before(async () => {
-    closeTestServer = (await testServer({port: 7272})).close;
+    const server = await testServer({port: 7272});
+    closeTestServer = server.close;
     closeStorybook = await testStorybook({
       port: 9001,
       storybookConfigDir: path.resolve(__dirname, '../fixtures/accessibilityStorybook'),

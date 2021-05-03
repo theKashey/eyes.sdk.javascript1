@@ -2,7 +2,7 @@
   "fake ie": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "<story-book path>",
+    "<story_book_path>",
     "",
     "See details at <some_url>",
     "",

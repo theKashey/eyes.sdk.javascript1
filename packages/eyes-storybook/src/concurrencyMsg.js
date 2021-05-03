@@ -1,5 +1,5 @@
 'use strict';
-const chalk = require('chalk');
+const chalk = require('./chalkify');
 
 module.exports = chalk.yellow(`
 Important notice: Your Applitools visual tests are currently running with a concurrency value of 5.

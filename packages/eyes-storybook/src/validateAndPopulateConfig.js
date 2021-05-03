@@ -1,5 +1,5 @@
 'use strict';
-const chalk = require('chalk');
+const chalk = require('./chalkify');
 const fs = require('fs');
 const detect = require('detect-port');
 const {version: packageVersion} = require('../package.json');
