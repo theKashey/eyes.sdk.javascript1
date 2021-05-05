@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix no browser config storybook
 
 ## 3.22.0 - 2021/5/2
 

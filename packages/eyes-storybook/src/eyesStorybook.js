@@ -143,7 +143,6 @@ async function eyesStorybook({
     logger.log('finished creating functions');
 
     const configs = splitConfigsByBrowser(config);
-
     const [error, results] = await presult(
       executeRenders({
         renderStories,

@@ -19,7 +19,7 @@ describe('fake ie', () => {
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
-    console.log('before', stdout);
+
     const output = stdout
       .replace(/\/.*.bin\/start-storybook/, '<story_book_path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
@@ -28,7 +28,7 @@ describe('fake ie', () => {
         'See details at <some_url>',
       )
       .replace(version, '<version>');
-    console.log('after', output);
+
     await snap(output, 'fake ie');
   });
 });
