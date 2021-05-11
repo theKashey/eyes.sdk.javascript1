@@ -12,6 +12,6 @@ describe('vg', () => {
   after(() => {
     const testResults = browser.eyesGetTestResults()
     const data = browser.call(() => ApiAssertions.getApiData(testResults, process.env.APPLITOOLS_API_KEY))
-    expect(data.startInfo.agentId).to.equal(`eyes-webdriverio-service-visualgrid/${version}`)
+    expect(data.startInfo.agentId).to.equal(`eyes-webdriverio-service.visualgrid/${version}`)
   })
 })

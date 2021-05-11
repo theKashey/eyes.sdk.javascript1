@@ -1,3 +1,5 @@
+import {makeSDK} from '@applitools/eyes-sdk-core'
+import * as spec from './spec-driver'
 import {Driver, Element, Eyes, VisualGridRunner, ConfigurationPlain, TestResults} from './api'
 
 if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
@@ -8,6 +10,18 @@ if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
   } catch {
     // NOTE: ignore error
   }
+}
+
+// TODO have to be removed
+const sdk = makeSDK({
+  name: 'eyes-webdriverio-service',
+  version: require('../package.json').version,
+  spec,
+  VisualGridClient: require('@applitools/visual-grid-client'),
+})
+class EyesOverride extends Eyes {
+  protected static readonly _spec = sdk
+  protected readonly _spec = sdk
 }
 
 interface EyesServiceOptions extends ConfigurationPlain {
@@ -27,12 +41,7 @@ export = class EyesService {
 
     if (!useVisualGrid) config.hideScrollbars = true
 
-    this._eyes = new Eyes(useVisualGrid ? new VisualGridRunner({testConcurrency: concurrency}) : null, config)
-
-    // TODO have to be removed after core refactoring
-    // @ts-ignore
-    this._eyes.getBaseAgentId = () =>
-      `eyes-webdriverio-service${useVisualGrid ? '-visualgrid' : ''}/${require('../package.json').version}`
+    this._eyes = new EyesOverride(useVisualGrid ? new VisualGridRunner({testConcurrency: concurrency}) : null, config)
   }
   beforeSession(config: Record<string, unknown>) {
     this._appName = this._eyes.configuration.appName
