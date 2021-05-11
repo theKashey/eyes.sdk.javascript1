@@ -10,6 +10,13 @@ if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
   }
 }
 
+// TODO have to be removed after core refactoring
+
+// @ts-ignore
+Eyes.EyesClassic.getBaseAgentId = () => `eyes-webdriverio-service/${require('../package.json').version}`
+// @ts-ignore
+Eyes.EyesVisualGrid.getBaseAgentId = () => `eyes-webdriverio-service-visualgrid/${require('../package.json').version}`
+
 interface EyesServiceOptions extends ConfigurationPlain {
   useVisualGrid?: boolean
   concurrency?: number
