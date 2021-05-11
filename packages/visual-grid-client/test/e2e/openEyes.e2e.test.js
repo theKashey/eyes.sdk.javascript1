@@ -11,7 +11,7 @@ const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const fs = require('fs')
 const {resolve} = require('path')
 const testLogger = require('../util/testLogger')
-const {ApiAssertions} = require('@applitools/sdk-shared')
+const {ApiAssertions} = require('@applitools/sdk-shared/coverage-tests/util/ApiAssertions')
 
 describe('openEyes', () => {
   let baseUrl, closeServer, openEyes
