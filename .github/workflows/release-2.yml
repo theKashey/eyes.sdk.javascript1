@@ -1,4 +1,4 @@
-name: Coverage test (advanced)
+name: Publish an SDK
 
 on:
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
       fail-fast: false
-    name: test ${{matrix.name}}
+    name: publish ${{matrix.name}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
