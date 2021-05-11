@@ -10,13 +10,6 @@ if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
   }
 }
 
-// TODO have to be removed after core refactoring
-
-// @ts-ignore
-Eyes.EyesClassic.getBaseAgentId = () => `eyes-webdriverio-service/${require('../package.json').version}`
-// @ts-ignore
-Eyes.EyesVisualGrid.getBaseAgentId = () => `eyes-webdriverio-service-visualgrid/${require('../package.json').version}`
-
 interface EyesServiceOptions extends ConfigurationPlain {
   useVisualGrid?: boolean
   concurrency?: number
@@ -35,6 +28,11 @@ export = class EyesService {
     if (!useVisualGrid) config.hideScrollbars = true
 
     this._eyes = new Eyes(useVisualGrid ? new VisualGridRunner({testConcurrency: concurrency}) : null, config)
+
+    // TODO have to be removed after core refactoring
+    // @ts-ignore
+    this._eyes.getBaseAgentId = () =>
+      `eyes-webdriverio-service${useVisualGrid ? '-visualgrid' : ''}/${require('../package.json').version}`
   }
   beforeSession(config: Record<string, unknown>) {
     this._appName = this._eyes.configuration.appName
