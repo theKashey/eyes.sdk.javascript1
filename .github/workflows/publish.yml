@@ -64,5 +64,5 @@ jobs:
           name: coverage-tests-report
           retention-days: 30
           path: |
-            packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
-            packages/${{github.event.inputs.name}}/coverage-test-report.xml
+            packages/${{matrix.sdk}}/coverage-tests-metadata.json
+            packages/${{matrix.sdk}}/coverage-test-report.xml
