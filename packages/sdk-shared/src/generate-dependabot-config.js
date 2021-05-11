@@ -1,21 +1,31 @@
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require('fs').promises
+const path = require('path')
 
-const skipList = ['eyes-universal-poc', 'eyes-leanft', 'eyes-images-legacy', 'eyes-sdk-core-legacy', 'eyes-common-legacy', 'eyes-selenium-3'];
+const skipList = [
+  'eyes-universal-poc',
+  'eyes-leanft',
+  'eyes-images-legacy',
+  'eyes-sdk-core-legacy',
+  'eyes-common-legacy',
+  'eyes-selenium-3',
+]
 
 ;(async () => {
-    const items = await fs.readdir(path.join(__dirname, '../../'));
-    const packages = items.filter(package => !skipList.includes(package) && !package.startsWith('.'));
-    const packagesStr = packages
-    .filter(package => !skipList.includes(package) && !package.startsWith('.'))
-    .map(package => `  - package-ecosystem: "npm"
-    directory: "/packages/${package}"
+  const items = await fs.readdir(path.join(__dirname, '../../'))
+  const packages = items.filter(
+    packageName => !skipList.includes(packageName) && !packageName.startsWith('.'),
+  )
+  const packagesStr = packages
+    .filter(packageName => !skipList.includes(packageName) && !packageName.startsWith('.'))
+    .map(
+      packageName => `  - package-ecosystem: "npm"
+    directory: "/packages/${packageName}"
     update_schedule: "live"
     allowed_updates:
       - match:
-        update_type: "security"`)
+        update_type: "security"`,
+    )
     .join('\n')
-    const fileContent = `version: 2\nupdates:\n${packagesStr}`
-    await fs.writeFile(path.join(__dirname,'../../../.github/dependabot.yml'), fileContent);
+  const fileContent = `version: 2\nupdates:\n${packagesStr}`
+  await fs.writeFile(path.join(__dirname, '../../../.github/dependabot.yml'), fileContent)
 })()
-
