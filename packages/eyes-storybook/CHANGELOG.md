@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.2 - 2021/5/11
+
 - fix ie browser name
 
 ## 3.22.1 - 2021/5/5
