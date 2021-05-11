@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix path to the sdk
 
 ## 0.8.9 - 2021/5/11
 
