@@ -33,7 +33,7 @@ function hasIE(config) {
 }
 
 function isIE(browser) {
-  return browser.name === BrowserType.IE_11;
+  return browser.name === BrowserType.IE_11 || browser.name === 'ie11';
 }
 
 function validateBrowsers(config) {
@@ -44,4 +44,4 @@ function validateBrowsers(config) {
   }
 }
 
-module.exports = {splitConfigsByBrowser, shouldRenderIE};
+module.exports = {splitConfigsByBrowser, shouldRenderIE, isIE};

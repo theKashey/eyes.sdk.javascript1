@@ -309,7 +309,6 @@ describe('eyesStorybook', () => {
       )}/${encodeURIComponent(testResults.getId())}`;
 
       const session = await fetch(sessionUrl).then(r => r.json());
-      console.log(session.startInfo);
       expect(session.startInfo.parentBranchBaselineSavedBefore).to.match(
         /\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}:\d{2}\+\d{2}\:\d{2}/,
       );
