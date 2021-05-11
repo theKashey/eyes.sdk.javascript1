@@ -54,7 +54,7 @@ jobs:
         name: Setup Node.js
         with:
           node-version: 14
-      - uses: ./.github/actions/coverage-tests
+      - uses: ./.github/actions/tests
         name: Run tests
         with:
           sdk: ${{matrix.sdk}}
