@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.0 - 2021/5/11
+
 - rename variantId to variationGroupId
 - added strict type definition of CheckSettings.hooks
 
