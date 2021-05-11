@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.8.9 - 2021/5/11
+
 - add script for linking
 
 ## 0.8.8 - 2021/3/15
