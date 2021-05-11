@@ -1,10 +1,10 @@
-name: Publish an SDK
+name: Release SDKs
 
 on:
   workflow_dispatch:
     inputs:
       sdks:
-        description: "sdk packages"
+        description: "sdk names (aliases)"
         required: true
       version:
         description: "version type (specify 'major', 'minor, or 'patch')"

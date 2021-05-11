@@ -25,19 +25,19 @@ runs:
 
         echo "::group::Create temp branch"
         DATE=$(date +%F_%H-%M)
-        BRANCH="${{inputs.name}}_$DATE"
+        BRANCH="${{inputs.sdk}}_$DATE"
         git checkout -b $BRANCH
         git push -u origin $BRANCH
         echo "::endgroup::"
 
-        echo "::group::Publish ${{inputs.name}}"
-        cd "packages/${{inputs.name}}"
+        echo "::group::Publish ${{inputs.sdk}}"
+        cd "packages/${{inputs.sdk}}"
         git status
         yarn install
         git status
         yarn deps
         git status
-
+        yarn publish "--${{.inputs.version}}" --access public
         git status
         echo "::endgroup::"
 
