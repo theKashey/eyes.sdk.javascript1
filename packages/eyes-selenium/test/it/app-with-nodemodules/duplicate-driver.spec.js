@@ -3,14 +3,14 @@
 const fs = require('fs')
 const path = require('path')
 const {expect} = require('chai')
-const {Target} = require('../../..')
+const {Target} = require('../../../dist')
 const {
   testSetup: {getEyes},
 } = require('@applitools/sdk-shared')
 const ncp = require('ncp')
 const {promisify} = require('util')
 const pncp = promisify(ncp)
-const spec = require('../../../src/spec-driver')
+const spec = require('../../../dist/spec-driver')
 
 describe('JS Coverage tests', () => {
   it('works in a project with duplicate protractor', async () => {
@@ -22,10 +22,7 @@ describe('JS Coverage tests', () => {
     const targetSeleniumFolder = path.resolve(otherNodeModules, 'selenium-webdriver')
 
     // copy selenium-webdriver into the new node_modules
-    await pncp(
-      path.resolve(require.resolve('selenium-webdriver'), '..'), // eslint-disable-line node/no-extraneous-require
-      targetSeleniumFolder,
-    )
+    await pncp(path.resolve(require.resolve('selenium-webdriver'), '..'), targetSeleniumFolder)
 
     // make Node take protractor from new node_modules location (I don't really know what I'm doing here, I found what to do through debugging)
     module.constructor._pathCache = {}
@@ -57,8 +54,5 @@ describe('JS Coverage tests', () => {
 
 async function buildDriver({capabilities, url = process.env.CVG_TESTS_REMOTE}) {
   const {Builder} = require('selenium-webdriver')
-  return new Builder()
-    .withCapabilities(capabilities)
-    .usingServer(url)
-    .build()
+  return new Builder().withCapabilities(capabilities).usingServer(url).build()
 }

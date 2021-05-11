@@ -5,9 +5,8 @@ export type RectangleSize = {
   height: number
 }
 
-export default class RectangleSizeData implements Required<RectangleSize> {
-  private _width: number
-  private _height: number
+export class RectangleSizeData implements Required<RectangleSize> {
+  private _size: RectangleSize = {} as any
 
   constructor(size: RectangleSize)
   constructor(width: number, height: number)
@@ -15,36 +14,50 @@ export default class RectangleSizeData implements Required<RectangleSize> {
     if (utils.types.isNumber(sizeOrWidth)) {
       return new RectangleSizeData({width: sizeOrWidth, height})
     }
-    const size = sizeOrWidth
-    this.width = size.width
-    this.height = size.height
+    this.width = sizeOrWidth.width
+    this.height = sizeOrWidth.height
   }
 
   get width(): number {
-    return this._width
+    return this._size.width
   }
   set width(width: number) {
     utils.guard.isNumber(width, {name: 'width', gte: 0})
-    this._width = width
+    this._size.width = width
   }
-  getWidth() {
-    return this._width
+  getWidth(): number {
+    return this.width
   }
   setWidth(width: number) {
     this.width = width
   }
 
   get height(): number {
-    return this._height
+    return this._size.height
   }
   set height(height: number) {
     utils.guard.isNumber(height, {name: 'height', gte: 0})
-    this._height = height
+    this._size.height = height
   }
-  getHeight() {
-    return this._height
+  getHeight(): number {
+    return this.height
   }
   setHeight(height: number) {
     this.height = height
+  }
+
+  /** @internal */
+  toObject(): RectangleSize {
+    return this._size
+  }
+
+  /** @internal */
+  toJSON(): RectangleSize {
+    return utils.general.toJSON(this._size)
+  }
+
+  /** @internal */
+  toString() {
+    return utils.general.toString(this)
   }
 }

@@ -1,6 +1,5 @@
 const assert = require('assert')
-const {testSetup} = require('@applitools/sdk-shared')
-const spec = require('../../src/spec-driver')
+const spec = require('../../dist/spec-driver')
 
 describe('spec driver', async () => {
   let page, destroyPage
@@ -8,7 +7,7 @@ describe('spec driver', async () => {
 
   describe('headless desktop', async () => {
     before(async () => {
-      ;[page, destroyPage] = await spec.build(testSetup.Env({browser: 'chrome'}, 'cdp'))
+      ;[page, destroyPage] = await spec.build({browser: 'chrome', headless: true})
       await page.goto(url)
     })
 

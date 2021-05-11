@@ -1,5 +1,5 @@
 const assert = require('assert')
-const spec = require('../../src/spec-driver')
+const spec = require('../../dist/spec-driver')
 
 describe('spec driver', async () => {
   let driver, destroyDriver
@@ -18,14 +18,8 @@ describe('spec driver', async () => {
 
     it('isDriver(driver)', isDriver({expected: true}))
     it('isDriver(wrong)', isDriver({input: {}, expected: false}))
-    it(
-      'isElement(element)',
-      isElement({input: () => driver.findElement({css: 'div'}), expected: true}),
-    )
-    it(
-      'isElement(element-finder)',
-      isElement({input: () => driver.element({css: 'div'}), expected: true}),
-    )
+    it('isElement(element)', isElement({input: () => driver.findElement({css: 'div'}), expected: true}))
+    it('isElement(element-finder)', isElement({input: () => driver.element({css: 'div'}), expected: true}))
     it('isElement(wrong)', isElement({input: () => ({}), expected: false}))
     it('isSelector(string)', isSelector({input: 'div', expected: true}))
     it('isSelector(by)', isSelector({input: {xpath: '//div'}, expected: true}))
@@ -33,10 +27,7 @@ describe('spec driver', async () => {
     it(
       'isEqualElements(element, element)',
       isEqualElements({
-        input: () =>
-          driver
-            .findElement({css: 'div'})
-            .then(element => ({element1: element, element2: element})),
+        input: () => driver.findElement({css: 'div'}).then(element => ({element1: element, element2: element})),
         expected: true,
       }),
     )
@@ -50,7 +41,7 @@ describe('spec driver', async () => {
         expected: false,
       }),
     )
-    it('executeScript(strings, ...args)', executeScript())
+    it('executeScript(strings, args)', executeScript())
     it('findElement(by-hash)', findElement({input: {css: '#overflowing-div'}}))
     it('findElements(by-hash)', findElements({input: {css: 'div'}}))
     it('findElement(non-existent)', findElement({input: 'non-existent', expected: null}))
@@ -195,8 +186,8 @@ describe('spec driver', async () => {
   function executeScript() {
     return async () => {
       const args = [0, 'string', {key: 'value'}, [0, 1, 2, 3]]
-      const expected = await driver.executeScript('return arguments', ...args)
-      const result = await spec.executeScript(driver, 'return arguments', ...args)
+      const expected = await driver.executeScript('return arguments[0]', args)
+      const result = await spec.executeScript(driver, 'return arguments[0]', args)
       assert.deepStrictEqual(result, expected)
     }
   }
@@ -279,14 +270,8 @@ describe('spec driver', async () => {
   }
   function getWindowRect() {
     return async () => {
-      const {x, y} = await driver
-        .manage()
-        .window()
-        .getPosition()
-      const {width, height} = await driver
-        .manage()
-        .window()
-        .getSize()
+      const {x, y} = await driver.manage().window().getPosition()
+      const {width, height} = await driver.manage().window().getSize()
       const rect = {x, y, width, height}
       const result = await spec.getWindowRect(driver)
       assert.deepStrictEqual(result, rect)
@@ -295,14 +280,8 @@ describe('spec driver', async () => {
   function setWindowRect({input, expected} = {}) {
     return async () => {
       await spec.setWindowRect(driver, input)
-      const {x, y} = await driver
-        .manage()
-        .window()
-        .getPosition()
-      const {width, height} = await driver
-        .manage()
-        .window()
-        .getSize()
+      const {x, y} = await driver.manage().window().getPosition()
+      const {width, height} = await driver.manage().window().getSize()
       const rect = {x, y, width, height}
       assert.deepStrictEqual(rect, expected)
     }

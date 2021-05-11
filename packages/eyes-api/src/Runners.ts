@@ -1,49 +1,95 @@
 import * as utils from '@applitools/utils'
-import Eyes from './Eyes'
+import {RunnerOptions, RunnerOptionsFluent} from './input/RunnerOptions'
+import {TestResultsSummaryData} from './output/TestResultsSummary'
+import type {Eyes} from './Eyes'
 
-export default class EyesRunner {
+export type RunnerConfiguration<TType extends 'vg' | 'classic' = 'vg' | 'classic'> = {
+  type: TType
+  concurrency?: TType extends 'vg' ? number : never
+  legacy?: TType extends 'vg' ? boolean : never
+}
+
+export abstract class EyesRunner {
+  private _make: (config: RunnerConfiguration) => (...args: any[]) => unknown
+  private _controller: any
   private _eyes: Eyes[] = []
 
-  attach(eyes: Eyes) {
+  /** @internal */
+  abstract get config(): RunnerConfiguration
+
+  /** @internal */
+  attach(eyes: Eyes, init: (...args: any) => any) {
     this._eyes.push(eyes)
+    this._make = this._make || init
   }
 
-  async getAllTestResults(throwErr: boolean): Promise<any> {
-    if (this._eyes.length > 0) {
-      const results = await Promise.all(
-        this._eyes.map(eyes => {
-          return eyes.closeBatch().then(() => eyes.close())
-        }),
-      )
+  /** @internal */
+  async open(...args: any[]): Promise<any> {
+    if (!this._controller) this._controller = this._make(this.config)
 
-      return results
+    return this._controller.open(...args)
+  }
+
+  async getAllTestResults(throwErr = false): Promise<TestResultsSummaryData> {
+    const results = await this._controller.getResults()
+    if (throwErr) {
+      for (const result of results) {
+        if (result.exception) throw result.exception
+      }
     }
+    return new TestResultsSummaryData(results)
   }
 }
 
 export class VisualGridRunner extends EyesRunner {
-  private _legacyConcurrency: number
   private _testConcurrency: number
+  private _legacyConcurrency: number
 
-  constructor(options: {testConcurrency: number})
+  constructor(options: RunnerOptions)
+  /** @deprecated */
+  constructor(options: RunnerOptionsFluent)
   /** @deprecated */
   constructor(legacyConcurrency: number)
-  constructor(optionsOrLegacyConcurrency: {testConcurrency: number} | number) {
+  constructor(optionsOrLegacyConcurrency: RunnerOptions | RunnerOptionsFluent | number) {
     super()
     if (utils.types.isNumber(optionsOrLegacyConcurrency)) {
       this._legacyConcurrency = optionsOrLegacyConcurrency
     } else {
-      this._legacyConcurrency = optionsOrLegacyConcurrency.testConcurrency
+      const options =
+        optionsOrLegacyConcurrency instanceof RunnerOptionsFluent
+          ? optionsOrLegacyConcurrency.toJSON()
+          : optionsOrLegacyConcurrency
+      this._testConcurrency = options.testConcurrency
     }
   }
 
-  get legacyConcurrency() {
-    return this._legacyConcurrency
+  /** @internal */
+  get config(): RunnerConfiguration<'vg'> {
+    return {
+      type: 'vg',
+      concurrency: this._testConcurrency || this._legacyConcurrency,
+      legacy: Boolean(this._legacyConcurrency),
+    }
   }
 
   get testConcurrency() {
     return this._testConcurrency
   }
+
+  /** @deprecated */
+  get legacyConcurrency() {
+    return this._legacyConcurrency
+  }
+
+  /** @deprecated */
+  getConcurrentSessions() {
+    return this._legacyConcurrency
+  }
 }
 
-export class ClassicRunner extends EyesRunner {}
+export class ClassicRunner extends EyesRunner {
+  /** @internal */
+  get config(): RunnerConfiguration<'classic'> {
+    return {type: 'classic'}
+  }
+}

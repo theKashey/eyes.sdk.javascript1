@@ -1,0 +1,11 @@
+name: 'Setup matrix'
+inputs:
+  settings:
+    description: 'comma-separated list of sdk names (aliases) with modifiers such as version or aut protocol'
+    required: true
+outputs:
+  matrix:
+    description: 'strategy.matrix compatible json object'
+runs:
+  using: 'node12'
+  main: 'index.js'

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- added support for wdio7
+- added full typescript support
+- introduced @applitools/eyes-api package with new api
 
 ## 5.30.0 - 2021/4/26
 

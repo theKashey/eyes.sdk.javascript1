@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 'use strict'
 
-const {By, Target} = require('../..')
+const {By, Target} = require('../../dist')
 
 describe('EyesServiceTest', () => {
   beforeEach(() => {
@@ -12,9 +12,7 @@ describe('EyesServiceTest', () => {
     browser.eyesCheck(
       'see our features',
       Target.window()
-        .layoutRegions(
-          By.css('a.nytc---navbtn---desktop-link-child.nytc---navbtn---navLabel:first-of-type'),
-        )
+        .layoutRegions(By.css('a.nytc---navbtn---desktop-link-child.nytc---navbtn---navLabel:first-of-type'))
         .ignoreRegions(By.css('.features-onboarding-top-video')),
     )
   })

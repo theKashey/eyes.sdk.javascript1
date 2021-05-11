@@ -1,0 +1,50 @@
+name: 'Publish'
+description: 'Publish an SDK to NPM'
+inputs:
+  sdk:
+    description: "name of an SDK"
+    required: true
+  version:
+    description: "name of the framework to install"
+    default: 'patch'
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        echo "::group::Configure NPM"
+        echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+        echo "registry=https://registry.npmjs.org/" >> .npmrc
+        echo "always-auth=true" >> .npmrc
+        echo "::endgroup::"
+
+        echo "::group::Configure Git"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        echo "::endgroup::"
+
+        echo "::group::Create temp branch"
+        DATE=$(date +%F_%H-%M)
+        BRANCH="${{inputs.name}}_$DATE"
+        git checkout -b $BRANCH
+        git push -u origin $BRANCH
+        echo "::endgroup::"
+
+        echo "::group::Publish ${{inputs.name}}"
+        cd "packages/${{inputs.name}}"
+        git status
+        yarn install
+        git status
+        yarn deps
+        git status
+
+        git status
+        echo "::endgroup::"
+
+        echo "::group::Update ${{github.ref}} from $BRANCH"
+        git checkout ${{github.ref}}
+        git status
+        git pull origin ${{github.ref}} --rebase
+        git merge $BRANCH
+        git push origin ${{github.ref}}
+        echo "::endgroup::"

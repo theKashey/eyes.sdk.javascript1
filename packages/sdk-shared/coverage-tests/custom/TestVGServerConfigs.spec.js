@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const {getEyes, batch} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {
   ScreenOrientation,
   IosDeviceName,
@@ -43,7 +43,7 @@ describe('TestVGServerConfigs', () => {
 
     await eyes.open(webDriver)
     await eyes.close()
-    await expect(eyes.close()).to.be.rejectedWith(Error, 'IllegalState: Eyes not open')
+    await expect(eyes.close()).to.be.rejectedWith(Error, 'Eyes not open')
   })
 
   it(`TestMobileWeb_VG`, async () => {

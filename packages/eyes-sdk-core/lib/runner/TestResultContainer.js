@@ -1,4 +1,5 @@
 'use strict'
+const GeneralUtils = require('../utils/GeneralUtils')
 
 class TestResultContainer {
   /**
@@ -22,6 +23,10 @@ class TestResultContainer {
    */
   getException() {
     return this._exception
+  }
+
+  toJSON() {
+    return GeneralUtils.toPlain(this)
   }
 
   /**

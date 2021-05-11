@@ -1,13 +1,14 @@
 import * as utils from '@applitools/utils'
-import ExactMatchSettingsData, {ExactMatchSettings} from './ExactMatchSettings'
-import RegionData, {Region} from './Region'
-import FloatingRegionData, {FloatingRegion} from './FloatingRegion'
-import AccessibilityRegionData, {AccessibilityRegion} from './AccessibilityRegion'
-import {AccessibilitySettings} from './AccessibilitySettings'
 import MatchLevel from '../enums/MatchLevel'
 import AccessibilityLevel from '../enums/AccessibilityLevel'
 import AccessibilityGuidelinesVersion from '../enums/AccessibilityGuidelinesVersion'
+import {ExactMatchSettings, ExactMatchSettingsData} from './ExactMatchSettings'
+import {FloatingMatchSettings, FloatingMatchSettingsData} from './FloatingMatchSettings'
+import {AccessibilityMatchSettings, AccessibilityMatchSettingsData} from './AccessibilityMatchSettings'
+import {Region, RegionData} from './Region'
+import {AccessibilitySettings} from './AccessibilitySettings'
 
+/** @undocumented */
 export type ImageMatchSettings = {
   exact?: ExactMatchSettings
   matchLevel?: MatchLevel
@@ -15,155 +16,131 @@ export type ImageMatchSettings = {
   useDom?: boolean
   enablePatterns?: boolean
   ignoreDisplacements?: boolean
-  ignore?: Region[]
   ignoreRegions?: Region[]
-  layout?: Region[]
   layoutRegions?: Region[]
-  strict?: Region[]
   strictRegions?: Region[]
-  content?: Region[]
   contentRegions?: Region[]
-  floating?: FloatingRegion[]
-  floatingRegions?: FloatingRegion[]
-  accessibility?: AccessibilityRegion[]
-  accessibilityRegions?: AccessibilityRegion[]
+  floatingRegions?: FloatingMatchSettings[]
+  accessibilityRegions?: AccessibilityMatchSettings[]
   accessibilitySettings?: AccessibilitySettings
 }
 
-export default class ImageMatchSettingsData implements Required<ImageMatchSettings> {
-  private _exact: ExactMatchSettingsData
-  private _matchLevel: MatchLevel = MatchLevel.Strict
-  private _ignoreCaret = true
-  private _useDom = false
-  private _enablePatterns = false
-  private _ignoreDisplacements = false
-  private _ignoreRegions: RegionData[]
-  private _layoutRegions: RegionData[]
-  private _strictRegions: RegionData[]
-  private _contentRegions: RegionData[]
-  private _floatingRegions: FloatingRegionData[]
-  private _accessibilityRegions: AccessibilityRegionData[]
-  private _accessibilitySettings: AccessibilitySettings
+/** @undocumented */
+export class ImageMatchSettingsData implements Required<ImageMatchSettings> {
+  private _settings: ImageMatchSettings = {}
 
   constructor(settings?: ImageMatchSettings) {
     if (!settings) return this
-    const self = this as any
+    if (settings instanceof ImageMatchSettingsData) settings = settings.toJSON()
+
     for (const [key, value] of Object.entries(settings)) {
-      if (key in this && !key.startsWith('_')) {
-        self[key] = value
-      }
+      ;(this as any)[key] = value
     }
   }
 
   get exact(): ExactMatchSettings {
-    return this._exact
+    return this._settings.exact
   }
   set exact(exact: ExactMatchSettings) {
-    this._exact = new ExactMatchSettingsData(exact)
+    this._settings.exact = exact
   }
-  getExact(): ExactMatchSettings {
-    return this._exact
+  getExact(): ExactMatchSettingsData {
+    return new ExactMatchSettingsData(this.exact)
   }
   setExact(exact: ExactMatchSettings) {
     this.exact = exact
   }
 
   get matchLevel(): MatchLevel {
-    return this._matchLevel
+    return this._settings.matchLevel
   }
   set matchLevel(matchLevel: MatchLevel) {
     utils.guard.isEnumValue(matchLevel, MatchLevel, {name: 'matchLevel'})
-    this._matchLevel = matchLevel
+    this._settings.matchLevel = matchLevel
   }
   getMatchLevel(): MatchLevel {
-    return this._matchLevel
+    return this.matchLevel
   }
   setMatchLevel(matchLevel: MatchLevel) {
     this.matchLevel = matchLevel
   }
 
   get ignoreCaret(): boolean {
-    return this._ignoreCaret
+    return this._settings.ignoreCaret
   }
   set ignoreCaret(ignoreCaret: boolean) {
     utils.guard.isBoolean(ignoreCaret, {name: 'ignoreCaret', strict: false})
-    this._ignoreCaret = ignoreCaret
+    this._settings.ignoreCaret = ignoreCaret
   }
   getIgnoreCaret(): boolean {
-    return this._ignoreCaret
+    return this.ignoreCaret
   }
   setIgnoreCaret(ignoreCaret: boolean) {
     this.ignoreCaret = ignoreCaret
   }
 
   get useDom(): boolean {
-    return this._useDom
+    return this._settings.useDom
   }
   set useDom(useDom: boolean) {
     utils.guard.isBoolean(useDom, {name: 'useDom', strict: false})
-    this._useDom = useDom
+    this._settings.useDom = useDom
   }
   getUseDom(): boolean {
-    return this._useDom
+    return this.useDom
   }
   setUseDom(useDom: boolean) {
     this.useDom = useDom
   }
 
   get enablePatterns(): boolean {
-    return this._enablePatterns
+    return this._settings.enablePatterns
   }
   set enablePatterns(enablePatterns: boolean) {
     utils.guard.isBoolean(enablePatterns, {name: 'enablePatterns', strict: false})
-    this._enablePatterns = enablePatterns
+    this._settings.enablePatterns = enablePatterns
   }
   getEnablePatterns(): boolean {
-    return this._enablePatterns
+    return this.enablePatterns
   }
   setEnablePatterns(enablePatterns: boolean) {
     this.enablePatterns = enablePatterns
   }
 
   get ignoreDisplacements(): boolean {
-    return this._ignoreDisplacements
+    return this._settings.ignoreDisplacements
   }
   set ignoreDisplacements(ignoreDisplacements: boolean) {
     utils.guard.isBoolean(ignoreDisplacements, {name: 'ignoreDisplacements', strict: false})
-    this._ignoreDisplacements = ignoreDisplacements
+    this._settings.ignoreDisplacements = ignoreDisplacements
   }
   getIgnoreDisplacements(): boolean {
-    return this._ignoreDisplacements
+    return this.ignoreDisplacements
   }
   setIgnoreDisplacements(ignoreDisplacements: boolean) {
     this.ignoreDisplacements = ignoreDisplacements
   }
 
   get ignoreRegions(): Region[] {
-    return this._ignoreRegions
+    return this._settings.ignoreRegions
   }
   set ignoreRegions(ignoreRegions: Region[]) {
     utils.guard.isArray(ignoreRegions, {name: 'ignoreRegions', strict: false})
-    this._ignoreRegions = ignoreRegions ? ignoreRegions.map(region => new RegionData(region)) : []
-  }
-  get ignore(): Region[] {
-    return this.ignoreRegions
-  }
-  set ignore(ignoreRegions: Region[]) {
-    this.ignoreRegions = ignoreRegions
+    this._settings.ignoreRegions = ignoreRegions ?? []
   }
   getIgnoreRegions(): RegionData[] {
-    return this._ignoreRegions
+    return this.ignoreRegions?.map(region => new RegionData(region)) ?? []
   }
-  setIgnoreRegions(ignoreRegions: Region[] | RegionData[]) {
+  setIgnoreRegions(ignoreRegions: Region[]) {
     this.ignoreRegions = ignoreRegions
   }
 
   get layoutRegions(): Region[] {
-    return this._layoutRegions
+    return this._settings.layoutRegions
   }
   set layoutRegions(layoutRegions: Region[]) {
     utils.guard.isArray(layoutRegions, {name: 'layoutRegions', strict: false})
-    this._layoutRegions = layoutRegions ? layoutRegions.map(region => new RegionData(region)) : []
+    this._settings.layoutRegions = layoutRegions ?? []
   }
   get layout(): Region[] {
     return this.layoutRegions
@@ -172,18 +149,18 @@ export default class ImageMatchSettingsData implements Required<ImageMatchSettin
     this.layoutRegions = layoutRegions
   }
   getLayoutRegions(): RegionData[] {
-    return this._layoutRegions
+    return this.layoutRegions?.map(region => new RegionData(region)) ?? []
   }
-  setLayoutRegions(layoutRegions: Region[] | RegionData[]) {
+  setLayoutRegions(layoutRegions: Region[]) {
     this.layoutRegions = layoutRegions
   }
 
   get strictRegions(): Region[] {
-    return this._strictRegions
+    return this._settings.strictRegions
   }
   set strictRegions(strictRegions: Region[]) {
     utils.guard.isArray(strictRegions, {name: 'strictRegions', strict: false})
-    this._strictRegions = strictRegions ? strictRegions.map(region => new RegionData(region)) : []
+    this._settings.strictRegions = strictRegions ?? []
   }
   get strict(): Region[] {
     return this.strictRegions
@@ -192,18 +169,18 @@ export default class ImageMatchSettingsData implements Required<ImageMatchSettin
     this.strictRegions = strictRegions
   }
   getStrictRegions(): RegionData[] {
-    return this._strictRegions
+    return this.strictRegions?.map(region => new RegionData(region)) ?? []
   }
-  setStrictRegions(strictRegions: Region[] | RegionData[]) {
+  setStrictRegions(strictRegions: Region[]) {
     this.strictRegions = strictRegions
   }
 
   get contentRegions(): Region[] {
-    return this._contentRegions
+    return this._settings.contentRegions
   }
   set contentRegions(contentRegions: Region[]) {
     utils.guard.isArray(contentRegions, {name: 'contentRegions', strict: false})
-    this._contentRegions = contentRegions ? contentRegions.map(region => new RegionData(region)) : []
+    this._settings.contentRegions = contentRegions ?? []
   }
   get content(): Region[] {
     return this.contentRegions
@@ -212,56 +189,54 @@ export default class ImageMatchSettingsData implements Required<ImageMatchSettin
     this.contentRegions = contentRegions
   }
   getContentRegions(): RegionData[] {
-    return this._contentRegions
+    return this.contentRegions?.map(region => new RegionData(region)) ?? []
   }
-  setContentRegions(contentRegions: Region[] | RegionData[]) {
+  setContentRegions(contentRegions: Region[]) {
     this.contentRegions = contentRegions
   }
 
-  get floatingRegions(): FloatingRegion[] {
-    return this._floatingRegions
+  get floatingRegions(): FloatingMatchSettings[] {
+    return this._settings.floatingRegions
   }
-  set floatingRegions(floatingRegions: FloatingRegion[]) {
+  set floatingRegions(floatingRegions: FloatingMatchSettings[]) {
     utils.guard.isArray(floatingRegions, {name: 'floatingRegions', strict: false})
-    this._floatingRegions = floatingRegions ? floatingRegions.map(region => new FloatingRegionData(region)) : []
+    this._settings.floatingRegions = floatingRegions ?? []
   }
-  get floating(): FloatingRegion[] {
+  get floating(): FloatingMatchSettings[] {
     return this.floatingRegions
   }
-  set floating(floatingRegions: FloatingRegion[]) {
+  set floating(floatingRegions: FloatingMatchSettings[]) {
     this.floatingRegions = floatingRegions
   }
-  getFloatingRegions(): FloatingRegionData[] {
-    return this._floatingRegions
+  getFloatingRegions(): FloatingMatchSettingsData[] {
+    return this.floatingRegions?.map(region => new FloatingMatchSettingsData(region)) ?? []
   }
-  setFloatingRegions(floatingRegions: FloatingRegion[] | FloatingRegionData[]) {
+  setFloatingRegions(floatingRegions: FloatingMatchSettings[]) {
     this.floatingRegions = floatingRegions
   }
 
-  get accessibilityRegions(): AccessibilityRegion[] {
-    return this._accessibilityRegions
+  get accessibilityRegions(): AccessibilityMatchSettings[] {
+    return this._settings.accessibilityRegions
   }
-  set accessibilityRegions(accessibilityRegions: AccessibilityRegion[]) {
+  set accessibilityRegions(accessibilityRegions: AccessibilityMatchSettings[]) {
     utils.guard.isArray(accessibilityRegions, {name: 'accessibilityRegions', strict: false})
-    this._accessibilityRegions = accessibilityRegions
-      ? accessibilityRegions.map(region => new AccessibilityRegionData(region))
-      : []
+    this._settings.accessibilityRegions = accessibilityRegions ?? []
   }
-  get accessibility(): AccessibilityRegion[] {
+  get accessibility(): AccessibilityMatchSettings[] {
     return this.accessibilityRegions
   }
-  set accessibility(accessibilityRegions: AccessibilityRegion[]) {
+  set accessibility(accessibilityRegions: AccessibilityMatchSettings[]) {
     this.accessibilityRegions = accessibilityRegions
   }
-  getAccessibilityRegions(): AccessibilityRegionData[] {
-    return this._accessibilityRegions
+  getAccessibilityRegions(): AccessibilityMatchSettingsData[] {
+    return this.accessibilityRegions?.map(region => new AccessibilityMatchSettingsData(region)) ?? []
   }
-  setAccessibilityRegions(accessibilityRegions: AccessibilityRegion[] | AccessibilityRegionData[]) {
+  setAccessibilityRegions(accessibilityRegions: AccessibilityMatchSettings[]) {
     this.accessibilityRegions = accessibilityRegions
   }
 
   get accessibilitySettings(): AccessibilitySettings {
-    return this._accessibilitySettings
+    return this._settings.accessibilitySettings
   }
   set accessibilitySettings(accessibilitySettings: AccessibilitySettings) {
     if (accessibilitySettings) {
@@ -271,12 +246,27 @@ export default class ImageMatchSettingsData implements Required<ImageMatchSettin
         name: 'accessibilitySettings.guidelinesVersion',
       })
     }
-    this._accessibilitySettings = accessibilitySettings
+    this._settings.accessibilitySettings = accessibilitySettings
   }
   getAccessibilitySettings(): AccessibilitySettings {
-    return this._accessibilitySettings
+    return this.accessibilitySettings
   }
   setAccessibilitySettings(accessibilitySettings: AccessibilitySettings) {
-    this._accessibilitySettings = accessibilitySettings
+    this.accessibilitySettings = accessibilitySettings
+  }
+
+  /** @internal */
+  toObject(): ImageMatchSettings {
+    return this._settings
+  }
+
+  /** @internal */
+  toJSON(): ImageMatchSettings {
+    return utils.general.toJSON(this._settings)
+  }
+
+  /** @internal */
+  toString() {
+    return utils.general.toString(this)
   }
 }

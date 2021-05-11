@@ -55,6 +55,10 @@ class EyesFactory {
         return EyesVisualGrid
       }
 
+      static async getViewportSize(driver) {
+        return EyesClassic.getViewportSize(driver)
+      }
+
       /**
        * Sets the browser's viewport size
        * @param {TDriver} driver - driver object for the specific framework

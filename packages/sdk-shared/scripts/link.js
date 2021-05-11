@@ -10,6 +10,11 @@ yargs
     command: '*',
     builder: yargs =>
       yargs.options({
+        unlink: {
+          description: 'Unlink packages instead of linking them',
+          type: 'boolean',
+          default: false,
+        },
         packagePath: {
           alias: ['package'],
           description: 'Path to the target package',
@@ -40,10 +45,10 @@ yargs
           description: 'Package names to not link',
           type: 'array',
         },
-        unlink: {
-          description: 'Unlink packages instead of linking them',
-          type: 'boolean',
-          default: false,
+        maxDepth: {
+          alias: ['depth'],
+          type: 'number',
+          default: 0,
         },
       }),
     handler: async args => {
@@ -59,86 +64,84 @@ yargs
   .help().argv
 
 async function link({
-  include,
+  include = [],
   exclude = [],
   packagePath = process.cwd(),
   packagesPath = path.resolve(packagePath, '..'),
   runInstall = false,
   runBuild = true,
+  maxDepth = 0,
 } = {}) {
-  const manifest = await getManifest(packagePath)
-  if (!manifest) process.exit(1)
+  const target = await getPackage(packagePath)
+  if (!target) process.exit(1)
 
-  const packages = await getPackages(packagesPath)
+  const packages = await getPackages(packagesPath, {include, exclude})
 
-  const dependencyNames = Object.keys({
-    ...manifest.dependencies,
-    ...manifest.devDependencies,
-    ...manifest.optionalDependencies,
-  })
-
-  const dependencies = dependencyNames
-    .filter(dependencyName => {
-      return (
-        packages.has(dependencyName) &&
-        !exclude.includes(dependencyName) &&
-        (!include || include.length <= 0 || include.includes(dependencyName))
-      )
-    })
-    .map(dependencyName => packages.get(dependencyName))
-
-  const executions = dependencies.map(dependency => {
-    return new Promise(resolve => {
-      const commands = [`yarn link`]
-      if (runInstall) commands.push(`yarn install`)
-      if (runBuild && dependency.hasBuild) commands.push(`yarn build`)
-      commands.push(`cd ${packagePath}`, `yarn link ${dependency.name}`)
-      exec(commands.join(' && '), {cwd: dependency.path}, error => {
-        resolve({name: dependency.name, error})
-      })
-    })
-  })
-
-  const results = await Promise.all(executions)
+  const results = await task(target, packages)
 
   results.forEach(result => {
     if (result.error) {
-      console.error(chalk.redBright(`${chalk.bold.yellow(result.name)} wasn't linked due to error`))
+      console.error(
+        chalk.redBright(
+          `${chalk.bold.yellow(result.dependency.name)} wasn't linked to ${chalk.bold.yellow(
+            result.target.name,
+          )} due to error`,
+        ),
+      )
       console.error(result.error)
       process.exit(1)
     }
-    console.log(chalk.greenBright(`${chalk.bold.cyan(result.name)} was successfully linked`))
+    console.log(
+      chalk.greenBright(
+        `${chalk.bold.cyan(result.dependency.name)} was successfully linked to ${chalk.bold.cyan(
+          result.target.name,
+        )}`,
+      ),
+    )
   })
+
+  async function task(target, packages, {depth = 0} = {}) {
+    const dependencies = target.dependencies
+      .filter(dependencyName => packages.has(dependencyName))
+      .map(dependencyName => packages.get(dependencyName))
+
+    return dependencies.reduce(async (promise, dependency) => {
+      const results = await promise
+      let [result, ...nestedResults] = await new Promise(async resolve => {
+        const nestedResults =
+          depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
+        const commands = ['yarn link']
+        if (runInstall) commands.push('yarn install')
+        if (runBuild && dependency.hasBuild) commands.push('yarn build')
+        exec(commands.join(' && '), {cwd: dependency.path}, async error => {
+          resolve([{target, dependency, error}, ...nestedResults])
+        })
+      })
+      if (!result.error) {
+        result = await new Promise(resolve => {
+          exec(`yarn link ${dependency.name}`, {cwd: target.path}, error => {
+            resolve({target, dependency, error})
+          })
+        })
+      }
+      return results.concat(result, nestedResults)
+    }, Promise.resolve([]))
+  }
 }
 
 async function unlink({
-  include,
+  include = [],
   exclude = [],
   packagePath = process.cwd(),
   packagesPath = path.resolve(packagePath, '..'),
 } = {}) {
-  const manifest = await getManifest(packagePath)
-  if (!manifest) {
-    console.error(chalk.redBright('This script should be executed inside npm package'))
-    process.exit(1)
-  }
+  const target = await getPackage(packagePath)
+  if (!target) process.exit(1)
 
-  const packages = await getPackages(packagesPath)
+  const packages = await getPackages(packagesPath, [include, exclude])
 
-  const dependencyNames = Object.keys({
-    ...manifest.dependencies,
-    ...manifest.devDependencies,
-    ...manifest.optionalDependencies,
-  })
-
-  const dependencies = dependencyNames
-    .filter(dependencyName => {
-      return (
-        packages.has(dependencyName) &&
-        !exclude.includes(dependencyName) &&
-        (!include || include.includes(dependencyName))
-      )
-    })
+  const dependencies = target.dependencies
+    .filter(dependencyName => packages.has(dependencyName))
     .map(dependencyName => packages.get(dependencyName))
 
   const result = await new Promise(resolve => {
@@ -167,21 +170,39 @@ async function getManifest(packagePath) {
   return require(manifestPath)
 }
 
-async function getPackages(packagesPath) {
+async function getPackage(packagePath) {
+  const manifest = await getManifest(packagePath)
+  if (!manifest) return null
+  return {
+    name: manifest.name,
+    alias: path.basename(packagePath),
+    path: packagePath,
+    dependencies: Object.keys({
+      ...manifest.dependencies,
+      ...manifest.devDependencies,
+      ...manifest.optionalDependencies,
+    }),
+    hasBuild: Boolean(manifest.scripts && manifest.scripts.build),
+  }
+}
+
+async function getPackages(packagesPath, {include = [], exclude = []} = {}) {
   const entries = await new Promise(resolve => {
     fs.readdir(packagesPath, (err, entries) => resolve(!err ? entries : []))
   })
   return entries.reduce(async (promise, entry) => {
+    const data = await getPackage(path.resolve(packagesPath, entry))
     const packages = await promise
-    const packagePath = path.resolve(packagesPath, entry)
-    const manifest = await getManifest(packagePath)
-    if (manifest) {
-      packages.set(manifest.name, {
-        name: manifest.name,
-        path: packagePath,
-        hasBuild: Boolean(manifest.scripts && manifest.scripts.build),
-      })
+
+    if (
+      !data ||
+      exclude.some(name => name === data.name || name === data.alias) ||
+      include.every(name => name !== data.name && name !== data.alias)
+    ) {
+      return packages
     }
+
+    packages.set(data.name, data)
     return packages
   }, Promise.resolve(new Map()))
 }

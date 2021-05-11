@@ -1,105 +1,90 @@
 import * as utils from '@applitools/utils'
+import type {Mutable} from '@applitools/utils'
 
 export type ApiUrls = {
-  baselineImage?: string
-  currentImage?: string
-  checkpointImage?: string
-  checkpointImageThumbnail?: string
-  diffImage?: string
+  readonly baselineImage?: string
+  readonly currentImage?: string
+  readonly checkpointImage?: string
+  readonly checkpointImageThumbnail?: string
+  readonly diffImage?: string
 }
 
-export default class ApiUrlsData implements Required<ApiUrls> {
-  private _baselineImage: string
-  private _currentImage: string
-  private _checkpointImage: string
-  private _checkpointImageThumbnail: string
-  private _diffImage: string
+export class ApiUrlsData implements Required<ApiUrls> {
+  private _urls: Mutable<ApiUrls> = {} as any
 
-  constructor(appUrls?: ApiUrls) {
-    if (appUrls) return this
-    this.baselineImage = appUrls.baselineImage
-    this.currentImage = appUrls.currentImage
-    this.checkpointImage = appUrls.checkpointImage
-    this.checkpointImageThumbnail = appUrls.checkpointImageThumbnail
-    this.diffImage = appUrls.diffImage
+  /** @internal */
+  constructor(urls?: ApiUrls) {
+    if (!urls) return this
+    this._urls = urls instanceof ApiUrlsData ? urls.toJSON() : urls
   }
 
   get baselineImage(): string {
-    return this._baselineImage
-  }
-  set baselineImage(value: string) {
-    this._baselineImage = value
+    return this._urls.baselineImage
   }
   getBaselineImage(): string {
-    return this._baselineImage
+    return this.baselineImage
   }
-  setBaselineImage(value: string) {
-    this._baselineImage = value
+  /** @deprecated */
+  setBaselineImage(setBaselineImage: string) {
+    this._urls.baselineImage = setBaselineImage
   }
 
   get currentImage(): string {
-    return this._currentImage
-  }
-  set currentImage(currentImage: string) {
-    this._currentImage = currentImage
+    return this._urls.currentImage
   }
   getCurrentImage(): string {
-    return this._currentImage
+    return this.currentImage
   }
+  /** @deprecated */
   setCurrentImage(currentImage: string) {
-    this._currentImage = currentImage
+    this._urls.currentImage = currentImage
   }
 
   get checkpointImage(): string {
-    return this._checkpointImage
-  }
-  set checkpointImage(checkpointImage: string) {
-    this._checkpointImage = checkpointImage
+    return this._urls.checkpointImage
   }
   getCheckpointImage(): string {
-    return this._checkpointImage
+    return this.checkpointImage
   }
+  /** @deprecated */
   setCheckpointImage(checkpointImage: string) {
-    this._checkpointImage = checkpointImage
+    this._urls.checkpointImage = checkpointImage
   }
 
   get checkpointImageThumbnail(): string {
-    return this._checkpointImageThumbnail
-  }
-  set checkpointImageThumbnail(checkpointImageThumbnail: string) {
-    this._checkpointImageThumbnail = checkpointImageThumbnail
+    return this._urls.checkpointImageThumbnail
   }
   getCheckpointImageThumbnail(): string {
-    return this._checkpointImageThumbnail
+    return this.checkpointImageThumbnail
   }
+  /** @deprecated */
   setCheckpointImageThumbnail(checkpointImageThumbnail: string) {
-    this.checkpointImageThumbnail = checkpointImageThumbnail
+    this._urls.checkpointImageThumbnail = checkpointImageThumbnail
   }
 
   get diffImage(): string {
-    return this._diffImage
-  }
-  set diffImage(diffImage: string) {
-    this._diffImage = diffImage
+    return this._urls.diffImage
   }
   getDiffImage(): string {
-    return this._diffImage
+    return this.diffImage
   }
+  /** @deprecated */
   setDiffImage(diffImage: string) {
-    this.diffImage = diffImage
+    this._urls.diffImage = diffImage
   }
 
+  /** @internal */
+  toObject(): ApiUrls {
+    return this._urls
+  }
+
+  /** @internal */
   toJSON(): ApiUrls {
-    return utils.general.toJSON(this, [
-      'baselineImage',
-      'currentImage',
-      'checkpointImage',
-      'checkpointImageThumbnail',
-      'diffImage',
-    ])
+    return utils.general.toJSON(this._urls)
   }
 
-  toString() {
+  /** @internal */
+  toString(): string {
     return utils.general.toString(this)
   }
 }

@@ -1,4 +1,4 @@
-const EyesService = require('../../../src/eyes-service')
+const EyesService = require('../../../dist/service')
 const assert = require('assert')
 
 describe('EyesService', () => {

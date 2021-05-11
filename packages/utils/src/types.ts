@@ -1,3 +1,5 @@
+/* eslint {"@typescript-eslint/ban-types": ["error", {"types": {"Function": false}}]} */
+
 export function isNull(value: any): value is null | undefined {
   return value == null
 }
@@ -30,7 +32,22 @@ export function isObject(value: any): value is Record<PropertyKey, any> {
   return typeof value === 'object' && value !== null
 }
 
-export function isFunction(value: any): value is (...args: any[]) => any {
+export function isEmpty(value: Record<PropertyKey, unknown>): value is Record<PropertyKey, never>
+export function isEmpty(value: any[]): value is []
+export function isEmpty(value: string): value is ''
+export function isEmpty(value: any): boolean {
+  if (!value) return true
+  if (isObject(value)) return Object.keys(value).length === 0
+  return value.length === 0
+}
+
+export function isFunction(value: any): value is (...args: any[]) => any
+export function isFunction<TKey extends PropertyKey>(
+  value: any,
+  key: TKey,
+): value is {[key in TKey]: (...args: any[]) => any}
+export function isFunction<TKey extends PropertyKey>(value: any, key?: TKey): boolean {
+  if (key && has(value, key)) return typeof value[key] === 'function'
   return typeof value === 'function'
 }
 
@@ -51,15 +68,21 @@ export function has<TKey extends PropertyKey>(
   if (!isArray(keys)) keys = [keys as TKey]
 
   for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(value, key)) {
-      return false
-    }
+    if (!(key in value)) return false
   }
 
   return true
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function instanceOf<TCtor extends Function>(value: any, ctor: TCtor): value is TCtor['prototype'] {
-  return value instanceof ctor
+export function instanceOf<TCtor>(value: any, ctorName: string): value is TCtor
+export function instanceOf<TCtor extends Function>(value: any, ctor: TCtor): value is TCtor['prototype']
+export function instanceOf(value: any, ctorOrName: Function | string): boolean {
+  if (!isObject(value)) return false
+  if (!isString(ctorOrName)) return value instanceof ctorOrName
+  let proto = Object.getPrototypeOf(value)
+  while (proto) {
+    if (proto.constructor.name === ctorOrName) return true
+    proto = Object.getPrototypeOf(proto)
+  }
+  return false
 }

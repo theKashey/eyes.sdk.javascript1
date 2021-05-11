@@ -2,15 +2,7 @@
 
 const chromedriver = require('chromedriver')
 const {remote} = require('webdriverio')
-const {
-  Eyes,
-  Target,
-  VisualGridRunner,
-  Configuration,
-  BrowserType,
-  BatchInfo,
-  ConsoleLogHandler,
-} = require('../index') // should be replaced to '@applitools/eyes-webdriverio'
+const {Eyes, Target, VisualGridRunner, Configuration, BrowserType, BatchInfo, ConsoleLogHandler} = require('../index') // should be replaced to '@applitools/eyes-webdriverio'
 
 ;(async () => {
   chromedriver.start()

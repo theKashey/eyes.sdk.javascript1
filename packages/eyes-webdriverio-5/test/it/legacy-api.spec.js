@@ -1,12 +1,12 @@
 const assert = require('assert')
-const spec = require('../../src/spec-driver')
-const {LegacySelector, withLegacyDriverAPI} = require('../../src/legacy-api')
+const spec = require('../../dist/spec-driver')
+const legacy = require('../../dist/legacy')
 
 describe('legacy api', () => {
   let browser, destroyBrowser, driver
   before(async () => {
     ;[browser, destroyBrowser] = await spec.build({browser: 'chrome'})
-    driver = withLegacyDriverAPI(browser)
+    driver = legacy.wrapDriver(browser)
     await driver.url('https://applitools.github.io/demo/TestPages/FramesTestPage/')
   })
 
@@ -19,7 +19,7 @@ describe('legacy api', () => {
   })
 
   it('findElement(legacy-selector)', async () => {
-    const element = await driver.findElement(LegacySelector.id('overflowing-div'))
+    const element = await driver.findElement(legacy.By.id('overflowing-div'))
     assert.ok(element)
     assert.ok(element.getDriver)
     assert.ok(spec.isElement(element))
@@ -42,10 +42,7 @@ describe('legacy api', () => {
   })
 
   it('getCurrentUrl()', async () => {
-    assert.strictEqual(
-      await driver.getCurrentUrl(),
-      'https://applitools.github.io/demo/TestPages/FramesTestPage/',
-    )
+    assert.strictEqual(await driver.getCurrentUrl(), 'https://applitools.github.io/demo/TestPages/FramesTestPage/')
   })
 
   it('getBrowserName()', async () => {
@@ -53,25 +50,25 @@ describe('legacy api', () => {
   })
 
   it('element.getDriver()', async () => {
-    const element = await driver.findElement(LegacySelector.css('div'))
+    const element = await driver.findElement(legacy.By.css('div'))
     assert.strictEqual(element.getDriver(), driver)
   })
 
   it('element.executeScript(script)', async () => {
-    const element = await driver.findElement(LegacySelector.id('overflowing-div-image'))
+    const element = await driver.findElement(legacy.By.id('overflowing-div-image'))
     const tagName = await element.executeScript('return arguments[0].id')
     assert.strictEqual(tagName, 'overflowing-div-image')
   })
 
   it('element.findElement(legacy-selector)', async () => {
-    const element = await driver.findElement(LegacySelector.id('overflowing-div-image'))
-    const childElement = await element.findElement(LegacySelector.css('img'))
+    const element = await driver.findElement(legacy.By.id('overflowing-div-image'))
+    const childElement = await element.findElement(legacy.By.css('img'))
     assert.ok(childElement)
     assert.ok(childElement.getDriver)
     assert.ok(spec.isElement(childElement))
   })
   it('element.click()', async () => {
-    const element = await driver.findElement(LegacySelector.css('input'))
+    const element = await driver.findElement(legacy.By.css('input'))
     const isBlurred = await element.executeScript('return arguments[0] !== document.activeElement')
     assert.ok(isBlurred)
     await element.click()
@@ -79,7 +76,7 @@ describe('legacy api', () => {
     assert.ok(isFocused)
   })
   it('element.sendKeys(string)', async () => {
-    const element = await driver.findElement(LegacySelector.css('input'))
+    const element = await driver.findElement(legacy.By.css('input'))
     await element.sendKeys('Hello World!')
     const [isFocused, value] = await element.executeScript(
       'return [arguments[0] === document.activeElement, arguments[0].value]',

@@ -1,4 +1,4 @@
-const {EyesService} = require('../../..')
+const EyesService = require('../../../dist/service')
 const path = require('path')
 const {config} = require('../wdio.base.conf')
 

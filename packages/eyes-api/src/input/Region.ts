@@ -2,84 +2,49 @@ import * as utils from '@applitools/utils'
 import {Location} from './Location'
 import {RectangleSize} from './RectangleSize'
 
-type Offset = {
-  left: number
-  top: number
-}
+export type Region = Location & RectangleSize
 
-export type Region = (Location | Offset) & RectangleSize
-
-export default class RegionData implements Required<Offset & Location & RectangleSize> {
-  private _x: number
-  private _y: number
-  private _width: number
-  private _height: number
+export class RegionData implements Required<Region> {
+  private _region: Region = {} as any
 
   constructor(region: Region)
-  constructor(location: Location | Offset, size: RectangleSize)
+  constructor(location: Location, size: RectangleSize)
   constructor(x: number, y: number, width: number, height: number)
   constructor(
-    regionOrLocationOrX: Region | Location | Offset | number,
+    regionOrLocationOrX: Region | Location | number,
     sizeOrY?: RectangleSize | number,
     width?: number,
     height?: number,
   ) {
     if (utils.types.isNumber(regionOrLocationOrX)) {
-      const x: number = regionOrLocationOrX
-      const y = sizeOrY as number
-      return new RegionData({x, y, width, height})
-    } else if (!utils.types.has(regionOrLocationOrX, 'width')) {
-      const {x, y} = utils.types.has(regionOrLocationOrX, 'left')
-        ? {x: regionOrLocationOrX.left, y: regionOrLocationOrX.top}
-        : regionOrLocationOrX
-      const {width, height} = sizeOrY as RectangleSize
-      return new RegionData({x, y, width, height})
+      return new RegionData({x: regionOrLocationOrX, y: sizeOrY as number, width, height})
+    } else if (!utils.types.has(regionOrLocationOrX, ['width', 'height'])) {
+      return new RegionData({...regionOrLocationOrX, ...(sizeOrY as RectangleSize)})
     }
-    const region = regionOrLocationOrX
-    if (utils.types.has(region, 'x')) {
-      this.x = region.x
-      this.y = region.y
-    } else {
-      this.x = region.left
-      this.y = region.top
-    }
-    this.width = region.width
-    this.height = region.height
+    this.x = regionOrLocationOrX.x
+    this.y = regionOrLocationOrX.y
+    this.width = regionOrLocationOrX.width
+    this.height = regionOrLocationOrX.height
   }
 
   get x(): number {
-    return this._x
+    return this._region.x
   }
   set x(x: number) {
     utils.guard.isNumber(x, {name: 'x'})
-    this._x = x
+    this._region.x = x
   }
-  getX(): number {
-    return this._x
-  }
-  setX(x: number) {
-    this.x = x
-  }
-
-  get y(): number {
-    return this._y
-  }
-  set y(y: number) {
-    utils.guard.isNumber(y, {name: 'y'})
-    this._y = y
-  }
-  getY(): number {
-    return this._y
-  }
-  setY(y: number) {
-    this.y = y
-  }
-
   get left(): number {
     return this.x
   }
   set left(left: number) {
     this.x = left
+  }
+  getX(): number {
+    return this.x
+  }
+  setX(x: number) {
+    this.x = x
   }
   getLeft(): number {
     return this.x
@@ -88,11 +53,24 @@ export default class RegionData implements Required<Offset & Location & Rectangl
     this.x = left
   }
 
+  get y(): number {
+    return this._region.y
+  }
+  set y(y: number) {
+    utils.guard.isNumber(y, {name: 'y'})
+    this._region.y = y
+  }
   get top(): number {
     return this.y
   }
   set top(top: number) {
     this.y = top
+  }
+  getY(): number {
+    return this.y
+  }
+  setY(y: number) {
+    this.y = y
   }
   getTop(): number {
     return this.y
@@ -102,30 +80,45 @@ export default class RegionData implements Required<Offset & Location & Rectangl
   }
 
   get width(): number {
-    return this._width
+    return this._region.width
   }
   set width(width: number) {
     utils.guard.isNumber(width, {name: 'width', gte: 0})
-    this._width = width
+    this._region.width = width
   }
-  getWidth() {
-    return this._width
+  getWidth(): number {
+    return this._region.width
   }
   setWidth(width: number) {
     this.width = width
   }
 
   get height(): number {
-    return this._height
+    return this._region.height
   }
   set height(height: number) {
     utils.guard.isNumber(height, {name: 'height', gte: 0})
-    this._height = height
+    this._region.height = height
   }
-  getHeight() {
-    return this._height
+  getHeight(): number {
+    return this._region.height
   }
   setHeight(height: number) {
     this.height = height
+  }
+
+  /** @internal */
+  toObject(): Region {
+    return this._region
+  }
+
+  /** @internal */
+  toJSON(): Region {
+    return utils.general.toJSON(this._region)
+  }
+
+  /** @internal */
+  toString() {
+    return utils.general.toString(this)
   }
 }

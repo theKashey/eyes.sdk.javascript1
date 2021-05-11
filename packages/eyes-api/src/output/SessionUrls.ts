@@ -1,51 +1,54 @@
 import * as utils from '@applitools/utils'
+import type {Mutable} from '@applitools/utils'
 
 export type SessionUrls = {
-  batch?: string
-  session?: string
+  readonly batch?: string
+  readonly session?: string
 }
 
-export default class SessionUrlsData implements Required<SessionUrls> {
-  private _batch: string
-  private _session: string
+export class SessionUrlsData implements Required<SessionUrls> {
+  private _urls: Mutable<SessionUrls> = {} as any
 
-  constructor(sessionUrls?: SessionUrls) {
-    if (!sessionUrls) return this
-    this.batch = sessionUrls.batch
-    this.session = sessionUrls.session
+  /** @internal */
+  constructor(urls?: SessionUrls) {
+    if (!urls) return this
+    this._urls = urls instanceof SessionUrlsData ? urls.toJSON() : urls
   }
 
   get batch(): string {
-    return this._batch
-  }
-  set batch(batch: string) {
-    this._batch = batch
+    return this._urls.batch
   }
   getBatch(): string {
-    return this._batch
+    return this.batch
   }
+  /** @deprecated */
   setBatch(batch: string) {
-    this.batch = batch
+    this._urls.batch = batch
   }
 
   get session(): string {
-    return this._session
-  }
-  set session(session: string) {
-    this._session = session
+    return this._urls.session
   }
   getSession(): string {
-    return this._session
+    return this.session
   }
+  /** @deprecated */
   setSession(session: string) {
-    this.session = session
+    this._urls.session = session
   }
 
+  /** @internal */
+  toObject(): SessionUrls {
+    return this._urls
+  }
+
+  /** @internal */
   toJSON(): SessionUrls {
-    return utils.general.toJSON(this, ['batch', 'session'])
+    return utils.general.toJSON(this._urls)
   }
 
-  toString() {
+  /** @internal */
+  toString(): string {
     return utils.general.toString(this)
   }
 }

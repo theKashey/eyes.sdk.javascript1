@@ -48,10 +48,7 @@ describe('Measurements', () => {
     logger.log(`Total minus visits: ${totalMinus} sec (${minutes(totalMinus)})`)
     console.log(`Total minus visits: ${totalMinus} sec (${minutes(totalMinus)})`)
     logHandler.close()
-    fs.appendFileSync(
-      './logs/measurements/total',
-      `${configStr} | ${minutes(total / 1000)} | ${minutes(totalMinus)}\n`,
-    )
+    fs.appendFileSync('./logs/measurements/total', `${configStr} | ${minutes(total / 1000)} | ${minutes(totalMinus)}\n`)
   })
 
   function minutes(s) {

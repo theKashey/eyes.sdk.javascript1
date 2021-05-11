@@ -1,9 +1,9 @@
 import * as utils from '@applitools/utils'
 import AccessibilityRegionType from '../enums/AccessibilityRegionType'
 import MatchLevel from '../enums/MatchLevel'
-import RegionData, {Region} from './Region'
+import {Region} from './Region'
 
-type RegionReference<TElement, TSelector> = Region | RegionData | ElementReference<TElement, TSelector>
+type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
 
 type ElementReference<TElement, TSelector> = TElement | TSelector
 
@@ -27,7 +27,7 @@ type AccessibilityRegionReference<TElement, TSelector> = {
   type?: AccessibilityRegionType
 }
 
-export type CheckSettingsSpec<TElement, TSelector> = {
+type CheckSettingsSpec<TElement, TSelector> = {
   isElement(value: any): value is TElement
   isSelector(value: any): value is TSelector
 }
@@ -37,7 +37,7 @@ export type CheckSettings<TElement, TSelector> = {
   region?: RegionReference<TElement, TSelector>
   frames?: (ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>)[]
   scrollRootElement?: ElementReference<TElement, TSelector>
-  isFully?: boolean
+  fully?: boolean
   matchLevel?: MatchLevel
   useDom?: boolean
   sendDom?: boolean
@@ -53,15 +53,55 @@ export type CheckSettings<TElement, TSelector> = {
   disableBrowserFetching?: boolean
   layoutBreakpoints?: boolean | number[]
   visualGridOptions?: {[key: string]: any}
-  hooks?: {[key: string]: string}
+  hooks?: {beforeCaptureScreenshot: string}
   renderId?: string
+  variationGroupId?: string
   timeout?: number
 }
 
-export default abstract class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
-  protected abstract _spec: CheckSettingsSpec<TElement, TSelector>
+export type Target<TElement, TSelector> = {
+  window(): CheckSettingsFluent<TElement, TSelector>
+  region(region: RegionReference<TElement, TSelector>): CheckSettingsFluent<TElement, TSelector>
+  frame(context: ContextReference<TElement, TSelector>): CheckSettingsFluent<TElement, TSelector>
+  frame(
+    frame: FrameReference<TElement, TSelector>,
+    scrollRootElement?: ElementReference<TElement, TSelector>,
+  ): CheckSettingsFluent<TElement, TSelector>
+}
+
+export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
+  /** @internal */
+  static window(): CheckSettingsFluent {
+    return new this()
+  }
+  /** @internal */
+  static region(region: unknown): CheckSettingsFluent {
+    return new this().region(region)
+  }
+  /** @internal */
+  static frame(contextOrFrame: unknown, scrollRootElement?: unknown): CheckSettingsFluent {
+    return new this().frame(contextOrFrame, scrollRootElement)
+  }
+
+  protected readonly _spec: CheckSettingsSpec<TElement, TSelector>
 
   private _settings: CheckSettings<TElement, TSelector> = {}
+
+  private _isFrameReference(value: any): value is FrameReference<TSelector, TElement> {
+    return utils.types.isNumber(value) || utils.types.isString(value) || this._isElementReference(value)
+  }
+
+  private _isRegionReference(value: any): value is RegionReference<TSelector, TElement> {
+    return (
+      utils.types.has(value, ['x', 'y', 'width', 'height']) ||
+      utils.types.has(value, ['left', 'top', 'width', 'height']) ||
+      this._isElementReference(value)
+    )
+  }
+
+  private _isElementReference(value: any): value is ElementReference<TSelector, TElement> {
+    return this._spec.isElement(value) || this._spec.isSelector(value)
+  }
 
   constructor(settings?: CheckSettings<TElement, TSelector>) {
     if (!settings) return this
@@ -78,7 +118,7 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
       })
     }
     if (settings.scrollRootElement) this.scrollRootElement(settings.scrollRootElement)
-    if (!utils.types.isNull(settings.isFully)) this.fully(settings.isFully)
+    if (!utils.types.isNull(settings.fully)) this.fully(settings.fully)
     if (settings.matchLevel) this.matchLevel(settings.matchLevel)
     if (!utils.types.isNull(settings.useDom)) this.useDom(settings.useDom)
     if (!utils.types.isNull(settings.sendDom)) this.sendDom(settings.sendDom)
@@ -117,25 +157,11 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
       Object.entries(settings.visualGridOptions).forEach(([key, value]) => this.visualGridOption(key, value))
     }
     if (settings.renderId) this.renderId(settings.renderId)
+    if (settings.variationGroupId) this.variationGroupId(settings.variationGroupId)
     if (!utils.types.isNull(settings.timeout)) this.timeout(settings.timeout)
   }
 
-  isFrameReference(value: any): value is FrameReference<TSelector, TElement> {
-    return utils.types.isNumber(value) || utils.types.isString(value) || this.isElementReference(value)
-  }
-
-  isRegionReference(value: any): value is RegionReference<TSelector, TElement> {
-    return (
-      utils.types.has(value, ['x', 'y', 'width', 'height']) ||
-      utils.types.has(value, ['left', 'top', 'width', 'height']) ||
-      this.isElementReference(value)
-    )
-  }
-
-  isElementReference(value: any): value is ElementReference<TSelector, TElement> {
-    return this._spec.isElement(value) || this._spec.isSelector(value)
-  }
-
+  /** @undocumented */
   name(name: string): this {
     utils.guard.isString(name, {name: 'name'})
     this._settings.name = name
@@ -146,7 +172,7 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
   }
 
   region(region: RegionReference<TElement, TSelector>): this {
-    utils.guard.custom(region, value => this.isRegionReference(value), {name: 'region'})
+    utils.guard.custom(region, value => this._isRegionReference(value), {name: 'region'})
     this._settings.region = region
     return this
   }
@@ -161,8 +187,8 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
       ? contextOrFrame
       : {frame: contextOrFrame, scrollRootElement}
     if (!this._settings.frames) this._settings.frames = []
-    utils.guard.custom(context.frame, value => this.isFrameReference(value), {name: 'frame'})
-    utils.guard.custom(context.scrollRootElement, value => this.isElementReference(value), {
+    utils.guard.custom(context.frame, value => this._isFrameReference(value), {name: 'frame'})
+    utils.guard.custom(context.scrollRootElement, value => this._isElementReference(value), {
       name: 'scrollRootElement',
       strict: false,
     })
@@ -179,9 +205,11 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     ignoreRegions.forEach(ignoreRegion => this.ignoreRegion(ignoreRegion))
     return this
   }
+  /** @deprecated */
   ignore(ignoreRegion: RegionReference<TElement, TSelector>) {
     return this.ignoreRegion(ignoreRegion)
   }
+  /** @deprecated */
   ignores(...ignoreRegions: RegionReference<TElement, TSelector>[]): this {
     return this.ignoreRegions(...ignoreRegions)
   }
@@ -234,7 +262,7 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     const floatingRegion = utils.types.has(region, 'region')
       ? region
       : {region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset}
-    utils.guard.custom(floatingRegion.region, value => this.isRegionReference(value), {
+    utils.guard.custom(floatingRegion.region, value => this._isRegionReference(value), {
       name: 'region',
     })
     utils.guard.isNumber(floatingRegion.maxUpOffset, {name: 'region'})
@@ -272,7 +300,9 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     }
     return this
   }
+  /** @deprecated */
   floating(region: FloatingRegionReference<TElement, TSelector>): this
+  /** @deprecated */
   floating(region: RegionReference<TElement, TSelector>): this
   floating(
     region: FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>,
@@ -289,7 +319,9 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
       maxRightOffset,
     )
   }
+  /** @deprecated */
   floatings(...regions: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]): this
+  /** @deprecated */
   floatings(maxOffset: number, ...regions: RegionReference<TElement, TSelector>[]): this
   floatings(
     regionOrMaxOffset: FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | number,
@@ -305,7 +337,7 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     type?: AccessibilityRegionType,
   ): this {
     const accessibilityRegion = utils.types.has(region, 'region') ? region : {region, type}
-    utils.guard.custom(accessibilityRegion.region, value => this.isRegionReference(value), {
+    utils.guard.custom(accessibilityRegion.region, value => this._isRegionReference(value), {
       name: 'region',
     })
     utils.guard.isEnumValue(accessibilityRegion.type, AccessibilityRegionType, {
@@ -338,33 +370,9 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     }
     return this
   }
-  accessibility(region: AccessibilityRegionReference<TElement, TSelector>): this
-  accessibility(region: RegionReference<TElement, TSelector>, type?: AccessibilityRegionType): this
-  accessibility(
-    region: AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>,
-    type?: AccessibilityRegionType,
-  ): this {
-    return this.accessibilityRegion(region as RegionReference<TElement, TSelector>, type)
-  }
-  accessibilities(
-    ...regions: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
-  ): this
-  accessibilities(type: AccessibilityRegionType, ...regions: RegionReference<TElement, TSelector>[]): this
-  accessibilities(
-    regionOrType:
-      | AccessibilityRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | AccessibilityRegionType,
-    ...regions: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
-  ): this {
-    return this.accessibilityRegions(
-      regionOrType as AccessibilityRegionType,
-      ...(regions as RegionReference<TElement, TSelector>[]),
-    )
-  }
 
   scrollRootElement(scrollRootElement: ElementReference<TElement, TSelector>): this {
-    utils.guard.custom(scrollRootElement, value => this.isElementReference(value), {
+    utils.guard.custom(scrollRootElement, value => this._isElementReference(value), {
       name: 'scrollRootElement',
     })
     if (this._settings.frames && this._settings.frames.length > 0) {
@@ -375,9 +383,9 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     return this
   }
 
-  fully(isFully = true): this {
-    utils.guard.isBoolean(isFully, {name: 'isFully'})
-    this._settings.isFully = isFully
+  fully(fully = true): this {
+    utils.guard.isBoolean(fully, {name: 'fully'})
+    this._settings.fully = fully
     return this
   }
 
@@ -460,22 +468,19 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
   }
 
   hook(name: string, script: string): this {
-    this._settings.hooks[name] = script
+    this._settings.hooks = {...this._settings.hooks, [name]: script}
     return this
   }
-
   beforeRenderScreenshotHook(script: string): this {
     return this.hook('beforeCaptureScreenshot', script)
   }
-
   /** @deprecated */
   webHook(script: string): this {
     return this.beforeRenderScreenshotHook(script)
   }
 
   visualGridOption(key: string, value: any) {
-    if (!this._settings.visualGridOptions) this._settings.visualGridOptions = {}
-    this._settings.visualGridOptions[key] = value
+    this._settings.visualGridOptions = {...this._settings.visualGridOptions, [key]: value}
     return this
   }
   visualGridOptions(options: {[key: string]: any}) {
@@ -489,14 +494,30 @@ export default abstract class CheckSettingsFluent<TElement = unknown, TSelector 
     return this
   }
 
+  variationGroupId(variationGroupId: string): this {
+    utils.guard.isString(variationGroupId, {name: 'variationGroupId'})
+    this._settings.variationGroupId = variationGroupId
+    return this
+  }
+
   timeout(timeout: number): this {
     utils.guard.isNumber(timeout, {name: 'timeout'})
     this._settings.timeout = timeout
     return this
   }
 
+  /** @internal */
+  toObject(): CheckSettings<TElement, TSelector> {
+    return this._settings
+  }
+
+  /** @internal */
   toJSON(): CheckSettings<TElement, TSelector> {
-    // TODO create a plain object
-    return {}
+    return utils.general.toJSON(this._settings)
+  }
+
+  /** @internal */
+  toString(): string {
+    return utils.general.toString(this)
   }
 }

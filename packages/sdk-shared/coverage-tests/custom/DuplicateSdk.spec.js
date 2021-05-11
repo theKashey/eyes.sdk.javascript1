@@ -2,13 +2,13 @@
 const cwd = process.cwd()
 const path = require('path')
 const {getEyes} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const fs = require('fs')
 const {promisify} = require('util')
 const ncp = require('ncp')
 const pncp = promisify(ncp)
 
-describe('Coverage tests', () => {
+describe.skip('Coverage tests', () => {
   let driver, destroyDriver, eyes
 
   beforeEach(async () => {
@@ -21,7 +21,7 @@ describe('Coverage tests', () => {
   })
 
   it('resilient to duplicate copies of the SDK', async () => {
-    const {sdkPath, cleanup} = await createCopyOfSdk(cwd)
+    const {sdkPath, cleanup} = await createCopyOfSdk(cwd, 'dist')
 
     await spec.visit(driver, 'https://applitools.github.io/demo/TestPages/FramesTestPage/')
 
@@ -49,34 +49,22 @@ async function createCopyOfSdk(pathToExistingSdk) {
   )
 
   // create copy of src folder
-  const targetSrcPath = path.resolve(pathToExistingSdk, 'src2')
-  fs.rmdirSync(targetSrcPath, {recursive: true})
-  await pncp(path.resolve(pathToExistingSdk, 'src'), targetSrcPath)
+  const targetDistPath = path.resolve(pathToExistingSdk, 'dist2')
+  fs.rmdirSync(targetDistPath, {recursive: true})
+  await pncp(path.resolve(pathToExistingSdk, 'dist'), targetDistPath)
 
   // fix references in src folder
-  fixReferencesInFolder(path.resolve(pathToExistingSdk, 'src2'))
+  fixReferencesInFolder(targetDistPath)
 
-  // create copy of index file
-  const targetIndexPath = path.resolve(pathToExistingSdk, 'index2.js')
-  fs.copyFileSync(path.resolve(pathToExistingSdk, 'index.js'), targetIndexPath)
-
-  // fix references in index file
-  const content = fs.readFileSync(targetIndexPath).toString()
-  const newContent = content
-    .replace('@applitools/eyes-sdk-core', `./eyes-sdk-core`)
-    .replace('./src/', './src2/')
-  fs.writeFileSync(targetIndexPath, newContent)
-
-  return {sdkPath: targetIndexPath, cleanup}
+  return {sdkPath: targetDistPath, cleanup}
 
   function cleanup() {
-    fs.rmdirSync(targetSrcPath, {recursive: true})
+    fs.rmdirSync(targetDistPath, {recursive: true})
     fs.rmdirSync(targetCorePath, {recursive: true})
-    fs.unlinkSync(targetIndexPath)
   }
 }
 
-function fixReferencesInFolder(folderPath, depth = 1) {
+function fixReferencesInFolder(folderPath, depth = 2) {
   const filesInSrc = fs.readdirSync(folderPath)
   for (const file of filesInSrc) {
     const filepath = path.resolve(folderPath, file)

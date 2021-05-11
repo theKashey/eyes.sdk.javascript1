@@ -15,12 +15,7 @@ const {Eyes, Target, ConsoleLogHandler, RectangleSize, Region} = require('../ind
 
   try {
     // Start the test and set the browser's viewport size to 800x600.
-    await eyes.open(
-      driver,
-      'Eyes Examples',
-      'My advanced JavaScript test!',
-      new RectangleSize(800, 600),
-    )
+    await eyes.open(driver, 'Eyes Examples', 'My advanced JavaScript test!', new RectangleSize(800, 600))
 
     // Navigate the browser to the "test pages" web-site.
     await driver.get('http://applitools.github.io/demo/TestPages/FramesTestPage/')

@@ -1,7 +1,7 @@
 // https://trello.com/c/FGmYqjCo
 const path = require('path')
 const cwd = process.cwd()
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {testSetup} = require('../..')
 
 describe.skip('baselineBranchName', () => {

@@ -21,6 +21,13 @@ export function guid(): string {
   })
 }
 
+export function jwtDecode(token: string): Record<string, any> {
+  let payloadSeg = token.split('.')[1]
+  payloadSeg += new Array(5 - (payloadSeg.length % 4)).join('=')
+  payloadSeg = payloadSeg.replace(/-/g, '+').replace(/_/g, '/')
+  return JSON.parse(Buffer.from(payloadSeg, 'base64').toString())
+}
+
 export function sleep(ms: number) {
   if (types.isNumber(ms)) {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -45,10 +52,17 @@ export function toJSON<
     ? ReturnType<TObject[TProps[key]]['toJSON']>
     : TObject[TProps[key]]
 }
-export function toJSON(object: Record<PropertyKey, any>, props: string[] | Record<string, PropertyKey>) {
+export function toJSON<TObject extends Record<PropertyKey, any>>(
+  object: TObject,
+): {
+  [key in keyof Omit<TObject, symbol>]: TObject[key] extends {toJSON(): any}
+    ? ReturnType<TObject[key]['toJSON']>
+    : TObject[key]
+}
+export function toJSON(object: Record<PropertyKey, any>, props?: string[] | Record<string, PropertyKey>) {
   if (!types.isObject(object)) return null
-  const original = Object.values(props)
-  const keys = types.isArray(props) ? original : Object.keys(props)
+  const original = props ? Object.values(props) : Object.keys(object)
+  const keys = !props || types.isArray(props) ? original : Object.keys(props)
   return keys.reduce((plain: any, key, index) => {
     const value = object[original[index] as string]
     plain[key] = value && types.isFunction(value.toJSON) ? value.toJSON() : value

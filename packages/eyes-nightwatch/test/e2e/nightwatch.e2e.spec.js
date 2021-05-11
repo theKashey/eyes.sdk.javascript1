@@ -1,7 +1,7 @@
-const {Eyes, Target} = require('../..')
+const {Eyes, Target} = require('../../dist')
 
 describe('Nightwatch e2e tests', async () => {
-  it('chaining api', function(driver) {
+  it('chaining api', function (driver) {
     driver
       .url('https://applitools.github.io/demo/TestPages/FramesTestPage/')
       .eyesOpen()
@@ -10,7 +10,7 @@ describe('Nightwatch e2e tests', async () => {
       .end()
   })
 
-  it('async api', async function(driver) {
+  it('async api', async function (driver) {
     await driver.url('https://applitools.github.io/demo/TestPages/FramesTestPage/')
 
     const eyes = new Eyes()

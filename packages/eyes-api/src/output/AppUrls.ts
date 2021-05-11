@@ -1,51 +1,54 @@
 import * as utils from '@applitools/utils'
+import type {Mutable} from '@applitools/utils'
 
 export type AppUrls = {
-  step?: string
-  stepEditor?: string
+  readonly step?: string
+  readonly stepEditor?: string
 }
 
-export default class AppUrlsData implements Required<AppUrls> {
-  private _step: string
-  private _stepEditor: string
+export class AppUrlsData implements Required<AppUrls> {
+  private _urls: Mutable<AppUrls> = {} as any
 
-  constructor(appUrls?: AppUrls) {
-    if (!appUrls) return this
-    this.step = appUrls.step
-    this.stepEditor = appUrls.stepEditor
+  /** @internal */
+  constructor(urls?: AppUrls) {
+    if (!urls) return this
+    this._urls = urls instanceof AppUrlsData ? urls.toJSON() : urls
   }
 
   get step(): string {
-    return this._step
-  }
-  set step(step: string) {
-    this._step = step
+    return this._urls.step
   }
   getStep(): string {
-    return this._step
+    return this.step
   }
+  /** @deprecated */
   setStep(step: string) {
-    this.step = step
+    this._urls.step = step
   }
 
   get stepEditor(): string {
-    return this._stepEditor
-  }
-  set stepEditor(stepEditor: string) {
-    this._stepEditor = stepEditor
+    return this._urls.stepEditor
   }
   getStepEditor(): string {
-    return this._stepEditor
+    return this.stepEditor
   }
+  /** @deprecated */
   setStepEditor(stepEditor: string) {
-    this.stepEditor = stepEditor
+    this._urls.stepEditor = stepEditor
   }
 
+  /** @internal */
+  toObject(): AppUrls {
+    return this._urls
+  }
+
+  /** @internal */
   toJSON(): AppUrls {
-    return utils.general.toJSON(this, ['step', 'stepEditor'])
+    return utils.general.toJSON(this._urls)
   }
 
-  toString() {
+  /** @internal */
+  toString(): string {
     return utils.general.toString(this)
   }
 }

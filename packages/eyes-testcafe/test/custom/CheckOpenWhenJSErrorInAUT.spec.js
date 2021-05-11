@@ -1,6 +1,6 @@
 // re: https://trello.com/c/xNCZNfPi
 const _path = require('path')
-const {testSetup, _testServer} = require('@applitools/sdk-shared')
+const {testSetup} = require('@applitools/sdk-shared')
 const eyes = testSetup.getEyes({vg: true})
 let _server
 fixture`check open when js error in aut`

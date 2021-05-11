@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": "types",
+    "target": "ES2017",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "stripInternal": true,
+    "experimentalDecorators": false,
+    "resolveJsonModule": true,
+  }
+}

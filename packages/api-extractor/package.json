@@ -1,0 +1,71 @@
+{
+  "name": "@applitools/api-extractor",
+  "version": "1.1.0",
+  "description": "Ultimate api extractor for typescript project",
+  "keywords": [
+    "applitools",
+    "typescript",
+    "ts",
+    "type definition"
+  ],
+  "homepage": "https://applitools.com",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:applitools/eyes.sdk.javascript1.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "main": "./index.js",
+  "bin": {
+    "api-extractor": "./bin/cli.js"
+  },
+  "directories": {
+    "lib": "./src",
+    "test": "./test"
+  },
+  "files": [
+    "src",
+    "bin",
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion",
+    "deps": "bongo deps",
+    "prepublish:setup": ""
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {
+    "prettier": "2.2.1",
+    "typedoc": "0.20.33",
+    "typescript": "4.2.3",
+    "yargs": "16.2.0"
+  },
+  "devDependencies": {
+    "@applitools/sdk-release-kit": "0.13.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.7",
+    "mocha": "^8.0.1"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}

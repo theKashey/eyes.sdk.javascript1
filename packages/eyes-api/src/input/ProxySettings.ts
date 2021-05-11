@@ -7,70 +7,62 @@ export type ProxySettings = {
   isHttpOnly?: boolean
 }
 
-export default class ProxySettingsData implements Required<ProxySettings> {
-  private _url: string
-  private _username: string
-  private _password: string
-  private _isHttpOnly: boolean
-  private _isDisabled: boolean
+export class ProxySettingsData implements Required<ProxySettings> {
+  private _proxy: ProxySettings = {} as any
 
   constructor(proxy: ProxySettings)
   constructor(url: string, username?: string, password?: string, isHttpOnly?: boolean)
-  constructor(isDisabled: true)
-  constructor(
-    proxyOrUrlOrIsDisabled: ProxySettings | string | true,
-    username?: string,
-    password?: string,
-    isHttpOnly?: boolean,
-  ) {
-    utils.guard.notNull(proxyOrUrlOrIsDisabled, {name: 'proxyOrUrlOrIsDisabled'})
-
-    if (proxyOrUrlOrIsDisabled === true) {
-      this._isDisabled = true
-    } else {
-      if (utils.types.isString(proxyOrUrlOrIsDisabled)) {
-        return new ProxySettingsData({url: proxyOrUrlOrIsDisabled, username, password, isHttpOnly})
-      }
-      this._url = proxyOrUrlOrIsDisabled.url
-      this._username = proxyOrUrlOrIsDisabled.username
-      this._password = proxyOrUrlOrIsDisabled.password
-      this._isHttpOnly = proxyOrUrlOrIsDisabled.isHttpOnly
-      this._isDisabled = false
+  constructor(proxyOrUrl: ProxySettings | string, username?: string, password?: string, isHttpOnly?: boolean) {
+    utils.guard.notNull(proxyOrUrl, {name: 'proxyOrUrl'})
+    if (utils.types.isString(proxyOrUrl)) {
+      return new ProxySettingsData({url: proxyOrUrl, username, password, isHttpOnly})
     }
+    this._proxy = proxyOrUrl
   }
 
-  get url() {
-    return this._url
+  get url(): string {
+    return this._proxy.url
   }
-  getUri() {
+  getUri(): string {
+    return this.url
+  }
+  getUrl(): string {
     return this.url
   }
 
-  get username() {
-    return this._username
+  get username(): string {
+    return this._proxy.username
   }
-  getUsername() {
-    return this._username
-  }
-
-  get password() {
-    return this._password
-  }
-  getPassword() {
-    return this._password
+  getUsername(): string {
+    return this.username
   }
 
-  get isHttpOnly() {
-    return this._isHttpOnly
+  get password(): string {
+    return this.password
   }
-  getIsHttpOnly() {
-    return this._isHttpOnly
+  getPassword(): string {
+    return this.password
   }
 
-  get isDisabled() {
-    return this._isDisabled
+  get isHttpOnly(): boolean {
+    return this._proxy.isHttpOnly
   }
-  getIsDisabled() {
-    return this._isDisabled
+  getIsHttpOnly(): boolean {
+    return this.isHttpOnly
+  }
+
+  /** @internal */
+  toObject(): ProxySettings {
+    return this._proxy
+  }
+
+  /** @internal */
+  toJSON(): ProxySettings {
+    return utils.general.toJSON(this._proxy)
+  }
+
+  /** @internal */
+  toString() {
+    return utils.general.toString(this)
   }
 }

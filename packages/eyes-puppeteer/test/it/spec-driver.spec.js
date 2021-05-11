@@ -1,5 +1,5 @@
 const assert = require('assert')
-const spec = require('../../src/spec-driver')
+const spec = require('../../dist/spec-driver')
 
 describe('spec driver', async () => {
   let page, destroyPage
@@ -104,7 +104,7 @@ describe('spec driver', async () => {
       const obj = {key: 'value', obj: {key: 0}}
       const arr = [0, 1, 2, {key: 3}]
       const el = await page.$('div')
-      const fn = function() {
+      const fn = function () {
         return arguments
       }
       const result = await spec.executeScript(page, fn, {num, str, obj, arr, el})
@@ -120,7 +120,7 @@ describe('spec driver', async () => {
       const el = await page.$('div')
       const str = 'blah'
       const args = [[el], [str]]
-      const fn = function() {
+      const fn = function () {
         return arguments
       }
       const result = await spec.executeScript(page, fn, args)
@@ -131,7 +131,7 @@ describe('spec driver', async () => {
   function executeScriptWithElement() {
     return async () => {
       const el = await page.$('div')
-      const fn = function() {
+      const fn = function () {
         return arguments
       }
       let result = await spec.executeScript(page, fn, el)

@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const {Target, StitchMode} = require(cwd)
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {getEyes} = require('../../../src/test-setup')
 
 const iPhoneAgent =

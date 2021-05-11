@@ -3,7 +3,7 @@ const cwd = process.cwd()
 const path = require('path')
 const {getEyes} = require('../../../src/test-setup')
 const {assertImages} = require('../../util/ApiAssertions')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {MatchLevel} = require(cwd)
 const {testSetup, getCheckSettings} = require('./EyesDifferentRunners')
 

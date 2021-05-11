@@ -43,7 +43,7 @@ eyes-testcafe-bak
 
 # generated
 dist
-types
 docs
 doc
 bin
+types/index.d.ts

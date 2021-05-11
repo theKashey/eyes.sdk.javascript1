@@ -1,176 +1,139 @@
 import * as utils from '@applitools/utils'
+import {PropertyData, PropertyDataData} from './PropertyData'
 
 export type BatchInfo = {
   id?: string
   name?: string
-  startedAt?: Date
   sequenceName?: string
+  startedAt?: Date | string
   notifyOnCompletion?: boolean
-  isCompleted?: boolean
-  isGeneratedId?: boolean
+  properties?: PropertyData[]
 }
 
-export default class BatchInfoData implements Required<BatchInfo> {
-  private _id: string
-  private _name: string
-  private _startedAt: Date
-  private _sequenceName: string
-  private _notifyOnCompletion: boolean
-  private _isCompleted: boolean
-  private _isGeneratedId: boolean
+export class BatchInfoData implements Required<BatchInfo> {
+  private _batch: BatchInfo = {}
 
   constructor()
-  constructor(batch: BatchInfo)
-  constructor(name: string, startedAt?: Date | string, id?: string)
+  constructor(batch?: BatchInfo)
+  constructor(name?: string, startedAt?: Date | string, id?: string)
   constructor(batchOrName?: BatchInfo | string, startedAt?: Date | string, id?: string) {
-    if (utils.types.isString(batchOrName)) {
-      return new BatchInfoData({name: batchOrName, id, startedAt: new Date(startedAt)})
+    if (utils.types.isNull(batchOrName) || utils.types.isString(batchOrName)) {
+      return new BatchInfoData({name: batchOrName, id, startedAt: startedAt})
     }
-    const batch = batchOrName || {}
-    utils.guard.isString(batch.id, {name: 'batch.id', strict: false})
-    utils.guard.isString(batch.name, {name: 'batch.batchName', strict: false})
-    utils.guard.isString(batch.sequenceName, {name: 'batch.sequenceName', strict: false})
-    utils.guard.isBoolean(batch.notifyOnCompletion, {
-      name: 'batch.notifyOnCompletion',
-      strict: false,
-    })
-    utils.guard.isBoolean(batch.isCompleted, {name: 'batch.isCompleted', strict: false})
-    utils.guard.isBoolean(batch.isGeneratedId, {name: 'batch.isGeneratedId', strict: false})
-
-    this._id = id || utils.general.getEnvValue('BATCH_ID')
-    if (this._id) {
-      this._isGeneratedId = Boolean(batch.isGeneratedId)
-    } else {
-      this._isGeneratedId = true
-      this._id = utils.general.guid()
-    }
-
-    this._name = name || utils.general.getEnvValue('BATCH_NAME')
-
-    if (batch.startedAt && !(batch.startedAt instanceof Date)) {
-      utils.guard.isString(startedAt, {name: 'batch.startedAt', strict: false})
-      this._startedAt = new Date(startedAt)
-    } else {
-      this._startedAt = batch.startedAt || new Date()
-    }
-
-    this._sequenceName = batch.sequenceName || utils.general.getEnvValue('BATCH_SEQUENCE', 'string')
-    this._notifyOnCompletion = batch.notifyOnCompletion || utils.general.getEnvValue('BATCH_NOTIFY', 'boolean') || false
-    this._isCompleted = Boolean(batch.isCompleted)
+    this.id = batchOrName.id ?? utils.general.getEnvValue('BATCH_ID')
+    this.name = batchOrName.name ?? utils.general.getEnvValue('BATCH_NAME')
+    this.sequenceName = batchOrName.sequenceName ?? utils.general.getEnvValue('BATCH_SEQUENCE', 'string')
+    this.startedAt = batchOrName.startedAt ?? new Date()
+    this.notifyOnCompletion =
+      batchOrName.notifyOnCompletion ?? utils.general.getEnvValue('BATCH_NOTIFY', 'boolean') ?? false
+    this.properties = batchOrName.properties
   }
 
-  /**
-   * A unique identifier for the batch. Sessions with batch info which includes the same ID will be grouped
-   * together.
-   */
   get id(): string {
-    return this._id
+    return this._batch.id
   }
   set id(id: string) {
-    utils.guard.notNull(id, {name: 'id'})
-    this._id = id
+    utils.guard.isString(id, {name: 'id', strict: false})
+    this._batch.id = id
   }
   getId(): string {
-    return this._id
+    return this.id
   }
   setId(id: string): this {
     this.id = id
     return this
   }
 
-  get isGeneratedId(): boolean {
-    return this._isGeneratedId
-  }
-  set isGeneratedId(isGeneratedId: boolean) {
-    this._isGeneratedId = isGeneratedId
-  }
-  getIsGeneratedId() {
-    return this._isGeneratedId
-  }
-  setIsGeneratedId(isGeneratedId: boolean): this {
-    this.isGeneratedId = isGeneratedId
-    return this
-  }
-
-  /**
-   * The name of the batch or {@code null} if anonymous.
-   */
   get name(): string {
-    return this._name
+    return this._batch.name
   }
   set name(name: string) {
-    this._name = name
+    utils.guard.isString(name, {name: 'name', strict: false})
+    this._batch.name = name
   }
   getName(): string {
-    return this._name
+    return this.name
   }
   setName(name: string): this {
     this.name = name
     return this
   }
 
-  /**
-   * The batch start date.
-   */
-  get startedAt(): Date {
-    return this._startedAt
-  }
-  set startedAt(startedAt: Date) {
-    this._startedAt = startedAt
-  }
-  getStartedAt() {
-    return this._startedAt
-  }
-  setStartedAt(startedAt: Date | string): this {
-    this.startedAt = new Date(startedAt)
-    return this
-  }
-
-  /**
-   * The name of the sequence.
-   */
   get sequenceName(): string {
-    return this._sequenceName
+    return this._batch.sequenceName
   }
   set sequenceName(sequenceName: string) {
-    this._sequenceName = sequenceName
+    utils.guard.isString(sequenceName, {name: 'sequenceName', strict: false})
+    this._batch.sequenceName = sequenceName
   }
   getSequenceName(): string {
-    return this._sequenceName
+    return this.sequenceName
   }
   setSequenceName(sequenceName: string): this {
     this.sequenceName = sequenceName
     return this
   }
 
-  /**
-   * Indicate whether notification should be sent on this batch completion.
-   */
+  get startedAt(): Date | string {
+    return this._batch.startedAt
+  }
+  set startedAt(startedAt: Date | string) {
+    this._batch.startedAt = new Date(startedAt)
+  }
+  getStartedAt(): Date | string {
+    return this.startedAt
+  }
+  setStartedAt(startedAt: Date | string): this {
+    this.startedAt = startedAt
+    return this
+  }
+
   get notifyOnCompletion(): boolean {
-    return this._notifyOnCompletion
+    return this._batch.notifyOnCompletion
   }
   set notifyOnCompletion(notifyOnCompletion: boolean) {
-    this._notifyOnCompletion = notifyOnCompletion
+    utils.guard.isBoolean(notifyOnCompletion, {name: 'notifyOnCompletion', strict: false})
+    this._batch.notifyOnCompletion = notifyOnCompletion
   }
   getNotifyOnCompletion(): boolean {
-    return this._notifyOnCompletion
+    return this.notifyOnCompletion
   }
   setNotifyOnCompletion(notifyOnCompletion: boolean): this {
     this.notifyOnCompletion = notifyOnCompletion
     return this
   }
 
-  get isCompleted(): boolean {
-    return this._isCompleted
+  get properties(): PropertyData[] {
+    return this._batch.properties
   }
-  set isCompleted(isCompleted: boolean) {
-    this._isCompleted = isCompleted
+  set properties(properties: PropertyData[]) {
+    utils.guard.isArray(properties, {name: 'properties', strict: false})
+    this._batch.properties = properties
   }
-  getIsCompleted(): boolean {
-    return this._isCompleted
+  getProperties(): PropertyDataData[] {
+    return this.properties?.map(property => new PropertyDataData(property)) ?? []
   }
-  setIsCompleted(isCompleted: boolean): this {
-    this.isCompleted = isCompleted
+  setProperties(properties: PropertyData[]): this {
+    this.properties = properties
     return this
+  }
+  addProperty(property: PropertyData): this {
+    this.properties.push(property)
+    return this
+  }
+
+  /** @internal */
+  toObject(): BatchInfo {
+    return this._batch
+  }
+
+  /** @internal */
+  toJSON(): BatchInfo {
+    return utils.general.toJSON(this._batch)
+  }
+
+  /** @internal */
+  toString() {
+    return utils.general.toString(this)
   }
 }

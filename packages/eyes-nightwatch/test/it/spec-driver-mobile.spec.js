@@ -1,5 +1,5 @@
 const assert = require('assert')
-const spec = require('../../src/spec-driver')
+const spec = require('../../dist/spec-driver')
 const fakeCaps = require('./fixtures/fake-caps-android')
 
 // NOTE: to run this against a real mobile configuration
@@ -9,39 +9,40 @@ const fakeCaps = require('./fixtures/fake-caps-android')
 // TODO: test against iOS
 describe('spec driver', async () => {
   describe('mobile driver (@mobile)', async () => {
-    before(function(_driver, done) {
+    before(function (driver, done) {
+      driver.options.desiredCapabilities = fakeCaps
       done()
     })
-    after(function(driver, done) {
-      return driver.end(function() {
+    after(function (driver, done) {
+      return driver.end(function () {
         done()
       })
     })
-    it('isMobile()', function(driver) {
-      const {isMobile} = spec.getDriverInfo(driver, {using: fakeCaps})
+    it('isMobile()', async function (driver) {
+      const {isMobile} = await await spec.getDriverInfo(driver)
       assert.ok(isMobile)
     })
-    it('getDeviceName()', function(driver) {
-      const {deviceName} = spec.getDriverInfo(driver, {using: fakeCaps})
+    it('getDeviceName()', async function (driver) {
+      const {deviceName} = await spec.getDriverInfo(driver)
       assert.deepStrictEqual(deviceName, 'google pixel 2')
     })
-    it('getPlatformName()', function(driver) {
-      const {platformName} = spec.getDriverInfo(driver, {using: fakeCaps})
+    it('getPlatformName()', async function (driver) {
+      const {platformName} = await spec.getDriverInfo(driver)
       assert.deepStrictEqual(platformName, 'Android')
     })
     // TODO: test on Sauce
-    it('getPlatformVersion()', function(driver) {
-      const {platformVersion} = spec.getDriverInfo(driver, {using: fakeCaps})
+    it('getPlatformVersion()', async function (driver) {
+      const {platformVersion} = await spec.getDriverInfo(driver)
       assert.deepStrictEqual(platformVersion, '9.0')
     })
     // TODO: test w/ orientation set on BS (fake captured w/o it)
     // TODO: test on Sauce
-    it('getOrientation()', function(driver) {
-      const result = spec.getOrientation(driver, {using: fakeCaps})
+    it('getOrientation()', async function (driver) {
+      const result = await spec.getOrientation(driver)
       assert.strictEqual(result, 'portrait')
     })
-    it('isNative()', function(driver) {
-      const {isNative} = spec.getDriverInfo(driver, {using: fakeCaps})
+    it('isNative()', async function (driver) {
+      const {isNative} = await spec.getDriverInfo(driver)
       assert.strictEqual(isNative, true)
     })
   })

@@ -1,6 +1,6 @@
 enum SessionType {
   SEQUENTIAL = 'SEQUENTIAL',
-  PROGRESSION = 'SEQUENTIAL',
+  PROGRESSION = 'PROGRESSION',
 }
 
 export default SessionType

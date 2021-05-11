@@ -192,12 +192,13 @@ class EyesDriver {
       this._platformVersion = info.platformVersion
       this._browserName = info.browserName
       this._browserVersion = info.browserVersion
-
-      if (!this._isNative) {
-        this._userAgentString = await EyesUtils.getUserAgent(this._logger, this)
-        this._userAgent = UserAgent.parseUserAgentString(this._userAgentString, true)
-      }
     }
+
+    if (!this._isNative) {
+      this._userAgentString = await EyesUtils.getUserAgent(this._logger, this)
+      this._userAgent = UserAgent.parseUserAgentString(this._userAgentString, true)
+    }
+
     if (this._userAgent) {
       if (!this._isMobile) this._isMobile = ['iOS', 'Android'].includes(this._userAgent.getOS())
       if (!this._platformName) this._platformName = this._userAgent.getOS()

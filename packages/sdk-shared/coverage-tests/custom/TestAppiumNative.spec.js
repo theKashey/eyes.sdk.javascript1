@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const {getEyes} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Target, Region} = require(cwd)
 
 describe.skip('TestAppiumNative (@native @mobile)', () => {

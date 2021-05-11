@@ -1,3 +1,6 @@
+import * as utils from '@applitools/utils'
+
+/** @undocumented */
 export type ExactMatchSettings = {
   minDiffIntensity: number
   minDiffWidth: number
@@ -5,68 +8,85 @@ export type ExactMatchSettings = {
   matchThreshold: number
 }
 
-export default class ExactMatchSettingsData implements Required<ExactMatchSettings> {
-  private _minDiffIntensity: number
-  private _minDiffWidth: number
-  private _minDiffHeight: number
-  private _matchThreshold: number
+/** @undocumented */
+export class ExactMatchSettingsData implements Required<ExactMatchSettings> {
+  private _settings: ExactMatchSettings = {} as any
 
   constructor(settings: ExactMatchSettings) {
-    this._minDiffIntensity = settings.minDiffIntensity || 0
-    this._minDiffWidth = settings.minDiffWidth || 0
-    this._minDiffHeight = settings.minDiffHeight || 0
-    this._matchThreshold = settings.matchThreshold || 0
+    this.minDiffIntensity = settings.minDiffIntensity
+    this.minDiffWidth = settings.minDiffWidth
+    this.minDiffHeight = settings.minDiffHeight
+    this.matchThreshold = settings.matchThreshold
   }
 
   get minDiffIntensity(): number {
-    return this._minDiffIntensity
+    return this._settings.minDiffIntensity
   }
-  set minDiffIntensity(value: number) {
-    this._minDiffIntensity = value
+  set minDiffIntensity(minDiffIntensity: number) {
+    utils.guard.isNumber(minDiffIntensity, {name: 'minDiffIntensity', strict: false})
+    this._settings.minDiffIntensity = minDiffIntensity
   }
   getMinDiffIntensity(): number {
-    return this._minDiffIntensity
+    return this.minDiffIntensity
   }
   setMinDiffIntensity(value: number) {
-    this._minDiffIntensity = value
+    this.minDiffIntensity = value
   }
 
   get minDiffWidth(): number {
-    return this._minDiffWidth
+    return this._settings.minDiffWidth
   }
-  set minDiffWidth(value: number) {
-    this._minDiffWidth = value
+  set minDiffWidth(minDiffWidth: number) {
+    utils.guard.isNumber(minDiffWidth, {name: 'minDiffWidth', strict: false})
+    this._settings.minDiffWidth = minDiffWidth
   }
   getMinDiffWidth() {
-    return this._minDiffWidth
+    return this.minDiffWidth
   }
   setMinDiffWidth(value: number) {
-    this._minDiffWidth = value
+    this.minDiffWidth = value
   }
 
   get minDiffHeight(): number {
-    return this._minDiffHeight
+    return this._settings.minDiffHeight
   }
-  set minDiffHeight(value: number) {
-    this._minDiffHeight = value
+  set minDiffHeight(minDiffHeight: number) {
+    utils.guard.isNumber(minDiffHeight, {name: 'minDiffHeight', strict: false})
+    this._settings.minDiffHeight = minDiffHeight
   }
   getMinDiffHeight() {
-    return this._minDiffHeight
+    return this.minDiffHeight
   }
   setMinDiffHeight(value: number) {
-    this._minDiffHeight = value
+    this.minDiffHeight = value
   }
 
   get matchThreshold(): number {
-    return this._matchThreshold
+    return this._settings.matchThreshold
   }
-  set matchThreshold(value: number) {
-    this._matchThreshold = value
+  set matchThreshold(matchThreshold: number) {
+    utils.guard.isNumber(matchThreshold, {name: 'matchThreshold', strict: false})
+    this._settings.matchThreshold = matchThreshold
   }
   getMatchThreshold() {
-    return this._matchThreshold
+    return this.matchThreshold
   }
   setMatchThreshold(value: number) {
-    this._matchThreshold = value
+    this.matchThreshold = value
+  }
+
+  /** @internal */
+  toObject(): ExactMatchSettings {
+    return this._settings
+  }
+
+  /** @internal */
+  toJSON(): ExactMatchSettings {
+    return utils.general.toJSON(this._settings)
+  }
+
+  /** @internal */
+  toString(): string {
+    return utils.general.toString(this)
   }
 }

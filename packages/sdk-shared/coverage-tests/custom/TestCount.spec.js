@@ -3,7 +3,7 @@ const cwd = process.cwd()
 const assert = require('assert')
 const path = require('path')
 const {getEyes} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Target} = require(cwd)
 
 describe('TestCounts', () => {

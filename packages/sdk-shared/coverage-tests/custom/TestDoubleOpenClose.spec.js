@@ -3,7 +3,7 @@ const path = require('path')
 const assert = require('assert')
 const cwd = process.cwd()
 const {getEyes, batch} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Target, ClassicRunner, VisualGridRunner, Eyes} = require(cwd)
 
 const appName = 'Eyes Selenium SDK - Double Open Close'

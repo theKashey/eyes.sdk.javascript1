@@ -1,31 +1,7 @@
 'use strict'
 /* eslint-disable max-len */
 
-/**
- * @typedef {import('./lib/config/Configuration').PlainConfiguration} PlainConfiguration
- * @typedef {import('./lib/config/Configuration').PlainConfigurationClassic} PlainConfigurationClassic
- * @typedef {import('./lib/config/Configuration').PlainConfigurationVisualGrid} PlainConfigurationVisualGrid
- */
-
-/**
- * @template TDriver, TElement, TSelector
- * @typedef {import('./lib/wrappers/EyesDriver').SpecDriver<TDriver, TElement, TSelector>} SpecDriver
- */
-
-/**
- * @template TDriver, TElement, TSelector
- * @typedef {import('./lib/wrappers/EyesWrappedElement').SpecElement<TDriver, TElement, TSelector>} SpecElement
- */
-
-/**
- * @template TDriver, TElement, TSelector
- * @typedef {import('./lib/frames/Frame').SpecFrame<TDriver, TElement, TSelector>} SpecFrame
- */
-
-/**
- * @template TElement, TSelector
- * @typedef {import('./lib/fluent/DriverCheckSettings').SpecCheckSettings<TElement, TSelector>} SpecCheckSettings
- */
+exports.makeSDK = require('./lib/new/sdk')
 
 // config
 exports.AccessibilityLevel = require('./lib/config/AccessibilityLevel')
@@ -226,7 +202,6 @@ exports.EyesDriver = require('./lib/sdk/EyesDriver')
 exports.EyesContext = require('./lib/sdk/EyesContext')
 exports.EyesElement = require('./lib/sdk/EyesElement')
 exports.EyesSDK = require('./lib/sdk/EyesSDK')
-exports.makeSDK = require('./lib/sdk/makeSDK')
 
 exports.takeDomSnapshot = require('./lib/utils/takeDomSnapshot')
 exports.takeDomSnapshots = require('./lib/utils/takeDomSnapshots')

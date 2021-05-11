@@ -1,6 +1,6 @@
 const cwd = process.cwd()
 const path = require('path')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {getEyes} = require('../../src/test-setup')
 const {BrowserType} = require(cwd)
 

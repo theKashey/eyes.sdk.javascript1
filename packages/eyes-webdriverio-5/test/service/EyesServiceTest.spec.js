@@ -2,7 +2,7 @@
 'use strict'
 
 const assert = require('assert')
-const {By, Target} = require('../..')
+const {By, Target} = require('../../dist')
 
 describe('EyesServiceTest', () => {
   beforeEach(() => {
@@ -41,9 +41,7 @@ describe('EyesServiceTest', () => {
       if (testResults.isPassed()) {
         console.log(`${testResults.getName()} is passed.`)
       } else {
-        console.log(
-          `Test is not passed: ${testResults.getMismatches()} out of ${testResults.getSteps()} failed.`,
-        )
+        console.log(`Test is not passed: ${testResults.getMismatches()} out of ${testResults.getSteps()} failed.`)
         console.log(`Step details URL: ${testResults.getAppUrls().getSession()}`)
       }
     }

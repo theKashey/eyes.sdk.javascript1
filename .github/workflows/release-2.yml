@@ -1,18 +1,44 @@
-name: Release a package
+name: Coverage test (advanced)
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: "name"
+      sdks:
+        description: "sdk packages"
         required: true
       version:
         description: "version type (specify 'major', 'minor, or 'patch')"
         required: true
+env:
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
-  publish:
+  setup:
+    name: Prepare settings
     runs-on: ubuntu-latest
-    name: publish ${{github.event.inputs.name}}
+    outputs:
+      matrix: ${{steps.setup.outputs.matrix}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-matrix
+        id: setup
+        with:
+          sdks: ${{github.event.inputs.sdks}}
+  publish:
+    needs: setup
+    strategy:
+      matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
+      fail-fast: false
+    name: test ${{matrix.name}}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -20,45 +46,14 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14
-      - name: Configure and publish
-        run: |
-          echo "::group::configure npm and git"
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          echo "::endgroup::"
-
-          echo "::group::create temp branch"
-          DATE=$(date +%F_%H-%M)
-          BRANCH="${{github.event.inputs.name}}_$DATE"
-          git checkout -b $BRANCH
-          git push -u origin $BRANCH
-          echo "::endgroup::"
-
-          echo "::group::publish ${{github.event.inputs.name}}"
-          cd "packages/${{github.event.inputs.name}}"
-          git status
-          yarn
-          git status
-          yarn deps
-          git status
-          yarn list
-          git status
-          yarn prepublish:setup
-          git status
-          yarn publish "--${{github.event.inputs.version}}" --access public
-          git status
-          echo "::endgroup::"
-
-          echo "::group::update master from $BRANCH"
-          git checkout master
-          git status
-          git pull origin master --rebase
-          git merge $BRANCH
-          git push origin master
-          echo "::endgroup::"
+      - uses: ./.github/actions/tests
+        with:
+          sdk: ${{matrix.sdk}}
+        env: ${{matrix.env}}
+      - uses: ./.github/actions/release
+        with:
+          sdk: ${{matrix.sdk}}
+          version: ${{github.event.inputs.version}}
       - uses: actions/upload-artifact@v2
         with:
           name: coverage-tests-report
@@ -66,13 +61,3 @@ jobs:
           path: |
             packages/${{github.event.inputs.name}}/coverage-tests-metadata.json
             packages/${{github.event.inputs.name}}/coverage-test-report.xml
-    env:
-      CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
-      STDOUT_LEVEL: 1

@@ -1,0 +1,42 @@
+name: 'Coverage Tests'
+description: 'Run coverage tests for an SDK'
+inputs:
+  sdk:
+    description: "name"
+    required: true
+  install:
+    description: "name of the framework to install"
+  links:
+    description: "links"
+  linking-depth:
+    description: "linking depth"
+    default: 0
+  grep:
+    description: "grep"
+  report:
+    description: "report level"
+    default: "sandbox"
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      env:
+        MOCHA_GREP: ${{inputs.grep}}
+      run: |
+        echo "::group::Configure NPM"
+        echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+        echo "registry=https://registry.npmjs.org/" >> .npmrc
+        echo "always-auth=true" >> .npmrc
+        echo "::endgroup::"
+
+        cd "packages/${{inputs.sdk}}"
+        yarn install
+        yarn deps --skip-commit
+        yarn install --cwd "../sdk-shared"
+        yarn run link --include ${{inputs.links}} --build --install --depth ${{inputs['linking-depth']}}
+        if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
+        npm run build --if-present
+        npm run setup --if-present
+        yarn test
+        if [ "${{inputs.sandbox}}" = "sandbox" ]; then yarn report --sandbox; else yarn report; fi
+        cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"

@@ -1,17 +1,49 @@
-name: Coverage test with links
+name: Coverage test (advanced)
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: "name"
+      settings:
+        description: "sdk packages"
         required: true
       links:
-        description: "links"
+        description: "linked packages"
+        default: "eyes-sdk-core"
+      linking-depth:
+        description: "linking depth"
+        default: 0
+      grep:
+        description: "grep"
+env:
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
-  test:
+  setup:
+    name: Prepare settings
     runs-on: ubuntu-latest
-    name: test ${{github.event.inputs.name}}
+    outputs:
+      matrix: ${{steps.settings.outputs.matrix}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-matrix
+        id: settings
+        with:
+          settings: ${{github.event.inputs.settings}}
+  test:
+    needs: setup
+    strategy:
+      matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
+      fail-fast: false
+    name: ${{matrix.name}}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -19,36 +51,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          echo "::group::create temp branch"
-          DATE=$(date +%F_%H-%M)
-          BRANCH="${{github.event.inputs.name}}_$DATE"
-          git checkout -b $BRANCH
-          git push -u origin $BRANCH
-          echo "::endgroup::"
-
-          echo "::group::test ${{github.event.inputs.name}}"
-          yarn install --cwd "packages/sdk-shared"
-          echo $PWD
-          cd "packages/${{github.event.inputs.name}}"
-          yarn link --include ${{github.event.inputs.links}} --build --install
-          yarn
-          yarn prepublish:setup
-          yarn coverage:sandbox
-          echo "::endgroup::"
-
-          cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"
-          git branch -d $BRANCH
-          git push origin --delete $BRANCH
-    env:
-      CVG_TESTS_REMOTE: ${{secrets.CVG_TESTS_REMOTE}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+      - uses: ./.github/actions/coverage-tests
+        with:
+          sdk: ${{matrix.sdk}}
+          install: ${{matrix.install}}
+          links: ${{github.event.inputs.links}}
+          linking-depth: ${{github.event.inputs['linking-depth']}}
+          grep: ${{github.event.inputs.grep}}
+        env: ${{matrix.env}}

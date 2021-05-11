@@ -3,7 +3,7 @@ const assert = require('assert')
 const path = require('path')
 const cwd = process.cwd()
 const {batch} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Configuration, Eyes, VisualGridRunner, RectangleSize, Target} = require(cwd)
 
 const appName = 'TestRendersMatch'

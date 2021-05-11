@@ -3,7 +3,7 @@ const {testSetup, getTestInfo} = require('../..')
 const assert = require('assert')
 const path = require('path')
 const cwd = process.cwd()
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 
 describe('EnablePatterns', () => {
   let driver, destroyDriver

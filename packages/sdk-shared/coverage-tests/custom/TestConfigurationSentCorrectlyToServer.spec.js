@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const {getEyes} = require('../../src/test-setup')
-const spec = require(path.resolve(cwd, 'src/spec-driver'))
+const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const assert = require('assert')
 const {Target, BatchInfo, MatchLevel} = require(cwd)
 const {getApiData} = require('../util/ApiAssertions')
@@ -26,7 +26,7 @@ describe('TestEyesConfiguration', async () => {
       if (data.sequenceNameEnvVar !== undefined) {
         process.env.APPLITOOLS_BATCH_SEQUENCE = data.sequenceNameEnvVar
       }
-      let batchInfo = new BatchInfo()
+      let batchInfo = new BatchInfo({id: `batch-id-${Math.floor(Math.random() * 100000)}`})
       let effectiveSequenceName = data.sequenceName ? data.sequenceName : data.sequenceNameEnvVar
 
       if (data.sequenceName !== undefined) {
@@ -74,9 +74,9 @@ describe('TestEyesConfiguration', async () => {
       assert.deepStrictEqual(sessionResults.env.hostingApp, 'someHostApp', 'Hosting App')
 
       assert.deepStrictEqual(
-        sessionResults.startInfo.batchInfo.sequenceName,
+        sessionResults.startInfo.batchInfo.sequenceName ||
+          sessionResults.startInfo.batchInfo.batchSequenceName,
         batchInfo.sequenceName,
-        'Sequence Name',
       )
 
       assert.ok(sessionResults.actualAppOutput, 'Actual App Output')

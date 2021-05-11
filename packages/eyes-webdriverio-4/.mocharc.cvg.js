@@ -10,6 +10,8 @@ const tags = [
   'edge',
   'safari',
 ]
+const grep = process.env.MOCHA_GREP
+
 module.exports = {
   spec: [
     './test/generic/*.spec.js',
@@ -20,5 +22,5 @@ module.exports = {
   timeout: 0,
   reporter: 'spec-xunit-file',
   require: ['node_modules/@applitools/sdk-shared/coverage-tests/util/mocha-hooks.js'],
-  grep: new RegExp(`^[^\(]*?(\\((?:@(${tags.join('|')}) ?)+\\))?$`),
+  grep: new RegExp(`^${grep ? `.*?${grep}.*?` : '[^(]*?'}(\\((?:@(${tags.join('|')}) ?)+\\))?$`, 'i'),
 }

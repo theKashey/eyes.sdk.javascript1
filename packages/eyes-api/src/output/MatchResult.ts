@@ -1,53 +1,54 @@
 import * as utils from '@applitools/utils'
+import type {Mutable} from '@applitools/utils'
 
 export type MatchResult = {
-  asExpected?: boolean
-  windowId?: number
+  readonly asExpected?: boolean
+  readonly windowId?: number
 }
 
-export default class MatchResultData implements Required<MatchResult> {
-  private _asExpected: boolean
-  private _windowId: number
+export class MatchResultData implements Required<MatchResult> {
+  private _result: Mutable<MatchResult> = {} as any
 
+  /** @internal */
   constructor(result?: MatchResult) {
     if (!result) return this
-    this.asExpected = result.asExpected
-    this.windowId = result.windowId
+    this._result = result instanceof MatchResultData ? result.toJSON() : result
   }
 
   get asExpected(): boolean {
-    return this._asExpected
-  }
-  set asExpected(asExpected: boolean) {
-    utils.guard.isBoolean(asExpected, {name: 'asExpected'})
-    this._asExpected = asExpected
+    return this._result.asExpected
   }
   getAsExpected(): boolean {
-    return this._asExpected
+    return this.asExpected
   }
+  /** @deprecated */
   setAsExpected(asExpected: boolean) {
-    this.asExpected = asExpected
+    this._result.asExpected = asExpected
   }
 
   get windowId(): number {
-    return this._windowId
-  }
-  set windowId(windowId: number) {
-    utils.guard.isNumber(windowId, {name: 'windowId'})
-    this._windowId = windowId
+    return this._result.windowId
   }
   getWindowId(): number {
-    return this._windowId
+    return this.windowId
   }
+  /** @deprecated */
   setWindowId(windowId: number) {
-    this.windowId = windowId
+    this._result.windowId = windowId
   }
 
+  /** @internal */
+  toObject(): MatchResult {
+    return this._result
+  }
+
+  /** @internal */
   toJSON(): MatchResult {
-    return utils.general.toJSON(this, ['asExpected', 'windowId'])
+    return utils.general.toJSON(this._result)
   }
 
-  toString() {
+  /** @internal */
+  toString(): string {
     return utils.general.toString(this)
   }
 }
