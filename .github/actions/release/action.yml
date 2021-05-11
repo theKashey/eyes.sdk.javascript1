@@ -24,7 +24,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Create temp branch"
-        CURRENT_BRANCH="$(echo ${{github.ref}})#refs/heads/"
+        CURRENT_BRANCH=${$(echo ${{github.ref}})#refs/heads/}
         BRANCH="${{inputs.sdk}}_$(date +%F_%H-%M)"
         git checkout -b $BRANCH
         git push -u origin $BRANCH
