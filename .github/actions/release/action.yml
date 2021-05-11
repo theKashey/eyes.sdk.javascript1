@@ -37,7 +37,7 @@ runs:
         git status
         yarn deps
         git status
-        yarn publish "--${{.inputs.version}}" --access public
+        yarn publish "--${{inputs.version}}" --access public
         git status
         echo "::endgroup::"
 
