@@ -20,7 +20,7 @@ env:
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
   setup:
-    name: Prepare settings
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{steps.setup.outputs.matrix}}
@@ -37,24 +37,29 @@ jobs:
     strategy:
       matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
       fail-fast: false
-    name: publish ${{matrix.name}}
+    name: ${{matrix.name}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        name: Check-out repository
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v1
+        name: Setup Node.js
         with:
           node-version: 14
       - uses: ./.github/actions/tests
+        name: Run tests
         with:
           sdk: ${{matrix.sdk}}
         env: ${{matrix.env}}
       - uses: ./.github/actions/release
+        name: Publish
         with:
           sdk: ${{matrix.sdk}}
           version: ${{github.event.inputs.version}}
       - uses: actions/upload-artifact@v2
+        name: Save release and testing artifacts
         with:
           name: coverage-tests-report
           retention-days: 30

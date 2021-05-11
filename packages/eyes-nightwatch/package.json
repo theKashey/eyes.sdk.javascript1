@@ -51,7 +51,7 @@
     "build:dist": "tsc",
     "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules nightwatch",
     "generate:tests": "coverage-tests generate node_modules/@applitools/sdk-shared/coverage-tests/generic/index.js --name 'eyes-nightwatch'",
-    "test": "yarn build:dist && yarn test:it && yarn test:e2e && yarn test:coverage:generate && yarn test:coverage",
+    "test": "yarn build:dist && yarn test:it && yarn test:e2e && yarn generate:tests && yarn test:coverage",
     "test:it": "yarn test:it:headless:jwp && yarn test:it:headless:w3c && yarn test:it:headed && yarn test:it:mobile",
     "test:it:headless:jwp": "yarn nightwatch test/it/spec-driver-headless-desktop.spec.js",
     "test:it:headless:w3c": "yarn nightwatch test/it/spec-driver-headless-desktop.spec.js --env firefox",

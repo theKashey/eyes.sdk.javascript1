@@ -1,8 +1,10 @@
 name: 'Setup matrix'
 inputs:
-  settings:
+  sdks:
     description: 'comma-separated list of sdk names (aliases) with modifiers such as version or aut protocol'
     required: true
+  allow-modifiers:
+    description: 'boolean value to allows use of modified sdks (e.g. wdio:cdp or selenium@3)'
 outputs:
   matrix:
     description: 'strategy.matrix compatible json object'
