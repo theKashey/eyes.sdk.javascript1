@@ -24,8 +24,8 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Create temp branch"
-        DATE=$(date +%F_%H-%M)
-        BRANCH="${{inputs.sdk}}_$DATE"
+        CURRENT_BRANCH="$(echo ${{github.ref}})#refs/heads/"
+        BRANCH="${{inputs.sdk}}_$(date +%F_%H-%M)"
         git checkout -b $BRANCH
         git push -u origin $BRANCH
         echo "::endgroup::"
@@ -41,10 +41,10 @@ runs:
         git status
         echo "::endgroup::"
 
-        echo "::group::Update ${{github.ref}} from $BRANCH"
-        git checkout ${{github.ref}}
+        echo "::group::Update $CURRENT_BRANCH from $BRANCH"
+        git checkout $CURRENT_BRANCH
         git status
-        git pull origin ${{github.ref}} --rebase
+        git pull origin $CURRENT_BRANCH --rebase
         git merge $BRANCH
-        git push origin ${{github.ref}}
+        git push origin $CURRENT_BRANCH
         echo "::endgroup::"
