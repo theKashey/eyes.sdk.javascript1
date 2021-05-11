@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-playwright",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Applitools Eyes SDK for Playwright",
   "keywords": [
     "eyes-playwright",
