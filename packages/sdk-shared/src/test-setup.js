@@ -11,7 +11,7 @@ const {
   VisualGridRunner,
   ConsoleLogHandler,
   FileLogHandler,
-} = require(path.resolve(cwd, codeDir, 'index.js'))
+} = require(path.resolve(cwd, codeDir))
 
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
 
