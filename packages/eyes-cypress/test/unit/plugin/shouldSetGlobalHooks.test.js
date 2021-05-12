@@ -15,5 +15,4 @@ describe('shouldSetGlobalHooks', () => {
   it('should return true if version >= 6.7.0', () => {
     expect(shouldSetGlobalHooks({version: '6.7.0'})).to.be.true;
   });
-
 });
