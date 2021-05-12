@@ -164,8 +164,9 @@ export async function getUrl(page: Driver): Promise<string> {
 export async function visit(page: Driver, url: string): Promise<void> {
   await page.goto(url)
 }
-export async function takeScreenshot(page: Driver): Promise<Buffer> {
-  return page.screenshot() as Promise<Buffer>
+export async function takeScreenshot(page: Driver): Promise<string> {
+  const scr = await (page as any)._client.send('Page.captureScreenshot')
+  return scr.data
 }
 export async function click(frame: Context, element: Element | Selector): Promise<void> {
   if (isSelector(element)) element = await findElement(frame, element)
