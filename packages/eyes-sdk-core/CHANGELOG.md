@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 12.19.2 - 2021/5/12
+
+- updated to @applitools/dom-snapshot@4.5.1 (from 4.5.0)
+
 ## 12.19.1 - 2021/5/11
 
 - updated to @applitools/driver@1.0.5 (from 1.0.4)
