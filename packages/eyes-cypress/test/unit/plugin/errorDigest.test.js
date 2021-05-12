@@ -1,7 +1,5 @@
 'use strict';
 const {describe, it} = require('mocha');
-const {expect} = require('chai');
-const chalk = require('chalk');
 const errorDigest = require('../../../src/plugin/errorDigest');
 const {TestResults} = require('@applitools/visual-grid-client');
 const snap = require('@applitools/snaptdout');

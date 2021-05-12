@@ -63,7 +63,7 @@ describe('pluginExport', () => {
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesLegacyHooks: false,
+      eyesLegacyHooks: true,
       eyesIsDisabled: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,

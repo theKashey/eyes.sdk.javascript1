@@ -57,4 +57,21 @@ describe('global hooks', () => {
       throw ex;
     }
   });
+
+  it('works with cypress 6.7.0 or greater without flag', async () => {
+    try {
+      await pexec(`npm install cypress@latest`, {
+        maxBuffer: 1000000,
+      });
+      await pexec(
+        './node_modules/.bin/cypress run --headless --config testFiles=simple.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        {
+          maxBuffer: 10000000,
+        },
+      );
+    } catch (ex) {
+      console.error('Error during test!', ex.stdout);
+      throw ex;
+    }
+  });
 });

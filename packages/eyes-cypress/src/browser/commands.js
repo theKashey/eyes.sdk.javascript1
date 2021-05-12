@@ -18,10 +18,7 @@ function getGlobalConfigProperty(prop) {
   const shouldParse = ['eyesBrowser', 'eyesLayoutBreakpoints'];
   return property ? (shouldParse.includes(prop) ? JSON.parse(property) : property) : undefined;
 }
-if (
-  !getGlobalConfigProperty('eyesIsDisabled') &&
-  (getGlobalConfigProperty('eyesLegacyHooks') || getGlobalConfigProperty('isInteractive'))
-) {
+if (!getGlobalConfigProperty('eyesIsDisabled') && getGlobalConfigProperty('eyesLegacyHooks')) {
   const batchEnd = poll(() => {
     return sendRequest({command: 'batchEnd'});
   });
