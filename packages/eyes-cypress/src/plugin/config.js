@@ -30,6 +30,11 @@ function makeConfig() {
     config.testConcurrency = Number(config.testConcurrency);
   }
 
+  if (config.accessibilityValidation) {
+    config.accessibilitySettings = config.accessibilityValidation;
+    delete config.accessiblityValidation;
+  }
+
   const eyesConfig = {
     eyesIsDisabled: !!config.isDisabled,
     eyesBrowser: JSON.stringify(config.browser),

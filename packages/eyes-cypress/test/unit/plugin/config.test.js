@@ -2,6 +2,8 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const makeConfig = require('../../../src/plugin/config');
+const fs = require('fs');
+const path = require('path');
 
 describe('config', () => {
   it('should create eyes config', () => {
@@ -30,5 +32,16 @@ describe('config', () => {
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
     });
+  });
+
+  it('should convert accessibilityValidation to acceessibilityValidation', () => {
+    const filePath = path.join(__dirname, '../../../applitools.config.js');
+    fs.writeFileSync(filePath, "module.exports = {accessibilityValidation: 'AA'};");
+    const {config} = makeConfig();
+    try {
+      expect(config.accessibilitySettings).to.equal('AA');
+    } finally {
+      fs.unlinkSync(filePath);
+    }
   });
 });
