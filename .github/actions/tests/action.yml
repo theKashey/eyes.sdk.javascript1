@@ -1,11 +1,11 @@
-name: 'Coverage Tests'
-description: 'Run coverage tests for an SDK'
+name: 'Tests'
+description: 'Run tests for a package'
 inputs:
-  sdk:
-    description: "name"
+  package:
+    description: "name of the package"
     required: true
   install:
-    description: "name of the framework to install"
+    description: "name and version of the framework to install"
   links:
     description: "links"
   linking-depth:
@@ -29,14 +29,22 @@ runs:
         echo "always-auth=true" >> .npmrc
         echo "::endgroup::"
 
-        cd "packages/${{inputs.sdk}}"
+        cd "packages/${{inputs.package}}"
         yarn install
-        yarn deps --skip-commit
-        yarn install --cwd "../sdk-shared"
-        yarn run link --include ${{inputs.links}} --build --install --depth ${{inputs['linking-depth']}}
+        npm run deps --if-present -- --skip-commit
+
+        if [ ! -z "${{inputs.links}}" ]
+        then
+          yarn install --cwd "../sdk-shared"
+          npm run link --if-present -- --include ${{inputs.links}} --build --install --depth ${{inputs['linking-depth']}}
+        fi
+
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
+
         npm run build --if-present
         npm run setup --if-present
-        yarn test
-        if [ "${{inputs.sandbox}}" = "sandbox" ]; then yarn report --sandbox; else yarn report; fi
+        npm run test
+
+        if [ "${{inputs.sandbox}}" = "sandbox" ]; then npm run report --if-present -- --sandbox; else npm run report --if-present; fi
+
         cat coverage-test-report.xml || echo "failed to cat coverage-test-report.xml file"

@@ -1,14 +1,14 @@
-name: Release SDKs
+name: Release packages
 
 on:
   workflow_dispatch:
     inputs:
-      sdks:
-        description: "sdk names (aliases)"
+      packages:
+        description: "package names (aliases)"
         required: true
       version:
         description: "version type (specify 'major', 'minor, or 'patch')"
-        required: true
+        default: "patch"
 env:
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
@@ -23,46 +23,417 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{steps.setup.outputs.matrix}}
+      sdk-matrix: ${{steps.setup.outputs.sdk-matrix}}
+      packages: ${{steps.setup.outputs.packages}}
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: ./.github/actions/setup-matrix
         id: setup
         with:
-          sdks: ${{github.event.inputs.sdks}}
-  publish:
+          packages: ${{github.event.inputs.packages}}
+          release-version: ${{github.event.inputs.version}}
+
+  utils:
     needs: setup
-    strategy:
-      matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
-      fail-fast: false
-    name: ${{matrix.name}}
+    if: ${{!fromJSON(needs.setup.outputs.packages).utils.skip}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: Check-out repository
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        name: Setup Node.js
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: 14
-      - uses: ./.github/actions/tests
-        name: Run tests
+      - name: Run tests
+        uses: ./.github/actions/tests
         with:
-          sdk: ${{matrix.sdk}}
-        env: ${{matrix.env}}
-      - uses: ./.github/actions/release
-        name: Publish
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
+      - name: Publish
+        uses: ./.github/actions/release
         with:
-          sdk: ${{matrix.sdk}}
-          version: ${{github.event.inputs.version}}
-      - uses: actions/upload-artifact@v2
-        name: Save release and testing artifacts
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).utils.releaseVersion}}
+  snippets:
+    needs: setup
+    if: ${{!fromJSON(needs.setup.outputs.packages).snippets.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
-          name: coverage-tests-report
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
+
+  logger:
+    needs: [setup, utils]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).logger.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).logger.release-version}}
+  screenshoter:
+    needs: [setup, utils]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).screenshoter.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.release-version}}
+  driver:
+    needs: [setup, utils, snippets]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).driver.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).driver.release-version}}
+
+  api:
+    needs: [setup, utils, logger]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).api.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).api.release-version}}
+  core:
+    needs: [setup, driver, screenshoter, snippets]
+    if: ${{!fromJSON(needs.setup.outputs.packages).core.skip && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).core.release-version}}
+
+  vgc:
+    needs: [setup, core]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).vgc.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).vgc.release-version}}
+
+  playwright:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).playwright.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).playwright.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).playwright.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).playwright.package}}
           retention-days: 30
           path: |
-            packages/${{matrix.sdk}}/coverage-tests-metadata.json
-            packages/${{matrix.sdk}}/coverage-test-report.xml
+            packages/${{fromJSON(needs.setup.outputs.packages).playwright.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).playwright.package}}/coverage-test-report.xml
+  puppeteer:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).puppeteer.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).puppeteer.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}/coverage-test-report.xml
+  webdriverio:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).webdriverio.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-test-report.xml
+  webdriverio-legacy:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).webdriverio-legacy.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}/coverage-test-report.xml
+  selenium:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).selenium.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).selenium.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).selenium.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).selenium.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).selenium.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).selenium.package}}/coverage-test-report.xml
+  protractor:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).protractor.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).protractor.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).protractor.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).protractor.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).protractor.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).protractor.package}}/coverage-test-report.xml
+  nightwatch:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).nightwatch.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).nightwatch.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}/coverage-test-report.xml
+  testcafe:
+    needs: [setup, utils, api, core, vgc]
+    if: ${{!failure() && !cancelled() && !fromJSON(needs.setup.outputs.packages).testcafe.skip}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).testcafe.env}}
+      - name: Publish
+        uses: ./.github/actions/release
+        with:
+          sdk: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).testcafe.release-version}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-test-report.xml

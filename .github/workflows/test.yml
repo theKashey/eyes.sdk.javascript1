@@ -62,4 +62,13 @@ jobs:
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs['linking-depth']}}
           grep: ${{github.event.inputs.grep}}
+          sandbox: true
         env: ${{matrix.env}}
+      - uses: actions/upload-artifact@v2
+        name: Save testing artifacts
+        with:
+          name: coverage-tests-report
+          retention-days: 30
+          path: |
+            packages/${{matrix.sdk}}/coverage-tests-metadata.json
+            packages/${{matrix.sdk}}/coverage-test-report.xml
