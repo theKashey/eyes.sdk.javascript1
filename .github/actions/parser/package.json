@@ -1,5 +1,5 @@
 {
-  "name": "@applitools/setup-matrix",
+  "name": "@applitools/parser",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {

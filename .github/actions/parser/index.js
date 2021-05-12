@@ -88,7 +88,7 @@ const packageSettings = core.getInput('packages', {required: true})
 const allowModifiers = core.getInput('allow-modifiers')
 const defaultReleaseVersion = core.getInput('release-version')
 
-const output = packageSettings.split(/[\s,]+/).reduce((output, packageSetting) => {
+const packages = packageSettings.split(/[\s,]+/).reduce((output, packageSetting) => {
   const [_, packageKey, releaseVersion = defaultReleaseVersion, frameworkVersion, frameworkProtocol]
     = packageSetting.match(/^(.*?)(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
   const packageName = Object.keys(PACKAGES).find(packageName => {
@@ -130,12 +130,4 @@ const output = packageSettings.split(/[\s,]+/).reduce((output, packageSetting) =
   return output
 }, {})
 
-core.setOutput('sdk-matrix', {include: Object.values(output).filter(pkg => pkg.sdk)})
-
-const g = Object.keys(PACKAGES).reduce((packages, packageName) => Object.assign(packages, {
-  [packageName]: output[packageName] || {displayName: `${packageName} (skipped)`, skip: true}
-}), {})
-
-core.setOutput('packages', g)
-
-console.log(g)
+core.setOutput('packages', packages)

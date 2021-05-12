@@ -1,4 +1,4 @@
-name: 'Setup matrix'
+name: 'Parser'
 inputs:
   packages:
     description: "list of package names (aliases) with modifiers such as version or aut protocol"
@@ -8,8 +8,6 @@ inputs:
   release-version:
     description: "default release version type (e.g. 'major', 'minor, or 'patch')"
 outputs:
-  sdk-matrix:
-    description: "matrix of the sdks"
   packages:
     description: "map of each package"
 runs:
