@@ -10,7 +10,7 @@
     "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
     "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
     "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
-    "test:e2e": "mocha --no-timeouts 'test/e2e/**/*.test.js'",
+    "test:e2e": "mkdir -p test/fixtures/testAppCopies && mocha --no-timeouts 'test/e2e/**/*.test.js'",
     "lint": "eslint '**/*.js'",
     "test": "yarn test:unit && yarn test:it && yarn test:e2e && yarn lint",
     "cypress": "cd test/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-play.js",
