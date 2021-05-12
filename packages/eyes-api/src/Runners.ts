@@ -45,16 +45,16 @@ export class VisualGridRunner extends EyesRunner {
   private _testConcurrency: number
   private _legacyConcurrency: number
 
-  constructor(options: RunnerOptions)
+  constructor(options?: RunnerOptions)
   /** @deprecated */
-  constructor(options: RunnerOptionsFluent)
+  constructor(options?: RunnerOptionsFluent)
   /** @deprecated */
-  constructor(legacyConcurrency: number)
-  constructor(optionsOrLegacyConcurrency: RunnerOptions | RunnerOptionsFluent | number) {
+  constructor(legacyConcurrency?: number)
+  constructor(optionsOrLegacyConcurrency?: RunnerOptions | RunnerOptionsFluent | number) {
     super()
     if (utils.types.isNumber(optionsOrLegacyConcurrency)) {
       this._legacyConcurrency = optionsOrLegacyConcurrency
-    } else {
+    } else if (optionsOrLegacyConcurrency) {
       const options =
         optionsOrLegacyConcurrency instanceof RunnerOptionsFluent
           ? optionsOrLegacyConcurrency.toJSON()

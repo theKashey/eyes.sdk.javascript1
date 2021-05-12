@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- allow VisualGridRunner to be constructed without argument
 
 ## 1.0.0 - 2021/5/11
 
