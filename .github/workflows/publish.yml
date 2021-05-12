@@ -216,7 +216,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -246,7 +246,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -276,7 +276,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -306,7 +306,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -336,7 +336,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).selenium.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -366,7 +366,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).protractor.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -396,7 +396,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
@@ -426,7 +426,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/release
         with:
-          sdk: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
+          package: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).testcafe.releaseVersion}}
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
