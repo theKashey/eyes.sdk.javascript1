@@ -4,6 +4,7 @@
 
 - fix `accessibilityValidation`
 - remove the need for `experimentalRunEvents` in cypress >= `6.7.0`
+- updated to @applitools/visual-grid-client@15.8.4 (from 15.8.0)
 
 ## 3.21.0 - 2021/4/22
 
