@@ -75,20 +75,19 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js",
+    "render": "node example/render.js",
+    "build:browser": "cd test/fixtures/test-app && yarn install --focused && yarn build",
+    "test": "yarn build:browser && yarn test:mocha",
     "test:mocha": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.test.js\"",
     "test:sanity": "mocha --no-timeouts 'test/!(browser||e2e)/**/*.test.js'",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.test.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.test.js\"",
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
-    "build:browser": "cd test/fixtures/test-app && yarn install --focused && yarn build",
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
-    "prepublish:setup": "echo 'no setup'",
-    "test": "yarn build:browser && yarn test:mocha",
-    "render": "node example/render.js",
-    "preversion": "bongo preversion && yarn test",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion",
     "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps"
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

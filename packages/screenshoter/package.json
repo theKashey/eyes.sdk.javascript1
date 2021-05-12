@@ -48,15 +48,15 @@
   "scripts": {
     "lint": "eslint . --ext .js",
     "test": "yarn test:it && yarn test:coverage",
-    "test:coverage": "mocha --no-timeouts './test/coverage/*.spec.js'",
     "test:it": "mocha --no-timeouts './test/it/*.spec.js'",
-    "preversion": "bongo preversion && yarn test",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps",
+    "test:coverage": "mocha --no-timeouts './test/coverage/*.spec.js'",
     "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "prepublish:setup": "yarn docker:setup"
+    "setup": "yarn docker:setup",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

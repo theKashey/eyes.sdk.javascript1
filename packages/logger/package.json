@@ -52,11 +52,10 @@
     "lint": "eslint '**/*.js'",
     "test": "yarn test:e2e",
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
-    "preversion": "bongo preversion && yarn test",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {

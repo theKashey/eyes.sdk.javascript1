@@ -5,17 +5,16 @@
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "lint": "eslint '**/*.js'",
+    "build": "node ./rollup/cli bundle --format json --format snippet",
+    "build:watch": "node ./rollup/cli watch --format json --format snippet",
     "test": "mocha --no-timeouts --require test/util/hook.js ./test/*.spec.js",
     "test:chrome": "mocha --no-timeouts --require test/util/hook.js --grep chrome ./test/*.spec.js",
     "test:ie": "mocha --no-timeouts --require test/util/hook.js --grep 'internet explorer' ./test/*.spec.js",
     "test:ios": "mocha --no-timeouts --require test/util/hook.js --grep 'ios safari' ./test/*.spec.js",
-    "prepublish:setup": "yarn build",
-    "build": "node ./rollup/cli bundle --format json --format snippet",
-    "build:watch": "node ./rollup/cli watch --format json --format snippet",
-    "preversion": "yarn build && bongo preversion && yarn test",
+    "deps": "bongo deps",
+    "preversion": "yarn build && bongo preversion",
     "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps"
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "files": [
     "dist"

@@ -37,12 +37,11 @@
     "lint": "eslint '**/*.ts' '**/*.js'",
     "build": "tsc",
     "test": "yarn build && yarn test:unit",
-    "test:unit": " mocha --no-timeouts './test/unit/*.spec.js'",
-    "preversion": "bongo preversion && yarn test && yarn build",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
+    "test:unit": "mocha --no-timeouts './test/unit/*.spec.js'",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "preversion": "bongo preversion && yarn build",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "dependencies": {
     "@applitools/logger": "1.0.0",

@@ -74,11 +74,10 @@
     "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "preversion": "bongo preversion --skip-verify-installed-versions && yarn test",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "preversion": "bongo preversion --skip-verify-installed-versions",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "bin": {
     "eyes-check-network": "./bin/runCheckNetwork.js"

@@ -37,11 +37,10 @@
   "scripts": {
     "lint": "eslint '**/*.ts'",
     "build": "tsc",
+    "deps": "bongo deps",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps",
-    "prepublish:setup": "echo 'setup is a no-op. Move along, nothing to see here.'"
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "husky": {
     "hooks": {

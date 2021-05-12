@@ -221,7 +221,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).playwright.package}}
+          name: coverage-tests-report-playwright
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).playwright.package}}/coverage-tests-metadata.json
@@ -251,7 +251,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
+          name: coverage-tests-report-puppeteer
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}/coverage-tests-metadata.json
@@ -281,7 +281,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
+          name: coverage-tests-report-webdriverio
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-tests-metadata.json
@@ -311,7 +311,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
+          name: coverage-tests-report-webdriverio-legacy
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}/coverage-tests-metadata.json
@@ -341,7 +341,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).selenium.package}}
+          name: coverage-tests-report-selenium
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).selenium.package}}/coverage-tests-metadata.json
@@ -371,7 +371,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).protractor.package}}
+          name: coverage-tests-report-protractor
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).protractor.package}}/coverage-tests-metadata.json
@@ -401,7 +401,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
+          name: coverage-tests-report-nightwatch
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}/coverage-tests-metadata.json
@@ -431,7 +431,7 @@ jobs:
       - name: Save release and testing artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report-${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
+          name: coverage-tests-report-testcafe
           retention-days: 30
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-tests-metadata.json

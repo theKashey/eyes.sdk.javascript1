@@ -42,11 +42,10 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js",
+    "deps": "bongo deps",
     "preversion": "bongo preversion",
     "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps",
-    "prepublish:setup": "echo 'setup is a no-op. Move along, nothing to see here.'"
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
