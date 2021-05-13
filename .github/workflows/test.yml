@@ -31,7 +31,6 @@ jobs:
       packages: ${{steps.setup.outputs.packages}}
     steps:
       - uses: actions/checkout@v2
-        with:
       - uses: ./.github/actions/parser
         id: setup
         with:
