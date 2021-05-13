@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- remove support of `initializeSdk` and `overrideTests` configuration properties
+- use cwd relative path to import files
+- add support for remote config
+- add integrated formatter
+- add support of `extends` property in config file, which could be used to extend configurations
+- allow `overrides` property to be not only path but also an object, or array with pathes and/or objects
+- provide better logging for report command
 
 ## 2.3.11 - 2021/4/26
 

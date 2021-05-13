@@ -1,9 +1,23 @@
+const path = require('path')
 const babel = require('@babel/core')
-const {isUrl, toPascalCase, mergeObjects, loadFile, runCode, requireUrl} = require('../common-util')
+const {
+  isString,
+  isUrl,
+  toPascalCase,
+  mergeObjects,
+  loadFile,
+  runCode,
+  requireUrl,
+} = require('../common-util')
 const {useFramework} = require('../framework')
 
-async function loadOverrides(path) {
-  return isUrl(path) ? requireUrl(path) : require(path)
+function loadOverrides(overrides) {
+  if (Array.isArray(overrides)) {
+    return overrides.reduce((overrides, item) => Object.assign(overrides, loadOverrides(item)), {})
+  }
+
+  if (!isString(overrides)) return overrides
+  return isUrl(overrides) ? requireUrl(overrides) : require(path.join(path.resolve('.'), overrides))
 }
 
 async function loadTests(path) {
@@ -54,15 +68,9 @@ function transformTests(code) {
   return transformed.code
 }
 
-async function testsLoader({
-  tests: testsPath,
-  overrides,
-  overrideTests,
-  ignoreSkip,
-  ignoreSkipEmit,
-}) {
+async function testsLoader({tests: testsPath, overrides, ignoreSkip, ignoreSkipEmit}) {
   const {tests, testsConfig} = await loadTests(testsPath)
-  overrideTests = overrideTests || (await loadOverrides(overrides))
+  const overrideTests = loadOverrides(overrides)
   const normalizedTests = Object.entries(tests).reduce((tests, [testName, {variants, ...test}]) => {
     test.group = testName
     test.key = test.key || toPascalCase(testName)
@@ -109,7 +117,5 @@ function filterTests(tests, {emitOnly = [], emitSkipped, ignoreSkipEmit}) {
   }
 }
 
-exports.loadTests = loadTests
-exports.transformTests = transformTests
 exports.testsLoader = testsLoader
 exports.filterTests = filterTests

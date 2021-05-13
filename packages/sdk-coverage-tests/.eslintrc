@@ -21,7 +21,7 @@
     "**/test/coverage/generic/"
   ],
   "rules": {
-    "prettier/prettier": ["error", {"allowParens": "avoid"}],
+    "prettier/prettier": ["error", {"arrowParens": "avoid"}],
     "no-process-exit": "off",
     "no-const-assign": "error",
     "no-this-before-super": "error",
