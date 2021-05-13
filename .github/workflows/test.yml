@@ -36,7 +36,8 @@ jobs:
         with:
           packages: ${{github.event.inputs.packages}}
           allow-modifiers: true
-      - run: |
+      - name: Debug
+        run: |
         echo ${{toJSON(fromJSON(steps.setup.outputs.packages).*)}}
   test:
     needs: setup
