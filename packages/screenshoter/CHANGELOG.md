@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 3.0.7 - 2021/5/13
+
 fixed image cropping algorithm to not copy data into a heap
 optimized image rotation and image copping algorithms
 
