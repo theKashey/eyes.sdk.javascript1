@@ -309,24 +309,25 @@ function cropImage(image, region) {
       return reject(new Error(`region is outside the image bounds! ${region}`))
     }
 
-    // process the pixels - crop
-    const croppedArray = []
     const yStart = Math.round(region.getTop())
     const yEnd = Math.min(Math.round(region.getTop() + region.getHeight()), image.height)
     const xStart = Math.round(region.getLeft())
     const xEnd = Math.min(Math.round(region.getLeft() + region.getWidth()), image.width)
 
-    let y, x, idx, i
-    for (y = yStart; y < yEnd; y += 1) {
-      for (x = xStart; x < xEnd; x += 1) {
-        idx = (image.width * y + x) * 4
-        for (i = 0; i < 4; i += 1) {
-          croppedArray.push(image.data[idx + i])
-        }
-      }
+    const chunkCount = yEnd - yStart
+    const chunkLength = (xEnd - xStart) * 4
+    const croppedBuffer = Buffer.alloc(chunkLength * chunkCount)
+
+    for (
+      let sourceY = yStart, targetStart = 0;
+      sourceY < yEnd - 1;
+      ++sourceY, targetStart += chunkLength
+    ) {
+      const sourceStart = (sourceY * image.width + xStart) * 4
+      croppedBuffer.set(image.data.subarray(sourceStart, sourceStart + chunkLength), targetStart)
     }
 
-    image.data = Buffer.from(croppedArray)
+    image.data = croppedBuffer
     image.width = xEnd - xStart
     image.height = yEnd - yStart
 

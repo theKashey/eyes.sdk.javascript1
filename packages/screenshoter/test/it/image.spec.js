@@ -28,6 +28,14 @@ describe('image', () => {
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
   })
 
+  it('should crop a big image without heap overflow', async () => {
+    const actual = await makeImage({width: 1000, height: 50000})
+      .crop({x: 0, y: 0, width: 1000, height: 49500})
+      .then(image => image.toObject())
+    assert.strictEqual(actual.width, 1000)
+    assert.strictEqual(actual.height, 49500)
+  })
+
   it('should scale', async () => {
     const actual = await makeImage('./test/fixtures/image/house.png')
       .scale(0.5)
@@ -44,6 +52,14 @@ describe('image', () => {
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
   })
 
+  it('should rotate a big image without heap overflow', async () => {
+    const actual = await makeImage({width: 1000, height: 50000})
+      .rotate(270)
+      .then(image => image.toObject())
+    assert.strictEqual(actual.width, 50000)
+    assert.strictEqual(actual.height, 1000)
+  })
+
   it('should copy one image to another', async () => {
     const image = await makeImage('./test/fixtures/image/house.png').toObject()
     const composition = makeImage({width: image.width, height: image.height * 2})
@@ -52,5 +68,14 @@ describe('image', () => {
     const actual = await composition.toObject()
     const expected = await makeImage('./test/fixtures/image/house.stitched.png').toObject()
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
+  })
+
+  it('should copy a big image without heap overflow', async () => {
+    const source = await makeImage({width: 1000, height: 50000}).toObject()
+    const actual = await makeImage({width: 1000, height: 50000})
+      .copy(source, {x: 100, y: 500})
+      .then(image => image.toObject())
+    assert.strictEqual(actual.width, 1000)
+    assert.strictEqual(actual.height, 50000)
   })
 })

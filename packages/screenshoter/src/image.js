@@ -138,7 +138,7 @@ async function resize(image, size) {
 }
 
 async function crop(image, region) {
-  if (utils.types.has(region, 'left')) {
+  if (utils.types.has(region, ['left', 'right', 'top', 'bottom'])) {
     region = {
       x: region.left,
       y: region.top,
@@ -147,85 +147,98 @@ async function crop(image, region) {
     }
   }
 
-  // process the pixels - crop
-  const croppedArray = []
-  const yStart = Math.max(0, Math.round(region.y))
-  const yEnd = Math.min(image.height, Math.round(region.y + region.height))
-  const xStart = Math.max(0, Math.round(region.x))
-  const xEnd = Math.min(image.width, Math.round(region.width + region.x))
+  const srcX = Math.max(0, Math.round(region.x))
+  const srcY = Math.max(0, Math.round(region.y))
+  const dstWidth = Math.round(Math.min(image.width - srcX, region.width))
+  const dstHeight = Math.round(Math.min(image.height - srcY, region.height))
 
-  let y, x, idx, i
-  for (y = yStart; y < yEnd; y += 1) {
-    for (x = xStart; x < xEnd; x += 1) {
-      idx = (image.width * y + x) * 4
-      for (i = 0; i < 4; i += 1) {
-        croppedArray.push(image.data[idx + i])
-      }
-    }
+  if (srcX === 0 && dstWidth === image.width) {
+    const srcOffset = srcY * image.width * 4
+    const dstLength = dstWidth * dstHeight * 4
+    image.data = image.data.subarray(srcOffset, srcOffset + dstLength)
+    image.width = dstWidth
+    image.height = dstHeight
+
+    return image
   }
 
-  image.data = Buffer.from(croppedArray)
-  image.width = xEnd - xStart
-  image.height = yEnd - yStart
+  const cropped = Buffer.alloc(dstWidth * dstHeight * 4)
+
+  const chunkLength = dstWidth * 4
+  for (let chunk = 0; chunk < dstHeight; ++chunk) {
+    const srcOffset = ((srcY + chunk) * image.width + srcX) * 4
+    cropped.set(image.data.subarray(srcOffset, srcOffset + chunkLength), chunk * chunkLength)
+  }
+
+  image.data = cropped
+  image.width = dstWidth
+  image.height = dstHeight
 
   return image
 }
 
 async function rotate(image, degrees) {
-  let i = Math.round(degrees / 90) % 4
-  while (i < 0) {
-    i += 4
-  }
+  degrees = (360 + degrees) % 360
 
-  while (i > 0) {
-    const dstBuffer = Buffer.alloc(image.data.length)
-    let dstOffset = 0
-    for (let x = 0; x < image.width; x += 1) {
-      for (let y = image.height - 1; y >= 0; y -= 1) {
-        const srcOffset = (image.width * y + x) * 4
-        const data = image.data.readUInt32BE(srcOffset)
-        dstBuffer.writeUInt32BE(data, dstOffset)
-        dstOffset += 4
+  const dstImage = {
+    data: Buffer.alloc(image.data.length),
+  }
+  if (degrees === 90) {
+    dstImage.width = image.height
+    dstImage.height = image.width
+    for (let srcY = 0, dstX = image.height - 1; srcY < image.height; ++srcY, --dstX) {
+      for (let srcX = 0, dstY = 0; srcX < image.width; ++srcX, ++dstY) {
+        const pixel = image.data.readUInt32BE((srcY * image.width + srcX) * 4)
+        dstImage.data.writeUInt32BE(pixel, (dstY * dstImage.width + dstX) * 4)
       }
     }
-
-    image.data = Buffer.from(dstBuffer)
-    const tmp = image.width
-
-    image.width = image.height
-    image.height = tmp
-
-    i -= 1
+  } else if (degrees === 180) {
+    dstImage.width = image.width
+    dstImage.height = image.height
+    for (let srcY = 0, dstY = image.height - 1; srcY < image.height; ++srcY, --dstY) {
+      for (let srcX = 0, dstX = image.width - 1; srcX < image.width; ++srcX, --dstX) {
+        const pixel = image.data.readUInt32BE((srcY * image.width + srcX) * 4)
+        dstImage.data.writeUInt32BE(pixel, (dstY * dstImage.width + dstX) * 4)
+      }
+    }
+  } else if (degrees === 270) {
+    dstImage.width = image.height
+    dstImage.height = image.width
+    for (let srcY = 0, dstX = 0; srcY < image.height; ++srcY, ++dstX) {
+      for (let srcX = 0, dstY = image.width - 1; srcX < image.width; ++srcX, --dstY) {
+        const pixel = image.data.readUInt32BE((srcY * image.width + srcX) * 4)
+        dstImage.data.writeUInt32BE(pixel, (srcX * dstImage.width + dstY) * 4)
+      }
+    }
+  } else {
+    return image
   }
+
+  image.data = dstImage.data
+  image.width = dstImage.width
+  image.height = dstImage.height
 
   return image
 }
 
 async function copy(dstImage, srcImage, offset) {
-  const offsetX = Math.round(offset.x)
-  const offsetY = Math.round(offset.y)
+  const dstX = Math.round(offset.x)
+  const dstY = Math.round(offset.y)
+  const srcWidth = Math.min(srcImage.width, dstImage.width - dstX)
+  const srcHeight = Math.min(srcImage.height, dstImage.height - dstY)
 
-  // Fix the problem when src image was out of dst image and pixels was copied to wrong position in dst image.
-  const maxHeight =
-    offsetY + srcImage.height <= dstImage.height ? srcImage.height : dstImage.height - offsetY
-  const maxWidth =
-    offsetX + srcImage.width <= dstImage.width ? srcImage.width : dstImage.width - offsetX
+  if (dstX === 0 && srcWidth === dstImage.width && srcWidth === srcImage.width) {
+    const dstOffset = dstY * dstImage.width * 4
+    dstImage.data.set(srcImage.data.subarray(0, srcWidth * srcHeight * 4), dstOffset)
 
-  for (let srcY = 0; srcY < maxHeight; srcY += 1) {
-    const dstY = offsetY + srcY
+    return dstImage
+  }
 
-    for (let srcX = 0; srcX < maxWidth; srcX += 1) {
-      const dstX = offsetX + srcX
-
-      // Since each pixel is composed of 4 values (RGBA) we multiply each index by 4.
-      const dstIndex = (dstY * dstImage.width + dstX) * 4
-      const srcIndex = (srcY * srcImage.width + srcX) * 4
-
-      dstImage.data[dstIndex] = srcImage.data[srcIndex]
-      dstImage.data[dstIndex + 1] = srcImage.data[srcIndex + 1]
-      dstImage.data[dstIndex + 2] = srcImage.data[srcIndex + 2]
-      dstImage.data[dstIndex + 3] = srcImage.data[srcIndex + 3]
-    }
+  const chunkLength = srcWidth * 4
+  for (let chunk = 0; chunk < srcHeight; ++chunk) {
+    const srcOffset = chunk * srcImage.width * 4
+    const dstOffset = ((dstY + chunk) * dstImage.width + dstX) * 4
+    dstImage.data.set(srcImage.data.subarray(srcOffset, srcOffset + chunkLength), dstOffset)
   }
 
   return dstImage
