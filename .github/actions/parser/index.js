@@ -120,7 +120,7 @@ const packages = packageSettings.split(/[\s,]+/).reduce((output, packageSetting)
     name: packageName,
     package: packageInfo.dirname,
     sdk: packageInfo.sdk,
-    install: frameworkVersion ? `${packageName.framework}@${frameworkVersion}` : '',
+    install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
     releaseVersion,
     env: {
       [`APPLITOOLS_${packageName.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
