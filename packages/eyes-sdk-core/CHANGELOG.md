@@ -3,6 +3,7 @@
 ## Unreleased
 
 fixed image cropping algorithm to not copy data into a heap
+- updated to @applitools/screenshoter@3.0.7 (from 3.0.6)
 
 ## 12.19.2 - 2021/5/12
 
