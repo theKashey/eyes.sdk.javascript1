@@ -66,7 +66,7 @@ const packages = packageSettings.split(/[\s,]+/).reduce((packages, packageSettin
   }
 
   if (allowVariations) packages.push(package)
-  else packages[packages.name] = package
+  else packages[package.name] = package
 
   return packages
 }, allowVariations ? [] : {})
