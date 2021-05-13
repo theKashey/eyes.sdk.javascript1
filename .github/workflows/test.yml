@@ -38,7 +38,7 @@ jobs:
           allow-modifiers: true
       - name: Debug
         run: |
-        echo ${{toJSON(fromJSON(steps.setup.outputs.packages).*)}}
+          echo ${{toJSON(fromJSON(steps.setup.outputs.packages).*)}}
   test:
     needs: setup
     strategy:
