@@ -1,10 +1,10 @@
-name: Test SDKs
+name: Test packages
 
 on:
   workflow_dispatch:
     inputs:
-      sdks:
-        description: "sdk names (aliases)"
+      packages:
+        description: "package names (aliases and variations)"
         required: true
       links:
         description: "linked packages names"
@@ -13,7 +13,7 @@ on:
         description: "linking depth"
         default: 0
       grep:
-        description: "grep patter"
+        description: "grep pattern"
 env:
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
@@ -28,47 +28,44 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{steps.setup.outputs.matrix}}
+      packages: ${{steps.setup.outputs.packages}}
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup-matrix
+      - uses: ./.github/actions/parser
         id: setup
         with:
-          sdks: ${{github.event.inputs.sdks}}
+          packages: ${{github.event.inputs.packages}}
           allow-modifiers: true
   test:
     needs: setup
     strategy:
-      matrix: ${{fromJSON(needs.setup.outputs.matrix)}}
+      matrix: 
+        include: ${{fromJSON(needs.setup.outputs.packages).*}}
       fail-fast: false
-    name: ${{matrix.name}}
+    name: ${{matrix.displayName}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        name: Check-out repository
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v1
-        name: Setup Node.js
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
           node-version: 14
-      - uses: ./.github/actions/tests
-        name: Run tests
+      - name: Run tests
+        uses: ./.github/actions/tests
         with:
-          sdk: ${{matrix.sdk}}
+          package: ${{matrix.package}}
           install: ${{matrix.install}}
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs['linking-depth']}}
           grep: ${{github.event.inputs.grep}}
-          sandbox: true
         env: ${{matrix.env}}
-      - uses: actions/upload-artifact@v2
-        name: Save testing artifacts
+      - name: Save testing artifacts
+        uses: actions/upload-artifact@v2
         with:
-          name: coverage-tests-report
-          retention-days: 30
+          name: coverage-tests-report-${{matrix.name}}
+          retention-days: 2
           path: |
-            packages/${{matrix.sdk}}/coverage-tests-metadata.json
-            packages/${{matrix.sdk}}/coverage-test-report.xml
+            packages/${{matrix.package}}/coverage-tests-metadata.json
+            packages/${{matrix.package}}/coverage-test-report.xml
