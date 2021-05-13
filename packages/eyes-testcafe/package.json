@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-testcafe",
-  "version": "1.13.1",
+  "version": "1.14.0",
   "description": "Applitools Eyes SDK for TestCafe",
   "keywords": [
     "eyes-testcafe",
