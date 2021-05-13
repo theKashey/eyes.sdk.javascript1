@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 2.3.12 - 2021/5/13
+
 - remove support of `initializeSdk` and `overrideTests` configuration properties
 - use cwd relative path to import files
 - add support for remote config
