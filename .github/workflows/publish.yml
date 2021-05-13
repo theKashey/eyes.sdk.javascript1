@@ -1,4 +1,4 @@
-name: Release packages
+name: Publish packages
 
 on:
   workflow_dispatch:
@@ -48,7 +48,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).utils.releaseVersion}}
@@ -68,7 +68,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
@@ -89,7 +89,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
@@ -109,7 +109,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
@@ -129,7 +129,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).driver.releaseVersion}}
@@ -150,7 +150,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).api.releaseVersion}}
@@ -170,7 +170,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).core.releaseVersion}}
@@ -191,7 +191,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
@@ -214,7 +214,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).playwright.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
@@ -244,7 +244,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).puppeteer.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.releaseVersion}}
@@ -274,7 +274,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).webdriverio.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.releaseVersion}}
@@ -304,7 +304,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.releaseVersion}}
@@ -334,7 +334,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).selenium.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).selenium.releaseVersion}}
@@ -364,7 +364,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).protractor.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).protractor.releaseVersion}}
@@ -394,7 +394,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).nightwatch.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.releaseVersion}}
@@ -424,7 +424,7 @@ jobs:
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).testcafe.env}}
       - name: Publish
-        uses: ./.github/actions/release
+        uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).testcafe.releaseVersion}}

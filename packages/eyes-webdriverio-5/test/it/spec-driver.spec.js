@@ -8,6 +8,10 @@ describe('spec driver', async () => {
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
   describe('headless desktop (@webdriver)', async () => {
+    before(function () {
+      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'chrome'})
       await browser.url(url)
@@ -127,6 +131,10 @@ describe('spec driver', async () => {
   })
 
   describe('onscreen desktop (@webdriver)', async () => {
+    before(function () {
+      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', headless: false})
     })
@@ -159,6 +167,10 @@ describe('spec driver', async () => {
   })
 
   describe('legacy browser (@webdriver)', async () => {
+    before(function () {
+      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'ie-11', legacy: true})
     })
@@ -197,6 +209,10 @@ describe('spec driver', async () => {
   })
 
   describe('mobile browser (@mobile)', async () => {
+    before(function () {
+      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL'})
     })
@@ -226,6 +242,10 @@ describe('spec driver', async () => {
   })
 
   describe('native app (@mobile @native)', async () => {
+    before(function () {
+      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({
         app: 'http://saucelabs.com/example_files/ContactManager.apk',
@@ -259,6 +279,10 @@ describe('spec driver', async () => {
   })
 
   describe('headless desktop (@puppeteer)', async () => {
+    before(function () {
+      if (Number(process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) < 7) this.skip()
+    })
+
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', protocol: 'cdp'})
       await browser.url(url)

@@ -1,14 +1,14 @@
-name: 'Publish'
-description: 'Publish a package to NPM'
+name: Publish
+description: Publish a package to NPM
 inputs:
   package:
-    description: "name of the package"
+    description: name of the package
     required: true
   version:
-    description: "version type"
+    description: version type (patch, major, minor)
     required: true
 runs:
-  using: "composite"
+  using: composite
   steps:
     - shell: bash
       run: |
