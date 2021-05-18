@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix coverage report calculation
 
 ## 2.3.12 - 2021/5/13
 
