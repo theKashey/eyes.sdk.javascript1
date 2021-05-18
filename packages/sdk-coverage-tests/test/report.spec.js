@@ -107,6 +107,17 @@ describe('Report', () => {
     const result = convertJunitXmlToResultSchema({junit, metadata})
     assert.deepStrictEqual(result, [
       {
+        test_name: 'test check window with vg',
+        parameters: {
+          browser: 'chrome',
+          mode: 'visualgrid',
+          api: undefined,
+        },
+        passed: false,
+        isSkipped: false,
+        isGeneric: true,
+      },
+      {
         test_name: 'test check window with css',
         parameters: {
           browser: 'chrome',
@@ -118,25 +129,14 @@ describe('Report', () => {
         isGeneric: true,
       },
       {
-        test_name: 'test check window with vg',
-        parameters: {
-          browser: 'chrome',
-          mode: 'visualgrid',
-          api: undefined,
-        },
-        passed: undefined,
-        isSkipped: true,
-        isGeneric: true,
-      },
-      {
         test_name: 'test check window with scroll',
         parameters: {
           browser: 'chrome',
           mode: 'scroll',
           api: undefined,
         },
-        passed: undefined,
-        isSkipped: true,
+        passed: true,
+        isSkipped: false,
         isGeneric: true,
       },
       {
@@ -157,8 +157,8 @@ describe('Report', () => {
           mode: 'bla',
           api: undefined,
         },
-        passed: true,
-        isSkipped: false,
+        passed: undefined,
+        isSkipped: true,
         isGeneric: true,
       },
     ])
@@ -171,6 +171,17 @@ describe('Report', () => {
       sandbox: false,
       results: [
         {
+          test_name: 'test check window with vg',
+          parameters: {
+            browser: 'chrome',
+            mode: 'visualgrid',
+            api: undefined,
+          },
+          passed: false,
+          isSkipped: false,
+          isGeneric: true,
+        },
+        {
           test_name: 'test check window with css',
           parameters: {
             browser: 'chrome',
@@ -182,25 +193,14 @@ describe('Report', () => {
           isGeneric: true,
         },
         {
-          test_name: 'test check window with vg',
-          parameters: {
-            browser: 'chrome',
-            mode: 'visualgrid',
-            api: undefined,
-          },
-          passed: undefined,
-          isSkipped: true,
-          isGeneric: true,
-        },
-        {
           test_name: 'test check window with scroll',
           parameters: {
             browser: 'chrome',
             mode: 'scroll',
             api: undefined,
           },
-          passed: undefined,
-          isSkipped: true,
+          passed: true,
+          isSkipped: false,
           isGeneric: true,
         },
         {
@@ -221,8 +221,8 @@ describe('Report', () => {
             mode: 'bla',
             api: undefined,
           },
-          passed: true,
-          isSkipped: false,
+          passed: undefined,
+          isSkipped: true,
           isGeneric: true,
         },
       ],
@@ -239,6 +239,17 @@ describe('Report', () => {
         sandbox: false,
         results: [
           {
+            test_name: 'test check window with vg',
+            parameters: {
+              browser: 'chrome',
+              mode: 'visualgrid',
+              api: undefined,
+            },
+            passed: false,
+            isSkipped: false,
+            isGeneric: true,
+          },
+          {
             test_name: 'test check window with css',
             parameters: {
               browser: 'chrome',
@@ -250,25 +261,14 @@ describe('Report', () => {
             isGeneric: true,
           },
           {
-            test_name: 'test check window with vg',
-            parameters: {
-              browser: 'chrome',
-              mode: 'visualgrid',
-              api: undefined,
-            },
-            passed: undefined,
-            isSkipped: true,
-            isGeneric: true,
-          },
-          {
             test_name: 'test check window with scroll',
             parameters: {
               browser: 'chrome',
               mode: 'scroll',
               api: undefined,
             },
-            passed: undefined,
-            isSkipped: true,
+            passed: true,
+            isSkipped: false,
             isGeneric: true,
           },
           {
@@ -289,8 +289,8 @@ describe('Report', () => {
               mode: 'bla',
               api: undefined,
             },
-            passed: true,
-            isSkipped: false,
+            passed: undefined,
+            isSkipped: true,
             isGeneric: true,
           },
         ],
@@ -304,6 +304,17 @@ describe('Report', () => {
     const result = convertJunitXmlToResultSchema({junit, metadata})
     assert.deepStrictEqual(result, [
       {
+        test_name: 'test check window with vg',
+        parameters: {
+          browser: 'chrome',
+          mode: 'visualgrid',
+          api: undefined,
+        },
+        passed: true,
+        isSkipped: false,
+        isGeneric: true,
+      },
+      {
         test_name: 'test check window with css',
         parameters: {
           browser: 'chrome',
@@ -315,26 +326,26 @@ describe('Report', () => {
         isGeneric: true,
       },
       {
-        test_name: 'test check window with vg',
-        parameters: {
-          browser: 'chrome',
-          mode: 'visualgrid',
-          api: undefined,
-        },
-        passed: undefined,
-        isSkipped: true,
-        isGeneric: true,
-      },
-      {
         test_name: 'test check window with scroll',
         parameters: {
           browser: 'chrome',
           mode: 'scroll',
           api: undefined,
         },
-        passed: undefined,
-        isSkipped: true,
+        passed: true,
+        isSkipped: false,
         isGeneric: true,
+      },
+      {
+        test_name: 'some custom test',
+        parameters: {
+          api: undefined,
+          browser: 'chrome',
+          mode: undefined,
+        },
+        passed: false,
+        isSkipped: false,
+        isGeneric: false,
       },
       {
         test_name: 'test that was not emitted',
@@ -354,20 +365,9 @@ describe('Report', () => {
           mode: 'bla',
           api: undefined,
         },
-        passed: true,
-        isSkipped: false,
+        passed: undefined,
+        isSkipped: true,
         isGeneric: true,
-      },
-      {
-        test_name: 'some custom test',
-        parameters: {
-          api: undefined,
-          browser: 'chrome',
-          mode: undefined,
-        },
-        passed: false,
-        isSkipped: false,
-        isGeneric: false,
       },
     ])
   })

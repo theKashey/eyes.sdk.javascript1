@@ -1,6 +1,8 @@
 const fetch = require('node-fetch')
 
 async function _send({uri, payload}) {
+  console.log(payload.results.length)
+  console.log(payload.results.filter(t => t.isSkipped).length)
   const result = await fetch(uri, {
     method: 'post',
     body: JSON.stringify(payload),

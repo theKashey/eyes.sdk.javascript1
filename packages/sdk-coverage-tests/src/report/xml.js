@@ -5,16 +5,23 @@ function convertJunitXmlToResultSchema({junit, browser, metadata}) {
   const tests = parseJunitXmlForTests(junit)
 
   logDebug(tests)
-  const allTests = tests.reduce((acc, test) => {
+
+  const xmlTests = tests.reduce((acc, test) => {
+    // console.log(test)
     const name = parseBareTestName(test._attributes.name)
-    acc[name] = metadata[name] || {
-      skip: Number(test._attributes.time) === 0 || test.hasOwnProperty('skipped'),
-      ...test,
+    acc[name] = {
+      ...test._attributes,
+      skip: test.hasOwnProperty('skipped') || Number(test._attributes.time) === 0,
+      failure: test.hasOwnProperty('failure') || !!test._attributes.failure,
     }
     return acc
-  }, metadata)
+  }, {})
 
-  return Object.entries(allTests).map(([testName, testMeta]) => {
+  Object.entries(metadata).forEach(([key, value]) => {
+    xmlTests[key] = {...value, skip: !xmlTests[key], ...xmlTests[key], name: value.name}
+  })
+
+  return Object.entries(xmlTests).map(([testName, testMeta]) => {
     const isSkipped = testMeta.skip || testMeta.skipEmit || false // we explicitly set false to preserve backwards compatibility
     return {
       test_name: testMeta.name || testName,
