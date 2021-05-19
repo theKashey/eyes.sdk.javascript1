@@ -1,17 +1,17 @@
-name: issue response
+# name: issue response
 
-on:
-  issues:
-    types: [opened]
+# on:
+#   issues:
+#     types: [opened]
 
-jobs:
-  auto-response:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: derekprior/add-autoresponse@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        respondableId: ${{ github.event.issue.node_id }}
-        response: "Hello @${{ github.event.issue.user.login }}! Please send an email to `support@applitools.com` and we'll be happy to further assist you."
-        author: ${{ github.event.issue.user.login }} 
+# jobs:
+#   auto-response:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: derekprior/add-autoresponse@master
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       with:
+#         respondableId: ${{ github.event.issue.node_id }}
+#         response: "Hello @${{ github.event.issue.user.login }}! Please send an email to `support@applitools.com` and we'll be happy to further assist you."
+#         author: ${{ github.event.issue.user.login }} 
