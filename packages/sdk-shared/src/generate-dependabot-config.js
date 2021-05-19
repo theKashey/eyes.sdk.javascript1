@@ -18,14 +18,14 @@ const skipList = [
   const packagesStr = packages
     .filter(packageName => !skipList.includes(packageName) && !packageName.startsWith('.'))
     .map(
-      packageName => `  - package-ecosystem: "npm"
+      packageName => `  - package_manager: "javascript"
     directory: "/packages/${packageName}"
     update_schedule: "live"
     allowed_updates:
       - match:
-        update_type: "security"`,
+          update_type: "security"`,
     )
     .join('\n')
-  const fileContent = `version: 2\nupdates:\n${packagesStr}`
+  const fileContent = `version: 1\nupdate_configs:\n${packagesStr}`
   await fs.writeFile(path.join(__dirname, '../../../.github/dependabot.yml'), fileContent)
 })()
