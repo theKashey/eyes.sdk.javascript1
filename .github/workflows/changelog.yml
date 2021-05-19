@@ -5,9 +5,9 @@ on: pull_request
 jobs:
   changelog:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.commits[0].message, '[Security]')"
     name: changelog
     steps:
+      - if: "!contains(github.event.head_commit.message, '[Security]')"
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
