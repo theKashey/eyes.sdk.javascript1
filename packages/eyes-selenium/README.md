@@ -29,6 +29,7 @@
         * [Content/Strict/Layout Regions](#content-strict-layout-regions)
         * [Accessiblity Regions](#accessiblity-regions)
         * [Scroll root element](#scroll-root-element)
+        * [Variation group ID](#variation-group-id)
         * [Other checkSettings configuration](#other-checksettings-configuration)
   * [close](#close)
 - [Runners](#runners)
@@ -367,6 +368,14 @@ Defines a name for the checkpoint in the Eyes Test Manager. The name may be any 
 ```js
 eyes.check(Target.window().withName('Main page'))
 ```
+
+##### Variation group ID
+
+```js
+eyes.check(Target.window().variationGroupId('Login button on the right'))
+```
+
+_For more information, visit our documentation page: https://applitools.com/docs/features/baseline-variations-groups.html_
 
 ###### Other checkSettings configuration
 
