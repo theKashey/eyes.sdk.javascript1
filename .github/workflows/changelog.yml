@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     name: changelog
     steps:
-      - if: "!contains(github.event.head_commit.message, '[Security]')"
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - if: "!contains(github.event.head_commit.message, '[Security]')"
       - uses: actions/setup-node@v1
         with:
           node-version: 14
