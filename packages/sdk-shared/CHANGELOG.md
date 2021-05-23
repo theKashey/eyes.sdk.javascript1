@@ -3,6 +3,19 @@
 ## Unreleased
 
 
+## 0.9.2 - 2021/5/23
+
+- fix handlebars middleware
+
+## 0.9.1 - 2021/5/23
+
+- move test-server and test-utils from dev deps to deps
+
+## 0.9.0 - 2021/5/23
+
+- decompose all of the logic to the separate packages
+- dedicate this package only to shared custom tests
+
 ## 0.8.10 - 2021/5/11
 
 - fix path to the sdk

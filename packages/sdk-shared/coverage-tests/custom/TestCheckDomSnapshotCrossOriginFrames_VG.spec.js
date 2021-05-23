@@ -1,8 +1,8 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {testServer} = require('../../index')
-const {getEyes} = require('../../src/test-setup')
+const {testServer} = require('@applitools/test-server')
+const {setupEyes} = require('@applitools/test-utils')
 const adjustUrlToDocker = require('../util/adjust-url-to-docker')
 
 describe('Coverage Tests', () => {
@@ -22,7 +22,7 @@ describe('Coverage Tests', () => {
     })
     serverB = await testServer({port: 7374, staticPath})
     ;[driver, destroy] = await spec.build({browser: 'chrome'})
-    eyes = getEyes({stitchMode: 'CSS'})
+    eyes = setupEyes({stitchMode: 'CSS'})
   })
 
   afterEach(async () => {

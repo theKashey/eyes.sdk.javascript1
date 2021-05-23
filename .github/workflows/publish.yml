@@ -72,6 +72,26 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
+  test-utils:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.package}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-utils.releaseVersion}}
 
   logger:
     needs: [setup, utils]
@@ -133,6 +153,46 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).driver.releaseVersion}}
+  test-server:
+    needs: [setup, utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.package}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-server.releaseVersion}}
+  scripts:
+    needs: [setup, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).scripts && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).scripts.package}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).scripts.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).scripts.releaseVersion}}
 
   api:
     needs: [setup, utils, logger]

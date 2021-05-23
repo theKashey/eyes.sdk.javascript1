@@ -1,5 +1,6 @@
+const {promisify} = require('util')
 const fetch = require('node-fetch')
-const {delay} = require('@applitools/functional-commons')
+const delay = promisify(setTimeout)
 
 async function waitForDockerBrowsers(
   {remoteUrl = process.env.CVG_TESTS_REMOTE, retries = 50} = {

@@ -142,8 +142,8 @@ const browserNames: Record<string, string> = {
 }
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const playwright = require('playwright')
-  const {testSetup} = require('@applitools/sdk-shared')
-  const {browser, device, url, attach, proxy, args = [], headless} = testSetup.Env(env, 'cdp')
+  const parseEnv = require('@applitools/test-utils/src/parse-env')
+  const {browser, device, url, attach, proxy, args = [], headless} = parseEnv(env, 'cdp')
   const launcher = playwright[browserNames[browser] || browser]
   if (!launcher) throw new Error(`Browser "${browser}" is not supported.`)
   if (attach) throw new Error(`Attaching to the existed browser doesn't supported by playwright`)

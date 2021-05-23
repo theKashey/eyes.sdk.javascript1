@@ -222,9 +222,9 @@ const browserOptionsNames: Record<string, string> = {
 }
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const {Builder} = require('selenium-webdriver')
-  const {testSetup} = require('@applitools/sdk-shared')
+  const parseEnv = require('@applitools/test-utils/src/parse-env')
 
-  const {browser = '', capabilities, url, attach, proxy, configurable = true, args = [], headless} = testSetup.Env({
+  const {browser = '', capabilities, url, attach, proxy, configurable = true, args = [], headless} = parseEnv({
     ...env,
     legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3',
   })

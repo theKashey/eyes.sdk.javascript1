@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
-const testServer = require('@applitools/sdk-shared/src/run-test-server');
+const {testServerInProcess} = require('@applitools/test-server');
 const testStorybook = require('../util/testStorybook');
 const getStories = require('../../dist/getStories');
 const {delay: psetTimeout} = require('@applitools/functional-commons');
@@ -11,7 +11,7 @@ const logger = require('../util/testLogger');
 describe('getStories', () => {
   let closeTestServer, browser;
   before(async () => {
-    const server = await testServer({port: 7272});
+    const server = await testServerInProcess({port: 7272});
     closeTestServer = server.close;
     browser = await puppeteer.launch(); // {headless: false, devtools: true}
   });

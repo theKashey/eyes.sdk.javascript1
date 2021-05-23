@@ -1,7 +1,7 @@
 /* global browser */
 'use strict'
 const {expect} = require('chai')
-const {ApiAssertions} = require('@applitools/sdk-shared')
+const {getTestInfo} = require('@applitools/test-utils')
 const {version} = require('../../../package.json')
 
 describe('vg', () => {
@@ -11,7 +11,7 @@ describe('vg', () => {
   })
   after(() => {
     const testResults = browser.eyesGetTestResults()
-    const data = browser.call(() => ApiAssertions.getApiData(testResults, process.env.APPLITOOLS_API_KEY))
+    const data = browser.call(() => getTestInfo(testResults, process.env.APPLITOOLS_API_KEY))
     expect(data.startInfo.agentId).to.equal(`eyes-webdriverio-service.visualgrid/${version}`)
   })
 })

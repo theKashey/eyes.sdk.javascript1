@@ -2,13 +2,13 @@
 const path = require('path')
 const cwd = process.cwd()
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {testSetup} = require('../..')
+const {setupEyes} = require('@applitools/test-utils')
 
 describe.skip('baselineBranchName', () => {
   let driver, destroy, eyes
   before(async () => {
     ;[driver, destroy] = await spec.build({browser: 'chrome'})
-    eyes = testSetup.getEyes({vg: true})
+    eyes = setupEyes({vg: true})
   })
   after(async () => {
     await destroy()

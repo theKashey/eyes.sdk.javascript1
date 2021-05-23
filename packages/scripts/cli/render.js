@@ -1,17 +1,13 @@
 #!/usr/bin/env node
-'use strict'
+
 const fs = require('fs')
 const path = require('path')
 const util = require('util')
 const yargs = require('yargs')
-const {URL} = require('url')
-const {emitTest} = require('@applitools/sdk-coverage-tests')
+const {setupEyes} = require('@applitools/test-utils')
 const utils = require('../src/cli-utils')
 const cwd = process.cwd()
-const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {DeviceName, ScreenOrientation, MatchLevel} = require(cwd)
-const {getEyes} = require('../src/test-setup')
-const scrollPage = require('../src/scroll-page')
 const delay = util.promisify(setTimeout)
 
 const checkConfig = {
@@ -249,10 +245,6 @@ const testConfig = {
     type: 'number',
     default: 0,
   },
-  scrollPage: {
-    describe: 'before taking the screenshot, scroll page to the bottom and up',
-    type: 'boolean',
-  },
   runBefore: {
     describe:
       'path to JavaScript file which exports an async function which should be run before the visual check. The function receives the driver as a parameter so is can perform page interactions.',
@@ -295,8 +287,7 @@ yargs
     handler: async args => {
       console.log(`Options:\n ${formatArgs(args)}\n`)
       try {
-        if (args.save) await saver(args)
-        else await runner(args)
+        await runner(args)
       } catch (err) {
         console.log(err)
         process.exit(1)
@@ -306,6 +297,8 @@ yargs
   .help().argv
 
 async function runner(args) {
+  const spec = require(path.resolve(cwd, 'dist/spec-driver'))
+
   let runBeforeFunc
   if (args.runBefore !== undefined) {
     if (!fs.existsSync(args.runBefore)) {
@@ -329,7 +322,7 @@ async function runner(args) {
     console.log('log file at:', args.saveLogs)
     if (args.saveDebugScreenshots) console.log('debug screenshots at:', args.saveDebugScreenshots)
 
-    const eyes = getEyes(argsToEyesConfig(args))
+    const eyes = setupEyes(argsToEyesConfig(args))
     const logger = eyes.getLogger()
     const runner = eyes.getRunner()
 
@@ -343,8 +336,6 @@ async function runner(args) {
     logger.log(`[render script] awaiting delay... ${args.delay}s`)
     await delay(args.delay * 1000)
     logger.log('[render script] awaiting delay... DONE')
-
-    if (args.scrollPage) await spec.executeScript(driver, scrollPage)
 
     await eyes.check(argsToCheckConfig(args))
 
@@ -365,29 +356,6 @@ async function runner(args) {
   } finally {
     await destroyDriver()
   }
-}
-
-async function saver(args) {
-  const test = {
-    name: `render-script-${formatUrl(args.url) || 'running-browser'}-${formatDate(new Date())}`,
-    features: ['render-script'],
-    env: argsToBuildConfig(args),
-    config: argsToEyesConfig(args),
-    test: ({driver, eyes, helpers}) => {
-      const url = args.attach ? eyes.getUrl().ref('url') : args.url
-      driver.visit(url)
-      eyes.open({appName: args.appName, testName: url})
-      if (args.delay) helpers.delay(args.delay * 1000)
-      if (args.scrollPage) driver.executeScript(scrollPage.toString())
-      eyes.check(argsToCheckConfig(args))
-      eyes.close()
-    },
-  }
-  const {name, code} = emitTest(test)
-  const testPath = typeof args.save === 'string' ? args.save : `./generated/${name}.spec.js`
-  fs.mkdirSync(path.dirname(testPath), {recursive: true})
-  fs.writeFileSync(testPath, code)
-  console.log(`test file at: ${testPath}`)
 }
 
 function parseRegionReferences(str) {

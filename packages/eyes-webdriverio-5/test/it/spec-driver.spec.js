@@ -18,7 +18,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('isDriver(driver)', async () => {
@@ -140,7 +140,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('getWindowRect()', async () => {
@@ -176,7 +176,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('getWindowRect()', async () => {
@@ -218,7 +218,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('isMobile()', async () => {
@@ -255,7 +255,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('isMobile()', async () => {
@@ -289,7 +289,7 @@ describe('spec driver', async () => {
     })
 
     after(async () => {
-      await destroyBrowser()
+      if (destroyBrowser) await destroyBrowser()
     })
 
     it('isDriver(driver)', async () => {

@@ -3,7 +3,7 @@
 const {describe, it, before, after} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const fs = require('fs')
 const path = require('path')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
@@ -20,7 +20,7 @@ describe('browser visual grid', () => {
     if (!apiKey) {
       throw new Error('APPLITOOLS_API_KEY env variable is not defined')
     }
-    const server = await testServer({port: 3456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServerInProcess({port: 3456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 

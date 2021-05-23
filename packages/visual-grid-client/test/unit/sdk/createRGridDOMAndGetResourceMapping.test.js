@@ -8,7 +8,7 @@ const createResourceCache = require('../../../src/sdk/createResourceCache')
 const extractCssResources = require('../../../src/sdk/extractCssResources')
 const makeFetchResource = require('../../../src/sdk/fetchResource')
 const testLogger = require('../../util/testLogger')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const {loadJsonFixture, loadFixtureBuffer} = require('../../util/loadFixture')
 const toRGridResource = require('../../util/toRGridResource')
 const createRGridDom = require('../../../src/sdk/createRGridDom')
@@ -20,7 +20,7 @@ describe('createRGridDOMAndGetResourceMapping', () => {
   let baseUrl
   let fut
   before(async () => {
-    server = await testServer()
+    server = await testServerInProcess()
     baseUrl = `http://localhost:${server.port}`
   })
   after(async () => {

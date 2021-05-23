@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.2.0 - 2021/5/23
+
+- add process utilities
+
 ## 1.1.3 - 2021/4/12
 
 - add utility types

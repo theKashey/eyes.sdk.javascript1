@@ -1,11 +1,10 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes, getTestInfo} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const assert = require('assert')
 const {Target, BatchInfo, MatchLevel} = require(cwd)
-const {getApiData} = require('../util/ApiAssertions')
 describe('TestEyesConfiguration', async () => {
   let testCases = []
   testCase(false, 'Test sequence', 'Test Sequence Name Env Var')
@@ -19,7 +18,7 @@ describe('TestEyesConfiguration', async () => {
 
   testCases.forEach(data => {
     it(`TestEyesConfiguration`, async () => {
-      let eyes = getEyes({vg: data.useVisualGrid})
+      let eyes = setupEyes({vg: data.useVisualGrid})
       let [driver, destroyDriver] = await spec.build({browser: 'chrome'})
       await spec.visit(driver, 'https://applitools.github.io/demo/TestPages/FramesTestPage/')
       let originalBatchSequence = process.env.APPLITOOLS_BATCH_SEQUENCE
@@ -67,7 +66,7 @@ describe('TestEyesConfiguration', async () => {
         await destroyDriver()
       }
 
-      let sessionResults = await getApiData(results)
+      let sessionResults = await getTestInfo(results)
       assert.ok(sessionResults, 'SessionResults')
 
       assert.deepStrictEqual(sessionResults.env.os, 'someHostOS', 'OS')

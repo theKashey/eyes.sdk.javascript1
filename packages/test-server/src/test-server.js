@@ -6,14 +6,8 @@ const morgan = require('morgan')
 const {resolve} = require('path')
 const cors = require('cors')
 
-function startTestServer(argv = {}) {
-  const {
-    staticPath = resolve('./test/fixtures'),
-    port = 0,
-    allowCors,
-    showLogs,
-    middlewareFile,
-  } = argv
+function testServer(argv = {}) {
+  const {staticPath = resolve('./test/fixtures'), port = 0, allowCors, showLogs, middlewareFile} = argv
 
   const app = express()
   app.use(cookieParser())
@@ -69,11 +63,7 @@ function startTestServer(argv = {}) {
 
       server.on('error', err => {
         if (err.code === 'EADDRINUSE') {
-          log(
-            `error: test server could not start at port ${
-              server.address().port
-            }: port is already in use.`,
-          )
+          log(`error: test server could not start at port ${server.address().port}: port is already in use.`)
         } else {
           log('error in test server:', err)
         }
@@ -83,24 +73,4 @@ function startTestServer(argv = {}) {
   })
 }
 
-if (require.main === module) {
-  const {argv} = require('yargs').option('hbData', {corece: JSON.stringify})
-  console.log('running test server', argv)
-  startTestServer(argv)
-    .then(({close, port}) => {
-      process.on('SIGTERM', () => {
-        close()
-      })
-      if (process.send) {
-        process.send({success: true, port})
-      }
-    })
-    .catch(err => {
-      if (process.send) {
-        process.send({success: false, err})
-      }
-      process.exit(1)
-    })
-}
-
-module.exports = startTestServer
+module.exports = testServer

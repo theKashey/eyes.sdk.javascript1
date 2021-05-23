@@ -27,7 +27,7 @@ describe('legacy api', () => {
 
   it('executeScript(script, ...args)', async () => {
     const args = [{a: 0}, [1, 2, 3], 0, 'str', true]
-    const result = await driver.executeScript('return arguments', ...args)
+    const result = await driver.executeScript('return Array.from(arguments)', ...args)
     assert.deepStrictEqual(result, args)
   })
 
@@ -35,10 +35,10 @@ describe('legacy api', () => {
     const mainDoc = await driver.executeScript('return document.documentElement')
     await driver.switchTo().frame(1)
     const frameDoc = await driver.executeScript('return document.documentElement')
-    assert.notDeepStrictEqual(frameDoc, mainDoc)
+    assert.ok(!(await spec.isEqualElements(browser, mainDoc, frameDoc)))
     await driver.switchTo().defaultContent()
     const defaultDoc = await driver.executeScript('return document.documentElement')
-    assert.deepStrictEqual(defaultDoc, mainDoc)
+    assert.ok(await spec.isEqualElements(browser, mainDoc, defaultDoc))
   })
 
   it('getCurrentUrl()', async () => {
@@ -46,7 +46,7 @@ describe('legacy api', () => {
   })
 
   it('getBrowserName()', async () => {
-    assert.strictEqual(await driver.getBrowserName(), 'chrome')
+    assert.strictEqual(await driver.getBrowserName(), browser.isDevTools ? 'Chrome Headless' : 'chrome')
   })
 
   it('element.getDriver()', async () => {

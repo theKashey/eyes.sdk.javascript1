@@ -7,13 +7,13 @@ const takeScreenshot = require('../../src/sdk/takeScreenshot')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const fetch = require('node-fetch')
 const {presult} = require('@applitools/functional-commons')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 
 describe('takeScreenshot e2e', () => {
   let server, browser, page
 
   before(async () => {
-    server = await testServer({port: 3459})
+    server = await testServerInProcess({port: 3459})
     browser = await puppeteer.launch()
     page = await browser.newPage()
   })

@@ -7,7 +7,7 @@ const makeGetAllResources = require('../../../src/sdk/getAllResources')
 const extractCssResources = require('../../../src/sdk/extractCssResources')
 const makeFetchResource = require('../../../src/sdk/fetchResource')
 const createResourceCache = require('../../../src/sdk/createResourceCache')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const testLogger = require('../../util/testLogger')
 const {loadFixtureBuffer} = require('../../util/loadFixture')
 const resourceType = require('../../../src/sdk/resourceType')
@@ -44,7 +44,7 @@ describe('getAllResources', () => {
   })
 
   it('works for absolute urls', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 
@@ -115,7 +115,7 @@ describe('getAllResources', () => {
   })
 
   it('works for svg urls', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 
@@ -204,7 +204,7 @@ describe('getAllResources', () => {
   })
 
   it('works for urls with long paths', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     closeServer = server.close
 
     const url = `long/path/to/something.js`
@@ -372,7 +372,7 @@ describe('getAllResources', () => {
   })
 
   it('handles uppercase urls', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     closeServer = server.close
     try {
       const url = `HTTP://LOCALHOST:${server.port}/imported2.css`
@@ -395,7 +395,7 @@ describe('getAllResources', () => {
   })
 
   it('gets resources from prefilled resources', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     closeServer = server.close
 
     const baseUrl = `http://localhost:${server.port}`
@@ -442,7 +442,7 @@ describe('getAllResources', () => {
   })
 
   it('doesnt process prefilled resources', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     closeServer = server.close
 
     const baseUrl = `http://localhost:${server.port}`
@@ -477,7 +477,7 @@ describe('getAllResources', () => {
 
   // TODO enable this
   it.skip('works for unknown content-type', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     closeServer = server.close
 
     const url = 'no-content-type'
@@ -574,7 +574,7 @@ describe('getAllResources', () => {
   })
 
   it('handles the case when the same resource appears both in resourceUrls and preResources', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const url = `${baseUrl}/smurfs.jpg`
     const preResources = {
@@ -590,7 +590,7 @@ describe('getAllResources', () => {
   })
 
   it('handles the case when the same resource appears both in preResources and as a dependency of another resourceUrl', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const url = `${baseUrl}/smurfs.jpg`
     const preResources = {
@@ -616,7 +616,7 @@ describe('getAllResources', () => {
   })
 
   it('handles the case when the same resource appears both in preResources and as a dependency of another preResource', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const jpgUrl = `${baseUrl}/smurfs.jpg`
     const cssName = 'single-resource.css'
@@ -636,7 +636,7 @@ describe('getAllResources', () => {
   })
 
   it('handles recursive reference inside a dependency', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const name = 'recursive.css'
     const url = `${baseUrl}/${name}`
@@ -656,7 +656,7 @@ describe('getAllResources', () => {
   })
 
   it('handles recursive reference inside a dependency from a preResource', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const name = 'recursive.css'
     const url = `${baseUrl}/${name}`
@@ -673,7 +673,7 @@ describe('getAllResources', () => {
   })
 
   it('handles mutually recursive references', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     const name1 = 'recursive-1.css'
     const url1 = `${baseUrl}/${name1}`
@@ -751,7 +751,7 @@ describe('getAllResources', () => {
   })
 
   it('handles resources with errorStatusCode (non-200 resources) from resourceUrls', async () => {
-    const server = await testServer()
+    const server = await testServerInProcess()
     const baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 

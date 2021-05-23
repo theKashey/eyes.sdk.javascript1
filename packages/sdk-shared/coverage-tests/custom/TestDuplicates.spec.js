@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const appName = 'Eyes Selenium SDK - Duplicates'
 
 describe.skip(appName, async () => {
@@ -14,7 +14,7 @@ describe.skip(appName, async () => {
   describe('CSS', async () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-      eyes = await getEyes({vg: true})
+      eyes = await setupEyes({vg: true})
     })
     it('TestDuplicatedIFrames', TestDuplicatedIFrames('TestDuplicatedIFrames'))
   })
@@ -22,7 +22,7 @@ describe.skip(appName, async () => {
   describe('SCROLL', async () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-      eyes = await getEyes()
+      eyes = await setupEyes()
     })
     it('TestDuplicatedIFrames', TestDuplicatedIFrames('TestDuplicatedIFrames_Scroll'))
   })
@@ -30,7 +30,7 @@ describe.skip(appName, async () => {
   describe.skip('VG', async () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-      eyes = await getEyes({vg: true})
+      eyes = await setupEyes({vg: true})
     })
     it('TestDuplicatedIFrames', TestDuplicatedIFrames('TestDuplicatedIFrames_VG'))
   })

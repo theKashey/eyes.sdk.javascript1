@@ -2,12 +2,12 @@
 const fs = require('fs')
 const path = require('path')
 const pickby = require('lodash.pickby')
-const {sh} = require('@applitools/sdk-shared/src/process-commons')
+const utils = require('@applitools/utils')
 const chalk = require('chalk')
 const {writeUnreleasedItemToChangelog} = require('../changelog')
 
 async function yarnInstall() {
-  await sh(`yarn install`)
+  await utils.process.sh(`yarn install`)
 }
 
 async function yarnUpgrade({folder, upgradeAll}) {
@@ -22,7 +22,7 @@ async function yarnUpgrade({folder, upgradeAll}) {
     const depsStr = Object.keys(depsToUpgrade).join(' ')
     const cmd = `yarn upgrade --latest ${depsStr}`
     console.log(chalk.cyan(cmd))
-    await sh(cmd)
+    await utils.process.sh(cmd)
 
     const newPkgJson = JSON.parse(fs.readFileSync(path.resolve(folder, 'package.json')))
     const upgradedDeps = findUpgradedDeps(dependencies, newPkgJson.dependencies)

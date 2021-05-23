@@ -1,7 +1,7 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {RectangleSize, Target, Region} = require(cwd)
 const appName = 'TestScrolling'
@@ -35,7 +35,7 @@ describe(appName, () => {
           driver,
           'https://applitools.github.io/demo/TestPages/MobileDemo/adaptive.html',
         )
-        eyes = getEyes({stitchMode: 'CSS'})
+        eyes = setupEyes({stitchMode: 'CSS'})
         await eyes.open(driver, appName, `TestWebAppScrolling`, {
           width: 360,
           height: 740,
@@ -83,7 +83,7 @@ describe(appName, () => {
           driver,
           'https://applitools.github.io/demo/TestPages/MobileDemo/AccessPayments/',
         )
-        eyes = getEyes({stitchMode: 'CSS'})
+        eyes = setupEyes({stitchMode: 'CSS'})
         await eyes.open(driver, appName, 'TestWebAppScrolling2', {width: 386, height: 512})
         await eyes.check('big page on mobile', Target.window().fully())
         await eyes.close()
@@ -111,7 +111,7 @@ describe(appName, () => {
       })
       try {
         await spec.visit(driver, 'https://www.applitools.com/customers')
-        eyes = getEyes()
+        eyes = setupEyes()
         eyes.setBranchName('default')
         await eyes.open(driver, appName, 'TestWebAppScrolling3', {width: 386, height: 512})
         let el = await spec.findElement(driver, 'main#site-main')

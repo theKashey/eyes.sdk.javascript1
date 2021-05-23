@@ -1,7 +1,7 @@
 'use strict'
 
 const {Eyes, BatchInfo, ConsoleLogHandler, Target} = require('../../index')
-const {getTestInfo} = require('@applitools/sdk-shared')
+const {getTestInfo} = require('@applitools/test-utils')
 const assert = require('assert')
 
 describe('TestVariantId', function() {

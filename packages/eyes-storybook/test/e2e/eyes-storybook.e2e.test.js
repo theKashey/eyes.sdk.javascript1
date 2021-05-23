@@ -1,8 +1,8 @@
 const {describe, it, before, after} = require('mocha');
 const {expect} = require('chai');
 const path = require('path');
-const testServer = require('@applitools/sdk-shared/src/run-test-server');
-const {sh} = require('@applitools/sdk-shared/src/process-commons');
+const {testServerInProcess} = require('@applitools/test-server');
+const utils = require('@applitools/utils');
 const {delay: psetTimeout, presult} = require('@applitools/functional-commons');
 const {version} = require('../../package.json');
 const snap = require('@applitools/snaptdout');
@@ -10,7 +10,7 @@ const snap = require('@applitools/snaptdout');
 describe('eyes-storybook', () => {
   let closeTestServer, showLogsOrig;
   before(async () => {
-    closeTestServer = (await testServer({port: 7272})).close;
+    closeTestServer = (await testServerInProcess({port: 7272})).close;
     showLogsOrig = process.env.APPLITOOLS_SHOW_LOGS;
     if (showLogsOrig) {
       console.warn(
@@ -27,7 +27,7 @@ describe('eyes-storybook', () => {
 
   it('renders test storybook', async () => {
     const [err, result] = await presult(
-      sh(
+      utils.process.sh(
         `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
           __dirname,
           'happy-config/applitools.config.js',
@@ -55,7 +55,7 @@ describe('eyes-storybook', () => {
 
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
-      sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
+      utils.process.sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
         spawnOptions: {stdio: 'pipe'},
       }),
     );
@@ -69,7 +69,7 @@ describe('eyes-storybook', () => {
 
   it('fails with proper message when failing to get stories because of navigation timeout', async () => {
     const promise = presult(
-      sh(`node ./bin/eyes-storybook --read-stories-timeout=10 -u http://localhost:9001`, {
+      utils.process.sh(`node ./bin/eyes-storybook --read-stories-timeout=10 -u http://localhost:9001`, {
         spawnOptions: {stdio: 'pipe'},
       }),
     );
@@ -85,7 +85,7 @@ describe('eyes-storybook', () => {
 
   it('fails with proper message when failing to get stories because storybook is loading too slowly', async () => {
     const promise = presult(
-      sh(
+      utils.process.sh(
         `node ./bin/eyes-storybook --read-stories-timeout=1000 -u http://localhost:7272/storybook-loading.html`,
         {
           spawnOptions: {stdio: 'pipe'},
@@ -102,7 +102,7 @@ describe('eyes-storybook', () => {
 
   it('renders multi browser versions', async () => {
     const [err, result] = await presult(
-      sh(
+      utils.process.sh(
         `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
           __dirname,
           'happy-config/single.config.js',

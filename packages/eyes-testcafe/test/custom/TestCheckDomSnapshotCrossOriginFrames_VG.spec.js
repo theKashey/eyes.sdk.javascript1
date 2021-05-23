@@ -1,6 +1,7 @@
 const cwd = process.cwd()
 const path = require('path')
-const {testSetup, testServer} = require('@applitools/sdk-shared')
+const {setupEyes} = require('@applitools/test-utils')
+const {testServer} = require('@applitools/test-server')
 let eyes, serverA, serverB
 
 fixture`CORS iframe support in vg`
@@ -19,7 +20,7 @@ fixture`CORS iframe support in vg`
       },
     })
     serverB = await testServer({port: 7374, staticPath})
-    eyes = testSetup.getEyes({vg: true})
+    eyes = setupEyes({vg: true})
   })
   .after(async () => {
     await serverA.close()

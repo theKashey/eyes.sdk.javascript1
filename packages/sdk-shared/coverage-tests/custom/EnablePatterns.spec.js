@@ -1,5 +1,5 @@
 // https://trello.com/c/QCK2xDlS
-const {testSetup, getTestInfo} = require('../..')
+const {setupEyes, getTestInfo} = require('@applitools/test-utils')
 const assert = require('assert')
 const path = require('path')
 const cwd = process.cwd()
@@ -15,7 +15,7 @@ describe('EnablePatterns', () => {
   })
   it('in config (classic)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
-    const eyes = testSetup.getEyes({vg: false})
+    const eyes = setupEyes({vg: false})
     const config = eyes.getConfiguration()
     config.setEnablePatterns(true)
     eyes.setConfiguration(config)
@@ -27,7 +27,7 @@ describe('EnablePatterns', () => {
   })
   it('in config (vg)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
-    const eyes = testSetup.getEyes({vg: true})
+    const eyes = setupEyes({vg: true})
     const config = eyes.getConfiguration()
     config.setEnablePatterns(true)
     eyes.setConfiguration(config)
@@ -39,7 +39,7 @@ describe('EnablePatterns', () => {
   })
   it('in check settings (classic)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
-    const eyes = testSetup.getEyes({vg: false})
+    const eyes = setupEyes({vg: false})
     await eyes.open(driver, 'eyes-testcafe', 'enablePatterns')
     await eyes.check({enablePatterns: true})
     const result = await eyes.close(false)
@@ -48,7 +48,7 @@ describe('EnablePatterns', () => {
   })
   it('in check settings (vg)', async () => {
     await spec.visit(driver, 'https://applitools.com/helloworld/')
-    const eyes = testSetup.getEyes({vg: true})
+    const eyes = setupEyes({vg: true})
     await eyes.open(driver, 'eyes-testcafe', 'enablePatterns')
     await eyes.check({enablePatterns: true})
     const result = await eyes.close(false)

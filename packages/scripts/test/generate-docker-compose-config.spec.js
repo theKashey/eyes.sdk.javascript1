@@ -1,5 +1,5 @@
 const assert = require('assert')
-const generateDockerComposeConfig = require('../src/generate-docker-compose-config')
+const generateDockerComposeConfig = require('../scripts/generate-docker-compose-config')
 
 describe('generate-docker-compose-config', () => {
   it('linux', () => {

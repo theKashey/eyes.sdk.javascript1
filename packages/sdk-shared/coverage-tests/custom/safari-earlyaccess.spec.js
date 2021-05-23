@@ -1,14 +1,14 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const {BrowserType} = require(cwd)
 
 describe('safari-earlyaccess', async () => {
   let driver, destroyDriver, eyes
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = getEyes({vg: true})
+    eyes = setupEyes({vg: true})
     let conf = eyes.getConfiguration()
     conf.setTestName('safari-earlyaccess')
     conf.setAppName(`SDK Coverage Tests`)

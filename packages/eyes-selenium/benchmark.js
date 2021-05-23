@@ -1,7 +1,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'src/spec-driver'))
-const {testSetup} = require('@applitools/sdk-shared')
+const {setupEyes} = require('@applitools/test-utils')
 const {VisualGridRunner} = require(cwd)
 
 const URLS = [
@@ -27,7 +27,7 @@ describe('Coverage Tests', () => {
 
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = testSetup.getEyes({
+    eyes = setupEyes({
       runner,
       configuration: {
         concurrentSessions: 10,

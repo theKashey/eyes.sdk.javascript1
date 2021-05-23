@@ -2,10 +2,10 @@
 
 const path = require('path')
 const cwd = process.cwd()
-const testServer = require('../../src/test-server')
+const {testServer} = require('@applitools/test-server')
 const {Target} = require(cwd)
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const adjustUrlToDocker = require('../util/adjust-url-to-docker')
 
 describe('TestVisualGridRefererHeader', () => {
@@ -39,7 +39,7 @@ describe('TestVisualGridRefererHeader', () => {
   it('send referer header', async () => {
     const url = adjustUrlToDocker('http://localhost:5555/cors.html')
     await spec.visit(driver, url)
-    const eyes = getEyes({vg: true})
+    const eyes = setupEyes({vg: true})
     await eyes.open(driver, 'VgFetch', ' VgFetch referer', {width: 800, height: 600})
     await eyes.check('referer', Target.window())
     await eyes.close()

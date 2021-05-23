@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const {Target} = require(cwd)
 
 describe.skip('Check Region, Chrome on Android', async () => {
@@ -10,7 +10,7 @@ describe.skip('Check Region, Chrome on Android', async () => {
   let driver
   before(async () => {
     driver = await spec.build({browser: 'chrome', device: 'Pixel 3 XL', remote: 'sauce'})
-    eyes = getEyes()
+    eyes = setupEyes()
   })
 
   after(async () => {

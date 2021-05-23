@@ -1,7 +1,7 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes, batch} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {
   ScreenOrientation,
@@ -26,7 +26,7 @@ describe('TestVGServerConfigs', () => {
 
   beforeEach(async () => {
     ;[webDriver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = await getEyes({vg: true})
+    eyes = await setupEyes({vg: true})
     runner = eyes.getRunner()
   })
 
@@ -36,7 +36,6 @@ describe('TestVGServerConfigs', () => {
 
   it(`TestVGDoubleCloseNoCheck`, async () => {
     const conf = eyes.getConfiguration()
-    conf.setBatch(batch)
     conf.setAppName('app')
     conf.setTestName('test')
     eyes.setConfiguration(conf)
@@ -123,7 +122,6 @@ describe('TestVGServerConfigs', () => {
 
   it.skip('TestVGChangeConfigAfterOpen', async () => {
     const conf = eyes.getConfiguration()
-    conf.setBatch(batch)
     conf.setAppName('app')
     conf.setTestName('js test')
 
@@ -220,7 +218,7 @@ describe('Miscellaneous VG tests', () => {
     const edgeWarning = chalk.yellow(edgeWarningText)
 
     try {
-      const eyes = getEyes({vg: true})
+      const eyes = setupEyes({vg: true})
       const configuration = eyes.getConfiguration()
       configuration.addBrowser(1000, 900, BrowserType.EDGE)
       configuration.addBrowser(1000, 900, BrowserType.FIREFOX)

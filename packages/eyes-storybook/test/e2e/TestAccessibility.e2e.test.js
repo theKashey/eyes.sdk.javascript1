@@ -5,7 +5,7 @@ const flatten = require('lodash.flatten');
 const {expect} = require('chai');
 const testStorybook = require('../util/testStorybook');
 const path = require('path');
-const testServer = require('@applitools/sdk-shared/src/run-test-server');
+const {testServerInProcess} = require('@applitools/test-server');
 const eyesStorybook = require('../../src/eyesStorybook');
 const generateConfig = require('../../src/generateConfig');
 const {configParams: externalConfigParams} = require('@applitools/visual-grid-client');
@@ -19,7 +19,7 @@ const snap = require('@applitools/snaptdout');
 describe('eyes-storybook accessibility', () => {
   let closeStorybook, closeTestServer;
   before(async () => {
-    const server = await testServer({port: 7272});
+    const server = await testServerInProcess({port: 7272});
     closeTestServer = server.close;
     closeStorybook = await testStorybook({
       port: 9001,

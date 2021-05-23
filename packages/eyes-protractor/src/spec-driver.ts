@@ -197,7 +197,7 @@ const browserOptionsNames: Record<string, string> = {
 }
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const {Builder, Runner} = require('protractor')
-  const {testSetup} = require('@applitools/sdk-shared')
+  const parseEnv = require('@applitools/test-utils/src/parse-env')
 
   const {
     browser = '',
@@ -209,7 +209,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     args = [],
     headless,
     logLevel = 'silent',
-  } = testSetup.Env({...env, legacy: true})
+  } = parseEnv({...env, legacy: true})
 
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {

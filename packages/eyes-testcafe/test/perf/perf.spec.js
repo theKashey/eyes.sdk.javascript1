@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const {Eyes, Logger, FileLogHandler, VisualGridRunner} = require('../../index')
-const {testServer} = require('@applitools/sdk-shared')
+const {testServer} = require('@applitools/test-server')
 const logDir = path.join(__dirname, 'out', Date.now().toString())
 const NUMBER_OF_TESTS = 5
 const NUMBER_OF_APP_RESOURCES = 10

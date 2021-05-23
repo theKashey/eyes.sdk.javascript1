@@ -1,6 +1,6 @@
 // https://trello.com/c/QCK2xDlS
-const {testSetup, getTestInfo} = require('@applitools/sdk-shared')
-const eyes = testSetup.getEyes({vg: true})
+const {setupEyes, getTestInfo} = require('@applitools/test-utils')
+const eyes = setupEyes({vg: true})
 const assert = require('assert')
 
 fixture`Hello world`.page('https://applitools.com/helloworld/')

@@ -3,7 +3,7 @@ const cwd = process.cwd()
 const path = require('path')
 const assert = require('assert')
 const {Target, BrowserType} = require(process.cwd())
-const {getApiData} = require('../../util/ApiAssertions')
+const {getTestInfo} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 
 function testSetup(getCheckSettings, validateResults) {
@@ -49,7 +49,7 @@ async function validateVG(eyes) {
     if (!testResults) {
       assert.fail(result.getException())
     }
-    const data = await getApiData(testResults)
+    const data = await getTestInfo(testResults)
     assert.deepStrictEqual(
       data.actualAppOutput.length,
       2,
@@ -80,7 +80,7 @@ async function validateVG2(eyes) {
   let container = await eyes.getRunner().getAllTestResults(false)
   let results = container.getAllResults()
   let result = results[0]
-  let data = await getApiData(result.getTestResults())
+  let data = await getTestInfo(result.getTestResults())
   assert.deepStrictEqual(
     data.actualAppOutput.length,
     2,

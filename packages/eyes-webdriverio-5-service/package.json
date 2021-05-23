@@ -46,7 +46,7 @@
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
-    "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "prepublish:setup": "yarn docker:setup"
   },

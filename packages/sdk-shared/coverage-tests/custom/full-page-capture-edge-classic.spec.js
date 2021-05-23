@@ -1,7 +1,7 @@
 // re: https://trello.com/c/IRsmmbK5
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {By, Target} = require(cwd)
 
@@ -13,7 +13,7 @@ describe.skip('Coverage Tests', async () => {
 
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'edge-18', remote: 'sauce'})
-      eyes = getEyes({stitchMode: 'CSS'})
+      eyes = setupEyes({stitchMode: 'CSS'})
       eyes.setMatchTimeout(0)
     })
 

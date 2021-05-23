@@ -6,7 +6,7 @@ const {expect} = chai
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const makeGlobalState = require('../../src/sdk/globalState')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const {promisify: p} = require('util')
 const psetTimeout = p(setTimeout)
 const {presult} = require('@applitools/functional-commons')
@@ -18,7 +18,7 @@ describe('closeEyes', () => {
   const appName = 'some app name'
 
   before(async () => {
-    const server = await testServer({port: 4456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServerInProcess({port: 4456}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
   })

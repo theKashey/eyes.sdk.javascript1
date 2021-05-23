@@ -186,7 +186,7 @@ const browserOptionsNames: Record<string, string> = {
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const webdriverio = require('webdriverio')
   const chromedriver = require('chromedriver')
-  const {testSetup} = require('@applitools/sdk-shared')
+  const parseEnv = require('@applitools/test-utils/src/parse-env')
   const {
     browser = '',
     capabilities,
@@ -197,7 +197,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     args = [],
     headless,
     logLevel = 'silent',
-  } = testSetup.Env({...env, legacy: true})
+  } = parseEnv({...env, legacy: true})
 
   const options = {
     desiredCapabilities: {browserName: browser, ...capabilities},

@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const assert = require('assert')
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Target} = require(cwd)
 
@@ -11,7 +11,7 @@ describe('TestCounts', () => {
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
     await spec.visit(driver, 'https://applitools.com/helloworld')
-    eyes = await getEyes({vg: true})
+    eyes = await setupEyes({vg: true})
     runner = eyes.getRunner()
     await eyes.setSendDom(false)
   })

@@ -1,7 +1,7 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const fs = require('fs')
 const {promisify} = require('util')
@@ -13,7 +13,7 @@ describe.skip('Coverage tests', () => {
 
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-    eyes = await getEyes({stitchMode: 'CSS'})
+    eyes = await setupEyes({stitchMode: 'CSS'})
   })
 
   afterEach(async () => {

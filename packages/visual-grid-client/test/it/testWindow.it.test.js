@@ -3,7 +3,7 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const createFakeWrapper = require('../util/createFakeWrapper')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const {loadJsonFixture} = require('../util/loadFixture')
 const nock = require('nock')
 const {ptimeoutWithError, presult} = require('@applitools/functional-commons')
@@ -16,7 +16,7 @@ describe('testWindow', () => {
   const testName = 'some test name'
 
   before(async () => {
-    const server = await testServer({port: 3453}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServerInProcess({port: 3453}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
   })

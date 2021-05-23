@@ -2,7 +2,7 @@ const {describe, it, before, after} = require('mocha');
 const testStorybook = require('../util/testStorybook');
 const path = require('path');
 const {delay: _psetTimeout, presult} = require('@applitools/functional-commons');
-const {sh} = require('@applitools/sdk-shared/src/process-commons');
+const utils = require('@applitools/utils');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
@@ -19,7 +19,7 @@ describe('eyes-storybook', () => {
 
   it('renders with layout breakpoints in config', async () => {
     const [err, result] = await presult(
-      sh(
+      utils.process.sh(
         `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
           __dirname,
           'happy-config/layout-breakpoints-global.config.js',
@@ -44,7 +44,7 @@ describe('eyes-storybook', () => {
 
   it('renders with layout breakpoints in story parameters', async () => {
     const [err, result] = await presult(
-      sh(
+      utils.process.sh(
         `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
           __dirname,
           'happy-config/layout-breakpoints-local.config.js',

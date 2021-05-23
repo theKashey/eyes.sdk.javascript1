@@ -4,7 +4,7 @@ const {describe, it, before, after, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const puppeteer = require('puppeteer')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
-const testServer = require('@applitools/sdk-shared/src/run-test-server')
+const {testServerInProcess} = require('@applitools/test-server')
 const {presult} = require('@applitools/functional-commons')
 const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
@@ -31,7 +31,7 @@ describe('testWindow', () => {
     if (!apiKey) {
       throw new Error('APPLITOOLS_API_KEY env variable is not defined')
     }
-    const server = await testServer({port: 3455}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
+    const server = await testServerInProcess({port: 3455}) // TODO fixed port avoids 'need-more-resources' for dom. Is this desired? should both paths be tested?
     baseUrl = `http://localhost:${server.port}`
     closeServer = server.close
 

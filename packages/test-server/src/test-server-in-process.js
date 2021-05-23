@@ -1,9 +1,7 @@
-'use strict'
-
-const {executeAndControlProcess} = require('./process-commons')
 const path = require('path')
+const utils = require('@applitools/utils')
 
-async function runTestServer(args = {}) {
+async function testServerInProcess(args = {}) {
   let resolve, reject
   const ret = new Promise((r, j) => {
     resolve = r
@@ -13,12 +11,11 @@ async function runTestServer(args = {}) {
   const spawnArgs = [
     filepath,
     ...Object.entries(args).reduce(
-      (acc, [key, value]) =>
-        acc.concat([`--${key}`, typeof value === 'object' ? JSON.stringify(value) : value]),
+      (acc, [key, value]) => acc.concat([`--${key}`, typeof value === 'object' ? JSON.stringify(value) : value]),
       [],
     ),
   ]
-  const {subProcess, exitPromise} = executeAndControlProcess('node', spawnArgs, {
+  const {subProcess, exitPromise} = utils.process.executeAndControlProcess('node', spawnArgs, {
     spawnOptions: {stdio: ['pipe', 'pipe', 'pipe', 'ipc']},
   })
 
@@ -37,4 +34,4 @@ async function runTestServer(args = {}) {
   return ret
 }
 
-module.exports = runTestServer
+module.exports = testServerInProcess

@@ -2,7 +2,7 @@
 const cwd = process.cwd()
 const path = require('path')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const {Target} = require(cwd)
 
 describe.skip('calculating scrollRootElement offset errors on IE11', async () => {
@@ -11,7 +11,7 @@ describe.skip('calculating scrollRootElement offset errors on IE11', async () =>
 
   before(async () => {
     browser = await spec.build({browser: 'ie-11', remote: 'sauce'})
-    eyes = getEyes()
+    eyes = setupEyes()
   })
 
   after(async () => {

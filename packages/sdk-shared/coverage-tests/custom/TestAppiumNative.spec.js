@@ -1,7 +1,7 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {Target, Region} = require(cwd)
 
@@ -26,7 +26,7 @@ describe.skip('TestAppiumNative (@native @mobile)', () => {
       },
     })
 
-    eyes = new getEyes()
+    eyes = new setupEyes()
     await eyes.open(driver, 'Mobile Native Tests', 'Android Native App 1')
     await eyes.check('Contact list', Target.window().ignore(new Region(0, 0, 768, 48)))
     await eyes.close()
@@ -47,7 +47,7 @@ describe.skip('TestAppiumNative (@native @mobile)', () => {
         newCommandTimeout: 600,
       },
     })
-    eyes = getEyes()
+    eyes = setupEyes()
     await eyes.open(driver, 'Mobile Native Tests', 'Android Native App 2')
 
     let scrollableElement = await driver.findElement(
@@ -73,7 +73,7 @@ describe.skip('TestAppiumNative (@native @mobile)', () => {
         noReset: true,
       },
     })
-    eyes = getEyes()
+    eyes = setupEyes()
     await eyes.open(driver, 'JS test', 'Checking eyes settings in appium tests')
     await eyes.check(
       'Check',

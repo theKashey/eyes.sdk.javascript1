@@ -1,7 +1,7 @@
 'use strict'
 const cwd = process.cwd()
 const path = require('path')
-const {getEyes} = require('../../../src/test-setup')
+const {setupEyes} = require('@applitools/test-utils')
 const spec = require(path.resolve(cwd, 'dist/spec-driver'))
 const {BrowserType, MatchLevel} = require(cwd)
 const {testSetup, getCheckSettingsWithHook, validateVG} = require('./EyesDifferentRunners')
@@ -14,7 +14,7 @@ describe('TestEyesDifferentRunners VG with hooks', () => {
 
   beforeEach(async function() {
     ;[this.webDriver, this.destroyDriver] = await spec.build({browser: 'chrome'})
-    this.eyes = await getEyes({vg: true})
+    this.eyes = await setupEyes({vg: true})
     let conf = this.eyes.getConfiguration()
     conf.setTestName(`Top Sites - ${this.currentTest.title}`)
     conf.setAppName(`Top Sites`)

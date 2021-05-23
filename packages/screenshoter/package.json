@@ -34,7 +34,7 @@
     "test": "yarn test:it && yarn test:coverage",
     "test:it": "mocha --no-timeouts './test/it/*.spec.js'",
     "test:coverage": "mocha --no-timeouts './test/coverage/*.spec.js'",
-    "docker:setup": "node ../sdk-shared/src/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "setup": "yarn docker:setup",
     "deps": "bongo deps",
