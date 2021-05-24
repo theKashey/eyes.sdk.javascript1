@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 3.0.8 - 2021/5/24
+
+- updated to @applitools/utils@1.2.0 (from 1.1.3)
+
 ## 3.0.7 - 2021/5/13
 
 fixed image cropping algorithm to not copy data into a heap
