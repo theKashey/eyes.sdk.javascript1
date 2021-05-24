@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.1 - 2021/5/24
+
 - fix filename in logs config
 
 ## 1.0.0 - 2021/5/23
