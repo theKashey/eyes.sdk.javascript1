@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.3 - 2021/5/24
+
 - fix path to the cli to run a process
 
 ## 1.0.2 - 2021/5/23
