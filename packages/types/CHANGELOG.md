@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.1 - 2021/5/24
+
 - fix `logs` type in `Config.EyesConfig`
 - add `Options.TextRegion` type to return from `Eyes#extractTextRegions`
 - replace mapper types with `Record` in return values of `Eyes#extractTextRegions` and `Eyes#locate`
