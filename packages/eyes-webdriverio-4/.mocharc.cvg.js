@@ -1,3 +1,5 @@
+const {mochaGrep} = require('@applitools/test-utils')
+
 const tags = [
   'headfull',
   'webdriver',
@@ -10,7 +12,6 @@ const tags = [
   'edge',
   'safari',
 ]
-const grep = process.env.MOCHA_GREP
 
 module.exports = {
   spec: [
@@ -22,5 +23,5 @@ module.exports = {
   timeout: 0,
   reporter: 'spec-xunit-file',
   require: ['@applitools/test-utils/mocha-hooks/docker.js'],
-  grep: new RegExp(`^${grep ? `.*?${grep}.*?` : '[^(]*?'}(\\((?:@(${tags.join('|')}) ?)+\\))?$`, 'i'),
+  grep: mochaGrep({tags})
 }

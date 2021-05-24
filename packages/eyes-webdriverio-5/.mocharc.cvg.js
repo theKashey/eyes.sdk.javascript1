@@ -1,3 +1,5 @@
+const {mochaGrep} = require('@applitools/test-utils')
+
 const tags = {
   wd: [
     'headfull',
@@ -14,7 +16,6 @@ const tags = {
   cdp: ['chrome']
 }
 const protocol = process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL in tags ? process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL : 'wd'
-const grep = process.env.MOCHA_GREP
 
 module.exports = {
   spec: [
@@ -26,5 +27,5 @@ module.exports = {
   timeout: 0,
   reporter: 'spec-xunit-file',
   require: ['@applitools/test-utils/mocha-hooks/docker.js'],
-  grep: new RegExp(`^${grep ? `.*?${grep}.*?` : '[^(]*?'}(\\((?:@(${tags[protocol].join('|')}) ?)+\\))?$`, 'i'),
+  grep: mochaGrep({tags: tags[protocol]}),
 }
