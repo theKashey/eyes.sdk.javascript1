@@ -76,7 +76,7 @@ describe('openEyes', () => {
     }
   })
 
-  it.only('passes with correct screenshot', async () => {
+  it('passes with correct screenshot', async () => {
     await page.goto(`${baseUrl}/test.html`)
 
     const {cdt, url, resourceContents, resourceUrls} = await processPage()
