@@ -90,6 +90,8 @@ async function link({
         ),
       )
       console.error(result.error)
+      console.error('STDOUT:', result.stdout)
+      console.error('STDERR:', result.stderr)
       process.exit(1)
     }
     console.log(
@@ -114,14 +116,14 @@ async function link({
         const commands = ['yarn link']
         if (runInstall) commands.push('yarn install')
         if (runBuild && dependency.hasBuild) commands.push('yarn build')
-        exec(commands.join(' && '), {cwd: dependency.path}, async error => {
-          resolve([{target, dependency, error}, ...nestedResults])
+        exec(commands.join(' && '), {cwd: dependency.path}, async (error, stdout, stderr) => {
+          resolve([{target, dependency, error, stdout, stderr}, ...nestedResults])
         })
       })
       if (!result.error) {
         result = await new Promise(resolve => {
-          exec(`yarn link ${dependency.name}`, {cwd: target.path}, error => {
-            resolve({target, dependency, error})
+          exec(`yarn link ${dependency.name}`, {cwd: target.path}, (error, stdout, stderr) => {
+            resolve({target, dependency, error, stdout, stderr})
           })
         })
       }

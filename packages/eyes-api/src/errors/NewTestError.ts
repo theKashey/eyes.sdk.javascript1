@@ -1,8 +1,8 @@
 import * as utils from '@applitools/utils'
-import TestFailedError from './TestFailedError'
+import {TestFailedError} from './TestFailedError'
 import {TestResults} from '../output/TestResults'
 
-export default class NewTestError extends TestFailedError {
+export class NewTestError extends TestFailedError {
   constructor(message: string, results?: TestResults)
   constructor(results: TestResults)
   constructor(message: string | TestResults, results?: TestResults) {

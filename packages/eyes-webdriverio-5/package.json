@@ -57,7 +57,7 @@
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml -f packages='wdio wdio+cdp wdio@6 wdio@5' -f links='eyes-sdk-core eyes-api utils sdk-shared visual-grid-client' -f linking-depth='1'",
+    "gh:test": "gh workflow run test.yml -f packages='wdio wdio+cdp wdio@6 wdio@5' -f links='eyes-sdk-core eyes-api types utils sdk-shared visual-grid-client' -f linking-depth='1'",
     "gh:publish": "gh workflow run publish.yml -f packages='wdio'",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",

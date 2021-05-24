@@ -58,6 +58,6 @@ export class RectangleSizeData implements Required<RectangleSize> {
 
   /** @internal */
   toString() {
-    return utils.general.toString(this)
+    return `${this.width}x${this.height}`
   }
 }

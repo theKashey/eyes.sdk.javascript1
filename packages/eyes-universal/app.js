@@ -5,7 +5,8 @@ const {argv} = yargs
   .example([
     ['$ eyes-universal', 'Run Eyes Universal server on default port (2107)'],
     ['$ eyes-universal --port 8080', 'Run Eyes Universal server on port 8080'],
-    ['$ eyes-universal --no-singleton', 'Run Eyes Universal server in non-singleton mode'],
+    ['$ eyes-universal --no-singleton', 'Run Eyes Universal server on a non-singleton mode'],
+    ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
   ])
   .option('port', {
     description: 'run server on a specific port.',
@@ -15,10 +16,17 @@ const {argv} = yargs
   })
   .option('singleton', {
     description:
-      'run server on a singleton mode. It will prevent server to start in case the same server is already started.',
+      'runs server on a singleton mode. It will prevent the server to start in case the same server is already started.',
     alias: 's',
     type: 'boolean',
     default: true,
+  })
+  .option('lazy', {
+    description:
+      'runs server on a lazy mode. It will not try to find a free port if the required one is already taken.',
+    alias: 'l',
+    type: 'boolean',
+    default: false,
   })
   .option('idle-timeout', {
     description: 'time in minutes for server to stay responsible in case of idle.',

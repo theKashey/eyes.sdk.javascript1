@@ -1,6 +1,6 @@
 import * as utils from '@applitools/utils'
-import AccessibilityRegionType from '../enums/AccessibilityRegionType'
-import MatchLevel from '../enums/MatchLevel'
+import {AccessibilityRegionType, AccessibilityRegionTypeLiteral} from '../enums/AccessibilityRegionType'
+import {MatchLevel, MatchLevelLiteral} from '../enums/MatchLevel'
 import {Region} from './Region'
 
 type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
@@ -24,10 +24,10 @@ type FloatingRegionReference<TElement, TSelector> = {
 
 type AccessibilityRegionReference<TElement, TSelector> = {
   region: RegionReference<TElement, TSelector>
-  type?: AccessibilityRegionType
+  type?: AccessibilityRegionTypeLiteral
 }
 
-type CheckSettingsSpec<TElement, TSelector> = {
+type CheckSettingsSpec<TElement = unknown, TSelector = unknown> = {
   isElement(value: any): value is TElement
   isSelector(value: any): value is TSelector
 }
@@ -38,7 +38,7 @@ export type CheckSettings<TElement, TSelector> = {
   frames?: (ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>)[]
   scrollRootElement?: ElementReference<TElement, TSelector>
   fully?: boolean
-  matchLevel?: MatchLevel
+  matchLevel?: MatchLevelLiteral
   useDom?: boolean
   sendDom?: boolean
   enablePatterns?: boolean
@@ -83,7 +83,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return new this().frame(contextOrFrame, scrollRootElement)
   }
 
-  protected readonly _spec: CheckSettingsSpec<TElement, TSelector>
+  protected static readonly _spec: CheckSettingsSpec
+  protected get _spec(): CheckSettingsSpec<TElement, TSelector> {
+    return (this.constructor as typeof CheckSettingsFluent)._spec as CheckSettingsSpec<TElement, TSelector>
+  }
 
   private _settings: CheckSettings<TElement, TSelector> = {}
 
@@ -119,7 +122,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     }
     if (settings.scrollRootElement) this.scrollRootElement(settings.scrollRootElement)
     if (!utils.types.isNull(settings.fully)) this.fully(settings.fully)
-    if (settings.matchLevel) this.matchLevel(settings.matchLevel)
+    if (settings.matchLevel) this.matchLevel(settings.matchLevel as MatchLevel)
     if (!utils.types.isNull(settings.useDom)) this.useDom(settings.useDom)
     if (!utils.types.isNull(settings.sendDom)) this.sendDom(settings.sendDom)
     if (!utils.types.isNull(settings.enablePatterns)) this.enablePatterns(settings.enablePatterns)
@@ -265,10 +268,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     utils.guard.custom(floatingRegion.region, value => this._isRegionReference(value), {
       name: 'region',
     })
-    utils.guard.isNumber(floatingRegion.maxUpOffset, {name: 'region'})
-    utils.guard.isNumber(floatingRegion.maxDownOffset, {name: 'region'})
-    utils.guard.isNumber(floatingRegion.maxLeftOffset, {name: 'region'})
-    utils.guard.isNumber(floatingRegion.maxRightOffset, {name: 'region'})
+    utils.guard.isNumber(floatingRegion.maxUpOffset, {name: 'maxUpOffset'})
+    utils.guard.isNumber(floatingRegion.maxDownOffset, {name: 'maxDownOffset'})
+    utils.guard.isNumber(floatingRegion.maxLeftOffset, {name: 'maxLeftOffset'})
+    utils.guard.isNumber(floatingRegion.maxRightOffset, {name: 'maxRightOffset'})
     if (!this._settings.floatingRegions) this._settings.floatingRegions = []
     this._settings.floatingRegions.push(floatingRegion)
     return this

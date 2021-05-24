@@ -1,16 +1,17 @@
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
-import TestResultsStatus from '../enums/TestResultsStatus'
+import {TestResultsStatus, TestResultsStatusLiteral} from '../enums/TestResultsStatus'
 import {RectangleSize, RectangleSizeData} from '../input/RectangleSize'
 import {TestAccessibilityStatus} from './TestAccessibilityStatus'
 import {SessionUrls, SessionUrlsData} from './SessionUrls'
 import {StepInfo, StepInfoData} from './StepInfo'
 
 export type TestResults = {
-  readonly id?: string
+  readonly testId?: string
   readonly name?: string
   readonly secretToken?: string
-  readonly status?: TestResultsStatus
+  readonly status?: TestResultsStatusLiteral
   readonly appName?: string
   readonly batchId?: string
   readonly batchName?: string
@@ -41,24 +42,27 @@ export type TestResults = {
 
 export class TestResultsData implements Required<TestResults> {
   private _results: Mutable<TestResults> = {} as any
-  private readonly _deleteTestResults: (result: TestResults) => Promise<void>
+  private readonly _deleteTest: (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>
 
   /** @internal */
-  constructor(results?: TestResults, deleteTestResults?: (result: TestResults) => Promise<void>) {
-    this._deleteTestResults = deleteTestResults
+  constructor(
+    results?: types.Results.TestResult,
+    deleteTest?: (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>,
+  ) {
+    this._deleteTest = deleteTest
     if (!results) return this
     this._results = results instanceof TestResultsData ? results.toJSON() : results
   }
 
-  get id(): string {
-    return this._results.id
+  get testId(): string {
+    return this._results.testId
   }
   getId(): string {
-    return this.id
+    return this.testId
   }
   /** @deprecated */
   setId(id: string) {
-    this._results.id = id
+    this._results.testId = id
   }
 
   get name(): string {
@@ -83,11 +87,11 @@ export class TestResultsData implements Required<TestResults> {
     this._results.secretToken = secretToken
   }
 
-  get status(): TestResultsStatus {
+  get status(): TestResultsStatusLiteral {
     return this._results.status
   }
   getStatus(): TestResultsStatus {
-    return this.status
+    return this.status as TestResultsStatus
   }
   /** @deprecated */
   setStatus(status: TestResultsStatus) {
@@ -385,8 +389,8 @@ export class TestResultsData implements Required<TestResults> {
   }
 
   async delete(): Promise<void> {
-    if (!this._deleteTestResults) return
-    return this._deleteTestResults(this._results)
+    if (!this._deleteTest) return
+    return this._deleteTest({testId: this.testId, batchId: this.batchId, secretToken: this.secretToken})
   }
   /** @deprecated */
   async deleteSession(): Promise<void> {

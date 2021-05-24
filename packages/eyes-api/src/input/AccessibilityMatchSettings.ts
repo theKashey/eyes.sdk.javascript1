@@ -1,29 +1,32 @@
 import * as utils from '@applitools/utils'
-import AccessibilityRegionType from '../enums/AccessibilityRegionType'
+import {AccessibilityRegionType, AccessibilityRegionTypeLiteral} from '../enums/AccessibilityRegionType'
 import {Region, RegionData} from './Region'
 
 export type AccessibilityMatchSettings = {
   region: Region
-  type?: AccessibilityRegionType
+  type?: AccessibilityRegionTypeLiteral
 }
 
 export class AccessibilityMatchSettingsData implements Required<AccessibilityMatchSettings> {
   private _settings: AccessibilityMatchSettings = {} as any
 
   constructor(settings: AccessibilityMatchSettings)
+  constructor(region: Region)
   constructor(x: number, y: number, width: number, height: number, type?: AccessibilityRegionType)
   constructor(
-    settingsOrX: AccessibilityMatchSettings | number,
+    settingsOrRegionOrX: AccessibilityMatchSettings | Region | number,
     y?: number,
     width?: number,
     height?: number,
     type?: AccessibilityRegionType,
   ) {
-    if (utils.types.isNumber(settingsOrX)) {
-      return new AccessibilityMatchSettingsData({region: {x: settingsOrX, y, width, height}, type})
+    if (utils.types.isNumber(settingsOrRegionOrX)) {
+      return new AccessibilityMatchSettingsData({region: {x: settingsOrRegionOrX, y, width, height}, type})
+    } else if (!utils.types.has(settingsOrRegionOrX, 'region')) {
+      return new AccessibilityMatchSettingsData({region: settingsOrRegionOrX})
     }
-    this.region = settingsOrX.region
-    this.type = settingsOrX.type
+    this.region = settingsOrRegionOrX.region
+    this.type = settingsOrRegionOrX.type
   }
 
   get region(): Region {
@@ -64,15 +67,15 @@ export class AccessibilityMatchSettingsData implements Required<AccessibilityMat
     this.region.height = height
   }
 
-  get type(): AccessibilityRegionType {
+  get type(): AccessibilityRegionTypeLiteral {
     return this._settings.type
   }
-  set type(type: AccessibilityRegionType) {
+  set type(type: AccessibilityRegionTypeLiteral) {
     utils.guard.isEnumValue(type, AccessibilityRegionType, {name: 'type', strict: false})
     this._settings.type = type
   }
   getType(): AccessibilityRegionType {
-    return this.type
+    return this.type as AccessibilityRegionType
   }
   setType(type: AccessibilityRegionType) {
     this.type = type

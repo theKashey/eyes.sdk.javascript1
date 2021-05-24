@@ -4,14 +4,21 @@ const Configuration = require('../config/Configuration')
 const TestResults = require('../TestResults')
 
 function makeDeleteTestResults() {
-  return async function deleteTestResults({results, serverUrl, apiKey, proxy}) {
+  return async function deleteTestResults({
+    testId,
+    batchId,
+    secretToken,
+    serverUrl,
+    apiKey,
+    proxy,
+  }) {
     const serverConnector = new ServerConnector({
       logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
       configuration: new Configuration({serverUrl, apiKey, proxy}),
       getAgentId: () => '',
     })
 
-    await serverConnector.deleteSession(new TestResults(results))
+    await serverConnector.deleteSession(new TestResults({id: testId, batchId, secretToken}))
   }
 }
 

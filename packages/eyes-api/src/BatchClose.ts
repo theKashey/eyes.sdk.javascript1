@@ -26,7 +26,10 @@ export function closeBatch(spec: BatchCloseSpec): (options: BatchCloseOptions) =
 
 export class BatchClose {
   protected static readonly _spec: BatchCloseSpec
-  protected readonly _spec: BatchCloseSpec
+  protected get _spec(): BatchCloseSpec {
+    return (this.constructor as typeof BatchClose)._spec
+  }
+
   private _options: BatchCloseOptions = {batchIds: null}
 
   static async close(options: BatchCloseOptions): Promise<void> {

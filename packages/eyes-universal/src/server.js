@@ -18,7 +18,7 @@ async function isHandshakable(port) {
   })
 }
 
-async function makeServer({port = 2107, singleton = true} = {}) {
+async function makeServer({port = 2107, singleton = true, lazy = false} = {}) {
   const server = new http.Server()
   server.on('request', (request, response) => {
     if (request.url === '/handshake') {
@@ -41,7 +41,7 @@ async function makeServer({port = 2107, singleton = true} = {}) {
     })
 
     server.on('error', async err => {
-      if (err.code === 'EADDRINUSE') {
+      if (!lazy && err.code === 'EADDRINUSE') {
         if (singleton && (await isHandshakable(port))) {
           return resolve({port})
         } else {

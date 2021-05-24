@@ -27,7 +27,7 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, ...con
       cwd,
       typeof saveLogs === 'string' ? saveLogs : `./logs/${new Date().toISOString()}.log`,
     )
-    configuration.logs = {show: true, handler: {type: 'file', path: logsPath}}
+    configuration.logs = {type: 'file', filename: logsPath}
   }
 
   if (process.env.APPLITOOLS_SAVE_DEBUG_SCREENSHOTS || saveDebugScreenshots) {

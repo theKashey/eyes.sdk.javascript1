@@ -32,6 +32,26 @@ jobs:
           packages: ${{github.event.inputs.packages}}
           release-version: ${{github.event.inputs.version}}
 
+  types:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).types.package}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).types.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).types.releaseVersion}}
   utils:
     needs: setup
     if: ${{fromJSON(needs.setup.outputs.packages).utils}}

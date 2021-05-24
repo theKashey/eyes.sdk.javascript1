@@ -1,13 +1,13 @@
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
-import * as logger from '@applitools/logger'
-import SessionType from './enums/SessionType'
-import StitchMode from './enums/StitchMode'
-import MatchLevel from './enums/MatchLevel'
-import TestResultsStatus from './enums/TestResultsStatus'
-import EyesError from './errors/EyesError'
-import NewTestError from './errors/NewTestError'
-import DiffsFoundError from './errors/DiffsFoundError'
-import TestFailedError from './errors/TestFailedError'
+import {SessionTypeLiteral, SessionType} from './enums/SessionType'
+import {StitchMode} from './enums/StitchMode'
+import {MatchLevel} from './enums/MatchLevel'
+import {TestResultsStatus} from './enums/TestResultsStatus'
+import {EyesError} from './errors/EyesError'
+import {NewTestError} from './errors/NewTestError'
+import {DiffsFoundError} from './errors/DiffsFoundError'
+import {TestFailedError} from './errors/TestFailedError'
 import {CheckSettings, CheckSettingsFluent} from './input/CheckSettings'
 import {OCRSettings} from './input/OCRSettings'
 import {VisualLocatorSettings} from './input/VisualLocatorSettings'
@@ -20,66 +20,32 @@ import {OCRRegion} from './input/OCRRegion'
 import {ImageRotation, ImageRotationData} from './input/ImageRotation'
 import {CutProviderData} from './input/CutProvider'
 import {LogHandlerData, FileLogHandlerData, ConsoleLogHandlerData, NullLogHandlerData} from './input/LogHandler'
-import {MatchResult, MatchResultData} from './output/MatchResult'
+import {TextRegion} from './output/TextRegion'
+import {MatchResultData} from './output/MatchResult'
 import {TestResults, TestResultsData} from './output/TestResults'
-import {TestResultsSummary} from './output/TestResultsSummary'
 import {ValidationInfo} from './output/ValidationInfo'
 import {ValidationResult} from './output/ValidationResult'
 import {SessionEventHandler, SessionEventHandlers, RemoteSessionEventHandler} from './SessionEventHandlers'
-import {RunnerConfiguration, EyesRunner, ClassicRunner} from './Runners'
+import {EyesRunner, ClassicRunner} from './Runners'
 import {Logger} from './Logger'
 
-type EyesCommands<TElement = unknown, TSelector = unknown> = {
-  check(options: {
-    settings?: CheckSettings<TElement, TSelector>
-    config?: Configuration<TElement, TSelector>
-  }): Promise<MatchResult>
-  locate<TLocator extends string>(options: {
-    settings: VisualLocatorSettings<TLocator>
-    config?: Configuration<TElement, TSelector>
-  }): Promise<{[key in TLocator]: Region[]}>
-  extractTextRegions<TPattern extends string>(options: {
-    settings: OCRSettings<TPattern>
-    config?: Configuration<TElement, TSelector>
-  }): Promise<{[key in TPattern]: string[]}>
-  extractText(options: {
-    regions: OCRRegion<TElement, TSelector>[]
-    config?: Configuration<TElement, TSelector>
-  }): Promise<string[]>
-  close(): Promise<TestResults>
-  abort(): Promise<TestResults>
-}
-
-type EyesController<TDriver = unknown, TElement = unknown, TSelector = unknown> = {
-  open: (options: {
-    driver: TDriver
-    config?: Configuration<TElement, TSelector>
-    logger?: logger.Logger
-    on?: (event: string, data?: Record<string, any>) => any
-  }) => Promise<EyesCommands<TElement, TSelector>>
-  getResults: () => Promise<TestResultsSummary>
-}
-
-type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = {
+type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = types.Core<TDriver, TElement, TSelector> & {
   isDriver(value: any): value is TDriver
   isElement(value: any): value is TElement
   isSelector(value: any): value is TSelector
-  makeEyes(config?: RunnerConfiguration): EyesController<TDriver, TElement, TSelector>
-  getViewportSize(driver: TDriver): Promise<RectangleSize>
-  setViewportSize(driver: TDriver, viewportSize: RectangleSize): Promise<void>
-  closeBatch(options: {batchId: string; serverUrl?: string; apiKey?: string; proxy?: ProxySettings}): Promise<void>
-  deleteTestResults(results: TestResults): Promise<void>
 }
 
 export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   protected static readonly _spec: EyesSpec
-  protected readonly _spec: EyesSpec<TDriver, TElement, TSelector>
+  protected get _spec(): EyesSpec<TDriver, TElement, TSelector> {
+    return (this.constructor as typeof Eyes)._spec as EyesSpec<TDriver, TElement, TSelector>
+  }
 
   private _logger: Logger
   private _config: ConfigurationData<TElement, TSelector>
   private _runner: EyesRunner
   private _driver: TDriver
-  private _commands: EyesCommands<TElement, TSelector>
+  private _eyes: types.Eyes<TElement, TSelector>
   private _events: Map<string, Set<(...args: any[]) => any>> = new Map()
   private _handlers: SessionEventHandlers = new SessionEventHandlers()
 
@@ -88,22 +54,20 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   }
 
   constructor(runner?: EyesRunner, config?: Configuration<TElement, TSelector>)
-  constructor(config?: Configuration<TElement, TSelector>, runner?: EyesRunner)
+  constructor(config?: Configuration<TElement, TSelector>)
   constructor(
     runnerOrConfig?: EyesRunner | Configuration<TElement, TSelector>,
-    configOrRunner?: Configuration<TElement, TSelector> | EyesRunner,
+    config?: Configuration<TElement, TSelector>,
   ) {
     if (utils.types.instanceOf(runnerOrConfig, EyesRunner)) {
       this._runner = runnerOrConfig
-      this._config = new ConfigurationData(configOrRunner as Configuration<TElement, TSelector>)
-    } else if (utils.types.instanceOf(configOrRunner, EyesRunner)) {
-      this._runner = configOrRunner
-      this._config = new ConfigurationData(runnerOrConfig as Configuration<TElement, TSelector>)
+      this._config = new ConfigurationData(config)
     } else {
       this._runner = new ClassicRunner()
-      this._config = new ConfigurationData(runnerOrConfig as Configuration<TElement, TSelector>)
+      this._config = new ConfigurationData(runnerOrConfig)
     }
-    this._runner.attach(this, config => this._spec.makeEyes(config))
+
+    this._runner.attach(this, this._spec)
     this._handlers.attach(this)
     this._logger = new Logger({...this._config.logs, label: 'Eyes API'})
   }
@@ -143,7 +107,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   }
 
   get isOpen(): boolean {
-    return Boolean(this._commands)
+    return Boolean(this._eyes)
   }
   getIsOpen(): boolean {
     return this.isOpen
@@ -203,14 +167,14 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     appName?: string,
     testName?: string,
     viewportSize?: RectangleSize,
-    sessionType?: SessionType,
+    sessionType?: SessionTypeLiteral,
   ): Promise<TDriver>
   async open(
     driver: TDriver,
     configOrAppName?: Configuration | string,
     testName?: string,
     viewportSize?: RectangleSize,
-    sessionType?: SessionType,
+    sessionType?: SessionTypeLiteral,
   ): Promise<TDriver> {
     this._driver = driver
 
@@ -228,10 +192,9 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (utils.types.has(viewportSize, ['width', 'height'])) config.viewportSize = viewportSize
     if (utils.types.isEnumValue(sessionType, SessionType)) config.sessionType = sessionType
 
-    this._commands = await this._runner.open({
+    this._eyes = await this._runner.makeEyes({
       driver,
       config,
-      logger: this._logger,
       on: (name: string, data?: Record<string, any>) => {
         const globalHandlers = this._events.get('*')
         if (globalHandlers) globalHandlers.forEach(async handler => handler(name, data))
@@ -290,7 +253,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    let settings
+    let settings: CheckSettings<TElement, TSelector>
     if (utils.types.isString(checkSettingsOrName)) {
       utils.guard.notNull(checkSettings, {name: 'checkSettings'})
       settings = utils.types.instanceOf(checkSettings, CheckSettingsFluent)
@@ -302,41 +265,48 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
         : {...checkSettingsOrName}
     }
 
-    const result = await this._commands.check({settings, config: this._config.toJSON()})
+    const result = await this._eyes.check({settings, config: this._config.toJSON()})
 
     return new MatchResultData(result)
   }
 
   async locate<TLocator extends string>(
     settings: VisualLocatorSettings<TLocator>,
-  ): Promise<{[key in TLocator]: Region[]}> {
+  ): Promise<Record<TLocator, Region[]>> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._commands.locate({settings, config: this._config.toJSON()})
+    return this._eyes.locate({settings, config: this._config.toJSON()})
   }
 
   async extractTextRegions<TPattern extends string>(
     settings: OCRSettings<TPattern>,
-  ): Promise<{[key in TPattern]: string[]}> {
+  ): Promise<Record<TPattern, TextRegion[]>> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._commands.extractTextRegions({settings, config: this._config.toJSON()})
+    return this._eyes.extractTextRegions({settings, config: this._config.toJSON()})
   }
 
   async extractText(regions: OCRRegion<TElement, TSelector>[]): Promise<string[]> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._commands.extractText({regions, config: this._config.toJSON()})
+    return this._eyes.extractText({regions, config: this._config.toJSON()})
   }
 
   async close(throwErr = true): Promise<TestResultsData> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
-    const results = new TestResultsData(await this._commands.close(), results => this._spec.deleteTestResults(results))
-    this._commands = null
+    const results = new TestResultsData(await this._eyes.close(), options =>
+      this._spec.deleteTest({
+        ...options,
+        serverUrl: this._config.serverUrl,
+        apiKey: this._config.apiKey,
+        proxy: this._config.proxy,
+      }),
+    )
+    this._eyes = null
     if (throwErr) {
       if (results.status === TestResultsStatus.Unresolved) {
         if (results.isNew) throw new NewTestError(results)
@@ -354,8 +324,15 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
   async abort(): Promise<TestResultsData> {
     if (!this.isOpen || this._config.isDisabled) return null
-    const results = new TestResultsData(await this._commands.abort(), results => this._spec.deleteTestResults(results))
-    this._commands = null
+    const results = new TestResultsData(await this._eyes.abort(), options =>
+      this._spec.deleteTest({
+        ...options,
+        serverUrl: this._config.serverUrl,
+        apiKey: this._config.apiKey,
+        proxy: this._config.proxy,
+      }),
+    )
+    this._eyes = null
     return results
   }
   /** @deprecated */

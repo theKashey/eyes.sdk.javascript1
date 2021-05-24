@@ -1,8 +1,8 @@
 import * as utils from '@applitools/utils'
-import EyesError from './EyesError'
+import {EyesError} from './EyesError'
 import {TestResults, TestResultsData} from '../output/TestResults'
 
-export default class TestFailedError extends EyesError {
+export class TestFailedError extends EyesError {
   private _results: TestResults
   constructor(message: string, results?: TestResults)
   constructor(results: TestResults)

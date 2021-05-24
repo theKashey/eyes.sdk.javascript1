@@ -1,12 +1,12 @@
 import * as utils from '@applitools/utils'
-import SessionType from '../enums/SessionType'
-import StitchMode from '../enums/StitchMode'
-import MatchLevel from '../enums/MatchLevel'
-import BrowserName from '../enums/BrowserName'
-import DeviceName from '../enums/DeviceName'
-import ScreenOrientation from '../enums/ScreenOrientation'
+import {SessionType, SessionTypeLiteral} from '../enums/SessionType'
+import {StitchMode, StitchModeLiteral} from '../enums/StitchMode'
+import {MatchLevel} from '../enums/MatchLevel'
+import {BrowserType} from '../enums/BrowserType'
+import {DeviceName} from '../enums/DeviceName'
+import {ScreenOrientation} from '../enums/ScreenOrientation'
 import {AccessibilitySettings} from './AccessibilitySettings'
-import {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo} from './RenderInfo'
+import {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo, ChromeEmulationInfoLegacy} from './RenderInfo'
 import {CutProvider} from './CutProvider'
 import {LogHandler} from './LogHandler'
 import {DebugScreenshotProvider} from './DebugScreenshotProvider'
@@ -17,16 +17,16 @@ import {BatchInfo, BatchInfoData} from './BatchInfo'
 import {PropertyData, PropertyDataData} from './PropertyData'
 import {ImageMatchSettings, ImageMatchSettingsData} from './ImageMatchSettings'
 
-type RenderInfo = DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo
+type RenderInfo = DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo | ChromeEmulationInfoLegacy
 
-type ConfigurationSpec<TElement, TSelector> = {
+type ConfigurationSpec<TElement = unknown, TSelector = unknown> = {
   isElement(element: any): element is TElement
   isSelector(selector: any): selector is TSelector
 }
 
 export type GeneralConfiguration = {
   /** @undocumented */
-  logs?: {show: boolean; handler?: LogHandler}
+  logs?: LogHandler
   /** @undocumented */
   debugScreenshots?: DebugScreenshotProvider
   agentId?: string
@@ -47,7 +47,7 @@ export type OpenConfiguration = {
   testName?: string
   displayName?: string
   viewportSize?: RectangleSize
-  sessionType?: SessionType
+  sessionType?: SessionTypeLiteral
   properties?: PropertyData[]
   batch?: BatchInfo
   defaultMatchSettings?: ImageMatchSettings
@@ -78,7 +78,7 @@ export type CheckConfiguration = {
 
 export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   waitBeforeScreenshots?: number
-  stitchMode?: StitchMode
+  stitchMode?: StitchModeLiteral
   hideScrollbars?: boolean
   hideCaret?: boolean
   stitchOverlap?: number
@@ -91,7 +91,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
 export type VGConfiguration = {
   /** @undocumented */
   concurrentSessions?: number
-  browsersInfo?: RenderInfo[]
+  browsersInfo?: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[]
   visualGridOptions?: Record<string, any>
   layoutBreakpoints?: boolean | number[]
   disableBrowserFetching?: boolean
@@ -106,7 +106,10 @@ export type Configuration<TElement = unknown, TSelector = unknown> = GeneralConf
 export class ConfigurationData<TElement = unknown, TSelector = unknown>
   implements Required<Configuration<TElement, TSelector>>
 {
-  protected readonly _spec: ConfigurationSpec<TElement, TSelector>
+  protected static readonly _spec: ConfigurationSpec
+  protected get _spec(): ConfigurationSpec<TElement, TSelector> {
+    return (this.constructor as typeof ConfigurationData)._spec as ConfigurationSpec<TElement, TSelector>
+  }
 
   private _config: Configuration<TElement, TSelector> = {}
 
@@ -119,107 +122,31 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     }
   }
 
-  /** @internal */
-  get general(): Required<GeneralConfiguration> {
-    return utils.general.toJSON(this, [
-      'logs',
-      'debugScreenshots',
-      'agentId',
-      'apiKey',
-      'serverUrl',
-      'proxy',
-      'isDisabled',
-      'connectionTimeout',
-      'removeSession',
-      'remoteEvents',
-    ])
-  }
-
-  /** @internal */
-  get open(): Required<OpenConfiguration> {
-    return utils.general.toJSON(this, [
-      'appName',
-      'testName',
-      'displayName',
-      'viewportSize',
-      'sessionType',
-      'properties',
-      'batch',
-      'defaultMatchSettings',
-      'hostApp',
-      'hostOS',
-      'hostAppInfo',
-      'hostOSInfo',
-      'deviceInfo',
-      'baselineEnvName',
-      'environmentName',
-      'branchName',
-      'parentBranchName',
-      'baselineBranchName',
-      'compareWithParentBranch',
-      'ignoreBaseline',
-      'saveFailedTests',
-      'saveNewTests',
-      'saveDiffs',
-      'dontCloseBatches',
-    ])
-  }
-
-  /** @internal */
-  get check(): Required<CheckConfiguration> {
-    return utils.general.toJSON(this, ['sendDom', 'matchTimeout', 'forceFullPageScreenshot'])
-  }
-
-  /** @internal */
-  get classic(): Required<ClassicConfiguration<TElement, TSelector>> {
-    return utils.general.toJSON(this, [
-      'waitBeforeScreenshots',
-      'stitchMode',
-      'hideScrollbars',
-      'hideCaret',
-      'stitchOverlap',
-      'scrollRootElement',
-      'cut',
-      'rotation',
-      'scaleRatio',
-    ])
-  }
-
-  /** @internal */
-  get vg(): Required<VGConfiguration> {
-    return utils.general.toJSON(this, [
-      'concurrentSessions',
-      'browsersInfo',
-      'visualGridOptions',
-      'layoutBreakpoints',
-      'disableBrowserFetching',
-    ])
-  }
-
   /** @undocumented */
-  get logs(): {show: boolean; handler?: LogHandler} {
+  get logs(): LogHandler {
     return this._config.logs
   }
   /** @undocumented */
-  set logs(logs: {show: boolean; handler?: LogHandler}) {
+  set logs(logs: LogHandler) {
     this._config.logs = logs
   }
   /** @undocumented */
   getShowLogs(): boolean {
-    return this.logs?.show ?? false
+    return Boolean(this.logs)
   }
   /** @undocumented */
   setShowLogs(show: boolean): this {
-    this.logs = {...this.logs, show}
+    if (show) this.logs ??= {type: 'console'}
+    else this.logs = null
     return this
   }
   /** @undocumented */
   getLogHandler(): LogHandler {
-    return this.logs?.handler
+    return this.logs
   }
   /** @undocumented */
   setLogHandler(handler: LogHandler): this {
-    this.logs = {...this.logs, handler}
+    this.logs = handler
     return this
   }
 
@@ -334,14 +261,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get sessionType(): SessionType {
+  get sessionType(): SessionTypeLiteral {
     return this._config.sessionType
   }
-  set sessionType(sessionType: SessionType) {
+  set sessionType(sessionType: SessionTypeLiteral) {
     this._config.sessionType = sessionType
   }
   getSessionType(): SessionType {
-    return this.sessionType
+    return this.sessionType as SessionType
   }
   setSessionType(sessionType: SessionType): this {
     this.sessionType = sessionType
@@ -782,7 +709,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
   getMatchLevel(): MatchLevel {
-    return this.defaultMatchSettings?.matchLevel
+    return this.defaultMatchSettings?.matchLevel as MatchLevel
   }
   setMatchLevel(matchLevel: MatchLevel): this {
     if (!this.defaultMatchSettings) this.defaultMatchSettings = {}
@@ -859,15 +786,15 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get stitchMode(): StitchMode {
+  get stitchMode(): StitchModeLiteral {
     return this._config.stitchMode
   }
-  set stitchMode(stitchMode: StitchMode) {
+  set stitchMode(stitchMode: StitchModeLiteral) {
     utils.guard.isEnumValue(stitchMode, StitchMode, {name: 'stitchMode'})
     this._config.stitchMode = stitchMode
   }
   getStitchMode(): StitchMode {
-    return this.stitchMode
+    return this.stitchMode as StitchMode
   }
   setStitchMode(stitchMode: StitchMode): this {
     this.stitchMode = stitchMode
@@ -997,10 +924,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get browsersInfo(): RenderInfo[] {
+  get browsersInfo(): (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[] {
     return this._config.browsersInfo
   }
-  set browsersInfo(browsersInfo: RenderInfo[]) {
+  set browsersInfo(browsersInfo: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[]) {
     utils.guard.isArray(browsersInfo, {name: 'browsersInfo'})
     this._config.browsersInfo = browsersInfo
   }
@@ -1008,7 +935,9 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this.browsersInfo
   }
   setBrowsersInfo(browsersInfo: RenderInfo[]): this {
-    this.browsersInfo = browsersInfo
+    this.browsersInfo = browsersInfo.map(browserInfo =>
+      utils.types.has(browserInfo, 'deviceName') ? {chromeEmulationInfo: browserInfo} : browserInfo,
+    )
     return this
   }
   addBrowsers(...browsersInfo: RenderInfo[]) {
@@ -1016,18 +945,22 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
       utils.guard.isObject(browserInfo, {name: `addBrowsers( arg${index} )`})
     }
     if (!this.browsersInfo) this.browsersInfo = []
-    this.browsersInfo.push(...browsersInfo)
+    this.browsersInfo.push(
+      ...browsersInfo.map(browserInfo =>
+        utils.types.has(browserInfo, 'deviceName') ? {chromeEmulationInfo: browserInfo} : browserInfo,
+      ),
+    )
     return this
   }
   addBrowser(browserInfo: RenderInfo): this
-  addBrowser(width: number, height: number, name?: BrowserName): this
-  addBrowser(browserInfoOrWidth: RenderInfo | number, height?: number, name: BrowserName = BrowserName.CHROME) {
+  addBrowser(width: number, height: number, name?: BrowserType): this
+  addBrowser(browserInfoOrWidth: RenderInfo | number, height?: number, name: BrowserType = BrowserType.CHROME) {
     if (utils.types.isObject(browserInfoOrWidth)) return this.addBrowsers(browserInfoOrWidth)
     else return this.addBrowsers({width: browserInfoOrWidth, height, name})
   }
   addDeviceEmulation(deviceName: DeviceName, screenOrientation = ScreenOrientation.PORTRAIT) {
     if (!this.browsersInfo) this.browsersInfo = []
-    this.browsersInfo.push({deviceName, screenOrientation})
+    this.browsersInfo.push({chromeEmulationInfo: {deviceName, screenOrientation}})
     return this
   }
 

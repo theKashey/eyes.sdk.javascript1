@@ -1,6 +1,6 @@
-enum AccessibilityStatus {
+export enum AccessibilityStatus {
   Passed = 'Passed',
   Failed = 'Failed',
 }
 
-export default AccessibilityStatus
+export type AccessibilityStatusLiteral = AccessibilityStatus | `${AccessibilityStatus}`

@@ -1,6 +1,6 @@
-enum AccessibilityLevel {
+export enum AccessibilityLevel {
   AA = 'AA',
   AAA = 'AAA',
 }
 
-export default AccessibilityLevel
+export type AccessibilityLevelLiteral = AccessibilityLevel | `${AccessibilityLevel}`

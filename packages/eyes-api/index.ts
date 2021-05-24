@@ -1,26 +1,26 @@
 // #region ENUM
-export {default as AccessibilityGuidelinesVersion} from './src/enums/AccessibilityGuidelinesVersion'
-export {default as AccessibilityLevel} from './src/enums/AccessibilityLevel'
-export {default as AccessibilityRegionType} from './src/enums/AccessibilityRegionType'
-export {default as AccessibilityStatus} from './src/enums/AccessibilityStatus'
-export {default as BrowserType} from './src/enums/BrowserName'
-export {default as CorsIframeHandle} from './src/enums/CorsIframeHandle'
-export {default as DeviceName} from './src/enums/DeviceName'
-export {default as FailureReports} from './src/enums/FailureReports'
-export {default as IosDeviceName} from './src/enums/IOSDeviceName'
-export {default as IosVersion} from './src/enums/IOSVersion'
-export {default as MatchLevel} from './src/enums/MatchLevel'
-export {default as ScreenOrientation} from './src/enums/ScreenOrientation'
-export {default as SessionType} from './src/enums/SessionType'
-export {default as StitchMode} from './src/enums/StitchMode'
-export {default as TestResultsStatus} from './src/enums/TestResultsStatus'
+export {AccessibilityGuidelinesVersion} from './src/enums/AccessibilityGuidelinesVersion'
+export {AccessibilityLevel} from './src/enums/AccessibilityLevel'
+export {AccessibilityRegionType} from './src/enums/AccessibilityRegionType'
+export {AccessibilityStatus} from './src/enums/AccessibilityStatus'
+export {BrowserType} from './src/enums/BrowserType'
+export {CorsIframeHandle} from './src/enums/CorsIframeHandle'
+export {DeviceName} from './src/enums/DeviceName'
+export {FailureReport} from './src/enums/FailureReport'
+export {IosDeviceName} from './src/enums/IosDeviceName'
+export {IosVersion} from './src/enums/IosVersion'
+export {MatchLevel} from './src/enums/MatchLevel'
+export {ScreenOrientation} from './src/enums/ScreenOrientation'
+export {SessionType} from './src/enums/SessionType'
+export {StitchMode} from './src/enums/StitchMode'
+export {TestResultsStatus} from './src/enums/TestResultsStatus'
 // #endregion
 
 // #region ERROR
-export {default as EyesError} from './src/errors/EyesError'
-export {default as TestFailedError} from './src/errors/TestFailedError'
-export {default as DiffsFoundError} from './src/errors/DiffsFoundError'
-export {default as NewTestError} from './src/errors/NewTestError'
+export {EyesError} from './src/errors/EyesError'
+export {TestFailedError} from './src/errors/TestFailedError'
+export {DiffsFoundError} from './src/errors/DiffsFoundError'
+export {NewTestError} from './src/errors/NewTestError'
 // #endregion
 
 // #region INPUT
@@ -85,8 +85,6 @@ export {VisualLocatorSettings} from './src/input/VisualLocatorSettings'
 export {ApiUrls as ApiUrlsPlain, ApiUrlsData as ApiUrls} from './src/output/ApiUrls'
 export {AppUrls as AppUrlsPlain, AppUrlsData as AppUrls} from './src/output/AppUrls'
 export {MatchResult as MatchResultPlain, MatchResultData as MatchResult} from './src/output/MatchResult'
-export {RenderingInfo as RenderingInfoPlain, RenderingInfoData as RenderingInfo} from './src/output/RenderingInfo'
-export {RunningSession as RunningSessionPlain, RunningSessionData as RunningSession} from './src/output/RunningSession'
 export {SessionUrls as SessionUrlsPlain, SessionUrlsData as SessionUrls} from './src/output/SessionUrls'
 export {StepInfo as StepInfoPlain, StepInfoData as StepInfo} from './src/output/StepInfo'
 export {TestAccessibilityStatus} from './src/output/TestAccessibilityStatus'
@@ -99,6 +97,7 @@ export {
   TestResultsSummary as TestResultsSummaryPlain,
   TestResultsSummaryData as TestResultsSummary,
 } from './src/output/TestResultsSummary'
+export {TextRegion} from './src/output/TextRegion'
 export {ValidationInfo as ValidationInfoPlain, ValidationInfoData as ValidationInfo} from './src/output/ValidationInfo'
 export {
   ValidationResult as ValidationResultPlain,

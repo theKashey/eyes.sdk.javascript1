@@ -21,7 +21,6 @@ const sdk = makeSDK({
 })
 class EyesOverride extends Eyes {
   protected static readonly _spec = sdk
-  protected readonly _spec = sdk
 }
 
 interface EyesServiceOptions extends ConfigurationPlain {

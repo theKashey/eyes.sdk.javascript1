@@ -22,7 +22,6 @@ export {Driver, Element, Selector}
 
 export class Eyes extends legacy.TestCafeEyes(api.Eyes)<Driver, Element, Selector> {
   protected static readonly _spec = sdk
-  protected readonly _spec = sdk
   static setViewportSize: (driver: Driver, viewportSize: api.RectangleSize) => Promise<void>
 }
 
@@ -30,19 +29,16 @@ export type ConfigurationPlain = api.ConfigurationPlain<Element, Selector>
 
 export class Configuration extends api.Configuration<Element, Selector> {
   protected static readonly _spec = sdk
-  protected readonly _spec = sdk
 }
 
 export type CheckSettingsPlain = api.CheckSettingsPlain<Element, Selector>
 
 export class CheckSettings extends api.CheckSettings<Element, Selector> {
   protected static readonly _spec = sdk
-  protected readonly _spec = sdk
 }
 
 export const Target: api.Target<Element, Selector> = CheckSettings as any
 
 export class BatchClose extends api.BatchClose {
   protected static readonly _spec = sdk
-  protected readonly _spec = sdk
 }

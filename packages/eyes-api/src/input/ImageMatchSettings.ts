@@ -1,7 +1,7 @@
 import * as utils from '@applitools/utils'
-import MatchLevel from '../enums/MatchLevel'
-import AccessibilityLevel from '../enums/AccessibilityLevel'
-import AccessibilityGuidelinesVersion from '../enums/AccessibilityGuidelinesVersion'
+import {MatchLevelLiteral, MatchLevel} from '../enums/MatchLevel'
+import {AccessibilityLevel} from '../enums/AccessibilityLevel'
+import {AccessibilityGuidelinesVersion} from '../enums/AccessibilityGuidelinesVersion'
 import {ExactMatchSettings, ExactMatchSettingsData} from './ExactMatchSettings'
 import {FloatingMatchSettings, FloatingMatchSettingsData} from './FloatingMatchSettings'
 import {AccessibilityMatchSettings, AccessibilityMatchSettingsData} from './AccessibilityMatchSettings'
@@ -11,7 +11,7 @@ import {AccessibilitySettings} from './AccessibilitySettings'
 /** @undocumented */
 export type ImageMatchSettings = {
   exact?: ExactMatchSettings
-  matchLevel?: MatchLevel
+  matchLevel?: MatchLevelLiteral
   ignoreCaret?: boolean
   useDom?: boolean
   enablePatterns?: boolean
@@ -20,8 +20,8 @@ export type ImageMatchSettings = {
   layoutRegions?: Region[]
   strictRegions?: Region[]
   contentRegions?: Region[]
-  floatingRegions?: FloatingMatchSettings[]
-  accessibilityRegions?: AccessibilityMatchSettings[]
+  floatingRegions?: (Region | FloatingMatchSettings)[]
+  accessibilityRegions?: (Region | AccessibilityMatchSettings)[]
   accessibilitySettings?: AccessibilitySettings
 }
 
@@ -51,15 +51,15 @@ export class ImageMatchSettingsData implements Required<ImageMatchSettings> {
     this.exact = exact
   }
 
-  get matchLevel(): MatchLevel {
+  get matchLevel(): MatchLevelLiteral {
     return this._settings.matchLevel
   }
-  set matchLevel(matchLevel: MatchLevel) {
+  set matchLevel(matchLevel: MatchLevelLiteral) {
     utils.guard.isEnumValue(matchLevel, MatchLevel, {name: 'matchLevel'})
     this._settings.matchLevel = matchLevel
   }
   getMatchLevel(): MatchLevel {
-    return this.matchLevel
+    return this.matchLevel as MatchLevel
   }
   setMatchLevel(matchLevel: MatchLevel) {
     this.matchLevel = matchLevel
@@ -195,41 +195,45 @@ export class ImageMatchSettingsData implements Required<ImageMatchSettings> {
     this.contentRegions = contentRegions
   }
 
-  get floatingRegions(): FloatingMatchSettings[] {
+  get floatingRegions(): (Region | FloatingMatchSettings)[] {
     return this._settings.floatingRegions
   }
-  set floatingRegions(floatingRegions: FloatingMatchSettings[]) {
+  set floatingRegions(floatingRegions: (Region | FloatingMatchSettings)[]) {
     utils.guard.isArray(floatingRegions, {name: 'floatingRegions', strict: false})
     this._settings.floatingRegions = floatingRegions ?? []
   }
-  get floating(): FloatingMatchSettings[] {
+  get floating(): (Region | FloatingMatchSettings)[] {
     return this.floatingRegions
   }
-  set floating(floatingRegions: FloatingMatchSettings[]) {
+  set floating(floatingRegions: (Region | FloatingMatchSettings)[]) {
     this.floatingRegions = floatingRegions
   }
   getFloatingRegions(): FloatingMatchSettingsData[] {
-    return this.floatingRegions?.map(region => new FloatingMatchSettingsData(region)) ?? []
+    return this.floatingRegions?.map(region => new FloatingMatchSettingsData(region as FloatingMatchSettings)) ?? []
   }
   setFloatingRegions(floatingRegions: FloatingMatchSettings[]) {
     this.floatingRegions = floatingRegions
   }
 
-  get accessibilityRegions(): AccessibilityMatchSettings[] {
+  get accessibilityRegions(): (Region | AccessibilityMatchSettings)[] {
     return this._settings.accessibilityRegions
   }
-  set accessibilityRegions(accessibilityRegions: AccessibilityMatchSettings[]) {
+  set accessibilityRegions(accessibilityRegions: (Region | AccessibilityMatchSettings)[]) {
     utils.guard.isArray(accessibilityRegions, {name: 'accessibilityRegions', strict: false})
     this._settings.accessibilityRegions = accessibilityRegions ?? []
   }
-  get accessibility(): AccessibilityMatchSettings[] {
+  get accessibility(): (Region | AccessibilityMatchSettings)[] {
     return this.accessibilityRegions
   }
-  set accessibility(accessibilityRegions: AccessibilityMatchSettings[]) {
+  set accessibility(accessibilityRegions: (Region | AccessibilityMatchSettings)[]) {
     this.accessibilityRegions = accessibilityRegions
   }
   getAccessibilityRegions(): AccessibilityMatchSettingsData[] {
-    return this.accessibilityRegions?.map(region => new AccessibilityMatchSettingsData(region)) ?? []
+    return (
+      this.accessibilityRegions?.map(
+        region => new AccessibilityMatchSettingsData(region as AccessibilityMatchSettings),
+      ) ?? []
+    )
   }
   setAccessibilityRegions(accessibilityRegions: AccessibilityMatchSettings[]) {
     this.accessibilityRegions = accessibilityRegions

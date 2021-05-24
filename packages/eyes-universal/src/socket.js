@@ -1,5 +1,5 @@
+const utils = require('@applitools/utils')
 const WebSocket = require('ws')
-const uuid = require('uuid')
 
 function makeSocket(ws) {
   let socket = null
@@ -46,7 +46,7 @@ function makeSocket(ws) {
 
   function request(name, payload) {
     return new Promise((resolve, reject) => {
-      const key = uuid.v4()
+      const key = utils.general.guid()
       emit({name, key}, payload)
       once({name, key}, response => {
         if (response.error) return reject(response.error)
@@ -68,7 +68,7 @@ function makeSocket(ws) {
   }
 
   function subscribe(name, publisher, fn) {
-    const subscription = uuid.v4()
+    const subscription = utils.general.guid()
     emit(name, {publisher, subscription})
     const off = on({name, key: subscription}, fn)
     return () => (emit({name, key: subscription}), off())

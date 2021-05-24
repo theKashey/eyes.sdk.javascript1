@@ -154,6 +154,10 @@ function toPlain(object, exclude = [], rename = {}) {
     if (Object.prototype.hasOwnProperty.call(object, objectKey) && !exclude.includes(objectKey)) {
       if (object[objectKey] instanceof Object && typeof object[objectKey].toJSON === 'function') {
         plainObject[publicKey] = object[objectKey].toJSON()
+      } else if (Array.isArray(object[objectKey])) {
+        plainObject[publicKey] = object[objectKey].map(item =>
+          typeof item.toJSON === 'function' ? item.toJSON() : item,
+        )
       } else {
         plainObject[publicKey] = object[objectKey]
       }

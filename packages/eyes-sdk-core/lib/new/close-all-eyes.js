@@ -1,4 +1,4 @@
-function makeGetResults({runner}) {
+function makeCloseAllEyes({runner}) {
   return async function getResults() {
     const results = await runner.getAllTestResults(false)
     return results.getAllResults().map(results => {
@@ -8,11 +8,11 @@ function makeGetResults({runner}) {
         container.exception.getTestResults &&
         container.exception.getTestResults()
       ) {
-        return {testResults: container.exception.getTestResults().toJSON(), exception: null}
+        return container.exception.getTestResults().toJSON()
       }
-      return container
+      return container.testResults
     })
   }
 }
 
-module.exports = makeGetResults
+module.exports = makeCloseAllEyes

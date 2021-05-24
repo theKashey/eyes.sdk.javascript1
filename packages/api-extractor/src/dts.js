@@ -316,6 +316,25 @@ function dts({project, context, externalModules = [], externalGlobals = []}) {
       if (wrapper.type === 'intersection') return `(${wrapper.types.map(type => $type(type, {parent})).join('&')})`
       if (wrapper.type === 'union') return `${wrapper.types.map(type => $type(type, {parent})).join('|')}`
       if (wrapper.type === 'predicate') return `${wrapper.name} is (${$type(wrapper.targetType, {parent})})`
+      if (wrapper.type === 'template-literal') {
+        if (wrapper.tail.length === 1) {
+          const [[stringifiedType, ending]] = wrapper.tail
+          if (wrapper.head === '' && ending === '') {
+            if (stringifiedType.type === 'reference' && stringifiedType.reflection.kind === ReflectionKind.Enum) {
+              const literals = stringifiedType.reflection.children.reduce((literals, member) => {
+                const literal = `${member.defaultValue}`.replace(/"/g, '')
+                if (!literals.includes(literal)) literals.push(literal)
+                return literals
+              }, [])
+              return `${$type({type: 'union', types: literals.map(value => ({type: 'literal', value}))})}`
+            }
+          }
+        }
+        const templateLiteral = wrapper.tail.reduce((tail, [type, ending]) => {
+          return `${tail}\${${$type(type, {parent})}}${ending}`
+        }, wrapper.head)
+        return `\`${templateLiteral}\``
+      }
       if (wrapper.type === 'mapped') {
         const parameterType = $type(wrapper.parameterType, {parent})
         const templateType = $type(wrapper.templateType, {parent})

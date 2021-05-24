@@ -119,6 +119,6 @@ export class RegionData implements Required<Region> {
 
   /** @internal */
   toString() {
-    return utils.general.toString(this)
+    return `(${this.x}, ${this.y}) ${this.width}x${this.height}`
   }
 }

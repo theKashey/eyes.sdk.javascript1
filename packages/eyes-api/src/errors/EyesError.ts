@@ -1,1 +1,1 @@
-export default class EyesError extends Error {}
+export class EyesError extends Error {}

@@ -1,6 +1,6 @@
 import * as utils from '@applitools/utils'
-import TestResultsStatus from '../enums/TestResultsStatus'
-import TestFailedError from '../errors/TestFailedError'
+import {TestResultsStatus} from '../enums/TestResultsStatus'
+import {TestFailedError} from '../errors/TestFailedError'
 import {TestResults} from './TestResults'
 import {TestResultContainer, TestResultContainerData} from './TestResultContainer'
 

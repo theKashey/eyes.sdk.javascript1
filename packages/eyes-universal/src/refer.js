@@ -1,4 +1,4 @@
-const uuid = require('uuid')
+const utils = require('@applitools/utils')
 
 const REF_ID = 'applitools-ref-id'
 
@@ -13,7 +13,7 @@ function makeRefer() {
   }
 
   function ref(value, parentRef) {
-    const ref = uuid.v4()
+    const ref = utils.general.guid()
     store.set(ref, value)
     if (parentRef) {
       let childRefs = relation.get(parentRef[REF_ID])

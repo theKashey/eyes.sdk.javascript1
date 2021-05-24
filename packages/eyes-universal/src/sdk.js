@@ -1,4 +1,4 @@
-const core = require('@applitools/eyes-sdk-core')
+const {makeSDK} = require('@applitools/eyes-sdk-core')
 const VisualGridClient = require('@applitools/visual-grid-client')
 const makeServer = require('./server')
 const makeSocket = require('./socket')
@@ -8,7 +8,7 @@ const {version} = require('../package.json')
 
 const IDLE_TIMEOUT = 900000 // 15min
 
-async function makeSDK({idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
+async function makeAPI({idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
   const {server, port} = await makeServer(serverConfig)
   console.log(port) // NOTE: this is a part of the protocol
   if (!server) {
@@ -31,7 +31,6 @@ async function makeSDK({idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
     })
 
     socket.once('Session.init', config => {
-      const spec = makeSpec(socket)
       const commands = [
         'isDriver',
         'isElement',
@@ -40,53 +39,39 @@ async function makeSDK({idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
         'isStaleElementError',
         ...config.commands,
       ]
+      const spec = makeSpec(socket, commands)
 
-      socket.sdk = core.makeSDK({
+      socket.sdk = makeSDK({
         name: `eyes-universal/${config.name}`,
         version: `${version}/${config.version}`,
-        spec: commands.reduce((commands, name) => {
-          return Object.assign(commands, {[name]: spec[name]})
-        }, {}),
+        spec,
         VisualGridClient,
       })
     })
 
-    socket.on('Logger.log', ({publisher, subscription}) => {
-      socket.emit({name: 'Logger.log', key: subscription})
+    socket.command('EyesRunner.new', async ({config}) => {
+      const eyes = socket.sdk.makeEyes(config)
+      return refer.ref(eyes)
+    })
+    socket.command('EyesRunner.open', async ({eyes, driver, config}) => {
+      const commands = await refer.deref(eyes).open(driver, config)
+      return refer.ref(commands, eyes)
+    })
+    socket.command('EyesRunner.close', async ({eyes}) => {
+      return await refer.deref(eyes).getResults()
     })
 
-    socket.command('Util.setViewportSize', async ({driver, viewportSize}) => {
-      return socket.sdk.setViewportSize(driver, viewportSize)
+    socket.command('Eyes.check', async ({eyes, settings, config}) => {
+      return refer.deref(eyes).check({settings, config})
     })
-    socket.command('Util.closeBatch', config => {
-      return socket.sdk.closeBatch(config)
+    socket.command('Eyes.locate', async ({eyes, settings, config}) => {
+      return refer.deref(eyes).locate({settings, config})
     })
-    socket.command('Util.deleteResults', config => {
-      return socket.sdk.deleteResults(config)
+    socket.command('Eyes.extractTextRegions', async ({eyes, settings, config}) => {
+      return refer.deref(eyes).extractTextRegions({settings, config})
     })
-    socket.command('Runner.new', async () => {
-      const runner = new Set()
-      return refer.ref(runner)
-    })
-    socket.command('Runner.close', async ({runner}) => {
-      const commands = Array.from(refer.deref(runner))
-      const results = await Promise.all(commands.map(commands => commands.close()))
-      refer.destroy(runner)
-      return results.flat()
-    })
-    socket.command('Eyes.open', async ({driver, config, runner}) => {
-      const commands = await socket.sdk.openEyes(driver, config)
-      if (runner) {
-        socket.runners.get(runner)
-      }
-      return refer.ref(commands, runner)
-    })
-    socket.command('Eyes.locate', async ({eyes}) => {
-      // TODO
-    })
-    socket.command('Eyes.check', async ({eyes, checkSettings}) => {
-      const commands = refer.deref(eyes)
-      return commands.check(checkSettings)
+    socket.command('Eyes.extractText', async ({eyes, regions, config}) => {
+      return refer.deref(eyes).extractText({regions, config})
     })
     socket.command('Eyes.close', ({eyes}) => {
       const commands = refer.deref(eyes)
@@ -98,9 +83,22 @@ async function makeSDK({idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
       refer.destroy(eyes)
       return commands.abort()
     })
+
+    socket.command('Util.getViewportSize', async ({driver}) => {
+      return socket.sdk.getViewportSize(driver)
+    })
+    socket.command('Util.setViewportSize', async ({driver, viewportSize}) => {
+      return socket.sdk.setViewportSize(driver, viewportSize)
+    })
+    socket.command('Util.closeBatches', config => {
+      return socket.sdk.closeBatch(config)
+    })
+    socket.command('Util.deleteTestResults', config => {
+      return socket.sdk.deleteTestResults(config)
+    })
   })
 
   return {port, close: () => server.close()}
 }
 
-module.exports = makeSDK
+module.exports = makeAPI

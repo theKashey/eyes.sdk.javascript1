@@ -1,4 +1,4 @@
-enum DeviceName {
+export enum DeviceName {
   Blackberry_PlayBook = 'Blackberry PlayBook',
   BlackBerry_Z30 = 'BlackBerry Z30',
   Galaxy_A5 = 'Galaxy A5',
@@ -63,4 +63,4 @@ enum DeviceName {
   Pixel_4_XL = 'Pixel 4 XL',
 }
 
-export default DeviceName
+export type DeviceNameLiteral = DeviceName | `${DeviceName}`

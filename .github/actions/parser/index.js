@@ -1,6 +1,7 @@
 const core = require('@actions/core')
 
 const PACKAGES = [
+  {name: 'types', dirname: 'types', aliases: ['@applitools/types']},
   {name: 'utils', dirname: 'utils', aliases: ['@applitools/utils']},
   {name: 'test-utils', dirname: 'test-utils', aliases: ['@applitools/test-utils']},
   {name: 'snippets', dirname: 'snippets', aliases: ['@applitools/snippets']},

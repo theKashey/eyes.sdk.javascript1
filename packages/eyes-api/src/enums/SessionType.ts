@@ -1,6 +1,6 @@
-enum SessionType {
+export enum SessionType {
   SEQUENTIAL = 'SEQUENTIAL',
   PROGRESSION = 'PROGRESSION',
 }
 
-export default SessionType
+export type SessionTypeLiteral = SessionType | `${SessionType}`

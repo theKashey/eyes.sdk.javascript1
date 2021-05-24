@@ -59,6 +59,6 @@ export class LocationData implements Required<Location> {
 
   /** @internal */
   toString() {
-    return utils.general.toString(this)
+    return `(${this.x}, ${this.y})`
   }
 }

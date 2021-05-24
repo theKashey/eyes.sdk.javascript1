@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "declarationDir": "types",
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+
+    "target": "ES2015",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "stripInternal": true,
+  },
+}
