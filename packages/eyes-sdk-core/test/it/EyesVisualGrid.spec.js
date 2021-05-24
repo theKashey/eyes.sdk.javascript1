@@ -70,10 +70,10 @@ describe('EyesVisualGrid', async () => {
     conf.addBrowser({deviceName: 'non-existent'})
     eyes.setConfiguration(conf)
     await eyes.open(driver, 'FakeApp', 'FakeTest')
+    expect(startSessionCalled).to.be.undefined
     await eyes.check({matchLevel: MatchLevel.Layout})
     const err = await eyes.close().catch(err => err)
     ServerConnector.prototype.startSession = origStartSession
-    expect(startSessionCalled).to.be.undefined
     expect(err.message).to.contain('failed to render screenshot')
   })
 

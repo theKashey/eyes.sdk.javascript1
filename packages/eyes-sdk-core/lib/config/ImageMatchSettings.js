@@ -7,6 +7,9 @@ const MatchLevel = require('./MatchLevel')
 const AccessibilityLevel = require('./AccessibilityLevel')
 const AccessibilityGuidelinesVersions = require('./AccessibilityGuidelinesVersion')
 const ExactMatchSettings = require('./ExactMatchSettings')
+const AccessibilityMatchSettings = require('./AccessibilityMatchSettings')
+const FloatingMatchSettings = require('./FloatingMatchSettings')
+const Region = require('../geometry/Region')
 
 const DEFAULT_VALUES = {
   matchLevel: MatchLevel.Strict,
@@ -84,19 +87,29 @@ class ImageMatchSettings {
     this._exact = exact
 
     /** @type {Region[]} */
-    this._ignoreRegions = ignore || []
+    this._ignoreRegions = (ignore || []).map(region => new Region(region))
     /** @type {Region[]} */
-    this._layoutRegions = layout || []
+    this._layoutRegions = (layout || []).map(region => new Region(region)) || []
     /** @type {Region[]} */
-    this._strictRegions = strict || []
+    this._strictRegions = (strict || []).map(region => new Region(region)) || []
     /** @type {Region[]} */
-    this._contentRegions = content || []
+    this._contentRegions = (content || []).map(region => new Region(region)) || []
     /** @type {AccessibilityMatchSettings[]} */
-    this._accessibilityMatchSettings = accessibility || []
+    this._accessibilityMatchSettings =
+      (accessibility || []).map(region =>
+        TypeUtils.instanceOf(region, 'AccessibilityMatchSettings')
+          ? region
+          : new AccessibilityMatchSettings(region),
+      ) || []
     /** @type {AccessibilitySettings} */
     this.setAccessibilitySettings(accessibilitySettings)
     /** @type {FloatingMatchSettings[]} */
-    this._floatingMatchSettings = floating || []
+    this._floatingMatchSettings =
+      (floating || []).map(region =>
+        TypeUtils.instanceOf(region, 'FloatingMatchSettings')
+          ? region
+          : new FloatingMatchSettings(region),
+      ) || []
   }
 
   /**

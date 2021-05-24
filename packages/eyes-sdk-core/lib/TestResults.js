@@ -51,7 +51,7 @@ class SessionUrls {
    * @override
    */
   toJSON() {
-    return GeneralUtils.toPlain(this)
+    return GeneralUtils.toPlain(this, [], {id: 'testId'})
   }
 }
 

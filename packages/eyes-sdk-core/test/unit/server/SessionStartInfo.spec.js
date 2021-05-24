@@ -16,7 +16,7 @@ const {
   AccessibilityLevel,
   AccessibilityGuidelinesVersion,
   AccessibilityRegionType,
-  AccessibilityRegionByRectangle,
+  AccessibilityMatchSettings,
   MatchWindowTask,
 } = require('../../../index')
 const {EyesBaseImpl} = require('../../testUtils')
@@ -50,10 +50,13 @@ describe('SessionStartInfo', () => {
       defaultMatchSettings: new ImageMatchSettings({
         matchLevel: MatchLevel.Strict,
         accessibility: [
-          new AccessibilityRegionByRectangle(
-            {left: 10, top: 20, width: 30, height: 40},
-            AccessibilityRegionType.GraphicalObject,
-          ),
+          new AccessibilityMatchSettings({
+            left: 10,
+            top: 20,
+            width: 30,
+            height: 40,
+            type: AccessibilityRegionType.GraphicalObject,
+          }),
         ],
         floating: [
           new FloatingMatchSettings({

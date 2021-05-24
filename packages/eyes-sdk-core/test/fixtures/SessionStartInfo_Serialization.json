@@ -35,13 +35,11 @@
     "content": [],
     "accessibility": [
       {
-        "_rect": {
-          "left": 10,
-          "top": 20,
-          "width": 30,
-          "height": 40
-        },
-        "_type": "GraphicalObject"
+        "left": 10,
+        "top": 20,
+        "width": 30,
+        "height": 40,
+        "type": "GraphicalObject"
       }
     ],
     "accessibilitySettings": {
