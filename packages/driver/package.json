@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@applitools/snippets": "2.1.3",
-    "@applitools/utils": "1.1.3"
+    "@applitools/utils": "1.2.0"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.13.0",
