@@ -215,7 +215,7 @@ jobs:
           version: ${{fromJSON(needs.setup.outputs.packages).scripts.releaseVersion}}
 
   api:
-    needs: [setup, utils, logger]
+    needs: [setup, types, utils, logger]
     if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -277,7 +277,7 @@ jobs:
           version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
 
   playwright:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -307,7 +307,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).playwright.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).playwright.package}}/coverage-test-report.xml
   puppeteer:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).puppeteer && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -337,7 +337,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}/coverage-test-report.xml
   webdriverio:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).webdriverio && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -367,7 +367,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-test-report.xml
   webdriverio-legacy:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -397,7 +397,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}/coverage-test-report.xml
   selenium:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -427,7 +427,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).selenium.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).selenium.package}}/coverage-test-report.xml
   protractor:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).protractor && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -457,7 +457,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).protractor.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).protractor.package}}/coverage-test-report.xml
   nightwatch:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).nightwatch && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -487,7 +487,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}/coverage-test-report.xml
   testcafe:
-    needs: [setup, utils, api, core, vgc]
+    needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).testcafe && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
