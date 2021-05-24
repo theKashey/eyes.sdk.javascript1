@@ -7,7 +7,7 @@ async function testServerInProcess(args = {}) {
     resolve = r
     reject = j
   })
-  const filepath = path.resolve(__dirname, 'test-server.js')
+  const filepath = path.resolve(__dirname, '../cli/test-server.js')
   const spawnArgs = [
     filepath,
     ...Object.entries(args).reduce(

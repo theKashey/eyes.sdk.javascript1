@@ -1,13 +1,14 @@
 const fs = require('fs')
 const path = require('path')
 const cwd = process.cwd()
-const {Eyes, VisualGridRunner} = require(path.resolve(cwd, './dist'))
 
 const batch = {
   name: process.env.APPLITOOLS_BATCH_NAME || 'JS Coverage Tests',
 }
 
-function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, ...config} = {}) {
+function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = cwd, ...config} = {}) {
+  const {Eyes, VisualGridRunner} = require(require.resolve(path.join(sdk, './dist'), {paths: [cwd]}))
+
   runner = runner || (vg ? new VisualGridRunner({testConcurrency: 500}) : undefined)
   const configuration = {
     apiKey: process.env.APPLITOOLS_API_KEY_SDK,

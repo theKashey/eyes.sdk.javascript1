@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `sdk` property in `setupEyes`
 
 ## 1.0.2 - 2021/5/24
 
