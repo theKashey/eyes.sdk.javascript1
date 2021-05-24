@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.2 - 2021/5/24
+
 - add mochaGrep function to generate regexp for cvg tests
 
 ## 1.0.1 - 2021/5/24
