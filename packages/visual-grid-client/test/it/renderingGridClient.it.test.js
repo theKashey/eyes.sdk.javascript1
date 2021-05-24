@@ -50,7 +50,7 @@ describe('renderingGridClient', () => {
 
     await openEyes({wrappers: [wrapper]})
 
-    expect(wrapper.getBatch().toJSON().properties).to.equal(batchProperties)
+    expect(wrapper.getBatch().toJSON().properties).to.eql(batchProperties)
   })
 
   it('validates presence of apiKey when openEyes and not at the creation of the client', async () => {
