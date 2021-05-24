@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.3 - 2021/5/24
+
 - fix `EyesRunner#getAllTestResults` behavior when no eyes attached
 - fix missing `properties` array in `Configuration`
 - fix `logs` format in `Configuration`
