@@ -76,7 +76,7 @@ describe('openEyes', () => {
     }
   })
 
-  it('passes with correct screenshot', async () => {
+  it.only('passes with correct screenshot', async () => {
     await page.goto(`${baseUrl}/test.html`)
 
     const {cdt, url, resourceContents, resourceUrls} = await processPage()
@@ -170,7 +170,7 @@ describe('openEyes', () => {
     ]
 
     for (const [index, testResults] of results.entries()) {
-      const testData = await getTestInfo(testResults, apiKey)
+      const testData = await getTestInfo(testResults.toJSON(), apiKey)
       expect(testData.actualAppOutput[0].imageMatchSettings.ignore).to.eql(
         expectedIgnoreRegions[index],
       )
