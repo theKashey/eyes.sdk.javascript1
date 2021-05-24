@@ -8,6 +8,7 @@
 - improve string formatting for `Location`, `RectangleSize` and `Region` data classes
 - fix return value of `Eyes#extractTextRegions`
 - fix usage of enums and string literals
+- updated to @applitools/types@1.0.1 (from 1.0.0)
 
 ## 1.0.2 - 2021/5/23
 
