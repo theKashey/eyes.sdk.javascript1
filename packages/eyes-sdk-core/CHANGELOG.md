@@ -3,6 +3,8 @@
 ## Unreleased
 
 - add wrappers to work with new internal api
+- updated to @applitools/driver@1.0.6 (from 1.0.5)
+- updated to @applitools/screenshoter@3.0.8 (from 3.0.7)
 
 ## 12.19.3 - 2021/5/13
 
