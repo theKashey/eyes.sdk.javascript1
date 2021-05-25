@@ -7,17 +7,19 @@ const yargs = require('yargs')
 const {setupEyes} = require('@applitools/test-utils')
 const utils = require('../src/cli-utils')
 const cwd = process.cwd()
-const {DeviceName, ScreenOrientation, MatchLevel} = require(cwd)
 const delay = util.promisify(setTimeout)
+const table = require('cli-table3')
 
 const checkConfig = {
   name: {
     describe: 'tag for checkpoint',
     type: 'string',
+    alias: 'n',
     default: 'render script',
   },
   region: {
     describe: 'region to check',
+    alias: 'r',
     type: 'string',
     coerce(str) {
       const region = utils.parseRegion(str)
@@ -72,7 +74,7 @@ const checkConfig = {
   matchLevel: {
     describe: 'match level',
     type: 'string',
-    choices: Object.values(MatchLevel),
+    // choices: Object.values(MatchLevel),
   },
   fully: {
     type: 'boolean',
@@ -88,6 +90,7 @@ const checkConfig = {
 const buildConfig = {
   browser: {
     describe: 'preset name of browser. (e.g. "edge-18", "ie-11", "safari-11", "firefox")',
+    alias: 'b',
     type: 'string',
     default: 'chrome',
   },
@@ -108,6 +111,7 @@ const buildConfig = {
   attach: {
     describe: 'attach to existing chrome via remote debugging port',
     type: 'boolean',
+    alias: 'a'
   },
   driverUrl: {
     describe: 'url to the driver server',
@@ -126,9 +130,22 @@ const buildConfig = {
 }
 
 const eyesConfig = {
+  sdk: {
+    type: 'string',
+    describe: 'path to sdk',
+    default: process.cwd(),
+    alias: 's'
+  },
+  compare: {
+    type: 'boolean',
+    describe: 'compare classic with visual-grid',
+    default: false,
+    alias: 'c'
+  },
   vg: {
     type: 'boolean',
     describe: 'when specified, use visual grid instead of classic runner',
+    alias: 'v'
   },
   css: {
     type: 'boolean',
@@ -195,7 +212,6 @@ const eyesConfig = {
   renderBrowsers: {
     describe: 'comma-separated list of browser to render in vg mode (e.g. chrome(800x600))',
     type: 'string',
-    implies: ['vg'],
     coerce(str) {
       const regexp = /^(chrome|chrome-1|chrome-2|chrome-canary|firefox|firefox-1|firefox-2|ie11|ie10|edge|safari|safari-1|safari-2|ie-vmware|edge-chromium|edge-chromium-1|edge-chromium-2)(\( *(\d+) *(x|,) *(\d+) *\))?$/
       return utils.parseList(str).map(browser => {
@@ -217,18 +233,18 @@ const eyesConfig = {
     describe:
       'comma-separated list of chrome-emulation devices to render in vg mode (e.g. "Pixel 4:portrait", "Nexus 7")',
     type: 'string',
-    implies: ['vg'],
     coerce(str) {
-      const deviceNames = Object.values(DeviceName)
-      const orientations = Object.values(ScreenOrientation)
+      // const {DeviceName, ScreenOrientation, MatchLevel} = require(cwd)
+      // const deviceNames = Object.values(DeviceName)
+      // const orientations = Object.values(ScreenOrientation)
       return utils.parseList(str).map(deviceStr => {
         const deviceInfo = utils.parseSequence(['deviceName', 'screenOrientation'], ':')(deviceStr)
-        if (!deviceNames.includes(deviceInfo.deviceName)) {
-          throw new Error(`invalid device name. Supports only ${deviceNames.join(', ')}`)
-        }
-        if (deviceInfo.screenOrientation && !orientations.includes(deviceInfo.screenOrientation)) {
-          throw new Error(`invalid screen orientation. Supports only ${orientations.join(', ')}`)
-        }
+        // if (!deviceNames.includes(deviceInfo.deviceName)) {
+        //   throw new Error(`invalid device name. Supports only ${deviceNames.join(', ')}`)
+        // }
+        // if (deviceInfo.screenOrientation && !orientations.includes(deviceInfo.screenOrientation)) {
+        //   throw new Error(`invalid screen orientation. Supports only ${orientations.join(', ')}`)
+        // }
         return {chromeEmulationInfo: deviceInfo}
       })
     },
@@ -244,6 +260,7 @@ const testConfig = {
     describe: 'delay in seconds before capturing page',
     type: 'number',
     default: 0,
+    alias: 'd'
   },
   runBefore: {
     describe:
@@ -285,19 +302,41 @@ yargs
     builder: yargs =>
       yargs.options({...buildConfig, ...eyesConfig, ...checkConfig, ...testConfig, ...saveConfig}),
     handler: async args => {
-      console.log(`Options:\n ${formatArgs(args)}\n`)
+      console.log(`render options\n${formatArgs(args)}`)
       try {
-        await runner(args)
+        let testResults
+        if (args.compare) {
+          args.testName = `eyes-compare ${Date.now()}`
+          for (const {vg} of [{vg: false}, {vg: true}]) {
+            testResults = await runner({...args, vg})
+          }
+        } else {
+          testResults = await runner(args)
+        }
+        printTestResults(testResults)
       } catch (err) {
         console.log(err)
         process.exit(1)
       }
     },
   })
+  .wrap(yargs.terminalWidth())
   .help().argv
 
+function printTestResults(testResults) {
+  const resultsStr = testResults
+    .getAllResults()
+    .map(testResultContainer => {
+      const testResults = testResultContainer.getTestResults()
+      return testResults ? formatResults(testResults) : testResultContainer.getException()
+    })
+    .join('\n')
+
+  console.log(`render results\n${resultsStr}`)
+}
+
 async function runner(args) {
-  const spec = require(path.resolve(cwd, 'dist/spec-driver'))
+  const spec = require(require.resolve(path.join(args.sdk, 'dist/spec-driver'), {paths: [cwd]}))
 
   let runBeforeFunc
   if (args.runBefore !== undefined) {
@@ -315,11 +354,16 @@ async function runner(args) {
   try {
     args.url = args.attach ? await spec.getUrl(driver) : args.url
     if (!args.attach) await spec.visit(driver, args.url)
-    console.log('Running render script for', args.url)
+    console.log(
+      `running ${args.vg ? 'ultrafast mode' : 'classic mode'} render ${
+        args.compare ? 'compare ' : ''
+      }script for`,
+      args.url,
+    )
 
     args.saveLogs = path.resolve(cwd, `./logs/${formatUrl(args.url)}-${formatDate(new Date())}.log`)
     args.saveDebugScreenshots = args.saveDebugScreenshots && args.saveLogs.replace('.log', '')
-    console.log('log file at:', args.saveLogs)
+    console.log('log file at:', args.saveLogs, '\n')
     if (args.saveDebugScreenshots) console.log('debug screenshots at:', args.saveDebugScreenshots)
 
     const eyes = setupEyes(argsToEyesConfig(args))
@@ -331,7 +375,7 @@ async function runner(args) {
 
     if (runBeforeFunc) await runBeforeFunc(driver)
 
-    await eyes.open(driver, args.appName, args.url)
+    await eyes.open(driver, args.appName, args.testName || args.url)
 
     logger.log(`[render script] awaiting delay... ${args.delay}s`)
     await delay(args.delay * 1000)
@@ -342,17 +386,9 @@ async function runner(args) {
     await eyes.close(false)
 
     logger.getLogHandler().open()
-    const testResultsSummary = await runner.getAllTestResults(false)
+    const results = await runner.getAllTestResults(false)
     logger.getLogHandler().close()
-    const resultsStr = testResultsSummary
-      .getAllResults()
-      .map(testResultContainer => {
-        const testResults = testResultContainer.getTestResults()
-        return testResults ? formatResults(testResults) : testResultContainer.getException()
-      })
-      .join('\n')
-
-    console.log('\nRender results:\n', resultsStr)
+    return results
   } finally {
     await destroyDriver()
   }
@@ -380,6 +416,7 @@ function argsToBuildConfig(args) {
 
 function argsToEyesConfig(args) {
   return {
+    sdk: args.sdk,
     vg: args.vg,
     apiKey: args.apiKey,
     serverUrl: args.serverUrl,
@@ -436,34 +473,36 @@ function formatUrl(url) {
 }
 
 function formatArgs(args) {
-  return Object.entries(args)
-    .reduce((lines, [key, value]) => {
-      // don't show the entire cli, and show only the camelCase version of each arg
-      if (!['_', '$0'].includes(key) && !key.includes('-')) {
-        lines.push(`* ${key}: ${JSON.stringify(value)}`)
-      }
-      return lines
-    }, [])
-    .join('\n ')
+  const outputTable = new table({
+    style: {head: [], border: []},
+    chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
+  })
+  Object.entries(args).reduce((lines, [key, value]) => {
+    // don't show the entire cli, and show only the camelCase version of each arg
+    if (!['_', '$0'].includes(key) && !key.includes('-') && key.length > 1) {
+      lines.push([key, JSON.stringify(value)])
+    }
+    return lines
+  }, outputTable)
+  return outputTable.toString();
 }
 
 function formatResults(testResults) {
-  return `
-Test name                 : ${testResults.getName()}
-Test status               : ${testResults.getStatus()}
-URL to results            : ${testResults.getUrl()}
-Total number of steps     : ${testResults.getSteps()}
-Number of matching steps  : ${testResults.getMatches()}
-Number of visual diffs    : ${testResults.getMismatches()}
-Number of missing steps   : ${testResults.getMissing()}
-Display size              : ${testResults.getHostDisplaySize().toString()}
-Steps                     :
-${testResults
-  .getStepsInfo()
-  .map(step => {
-    return `  ${step.getName()} - ${getStepStatus(step)}`
-  })
-  .join('\n')}`
+  const outputTable = new table({ style: { head: [], border: [] }, chars: { 'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' } })
+  outputTable.push(['name', testResults.getName()])
+  outputTable.push(['status', testResults.getStatus()])
+  outputTable.push(['url', testResults.getUrl()])
+  outputTable.push(['total steps', testResults.getSteps()])
+  outputTable.push(['matches', testResults.getMatches()])
+  outputTable.push(['diffs', testResults.getMismatches()])
+  outputTable.push(['missing', testResults.getMissing()])
+  outputTable.push(['viewport', testResults.getHostDisplaySize().toString()])
+  outputTable.push(['steps', `${testResults.getStepsInfo()
+    .map(step => {
+      return `${step.getName()} - ${getStepStatus(step)}`
+    })
+    .join('\n')}`])
+  return outputTable.toString();
 
   function getStepStatus(step) {
     if (step.getIsDifferent()) {

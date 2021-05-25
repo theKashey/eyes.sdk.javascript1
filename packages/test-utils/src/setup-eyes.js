@@ -8,7 +8,6 @@ const batch = {
 
 function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = cwd, ...config} = {}) {
   const {Eyes, VisualGridRunner} = require(require.resolve(path.join(sdk, './dist'), {paths: [cwd]}))
-
   runner = runner || (vg ? new VisualGridRunner({testConcurrency: 500}) : undefined)
   const configuration = {
     apiKey: process.env.APPLITOOLS_API_KEY_SDK,
