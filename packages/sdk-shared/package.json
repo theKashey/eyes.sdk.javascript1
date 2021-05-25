@@ -34,8 +34,8 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
-    "@applitools/test-server": "1.0.1",
-    "@applitools/test-utils": "1.0.0",
+    "@applitools/test-server": "1.0.3",
+    "@applitools/test-utils": "1.0.3",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chalk": "3.0.0",
