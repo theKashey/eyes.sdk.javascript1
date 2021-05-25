@@ -47,7 +47,7 @@
     "@applitools/scripts": "1.0.0",
     "@applitools/sdk-coverage-tests": "2.3.13",
     "@applitools/sdk-release-kit": "^0.13.0",
-    "@applitools/sdk-shared": "0.9.2",
+    "@applitools/sdk-shared": "0.9.3",
     "@applitools/test-utils": "1.0.3",
     "@types/webdriverio": "4.13.3",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
