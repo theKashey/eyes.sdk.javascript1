@@ -69,7 +69,7 @@
     }
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "^4.5.2",
+    "@applitools/dom-snapshot": "4.5.2",
     "@applitools/eyes-api": "1.0.3",
     "@applitools/eyes-sdk-core": "12.20.0",
     "@applitools/utils": "1.2.0",
