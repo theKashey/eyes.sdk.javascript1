@@ -3,6 +3,8 @@
 ## Unreleased
 
  - add the option to send , variationGroupId to checkwidnow
+- updated to @applitools/dom-snapshot@4.5.2 (from 4.5.0)
+- updated to @applitools/visual-grid-client@15.8.7 (from 15.8.4)
 
 
 ## 3.21.1 - 2021/5/12
