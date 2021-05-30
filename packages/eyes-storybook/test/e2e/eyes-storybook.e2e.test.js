@@ -55,9 +55,12 @@ describe('eyes-storybook', () => {
 
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
-      utils.process.sh(`node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`, {
-        spawnOptions: {stdio: 'pipe'},
-      }),
+      utils.process.sh(
+        `node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`,
+        {
+          spawnOptions: {stdio: 'pipe'},
+        },
+      ),
     );
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
 
@@ -69,9 +72,12 @@ describe('eyes-storybook', () => {
 
   it('fails with proper message when failing to get stories because of navigation timeout', async () => {
     const promise = presult(
-      utils.process.sh(`node ./bin/eyes-storybook --read-stories-timeout=10 -u http://localhost:9001`, {
-        spawnOptions: {stdio: 'pipe'},
-      }),
+      utils.process.sh(
+        `node ./bin/eyes-storybook --read-stories-timeout=10 -u http://localhost:9001`,
+        {
+          spawnOptions: {stdio: 'pipe'},
+        },
+      ),
     );
     const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
 
