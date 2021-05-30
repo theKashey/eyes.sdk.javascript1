@@ -29,6 +29,17 @@ describe('getBrowserInfo(browser)', () => {
   })
 
   it('works with emulated device syntax', async () => {
+    const browser = {deviceName: 'emulated1', name: 'chrome', screenOrientation: 'landscape'}
+    assert.deepStrictEqual(
+      await getBrowserInfo({browser, getEmulatedDevicesSizes, getIosDevicesSizes}),
+      {
+        name: 'emulated1',
+        screenOrientation: 'landscape',
+        width: 11,
+        height: 1,
+      },
+    )
+
     const device1 = {deviceName: 'emulated1'}
     assert.deepStrictEqual(
       await getBrowserInfo({browser: device1, getEmulatedDevicesSizes, getIosDevicesSizes}),

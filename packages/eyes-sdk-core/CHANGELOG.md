@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix browser configuration for emulated device with `name` property
 
 ## 12.20.0 - 2021/5/24
 
