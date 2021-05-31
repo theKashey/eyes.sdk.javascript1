@@ -111,7 +111,7 @@ const buildConfig = {
   attach: {
     describe: 'attach to existing chrome via remote debugging port',
     type: 'boolean',
-    alias: 'a'
+    alias: 'a',
   },
   driverUrl: {
     describe: 'url to the driver server',
@@ -134,18 +134,18 @@ const eyesConfig = {
     type: 'string',
     describe: 'path to sdk',
     default: process.cwd(),
-    alias: 's'
+    alias: 's',
   },
   compare: {
     type: 'boolean',
     describe: 'compare classic with visual-grid',
     default: false,
-    alias: 'c'
+    alias: 'c',
   },
   vg: {
     type: 'boolean',
     describe: 'when specified, use visual grid instead of classic runner',
-    alias: 'v'
+    alias: 'v',
   },
   css: {
     type: 'boolean',
@@ -260,7 +260,7 @@ const testConfig = {
     describe: 'delay in seconds before capturing page',
     type: 'number',
     default: 0,
-    alias: 'd'
+    alias: 'd',
   },
   runBefore: {
     describe:
@@ -484,11 +484,14 @@ function formatArgs(args) {
     }
     return lines
   }, outputTable)
-  return outputTable.toString();
+  return outputTable.toString()
 }
 
 function formatResults(testResults) {
-  const outputTable = new table({ style: { head: [], border: [] }, chars: { 'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' } })
+  const outputTable = new table({
+    style: {head: [], border: []},
+    chars: {mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': ''},
+  })
   outputTable.push(['name', testResults.getName()])
   outputTable.push(['status', testResults.getStatus()])
   outputTable.push(['url', testResults.getUrl()])
@@ -497,12 +500,16 @@ function formatResults(testResults) {
   outputTable.push(['diffs', testResults.getMismatches()])
   outputTable.push(['missing', testResults.getMissing()])
   outputTable.push(['viewport', testResults.getHostDisplaySize().toString()])
-  outputTable.push(['steps', `${testResults.getStepsInfo()
-    .map(step => {
-      return `${step.getName()} - ${getStepStatus(step)}`
-    })
-    .join('\n')}`])
-  return outputTable.toString();
+  outputTable.push([
+    'steps',
+    `${testResults
+      .getStepsInfo()
+      .map(step => {
+        return `${step.getName()} - ${getStepStatus(step)}`
+      })
+      .join('\n')}`,
+  ])
+  return outputTable.toString()
 
   function getStepStatus(step) {
     if (step.getIsDifferent()) {
