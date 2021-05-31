@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/dom-snapshot@4.5.3 (from 4.5.2)
+- updated to @applitools/eyes-sdk-core@12.20.1 (from 12.20.0)
 
 
 ## 5.31.4 - 2021/5/27
