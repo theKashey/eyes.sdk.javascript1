@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix browser config
 
 ## 3.22.2 - 2021/5/11
 
