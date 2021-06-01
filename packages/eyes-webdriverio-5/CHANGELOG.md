@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- add `getEyes` to the service
+- fix bug when configuration was not propagated in service
+- 
 
 ## 5.31.5 - 2021/5/31
 

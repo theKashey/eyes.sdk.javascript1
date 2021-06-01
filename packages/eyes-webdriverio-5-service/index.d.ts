@@ -1,6 +1,7 @@
 import type {
   Element,
   Selector,
+  Eyes,
   ConfigurationPlain,
   Configuration,
   CheckSettingsPlain,
@@ -16,6 +17,7 @@ declare module WebdriverIO {
     eyes?: ServiceOption
   }
   interface Browser {
+    getEyes(): Eyes
     eyesCheck(title: string, checkSettings: CheckSettings | CheckSettingsPlain): Promise<void>
     eyesSetScrollRootElement(element: Element | Selector): void
     eyesAddProperty(key: string, value: string): void

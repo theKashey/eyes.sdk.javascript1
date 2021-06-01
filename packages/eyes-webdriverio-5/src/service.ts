@@ -1,6 +1,6 @@
 import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as spec from './spec-driver'
-import {Driver, Element, Eyes, VisualGridRunner, ConfigurationPlain, TestResults} from './api'
+import {Driver, Element, Eyes, VisualGridRunner, ClassicRunner, ConfigurationPlain, TestResults} from './api'
 
 if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
   try {
@@ -40,15 +40,22 @@ export = class EyesService {
 
     if (!useVisualGrid) config.hideScrollbars = true
 
-    this._eyes = new EyesOverride(useVisualGrid ? new VisualGridRunner({testConcurrency: concurrency}) : null, config)
+    this._eyes = new EyesOverride(
+      useVisualGrid ? new VisualGridRunner({testConcurrency: concurrency}) : new ClassicRunner(),
+      config,
+    )
   }
   beforeSession(config: Record<string, unknown>) {
     this._appName = this._eyes.configuration.appName
     if (config.enableEyesLogs) {
-      // this._eyes.configuration.LOG_HANDLER(new ConsoleLogHandler(true))
+      this._eyes.configuration.logs = {type: 'console'}
     }
   }
   before() {
+    browser.addCommand('getEyes', () => {
+      return this._eyes
+    })
+
     browser.addCommand('eyesCheck', async (title: string, checkSettings: any = {fully: true}) => {
       await this._eyesOpen()
       return this._eyes.check(title, checkSettings)

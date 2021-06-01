@@ -64,7 +64,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
       this._config = new ConfigurationData(config)
     } else {
       this._runner = new ClassicRunner()
-      this._config = new ConfigurationData(runnerOrConfig)
+      this._config = new ConfigurationData(runnerOrConfig ?? config)
     }
 
     this._runner.attach(this, this._spec)

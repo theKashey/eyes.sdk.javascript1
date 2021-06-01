@@ -366,6 +366,36 @@ jobs:
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}/coverage-test-report.xml
+  webdriverio-service:
+    needs: [setup, webdriverio]
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.env}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.releaseVersion}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-webdriverio-service
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}/coverage-test-report.xml
   webdriverio-legacy:
     needs: [setup, utils, test-utils, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy && !failure() && !cancelled()}}

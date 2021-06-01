@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix `Eyes` constructor to support the first argument as `null` and second as a `Configuration` object
 
 ## 1.0.3 - 2021/5/24
 
