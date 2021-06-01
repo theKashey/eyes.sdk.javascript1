@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/dom-snapshot@4.5.3 (from 4.5.2)
 
+
+## 12.20.2 - 2021/6/1
+
+- updated to @applitools/dom-snapshot@4.5.3 (from 4.5.2)
 
 ## 12.20.1 - 2021/5/30
 
