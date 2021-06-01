@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@applitools/dom-snapshot": "4.5.0",
-    "@applitools/driver": "^1.0.6",
+    "@applitools/driver": "1.0.6",
     "@applitools/eyes-puppeteer": "1.6.0",
     "@applitools/eyes-sdk-core": "12.17.4",
     "@applitools/functional-commons": "1.6.0",
