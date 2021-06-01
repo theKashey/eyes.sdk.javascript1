@@ -531,18 +531,11 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
-          report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).storybook.env}}
       - name: Publish
+        env:
+          STDOUT_LEVEL: 1
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
-      - name: Save release and testing artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-tests-report-storybook
-          retention-days: 30
-          path: |
-            packages/${{fromJSON(needs.setup.outputs.packages).storybook.package}}/coverage-tests-metadata.json
-            packages/${{fromJSON(needs.setup.outputs.packages).storybook.package}}/coverage-test-report.xml
