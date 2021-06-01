@@ -8,7 +8,7 @@
     "",
     "[EYES: TEST RESULTS]:",
     "",
-    "custom font: w/o font hinting [Chrome 90.0] [640x480] - \u001b[32mPassed\u001b[39m",
+    "custom font: w/o font hinting [Chrome <browser_version>] [640x480] - \u001b[32mPassed\u001b[39m",
     "",
     "\u001b[32m\u001b[39m",
     "\u001b[32mNo differences were found!\u001b[39m",

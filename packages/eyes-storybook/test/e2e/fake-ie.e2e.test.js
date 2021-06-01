@@ -27,7 +27,8 @@ describe('fake ie', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
-      .replace(version, '<version>');
+      .replace(version, '<version>')
+      .replace(/\d+(?:\.\d+)+/g, '<browser_version>');
 
     await snap(output, 'fake ie');
   });
