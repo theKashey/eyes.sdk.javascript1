@@ -516,3 +516,33 @@ jobs:
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-test-report.xml
+  storybook:
+    needs: [setup, utils, test-utils, core, vgc]
+    if: ${{fromJSON(needs.setup.outputs.packages).storybook && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).storybook.env}}
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-storybook
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).storybook.package}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).storybook.package}}/coverage-test-report.xml
