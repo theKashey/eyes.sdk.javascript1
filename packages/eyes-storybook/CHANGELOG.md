@@ -3,6 +3,9 @@
 ## Unreleased
 
 - fix browser config
+- updated to @applitools/dom-snapshot@4.5.3 (from 4.5.0)
+- updated to @applitools/eyes-sdk-core@12.20.2 (from 12.20.1)
+- updated to @applitools/visual-grid-client@15.8.8 (from 15.8.7)
 
 ## 3.22.2 - 2021/5/11
 
