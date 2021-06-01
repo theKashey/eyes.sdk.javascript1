@@ -1,5 +1,5 @@
 const path = require('path')
-const {EyesService} = require('@applitools/eyes-webdriverio')
+const EyesService = require('@applitools/eyes-webdriverio/dist/service')
 
 exports.config = {
   runner: 'local',
