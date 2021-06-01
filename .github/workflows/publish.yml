@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       packages:
-        description: "package names (aliases)"
+        description: 'package names (aliases)'
         required: true
       version:
         description: "version type (specify 'major', 'minor, or 'patch')"
-        default: "patch"
+        default: 'patch'
 env:
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
@@ -533,9 +533,9 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
         env: ${{fromJSON(needs.setup.outputs.packages).storybook.env}}
       - name: Publish
-        env:
-          STDOUT_LEVEL: 1
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
+    env:
+      STDOUT_LEVEL: 1
