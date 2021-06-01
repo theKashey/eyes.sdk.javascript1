@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.3 - 2021/6/1
+
 - fix browser config
 - updated to @applitools/dom-snapshot@4.5.3 (from 4.5.0)
 - updated to @applitools/eyes-sdk-core@12.20.2 (from 12.20.1)
