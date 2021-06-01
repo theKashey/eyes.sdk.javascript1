@@ -5,6 +5,8 @@
 - add `getEyes` to the service
 - fix bug when configuration was not propagated in service
 - 
+- updated to @applitools/eyes-sdk-core@12.20.2 (from 12.20.1)
+- updated to @applitools/visual-grid-client@15.8.8 (from 15.8.7)
 
 ## 5.31.5 - 2021/5/31
 
