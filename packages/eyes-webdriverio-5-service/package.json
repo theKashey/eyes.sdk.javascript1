@@ -20,7 +20,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@applitools/eyes-webdriverio": "5.29.8"
+    "@applitools/eyes-webdriverio": "5.31.5"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "^0.13.0",
@@ -42,13 +42,13 @@
   "scripts": {
     "lint": "eslint . --ext .js",
     "test": "wdio tests/wdio.conf.js",
-    "preversion": "bongo preversion && yarn test",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps",
+    "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "prepublish:setup": "yarn docker:setup"
+    "deps": "bongo deps",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
