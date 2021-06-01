@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.13.0 - 2021/6/1
+
 - added full typescript support
 - introduced @applitools/eyes-api package with new api
 - updated to @applitools/eyes-webdriverio@5.31.5 (from 5.29.8)
