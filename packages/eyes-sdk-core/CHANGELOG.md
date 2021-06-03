@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix errors thrown during `EyesVisualGrid::close`
 
 ## 12.20.2 - 2021/6/1
 
