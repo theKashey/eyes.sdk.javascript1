@@ -102,22 +102,13 @@ export async function getElementRect(
   const {value} = await browser.elementIdRect(extractElementId(element))
   return value
 }
-export async function getWindowRect(browser: Driver): Promise<{x: number; y: number; width: number; height: number}> {
-  const {value: location} = (await browser.windowHandlePosition()) as {value: {x: number; y: number}}
+export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {
   const {value: size} = (await browser.windowHandleSize()) as {value: {width: number; height: number}}
-  return {x: location.x, y: location.y, width: size.width, height: size.height}
+  return {width: size.width, height: size.height}
 }
-export async function setWindowRect(
-  browser: Driver,
-  rect: {x?: number; y?: number; width?: number; height?: number},
-): Promise<void> {
-  const {x = null, y = null, width = null, height = null} = rect || {}
-  if (x !== null && y !== null) {
-    await browser.windowHandlePosition({x, y})
-  }
-  if (width !== null && height !== null) {
-    await browser.windowHandleSize({width, height})
-  }
+export async function setWindowSize(browser: Driver, size: {width: number; height: number}): Promise<void> {
+  await browser.windowHandlePosition({x: 0, y: 0})
+  await browser.windowHandleSize(size)
 }
 export async function getOrientation(browser: Driver): Promise<string> {
   const orientation = ((await browser.getOrientation()) as unknown) as string
@@ -135,8 +126,8 @@ export async function getDriverInfo(browser: Driver): Promise<any> {
       browser.desiredCapabilities.platformName ||
       browser.desiredCapabilities.platform,
     platformVersion: browser.desiredCapabilities.platformVersion,
-    browserName: browser.desiredCapabilities.browserName,
-    browserVersion: browser.desiredCapabilities.browserVersion,
+    browserName: browser.desiredCapabilities.browserName ?? (browser.desiredCapabilities as any).name,
+    browserVersion: browser.desiredCapabilities.browserVersion ?? browser.desiredCapabilities.version,
   }
 }
 export async function getTitle(browser: Driver): Promise<string> {

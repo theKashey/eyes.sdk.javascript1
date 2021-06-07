@@ -13,7 +13,7 @@ async function getViewportSize(logger, context) {
   if (!context.driver.isNative) {
     size = await context.execute(snippets.getViewportSize)
   } else {
-    const rect = await context.driver.getWindowRect()
+    const rect = await context.driver.getWindowSize()
     size = {width: rect.width, height: rect.height}
     if (size.height > size.width) {
       const orientation = await context.driver.getOrientation()
@@ -41,13 +41,7 @@ async function setViewportSize(logger, context, requiredViewportSize) {
   // If the viewport size is already the required size
   if (utils.geometry.equals(actualViewportSize, requiredViewportSize)) return true
 
-  // We move the window to (0,0) to have the best chance to be able to
-  // set the viewport size as requested.
-  await context.driver.setWindowRect({x: 0, y: 0}).catch(err => {
-    logger.verbose('Warning: Failed to move the browser window to (0,0)', err)
-  })
-
-  let actualWindowSize = await context.driver.getWindowRect()
+  let actualWindowSize = await context.driver.getWindowSize()
   actualViewportSize = await getViewportSize(logger, context)
   logger.verbose(`actualWindowSize: ${actualWindowSize}, actualViewportSize: ${actualViewportSize}`)
 
@@ -60,7 +54,7 @@ async function setViewportSize(logger, context, requiredViewportSize) {
       height: actualWindowSize.height + (requiredViewportSize.height - actualViewportSize.height),
     }
     logger.verbose(`Attempt to set window size to ${requiredWindowSize}. Retries left: ${retries}`)
-    await context.driver.setWindowRect(requiredWindowSize)
+    await context.driver.setWindowSize(requiredWindowSize)
     await utils.general.sleep(sleep)
     actualViewportSize = await getViewportSize(logger, context)
     if (utils.geometry.equals(actualViewportSize, requiredViewportSize)) return true

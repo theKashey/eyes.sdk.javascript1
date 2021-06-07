@@ -13,39 +13,19 @@ describe('spec driver', async () => {
         done()
       })
     })
-    it('getWindowRect()', async function (driver) {
+    it('getWindowSize()', async function (driver) {
       const rect = await driver.getWindowRect()
-      const result = await spec.getWindowRect(driver)
-      assert.deepStrictEqual(result, rect)
+      const result = await spec.getWindowSize(driver)
+      assert.deepStrictEqual(result, {width: rect.width, height: rect.height})
     })
-    it('setWindowRect({x, y, width, height})', async function (driver) {
-      const input = {
-        x: 20,
-        y: 30,
-        width: 510,
-        height: 511,
-      }
-      await spec.setWindowRect(driver, input)
-      const rect = await spec.getWindowRect(driver)
-      assert.deepStrictEqual(rect, input)
-    })
-    it('setWindowRect({x, y})', async function (driver) {
-      const input = {
-        x: 21,
-        y: 31,
-      }
-      await spec.setWindowRect(driver, input)
-      const rect = await spec.getWindowRect(driver)
-      assert.deepStrictEqual(rect, {x: 21, y: 31, width: 510, height: 511})
-    })
-    it('setWindowRect({width, height})', async function (driver) {
+    it('setWindowSize({width, height})', async function (driver) {
       const input = {
         width: 551,
         height: 552,
       }
-      await spec.setWindowRect(driver, input)
-      const rect = await spec.getWindowRect(driver)
-      assert.deepStrictEqual(rect, {x: 21, y: 31, width: 551, height: 552})
+      await spec.setWindowSize(driver, input)
+      const rect = await driver.getWindowRect()
+      assert.deepStrictEqual(rect, {x: 0, y: 0, width: 551, height: 552})
     })
   })
 })

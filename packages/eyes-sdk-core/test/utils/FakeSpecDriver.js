@@ -41,12 +41,12 @@ module.exports = {
   getDriverInfo(driver) {
     return driver.info
   },
-  async getWindowRect(driver) {
+  async getWindowSize(driver) {
     const rect = await driver.getWindowRect()
     return rect
   },
-  async setWindowRect(driver, rect) {
-    await driver.setWindowRect(rect)
+  async setWindowSize(driver, size) {
+    await driver.setWindowRect(size)
   },
   async getUrl(driver) {
     if (this._isNative) return null

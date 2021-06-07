@@ -108,19 +108,14 @@ export async function getElementRect(
   const {width, height} = await element.getSize()
   return {x, y, width, height}
 }
-export async function getWindowRect(driver: Driver): Promise<{x: number; y: number; width: number; height: number}> {
-  const {x, y} = await driver.manage().window().getPosition()
-  const {width, height} = await driver.manage().window().getSize()
-  return {x, y, width, height}
+export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
+  const size = await driver.manage().window().getSize()
+  return {width: size.width, height: size.height}
 }
-export async function setWindowRect(driver: Driver, rect?: {x?: number; y?: number; width?: number; height?: number}) {
-  const {x = null, y = null, width = null, height = null} = rect || {}
-  if (x !== null && y !== null) {
-    await driver.manage().window().setPosition(x, y)
-  }
-  if (width !== null && height !== null) {
-    await driver.manage().window().setSize(width, height)
-  }
+export async function setWindowSize(driver: Driver, size: {width: number; height: number}) {
+  const window = driver.manage().window()
+  await window.setPosition(0, 0)
+  await window.setSize(size.width, size.height)
 }
 export async function getOrientation(driver: Driver): Promise<string> {
   const capabilities = await driver.getCapabilities()
@@ -129,16 +124,17 @@ export async function getOrientation(driver: Driver): Promise<string> {
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = await driver.getCapabilities()
+  const desiredCapabilities = capabilities.get('desired') ?? {}
   const session = await driver.getSession()
   const sessionId = session.getId()
-  const deviceName = capabilities.has('desired')
-    ? capabilities.get('desired').deviceName
-    : capabilities.get('deviceName')
-  const platformName = capabilities.get('platformName') || capabilities.get('platform')
+  const deviceName = desiredCapabilities.deviceName ?? capabilities.get('deviceName')
+  const platformName =
+    capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
   const platformVersion = capabilities.get('platformVersion')
-  const browserName = capabilities.get('browserName')
-  const browserVersion = capabilities.get('browserVersion')
-  const isMobile = ['android', 'ios'].includes(platformName && platformName.toLowerCase())
+  const browserName = capabilities.get('browserName') ?? desiredCapabilities.browserName
+  const browserVersion = capabilities.get('browserVersion') ?? capabilities.get('version')
+  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
+
   return {
     sessionId,
     isMobile,
@@ -206,6 +202,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     attach,
     proxy,
     configurable = true,
+    appium = false,
     args = [],
     headless,
     logLevel = 'silent',
@@ -213,7 +210,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
 
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {
-    const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]
+    const browserOptionsName = browserOptionsNames[desiredCapabilities.browserName]
     if (browserOptionsName) {
       const browserOptions = desiredCapabilities[browserOptionsName] || {}
       browserOptions.args = [...(browserOptions.args || []), ...args]
@@ -223,6 +220,9 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       }
       desiredCapabilities[browserOptionsName] = browserOptions
     }
+  }
+  if (appium && browser === 'chrome') {
+    desiredCapabilities['appium:chromeOptions'] = {w3c: false}
   }
   const builder = new Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)

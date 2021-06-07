@@ -1,7 +1,5 @@
 'use strict'
-const Location = require('../geometry/Location')
 const RectangleSize = require('../geometry/RectangleSize')
-const Region = require('../geometry/Region')
 const MutableImage = require('../images/MutableImage')
 const UserAgent = require('../useragent/UserAgent')
 const EyesUtils = require('./EyesUtils')
@@ -447,26 +445,24 @@ class EyesDriver {
   /**
    * @return {Promise<Region>}
    */
-  async getWindowRect() {
-    const {x = 0, y = 0, width, height} = this.spec.getWindowRect
-      ? await this.spec.getWindowRect(this._driver)
+  async getWindowSize() {
+    const size = this.spec.getWindowSize
+      ? await this.spec.getWindowSize(this._driver)
       : await this.spec.getViewportSize(this._driver)
-    return new Region({left: x, top: y, width, height})
+    return new RectangleSize(size)
   }
   /**
    * @param {PlainRegion | Region} rect
    * @return {Promise<void>}
    */
-  async setWindowRect(rect) {
-    if (rect instanceof Location || rect instanceof RectangleSize) {
-      rect = rect.toJSON()
-    } else if (rect instanceof Region) {
-      rect = {x: rect.getLeft(), y: rect.getTop(), width: rect.getWidth(), height: rect.getHeight()}
+  async setWindowSize(size) {
+    if (size instanceof RectangleSize) {
+      size = size.toJSON()
     }
-    if (this.spec.setWindowRect) {
-      await this.spec.setWindowRect(this._driver, rect)
-    } else if (rect.width && rect.height) {
-      await this.spec.setViewportSize(this._driver, {width: rect.width, height: rect.height})
+    if (this.spec.setWindowSize) {
+      await this.spec.setWindowSize(this._driver, size)
+    } else {
+      await this.spec.setViewportSize(this._driver, size)
     }
   }
   /**

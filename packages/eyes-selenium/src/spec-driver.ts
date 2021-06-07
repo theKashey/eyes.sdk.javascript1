@@ -105,42 +105,28 @@ export async function getElementRect(
 ): Promise<{x: number; y: number; width: number; height: number}> {
   return element.getRect()
 }
-export async function getWindowRect(driver: Driver): Promise<{x: number; y: number; width: number; height: number}> {
+export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   try {
-    if (utils.types.isFunction(driver.manage().window().getRect)) {
-      return await driver.manage().window().getRect()
-    } else {
-      const rect = {x: 0, y: 0, width: 0, height: 0}
-      if (utils.types.isFunction(driver.manage().window().getPosition)) {
-        const {x, y} = await driver.manage().window().getPosition()
-        rect.x = x
-        rect.y = y
-      }
-      if (utils.types.isFunction(driver.manage().window().getSize)) {
-        const {width, height} = await driver.manage().window().getSize()
-        rect.width = width
-        rect.height = height
-      }
-      return rect
+    const window = driver.manage().window()
+    if (utils.types.isFunction(window.getRect)) {
+      const rect = await window.getRect()
+      return {width: rect.width, height: rect.height}
+    } else if (utils.types.isFunction(window.getSize)) {
+      return await window.getSize()
     }
   } catch (err) {
     // workaround for Appium
     const cmd = require('selenium-webdriver/lib/command')
-
     return driver.execute(new cmd.Command(cmd.Name.GET_WINDOW_SIZE).setParameter('windowHandle', 'current'))
   }
 }
-export async function setWindowRect(driver: Driver, rect?: {x?: number; y?: number; width?: number; height?: number}) {
-  const {x = null, y = null, width = null, height = null} = rect || {}
-  if (utils.types.isFunction(driver.manage().window().setRect)) {
-    await driver.manage().window().setRect({x, y, width, height})
+export async function setWindowSize(driver: Driver, size: {width: number; height: number}) {
+  const window = driver.manage().window()
+  if (utils.types.isFunction(window.setRect)) {
+    await window.setRect({x: 0, y: 0, width: size.width, height: size.height})
   } else {
-    if (x !== null && y !== null) {
-      await driver.manage().window().setPosition(x, y)
-    }
-    if (width !== null && height !== null) {
-      await driver.manage().window().setSize(width, height)
-    }
+    await window.setPosition(0, 0)
+    await window.setSize(size.width, size.height)
   }
 }
 export async function getOrientation(driver: Driver): Promise<string> {
@@ -150,15 +136,15 @@ export async function getOrientation(driver: Driver): Promise<string> {
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = await driver.getCapabilities()
+  const desiredCapabilities = capabilities.get('desired') ?? {}
   const session = await driver.getSession()
   const sessionId = session.getId()
-  const deviceName = capabilities.has('desired')
-    ? capabilities.get('desired').deviceName
-    : capabilities.get('deviceName')
-  const platformName = capabilities.get('platformName') || capabilities.get('platform')
+  const deviceName = desiredCapabilities.deviceName ?? capabilities.get('deviceName')
+  const platformName =
+    capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
   const platformVersion = capabilities.get('platformVersion')
-  const browserName = capabilities.get('browserName')
-  const browserVersion = capabilities.get('browserVersion')
+  const browserName = capabilities.get('browserName') ?? desiredCapabilities.browserName
+  const browserVersion = capabilities.get('browserVersion') ?? capabilities.get('version')
   const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
 
   return {
@@ -224,10 +210,17 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const {Builder} = require('selenium-webdriver')
   const parseEnv = require('@applitools/test-utils/src/parse-env')
 
-  const {browser = '', capabilities, url, attach, proxy, configurable = true, args = [], headless} = parseEnv({
-    ...env,
-    legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3',
-  })
+  const {
+    browser = '',
+    capabilities,
+    url,
+    attach,
+    proxy,
+    configurable = true,
+    appium = false,
+    args = [],
+    headless,
+  } = parseEnv({...env, legacy: env.legacy ?? process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'})
   const desiredCapabilities = {browserName: browser, ...capabilities}
   if (configurable) {
     const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]
@@ -241,6 +234,9 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       }
       desiredCapabilities[browserOptionsName] = browserOptions
     }
+  }
+  if (appium && browser === 'chrome') {
+    desiredCapabilities['appium:chromeOptions'] = {w3c: false}
   }
   const builder = new Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)

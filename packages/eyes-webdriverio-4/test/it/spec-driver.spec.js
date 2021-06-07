@@ -16,55 +16,102 @@ describe('spec driver', async () => {
       await destroyBrowser()
     })
 
-    it('isDriver(driver)', isDriver({expected: true}))
-    it('isDriver(wrong)', isDriver({input: {}, expected: false}))
-    it('isElement(element)', isElement({input: () => browser.element('div').then(({value}) => value), expected: true}))
-    it('isElement(response-element)', isElement({input: () => browser.element('div'), expected: true}))
-    it('isElement(wrong)', isElement({input: () => ({}), expected: false}))
-    it('isSelector(string)', isSelector({input: 'div', expected: true}))
-    it('isSelector(by)', isSelector({input: By.xpath('//div'), expected: true}))
-    it('isSelector(wrong)', isSelector({input: {}, expected: false}))
-    it('transformElement(element)', transformElement({input: () => browser.element('div').then(({value}) => value)}))
-    it('transformElement(response-element)', transformElement({input: () => browser.element('div')}))
-    it(
-      'isEqualElements(element, element)',
-      isEqualElements({
+    it('isDriver(driver)', async () => {
+      await isDriver({expected: true})
+    })
+    it('isDriver(wrong)', async () => {
+      await isDriver({input: {}, expected: false})
+    })
+    it('isElement(element)', async () => {
+      await isElement({input: () => browser.element('div').then(({value}) => value), expected: true})
+    })
+    it('isElement(response-element)', async () => {
+      await isElement({input: () => browser.element('div'), expected: true})
+    })
+    it('isElement(wrong)', async () => {
+      await isElement({input: () => ({}), expected: false})
+    })
+    it('isSelector(string)', async () => {
+      await isSelector({input: 'div', expected: true})
+    })
+    it('isSelector(by)', async () => {
+      await isSelector({input: By.xpath('//div'), expected: true})
+    })
+    it('isSelector(wrong)', async () => {
+      await isSelector({input: {}, expected: false})
+    })
+    it('transformElement(element)', async () => {
+      await transformElement({input: () => browser.element('div').then(({value}) => value)})
+    })
+    it('transformElement(response-element)', async () => {
+      await transformElement({input: () => browser.element('div')})
+    })
+    it('isEqualElements(element, element)', async () => {
+      await isEqualElements({
         input: () => browser.element('div').then(({value}) => ({element1: value, element2: value})),
         expected: true,
-      }),
-    )
-    it(
-      'isEqualElements(element1, element2)',
-      isEqualElements({
+      })
+    })
+    it('isEqualElements(element1, element2)', async () => {
+      await isEqualElements({
         input: async () => ({
           element1: await browser.element('div').then(({value}) => value),
           element2: await browser.element('h1').then(({value}) => value),
         }),
         expected: false,
-      }),
-    )
-    it(
-      'extractSelector(element)',
-      extractSelector({
+      })
+    })
+    it('extractSelector(element)', async () => {
+      await extractSelector({
         input: () => browser.element('div').then(({value}) => value),
         expected: undefined,
-      }),
-    )
-    it('extractSelector(response-element)', extractSelector({input: () => browser.element('div'), expected: 'div'}))
-    it('executeScript(strings, args)', executeScript())
-    it('findElement(string)', findElement({input: '#overflowing-div'}))
-    it('findElements(string)', findElements({input: 'div'}))
-    it('findElement(non-existent)', findElement({input: 'non-existent', expected: null}))
-    it('findElements(non-existent)', findElements({input: 'non-existent', expected: []}))
-    it('mainContext()', mainContext())
-    it('parentContext()', parentContext())
-    it('childContext(element)', childContext())
-    it('getSessionId()', getSessionId())
-    it('getTitle()', getTitle())
-    it('getUrl()', getUrl())
-    it('visit()', visit())
-    it('isMobile()', isMobile({expected: false}))
-    it('getPlatformName()', getPlatformName({expected: undefined}))
+      })
+    })
+    it('extractSelector(response-element)', async () => {
+      await extractSelector({input: () => browser.element('div'), expected: 'div'})
+    })
+    it('executeScript(strings, args)', async () => {
+      await executeScript()
+    })
+    it('findElement(string)', async () => {
+      await findElement({input: '#overflowing-div'})
+    })
+    it('findElements(string)', async () => {
+      await findElements({input: 'div'})
+    })
+    it('findElement(non-existent)', async () => {
+      await findElement({input: 'non-existent', expected: null})
+    })
+    it('findElements(non-existent)', async () => {
+      await findElements({input: 'non-existent', expected: []})
+    })
+    it('mainContext()', async () => {
+      await mainContext()
+    })
+    it('parentContext()', async () => {
+      await parentContext()
+    })
+    it('childContext(element)', async () => {
+      await childContext()
+    })
+    it('getTitle()', async () => {
+      await getTitle()
+    })
+    it('getUrl()', async () => {
+      await getUrl()
+    })
+    it('visit()', async () => {
+      await visit()
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          browserName: 'chrome',
+          isMobile: false,
+          isNative: false,
+        },
+      })
+    })
   })
 
   describe('onscreen desktop (@webdriver)', async () => {
@@ -76,28 +123,12 @@ describe('spec driver', async () => {
       await destroyBrowser()
     })
 
-    it('getWindowRect()', getWindowRect())
-    it(
-      'setWindowRect({x, y, width, height})',
-      setWindowRect({
-        input: {x: 0, y: 0, width: 510, height: 511},
-        expected: {x: 0, y: 0, width: 510, height: 511},
-      }),
-    )
-    it(
-      'setWindowRect({x, y})',
-      setWindowRect({
-        input: {x: 11, y: 12},
-        expected: {x: 11, y: 12, width: 510, height: 511},
-      }),
-    )
-    it(
-      'setWindowRect({width, height})',
-      setWindowRect({
-        input: {width: 551, height: 552},
-        expected: {x: 11, y: 12, width: 551, height: 552},
-      }),
-    )
+    it('getWindowSize()', async () => {
+      await getWindowSize()
+    })
+    it('setWindowSize({width, height})', async () => {
+      await setWindowSize({input: {width: 510, height: 511}, expected: {width: 510, height: 511}})
+    })
   })
 
   describe('legacy browser (@webdriver)', async () => {
@@ -109,29 +140,26 @@ describe('spec driver', async () => {
       await destroyBrowser()
     })
 
-    it('getWindowRect()', getWindowRect())
-    it(
-      'setWindowRect({x, y, width, height})',
-      setWindowRect({
-        input: {x: 0, y: 0, width: 510, height: 511},
-        expected: {x: 0, y: 0, width: 510, height: 511},
-      }),
-    )
-    it(
-      'setWindowRect({x, y})',
-      setWindowRect({
-        input: {x: 11, y: 12},
-        expected: {x: 11, y: 12, width: 510, height: 511},
-      }),
-    )
-    it(
-      'setWindowRect({width, height})',
-      setWindowRect({
-        input: {width: 551, height: 552},
-        expected: {x: 11, y: 12, width: 551, height: 552},
-      }),
-    )
-    it('getPlatformName()', getPlatformName({expected: 'Windows 10'}))
+    it('getWindowSize()', async () => {
+      getWindowSize()
+    })
+    it('setWindowSize({width, height})', async () => {
+      await setWindowSize({
+        input: {width: 510, height: 511},
+        expected: {width: 510, height: 511},
+      })
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          browserName: 'internet explorer',
+          browserVersion: '11.285',
+          isMobile: false,
+          isNative: false,
+          platformName: 'Windows 10',
+        },
+      })
+    })
   })
 
   describe('mobile browser (@mobile)', async () => {
@@ -143,12 +171,24 @@ describe('spec driver', async () => {
       await destroyBrowser()
     })
 
-    it('isMobile()', isMobile({expected: true}))
-    it('getDeviceName()', getDeviceName({expected: 'Google Pixel 3a XL GoogleAPI Emulator'}))
-    it('getPlatformName()', getPlatformName({expected: 'Android'}))
-    it('isNative()', isNative({expected: false}))
-    it('getOrientation()', getOrientation({expected: 'portrait'}))
-    it('getPlatformVersion()', getPlatformVersion({expected: '10.0'}))
+    it('getWindowSize()', async () => {
+      getWindowSize()
+    })
+    it('getOrientation()', async () => {
+      await getOrientation({expected: 'portrait'})
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          browserName: 'chrome',
+          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+          isMobile: true,
+          isNative: false,
+          platformName: 'Android',
+          platformVersion: '10.0',
+        },
+      })
+    })
   })
 
   describe('native app (@mobile @native)', async () => {
@@ -164,214 +204,157 @@ describe('spec driver', async () => {
       await destroyBrowser()
     })
 
-    it('isMobile()', isMobile({expected: true}))
-    it('isNative()', isNative({expected: true}))
-    it('getDeviceName()', getDeviceName({expected: 'Android Emulator'}))
-    it('getPlatformName()', getPlatformName({expected: 'Android'}))
-    it('getPlatformVersion()', getPlatformVersion({expected: '6.0'}))
-    it('getOrientation()', getOrientation({expected: 'landscape'}))
+    it('getWindowSize()', async () => {
+      await getWindowSize()
+    })
+    it('getOrientation()', async () => {
+      await getOrientation({expected: 'landscape'})
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          deviceName: 'Android Emulator',
+          isMobile: true,
+          isNative: true,
+          platformName: 'Android',
+          platformVersion: '6.0',
+        },
+      })
+    })
   })
 
-  function isDriver({input, expected}) {
-    return async () => {
-      const isDriver = await spec.isDriver(input || browser)
-      assert.strictEqual(isDriver, expected)
+  async function isDriver({input, expected}) {
+    const isDriver = await spec.isDriver(input || browser)
+    assert.strictEqual(isDriver, expected)
+  }
+  async function isElement({input, expected}) {
+    const element = await input()
+    const isElement = await spec.isElement(element)
+    assert.strictEqual(isElement, expected)
+  }
+  async function isSelector({input, expected}) {
+    const isSelector = await spec.isSelector(input)
+    assert.strictEqual(isSelector, expected)
+  }
+  async function isEqualElements({input, expected}) {
+    const {element1, element2} = await input()
+    const result = await spec.isEqualElements(browser, element1, element2)
+    assert.deepStrictEqual(result, expected)
+  }
+  async function transformElement({input}) {
+    const element = await input()
+    const elementId = element.value
+      ? element.value['element-6066-11e4-a52e-4f735466cecf'] || element.value.ELEMENT
+      : element['element-6066-11e4-a52e-4f735466cecf'] || element.ELEMENT
+    const result = spec.transformElement(element)
+    assert.deepStrictEqual(result, {
+      ELEMENT: elementId,
+      'element-6066-11e4-a52e-4f735466cecf': elementId,
+    })
+  }
+  async function extractSelector({input, expected}) {
+    const selector = spec.extractSelector(await input())
+    assert.deepStrictEqual(selector, expected)
+  }
+  async function executeScript() {
+    const args = [0, 'string', {key: 'value'}, [0, 1, 2, 3]]
+    const {value: expected} = await browser.execute('return arguments[0]', args)
+    const result = await spec.executeScript(browser, 'return arguments[0]', args)
+    assert.deepStrictEqual(result, expected)
+  }
+  async function mainContext() {
+    try {
+      const {value: mainDocument} = await browser.element('html')
+      await browser.frame(await browser.element('[name="frame1"]').then(({value}) => value))
+      await browser.frame(await browser.element('[name="frame1-1"]').then(({value}) => value))
+      const {value: frameDocument} = await browser.element('html')
+      assert.ok(!(await spec.isEqualElements(browser, mainDocument, frameDocument)))
+      await spec.mainContext(browser)
+      const {value: resultDocument} = await browser.element('html')
+      assert.ok(await spec.isEqualElements(browser, resultDocument, mainDocument))
+    } finally {
+      await browser.frame(null).catch(() => null)
     }
   }
-  function isElement({input, expected}) {
-    return async () => {
-      const element = await input()
-      const isElement = await spec.isElement(element)
-      assert.strictEqual(isElement, expected)
+  async function parentContext() {
+    try {
+      await browser.frame(await browser.element('[name="frame1"]').then(({value}) => value))
+      const {value: parentDocument} = await browser.element('html')
+      await browser.frame(await browser.element('[name="frame1-1"]').then(({value}) => value))
+      const {value: frameDocument} = await browser.element('html')
+      assert.ok(!(await spec.isEqualElements(browser, parentDocument, frameDocument)))
+      await spec.parentContext(browser)
+      const {value: resultDocument} = await browser.element('html')
+      assert.ok(await spec.isEqualElements(browser, resultDocument, parentDocument))
+    } finally {
+      await browser.frame(null).catch(() => null)
     }
   }
-  function isSelector({input, expected}) {
-    return async () => {
-      const isSelector = await spec.isSelector(input)
-      assert.strictEqual(isSelector, expected)
+  async function childContext() {
+    try {
+      const {value: element} = await browser.element('[name="frame1"]')
+      await browser.frame(element)
+      const {value: expectedDocument} = await browser.element('html')
+      await browser.frame(null)
+      await spec.childContext(browser, element)
+      const {value: resultDocument} = await browser.element('html')
+      assert.ok(await spec.isEqualElements(browser, resultDocument, expectedDocument))
+    } finally {
+      await browser.frame(null).catch(() => null)
     }
   }
-  function isEqualElements({input, expected}) {
-    return async () => {
-      const {element1, element2} = await input()
-      const result = await spec.isEqualElements(browser, element1, element2)
-      assert.deepStrictEqual(result, expected)
+  async function findElement({input, expected} = {}) {
+    const result = expected !== undefined ? expected : await browser.element(input).then(({value}) => value)
+    const element = await spec.findElement(browser, input)
+    if (element !== result) {
+      assert.ok(await spec.isEqualElements(browser, element, result))
     }
   }
-  function transformElement({input}) {
-    return async () => {
-      const element = await input()
-      const elementId = element.value
-        ? element.value['element-6066-11e4-a52e-4f735466cecf'] || element.value.ELEMENT
-        : element['element-6066-11e4-a52e-4f735466cecf'] || element.ELEMENT
-      const result = spec.transformElement(element)
-      assert.deepStrictEqual(result, {
-        ELEMENT: elementId,
-        'element-6066-11e4-a52e-4f735466cecf': elementId,
-      })
+  async function findElements({input, expected} = {}) {
+    const result = expected !== undefined ? expected : await browser.elements(input).then(({value}) => value)
+    const elements = await spec.findElements(browser, input)
+    assert.strictEqual(elements.length, result.length)
+    for (const [index, element] of elements.entries()) {
+      assert.ok(await spec.isEqualElements(browser, element, result[index]))
     }
   }
-  function extractSelector({input, expected}) {
-    return async () => {
-      const selector = spec.extractSelector(await input())
-      assert.deepStrictEqual(selector, expected)
-    }
+  async function getWindowSize() {
+    const size = await browser.windowHandleSize().then(({value}) => ({width: value.width, height: value.height}))
+    const result = await spec.getWindowSize(browser)
+    assert.deepStrictEqual(result, size)
   }
-  function executeScript() {
-    return async () => {
-      const args = [0, 'string', {key: 'value'}, [0, 1, 2, 3]]
-      const {value: expected} = await browser.execute('return arguments[0]', args)
-      const result = await spec.executeScript(browser, 'return arguments[0]', args)
-      assert.deepStrictEqual(result, expected)
-    }
+  async function setWindowSize({input, expected} = {}) {
+    await spec.setWindowSize(browser, input)
+    const {x, y} = await browser.windowHandlePosition().then(({value}) => value)
+    const {width, height} = await browser.windowHandleSize().then(({value}) => value)
+    const rect = {x, y, width, height}
+    assert.deepStrictEqual(rect, {x: 0, y: 0, ...expected})
   }
-  function mainContext() {
-    return async () => {
-      try {
-        const {value: mainDocument} = await browser.element('html')
-        await browser.frame(await browser.element('[name="frame1"]').then(({value}) => value))
-        await browser.frame(await browser.element('[name="frame1-1"]').then(({value}) => value))
-        const {value: frameDocument} = await browser.element('html')
-        assert.ok(!(await spec.isEqualElements(browser, mainDocument, frameDocument)))
-        await spec.mainContext(browser)
-        const {value: resultDocument} = await browser.element('html')
-        assert.ok(await spec.isEqualElements(browser, resultDocument, mainDocument))
-      } finally {
-        await browser.frame(null).catch(() => null)
-      }
-    }
+  async function getOrientation({expected} = {}) {
+    const result = await spec.getOrientation(browser)
+    assert.strictEqual(result, expected)
   }
-  function parentContext() {
-    return async () => {
-      try {
-        await browser.frame(await browser.element('[name="frame1"]').then(({value}) => value))
-        const {value: parentDocument} = await browser.element('html')
-        await browser.frame(await browser.element('[name="frame1-1"]').then(({value}) => value))
-        const {value: frameDocument} = await browser.element('html')
-        assert.ok(!(await spec.isEqualElements(browser, parentDocument, frameDocument)))
-        await spec.parentContext(browser)
-        const {value: resultDocument} = await browser.element('html')
-        assert.ok(await spec.isEqualElements(browser, resultDocument, parentDocument))
-      } finally {
-        await browser.frame(null).catch(() => null)
-      }
-    }
+  async function getTitle() {
+    const expected = await browser.getTitle()
+    const result = await spec.getTitle(browser)
+    assert.deepStrictEqual(result, expected)
   }
-  function childContext() {
-    return async () => {
-      try {
-        const {value: element} = await browser.element('[name="frame1"]')
-        await browser.frame(element)
-        const {value: expectedDocument} = await browser.element('html')
-        await browser.frame(null)
-        await spec.childContext(browser, element)
-        const {value: resultDocument} = await browser.element('html')
-        assert.ok(await spec.isEqualElements(browser, resultDocument, expectedDocument))
-      } finally {
-        await browser.frame(null).catch(() => null)
-      }
-    }
+  async function getUrl() {
+    const result = await spec.getUrl(browser)
+    assert.deepStrictEqual(result, url)
   }
-  function findElement({input, expected} = {}) {
-    return async () => {
-      const result = expected !== undefined ? expected : await browser.element(input).then(({value}) => value)
-      const element = await spec.findElement(browser, input)
-      if (element !== result) {
-        assert.ok(await spec.isEqualElements(browser, element, result))
-      }
-    }
+  async function visit() {
+    const blank = 'about:blank'
+    await spec.visit(browser, blank)
+    const actual = await browser.getUrl()
+    assert.deepStrictEqual(actual, blank)
+    await browser.url(url)
   }
-  function findElements({input, expected} = {}) {
-    return async () => {
-      const result = expected !== undefined ? expected : await browser.elements(input).then(({value}) => value)
-      const elements = await spec.findElements(browser, input)
-      assert.strictEqual(elements.length, result.length)
-      for (const [index, element] of elements.entries()) {
-        assert.ok(await spec.isEqualElements(browser, element, result[index]))
-      }
-    }
-  }
-  function getWindowRect() {
-    return async () => {
-      const {x, y} = await browser.windowHandlePosition().then(({value}) => value)
-      const {width, height} = await browser.windowHandleSize().then(({value}) => value)
-      const rect = {x, y, width, height}
-      const result = await spec.getWindowRect(browser)
-      assert.deepStrictEqual(result, rect)
-    }
-  }
-  function setWindowRect({input, expected} = {}) {
-    return async () => {
-      await spec.setWindowRect(browser, input)
-      const {x, y} = await browser.windowHandlePosition().then(({value}) => value)
-      const {width, height} = await browser.windowHandleSize().then(({value}) => value)
-      const rect = {x, y, width, height}
-      assert.deepStrictEqual(rect, expected)
-    }
-  }
-  function getOrientation({expected} = {}) {
-    return async () => {
-      const result = await spec.getOrientation(browser)
-      assert.strictEqual(result, expected)
-    }
-  }
-  function getSessionId() {
-    return async () => {
-      const expected = browser.requestHandler.sessionID
-      const {sessionId} = await spec.getDriverInfo(browser)
-      assert.deepStrictEqual(sessionId, expected)
-    }
-  }
-  function getTitle() {
-    return async () => {
-      const expected = await browser.getTitle()
-      const result = await spec.getTitle(browser)
-      assert.deepStrictEqual(result, expected)
-    }
-  }
-  function getUrl() {
-    return async () => {
-      const result = await spec.getUrl(browser)
-      assert.deepStrictEqual(result, url)
-    }
-  }
-  function visit() {
-    return async () => {
-      const blank = 'about:blank'
-      await spec.visit(browser, blank)
-      const actual = await browser.getUrl()
-      assert.deepStrictEqual(actual, blank)
-      await browser.url(url)
-    }
-  }
-  function isMobile({expected} = {}) {
-    return async () => {
-      const {isMobile} = await spec.getDriverInfo(browser)
-      assert.deepStrictEqual(isMobile, expected)
-    }
-  }
-  function isNative({expected} = {}) {
-    return async () => {
-      const {isNative} = await spec.getDriverInfo(browser)
-      assert.strictEqual(isNative, expected)
-    }
-  }
-  function getDeviceName({expected} = {}) {
-    return async () => {
-      const {deviceName} = await spec.getDriverInfo(browser)
-      assert.strictEqual(deviceName, expected)
-    }
-  }
-  function getPlatformName({expected} = {}) {
-    return async () => {
-      const {platformName} = await spec.getDriverInfo(browser)
-      assert.strictEqual(platformName, expected)
-    }
-  }
-  function getPlatformVersion({expected} = {}) {
-    return async () => {
-      const {platformVersion} = await spec.getDriverInfo(browser)
-      assert.strictEqual(platformVersion, expected)
-    }
+  async function getDriverInfo({expected} = {}) {
+    const info = await spec.getDriverInfo(browser)
+    assert.deepStrictEqual(
+      Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
+      expected,
+    )
   }
 })

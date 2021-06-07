@@ -181,40 +181,20 @@ export async function getElementRect(
     return rect
   }
 }
-export async function getWindowRect(browser: Driver): Promise<{x: number; y: number; width: number; height: number}> {
+export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(browser.getWindowRect)) {
     const rect = await browser.getWindowRect()
-    return browser.isDevTools ? {x: 0, y: 0, width: rect.width, height: rect.height} : rect
+    return {width: rect.width, height: rect.height}
   } else {
-    const rect = {x: 0, y: 0, width: 0, height: 0}
-    if (utils.types.isFunction(browser.getWindowPosition)) {
-      const location = await browser.getWindowPosition()
-      rect.x = location.x
-      rect.y = location.y
-    }
-    if (utils.types.isFunction(browser.getWindowSize)) {
-      const size = await browser.getWindowSize()
-      rect.width = size.width
-      rect.height = size.height
-    }
-    return rect
+    return browser.getWindowSize()
   }
 }
-export async function setWindowRect(
-  browser: Driver,
-  rect: {x?: number; y?: number; width?: number; height?: number},
-): Promise<void> {
-  const {x = null, y = null, width = null, height = null} = rect || {}
-  if (browser.isDevTools && (width === null || height === null)) return
+export async function setWindowSize(browser: Driver, size: {width: number; height: number}): Promise<void> {
   if (utils.types.isFunction(browser.setWindowRect)) {
-    await browser.setWindowRect(x, y, width, height)
+    await browser.setWindowRect(0, 0, size.width, size.height)
   } else {
-    if (utils.types.isFunction(browser.setWindowPosition) && x !== null && y !== null) {
-      await browser.setWindowPosition(x, y)
-    }
-    if (utils.types.isFunction(browser.setWindowSize) && width !== null && height !== null) {
-      await browser.setWindowSize(width, height)
-    }
+    await browser.setWindowPosition(0, 0)
+    await browser.setWindowSize(size.width, size.height)
   }
 }
 export async function getOrientation(browser: Driver): Promise<string> {
@@ -228,10 +208,10 @@ export async function getDriverInfo(browser: Driver): Promise<any> {
     isMobile: browser.isMobile,
     isNative: browser.isMobile && !capabilities.browserName,
     deviceName: capabilities.desired ? capabilities.desired.deviceName : capabilities.deviceName,
-    platformName: capabilities.platformName || capabilities.platform,
+    platformName: capabilities.platformName ?? capabilities.platform,
     platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName,
-    browserVersion: capabilities.browserVersion,
+    browserName: capabilities.browserName ?? capabilities.desired.browserName,
+    browserVersion: capabilities.browserVersion ?? capabilities.version,
   }
 }
 export async function getTitle(browser: Driver): Promise<string> {

@@ -123,36 +123,27 @@ export async function getElementRect(
   const {width, height} = await call(driver, 'elementIdSize', extractElementId(element))
   return {x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height)}
 }
-export async function getWindowRect(driver: Driver): Promise<{x: number; y: number; width: number; height: number}> {
+export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   // NOTE:
   // https://github.com/nightwatchjs/nightwatch/blob/fd4aff1e2cc3e691a82e61c7e550fb088ee47d5a/lib/transport/jsonwire/actions.js#L165-L167
-  // getWindowRect is implemented on JWP drivers even though it won't work
+  // getWindowSize is implemented on JWP drivers even though it won't work
   // So we need to catch and retry a window size command that will work on JWP
   try {
-    return await call(driver, 'getWindowRect' as any)
+    const rect = await call(driver, 'getWindowRect' as any) as any
+    return {width: rect.width, height: rect.height}
   } catch {
-    const location = await call(driver, 'getWindowPosition' as 'windowPosition')
-    const size = await call(driver, 'getWindowSize' as 'windowSize')
-    return {...location, ...size}
+    return call(driver, 'getWindowSize' as 'windowSize')
   }
 }
-export async function setWindowRect(
-  driver: Driver,
-  rect: {x?: number; y?: number; width?: number; height?: number},
-): Promise<void> {
+export async function setWindowSize(driver: Driver, size: {width: number; height: number}): Promise<void> {
   // NOTE:
   // Same deal as with getWindowRect. If running on JWP, need to catch and retry
   // with a different command.
   try {
-    await call(driver, 'setWindowRect' as any, rect)
+    await call(driver, 'setWindowRect' as any, size)
   } catch {
-    const {x = null, y = null, width = null, height = null} = rect || {}
-    if (x !== null && y !== null) {
-      await call(driver, 'setWindowPosition' as 'windowPosition', x, y)
-    }
-    if (width !== null && height !== null) {
-      await call(driver, 'setWindowSize' as 'windowSize', width, height)
-    }
+    await call(driver, 'setWindowPosition' as 'windowPosition', 0, 0)
+    await call(driver, 'setWindowSize' as 'windowSize', size.width, size.height)
   }
 }
 export async function getOrientation(driver: Driver): Promise<string> {
@@ -163,11 +154,11 @@ export async function getOrientation(driver: Driver): Promise<string> {
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = driver.options.desiredCapabilities as Record<string, any>
   const sessionId = driver.sessionId
-  const browserName = capabilities.browserName
+  const browserName = capabilities.browserName ?? capabilities.browser_name
   const deviceName = capabilities.device ? capabilities.device : capabilities.deviceName
-  const platformName = capabilities.platformName || capabilities.platform
+  const platformName = capabilities.platformName ?? capabilities.platform
   const platformVersion = capabilities.osVersion ? capabilities.osVersion : capabilities.platformVersion
-  const isMobile = ['android', 'ios'].includes(platformName && platformName.toLowerCase())
+  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
   const isNative = isMobile && !browserName
   return {
     browserName,

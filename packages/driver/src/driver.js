@@ -398,22 +398,18 @@ class Driver {
   /**
    * @return {Promise<Region>}
    */
-  async getWindowRect() {
-    const {x = 0, y = 0, width, height} = this.spec.getWindowRect
-      ? await this.spec.getWindowRect(this._driver)
-      : await this.spec.getViewportSize(this._driver)
-    return {x, y, width, height}
+  async getWindowSize() {
+    return this.spec.getWindowSize
+      ? this.spec.getWindowSize(this._driver)
+      : this.spec.getViewportSize(this._driver)
   }
   /**
    * @param {PlainRegion | Region} rect
    * @return {Promise<void>}
    */
-  async setWindowRect(rect) {
-    if (this.spec.setWindowRect) {
-      await this.spec.setWindowRect(this._driver, rect)
-    } else if (rect.width && rect.height) {
-      await this.spec.setViewportSize(this._driver, {width: rect.width, height: rect.height})
-    }
+  async setWindowSize(size) {
+    if (this.spec.setWindowSize) await this.spec.setWindowSize(this._driver, size)
+    else await this.spec.setViewportSize(this._driver, size)
   }
   /**
    * @return {Promise<'portrait' | 'landscape'>}
