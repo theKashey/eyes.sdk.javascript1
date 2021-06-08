@@ -4,6 +4,8 @@
 - introduced @applitools/eyes-api package with new api
 
 ## Unreleased
+- updated to @applitools/eyes-sdk-core@12.20.3 (from 12.20.0)
+- updated to @applitools/visual-grid-client@15.8.9 (from 15.8.7)
 
 
 ## 2.30.2 - 2021/5/25
