@@ -20,7 +20,7 @@ describe('EyesVisualGrid', () => {
       })
 
       driver = new MockDriver({viewport: {width: 600, height: 700}})
-      driver.wrapMethod('setWindowSize', (method, driver, [rect]) => {
+      driver.wrapMethod('setWindowRect', (method, driver, [rect]) => {
         if (!Number.isNaN(Number(rect.width))) {
           rect.width = Math.min(Math.max(rect.width, 300), 800)
         }
