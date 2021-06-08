@@ -85,35 +85,19 @@ async function findElements(browser, selector) {
   const elements = await browser.$$(transformSelector(selector))
   return Array.from(elements)
 }
-async function getWindowRect(browser) {
+async function getWindowSize(browser) {
   if (utils.types.isFunction(browser.getWindowRect)) {
     return browser.getWindowRect()
-  } else {
-    const rect = {x: 0, y: 0, width: 0, height: 0}
-    if (utils.types.isFunction(browser.getWindowPosition)) {
-      const location = await browser.getWindowPosition()
-      rect.x = location.x
-      rect.y = location.y
-    }
-    if (utils.types.isFunction(browser.getWindowSize)) {
-      const size = await browser.getWindowSize()
-      rect.width = size.width
-      rect.height = size.height
-    }
-    return rect
+  } else if (utils.types.isFunction(browser.getWindowSize)) {
+    return await browser.getWindowSize()
   }
 }
-async function setWindowRect(browser, rect = {}) {
-  const {x = null, y = null, width = null, height = null} = rect
+async function setWindowSize(browser, {width, height} = {}) {
   if (utils.types.isFunction(browser.setWindowRect)) {
-    await browser.setWindowRect(x, y, width, height)
+    await browser.setWindowRect(0, 0, width, height)
   } else {
-    if (utils.types.isFunction(browser.setWindowPosition) && x !== null && y !== null) {
-      await browser.setWindowPosition(x, y)
-    }
-    if (utils.types.isFunction(browser.setWindowSize) && width !== null && height !== null) {
-      await browser.setWindowSize(width, height)
-    }
+    await browser.setWindowPosition(0, 0)
+    await browser.setWindowSize(width, height)
   }
 }
 async function getOrientation(browser) {
@@ -160,8 +144,8 @@ const spec = {
   childContext,
   findElement,
   findElements,
-  getWindowRect,
-  setWindowRect,
+  getWindowSize,
+  setWindowSize,
   getOrientation,
   getDriverInfo,
   takeScreenshot,
