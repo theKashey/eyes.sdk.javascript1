@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.7 - 2021/6/8
+
 - replace setWindowRect with setWindowSize
 
 ## 1.0.6 - 2021/5/24
