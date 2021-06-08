@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.20.3 - 2021/6/8
+
 - replace setWindowRect with setWindowSize in spec driver
 - fix errors thrown during `EyesVisualGrid::close`
 - updated to @applitools/driver@1.0.7 (from 1.0.6)
