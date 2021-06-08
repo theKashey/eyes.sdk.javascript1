@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes.webdriverio",
-  "version": "2.30.2",
+  "version": "2.30.3",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "repository": "https://github.com/applitools/eyes.sdk.javascript1",
   "license": "SEE LICENSE IN LICENSE",
