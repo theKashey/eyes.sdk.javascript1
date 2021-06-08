@@ -34,9 +34,9 @@
     }
   },
   "dependencies": {
-    "@applitools/test-utils": "1.0.0",
+    "@applitools/test-utils": "1.0.3",
     "chalk": "3.0.0",
-    "cli-table3": "^0.6.0",
+    "cli-table3": "0.6.0",
     "yargs": "15.3.1"
   },
   "devDependencies": {

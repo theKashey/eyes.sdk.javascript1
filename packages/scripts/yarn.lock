@@ -58,10 +58,10 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/test-utils@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@applitools/test-utils/-/test-utils-1.0.0.tgz#7c736ef3db24b9fde98cb3995252569614184a65"
-  integrity sha512-jRcRhyTYg4QFwCsYW1Ccc4v48J0A6cRhvVKeBylSlG/f/7kdt+nre84D97fBPXDSRfKQeRWPUvT4jSoADwDRoQ==
+"@applitools/test-utils@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.3.tgz#5ab233a087e5e6a4e356a22c9adcab23e959e03f"
+  integrity sha512-70V6g/jDqGGCxL5Eip2aydJbjZ3ULHQxNWhUSVDAuzyCZav5pR0hE03Cx/R2rvMoapXltScG4SOkXp+JmR7Haw==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
@@ -702,9 +702,9 @@ cli-cursor@^3.1.0:
   dependencies:
     restore-cursor "^3.1.0"
 
-cli-table3@^0.6.0:
+cli-table3@0.6.0:
   version "0.6.0"
-  resolved "https://registry.npmjs.org/cli-table3/-/cli-table3-0.6.0.tgz#b7b1bc65ca8e7b5cef9124e13dc2b21e2ce4faee"
+  resolved "https://registry.yarnpkg.com/cli-table3/-/cli-table3-0.6.0.tgz#b7b1bc65ca8e7b5cef9124e13dc2b21e2ce4faee"
   integrity sha512-gnB85c3MGC7Nm9I/FkiasNBOKjOiO1RNuXXarQms37q4QMpWdlbBgD/VnOStA2faG1dpXMv31RFApjX1/QdgWQ==
   dependencies:
     object-assign "^4.1.0"
