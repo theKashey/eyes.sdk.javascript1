@@ -15,19 +15,18 @@ export class FloatingMatchSettingsData implements Required<FloatingMatchSettings
   private _settings: FloatingMatchSettings
 
   constructor(settings: FloatingMatchSettings)
-  constructor(region: Region)
   constructor(
     x: number,
     y: number,
     width: number,
     height: number,
-    maxUpOffset?: number,
-    maxDownOffset?: number,
-    maxLeftOffset?: number,
-    maxRightOffset?: number,
+    maxUpOffset: number,
+    maxDownOffset: number,
+    maxLeftOffset: number,
+    maxRightOffset: number,
   )
   constructor(
-    settingsOrRegionOrX: FloatingMatchSettings | Region | number,
+    settingsOrX: FloatingMatchSettings | number,
     y?: number,
     width?: number,
     height?: number,
@@ -36,22 +35,20 @@ export class FloatingMatchSettingsData implements Required<FloatingMatchSettings
     maxLeftOffset?: number,
     maxRightOffset?: number,
   ) {
-    if (utils.types.isNumber(settingsOrRegionOrX)) {
+    if (utils.types.isNumber(settingsOrX)) {
       return new FloatingMatchSettingsData({
-        region: {x: settingsOrRegionOrX, y, width, height},
+        region: {x: settingsOrX, y, width, height},
         maxUpOffset,
         maxDownOffset,
         maxLeftOffset,
         maxRightOffset,
       })
-    } else if (!utils.types.has(settingsOrRegionOrX, 'region')) {
-      return new FloatingMatchSettingsData({region: settingsOrRegionOrX})
     }
-    this.region = settingsOrRegionOrX.region
-    this.maxUpOffset = settingsOrRegionOrX.maxUpOffset
-    this.maxDownOffset = settingsOrRegionOrX.maxDownOffset
-    this.maxLeftOffset = settingsOrRegionOrX.maxLeftOffset
-    this.maxRightOffset = settingsOrRegionOrX.maxRightOffset
+    this.region = settingsOrX.region
+    this.maxUpOffset = maxUpOffset
+    this.maxDownOffset = maxDownOffset
+    this.maxLeftOffset = maxLeftOffset
+    this.maxRightOffset = maxRightOffset
   }
 
   get region(): Region {

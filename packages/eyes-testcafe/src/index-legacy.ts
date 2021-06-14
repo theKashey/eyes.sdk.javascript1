@@ -1,5 +1,5 @@
 import {Eyes} from './index'
 
-// @ts-expect-error
+//@ts-ignore
 Eyes.default = Eyes
 export = Eyes

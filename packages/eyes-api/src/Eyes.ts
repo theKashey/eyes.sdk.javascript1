@@ -29,11 +29,7 @@ import {SessionEventHandler, SessionEventHandlers, RemoteSessionEventHandler} fr
 import {EyesRunner, ClassicRunner} from './Runners'
 import {Logger} from './Logger'
 
-type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = types.Core<TDriver, TElement, TSelector> & {
-  isDriver(value: any): value is TDriver
-  isElement(value: any): value is TElement
-  isSelector(value: any): value is TSelector
-}
+type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = types.Core<TDriver, TElement, TSelector>
 
 export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   protected static readonly _spec: EyesSpec
@@ -49,8 +45,8 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   private _events: Map<string, Set<(...args: any[]) => any>> = new Map()
   private _handlers: SessionEventHandlers = new SessionEventHandlers()
 
-  static async setViewportSize(driver: unknown, viewportSize: RectangleSize) {
-    await this._spec.setViewportSize(driver, viewportSize)
+  static async setViewportSize(driver: unknown, size: RectangleSize) {
+    await this._spec.setViewportSize({driver, size})
   }
 
   constructor(runner?: EyesRunner, config?: Configuration<TElement, TSelector>)
@@ -347,19 +343,21 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   // #region CONFIG
 
   async getViewportSize(): Promise<RectangleSizeData> {
-    return this._config.getViewportSize() || new RectangleSizeData(await this._spec.getViewportSize(this._driver))
+    return (
+      this._config.getViewportSize() || new RectangleSizeData(await this._spec.getViewportSize({driver: this._driver}))
+    )
   }
-  async setViewportSize(viewportSize: RectangleSize): Promise<void> {
-    utils.guard.notNull(viewportSize, {name: 'viewportSize'})
+  async setViewportSize(size: RectangleSize): Promise<void> {
+    utils.guard.notNull(size, {name: 'size'})
 
     if (!this._driver) {
-      this._config.setViewportSize(viewportSize)
+      this._config.setViewportSize(size)
     } else {
       try {
-        await this._spec.setViewportSize(this._driver, viewportSize)
-        this._config.setViewportSize(viewportSize)
+        await this._spec.setViewportSize({driver: this._driver, size})
+        this._config.setViewportSize(size)
       } catch (err) {
-        this._config.setViewportSize(await this._spec.getViewportSize(this._driver))
+        this._config.setViewportSize(await this._spec.getViewportSize({driver: this._driver}))
         throw new TestFailedError('Failed to set the viewport size')
       }
     }

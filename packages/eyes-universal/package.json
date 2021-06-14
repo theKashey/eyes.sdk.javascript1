@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-universal",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Applitools Eyes Universal SDK",
   "keywords": [
     "applitools",
@@ -12,55 +12,68 @@
     "tests"
   ],
   "homepage": "https://applitools.com",
-  "author": {
-    "name": "Applitools Team",
-    "email": "team@applitools.com"
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:applitools/eyes.sdk.javascript1.git"
   },
-  "bugs": {
-    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
-  },
-  "directories": {
-    "example": "./example",
-    "lib": "./src",
-    "test": "./test"
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
   },
   "main": "./index.js",
   "bin": {
-    "eyes-universal-linux": "./bin/app-linux",
-    "eyes-universal-macos": "./bin/app-macos",
-    "eyes-universal-windows": "./bin/app-win.exe"
+    "eyes-universal": "./dist/cli.js"
+  },
+  "directories": {
+    "lib": "./src",
+    "example": "./example",
+    "test": "./test"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint '**/*.ts'",
+    "build": "yarn build:dist && yarn build:bin",
+    "build:dist": "tsc",
+    "build:bin": "pkg ./dist/cli.js --out-path ./bin --compress GZip --targets node14-linux-x64,node14-macos-x64,node14-win-x64",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion && yarn build",
+    "version": "bongo version",
+    "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.13.5",
-    "@applitools/visual-grid-client": "15.5.11",
-    "@applitools/utils": "1.0.0",
-    "chalk": "^4.1.0",
-    "ws": "^7.3.1",
-    "yargs": "^16.1.0"
+    "@applitools/eyes-sdk-core": "12.20.2",
+    "@applitools/utils": "1.2.0",
+    "@applitools/visual-grid-client": "15.8.8",
+    "webdriver": "^7.7.3",
+    "ws": "7.4.6",
+    "yargs": "16.1.0"
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "^2.3.5",
-    "@applitools/sdk-release-kit": "^0.11.1",
-    "eslint": "^7.13.0",
+    "@applitools/sdk-release-kit": "^0.13.0",
+    "@applitools/test-utils": "^1.0.3",
+    "@applitools/types": "1.0.2",
+    "@types/ws": "^7.4.4",
+    "@types/yargs": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^3.3.1",
+    "mocha": "^9.0.0",
     "pkg": "^5.0.0",
-    "prettier": "1.19.0"
+    "prettier": "^2.1.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
   },
-  "scripts": {
-    "lint": "eslint '**/*.js'",
-    "build": "pkg app.js --targets node14-linux-x64,node14-macos-x64,node14-win-x64 --out-path ./bin",
-    "preversion": "bongo preversion && yarn build",
-    "version": "bongo version",
-    "postversion": "bongo postversion",
-    "deps": "bongo deps"
-  },
-  "license": "SEE LICENSE IN LICENSE",
   "engines": {
     "node": ">=14.15.0"
   }

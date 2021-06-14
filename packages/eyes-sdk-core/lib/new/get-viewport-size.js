@@ -1,6 +1,6 @@
 function makeGetViewportSize(sdk) {
-  return function getViewportSize(driver, viewportSize) {
-    return sdk.EyesFactory.getViewportSize(driver, viewportSize)
+  return function getViewportSize({driver}) {
+    return sdk.EyesFactory.getViewportSize(driver)
   }
 }
 

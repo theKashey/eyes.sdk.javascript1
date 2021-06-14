@@ -41,7 +41,8 @@ runs:
         if [ ! -z "${{inputs.links}}" ]
         then
           echo "::group::Linking dependencies"
-          npx link --include ${{inputs.links}} --build --install --depth ${{inputs['linking-depth']}}
+          npx link --include scripts --install
+          node ./node_modules/.bin/link --include ${{inputs.links}} --build --install --max-depth ${{inputs.linking-depth}}
           echo "::endgroup::"
         fi
 

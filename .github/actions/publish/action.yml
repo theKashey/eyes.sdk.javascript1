@@ -7,31 +7,35 @@ inputs:
   version:
     description: version type (patch, major, minor)
     required: true
+outputs:
+  tag:
+    description: name of the tag pushed after publishing
+    value: ${{steps.publish.outputs.tag}}
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Configure NPM
+      shell: bash
       run: |
-        echo "::group::Configure NPM"
         echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
         echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "always-auth=true" >> .npmrc
-        echo "::endgroup::"
-
-        echo "::group::Configure Git"
+    - name: Configure Git
+      id: git
+      shell: bash
+      run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        echo "::endgroup::"
 
-        echo "::group::Create temp branch"
-        GH_REF=${{github.ref}}
-        CURRENT_BRANCH=${GH_REF#refs/heads/}
         BRANCH="${{inputs.package}}_$(date +%F_%H-%M)"
         git checkout -b $BRANCH
         git push -u origin $BRANCH
-        echo "::endgroup::"
 
-        echo "::group::Publish ${{inputs.package}}"
+        echo "::set-output name=branch::$BRANCH"
+    - name: Publish ${{inputs.package}}
+      id: publish
+      shell: bash
+      run: |
         cd "packages/${{inputs.package}}"
         git status
         yarn install
@@ -40,12 +44,16 @@ runs:
         git status
         yarn publish "--${{inputs.version}}" --access public
         git status
-        echo "::endgroup::"
 
-        echo "::group::Update $CURRENT_BRANCH from $BRANCH"
+        echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
+    - name: Merge publish branch into ${{github.ref}}
+      shell: bash
+      run: |
+        GH_REF=${{github.ref}}
+        CURRENT_BRANCH=${GH_REF#refs/heads/}
+
         git checkout $CURRENT_BRANCH
         git status
         git pull origin $CURRENT_BRANCH --rebase
-        git merge $BRANCH
+        git merge ${{steps.git.outputs.branch}}
         git push origin $CURRENT_BRANCH
-        echo "::endgroup::"

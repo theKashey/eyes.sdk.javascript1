@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- improve logging in `link` script
 
 ## 1.0.1 - 2021/6/8
 

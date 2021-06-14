@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+
+## 1.0.2 - 2021/6/1
+
+- add `SpecDriver`, `ClientSocket` and `ServerSocket` types
+
 ## 1.0.1 - 2021/5/24
 
 - fix `logs` type in `Config.EyesConfig`

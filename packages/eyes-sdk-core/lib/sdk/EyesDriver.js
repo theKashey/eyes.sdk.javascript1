@@ -79,11 +79,13 @@ class EyesDriver {
   constructor(logger, driver) {
     if (driver instanceof EyesDriver) {
       return driver
-    } else if (this.spec.isDriver(driver)) {
-      /** @type {TDriver} */
-      this._driver = this.spec.transformDriver ? this.spec.transformDriver(driver) : driver
     } else {
-      throw new TypeError('EyesDriver constructor called with argument of unknown type!')
+      driver = this.spec.transformDriver ? this.spec.transformDriver(driver) : driver
+      if (!this.spec.isDriver(driver)) {
+        throw new TypeError('EyesDriver constructor called with argument of unknown type!')
+      }
+      /** @type {TDriver} */
+      this._driver = driver
     }
 
     /** @type {Logger} */

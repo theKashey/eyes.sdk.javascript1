@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- added full typescript support
+- introduced @applitools/eyes-api package with new api
 
 ## 1.7.2 - 2021/5/25
 

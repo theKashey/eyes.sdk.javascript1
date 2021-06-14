@@ -1,6 +1,6 @@
 function makeSetViewportSize(sdk) {
-  return function setViewportSize(driver, viewportSize) {
-    return sdk.EyesFactory.setViewportSize(driver, viewportSize)
+  return function setViewportSize({driver, size}) {
+    return sdk.EyesFactory.setViewportSize(driver, size)
   }
 }
 

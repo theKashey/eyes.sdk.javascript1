@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add script for linking
 
 ## 0.9.3 - 2021/5/25
 

@@ -22,7 +22,7 @@ export abstract class EyesRunner {
   private _eyes: Eyes<unknown, unknown, unknown>[] = []
 
   /** @internal */
-  abstract get config(): types.Configs.EyesManagerConfig
+  abstract get config(): types.EyesManagerConfig
 
   /** @internal */
   attach<TDriver, TElement, TSelector>(
@@ -34,12 +34,14 @@ export abstract class EyesRunner {
   }
 
   /** @internal */
-  async makeEyes<TDriver, TElement, TSelector>(
-    config: types.Configs.EyesMakeConfig<TDriver, TElement, TSelector>,
-  ): Promise<types.Eyes<TElement, TSelector>> {
-    if (!this._manager) this._manager = this._spec.makeManager(this.config)
+  async makeEyes<TDriver, TElement, TSelector>(options: {
+    driver: TDriver
+    config?: types.EyesConfig<TElement, TSelector>
+    on?: (name: string, data?: Record<string, any>) => void
+  }): Promise<types.Eyes<TElement, TSelector>> {
+    if (!this._manager) this._manager = await this._spec.makeManager(this.config)
 
-    return await this._manager.makeEyes(config)
+    return await this._manager.makeEyes(options)
   }
 
   async getAllTestResults(throwErr = false): Promise<TestResultsSummaryData> {
@@ -102,7 +104,7 @@ export class VisualGridRunner extends EyesRunner {
   }
 
   /** @internal */
-  get config(): types.Configs.EyesManagerConfig<'vg'> {
+  get config(): types.EyesManagerConfig<'vg'> {
     return {
       type: 'vg',
       concurrency: this._testConcurrency || this._legacyConcurrency,
@@ -127,7 +129,7 @@ export class VisualGridRunner extends EyesRunner {
 
 export class ClassicRunner extends EyesRunner {
   /** @internal */
-  get config(): types.Configs.EyesManagerConfig<'classic'> {
+  get config(): types.EyesManagerConfig<'classic'> {
     return {type: 'classic'}
   }
 }

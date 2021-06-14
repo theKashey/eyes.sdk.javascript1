@@ -1,4 +1,3 @@
-import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import type {Mutable} from '@applitools/utils'
 import {TestResultsStatus, TestResultsStatusLiteral} from '../enums/TestResultsStatus'
@@ -46,7 +45,7 @@ export class TestResultsData implements Required<TestResults> {
 
   /** @internal */
   constructor(
-    results?: types.Results.TestResult,
+    results?: TestResults,
     deleteTest?: (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>,
   ) {
     this._deleteTest = deleteTest

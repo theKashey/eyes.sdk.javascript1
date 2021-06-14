@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
@@ -92,7 +93,6 @@ async function link({
       console.error(result.error)
       console.error('STDOUT:', result.stdout)
       console.error('STDERR:', result.stderr)
-      process.exit(1)
     }
     console.log(
       chalk.greenBright(
@@ -101,7 +101,10 @@ async function link({
         )}`,
       ),
     )
+    console.error('STDOUT:', result.stdout)
   })
+
+  results.forEach(result => result.error && process.exit(1))
 
   async function task(target, packages, {depth = 0} = {}) {
     const dependencies = target.dependencies
