@@ -305,7 +305,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get apiKey(): string {
-    return this._config.apiKey
+    return this._config.apiKey ?? utils.general.getEnvValue('API_KEY')
   }
   set apiKey(apiKey: string) {
     utils.guard.isString(apiKey, {name: 'apiKey', alpha: true, numeric: true})
@@ -320,7 +320,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get serverUrl(): string {
-    return this._config.serverUrl
+    return this._config.serverUrl ?? utils.general.getEnvValue('SERVER_URL')
   }
   set serverUrl(serverUrl: string) {
     utils.guard.isString(serverUrl, {name: 'serverUrl', strict: false})
@@ -419,6 +419,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get batch(): BatchInfo {
+    if (!this._config.batch) {
+      return {
+        id: utils.general.getEnvValue('BATCH_ID'),
+        name: utils.general.getEnvValue('BATCH_NAME'),
+        sequenceName: utils.general.getEnvValue('BATCH_SEQUENCE'),
+        notifyOnCompletion: utils.general.getEnvValue('BATCH_NOTIFY', 'boolean'),
+      }
+    }
     return this._config.batch
   }
   set batch(batch: BatchInfo) {
@@ -490,7 +498,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get branchName(): string {
-    return this._config.branchName
+    return this._config.branchName ?? utils.general.getEnvValue('BRANCH')
   }
   set branchName(branchName: string) {
     utils.guard.isString(branchName, {name: 'branchName'})
@@ -505,7 +513,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get parentBranchName(): string {
-    return this._config.parentBranchName
+    return this._config.parentBranchName ?? utils.general.getEnvValue('PARENT_BRANCH')
   }
   set parentBranchName(parentBranchName: string) {
     utils.guard.isString(parentBranchName, {name: 'parentBranchName'})
@@ -520,7 +528,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get baselineBranchName(): string {
-    return this._config.baselineBranchName
+    return this._config.baselineBranchName ?? utils.general.getEnvValue('BASELINE_BRANCH_NAME')
   }
   set baselineBranchName(baselineBranchName: string) {
     utils.guard.isString(baselineBranchName, {name: 'baselineBranchName'})
@@ -1018,7 +1026,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
 
   /** @undocumented */
   get dontCloseBatches(): boolean {
-    return this._config.dontCloseBatches
+    return this._config.dontCloseBatches ?? utils.general.getEnvValue('DONT_CLOSE_BATCHES', 'boolean')
   }
   /** @undocumented */
   set dontCloseBatches(dontCloseBatches: boolean) {

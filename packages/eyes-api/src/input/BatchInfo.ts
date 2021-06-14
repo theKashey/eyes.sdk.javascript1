@@ -18,11 +18,11 @@ export class BatchInfoData implements Required<BatchInfo> {
   constructor(name?: string, startedAt?: Date | string, id?: string)
   constructor(batchOrName?: BatchInfo | string, startedAt?: Date | string, id?: string) {
     if (utils.types.isNull(batchOrName) || utils.types.isString(batchOrName)) {
-      return new BatchInfoData({name: batchOrName, id, startedAt: startedAt})
+      return new BatchInfoData({name: batchOrName, id, startedAt})
     }
-    this.id = batchOrName.id ?? utils.general.getEnvValue('BATCH_ID')
+    this.id = batchOrName.id ?? utils.general.getEnvValue('BATCH_ID') ?? `generated-${utils.general.guid()}`
     this.name = batchOrName.name ?? utils.general.getEnvValue('BATCH_NAME')
-    this.sequenceName = batchOrName.sequenceName ?? utils.general.getEnvValue('BATCH_SEQUENCE', 'string')
+    this.sequenceName = batchOrName.sequenceName ?? utils.general.getEnvValue('BATCH_SEQUENCE')
     this.startedAt = batchOrName.startedAt ?? new Date()
     this.notifyOnCompletion =
       batchOrName.notifyOnCompletion ?? utils.general.getEnvValue('BATCH_NOTIFY', 'boolean') ?? false
