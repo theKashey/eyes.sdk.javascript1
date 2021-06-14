@@ -82,7 +82,7 @@ class BatchInfo {
     }
 
     this._id = id || GeneralUtils.getEnvValue('BATCH_ID')
-    this._isGeneratedId = !!isGeneratedId || this._id.startsWith('generated-')
+    this._isGeneratedId = !!isGeneratedId || Boolean(this._id && this._id.startsWith('generated-'))
     if (!this._id) {
       this._generateAndSetId()
     }
