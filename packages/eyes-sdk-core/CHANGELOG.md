@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.21.0 - 2021/6/15
+
 - handle generated batch id from eyes-api
 
 ## 12.20.3 - 2021/6/8
