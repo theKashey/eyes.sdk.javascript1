@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- make `isContext` optional in `SpecDriver` type
+- 
 
 ## 1.0.2 - 2021/6/1
 

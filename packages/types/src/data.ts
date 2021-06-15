@@ -39,6 +39,7 @@ export type DriverInfo = {
   sessionId?: string
   isMobile?: boolean
   isNative?: boolean
+  isCDP?: boolean
   deviceName?: string
   platformName?: string
   platformVersion?: string
