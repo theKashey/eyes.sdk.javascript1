@@ -3,6 +3,7 @@
 ## Unreleased
 
 - move `@applitools/types` to dependencies
+- updated to @applitools/types@1.0.3 (from 1.0.2)
 
 ## 12.21.0 - 2021/6/15
 
