@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- move `@applitools/types` to dependencies
 
 ## 12.21.0 - 2021/6/15
 

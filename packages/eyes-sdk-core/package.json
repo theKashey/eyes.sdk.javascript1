@@ -39,6 +39,7 @@
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/screenshoter": "3.0.8",
     "@applitools/snippets": "2.1.3",
+    "@applitools/types": "1.0.2",
     "axios": "0.21.1",
     "chalk": "3.0.0",
     "cosmiconfig": "6.0.0",
@@ -52,7 +53,6 @@
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "2.1.1",
     "@applitools/sdk-release-kit": "0.13.0",
-    "@applitools/types": "1.0.2",
     "@applitools/visual-grid-client": "15.8.9",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
