@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 15.8.11 - 2021/6/15
+
+- updated to @applitools/eyes-sdk-core@12.21.1 (from 12.21.0)
+
 ## 15.8.10 - 2021/6/15
 
 - updated to @applitools/eyes-sdk-core@12.21.0 (from 12.20.3)
