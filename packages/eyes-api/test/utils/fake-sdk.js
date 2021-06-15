@@ -115,20 +115,20 @@ function makeSDK(settings = {}) {
     }
   }
 
-  async function getViewportSize(driver) {
+  async function getViewportSize({driver}) {
     assert.ok(isDriver(driver), '"driver" is not a driver')
     history.push({command: 'getViewportSize', data: [driver], result: settings.viewportSize})
     return settings.viewportSize
   }
 
-  async function setViewportSize(driver, viewportSize) {
+  async function setViewportSize({driver, size}) {
     assert.ok(isDriver(driver), '"driver" is not a driver')
     assert.ok(
-      utils.types.has(viewportSize, ['width', 'height']),
-      '"viewportSize" must be an object with "width" and "height" properties',
+      utils.types.has(size, ['width', 'height']),
+      '"size" must be an object with "width" and "height" properties',
     )
-    settings.viewportSize = viewportSize
-    history.push({command: 'setViewportSize', data: [driver, viewportSize]})
+    settings.viewportSize = size
+    history.push({command: 'setViewportSize', data: [driver, size]})
   }
 }
 
