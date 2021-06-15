@@ -50,7 +50,7 @@
     "@applitools/eyes-sdk-core": "12.20.2",
     "@applitools/utils": "1.2.0",
     "@applitools/visual-grid-client": "15.8.8",
-    "webdriver": "^7.7.3",
+    "webdriver": "7.7.3",
     "ws": "7.4.6",
     "yargs": "16.1.0"
   },
