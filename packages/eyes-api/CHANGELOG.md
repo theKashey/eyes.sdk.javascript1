@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.4 - 2021/6/15
+
 - add auto id generation for batch info
 - read default values for some configuration properties from environment variables
 - change default `throwErr` argument value in `EyesRunner::getAllTestResults` from `false` to `true`
