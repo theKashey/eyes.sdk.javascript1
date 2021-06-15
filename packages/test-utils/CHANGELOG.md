@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.4 - 2021/6/15
+
 - add `appium` flag for appium capabilities
 
 ## 1.0.3 - 2021/5/24
