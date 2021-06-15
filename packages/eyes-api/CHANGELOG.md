@@ -6,6 +6,7 @@
 - read default values for some configuration properties from environment variables
 - change default `throwErr` argument value in `EyesRunner::getAllTestResults` from `false` to `true`
 - fix `Eyes` constructor to support the first argument as `null` and second as a `Configuration` object
+- updated to @applitools/types@1.0.2 (from 1.0.1)
 
 ## 1.0.3 - 2021/5/24
 
