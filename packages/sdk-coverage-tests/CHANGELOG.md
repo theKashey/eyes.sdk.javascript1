@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix path resolution
 
 ## 2.3.13 - 2021/5/18
 

@@ -17,7 +17,9 @@ function loadOverrides(overrides) {
   }
 
   if (!isString(overrides)) return overrides
-  return isUrl(overrides) ? requireUrl(overrides) : require(path.join(path.resolve('.'), overrides))
+  return isUrl(overrides)
+    ? requireUrl(overrides)
+    : require(path.resolve(path.resolve('.'), overrides))
 }
 
 async function loadTests(path) {
