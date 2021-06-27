@@ -1,7 +1,7 @@
-Feature: Google
+Feature: Applitools demo page
 
-Scenario: Searching Google
+Scenario: Validate page
 
-  Given I open Google`s search page
-  Then visual test Google
-  And the Google search form exists
+  Given I open Applitools`s demo page
+  Then visual test Demo
+  And the button exists

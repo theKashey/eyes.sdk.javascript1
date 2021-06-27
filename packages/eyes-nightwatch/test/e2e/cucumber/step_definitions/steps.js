@@ -4,14 +4,14 @@ const {Target} = require('../../../../')
 
 setDefaultTimeout(100000)
 
-Given(/^I open Google`s search page$/, async () => {
-  await client.url('http://google.com')
+Given(/^I open Applitools`s demo page$/, async () => {
+  await client.url('https://applitools.github.io/demo/')
 })
 
-Then(/^visual test Google$/, async () => {
-  await client.eyesOpen('google', 'eyes-nightwatch cucumber').eyesCheck(Target.window().fully()).eyesClose()
+Then(/^visual test Demo$/, async () => {
+  await client.eyesOpen('demo', 'eyes-nightwatch cucumber').eyesCheck(Target.window().fully()).eyesClose()
 })
 
-Then(/^the Google search form exists$/, async () => {
-  await client.assert.visible('input[name="q"]')
+Then(/^the button exists$/, async () => {
+  await client.assert.visible('.button-section')
 })
