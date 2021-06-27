@@ -198,8 +198,12 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
         if (namedHandlers) namedHandlers.forEach(async handler => handler(data))
       },
     })
-
-    return this._driver
+    return new Proxy(this._driver as any, {
+      get(target, key) {
+        if (key === 'then') return
+        return Reflect.get(target, key)
+      },
+    }) as any
   }
 
   /** @deprecated */

@@ -2,8 +2,7 @@
 
 ## Unreleased
 
-- added full typescript support
-- introduced @applitools/eyes-api package with new api
+- fix nightwatch-api support
 
 ## 1.8.2 - 2021/5/25
 

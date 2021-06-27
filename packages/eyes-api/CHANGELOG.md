@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support thenable webdrivers
 
 ## 1.0.5 - 2021/6/15
 
