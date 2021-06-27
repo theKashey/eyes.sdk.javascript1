@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.8.3 - 2021/6/27
+
 - fix nightwatch-api support
 - updated to @applitools/eyes-api@1.0.6 (from 1.0.5)
 - updated to @applitools/eyes-sdk-core@12.21.2 (from 12.21.1)
