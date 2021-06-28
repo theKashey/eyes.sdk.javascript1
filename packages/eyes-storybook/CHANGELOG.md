@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix storybook url `html` extensions
 
 ## 3.22.3 - 2021/6/1
 
