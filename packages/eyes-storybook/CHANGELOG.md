@@ -7,6 +7,7 @@
 - updated to @applitools/eyes-sdk-core@12.21.2 (from 12.20.2)
 - updated to @applitools/visual-grid-client@15.8.11 (from 15.8.8)
 - updated to @applitools/visual-grid-client@15.8.12 (from 15.8.11)
+- updated to @applitools/eyes-puppeteer@1.7.3 (from 1.7.2)
 
 ## 3.22.3 - 2021/6/1
 
