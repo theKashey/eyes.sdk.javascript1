@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.4 - 2021/6/29
+
 - fix storybook url `html` extensions
 - updated to @applitools/driver@1.0.7 (from 1.0.6)
 - updated to @applitools/eyes-sdk-core@12.21.2 (from 12.20.2)
