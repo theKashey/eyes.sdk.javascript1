@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.13.0 - 2021/6/30
+
 - remove unused permissions
 
 ## 1.12.2 - 2021/6/30
