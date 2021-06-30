@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- add the option get and set rendering info separately from eyesOpen. This will also validate the response from getRenderInfo and will throw the appropriate exception.
 
 
 ## 15.8.12 - 2021/6/29

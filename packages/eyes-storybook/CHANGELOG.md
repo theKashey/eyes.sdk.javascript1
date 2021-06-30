@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+ - fail immediately when the api key is invalid 
 
 
 ## 3.22.4 - 2021/6/29
