@@ -1,11 +1,14 @@
 # Changelog
 
 ## Unreleased
+
+
+  ## 3.22.5 - 2021/6/30
+
  - fail immediately when the api key is invalid 
 - updated to @applitools/eyes-puppeteer@1.7.4 (from 1.7.3)
 - updated to @applitools/eyes-sdk-core@12.21.3 (from 12.21.2)
 - updated to @applitools/visual-grid-client@15.8.13 (from 15.8.12)
-
 
 ## 3.22.4 - 2021/6/29
 
