@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.21.3 - 2021/6/30
+
 - fix an issue with screenshots during locate logic
 
 ## 12.21.2 - 2021/6/27
