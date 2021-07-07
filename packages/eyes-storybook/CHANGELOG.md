@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.6 - 2021/7/7
+
 - document runBefore and runAfter functions caveats
 - updated to @applitools/dom-snapshot@4.5.4 (from 4.5.3)
 
