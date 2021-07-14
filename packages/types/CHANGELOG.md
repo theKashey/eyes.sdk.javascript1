@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- make `parentContext` optional in `SpecDriver` type
 ## 1.0.3 - 2021/6/15
 
 - make `isContext` optional in `SpecDriver` type
