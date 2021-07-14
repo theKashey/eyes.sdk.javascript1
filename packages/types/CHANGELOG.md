@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+
+## 1.0.4 - 2021/7/14
+
+- make `parentContext` optional in `SpecDriver` type
 - make `parentContext` optional in `SpecDriver` type
 ## 1.0.3 - 2021/6/15
 
