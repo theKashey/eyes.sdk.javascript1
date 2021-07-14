@@ -97,7 +97,7 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
     else throw err
   }
 }
-export async function findElements(driver: Driver, selector: Selector): Promise<Element> {
+export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(transformSelector(selector))
 }
 export async function getElementRect(

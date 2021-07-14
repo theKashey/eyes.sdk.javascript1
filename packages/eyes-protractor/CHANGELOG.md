@@ -2,7 +2,6 @@
 
 ## Unreleased
 
-
 ## 1.16.2 - 2021/5/25
 
 - added full typescript support

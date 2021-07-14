@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- TestResultsFormatter and ConfigUtils to exports
 
 ## 12.21.3 - 2021/6/30
 
