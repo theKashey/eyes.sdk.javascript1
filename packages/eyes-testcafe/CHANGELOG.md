@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.14.3 - 2021/7/14
+
 - fix issue with `Eyes` being exported as a type from legacy type definition file
 
 ## 1.14.2 - 2021/7/14
