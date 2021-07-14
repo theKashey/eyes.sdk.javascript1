@@ -175,7 +175,8 @@ function dts({project, context, externalModules = [], externalGlobals = []}) {
 
     const args = node.parameters.map(param => {
       const paramType = $type(param.type, {parent})
-      return `${param.flags.isRest ? '...' : ''}${param.name}${param.flags.isOptional ? '?' : ''}: ${paramType}`
+      const isOptional = param.flags.isOptional || Boolean(param.defaultValue)
+      return `${param.flags.isRest ? '...' : ''}${param.name}${isOptional ? '?' : ''}: ${paramType}`
     })
 
     return `(${args.join(', ')})`
@@ -229,7 +230,7 @@ function dts({project, context, externalModules = [], externalGlobals = []}) {
       get: (target, key) => Reflect.get(key in target ? target : target._type, key),
     })
 
-    if (reflection) {
+    if (reflection && wrapper.type !== 'intrinsic') {
       const symbol = project.reflectionIdToSymbolMap.get(reflection.id)
       if (symbol) {
         wrapper._type = context.converter.convertType(context, symbol.declarations[0].type)

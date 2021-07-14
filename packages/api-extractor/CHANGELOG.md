@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- mark argument as optional if it has default value
 
 ## 1.1.2 - 2021/6/23
 
