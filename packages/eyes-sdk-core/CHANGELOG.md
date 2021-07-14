@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.21.4 - 2021/7/14
+
 - TestResultsFormatter and ConfigUtils to exports
 - updated to @applitools/dom-snapshot@4.5.4 (from 4.5.3)
 
