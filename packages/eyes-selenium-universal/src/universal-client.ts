@@ -88,8 +88,8 @@ export class EyesManager implements types.EyesManager<Driver, Element, Selector>
     this._socket = socket
   }
 
-  async makeEyes({driver, config}: {driver: Driver; config?: types.EyesConfig<Element, Selector>}): Promise<Eyes> {
-    const eyes = await this._socket.request('EyesManager.makeEyes', {
+  async openEyes({driver, config}: {driver: Driver; config?: types.EyesConfig<Element, Selector>}): Promise<Eyes> {
+    const eyes = await this._socket.request('EyesManager.openEyes', {
       manager: this._manager,
       driver: await transform(driver),
       config: await transform(config),

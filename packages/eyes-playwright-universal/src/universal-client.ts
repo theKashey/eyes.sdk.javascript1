@@ -144,9 +144,9 @@ export class EyesManager implements types.EyesManager<Driver, Element, Selector>
     this._socket = socket
   }
 
-  async makeEyes({driver, config}: {driver: Driver; config?: types.EyesConfig<Element, Selector>}): Promise<Eyes> {
+  async openEyes({driver, config}: {driver: Driver; config?: types.EyesConfig<Element, Selector>}): Promise<Eyes> {
     const driverRef = this._refer.ref(driver)
-    const eyes = await this._socket.request('EyesManager.makeEyes', {
+    const eyes = await this._socket.request('EyesManager.openEyes', {
       manager: this._manager,
       driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)},
       config: this._refer.ref(config),

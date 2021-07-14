@@ -65,11 +65,20 @@ class Element {
 
   async equals(element) {
     if (this.isRef) return false
-    return this.spec.isEqualElements(
-      this._context.unwrapped,
-      this._element,
-      element instanceof Element ? element.unwrapped : element,
-    )
+    if (this.spec.isEqualElements) {
+      return this.spec.isEqualElements(
+        this._context.unwrapped,
+        this._element,
+        element instanceof Element ? element.unwrapped : element,
+      )
+    } else {
+      return this.spec
+        .executeScript(this._context.unwrapped, ([element1, element2]) => element1 === element2, [
+          this._element,
+          element instanceof Element ? element.unwrapped : element,
+        ])
+        .catch(() => false)
+    }
   }
 
   async init(context) {

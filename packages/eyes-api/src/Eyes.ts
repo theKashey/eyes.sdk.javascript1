@@ -188,7 +188,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (utils.types.has(viewportSize, ['width', 'height'])) config.viewportSize = viewportSize
     if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.sessionType = sessionType
 
-    this._eyes = await this._runner.makeEyes({
+    this._eyes = await this._runner.openEyes({
       driver,
       config,
       on: (name: string, data?: Record<string, any>) => {

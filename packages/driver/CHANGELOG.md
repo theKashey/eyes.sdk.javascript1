@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add default implementation for element comparison
 
 ## 1.0.7 - 2021/6/8
 

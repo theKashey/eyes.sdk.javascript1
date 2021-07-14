@@ -1,0 +1,31 @@
+{
+  "description": "Applitools Eyes browser extension SDK",
+  "manifest_version": 2,
+  "name": "Applitools Eyes browser extension SDK",
+  "version": "__PACKAGE_VERSION__",
+  "version_name": "__PACKAGE_VERSION__",
+  "homepage_url": "https://applitools.com/",
+  "icons": {
+    "70": "assets/icons/icon_70.png",
+    "128": "assets/icons/icon_128.png"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "webNavigation",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"],
+    "match_about_blank": true,
+    "all_frames": true
+  }],
+  "web_accessible_resources": ["api.js", "assets/dom-snapshot/*", "assets/dom-capture/*"],
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}

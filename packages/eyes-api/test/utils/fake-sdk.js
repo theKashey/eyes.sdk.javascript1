@@ -36,9 +36,9 @@ function makeSDK(settings = {}) {
 
     history.push({command: 'makeManager', data: config})
 
-    return {makeEyes, closeAllEyes}
+    return {openEyes, closeAllEyes}
 
-    function makeEyes({driver, config, on}) {
+    function openEyes({driver, config, on}) {
       assert.ok(isDriver(driver), '"driver" is not a driver')
 
       on('setSizeWillStart', {viewportSize: config.viewportSize})
@@ -48,7 +48,7 @@ function makeSDK(settings = {}) {
       on('testStarted', {sessionId: 'session-id'})
 
       test.config = config
-      history.push({command: 'makeEyes', data: {driver, config}})
+      history.push({command: 'openEyes', data: {driver, config}})
 
       return {
         check,

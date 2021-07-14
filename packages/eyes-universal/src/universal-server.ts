@@ -67,10 +67,10 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       return sdk.deleteTest(settings)
     })
 
-    socket.command('EyesManager.makeEyes', async ({manager, driver, config}) => {
-      const eyes = await refer.deref(manager).makeEyes({driver, config})
+    socket.command('EyesManager.openEyes', async ({manager, driver, config}) => {
+      const eyes = await refer.deref(manager).openEyes({driver, config})
       const eyesRef = refer.ref(eyes, manager)
-      tracker.makeEyes({manager, driver, config}, eyesRef)
+      tracker.openEyes({manager, driver, config}, eyesRef)
       return eyesRef
     })
     socket.command('EyesManager.closeAllEyes', async ({manager}) => {

@@ -21,7 +21,7 @@ export interface Core<TDriver, TElement, TSelector> {
 }
 
 export interface EyesManager<TDriver, TElement, TSelector> {
-  makeEyes(options: {
+  openEyes(options: {
     driver: TDriver
     config?: EyesConfig<TElement, TSelector>
     on?: (event: string, data?: Record<string, any>) => void

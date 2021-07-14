@@ -11,8 +11,8 @@ const makeAbort = require('./abort')
 const ConsoleLogHandler = require('../logging/ConsoleLogHandler')
 const FileLogHandler = require('../logging/FileLogHandler')
 
-function makeMakeEyes({sdk, runner}) {
-  return async function makeEyes({driver, config, on}) {
+function makeOpenEyes({sdk, runner}) {
+  return async function openEyes({driver, config, on}) {
     const eyes = new sdk.EyesFactory(runner)
     eyes.setConfiguration(config)
     if (config.scrollRootElement) eyes.setScrollRootElement(config.scrollRootElement)
@@ -70,4 +70,4 @@ function makeMakeEyes({sdk, runner}) {
   }
 }
 
-module.exports = makeMakeEyes
+module.exports = makeOpenEyes

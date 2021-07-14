@@ -47,7 +47,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).types.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).types.package}}
@@ -67,7 +67,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).utils.package}}
@@ -87,7 +87,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.package}}
@@ -107,7 +107,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).test-utils.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).test-utils.package}}
@@ -128,7 +128,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
@@ -148,7 +148,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
@@ -168,7 +168,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).driver.package}}
@@ -188,7 +188,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).test-server.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).test-server.package}}
@@ -208,7 +208,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).scripts.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).scripts.package}}
@@ -229,7 +229,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
@@ -249,7 +249,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).core.package}}
@@ -270,7 +270,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).vgc.package}}
@@ -292,13 +292,13 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).universal.package}}
         env: ${{fromJSON(needs.setup.outputs.packages).universal.env}}
-      - name: Publish
+      - name: Publish to NPM
         id: publish
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).universal.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).universal.releaseVersion}}
-      - name: Create GitHub release
+      - name: Publish to GitHub
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{steps.publish.outputs.tag}}
@@ -326,7 +326,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.package}}
@@ -356,7 +356,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.package}}
@@ -369,6 +369,38 @@ jobs:
           path: |
             packages/${{fromJSON(needs.setup.outputs.packages).selenium-universal.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).selenium-universal.package}}/coverage-test-report.xml
+
+  browser-extension:
+    needs: [setup, utils, test-utils, core, vgc]
+    if: ${{fromJSON(needs.setup.outputs.packages).browser-extension && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      # - name: Run tests
+      #   uses: ./.github/actions/tests
+      #   with:
+      #     package: ${{fromJSON(needs.setup.outputs.packages).browser-extension.package}}
+      #   env: ${{fromJSON(needs.setup.outputs.packages).browser-extension.env}}
+      - name: Update version
+        id: version
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).browser-extension.package}}
+          version: ${{fromJSON(needs.setup.outputs.packages).browser-extension.releaseVersion}}
+          skip-npm: true
+      - name: Publish to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{steps.version.outputs.tag}}
+          files: |
+            packages/${{fromJSON(needs.setup.outputs.packages).browser-extension.package}}/eyes-browser-extension.zip
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   playwright:
     needs: [setup, utils, test-utils, api, core, vgc]
@@ -387,7 +419,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).playwright.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).playwright.package}}
@@ -417,7 +449,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).puppeteer.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).puppeteer.package}}
@@ -447,7 +479,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).webdriverio.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio.package}}
@@ -477,7 +509,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.package}}
@@ -507,7 +539,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.package}}
@@ -537,7 +569,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).selenium.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).selenium.package}}
@@ -567,7 +599,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).protractor.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).protractor.package}}
@@ -597,7 +629,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).nightwatch.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).nightwatch.package}}
@@ -627,7 +659,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
           report: prod
         env: ${{fromJSON(needs.setup.outputs.packages).testcafe.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).testcafe.package}}
@@ -656,7 +688,7 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
         env: ${{fromJSON(needs.setup.outputs.packages).storybook.env}}
-      - name: Publish
+      - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}

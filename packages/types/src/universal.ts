@@ -28,7 +28,7 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
   request(name: 'Core.deleteTest', settings: DeleteTestSettings): Promise<void>
 
   request(
-    name: 'EyesManager.makeEyes',
+    name: 'EyesManager.openEyes',
     options: {
       manager: Ref<EyesManager<TDriver, TElement, TSelector>>
       driver: TDriver
@@ -197,7 +197,7 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
   command(name: 'Core.deleteTest', handler: (settings: DeleteTestSettings) => Promise<void>): () => void
 
   command(
-    name: 'EyesManager.makeEyes',
+    name: 'EyesManager.openEyes',
     handler: (options: {
       manager: Ref<EyesManager<TDriver, TElement, TSelector>>
       driver: TDriver

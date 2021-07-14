@@ -1,0 +1,35 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "logs",
+    "tmp/",
+    "types/",
+    "test/generic/",
+    "*.d.ts"
+  ],
+  "env": {
+    "browser": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["prettier", "mocha-no-only", "node"],
+  "extends": ["plugin:node/recommended", "prettier"],
+  "rules": {
+    "prettier/prettier": ["error", {
+      "arrowParens": "avoid",
+      "printWidth": 120
+    }],
+    "node/no-unsupported-features/es-syntax": "off",
+    "node/no-unpublished-import": "off",
+    "node/no-unpublished-require": "off",
+    "node/no-extraneous-require": "off",
+    "no-unused-vars": ["error", {"varsIgnorePattern": "^_", "args": "all", "argsIgnorePattern": "^_"}],
+    "no-undef": "warn",
+    "no-unreachable": "warn"
+  }
+}

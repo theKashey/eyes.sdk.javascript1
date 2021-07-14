@@ -1,0 +1,73 @@
+{
+  "name": "eyes-browser-extension",
+  "version": "0.1.8",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "scripts": {
+    "lint": "eslint '**/*.js'",
+    "build": "yarn build:dist && yarn build:zip",
+    "build:dist": "webpack",
+    "build:zip": "cd dist; zip -r eyes-browser-extension.zip *; mv eyes-browser-extension.zip ../",
+    "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-testcafe'",
+    "test": "yarn build && yarn test:it && yarn test:coverage",
+    "test:it": "mocha --no-timeouts ./test/it/*.spec.js",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-browser-extension' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
+    "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-browser-extension'",
+    "deps": "bongo deps",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='browser-extension' -f links='eyes-sdk-core utils visual-grid-client' -f linking-depth='1'",
+    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='browser-extension'",
+    "preversion": "bongo preversion",
+    "version": "yarn build && bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "dependencies": {
+    "@applitools/eyes-sdk-core": "12.21.3",
+    "@applitools/utils": "1.2.0",
+    "@applitools/visual-grid-client": "15.8.13",
+    "webextension-polyfill": "0.7.0"
+  },
+  "devDependencies": {
+    "@applitools/scripts": "^1.0.1",
+    "@applitools/sdk-coverage-tests": "^2.3.13",
+    "@applitools/sdk-release-kit": "^0.13.0",
+    "@applitools/test-utils": "^1.0.4",
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.13.8",
+    "assert": "^2.0.0",
+    "babel-loader": "^8.2.2",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^6.0.3",
+    "copy-webpack-plugin": "^7.0.0",
+    "core-js": "^3.14.0",
+    "crypto-browserify": "^3.12.0",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "mocha": "^8.3.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "playwright": "^1.12.2",
+    "prettier": "^2.3.2",
+    "process": "^0.11.10",
+    "selenium-webdriver": "^4.0.0-beta.4",
+    "spec-xunit-file": "^0.0.1-3",
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.3",
+    "webpack": "^5.39.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

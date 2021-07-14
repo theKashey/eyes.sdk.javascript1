@@ -19,7 +19,7 @@
       - [Session.init](#sessioninit)
     - [Client-initiated commands](#client-initiated-commands)
       - [Core.makeManager](#coremakemanager)
-      - [EyesManager.makeEyes](#eyesmanagermakeeyes)
+      - [EyesManager.openEyes](#eyesmanageropeneyes)
       - [EyesManage.closeAllEyes](#eyesmanageclosealleyes)
       - [Eyes.check](#eyescheck)
       - [Eyes.locate](#eyeslocate)
@@ -141,11 +141,11 @@ In order to perform any action, the *Client* has to send a proper request to the
 #### Core.makeManager
 This request should be sent to create a manager object. It expects input of type [EyesManagerConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L19).
 
-In response client should expect to get a manager reference ([ManagerRef](#Reference-format)), this reference has to be used in order to perform manager related actions ([EyesManager.makeEyes](#EyesManager.makeEyes), [EyesManager.closeAllEyes](#EyesManager.closeAllEyes))
+In response client should expect to get a manager reference ([ManagerRef](#Reference-format)), this reference has to be used in order to perform manager related actions ([EyesManager.openEyes](#EyesManager.openEyes), [EyesManager.closeAllEyes](#EyesManager.closeAllEyes))
 
 > Do not send this command in a moment when `EyesManager` is constructed but instead send it lazily when the actual eyes object has to be opened. Pay attention that in this architecture eyes could be created only from a manager instance, and creation and opening of the eyes are combined in a single operation.
 
-#### EyesManager.makeEyes
+#### EyesManager.openEyes
 This command has to be used in order to create an eyes object. It expects input with related [ManagerRef](#Reference-format) (from [Core.makeManager](#Core.makeManager)), [DriverRef](#Reference-format), and [EyesConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L25) in a format:
 ```ts
 {
@@ -491,7 +491,7 @@ Each ref is a JSON object with only one property `applitools-ref-id` with a guid
 How ever ref interface could be extended in some cases to provide more data about the object it referring to, for example it makes sense to add information about the selector to the element references, it will allow to avoid back and forth communication with the server in some rare cases.
 
 ### Reference usage
-On the client-side received from the server references (from commands [Core.makeManager](#Core.makeManager) and [EyesManager.makeEyes](#EyesManager.makeEyes)) could be used only to perform other server-side actions related to the object these references referring to. However, references which client sends to the server inevitably will be received back in one of the [Server-initiated commands](#Server-initiated-commands), in this case client should dereference received reference an perform required operation with actual object.
+On the client-side received from the server references (from commands [Core.makeManager](#Core.makeManager) and [EyesManager.openEyes](#EyesManager.openEyes)) could be used only to perform other server-side actions related to the object these references referring to. However, references which client sends to the server inevitably will be received back in one of the [Server-initiated commands](#Server-initiated-commands), in this case client should dereference received reference an perform required operation with actual object.
 
 ## API
 The API layer is the biggest part of the client implementation which should abstract the way end-user will use an sdk from the internal implementation. The main functional purpose of this layer should be to collect all of the configuration and inputs from a user and send them when actual action should be done. The biggest benefit of this architecture is that API (the biggest and the most chaotic part of the sdk) shouldn't be re-implemented again and again for each new framework.

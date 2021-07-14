@@ -1,17 +1,24 @@
 const {useEmitter} = require('../emitter')
 const {isFunction} = require('../common-util')
 
-function emitTests(tests, config) {
+function emitTests(tests, options) {
   const emittedTests = []
   const errors = []
+  let skippedTestCount = 0
+  let skippedEmitTestCount = 0
   for (const test of tests) {
-    try {
-      emittedTests.push(emitTest(test, config))
-    } catch (error) {
-      errors.push({test, error})
+    if (!test.skipEmit) {
+      try {
+        emittedTests.push(emitTest(test, options))
+        if (test.skip) skippedTestCount += 1
+      } catch (error) {
+        errors.push({test, error})
+      }
+    } else {
+      skippedEmitTestCount += 1
     }
   }
-  return {emittedTests, errors}
+  return {emittedTests, skippedTestCount, skippedEmitTestCount, errors}
 }
 
 function emitTest(test, {makeSpecEmitter, makeFile}) {

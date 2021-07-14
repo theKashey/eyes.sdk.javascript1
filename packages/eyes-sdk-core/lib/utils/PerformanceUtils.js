@@ -1,4 +1,4 @@
-'use strict'
+const {performance} = require('perf_hooks')
 
 const MS_IN_S = 1000
 const MS_IN_M = 60000
@@ -18,14 +18,13 @@ class Time {
 
   reset() {
     this._startTime = null
-    this._elapsedTime = null
 
     this._result = null
   }
 
   start() {
     this.reset()
-    this._startTime = process.hrtime()
+    this._startTime = performance.now()
   }
 
   /**
@@ -36,8 +35,7 @@ class Time {
       throw new Error('start() should be called first!')
     }
 
-    this._elapsedTime = process.hrtime(this._startTime)
-    const elapsedMs = this._elapsedTime[0] * MS_IN_S + this._elapsedTime[1] / NS_IN_MS
+    const elapsedMs = performance.now() - this._startTime
 
     this._result = {
       name: this._name || '',

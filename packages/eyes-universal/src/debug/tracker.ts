@@ -16,7 +16,7 @@ type TestHistory = {
 
 export interface Tracker {
   makeManager(config: any, manager: types.Ref): void
-  makeEyes(input: any, eyes: types.Ref): void
+  openEyes(input: any, eyes: types.Ref): void
   check(input: any, result: any): void
   locate(input: any, result: any): void
   extractTextRegions(input: any, result: any): void
@@ -41,7 +41,7 @@ export function makeTracker({track = false} = {}): Tracker {
     makeManager(config: any, manager: types.Ref) {
       history.managers.set(extractRefId(manager), {manager, config, eyes: []})
     },
-    makeEyes({manager, ...input}: any, eyes: types.Ref) {
+    openEyes({manager, ...input}: any, eyes: types.Ref) {
       const managerHistory = history.managers.get(extractRefId(manager))
       if (!managerHistory) return
       managerHistory.eyes.push(eyes)

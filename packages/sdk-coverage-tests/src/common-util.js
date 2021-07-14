@@ -90,6 +90,7 @@ function requireUrl(url, cache = {}) {
       let requiringUrl = new URL(modulePath, url).href
       return cache[requiringUrl] ? cache[requiringUrl].exports : requireUrl(requiringUrl, cache)
     },
+    process,
     module,
   })
   return module.exports

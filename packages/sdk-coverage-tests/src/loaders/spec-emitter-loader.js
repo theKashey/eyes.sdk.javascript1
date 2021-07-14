@@ -4,7 +4,7 @@ const {isUrl, requireUrl} = require('../common-util')
 async function specEmitterLoader({emitter: emitterPath}) {
   return isUrl(emitterPath)
     ? requireUrl(emitterPath)
-    : require(path.join(path.resolve('.'), emitterPath))
+    : require(path.resolve(process.cwd(), emitterPath))
 }
 
 exports.specEmitterLoader = specEmitterLoader

@@ -8,14 +8,18 @@ on:
         required: true
       type:
         description: testing type (unit, it, e2e, coverage)
+        required: false
       links:
         description: linked package names
         default: eyes-sdk-core
+        required: false
       linking-depth:
         description: linking depth
-        default: 0
+        default: '0'
+        required: false
       grep:
         description: grep pattern
+        required: false
 env:
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
@@ -25,6 +29,7 @@ env:
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  DISPLAY: ':99'
 jobs:
   setup:
     name: Setup
@@ -53,6 +58,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
+      - name: Setup xvfb
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb -ac $DISPLAY -screen 0 1280x1024x16 &
       - name: Run tests
         uses: ./.github/actions/tests
         with:

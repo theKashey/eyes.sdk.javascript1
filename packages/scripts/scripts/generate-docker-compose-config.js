@@ -2,17 +2,19 @@ const fs = require('fs')
 const path = require('path')
 
 function generateDockerComposeConfig({saveToDisk, platform = process.platform} = {}) {
+  const volumes = ['/dev/shm:/dev/shm']
+  if (process.env.VOLUME) volumes.push(process.env.VOLUME)
   const config = {
     version: '3.4',
     services: {
       chrome: {
         image: 'selenium/standalone-chrome',
-        volumes: ['/dev/shm:/dev/shm'],
+        volumes,
         ...generateNetworkConfigForPlatform(platform),
       },
       firefox: {
         image: 'selenium/standalone-firefox',
-        volumes: ['/dev/shm:/dev/shm'],
+        volumes,
         ports: ['4445:4444'],
       },
     },

@@ -34,14 +34,14 @@ export abstract class EyesRunner {
   }
 
   /** @internal */
-  async makeEyes<TDriver, TElement, TSelector>(options: {
+  async openEyes<TDriver, TElement, TSelector>(options: {
     driver: TDriver
     config?: types.EyesConfig<TElement, TSelector>
     on?: (name: string, data?: Record<string, any>) => void
   }): Promise<types.Eyes<TElement, TSelector>> {
     if (!this._manager) this._manager = await this._spec.makeManager(this.config)
 
-    return await this._manager.makeEyes(options)
+    return await this._manager.openEyes(options)
   }
 
   async getAllTestResults(throwErr = true): Promise<TestResultsSummaryData> {
