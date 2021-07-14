@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 12.21.5 - 2021/7/14
+
+- updated to @applitools/types@1.0.4 (from 1.0.3)
+
 ## 12.21.4 - 2021/7/14
 
 - TestResultsFormatter and ConfigUtils to exports
