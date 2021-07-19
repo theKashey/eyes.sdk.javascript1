@@ -44,7 +44,9 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     })
 
     socket.command('Core.makeManager', async config => {
+      console.log('here')
       const sdk = await init
+      console.log('here')
       const manager = await sdk.makeManager(config)
       const managerRef = refer.ref(manager)
       tracker.makeManager(config, managerRef)

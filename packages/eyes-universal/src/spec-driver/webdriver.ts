@@ -111,12 +111,12 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(...transformSelector(selector))
 }
-export async function getElementRect(
-  driver: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  return driver.getElementRect(extractElementId(element))
-}
+// export async function getElementRect(
+//   driver: Driver,
+//   element: Element,
+// ): Promise<{x: number; y: number; width: number; height: number}> {
+//   return driver.getElementRect(extractElementId(element))
+// }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(driver.getWindowRect)) {
     const rect = await driver.getWindowRect()

@@ -6,7 +6,10 @@ export type Context = types.Ref
 export type Element = types.Ref
 export type Selector = types.SpecSelector<types.Ref>
 
-type SpecDriver = Omit<types.SpecDriver<Driver, Context, Element, Selector>, 'transformDriver' | 'transformElement'>
+type SpecDriver = Omit<
+  types.SpecDriver<Driver, Context, Element, Selector>,
+  'transformDriver' | 'transformElement' | 'getElementRegion' | 'getElementAttribute'
+>
 
 export function makeSpec(options: {
   socket: types.ServerSocket<Driver, Context, Element, Selector>
@@ -80,9 +83,12 @@ export function makeSpec(options: {
     async getUrl(driver) {
       return socket.request('Driver.getUrl', {driver})
     },
-    async getElementRect(driver: Driver, element: Element): Promise<types.Size> {
-      return socket.request('Driver.getElementRect', {driver, element})
-    },
+    // async getElementRegion(driver: Driver, element: Element): Promise<types.Size> {
+    //   return socket.request('Driver.getElementRect', {driver, element})
+    // },
+    // async getElementAttribute(driver: Driver, element: Element): Promise<types.Size> {
+    //   return socket.request('Driver.getElementRect', {driver, element})
+    // },
     async getWindowSize(driver: Driver): Promise<types.Size> {
       return socket.request('Driver.getWindowSize', {driver})
     },
