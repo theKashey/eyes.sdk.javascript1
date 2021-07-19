@@ -10,7 +10,7 @@ export type Selector = types.SpecSelector<{using: string; value: string}>
 // #region HELPERS
 
 function extractElementId(element: Element): string {
-  return element['element-6066-11e4-a52e-4f735466cecf']
+  return (element as any).elementId ?? element['element-6066-11e4-a52e-4f735466cecf']
 }
 
 function transformSelector(selector: Selector): [string, string] {
@@ -33,6 +33,7 @@ export function isDriver(driver: any): driver is Driver {
   return utils.types.instanceOf(driver, 'Browser')
 }
 export function isElement(element: any): element is Element {
+
   return Boolean(element && extractElementId(element))
 }
 export function isSelector(selector: any): selector is Selector {
