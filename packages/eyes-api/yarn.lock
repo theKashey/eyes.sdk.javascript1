@@ -66,10 +66,10 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/types@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.3.tgz#1f7c8eac46df2f534ab95f36f8ef3a1341e2917e"
-  integrity sha512-g2T2fq4PHyLZNbsPA68RSymVrEDjI1F0kMoLa/CJXZahYaZTUaS9f1n93CO2mOQyMlXyfywffUFa+nL6mQDFLA==
+"@applitools/types@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.5.tgz#038e0036573e387c97de6b50fa87dd5dbfb5cbc6"
+  integrity sha512-8kUgOJvhyA747HkaGIOAiyV9ae/zeHpWyIG7Wvr6QfcyiEzM+bxuzSoQyuS+18s7UNjrffdri9SBr2IGHvGcQQ==
 
 "@applitools/utils@1.2.0":
   version "1.2.0"
