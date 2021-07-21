@@ -41,13 +41,15 @@ const path = require('path')
 
   function openEyes(config) {
     return driver.executeAsyncScript(
-      `__applitools.openEyes({config: ${JSON.stringify(config)}}).then(arguments[arguments.length-1])`,
+      `__applitools.openEyes({config: arguments[0]}).then(arguments[arguments.length-1])`,
+      config,
     )
   }
 
   function check(settings) {
     return driver.executeAsyncScript(
-      `__applitools.eyes.check({settings: ${JSON.stringify(settings)}}).then(arguments[arguments.length-1])`,
+      `__applitools.eyes.check({settings: arguments[0]}).then(arguments[arguments.length-1])`,
+      settings,
     )
   }
 
