@@ -1,6 +1,16 @@
 const {Builder, By} = require('selenium-webdriver')
 const path = require('path')
 
+const SAVE_RESULT = `.then(value => __applitools.result = {status: 'SUCCESS', value}).catch(error => __applitools.result = {status: 'ERROR', error})`
+const POLL_RESULT = `
+let response = __applitools.result;
+delete __applitools.result;
+return response;
+`
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 ;(async function main() {
   const extensionPath = process.argv[2] ? process.argv[2] : path.resolve(__dirname, 'dist')
   console.log('loading Eyes browser extension from', extensionPath)
@@ -39,22 +49,33 @@ const path = require('path')
 
   /******************************/
 
-  function openEyes(config) {
-    return driver.executeAsyncScript(
-      `__applitools.openEyes({config: arguments[0]}).then(arguments[arguments.length-1])`,
-      config,
-    )
+  async function openEyes(config) {
+    await driver.executeScript(`__applitools.openEyes({config: arguments[0]})${SAVE_RESULT}`, config)
+    return pollResult()
   }
 
-  function check(settings) {
-    return driver.executeAsyncScript(
-      `__applitools.eyes.check({settings: arguments[0]}).then(arguments[arguments.length-1])`,
-      settings,
-    )
+  async function check(settings) {
+    await driver.executeScript(`__applitools.eyes.check({settings: arguments[0]})${SAVE_RESULT}`, settings)
+    return pollResult()
   }
 
-  function close() {
-    return driver.executeAsyncScript(`return __applitools.eyes.close().then(arguments[arguments.length-1])`)
+  async function close() {
+    await driver.executeScript(`__applitools.eyes.close()${SAVE_RESULT}`)
+    return pollResult()
+  }
+
+  async function pollResult() {
+    let pollResponse
+    while (!pollResponse) {
+      pollResponse = await driver.executeScript(POLL_RESULT)
+      await wait(100)
+    }
+
+    if (pollResponse.status === 'SUCCESS') {
+      return pollResponse.value
+    } else if (pollResponse.status === 'ERROR') {
+      throw new Error(pollResponse.error)
+    }
   }
 
   /***********************************/
