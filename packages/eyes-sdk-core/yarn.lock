@@ -25,10 +25,10 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/dom-snapshot@4.5.4":
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.4.tgz#e0cee1d34f316ccfb04b77df9bf56c2909483f70"
-  integrity sha512-v58sScU9KJMDUUcF5yPLqx0b9oJCdy9imSjmKv5lTsUBtaEy34+45JH6X1synEHFkrIzrxmSmC9ECbBXqPFSlQ==
+"@applitools/dom-snapshot@4.5.5":
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.5.tgz#9782995594037b3d4f24d26d592bf2f019ad5611"
+  integrity sha512-tqaTlt33Fz5lfLfJM5H6TonjapLR2v6AsmlEX0cImEHpbBYNNsMZQd6paLngQYHV91uRuuYwBkO9fJxw+nBsqA==
   dependencies:
     "@applitools/dom-shared" "1.0.5"
     "@applitools/functional-commons" "1.6.0"
@@ -210,10 +210,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.3.tgz#1f7c8eac46df2f534ab95f36f8ef3a1341e2917e"
   integrity sha512-g2T2fq4PHyLZNbsPA68RSymVrEDjI1F0kMoLa/CJXZahYaZTUaS9f1n93CO2mOQyMlXyfywffUFa+nL6mQDFLA==
 
-"@applitools/types@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.4.tgz#09d461e6da2654b2e503da509e33d0254e5f789b"
-  integrity sha512-qD07Vnif3koE5tz45RqP/AKnnjTJvdttum1zBD6MjbB2t6xxrvTRbGkgz2PC5b5zw8fPqsT3zoUK25JDW32JLg==
+"@applitools/types@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.5.tgz#038e0036573e387c97de6b50fa87dd5dbfb5cbc6"
+  integrity sha512-8kUgOJvhyA747HkaGIOAiyV9ae/zeHpWyIG7Wvr6QfcyiEzM+bxuzSoQyuS+18s7UNjrffdri9SBr2IGHvGcQQ==
 
 "@applitools/utils@1.2.0":
   version "1.2.0"
