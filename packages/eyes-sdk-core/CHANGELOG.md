@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.21.6 - 2021/7/28
+
 - rename makeEyes to openEyes
 - updated to @applitools/dom-snapshot@4.5.5 (from 4.5.4)
 - updated to @applitools/types@1.0.5 (from 1.0.4)
