@@ -19,18 +19,25 @@ Headless Chrome does not support browser extensions, therefore the Eyes SDK brow
 
 ## Installation
 
-The extension is released as a `.crx` file under GitHub releases: https://github.com/applitools/eyes.sdk.javascript1/releases
-Download this file and double click it, or drag it into Google Chrome in order to install the extension.
+![](https://i.imgur.com/dmsNNRB.gif)
 
-// TODO gif
+1. Download the `.zip` file under GitHub releases: https://github.com/applitools/eyes.sdk.javascript1/releases/tag/%40applitools%2Feyes-browser-extension%400.1.8
+2. Navigate to [chrome://extensions]() in your browser
+3. Switch on **Developer mode** on the top right
+4. Drag the zip file into the browser
+
 
 ## Usage
+
+[Demo project](
+https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension-demo.zip)
+
 
 The automation environment should communicate with the Eyes SDK browser extension by executing JavaScript on the automated browser window.
 
 ### API
 
-Here is the JS methods that are exposed 
+Here are the JS methods that are exposed on the page's `window`: 
 
 #### __applitools.openEyes
 
@@ -38,19 +45,37 @@ This function creates a visual test and returns the `Eyes` instance for creating
 
 Returns: instance of `Eyes` which has `check` and `close` methods.
 
+_NOTE: the return value is seldom used in real world scenarios, since it is potentially cleared on page navigation. Instead, use the `__applitools.eyes` property. See more information in the **__applitools.eyes property** section below._
+
 Example:
 
 ```js
 // classic mode
 const eyes = await __applitools.openEyes({
-  config: {appName: 'My App', testName: 'My test', apiKey: '<your API key>'}
+  config: {
+    appName: 'My App',
+    testName: 'My test', 
+    apiKey: '<your API key>'
+  }
 })
 
 // Ultra fast grid mode
 const eyes = await __applitools.openEyes({
   type: 'vg',
   concurrency: 10,
-  config: {appName: 'My App', testName: 'My test', apiKey: '<your API key>'}
+  config: {
+    appName: 'My App',
+    testName: 'My test', 
+    apiKey: '<your API key>'
+  },
+  browsersInfo: [
+    {name: 'chrome', width: 800, height: 600},
+    {name: 'chrome', width: 1600, height: 1200},
+    {name: 'ie', width: 1600, height: 1200},
+    {name: 'firefox', width: 1440, height: 900},
+    {name: 'edgechromium', width: 1440, height: 900},
+    {name: 'safari', width: 1440, height: 900}
+  ]
 })
 ```
 
@@ -104,31 +129,71 @@ await __applitools.eyes.close()
 In JavaScript Selenium this would look similar to the following:
 
 ```js
-await driver.exectueScript(`return __applitools.openEyes({
+await driver.exectueAsyncScript(`return __applitools.openEyes({
   type: 'vg',
   concurrency: 10,
   config: {appName: 'My App', testName: 'My test', apiKey: '<your API key>'}
-})`)
+}).then(arguments[arguments.length-1])`)
 
-await driver.exectueScript(`return __applitools.eyes.check({})`)
+await driver.exectueAsyncScript(`return __applitools.eyes.check({}).then(arguments[arguments.length-1])`)
 
-await driver.exectueScript(`return __applitools.eyes.close()`)
+await driver.exectueAsyncScript(`return __applitools.eyes.close().then(arguments[arguments.length-1])`)
 ```
 
 ### Script timeout and polling
 
-TBD
+In the previous example, we relied on Selenium's ability to execute an **async** JS operation and wait for its promise to resolve. Note the `.then(arguments[arguments.length - 1])` in every call.
+Since this is not always available, we can resort to polling on our own in order to wait for the operation to finish.
 
-## Tosca user API
+Here is a snippet in Node.js for executing the API with polling:
 
-As an automation environment using the Eyes SDK browser extension, Tosca should expose to the end user the relevant configuration, and transform the user input into the input for the Eyes browser extension.
+```js
+const SAVE_RESULT = `.then(value => __applitools.result = {status: 'SUCCESS', value}).catch(error => __applitools.result = {status: 'ERROR', error})`
+const POLL_RESULT = `
+let response = __applitools.result;
+delete __applitools.result;
+return response;
+`
 
-The various configuration types that should be passed are the following (these will be described in further detail when we add the API details to this document):
+async function openEyes(config) {
+  await driver.executeScript(`__applitools.openEyes({config: arguments[0]})${SAVE_RESULT}`, config)
+  return pollResult()
+}
 
-- [EyesConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L25)
-- [EyesManagerConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L19)
-- [CheckSettings](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/setting.ts#L66)
+async function check(settings) {
+  await driver.executeScript(`__applitools.eyes.check({settings: arguments[0]})${SAVE_RESULT}`, settings)
+  return pollResult()
+}
 
-In addition, the test result data returned from the Eyes browser extension should be surfaced to the user. This data is of the following type:
+async function close() {
+  await driver.executeScript(`__applitools.eyes.close()${SAVE_RESULT}`)
+  return pollResult()
+}
 
-- [TestResult](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205)
+async function pollResult() {
+  let pollResponse
+  while (!pollResponse) {
+    pollResponse = await driver.executeScript(POLL_RESULT)
+    await wait(100)
+  }
+
+  if (pollResponse.status === 'SUCCESS') {
+    return pollResponse.value
+  } else if (pollResponse.status === 'ERROR') {
+    throw new Error(pollResponse.error)
+  }
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+```
+
+## Resources
+
+[Demo project](
+https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension-demo.zip)
+
+Diagram:
+
+![Diagram](https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension.png)
