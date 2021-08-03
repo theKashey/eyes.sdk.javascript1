@@ -1,7 +1,7 @@
 const {Builder, By} = require('selenium-webdriver')
 const path = require('path')
 
-const SAVE_RESULT = `.then(value => __applitools.result = {status: 'SUCCESS', value}).catch(error => __applitools.result = {status: 'ERROR', error})`
+const SAVE_RESULT = `.then(value => __applitools.result = {status: 'SUCCESS', value}).catch(error => __applitools.result = {status: 'ERROR', error: error.message})`
 const POLL_RESULT = `
 let response = __applitools.result;
 delete __applitools.result;
@@ -26,26 +26,30 @@ function wait(ms) {
 
   await driver.get('https://demo.applitools.com')
 
-  await openEyes({
-    appName: 'Demo App - javascript',
-    testName: 'Smoke Test',
-    apiKey: process.env.APPLITOOLS_API_KEY,
-    matchTimeout: 0,
-    viewportSize: {width: 800, height: 600},
-  })
+  try {
+    await openEyes({
+      appName: 'Demo App - javascript',
+      testName: 'Smoke Test',
+      apiKey: process.env.APPLITOOLS_API_KEY,
+      matchTimeout: 0,
+      viewportSize: {width: 800, height: 600},
+    })
 
-  await check({name: 'Login Window', fully: true})
+    await check({name: 'Login Window', fully: true})
 
-  const el = await driver.findElement(By.id('log-in'))
-  await el.click()
+    const el = await driver.findElement(By.id('log-in'))
+    await el.click()
 
-  await check({name: 'App Window', fully: true})
+    await check({name: 'App Window', fully: true})
 
-  const testResults = await close()
+    const testResults = await close()
 
-  console.log(formatTestResults(testResults))
-
-  await driver.close()
+    console.log(formatTestResults(testResults))
+  } catch (ex) {
+    console.log(ex)
+  } finally {
+    await driver.close()
+  }
 
   /******************************/
 
