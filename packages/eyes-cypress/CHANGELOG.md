@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update dom-snapshot to version 4.5.6
 
 
 ## 3.22.1 - 2021/7/28
