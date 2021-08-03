@@ -196,4 +196,4 @@ https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension-demo
 
 Diagram:
 
-![Diagram](https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension.png) 
+![Diagram](https://jssdkstorage.blob.core.windows.net/resources/eyes-browser-extension2.png)
