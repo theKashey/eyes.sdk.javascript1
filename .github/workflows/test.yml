@@ -80,4 +80,3 @@ jobs:
           path: |
             packages/${{matrix.package}}/coverage-tests-metadata.json
             packages/${{matrix.package}}/coverage-test-report.xml
-            packages/${{matrix.package}}/test/e2e/snapshots/*.json

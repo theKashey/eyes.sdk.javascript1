@@ -36,7 +36,7 @@
     "preversion": "bongo preversion && yarn test",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
-    "deps": "echo 'change back to bongo deps'",
+    "deps": "bongo deps",
     "prepublish:setup": "echo 'setup is a no-op. Move along, nothing to see here.'"
   },
   "keywords": [
