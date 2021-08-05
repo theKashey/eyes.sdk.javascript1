@@ -50,7 +50,7 @@ describe('eyes-storybook', () => {
         )
         .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
         .replace(version, '<version>');
-      console.log(output)
+      console.log(output);
       await snap(output, 'cors');
     } finally {
       await closeServerA();
