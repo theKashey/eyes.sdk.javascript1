@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix IE execution in parallel
 
 ## 3.22.6 - 2021/7/7
 

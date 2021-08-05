@@ -145,7 +145,7 @@ async function eyesStorybook({
 
     logger.log('finished creating functions');
 
-    const configs = splitConfigsByBrowser(config);
+    const configs = config.fakeIE ? splitConfigsByBrowser(config) : [config];
     const [error, results] = await presult(
       executeRenders({
         renderStories,
