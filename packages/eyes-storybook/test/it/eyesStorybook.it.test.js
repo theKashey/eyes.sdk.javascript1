@@ -159,19 +159,16 @@ describe('eyesStorybook', () => {
       expect(imageMatchSettings.strict).to.eql([
         {
           ...strict[0],
-          coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
       expect(imageMatchSettings.layout).to.eql([
         {
           ...layout[0],
-          coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
       expect(imageMatchSettings.content).to.eql([
         {
           ...content[0],
-          coordinatesType: 'SCREENSHOT_AS_IS',
         },
       ]);
 
