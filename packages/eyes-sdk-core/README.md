@@ -259,12 +259,15 @@ console.log(regions['\\d+']) // [{x, y, width, height, text: '1234'}, {x, y, wid
 
 Reference implementation can be found [here](https://github.com/applitools/eyes.sdk.javascript1/blob/490e05fac867a0a0beb22003af2a7f5e58b3287b/packages/eyes-browser-extension/src/spec-driver.js).
 
+### SpecDriver for Selenium
+
+Reference implementation can be found [here](https://github.com/applitools/eyes.sdk.javascript1/blob/e90ce45bacf3a13b11b5ded4fb3900f75501066c/packages/eyes-selenium/src/spec-driver.ts).
+
 ### Using selenium-webdriver
 
 ```js
 const {Builder} = require('selenium-webdriver')
 const {makeSDK} = require('@applitools/eyes-sdk-core')
-const VisualGridClient = require('@applitools/visual-grid-client')
 const spec = require('./spec-driver')
 
 const config = {
