@@ -17,7 +17,7 @@ const getIframeUrl = require('./getIframeUrl');
 const createPagePool = require('./pagePool');
 const getClientAPI = require('../dist/getClientAPI');
 const {takeDomSnapshots} = require('@applitools/eyes-sdk-core');
-const {makeDriver} = require('@applitools/driver');
+const {Driver} = require('@applitools/driver');
 const spec = require('@applitools/eyes-puppeteer/dist/spec-driver');
 const {refineErrorMessage} = require('./errMessages');
 const {splitConfigsByBrowser} = require('./shouldRenderIE');
@@ -77,7 +77,7 @@ async function eyesStorybook({
   const pagePool = createPagePool({initPage, logger});
 
   const doTakeDomSnapshots = async ({page, layoutBreakpoints}) => {
-    const driver = makeDriver(spec, logger, page);
+    const driver = new Driver({spec, driver: page, logger});
     const skipResources = getResourceUrlsInCache();
     const result = await takeDomSnapshots({
       logger,
