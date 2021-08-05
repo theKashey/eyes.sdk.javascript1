@@ -673,7 +673,7 @@ jobs:
             packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-tests-metadata.json
             packages/${{fromJSON(needs.setup.outputs.packages).testcafe.package}}/coverage-test-report.xml
   storybook:
-    needs: [setup, utils, test-utils, core, vgc]
+    needs: [setup, utils, test-utils, core, vgc, puppeteer]
     if: ${{fromJSON(needs.setup.outputs.packages).storybook && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
