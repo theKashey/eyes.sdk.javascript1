@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 3.2.1 - 2021/8/8
+
+- no changes
+
 ## 3.2.0 - 2021/8/7
 
 - change image processing order and improve general algorithm
