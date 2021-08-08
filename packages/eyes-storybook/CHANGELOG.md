@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.7 - 2021/8/8
+
 - fix IE execution in parallel
 - updated to @applitools/dom-snapshot@4.5.6 (from 4.5.4)
 - updated to @applitools/driver@1.1.0 (from 1.0.6)
