@@ -1,5 +1,3 @@
-'use strict'
-
 const assert = require('assert')
 
 const {
@@ -18,11 +16,7 @@ describe('ImageMatchSettings', () => {
       const expectedSerialization =
         '{"matchLevel":"Strict","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
-      assert.strictEqual(
-        JSON.stringify(ims),
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!')
     })
 
     it('with modified exact and ignore caret', () => {
@@ -39,11 +33,7 @@ describe('ImageMatchSettings', () => {
         '{"matchLevel":"Content","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"exact":{"minDiffIntensity":0,"minDiffWidth":0,"minDiffHeight":0,"matchThreshold":0},' +
         '"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"accessibilitySettings":{"level":"AA","version":"WCAG_2_0"},"floating":[]}'
-      assert.strictEqual(
-        JSON.stringify(ims),
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!')
     })
 
     it('with ignore regions', () => {
@@ -51,13 +41,9 @@ describe('ImageMatchSettings', () => {
       ims.setIgnoreRegions([new Region(10, 20, 30, 40)])
       const expectedSerialization =
         '{"matchLevel":"Strict","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
-        '"ignoreDisplacements":false,"ignore":[{"left":10,"top":20,"width":30,"height":40,"coordinatesType":' +
-        '"SCREENSHOT_AS_IS"}],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
-      assert.strictEqual(
-        JSON.stringify(ims),
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
+        '"ignoreDisplacements":false,"ignore":[{"left":10,"top":20,"width":30,"height":40}],' +
+        '"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!')
     })
 
     it('with accessibility regions', () => {
@@ -66,13 +52,8 @@ describe('ImageMatchSettings', () => {
       const expectedSerialization =
         '{"matchLevel":"Strict","ignoreCaret":true,"useDom":false,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"ignore":[],"layout":[],"strict":[],"content":[],' +
-        '"accessibility":[{"left":10,"top":20,"width":30,"height":40,"coordinatesType":' +
-        '"SCREENSHOT_AS_IS"}],"floating":[]}'
-      assert.strictEqual(
-        JSON.stringify(ims),
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
+        '"accessibility":[{"left":10,"top":20,"width":30,"height":40}],"floating":[]}'
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!')
     })
 
     it('with modified useDom and enablePatterns', () => {
@@ -80,11 +61,7 @@ describe('ImageMatchSettings', () => {
       const expectedSerialization =
         '{"matchLevel":"Strict","ignoreCaret":true,"useDom":true,"enablePatterns":false,' +
         '"ignoreDisplacements":false,"ignore":[],"layout":[],"strict":[],"content":[],"accessibility":[],"floating":[]}'
-      assert.strictEqual(
-        JSON.stringify(ims),
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
+      assert.strictEqual(JSON.stringify(ims), expectedSerialization, 'ImageMatchSettings serialization does not match!')
     })
 
     it('copy ctor', () => {

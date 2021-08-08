@@ -110,6 +110,15 @@ describe('spec driver', async () => {
     it('childContext(element)', async () => {
       await childContext()
     })
+    it('getWindowSize()', async () => {
+      await getWindowSize()
+    })
+    it('setWindowSize({width, height})', async () => {
+      await setWindowSize({
+        input: {width: 551, height: 552},
+        expected: {width: 551, height: 552},
+      })
+    })
     it('getTitle()', async () => {
       await getTitle()
     })
@@ -127,31 +136,6 @@ describe('spec driver', async () => {
           isNative: false,
           platformName: 'linux',
         },
-      })
-    })
-  })
-
-  describe('onscreen desktop (@webdriver)', async () => {
-    before(function () {
-      if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
-    })
-
-    before(async () => {
-      ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', headless: false})
-    })
-
-    after(async () => {
-      if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
-    })
-
-    it('getWindowSize()', async () => {
-      await getWindowSize()
-    })
-    it('setWindowSize({width, height})', async () => {
-      await setWindowSize({
-        input: {width: 551, height: 552},
-        expected: {width: 551, height: 552},
       })
     })
   })

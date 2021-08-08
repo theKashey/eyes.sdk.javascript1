@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 2.1.4 - 2021/8/4
+
+- add `isEqualElements` snippet
+
 ## 2.1.3 - 2021/3/11
 
 - fix exception thrown in getElementTranslateOffset [Trello](https://trello.com/c/duAwaupv)

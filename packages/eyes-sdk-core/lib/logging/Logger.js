@@ -1,4 +1,5 @@
 'use strict'
+const makeLogger = require('@applitools/logger')
 const stackTrace = require('stack-trace')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const GeneralUtils = require('../utils/GeneralUtils')
@@ -7,6 +8,7 @@ const DateTimeUtils = require('../utils/DateTimeUtils')
 const PerformanceUtils = require('../utils/PerformanceUtils')
 const NullLogHandler = require('./NullLogHandler')
 const ConsoleLogHandler = require('./ConsoleLogHandler')
+const FileLogHandler = require('./FileLogHandler')
 const DebugLogHandler = require('./DebugLogHandler')
 
 const timeStorage = PerformanceUtils.start()
@@ -28,9 +30,7 @@ class Logger {
     ArgumentGuard.isBoolean(showLogs, 'showLogs')
     ArgumentGuard.isString(debugAppName, 'debugAppName', false)
 
-    this._logHandler = showLogs
-      ? new ConsoleLogHandler(true)
-      : new DebugLogHandler(true, debugAppName)
+    this._logHandler = showLogs ? new ConsoleLogHandler(true) : new DebugLogHandler(true, debugAppName)
     this._sessionId = ''
     this._isIncludeTime = false
   }
@@ -64,6 +64,16 @@ class Logger {
     this._logHandler = handler || new NullLogHandler()
   }
 
+  _getNewLogger() {
+    return makeLogger({
+      handler:
+        this._logHandler instanceof FileLogHandler
+          ? {type: 'file', filename: this._logHandler._filename, append: true}
+          : {type: 'console'},
+      level: this._logHandler instanceof NullLogHandler || this._logHandler.getIsVerbose() ? 'silent' : 'info',
+    })
+  }
+
   /**
    * @param {string} name
    * @return {Logger}
@@ -83,10 +93,7 @@ class Logger {
    * @param {*} args
    */
   verbose(...args) {
-    this._logHandler.onMessage(
-      true,
-      this._getFormattedString('VERBOSE', GeneralUtils.stringify(...args)),
-    )
+    this._logHandler.onMessage(true, this._getFormattedString('VERBOSE', GeneralUtils.stringify(...args)))
   }
 
   /**
@@ -95,10 +102,7 @@ class Logger {
    * @param {*} args
    */
   log(...args) {
-    this._logHandler.onMessage(
-      false,
-      this._getFormattedString('LOG    ', GeneralUtils.stringify(...args)),
-    )
+    this._logHandler.onMessage(false, this._getFormattedString('LOG    ', GeneralUtils.stringify(...args)))
   }
 
   /**
@@ -114,9 +118,7 @@ class Logger {
       timeStorage.start()
     }
 
-    return `${dateTime} Eyes: [${logLevel}] {${
-      this._sessionId
-    }} ${this._getMethodName()}${elapsedTime}${message}`
+    return `${dateTime} Eyes: [${logLevel}] {${this._sessionId}} ${this._getMethodName()}${elapsedTime}${message}`
   }
 
   /**

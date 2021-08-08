@@ -51,7 +51,7 @@ describe('RenderStatusResults', () => {
     assert.deepStrictEqual(results.getDeviceSize().toJSON(), deviceSize)
     assert.deepStrictEqual(
       results.getSelectorRegions().map(region => region.map(r => r.toJSON())),
-      [[{left: 1, top: 2, width: 3, height: 4, coordinatesType: 'SCREENSHOT_AS_IS'}]],
+      [[{left: 1, top: 2, width: 3, height: 4}]],
     )
   })
 
@@ -77,7 +77,7 @@ describe('RenderStatusResults', () => {
 
     assert.strictEqual(
       JSON.stringify(results),
-      '{"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]]}',
+      '{"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4}]]}',
     )
   })
 
@@ -103,7 +103,7 @@ describe('RenderStatusResults', () => {
 
     assert.strictEqual(
       results.toString(),
-      'RenderStatusResults { {"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4,"coordinatesType":"SCREENSHOT_AS_IS"}]]} }',
+      'RenderStatusResults { {"status":"some status","imageLocation":"some image location","domLocation":"some dom location","error":"some error","os":"some os","userAgent":"some user agent","deviceSize":{"width":1,"height":2},"selectorRegions":[[{"left":1,"top":2,"width":3,"height":4}]]} }',
     )
   })
 })

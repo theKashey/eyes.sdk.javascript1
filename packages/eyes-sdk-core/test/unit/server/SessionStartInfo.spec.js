@@ -17,22 +17,14 @@ const {
   AccessibilityGuidelinesVersion,
   AccessibilityRegionType,
   AccessibilityMatchSettings,
-  MatchWindowTask,
 } = require('../../../index')
-const {EyesBaseImpl} = require('../../testUtils')
-
-const {CheckSettings} = require('../../utils/FakeSDK')
 
 describe('SessionStartInfo', () => {
   it('TestSerialization', () => {
     const properties = []
     properties.push(new PropertyData('property 1', 'value 1'))
 
-    const batchInfo = new BatchInfo(
-      'some batch',
-      new Date('2017-07-29T09:01:00.000Z'),
-      'someBatchId',
-    )
+    const batchInfo = new BatchInfo('some batch', new Date('2017-07-29T09:01:00.000Z'), 'someBatchId')
     const sessionStartInfo = new SessionStartInfo({
       agentId: 'agent',
       appIdOrName: 'some app',
@@ -89,91 +81,6 @@ describe('SessionStartInfo', () => {
 
     const actualSerialization = JSON.stringify(sessionStartInfo, null, 2)
     const expectedSerialization = getResourceAsText('SessionStartInfo_Serialization.json')
-    assert.strictEqual(
-      actualSerialization,
-      expectedSerialization,
-      'SessionStartInfo serialization does not match!',
-    )
-  })
-  ;[
-    {useDom: true, enablePatterns: true, ignoreDisplacements: true},
-    {useDom: true, enablePatterns: true, ignoreDisplacements: false},
-    {useDom: true, enablePatterns: false, ignoreDisplacements: true},
-    {useDom: true, enablePatterns: false, ignoreDisplacements: false},
-    {useDom: false, enablePatterns: true, ignoreDisplacements: true},
-    {useDom: false, enablePatterns: true, ignoreDisplacements: false},
-    {useDom: false, enablePatterns: false, ignoreDisplacements: true},
-    {useDom: false, enablePatterns: false, ignoreDisplacements: false},
-  ].forEach(({useDom, enablePatterns, ignoreDisplacements}) => {
-    it(`TestFluentApiSerialization (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
-      const settings = CheckSettings.window()
-        .fully()
-        .useDom(useDom)
-        .enablePatterns(enablePatterns)
-        .ignoreDisplacements(ignoreDisplacements)
-
-      const eyes = new EyesBaseImpl()
-      const task = new MatchWindowTask(true, true, true, true, eyes, true)
-      const imageMatchSettings = await task.createImageMatchSettings(settings, null)
-
-      const actualSerialization = JSON.stringify(imageMatchSettings)
-      const expectedSerialization = getResourceAsText(
-        `SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`,
-      )
-      assert.strictEqual(
-        actualSerialization,
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
-    })
-
-    it(`TestImageMatchSettingsSerialization_Global (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
-      const settings = CheckSettings.window()
-        .fully()
-        .useDom(useDom)
-        .enablePatterns(enablePatterns)
-
-      const eyes = new EyesBaseImpl()
-      const configuration = eyes.getConfiguration()
-      configuration.setIgnoreDisplacements(ignoreDisplacements)
-      eyes.setConfiguration(configuration)
-
-      const task = new MatchWindowTask(true, true, true, true, eyes, true)
-      const imageMatchSettings = await task.createImageMatchSettings(settings, null)
-
-      const actualSerialization = JSON.stringify(imageMatchSettings)
-      const expectedSerialization = getResourceAsText(
-        `SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`,
-      )
-      assert.strictEqual(
-        actualSerialization,
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
-    })
-
-    it(`TestConfigurationSerialization (${useDom}, ${enablePatterns}, ${ignoreDisplacements})`, async () => {
-      const settings = CheckSettings.window().fully()
-
-      const eyes = new EyesBaseImpl()
-      const configuration = eyes.getConfiguration()
-      configuration.setUseDom(useDom)
-      configuration.setEnablePatterns(enablePatterns)
-      configuration.setIgnoreDisplacements(ignoreDisplacements)
-      eyes.setConfiguration(configuration)
-
-      const task = new MatchWindowTask(true, true, true, true, eyes, true)
-      const imageMatchSettings = await task.createImageMatchSettings(settings, null)
-
-      const actualSerialization = JSON.stringify(imageMatchSettings)
-      const expectedSerialization = getResourceAsText(
-        `SessionStartInfo_FluentApiSerialization_${useDom}_${enablePatterns}_${ignoreDisplacements}.json`,
-      )
-      assert.strictEqual(
-        actualSerialization,
-        expectedSerialization,
-        'ImageMatchSettings serialization does not match!',
-      )
-    })
+    assert.strictEqual(actualSerialization, expectedSerialization, 'SessionStartInfo serialization does not match!')
   })
 })

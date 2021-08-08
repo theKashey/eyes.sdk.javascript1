@@ -17,16 +17,7 @@ class FloatingMatchSettings {
    * @param {number} settings.maxLeftOffset
    * @param {number} settings.maxRightOffset
    */
-  constructor({
-    left,
-    top,
-    width,
-    height,
-    maxUpOffset,
-    maxDownOffset,
-    maxLeftOffset,
-    maxRightOffset,
-  } = {}) {
+  constructor({left, top, width, height, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset} = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }

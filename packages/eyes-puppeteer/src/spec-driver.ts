@@ -2,8 +2,8 @@ import * as utils from '@applitools/utils'
 import type * as Puppeteer from 'puppeteer'
 
 export type Driver = Puppeteer.Page
-export type Element = Puppeteer.ElementHandle
 export type Context = Puppeteer.Frame
+export type Element = Puppeteer.ElementHandle
 export type Selector = string | {type: string; selector: string}
 
 // #region HELPERS
@@ -85,7 +85,12 @@ function scriptRunner(script: string, arg: any, ...elements: HTMLElement[]) {
 // #region UTILITY
 
 export function isDriver(page: any): page is Driver {
+  if (!page) return false
   return page.constructor.name === 'Page'
+}
+export function isContext(frame: any): frame is Context {
+  if (!frame) return false
+  return frame.constructor.name === 'Frame'
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
@@ -104,9 +109,6 @@ export function isStaleElementError(err: any): boolean {
     (err.message.includes('Execution context was destroyed') ||
       err.message.includes('JSHandles can be evaluated only in the context they were created'))
   )
-}
-export async function isEqualElements(frame: Context, element1: Element, element2: Element): Promise<boolean> {
-  return frame.evaluate((element1, element2) => element1 === element2, element1, element2).catch(() => false)
 }
 
 // #endregion

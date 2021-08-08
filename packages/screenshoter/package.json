@@ -1,6 +1,6 @@
 {
   "name": "@applitools/screenshoter",
-  "version": "3.0.8",
+  "version": "3.2.0",
   "description": "Applitools universal screenshoter for web and native applications",
   "keywords": [
     "applitools",
@@ -31,9 +31,9 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js",
-    "test": "yarn test:it && yarn test:coverage",
+    "test": "yarn test:it && yarn test:e2e",
     "test:it": "mocha --no-timeouts './test/it/*.spec.js'",
-    "test:coverage": "mocha --no-timeouts './test/coverage/*.spec.js'",
+    "test:e2e": "mocha --no-timeouts './test/e2e/*.spec.js'",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "setup": "yarn docker:setup",
@@ -48,11 +48,12 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.0",
+    "@applitools/snippets": "2.1.4",
+    "@applitools/utils": "1.2.2",
     "png-async": "0.9.4"
   },
   "devDependencies": {
-    "@applitools/driver": "1.0.6",
+    "@applitools/driver": "1.1.1",
     "@applitools/sdk-release-kit": "0.13.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

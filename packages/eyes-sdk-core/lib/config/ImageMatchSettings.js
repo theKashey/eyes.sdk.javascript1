@@ -80,10 +80,7 @@ class ImageMatchSettings {
     this._ignoreCaret = TypeUtils.getOrDefault(ignoreCaret, DEFAULT_VALUES.ignoreCaret)
     this._useDom = TypeUtils.getOrDefault(useDom, DEFAULT_VALUES.useDom)
     this._enablePatterns = TypeUtils.getOrDefault(enablePatterns, DEFAULT_VALUES.enablePatterns)
-    this._ignoreDisplacements = TypeUtils.getOrDefault(
-      ignoreDisplacements,
-      DEFAULT_VALUES.ignoreDisplacements,
-    )
+    this._ignoreDisplacements = TypeUtils.getOrDefault(ignoreDisplacements, DEFAULT_VALUES.ignoreDisplacements)
     this._exact = exact
 
     /** @type {Region[]} */
@@ -97,18 +94,14 @@ class ImageMatchSettings {
     /** @type {AccessibilityMatchSettings[]} */
     this._accessibilityMatchSettings =
       (accessibility || []).map(region =>
-        TypeUtils.instanceOf(region, 'AccessibilityMatchSettings')
-          ? region
-          : new AccessibilityMatchSettings(region),
+        TypeUtils.instanceOf(region, 'AccessibilityMatchSettings') ? region : new AccessibilityMatchSettings(region),
       ) || []
     /** @type {AccessibilitySettings} */
     this.setAccessibilitySettings(accessibilitySettings)
     /** @type {FloatingMatchSettings[]} */
     this._floatingMatchSettings =
       (floating || []).map(region =>
-        TypeUtils.instanceOf(region, 'FloatingMatchSettings')
-          ? region
-          : new FloatingMatchSettings(region),
+        TypeUtils.instanceOf(region, 'FloatingMatchSettings') ? region : new FloatingMatchSettings(region),
       ) || []
   }
 

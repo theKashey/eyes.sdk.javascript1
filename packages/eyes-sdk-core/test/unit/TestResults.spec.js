@@ -143,20 +143,14 @@ describe('TestResults', () => {
           hasCheckpointImage: true,
           appUrls: {
             step: 'https://eyes.applitools.com/app/test-results/123/567/steps/1?accountId=abc',
-            stepEditor:
-              'https://eyes.applitools.com/app/test-results/123/567/steps/1/edit?accountId=abc',
+            stepEditor: 'https://eyes.applitools.com/app/test-results/123/567/steps/1/edit?accountId=abc',
           },
           apiUrls: {
-            baselineImage:
-              'https://eyesapi.applitools.com/api/images/se~c96494e0-4010-4107-a4bf-c21e97370700',
-            currentImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/checkpoint',
-            checkpointImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/checkpoint',
-            checkpointImageThumbnail:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/...',
-            diffImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/diff',
+            baselineImage: 'https://eyesapi.applitools.com/api/images/se~c96494e0-4010-4107-a4bf-c21e97370700',
+            currentImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/checkpoint',
+            checkpointImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/checkpoint',
+            checkpointImageThumbnail: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/...',
+            diffImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/1/images/diff',
           },
         },
         {
@@ -167,20 +161,14 @@ describe('TestResults', () => {
           hasCheckpointImage: true,
           appUrls: {
             step: 'https://eyes.applitools.com/app/test-results/123/567/steps/2?accountId=abc',
-            stepEditor:
-              'https://eyes.applitools.com/app/test-results/123/567/steps/2/edit?accountId=abc',
+            stepEditor: 'https://eyes.applitools.com/app/test-results/123/567/steps/2/edit?accountId=abc',
           },
           apiUrls: {
-            baselineImage:
-              'https://eyesapi.applitools.com/api/images/se~47d0195f-170e-4468-ae35-421903166e60',
-            currentImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/checkpoint',
-            checkpointImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/checkpoint',
-            checkpointImageThumbnail:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/...',
-            diffImage:
-              'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/diff',
+            baselineImage: 'https://eyesapi.applitools.com/api/images/se~47d0195f-170e-4468-ae35-421903166e60',
+            currentImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/checkpoint',
+            checkpointImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/checkpoint',
+            checkpointImageThumbnail: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/...',
+            diffImage: 'https://eyesapi.applitools.com/api/sessions/batches/123/567/steps/2/images/diff',
           },
         },
       ],

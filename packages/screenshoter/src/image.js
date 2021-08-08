@@ -1,10 +1,13 @@
 const fs = require('fs')
 const stream = require('stream')
+const path = require('path')
 const png = require('png-async')
 const utils = require('@applitools/utils')
 
 function makeImage(data) {
   let image, size
+  let transforms = {rotate: 0, scale: 1, crop: null}
+
   if (utils.types.isBase64(data)) {
     const buffer = Buffer.from(data, 'base64')
     image = fromBuffer(buffer)
@@ -16,54 +19,110 @@ function makeImage(data) {
   } else if (Buffer.isBuffer(data)) {
     image = fromBuffer(data)
     size = extractPngSize(data)
-  } else {
+  } else if (data.isImage) {
+    image = data.toRaw()
+    size = data.size
+    transforms = data.transforms
+  } else if (utils.types.has(data, ['width', 'height'])) {
     image = fromSize(data)
     size = data
+  } else {
+    throw new Error('Unable to create an image abstraction from unknown data')
+  }
+
+  if (!transforms.crop) {
+    transforms.crop = utils.geometry.region({x: 0, y: 0}, size)
   }
 
   return {
+    get isImage() {
+      return true
+    },
+    get size() {
+      return {...utils.geometry.scale(size, transforms.scale)}
+    },
+    get transforms() {
+      return {...transforms}
+    },
     get width() {
-      return image.width || size.width
+      return size.width
     },
     get height() {
-      return image.height || size.height
+      return size.height
     },
-    async scale(scaleRatio) {
-      image = await scale(await image, scaleRatio)
+    scale(ratio) {
+      transforms.scale *= ratio
       return this
     },
-    async crop(region) {
-      image = await crop(await image, region)
+    crop(region) {
+      if (utils.types.has(region, ['left', 'right', 'top', 'bottom'])) {
+        region = {
+          x: region.left / transforms.scale,
+          y: region.top / transforms.scale,
+          width: image.width - (region.left + region.right) / transforms.scale,
+          height: image.height - (region.top + region.bottom) / transforms.scale,
+        }
+      } else {
+        region = utils.geometry.scale(region, 1 / transforms.scale)
+      }
+      region = utils.geometry.rotate(region, transforms.rotate)
+      transforms.crop = utils.geometry.intersect(transforms.crop, region)
+
+      size = utils.geometry.round(utils.geometry.size(transforms.crop))
+
       return this
     },
-    async rotate(degree) {
-      image = await rotate(await image, degree)
+    rotate(degree) {
+      transforms.rotate = (transforms.rotate + degree) % 360
       return this
     },
-    async copy(image2, offset) {
-      image = await copy(await image, image2, offset)
+    async copy(srcImage, offset) {
+      const [dst, src] = await Promise.all([this.toObject(), srcImage.toObject()])
+      image = await copy(dst, src, offset)
       return this
     },
-    async toObject() {
-      image = await image
-      return image
+    async combine(firstImage, lastImage, region) {
+      const [src, first, last] = await Promise.all([this.toObject(), firstImage.toObject(), lastImage.toObject()])
+      image = await combine(first, last, src, region)
+      size = {width: image.width, height: image.height}
+      return this
     },
     async toBuffer() {
-      image = await image
+      const image = await this.toObject()
       return image.data
     },
     async toPng() {
-      return toPng(await image)
+      return toPng(await this.toObject())
     },
     async toFile(path) {
-      return toFile(await image, path)
+      return toFile(await this.toObject(), path)
+    },
+    async toRaw() {
+      return image
+    },
+    async toObject() {
+      image = await transform(await image, transforms)
+      transforms = {rotate: 0, scale: 1, crop: utils.geometry.region({x: 0, y: 0}, size)}
+      return image
+    },
+    async debug(debug) {
+      if (!debug || !debug.path) return
+      const timestamp = new Date().toISOString().replace(/[-T:.]/g, '_')
+      const filename = ['screenshot', timestamp, debug.name, debug.suffix].filter(part => part).join('_') + '.png'
+      return toFile(await transform(await image, transforms), path.join(debug.path, filename)).catch(() => null)
     },
   }
 }
 
+function extractPngSize(buffer) {
+  return buffer.slice(12, 16).toString('ascii') === 'IHDR'
+    ? {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
+    : {width: 0, height: 0}
+}
+
 async function fromBuffer(buffer) {
   return new Promise((resolve, reject) => {
-    const image = new png.Image({filterType: 4})
+    const image = new png.Image()
 
     image.parse(buffer, (err, image) => {
       if (err) return reject(err)
@@ -73,7 +132,7 @@ async function fromBuffer(buffer) {
 }
 
 async function fromSize(size) {
-  return new png.Image({filterType: 4, width: size.width, height: size.height})
+  return new png.Image({width: size.width, height: size.height})
 }
 
 async function toPng(image) {
@@ -102,10 +161,11 @@ async function toFile(image, path) {
   })
 }
 
-function extractPngSize(buffer) {
-  return buffer.slice(12, 16).toString('ascii') === 'IHDR'
-    ? {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
-    : {width: 0, height: 0}
+async function transform(image, transforms) {
+  const croppedImage = transforms.crop ? await extract(image, transforms.crop) : image
+  const scaledImage = transforms.scale !== 1 ? await scale(croppedImage, transforms.scale) : croppedImage
+  const rotatedImage = transforms.rotate > 0 ? await rotate(scaledImage, transforms.rotate) : scaledImage
+  return rotatedImage
 }
 
 async function scale(image, scaleRatio) {
@@ -137,52 +197,39 @@ async function resize(image, size) {
   return image
 }
 
-async function crop(image, region) {
-  if (utils.types.has(region, ['left', 'right', 'top', 'bottom'])) {
-    region = {
-      x: region.left,
-      y: region.top,
-      width: image.width - region.left - region.right,
-      height: image.height - region.top - region.bottom,
-    }
-  }
-
+async function extract(image, region) {
   const srcX = Math.max(0, Math.round(region.x))
   const srcY = Math.max(0, Math.round(region.y))
   const dstWidth = Math.round(Math.min(image.width - srcX, region.width))
   const dstHeight = Math.round(Math.min(image.height - srcY, region.height))
+  const dstSize = {width: dstWidth, height: dstHeight}
+
+  if (utils.geometry.isEmpty(dstSize)) {
+    throw new Error(`Cannot extract empty region (${srcX};${srcY})${dstWidth}x${dstHeight} from image`)
+  }
+
+  const extracted = new png.Image(dstSize)
 
   if (srcX === 0 && dstWidth === image.width) {
     const srcOffset = srcY * image.width * 4
     const dstLength = dstWidth * dstHeight * 4
-    image.data = image.data.subarray(srcOffset, srcOffset + dstLength)
-    image.width = dstWidth
-    image.height = dstHeight
-
-    return image
+    extracted.data.set(image.data.subarray(srcOffset, srcOffset + dstLength))
+  } else {
+    const chunkLength = dstWidth * 4
+    for (let chunk = 0; chunk < dstHeight; ++chunk) {
+      const srcOffset = ((srcY + chunk) * image.width + srcX) * 4
+      extracted.data.set(image.data.subarray(srcOffset, srcOffset + chunkLength), chunk * chunkLength)
+    }
   }
 
-  const cropped = Buffer.alloc(dstWidth * dstHeight * 4)
-
-  const chunkLength = dstWidth * 4
-  for (let chunk = 0; chunk < dstHeight; ++chunk) {
-    const srcOffset = ((srcY + chunk) * image.width + srcX) * 4
-    cropped.set(image.data.subarray(srcOffset, srcOffset + chunkLength), chunk * chunkLength)
-  }
-
-  image.data = cropped
-  image.width = dstWidth
-  image.height = dstHeight
-
-  return image
+  return extracted
 }
 
 async function rotate(image, degrees) {
   degrees = (360 + degrees) % 360
 
-  const dstImage = {
-    data: Buffer.alloc(image.data.length),
-  }
+  const dstImage = new png.Image({width: image.width, height: image.height})
+
   if (degrees === 90) {
     dstImage.width = image.height
     dstImage.height = image.width
@@ -211,14 +258,10 @@ async function rotate(image, degrees) {
       }
     }
   } else {
-    return image
+    return dstImage.data.set(image.data)
   }
 
-  image.data = dstImage.data
-  image.width = dstImage.width
-  image.height = dstImage.height
-
-  return image
+  return dstImage
 }
 
 async function copy(dstImage, srcImage, offset) {
@@ -230,7 +273,6 @@ async function copy(dstImage, srcImage, offset) {
   if (dstX === 0 && srcWidth === dstImage.width && srcWidth === srcImage.width) {
     const dstOffset = dstY * dstImage.width * 4
     dstImage.data.set(srcImage.data.subarray(0, srcWidth * srcHeight * 4), dstOffset)
-
     return dstImage
   }
 
@@ -239,6 +281,99 @@ async function copy(dstImage, srcImage, offset) {
     const srcOffset = chunk * srcImage.width * 4
     const dstOffset = ((dstY + chunk) * dstImage.width + dstX) * 4
     dstImage.data.set(srcImage.data.subarray(srcOffset, srcOffset + chunkLength), dstOffset)
+  }
+
+  return dstImage
+}
+
+async function combine(firstImage, lastImage, srcImage, region) {
+  region = utils.geometry.intersect({x: 0, y: 0, width: firstImage.width, height: firstImage.height}, region)
+
+  if (region.x === 0 && region.y === 0 && region.width >= firstImage.width && region.height >= firstImage.height) {
+    return srcImage
+  }
+
+  if (region.width === srcImage.width && region.height === srcImage.height) {
+    await copy(firstImage, srcImage, {x: region.x, y: region.y})
+    return firstImage
+  }
+
+  const dstImage = new png.Image({
+    width: firstImage.width - region.width + srcImage.width,
+    height: firstImage.height - region.height + srcImage.height,
+  })
+
+  if (region.width === srcImage.width) {
+    const topImage = await extract(firstImage, {
+      x: 0,
+      y: 0,
+      width: firstImage.width,
+      height: region.y + region.height,
+    })
+    await copy(dstImage, topImage, {x: 0, y: 0})
+  } else if (region.height === srcImage.height) {
+    const leftImage = await extract(firstImage, {
+      x: 0,
+      y: 0,
+      width: region.x + region.width,
+      height: firstImage.height,
+    })
+    await copy(dstImage, leftImage, {x: 0, y: 0})
+  } else {
+    const topLeftImage = await extract(firstImage, {
+      x: 0,
+      y: 0,
+      width: region.x + region.width,
+      height: region.y + region.height,
+    })
+    await copy(dstImage, topLeftImage, {x: 0, y: 0})
+    const topRightImage = await extract(firstImage, {
+      x: region.x + region.width,
+      y: 0,
+      width: firstImage.width - (region.x + region.width),
+      height: region.y + region.height,
+    })
+    await copy(dstImage, topRightImage, {x: region.x + srcImage.width, y: 0})
+  }
+
+  await copy(dstImage, srcImage, {x: region.x, y: region.y})
+
+  if (lastImage.height > region.y + region.height) {
+    if (region.width === srcImage.width) {
+      const bottomImage = await extract(lastImage, {
+        x: 0,
+        y: region.y + region.height,
+        width: lastImage.width,
+        height: lastImage.height - (region.y + region.height),
+      })
+      await copy(dstImage, bottomImage, {x: 0, y: region.y + srcImage.height})
+    } else if (region.height === srcImage.height) {
+      const rightImage = await extract(lastImage, {
+        x: region.x + region.width,
+        y: 0,
+        width: lastImage.width - (region.x + region.width),
+        height: lastImage.height,
+      })
+      await copy(dstImage, rightImage, {x: region.x + srcImage.width, y: 0})
+    } else {
+      const bottomLeftImage = await extract(lastImage, {
+        x: 0,
+        y: region.y + region.height,
+        width: region.x + region.width,
+        height: lastImage.height - (region.y + region.height),
+      })
+      await copy(dstImage, bottomLeftImage, {x: 0, y: region.y + srcImage.height})
+      const bottomRightImage = await extract(lastImage, {
+        x: region.x + region.width,
+        y: region.y + region.height,
+        width: lastImage.width - (region.x + region.width),
+        height: lastImage.height - (region.y + region.height),
+      })
+      await copy(dstImage, bottomRightImage, {
+        x: region.x + srcImage.width,
+        y: region.y + srcImage.height,
+      })
+    }
   }
 
   return dstImage
@@ -290,8 +425,7 @@ function _interpolateColumns(bufSrc, hSrc, wDst, hDst) {
         const y0 = yPos > 0 ? bufSrc[kPos - wDst * 4] : 2 * bufSrc[kPos] - bufSrc[kPos + wDst * 4]
         const y1 = bufSrc[kPos]
         const y2 = bufSrc[kPos + wDst * 4]
-        const y3 =
-          yPos < hSrc - 2 ? bufSrc[kPos + wDst * 8] : 2 * bufSrc[kPos + wDst * 4] - bufSrc[kPos]
+        const y3 = yPos < hSrc - 2 ? bufSrc[kPos + wDst * 8] : 2 * bufSrc[kPos + wDst * 4] - bufSrc[kPos]
 
         buf[buf2Pos + k] = _interpolateCubic(y0, y1, y2, y3, t)
       }
@@ -385,7 +519,7 @@ function _scaleImageIncrementally(src, dst) {
 
     // If the current width is bigger than our target, cut it in half and sample again.
     if (currentWidth > targetWidth) {
-      currentWidth -= currentWidth / fraction
+      currentWidth -= Math.floor(currentWidth / fraction)
 
       // If we cut the width too far it means we are on our last iteration. Just set it to the target width
       // and finish up.
@@ -396,7 +530,7 @@ function _scaleImageIncrementally(src, dst) {
 
     // If the current height is bigger than our target, cut it in half and sample again.
     if (currentHeight > targetHeight) {
-      currentHeight -= currentHeight / fraction
+      currentHeight -= Math.floor(currentHeight / fraction)
 
       // If we cut the height too far it means we are on our last iteration. Just set it to the target height
       // and finish up.

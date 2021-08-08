@@ -74,9 +74,7 @@ describe('getScmInfo', () => {
         {cwd: remoteRepoDir},
       )
       const remoteRepoPath = resolve(remoteRepoDir, 'tmp_git_test')
-      const [err] = await presult(
-        getScmInfo('not-there', 'some-branch-name', {cwd: remoteRepoPath}),
-      )
+      const [err] = await presult(getScmInfo('not-there', 'some-branch-name', {cwd: remoteRepoPath}))
       const expectedError = 'fatal: --unshallow on a complete repository does not make sense'
       assert.ok(err && err.message)
       assert.ok(err.message.includes(expectedError), `Got ${err.message} expected defined error`)

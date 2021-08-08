@@ -4,14 +4,7 @@ const Configuration = require('../config/Configuration')
 const TestResults = require('../TestResults')
 
 function makeDeleteTestResults() {
-  return async function deleteTestResults({
-    testId,
-    batchId,
-    secretToken,
-    serverUrl,
-    apiKey,
-    proxy,
-  }) {
+  return async function deleteTestResults({testId, batchId, secretToken, serverUrl, apiKey, proxy}) {
     const serverConnector = new ServerConnector({
       logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
       configuration: new Configuration({serverUrl, apiKey, proxy}),

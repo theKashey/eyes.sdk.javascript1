@@ -92,16 +92,8 @@ describe('Configuration', () => {
     for (const pi of properties) {
       const methodName = _getMethodName(pi)
 
-      assert.strictEqual(
-        typeof config[`set${methodName}`],
-        'function',
-        `property '${pi}' doesn't have matching setter`,
-      )
-      assert.strictEqual(
-        typeof config[`get${methodName}`],
-        'function',
-        `property '${pi}' doesn't have matching getter`,
-      )
+      assert.strictEqual(typeof config[`set${methodName}`], 'function', `property '${pi}' doesn't have matching setter`)
+      assert.strictEqual(typeof config[`get${methodName}`], 'function', `property '${pi}' doesn't have matching getter`)
     }
   })
 
@@ -126,8 +118,7 @@ describe('Configuration', () => {
     } else if (type === '_stitchMode') {
       modifiedValue = modifiedValue === StitchMode.SCROLL ? StitchMode.CSS : StitchMode.SCROLL
     } else if (type === '_sessionType') {
-      modifiedValue =
-        origValue === SessionType.SEQUENTIAL ? SessionType.PROGRESSION : SessionType.SEQUENTIAL
+      modifiedValue = origValue === SessionType.SEQUENTIAL ? SessionType.PROGRESSION : SessionType.SEQUENTIAL
     } else if (type === '_apiKey') {
       modifiedValue = 'dummyapikey'
     } else if (type === '_proxySettings') {
@@ -188,18 +179,9 @@ describe('Configuration', () => {
       assert.strictEqual(configuration.getAppName(), configurationCopy.getAppName())
       assert.strictEqual(configuration.getApiKey(), configurationCopy.getApiKey())
       assert.strictEqual(configuration.getMatchLevel(), configurationCopy.getMatchLevel())
-      assert.strictEqual(
-        configuration.getLayoutBreakpoints(),
-        configurationCopy.getLayoutBreakpoints(),
-      )
-      assert.strictEqual(
-        configuration.getDisableBrowserFetching(),
-        configurationCopy.getDisableBrowserFetching(),
-      )
-      assert.strictEqual(
-        configuration.getIgnoreDisplacements(),
-        configurationCopy.getIgnoreDisplacements(),
-      )
+      assert.strictEqual(configuration.getLayoutBreakpoints(), configurationCopy.getLayoutBreakpoints())
+      assert.strictEqual(configuration.getDisableBrowserFetching(), configurationCopy.getDisableBrowserFetching())
+      assert.strictEqual(configuration.getIgnoreDisplacements(), configurationCopy.getIgnoreDisplacements())
 
       configuration.setDisplayName('test name1')
       configurationCopy.setDisplayName('test name2')
@@ -378,8 +360,7 @@ describe('Configuration', () => {
         "IllegalArgument: accessibilitySettings should have the following properties: 'level,guidelinesVersion'"
 
       const invalidAccLevelMessage = "IllegalType: bla is not a valid 'AccessibilityLevel' value"
-      const invalidAccVersionMessage =
-        "IllegalType: bla is not a valid 'AccessibilityGuidelinesVersion' value"
+      const invalidAccVersionMessage = "IllegalType: bla is not a valid 'AccessibilityGuidelinesVersion' value"
 
       // from object: invalid accessibilitySettings type
       assert.throws(
@@ -601,9 +582,7 @@ describe('Configuration', () => {
     it('returns a populated collection when device added', () => {
       const config = new Configuration()
       config.addDeviceEmulation('blah', 'blahblah')
-      assert.deepStrictEqual(config.getBrowsersInfo(), [
-        {deviceName: 'blah', screenOrientation: 'blahblah'},
-      ])
+      assert.deepStrictEqual(config.getBrowsersInfo(), [{deviceName: 'blah', screenOrientation: 'blahblah'}])
     })
   })
 

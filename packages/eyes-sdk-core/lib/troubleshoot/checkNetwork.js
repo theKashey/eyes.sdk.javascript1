@@ -55,13 +55,10 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
 
   return async function checkNetwork() {
     if (!userConfig.apiKey) {
-      printErr(
-        'Missing "apiKey". Add APPLITOOLS_API_KEY as an env variable or add "apiKey" in applitools.config.js\n',
-      )
+      printErr('Missing "apiKey". Add APPLITOOLS_API_KEY as an env variable or add "apiKey" in applitools.config.js\n')
       return
     }
-    const proxyEnvMsg = `HTTP_PROXY="${process.env.HTTP_PROXY || ''}" HTTPS_PROXY="${process.env
-      .HTTPS_PROXY || ''}".`
+    const proxyEnvMsg = `HTTP_PROXY="${process.env.HTTP_PROXY || ''}" HTTPS_PROXY="${process.env.HTTPS_PROXY || ''}".`
     print(`Eyes Check Network. Running with:\n${JSON.stringify(userConfig)} ${proxyEnvMsg} \n\n`)
 
     let hasErr = false

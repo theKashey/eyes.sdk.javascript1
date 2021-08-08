@@ -3,8 +3,8 @@ import type * as Playwright from 'playwright'
 import * as utils from '@applitools/utils'
 
 export type Driver = Playwright.Page
-export type Element = Playwright.ElementHandle
 export type Context = Playwright.Frame
+export type Element = Playwright.ElementHandle
 export type Selector = types.SpecSelector<string>
 
 // #region HELPERS
@@ -40,9 +40,9 @@ export function isDriver(page: any): page is Driver {
   if (!page) return false
   return page.constructor.name === 'Page'
 }
-export function isContext(context: any): context is Context {
-  if (!context) return false
-  return context.constructor.name === 'Frame'
+export function isContext(frame: any): frame is Context {
+  if (!frame) return false
+  return frame.constructor.name === 'Frame'
 }
 export function isElement(element: any): element is Element {
   if (!element) return false

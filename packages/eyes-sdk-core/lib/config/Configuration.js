@@ -207,9 +207,7 @@ class Configuration {
     this._deviceInfo = undefined
 
     /** @type {ImageMatchSettings} */
-    this._defaultMatchSettings = new ImageMatchSettings(
-      configuration ? configuration.defaultMatchSettings : undefined,
-    )
+    this._defaultMatchSettings = new ImageMatchSettings(configuration ? configuration.defaultMatchSettings : undefined)
 
     // classic (selenium)
     /** @type {boolean} */
@@ -313,10 +311,7 @@ class Configuration {
    * @return {string} - The URI of the eyes server.
    */
   getServerUrl() {
-    return TypeUtils.getOrDefault(
-      this._serverUrl,
-      GeneralUtils.getEnvValue('SERVER_URL') || DEFAULT_VALUES.serverUrl,
-    )
+    return TypeUtils.getOrDefault(this._serverUrl, GeneralUtils.getEnvValue('SERVER_URL') || DEFAULT_VALUES.serverUrl)
   }
 
   /**
@@ -353,12 +348,7 @@ class Configuration {
     } else if (value instanceof ProxySettings) {
       this._proxySettings = value
     } else {
-      this._proxySettings = new ProxySettings(
-        value.url,
-        value.username,
-        value.password,
-        value.isHttpOnly,
-      )
+      this._proxySettings = new ProxySettings(value.url, value.username, value.password, value.isHttpOnly)
     }
     return this
   }
@@ -405,10 +395,7 @@ class Configuration {
    * @return {boolean} - The currently compareWithParentBranch value
    */
   getCompareWithParentBranch() {
-    return TypeUtils.getOrDefault(
-      this._compareWithParentBranch,
-      DEFAULT_VALUES.compareWithParentBranch,
-    )
+    return TypeUtils.getOrDefault(this._compareWithParentBranch, DEFAULT_VALUES.compareWithParentBranch)
   }
 
   /**
@@ -493,9 +480,7 @@ class Configuration {
     ArgumentGuard.greaterThanOrEqualToZero(value, 'matchTimeout', true)
 
     if (value !== 0 && MIN_MATCH_TIMEOUT > value) {
-      throw new TypeError(
-        `Match timeout must be set in milliseconds, and must be > ${MIN_MATCH_TIMEOUT}`,
-      )
+      throw new TypeError(`Match timeout must be set in milliseconds, and must be > ${MIN_MATCH_TIMEOUT}`)
     }
 
     this._matchTimeout = value
@@ -641,10 +626,7 @@ class Configuration {
    * @return {string}
    */
   getBaselineBranchName() {
-    return TypeUtils.getOrDefault(
-      this._baselineBranchName,
-      GeneralUtils.getEnvValue('BASELINE_BRANCH'),
-    )
+    return TypeUtils.getOrDefault(this._baselineBranchName, GeneralUtils.getEnvValue('BASELINE_BRANCH'))
   }
 
   /**

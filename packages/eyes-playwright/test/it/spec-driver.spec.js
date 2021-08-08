@@ -1,6 +1,10 @@
 const assert = require('assert')
 const spec = require('../../dist/spec-driver')
 
+function isEqualElements(frame, element1, element2) {
+  return frame.evaluate(([element1, element2]) => element1 === element2, [element1, element2]).catch(() => false)
+}
+
 describe('spec driver', async () => {
   let page, destroyPage
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
@@ -21,20 +25,6 @@ describe('spec driver', async () => {
     it('isElement(wrong)', isElement({input: () => ({}), expected: false}))
     it('isSelector(string)', isSelector({input: 'div', expected: true}))
     it('isSelector(wrong)', isSelector({input: {}, expected: false}))
-    it(
-      'isEqualElements(element, element)',
-      isEqualElements({
-        input: () => page.$('div').then(element => ({element1: element, element2: element})),
-        expected: true,
-      }),
-    )
-    it(
-      'isEqualElements(element1, element2)',
-      isEqualElements({
-        input: async () => ({element1: await page.$('div'), element2: await page.$('h1')}),
-        expected: false,
-      }),
-    )
     it('isStaleElementError(err)', isStaleElementError())
     it('executeScript(script, args)', executeScript())
     it('mainContext()', mainContext())
@@ -76,13 +66,6 @@ describe('spec driver', async () => {
       assert.strictEqual(isSelector, expected)
     }
   }
-  function isEqualElements({input, expected}) {
-    return async () => {
-      const {element1, element2} = await input()
-      const result = await spec.isEqualElements(page, element1, element2)
-      assert.deepStrictEqual(result, expected)
-    }
-  }
   function isStaleElementError() {
     return async () => {
       const element = await page.$('#overflowing-div')
@@ -107,7 +90,7 @@ describe('spec driver', async () => {
       assert.strictEqual(result.str, str)
       assert.deepStrictEqual(result.obj, obj)
       assert.deepStrictEqual(result.arr, arr)
-      assert.ok(await spec.isEqualElements(page, result.el, el))
+      assert.ok(await isEqualElements(page, result.el, el))
     }
   }
   function mainContext() {
@@ -119,10 +102,10 @@ describe('spec driver', async () => {
         .find(frame => frame.name() === 'frame1')
       const frame2 = await frame1.childFrames().find(frame => frame.name() === 'frame1-1')
       const frameDocument = await frame2.$('html')
-      assert.ok(!(await spec.isEqualElements(frame2, mainDocument, frameDocument)))
+      assert.ok(!(await isEqualElements(frame2, mainDocument, frameDocument)))
       const mainFrame = await spec.mainContext(frame2)
       const resultDocument = await mainFrame.$('html')
-      assert.ok(await spec.isEqualElements(mainFrame, resultDocument, mainDocument))
+      assert.ok(await isEqualElements(mainFrame, resultDocument, mainDocument))
     }
   }
   function parentContext() {
@@ -134,10 +117,10 @@ describe('spec driver', async () => {
       const parentDocument = await frame1.$('html')
       const frame2 = await frame1.childFrames().find(frame => frame.name() === 'frame1-1')
       const frameDocument = await frame2.$('html')
-      assert.ok(!(await spec.isEqualElements(frame2, parentDocument, frameDocument)))
+      assert.ok(!(await isEqualElements(frame2, parentDocument, frameDocument)))
       const parentFrame = await spec.parentContext(frame2)
       const resultDocument = await parentFrame.$('html')
-      assert.ok(await spec.isEqualElements(parentFrame, resultDocument, parentDocument))
+      assert.ok(await isEqualElements(parentFrame, resultDocument, parentDocument))
     }
   }
   function childContext() {
@@ -147,7 +130,7 @@ describe('spec driver', async () => {
       const expectedDocument = await expectedFrame.$('html')
       const resultFrame = await spec.childContext(page.mainFrame(), element)
       const resultDocument = await resultFrame.$('html')
-      assert.ok(await spec.isEqualElements(resultFrame, resultDocument, expectedDocument))
+      assert.ok(await isEqualElements(resultFrame, resultDocument, expectedDocument))
     }
   }
   function findElement({input, expected} = {}) {
@@ -155,7 +138,7 @@ describe('spec driver', async () => {
       const result = expected !== undefined ? expected : await page.$(input)
       const element = await spec.findElement(page, input)
       if (element !== result) {
-        assert.ok(await spec.isEqualElements(page, element, result))
+        assert.ok(await isEqualElements(page, element, result))
       }
     }
   }
@@ -165,7 +148,7 @@ describe('spec driver', async () => {
       const elements = await spec.findElements(page, input)
       assert.strictEqual(elements.length, result.length)
       for (const [index, element] of elements.entries()) {
-        assert.ok(await spec.isEqualElements(page, element, result[index]))
+        assert.ok(await isEqualElements(page, element, result[index]))
       }
     }
   }

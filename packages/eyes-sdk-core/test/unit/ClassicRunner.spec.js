@@ -2,7 +2,7 @@ const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
+const {EyesClassic} = require('../utils/FakeSDK')
 
 describe('ClassicRunner', () => {
   let server, serverUrl, driver, eyes
@@ -28,7 +28,7 @@ describe('ClassicRunner', () => {
   })
 
   it('getAllTestResults should throw exception', async () => {
-    await eyes.check('diff', CheckSettings.window())
+    await eyes.check({})
     await eyes.close(false)
 
     const throwEx = true
@@ -39,7 +39,7 @@ describe('ClassicRunner', () => {
   })
 
   it("getAllTestResults shouldn't throw exception", async () => {
-    await eyes.check('diff', CheckSettings.window())
+    await eyes.check({})
     await eyes.close(false)
 
     const throwEx = false

@@ -363,9 +363,7 @@ function backwardCompatible(...args) {
     if (oldParam[oldParamName] === undefined) {
       results[newParamName] = newParam[newParamName]
     } else {
-      logger.log(
-        `warning - "${oldParamName}" is deprecated and will be removed, please use "${newParamName}" instead.`,
-      )
+      logger.log(`warning - "${oldParamName}" is deprecated and will be removed, please use "${newParamName}" instead.`)
       results[newParamName] = oldParam[oldParamName]
     }
   }

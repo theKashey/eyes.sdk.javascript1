@@ -85,6 +85,7 @@ function scriptRunner(script: string, arg: any, ...elements: Element[]) {
 // #region UTILITY
 
 export function isDriver(browser: any): browser is Driver {
+  if (!browser) return false
   return browser.constructor.name === 'Browser'
 }
 export function isElement(element: any): element is Element {
@@ -159,28 +160,6 @@ export async function findElements(browser: Driver, selector: Selector): Promise
   const elements = await browser.$$(transformSelector(selector))
   return Array.from(elements)
 }
-export async function getElementRect(
-  browser: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const extendedElement = await browser.$(element as any)
-  if (utils.types.isFunction(extendedElement, 'getRect')) {
-    return extendedElement.getRect()
-  } else {
-    const rect = {x: 0, y: 0, width: 0, height: 0}
-    if (utils.types.isFunction(extendedElement.getLocation)) {
-      const location = await extendedElement.getLocation()
-      rect.x = location.x
-      rect.y = location.y
-    }
-    if (utils.types.isFunction(extendedElement.getSize)) {
-      const size = await extendedElement.getSize()
-      rect.width = size.width
-      rect.height = size.height
-    }
-    return rect
-  }
-}
 export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(browser.getWindowRect)) {
     const rect = await browser.getWindowRect()
@@ -197,13 +176,9 @@ export async function setWindowSize(browser: Driver, size: {width: number; heigh
     await browser.setWindowSize(size.width, size.height)
   }
 }
-export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
-  const orientation = await browser.getOrientation()
-  return orientation.toLowerCase() as 'portrait' | 'landscape'
-}
 export async function getDriverInfo(browser: Driver): Promise<any> {
   const capabilities = browser.capabilities as any
-  return {
+  const info: any = {
     sessionId: browser.sessionId,
     isMobile: browser.isMobile,
     isNative: browser.isMobile && !capabilities.browserName,
@@ -212,7 +187,26 @@ export async function getDriverInfo(browser: Driver): Promise<any> {
     platformVersion: capabilities.platformVersion,
     browserName: capabilities.browserName ?? capabilities.desired.browserName,
     browserVersion: capabilities.browserVersion ?? capabilities.version,
+    pixelRatio: capabilities.pixelRatio,
   }
+
+  if (info.isNative) {
+    const {pixelRatio, viewportRect} = utils.types.has(capabilities, ['viewportRect', 'pixelRatio'])
+      ? browser.capabilities
+      : await browser.getSession()
+
+    info.pixelRatio = pixelRatio
+    if (viewportRect) {
+      info.viewportRegion = {
+        x: viewportRect.left,
+        y: viewportRect.top,
+        width: viewportRect.width,
+        height: viewportRect.height,
+      }
+    }
+  }
+
+  return info
 }
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()
@@ -272,6 +266,45 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
     // @ts-ignore
     await element.waitForDisplayed({timeout})
   }
+}
+
+// #region MOBILE COMMANDS
+
+export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
+  const orientation = await browser.getOrientation()
+  return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function getElementRegion(
+  browser: Driver,
+  element: Element,
+): Promise<{x: number; y: number; width: number; height: number}> {
+  const extendedElement = await browser.$(element as any)
+  if (utils.types.isFunction(extendedElement, 'getRect')) {
+    return extendedElement.getRect()
+  } else {
+    const region = {x: 0, y: 0, width: 0, height: 0}
+    if (utils.types.isFunction(extendedElement.getLocation)) {
+      const location = await extendedElement.getLocation()
+      region.x = location.x
+      region.y = location.y
+    }
+    if (utils.types.isFunction(extendedElement.getSize)) {
+      const size = await extendedElement.getSize()
+      region.width = size.width
+      region.height = size.height
+    }
+    return region
+  }
+}
+export async function getElementAttribute(browser: Driver, element: Element, attr: string): Promise<string> {
+  return browser.getElementAttribute(extractElementId(element), attr)
+}
+export async function getElementText(browser: Driver, element: Element): Promise<string> {
+  const extendedElement = await browser.$(element as any)
+  return extendedElement.getText()
+}
+export async function performAction(browser: Driver, steps: any[]): Promise<void> {
+  return browser.touchAction(steps as any)
 }
 
 // #endregion

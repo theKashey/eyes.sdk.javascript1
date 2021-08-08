@@ -93,6 +93,7 @@ const DEVICES = {
     capabilities: {
       platformName: 'iOS',
       platformVersion: '13.0',
+      appiumVersion: '1.19.2',
       deviceName: 'iPhone XS Simulator',
       ...SAUCE_CREDENTIALS,
     },
@@ -235,6 +236,7 @@ const BROWSERS = {
     },
   },
   chrome: {
+    // url: 'https://exec-wus.applitools.com/int-rel-tok-coverage-tests-js',
     capabilities: {
       browserName: 'chrome',
     },

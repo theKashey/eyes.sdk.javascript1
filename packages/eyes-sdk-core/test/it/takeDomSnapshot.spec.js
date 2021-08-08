@@ -1,6 +1,6 @@
 const takeDomSnapshot = require('../../lib/utils/takeDomSnapshot')
 const {expect} = require('chai')
-const {Driver: FakeEyesDriver} = require('../utils/FakeSDK')
+const {createFakeDriver} = require('../utils/FakeEyesDriver')
 const MockDriver = require('../utils/MockDriver')
 const Logger = require('../../lib/logging/Logger')
 const {presult} = require('../../lib/utils/GeneralUtils')
@@ -12,7 +12,8 @@ describe('takeDomSnapshot', () => {
 
   beforeEach(async () => {
     driver = new MockDriver()
-    eyesDriver = await new FakeEyesDriver(logger, driver).init()
+    eyesDriver = createFakeDriver(driver)
+    await eyesDriver.init()
   })
 
   it('should throw an error if snapshot failed', async () => {
@@ -209,9 +210,7 @@ describe('takeDomSnapshot', () => {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
-            cdt: [
-              {nodeName: 'IFRAME', attributes: [{name: 'nested-cross-origin-frame', value: true}]},
-            ],
+            cdt: [{nodeName: 'IFRAME', attributes: [{name: 'nested-cross-origin-frame', value: true}]}],
             url: 'http://cors.com',
             crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
           })
@@ -313,9 +312,7 @@ describe('takeDomSnapshot', () => {
             cdt: 'top page',
             frames: [
               generateSnapshotObject({
-                cdt: [
-                  {nodeName: 'IFRAME', attributes: [{name: 'cross-origin-frame', value: true}]},
-                ],
+                cdt: [{nodeName: 'IFRAME', attributes: [{name: 'cross-origin-frame', value: true}]}],
                 url: 'http://same-origin',
                 selector: '[data-applitools-selector="123"]',
                 crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
@@ -464,9 +461,7 @@ describe('takeDomSnapshot', () => {
     expect(cdt).to.deep.equal([
       {
         nodeName: 'IFRAME',
-        attributes: [
-          {name: 'data-applitools-src', value: 'URL:http://cors.com--QUERY:applitools-iframe'},
-        ],
+        attributes: [{name: 'data-applitools-src', value: 'URL:http://cors.com--QUERY:applitools-iframe'}],
       },
     ])
   })

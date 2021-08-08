@@ -12,15 +12,7 @@ const {promisify: p} = require('util')
 const nock = require('nock')
 const psetTimeout = p(setTimeout)
 const {presult} = require('@applitools/functional-commons')
-const {
-  RenderStatus,
-  RenderStatusResults,
-  Region,
-  IgnoreRegionByRectangle,
-  FloatingRegionByRectangle,
-  AccessibilityRegionByRectangle,
-  TestResults,
-} = require('@applitools/eyes-sdk-core/shared')
+const {RenderStatus, RenderStatusResults, TestResults} = require('@applitools/eyes-sdk-core/shared')
 const {
   apiKeyFailMsg,
   authorizationErrMsg,
@@ -1310,12 +1302,8 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     expect(r.getAsExpected()).to.equal(true)
-    expect(r.__checkSettings.getIgnoreRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(region)),
-    ])
-    expect(r.__checkSettings.getAccessibilityRegions()).to.eql([
-      new AccessibilityRegionByRectangle(new Region(region2), region2.accessibilityType),
-    ])
+    expect(r.__checkSettings.ignore).to.eql([region])
+    expect(r.__checkSettings.accessibility).to.eql([region2])
   })
 
   it('handles layout and strict and content regions', async () => {
@@ -1337,15 +1325,9 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     expect(r.getAsExpected()).to.equal(true)
-    expect(r.__checkSettings.getLayoutRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(regionLayout)),
-    ])
-    expect(r.__checkSettings.getStrictRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(regionStrict)),
-    ])
-    expect(r.__checkSettings.getContentRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(regionContent)),
-    ])
+    expect(r.__checkSettings.layout).to.eql([regionLayout])
+    expect(r.__checkSettings.strict).to.eql([regionStrict])
+    expect(r.__checkSettings.content).to.eql([regionContent])
   })
 
   it('handles ignore, layout, content, accessibility and strict regions with selector', async () => {
@@ -1356,93 +1338,93 @@ Received: 'firefox-1'.`,
 
     const ignoreSelector1 = {type: 'css', selector: 'sel1'}
     const region1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel1']
-    const region1 = new Region({
+    const region1 = {
       left: region1FromStatusResults.x,
       top: region1FromStatusResults.y,
       width: region1FromStatusResults.width,
       height: region1FromStatusResults.height,
-    })
+    }
 
     const layoutSelector1 = {type: 'css', selector: 'sel2'}
     const regionLayout1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel2']
-    const regionLayout1 = new Region({
+    const regionLayout1 = {
       left: regionLayout1FromStatusResults.x,
       top: regionLayout1FromStatusResults.y,
       width: regionLayout1FromStatusResults.width,
       height: regionLayout1FromStatusResults.height,
-    })
+    }
 
     const strictSelector1 = {type: 'css', selector: 'sel3'}
     const regionStrict1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel3']
-    const regionStrict1 = new Region({
+    const regionStrict1 = {
       left: regionStrict1FromStatusResults.x,
       top: regionStrict1FromStatusResults.y,
       width: regionStrict1FromStatusResults.width,
       height: regionStrict1FromStatusResults.height,
-    })
+    }
 
     const contentSelector1 = {type: 'css', selector: 'sel9'}
     const regionContent1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel9']
-    const regionContent1 = new Region({
+    const regionContent1 = {
       left: regionContent1FromStatusResults.x,
       top: regionContent1FromStatusResults.y,
       width: regionContent1FromStatusResults.width,
       height: regionContent1FromStatusResults.height,
-    })
+    }
 
     const accessibilitySelector1 = {type: 'css', selector: 'sel4', accessibilityType: 'LargeText'}
     const regionAaccessibility1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel4']
-    const regionAccessibility1 = new Region({
+    const regionAccessibility1 = {
       left: regionAaccessibility1FromStatusResults.x,
       top: regionAaccessibility1FromStatusResults.y,
       width: regionAaccessibility1FromStatusResults.width,
       height: regionAaccessibility1FromStatusResults.height,
-    })
+    }
 
     const ignoreSelector2 = {type: 'css', selector: 'sel5'}
     const region2FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel5']
-    const region2 = new Region({
+    const region2 = {
       left: region2FromStatusResults.x,
       top: region2FromStatusResults.y,
       width: region2FromStatusResults.width,
       height: region2FromStatusResults.height,
-    })
+    }
 
     const layoutSelector2 = {type: 'css', selector: 'sel6'}
     const regionLayout2FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel6']
-    const regionLayout2 = new Region({
+    const regionLayout2 = {
       left: regionLayout2FromStatusResults.x,
       top: regionLayout2FromStatusResults.y,
       width: regionLayout2FromStatusResults.width,
       height: regionLayout2FromStatusResults.height,
-    })
+    }
 
     const strictSelector2 = {type: 'css', selector: 'sel7'}
     const regionStrict2FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel7']
-    const regionStrict2 = new Region({
+    const regionStrict2 = {
       left: regionStrict2FromStatusResults.x,
       top: regionStrict2FromStatusResults.y,
       width: regionStrict2FromStatusResults.width,
       height: regionStrict2FromStatusResults.height,
-    })
+    }
 
     const contentSelector2 = {type: 'css', selector: 'sel10'}
     const regionContentFromStatusResults = FakeEyesWrapper.selectorsToLocations['sel10']
-    const regionContent2 = new Region({
+    const regionContent2 = {
       left: regionContentFromStatusResults.x,
       top: regionContentFromStatusResults.y,
       width: regionContentFromStatusResults.width,
       height: regionContentFromStatusResults.height,
-    })
+    }
 
     const accessibilitySelector2 = {type: 'css', selector: 'sel8', accessibilityType: 'RegularText'}
     const regionAaccessibility2FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel8']
-    const regionAccessibility2 = new Region({
+    const regionAccessibility2 = {
       left: regionAaccessibility2FromStatusResults.x,
       top: regionAaccessibility2FromStatusResults.y,
       width: regionAaccessibility2FromStatusResults.width,
       height: regionAaccessibility2FromStatusResults.height,
-    })
+    }
 
     checkWindow({
       url: '',
@@ -1456,25 +1438,13 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     expect(r.getAsExpected()).to.equal(true)
-    expect(r.__checkSettings.getIgnoreRegions()).to.eql([
-      new IgnoreRegionByRectangle(region1),
-      new IgnoreRegionByRectangle(region2),
-    ])
-    expect(r.__checkSettings.getLayoutRegions()).to.eql([
-      new IgnoreRegionByRectangle(regionLayout1),
-      new IgnoreRegionByRectangle(regionLayout2),
-    ])
-    expect(r.__checkSettings.getStrictRegions()).to.eql([
-      new IgnoreRegionByRectangle(regionStrict1),
-      new IgnoreRegionByRectangle(regionStrict2),
-    ])
-    expect(r.__checkSettings.getContentRegions()).to.eql([
-      new IgnoreRegionByRectangle(regionContent1),
-      new IgnoreRegionByRectangle(regionContent2),
-    ])
-    expect(r.__checkSettings.getAccessibilityRegions()).to.eql([
-      new AccessibilityRegionByRectangle(regionAccessibility1, 'LargeText'),
-      new AccessibilityRegionByRectangle(regionAccessibility2, 'RegularText'),
+    expect(r.__checkSettings.ignore).to.eql([region1, region2])
+    expect(r.__checkSettings.layout).to.eql([regionLayout1, regionLayout2])
+    expect(r.__checkSettings.strict).to.eql([regionStrict1, regionStrict2])
+    expect(r.__checkSettings.content).to.eql([regionContent1, regionContent2])
+    expect(r.__checkSettings.accessibility).to.eql([
+      {...regionAccessibility1, accessibilityType: accessibilitySelector1.accessibilityType},
+      {...regionAccessibility2, accessibilityType: accessibilitySelector2.accessibilityType},
     ])
   })
 
@@ -1522,61 +1492,51 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     expect(r.getAsExpected()).to.equal(true)
-    expect(r.__checkSettings.getIgnoreRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(ignoreRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedIgnoreSelectorRegion.x - imageOffset.x,
-          top: expectedIgnoreSelectorRegion.y - imageOffset.y,
-          width: expectedIgnoreSelectorRegion.width,
-          height: expectedIgnoreSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.ignore).to.eql([
+      ignoreRegion,
+      {
+        left: expectedIgnoreSelectorRegion.x - imageOffset.x,
+        top: expectedIgnoreSelectorRegion.y - imageOffset.y,
+        width: expectedIgnoreSelectorRegion.width,
+        height: expectedIgnoreSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getLayoutRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(layoutRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedLayoutSelectorRegion.x - imageOffset.x,
-          top: expectedLayoutSelectorRegion.y - imageOffset.y,
-          width: expectedLayoutSelectorRegion.width,
-          height: expectedLayoutSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.layout).to.eql([
+      layoutRegion,
+      {
+        left: expectedLayoutSelectorRegion.x - imageOffset.x,
+        top: expectedLayoutSelectorRegion.y - imageOffset.y,
+        width: expectedLayoutSelectorRegion.width,
+        height: expectedLayoutSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getContentRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(contentRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedContentSelectorRegion.x - imageOffset.x,
-          top: expectedContentSelectorRegion.y - imageOffset.y,
-          width: expectedContentSelectorRegion.width,
-          height: expectedContentSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.content).to.eql([
+      contentRegion,
+      {
+        left: expectedContentSelectorRegion.x - imageOffset.x,
+        top: expectedContentSelectorRegion.y - imageOffset.y,
+        width: expectedContentSelectorRegion.width,
+        height: expectedContentSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getStrictRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(strictRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedStrictSelectorRegion.x - imageOffset.x,
-          top: expectedStrictSelectorRegion.y - imageOffset.y,
-          width: expectedStrictSelectorRegion.width,
-          height: expectedStrictSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.strict).to.eql([
+      strictRegion,
+      {
+        left: expectedStrictSelectorRegion.x - imageOffset.x,
+        top: expectedStrictSelectorRegion.y - imageOffset.y,
+        width: expectedStrictSelectorRegion.width,
+        height: expectedStrictSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getAccessibilityRegions()).to.eql([
-      new AccessibilityRegionByRectangle(new Region(accessibilityRegion), 'LargeText'),
-      new AccessibilityRegionByRectangle(
-        new Region({
-          left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
-          top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
-          width: expectedAccessibilitySelectorRegion.width,
-          height: expectedAccessibilitySelectorRegion.height,
-        }),
-        'RegularText',
-      ),
+    expect(r.__checkSettings.accessibility).to.eql([
+      {...accessibilityRegion, accessibilityType: 'LargeText'},
+      {
+        left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
+        top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
+        width: expectedAccessibilitySelectorRegion.width,
+        height: expectedAccessibilitySelectorRegion.height,
+        accessibilityType: 'RegularText',
+      },
     ])
   })
 
@@ -1646,83 +1606,65 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     expect(r.getAsExpected()).to.equal(true)
-    expect(r.__checkSettings.getIgnoreRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(ignoreRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedIgnoreSelectorRegion.x - imageOffset.x,
-          top: expectedIgnoreSelectorRegion.y - imageOffset.y,
-          width: expectedIgnoreSelectorRegion.width,
-          height: expectedIgnoreSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.ignore).to.eql([
+      ignoreRegion,
+      {
+        left: expectedIgnoreSelectorRegion.x - imageOffset.x,
+        top: expectedIgnoreSelectorRegion.y - imageOffset.y,
+        width: expectedIgnoreSelectorRegion.width,
+        height: expectedIgnoreSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getLayoutRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(layoutRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedLayoutSelectorRegion.x - imageOffset.x,
-          top: expectedLayoutSelectorRegion.y - imageOffset.y,
-          width: expectedLayoutSelectorRegion.width,
-          height: expectedLayoutSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.layout).to.eql([
+      layoutRegion,
+      {
+        left: expectedLayoutSelectorRegion.x - imageOffset.x,
+        top: expectedLayoutSelectorRegion.y - imageOffset.y,
+        width: expectedLayoutSelectorRegion.width,
+        height: expectedLayoutSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getContentRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(contentRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedContentSelectorRegion.x - imageOffset.x,
-          top: expectedContentSelectorRegion.y - imageOffset.y,
-          width: expectedContentSelectorRegion.width,
-          height: expectedContentSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.content).to.eql([
+      contentRegion,
+      {
+        left: expectedContentSelectorRegion.x - imageOffset.x,
+        top: expectedContentSelectorRegion.y - imageOffset.y,
+        width: expectedContentSelectorRegion.width,
+        height: expectedContentSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getStrictRegions()).to.eql([
-      new IgnoreRegionByRectangle(new Region(strictRegion)),
-      new IgnoreRegionByRectangle(
-        new Region({
-          left: expectedStrictSelectorRegion.x - imageOffset.x,
-          top: expectedStrictSelectorRegion.y - imageOffset.y,
-          width: expectedStrictSelectorRegion.width,
-          height: expectedStrictSelectorRegion.height,
-        }),
-      ),
+    expect(r.__checkSettings.strict).to.eql([
+      strictRegion,
+      {
+        left: expectedStrictSelectorRegion.x - imageOffset.x,
+        top: expectedStrictSelectorRegion.y - imageOffset.y,
+        width: expectedStrictSelectorRegion.width,
+        height: expectedStrictSelectorRegion.height,
+      },
     ])
-    expect(r.__checkSettings.getAccessibilityRegions()).to.eql([
-      new AccessibilityRegionByRectangle(new Region(accessibilityRegion), 'LargeText'),
-      new AccessibilityRegionByRectangle(
-        new Region({
-          left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
-          top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
-          width: expectedAccessibilitySelectorRegion.width,
-          height: expectedAccessibilitySelectorRegion.height,
-        }),
-        'RegularText',
-      ),
+    expect(r.__checkSettings.accessibility).to.eql([
+      accessibilityRegion,
+      {
+        left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
+        top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
+        width: expectedAccessibilitySelectorRegion.width,
+        height: expectedAccessibilitySelectorRegion.height,
+        accessibilityType: accessibilitySelector.accessibilityType,
+      },
     ])
 
-    expect(r.__checkSettings.getFloatingRegions()).to.eql([
-      new FloatingRegionByRectangle(
-        new Region(floatingRegion),
-        floatingRegion.maxUpOffset,
-        floatingRegion.maxDownOffset,
-        floatingRegion.maxLeftOffset,
-        floatingRegion.maxRightOffset,
-      ),
-      new FloatingRegionByRectangle(
-        new Region({
-          left: expectedFloatingRegion.x - imageOffset.x,
-          top: expectedFloatingRegion.y - imageOffset.y,
-          width: expectedFloatingRegion.width,
-          height: expectedFloatingRegion.height,
-        }),
-        floatingSelector.maxUpOffset,
-        floatingSelector.maxDownOffset,
-        floatingSelector.maxLeftOffset,
-        floatingSelector.maxRightOffset,
-      ),
+    expect(r.__checkSettings.floating).to.eql([
+      floatingRegion,
+      {
+        left: expectedFloatingRegion.x - imageOffset.x,
+        top: expectedFloatingRegion.y - imageOffset.y,
+        width: expectedFloatingRegion.width,
+        height: expectedFloatingRegion.height,
+        maxUpOffset: floatingSelector.maxUpOffset,
+        maxDownOffset: floatingSelector.maxDownOffset,
+        maxLeftOffset: floatingSelector.maxLeftOffset,
+        maxRightOffset: floatingSelector.maxRightOffset,
+      },
     ])
   })
 
@@ -1742,12 +1684,12 @@ Received: 'firefox-1'.`,
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
     const r2 = results.getStepsInfo()[1].result
-    expect(r.__checkSettings.getUseDom()).to.be.true
-    expect(r.__checkSettings.getEnablePatterns()).to.be.false
-    expect(r.__checkSettings.getIgnoreDisplacements()).to.be.false
-    expect(r2.__checkSettings.getUseDom()).to.be.undefined
-    expect(r2.__checkSettings.getEnablePatterns()).to.be.undefined
-    expect(r2.__checkSettings.getIgnoreDisplacements()).to.be.undefined
+    expect(r.__checkSettings.useDom).to.be.true
+    expect(r.__checkSettings.enablePatterns).to.be.false
+    expect(r.__checkSettings.ignoreDisplacements).to.be.false
+    expect(r2.__checkSettings.useDom).to.be.undefined
+    expect(r2.__checkSettings.enablePatterns).to.be.undefined
+    expect(r2.__checkSettings.ignoreDisplacements).to.be.undefined
   })
 
   it('handles abort', async () => {
@@ -1957,7 +1899,7 @@ Received: 'firefox-1'.`,
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20)
       if (tag === 2) {
-        expect(checkSettings.getMatchLevel()).to.equal('Layout')
+        expect(checkSettings.matchLevel).to.equal('Layout')
       } else {
         expect(wrapper.getMatchLevel()).to.equal('Strict')
       }
@@ -1979,7 +1921,7 @@ Received: 'firefox-1'.`,
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20)
       if (tag === 2) {
-        expect(checkSettings.getMatchLevel()).to.equal('Layout')
+        expect(checkSettings.matchLevel).to.equal('Layout')
       } else {
         expect(wrapper.getMatchLevel()).to.equal('Content')
       }
@@ -2009,7 +1951,7 @@ Received: 'firefox-1'.`,
     wrapper.checkWindow = async ({tag, checkSettings}) => {
       await psetTimeout(20)
       if (tag === 2) {
-        expect(checkSettings.getMatchLevel()).to.equal('Layout')
+        expect(checkSettings.matchLevel).to.equal('Layout')
       } else {
         expect(wrapper.getMatchLevel()).to.equal('Content')
       }
@@ -2138,8 +2080,8 @@ Received: 'firefox-1'.`,
     await donePromise
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
-    expect(r.__checkSettings.getUseDom()).to.be.true
-    expect(r.__checkSettings.getEnablePatterns()).to.be.true
+    expect(r.__checkSettings.useDom).to.be.true
+    expect(r.__checkSettings.enablePatterns).to.be.true
   })
 
   it('checkWindow overrides openEyes useDom & enablePatterns with false', async () => {
@@ -2175,8 +2117,8 @@ Received: 'firefox-1'.`,
     await donePromise
     const [results] = await close()
     const r = results.getStepsInfo()[0].result
-    expect(r.__checkSettings.getUseDom()).to.be.false
-    expect(r.__checkSettings.getEnablePatterns()).to.be.false
+    expect(r.__checkSettings.useDom).to.be.false
+    expect(r.__checkSettings.enablePatterns).to.be.false
   })
 
   it('handles visualGridOptions in renderingGridClient', async () => {

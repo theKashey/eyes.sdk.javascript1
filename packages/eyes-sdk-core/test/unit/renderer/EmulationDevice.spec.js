@@ -9,10 +9,7 @@ describe('EmulationDevice', () => {
     const emulationDevice = new EmulationDevice()
     assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationDevice, '_width'), true)
     assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationDevice, '_height'), true)
-    assert.strictEqual(
-      Object.prototype.hasOwnProperty.call(emulationDevice, '_deviceScaleFactor'),
-      true,
-    )
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationDevice, '_deviceScaleFactor'), true)
     assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationDevice, '_mobile'), true)
   })
 

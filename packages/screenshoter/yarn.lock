@@ -2,13 +2,14 @@
 # yarn lockfile v1
 
 
-"@applitools/driver@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.0.6.tgz#55984f745b2f2d51fe652914d3b4f8f485d0668a"
-  integrity sha512-M7YZne9BXacWg8l7ArF5Lir1Yho/CPlGcG+R3vMsVqCFPD1P8IQg+fxQFD5M/7vG0zOFDuYXYDtUSbH85hNKQw==
+"@applitools/driver@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.1.1.tgz#8945634d9a3a10a4cad6a0cbf9332fd13d16101e"
+  integrity sha512-k6mQAYPkpDbiF+zRi+jKp7cpxUJznjtEjE9YkETV+bkS1cZBiIyhBWady6e3fMb/sHBHj9DuZiY8eY5v93xX7Q==
   dependencies:
-    "@applitools/snippets" "2.1.3"
-    "@applitools/utils" "1.2.0"
+    "@applitools/snippets" "2.1.4"
+    "@applitools/types" "1.0.6"
+    "@applitools/utils" "1.2.2"
 
 "@applitools/functional-commons@1.6.0":
   version "1.6.0"
@@ -66,15 +67,20 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/snippets@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.3.tgz#8596bb70c884e4d220798b62d9f17db77c36992c"
-  integrity sha512-c4efLfVK/yHBPJnNjqO8GcEd98m276NgPhUy+b7aIf2MazbQq2kYMnDUsONeKXS8SucnPyuhFO1JL6xkq9bnYw==
+"@applitools/snippets@2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.4.tgz#5b47556574ee898f581b7d1cf6b169c0a9b4aef8"
+  integrity sha512-Jmp+DM9Kj24+ByMaqoKxhMNsefsSshN5+MLyMyrFurb1FGRGoSMmAT5bZCI7zKFG02pxZmjBmenMhpNQbzZR/A==
 
-"@applitools/utils@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.0.tgz#a79774ffdb894a73fbca5d24eba66ef17119a7c6"
-  integrity sha512-NzynRgRavbTns5M85DJXXaMY/57xBte3F/tnK5nr3DSBhKTQnkjXIFwryPU5bVwEcpoGEVF0T1Gyq37WnDe38Q==
+"@applitools/types@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.6.tgz#f17390e9bd5679b70ffd03cb9538a08208d83d47"
+  integrity sha512-g0dC0+l8lPVsdblloVSX26rFTt6t3RAZnf5G0hZtjPDjT89oICtPytGRNmSqG7Sm1+DhywmEwtL+07ZzWE9uXw==
+
+"@applitools/utils@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.2.tgz#ea59bdbbdaf7da8c97bc496c7e3876c0d025b6fe"
+  integrity sha512-SyHY41J+hkZR9gma/M8gjbJXLXeLoVS5DQVYd/RinzWAq62Yvg9eA97+8oHDl8s+6ELK6wMcs4yajjqCPdpF0A==
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.1"

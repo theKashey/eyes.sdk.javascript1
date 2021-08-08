@@ -62,10 +62,6 @@ describe('Location', () => {
     const location = new Location({x: left, y: top})
     const actualSerialization = JSON.stringify(location)
 
-    assert.strictEqual(
-      expectedSerialization,
-      actualSerialization,
-      'Location serialization does not match!',
-    )
+    assert.strictEqual(expectedSerialization, actualSerialization, 'Location serialization does not match!')
   })
 })

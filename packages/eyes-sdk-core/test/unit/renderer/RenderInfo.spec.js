@@ -2,13 +2,7 @@
 
 const assert = require('assert')
 
-const {
-  RenderInfo,
-  Region,
-  RectangleSize,
-  EmulationInfo,
-  ScreenOrientation,
-} = require('../../../index')
+const {RenderInfo, Region, RectangleSize, EmulationInfo, ScreenOrientation} = require('../../../index')
 
 describe('RenderInfo', () => {
   it('constructor', () => {
@@ -100,7 +94,7 @@ describe('RenderInfo', () => {
 
     const renderInfo = new RenderInfo(renderInfoObj)
     const renderInfoWithAdjustedLeftTop = Object.assign(renderInfoObj, {
-      region: {x: 3, y: 4, width: 5, height: 6, coordinatesType: 'SCREENSHOT_AS_IS'},
+      region: {x: 3, y: 4, width: 5, height: 6},
     })
 
     assert.deepStrictEqual(renderInfo.toJSON(), renderInfoWithAdjustedLeftTop)
@@ -127,7 +121,7 @@ describe('RenderInfo', () => {
     const renderInfo = new RenderInfo(renderInfoObj)
     assert.deepStrictEqual(
       renderInfo.toString(),
-      'RenderInfo { {"width":1,"height":2,"sizeMode":"some size mode","selector":"some selector","region":{"width":5,"height":6,"coordinatesType":"SCREENSHOT_AS_IS","x":3,"y":4},"emulationInfo":{"deviceName":"deviceName","screenOrientation":"portrait"},"iosDeviceInfo":{"name":"iPhone 11 Pro","screenOrientation":"landscapeLeft","version":"latest"}} }',
+      'RenderInfo { {"width":1,"height":2,"sizeMode":"some size mode","selector":"some selector","region":{"width":5,"height":6,"x":3,"y":4},"emulationInfo":{"deviceName":"deviceName","screenOrientation":"portrait"},"iosDeviceInfo":{"name":"iPhone 11 Pro","screenOrientation":"landscapeLeft","version":"latest"}} }',
     )
   })
 })

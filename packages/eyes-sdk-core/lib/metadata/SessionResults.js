@@ -87,11 +87,7 @@ class SessionResults {
       startInfo = new StartInfo(startInfo)
     }
 
-    if (
-      actualAppOutput &&
-      actualAppOutput.length > 0 &&
-      !(actualAppOutput[0] instanceof ActualAppOutput)
-    ) {
+    if (actualAppOutput && actualAppOutput.length > 0 && !(actualAppOutput[0] instanceof ActualAppOutput)) {
       actualAppOutput = actualAppOutput.map(output => new ActualAppOutput(output))
     }
 

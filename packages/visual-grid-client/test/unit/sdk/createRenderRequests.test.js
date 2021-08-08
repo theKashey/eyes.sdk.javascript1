@@ -75,7 +75,7 @@ describe('createRenderRequest', () => {
         height: 2,
         selector,
         sizeMode,
-        region: {x: 1, y: 2, width: 3, height: 4, coordinatesType: 'SCREENSHOT_AS_IS'},
+        region: {x: 1, y: 2, width: 3, height: 4},
       },
     })
   })

@@ -5,25 +5,12 @@ const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const RenderingInfo = require('./RenderingInfo')
 const RunningSession = require('./RunningSession')
-const {
-  configureAxios,
-  delayRequest,
-  handleRequestResponse,
-  handleRequestError,
-} = require('./requestHelpers')
+const {configureAxios, delayRequest, handleRequestResponse, handleRequestError} = require('./requestHelpers')
 const TestResults = require('../TestResults')
 const MatchResult = require('../match/MatchResult')
 
 const RunningRender = require('../renderer/RunningRender')
 const RenderStatusResults = require('../renderer/RenderStatusResults')
-
-/**
- * @typedef {import('../geometry/Region').RegionObject} RegionObject
- */
-
-/**
- * @typedef {import('../logging/LogEvent').LogEvent} LogEvent
- */
 
 // Constants
 const EYES_API_PATH = '/api/sessions'
@@ -133,9 +120,7 @@ class ServerConnector {
       this._logger.verbose(
         `axios request interceptor - ${axiosConfig.name} [${axiosConfig.requestId}${
           axiosConfig.originalRequestId ? ` retry of ${axiosConfig.originalRequestId}` : ''
-        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(
-          axiosConfig.params,
-        )}${dataLengthStr}`,
+        }] will now call to ${axiosConfig.url} with params ${JSON.stringify(axiosConfig.params)}${dataLengthStr}`,
       )
 
       await delayRequest({axiosConfig, logger})
@@ -205,11 +190,7 @@ class ServerConnector {
    * @param {{updateBaselineIfDifferent: boolean, updateBaselineIfNew: boolean}} save
    * @return {Promise<TestResults>} - TestResults object for the stopped running session
    */
-  async stopSession(
-    runningSession,
-    isAborted,
-    {updateBaselineIfDifferent, updateBaselineIfNew} = {},
-  ) {
+  async stopSession(runningSession, isAborted, {updateBaselineIfDifferent, updateBaselineIfNew} = {}) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     this._logger.verbose(
       `ServerConnector.stopSession called with ${JSON.stringify({
@@ -276,9 +257,7 @@ class ServerConnector {
       return
     }
 
-    throw new Error(
-      `ServerConnector.deleteBatchSessions - unexpected status (${response.statusText})`,
-    )
+    throw new Error(`ServerConnector.deleteBatchSessions - unexpected status (${response.statusText})`)
   }
 
   /**
@@ -334,9 +313,7 @@ class ServerConnector {
 
     const response = await this._axios.request(config)
     if (response.status !== HTTP_STATUS_CODES.CREATED) {
-      throw new Error(
-        `ServerConnector.uploadScreenshot - unexpected status (${response.statusText})`,
-      )
+      throw new Error(`ServerConnector.uploadScreenshot - unexpected status (${response.statusText})`)
     }
 
     return url
@@ -352,9 +329,7 @@ class ServerConnector {
   async matchWindow(runningSession, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
-    this._logger.verbose(
-      `ServerConnector.matchWindow called with ${matchWindowData} for session: ${runningSession}`,
-    )
+    this._logger.verbose(`ServerConnector.matchWindow called with ${matchWindowData} for session: ${runningSession}`)
 
     const config = {
       name: 'matchWindow',
@@ -392,9 +367,7 @@ class ServerConnector {
 
   async matchWindowAndClose(runningSession, matchWindowData) {
     if (this._matchWindowAndCloseFallback) {
-      this._logger.verbose(
-        'ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used',
-      )
+      this._logger.verbose('ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used')
       await this.matchWindow(runningSession, matchWindowData)
       return this.stopSession(runningSession, false, {
         updateBaselineIfNew: matchWindowData.getUpdateBaselineIfNew(),
@@ -453,9 +426,7 @@ class ServerConnector {
       })
     }
 
-    throw new Error(
-      `ServerConnector.matchWindowAndClose - unexpected status (${response.statusText})`,
-    )
+    throw new Error(`ServerConnector.matchWindowAndClose - unexpected status (${response.statusText})`)
   }
 
   /**
@@ -469,9 +440,7 @@ class ServerConnector {
   async replaceWindow(runningSession, stepIndex, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
-    this._logger.verbose(
-      `ServerConnector.replaceWindow called with ${matchWindowData} for session: ${runningSession}`,
-    )
+    this._logger.verbose(`ServerConnector.replaceWindow called with ${matchWindowData} for session: ${runningSession}`)
 
     const config = {
       name: 'replaceWindow',
@@ -486,10 +455,7 @@ class ServerConnector {
       headers: {
         'Content-Type': 'application/octet-stream',
       },
-      data: Buffer.concat([
-        createDataBytes(matchWindowData),
-        matchWindowData.getAppOutput().getScreenshot64(),
-      ]),
+      data: Buffer.concat([createDataBytes(matchWindowData), matchWindowData.getAppOutput().getScreenshot64()]),
     }
 
     const response = await this._axios.request(config)
@@ -579,9 +545,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      let runningRender = Array.from(response.data).map(
-        resultsData => new RunningRender(resultsData),
-      )
+      let runningRender = Array.from(response.data).map(resultsData => new RunningRender(resultsData))
       if (!isBatch) {
         runningRender = runningRender[0]
       }
@@ -615,9 +579,7 @@ class ServerConnector {
       return response.data
     }
 
-    throw new Error(
-      `ServerConnector.renderGetRendererInfo - unexpected status (${response.statusText})`,
-    )
+    throw new Error(`ServerConnector.renderGetRendererInfo - unexpected status (${response.statusText})`)
   }
 
   /**
@@ -629,20 +591,13 @@ class ServerConnector {
   async renderCheckResources(resources) {
     ArgumentGuard.notNull(resources, 'resources')
     const hashes = resources.map(resource => resource.getHashAsObject())
-    this._logger.verbose(
-      `ServerConnector.renderCheckResources called with resources - ${hashes.map(
-        ({hash}) => hash,
-      )}`,
-    )
+    this._logger.verbose(`ServerConnector.renderCheckResources called with resources - ${hashes.map(({hash}) => hash)}`)
 
     const config = {
       name: 'renderCheckResources',
       withApiKey: false,
       method: 'POST',
-      url: GeneralUtils.urlConcat(
-        this._renderingInfo.getServiceUrl(),
-        '/resources/query/resources-exist/',
-      ),
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/resources/query/resources-exist/'),
       headers: {
         'X-Auth-Token': this._renderingInfo.getAccessToken(),
       },
@@ -659,9 +614,7 @@ class ServerConnector {
       return response.data
     }
 
-    throw new Error(
-      `ServerConnector.renderCheckResources - unexpected status (${response.statusText})`,
-    )
+    throw new Error(`ServerConnector.renderCheckResources - unexpected status (${response.statusText})`)
   }
 
   /**
@@ -673,19 +626,13 @@ class ServerConnector {
   async renderPutResource(resource) {
     ArgumentGuard.notNull(resource, 'resource')
     ArgumentGuard.notNull(resource.getContent(), 'resource.getContent()')
-    this._logger.verbose(
-      `ServerConnector.putResource called with resource#${resource.getSha256Hash()}`,
-    )
+    this._logger.verbose(`ServerConnector.putResource called with resource#${resource.getSha256Hash()}`)
 
     const config = {
       name: 'renderPutResource',
       withApiKey: false,
       method: 'PUT',
-      url: GeneralUtils.urlConcat(
-        this._renderingInfo.getServiceUrl(),
-        '/resources/sha256/',
-        resource.getSha256Hash(),
-      ),
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/resources/sha256/', resource.getSha256Hash()),
       headers: {
         'X-Auth-Token': this._renderingInfo.getAccessToken(),
         'Content-Type': resource.getContentType(),
@@ -700,17 +647,13 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose(
-        'ServerConnector.putResource - request succeeded. Response:',
-        response.data,
-      )
+      this._logger.verbose('ServerConnector.putResource - request succeeded. Response:', response.data)
       return true
     }
 
     throw new Error(
-      `ServerConnector.putResource - unexpected status (${
-        response.statusText
-      }) for resource ${resource.getUrl() || ''} ${resource.getContentType()}`,
+      `ServerConnector.putResource - unexpected status (${response.statusText}) for resource ${resource.getUrl() ||
+        ''} ${resource.getContentType()}`,
     )
   }
 
@@ -755,17 +698,12 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      let renderStatus = Array.from(response.data).map(
-        resultsData => new RenderStatusResults(resultsData || {}),
-      )
+      let renderStatus = Array.from(response.data).map(resultsData => new RenderStatusResults(resultsData || {}))
       if (!isBatch) {
         renderStatus = renderStatus[0] // eslint-disable-line prefer-destructuring
       }
 
-      this._logger.verbose(
-        `ServerConnector.renderStatus - get succeeded for ${renderId} -`,
-        renderStatus,
-      )
+      this._logger.verbose(`ServerConnector.renderStatus - get succeeded for ${renderId} -`, renderStatus)
       return renderStatus
     }
 
@@ -796,9 +734,7 @@ class ServerConnector {
 
     const response = await this._axios.request(config)
     if (response.status !== HTTP_STATUS_CODES.CREATED) {
-      throw new Error(
-        `ServerConnector.postDomSnapshot - unexpected status (${response.statusText})`,
-      )
+      throw new Error(`ServerConnector.postDomSnapshot - unexpected status (${response.statusText})`)
     }
 
     this._logger.verbose('ServerConnector.postDomSnapshot - post succeeded')
@@ -835,9 +771,7 @@ class ServerConnector {
    */
   async postLocators(visualLocatorData) {
     ArgumentGuard.notNull(visualLocatorData, 'visualLocatorData')
-    this._logger.verbose(
-      `ServerConnector.postLocators called with ${JSON.stringify(visualLocatorData)}`,
-    )
+    this._logger.verbose(`ServerConnector.postLocators called with ${JSON.stringify(visualLocatorData)}`)
 
     const config = {
       name: 'postLocators',
@@ -872,11 +806,7 @@ class ServerConnector {
     const config = {
       name: 'extractText',
       method: 'POST',
-      url: GeneralUtils.urlConcat(
-        this._configuration.getServerUrl(),
-        EYES_API_PATH,
-        '/running/images/text',
-      ),
+      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running/images/text'),
       data: {
         appOutput: {screenshotUrl, domUrl, location},
         regions: [region],
@@ -895,15 +825,7 @@ class ServerConnector {
     throw new Error(`ServerConnector.extractText - unexpected status (${response.statusText})`)
   }
 
-  async extractTextRegions({
-    screenshotUrl,
-    domUrl,
-    location,
-    patterns,
-    ignoreCase,
-    firstOnly,
-    language,
-  }) {
+  async extractTextRegions({screenshotUrl, domUrl, location, patterns, ignoreCase, firstOnly, language}) {
     ArgumentGuard.notNull(screenshotUrl, 'screenshotUrl')
     this._logger.verbose(
       `ServerConnector.extractTextRegions called with ${JSON.stringify({
@@ -920,11 +842,7 @@ class ServerConnector {
     const config = {
       name: 'extractTextRegions',
       method: 'POST',
-      url: GeneralUtils.urlConcat(
-        this._configuration.getServerUrl(),
-        EYES_API_PATH,
-        '/running/images/textregions',
-      ),
+      url: GeneralUtils.urlConcat(this._configuration.getServerUrl(), EYES_API_PATH, '/running/images/textregions'),
       data: {
         appOutput: {screenshotUrl, domUrl, location},
         patterns,
@@ -941,9 +859,7 @@ class ServerConnector {
       return response.data
     }
 
-    throw new Error(
-      `ServerConnector.extractTextRegions - unexpected status (${response.statusText})`,
-    )
+    throw new Error(`ServerConnector.extractTextRegions - unexpected status (${response.statusText})`)
   }
 
   async getEmulatedDevicesSizes(serviceUrl) {
@@ -953,19 +869,14 @@ class ServerConnector {
       name: 'getEmulatedDevicesSizes',
       method: 'GET',
       withApiKey: false,
-      url: GeneralUtils.urlConcat(
-        serviceUrl || this._renderingInfo.getServiceUrl(),
-        '/emulated-devices-sizes',
-      ),
+      url: GeneralUtils.urlConcat(serviceUrl || this._renderingInfo.getServiceUrl(), '/emulated-devices-sizes'),
     }
 
     const response = await this._axios.request(config)
     if (response.status === HTTP_STATUS_CODES.OK) {
       return response.data
     } else {
-      throw new Error(
-        `ServerConnector.getEmulatedDevicesSizes - unexpected status (${response.statusText})`,
-      )
+      throw new Error(`ServerConnector.getEmulatedDevicesSizes - unexpected status (${response.statusText})`)
     }
   }
 
@@ -975,19 +886,14 @@ class ServerConnector {
     const config = {
       name: 'getIosDevicesSizes',
       method: 'GET',
-      url: GeneralUtils.urlConcat(
-        serviceUrl || this._renderingInfo.getServiceUrl(),
-        '/ios-devices-sizes',
-      ),
+      url: GeneralUtils.urlConcat(serviceUrl || this._renderingInfo.getServiceUrl(), '/ios-devices-sizes'),
     }
 
     const response = await this._axios.request(config)
     if (response.status === HTTP_STATUS_CODES.OK) {
       return response.data
     } else {
-      throw new Error(
-        `ServerConnector.getIosDevicesSizes - unexpected status (${response.statusText})`,
-      )
+      throw new Error(`ServerConnector.getIosDevicesSizes - unexpected status (${response.statusText})`)
     }
   }
 

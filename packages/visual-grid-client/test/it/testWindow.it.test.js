@@ -99,32 +99,20 @@ describe('testWindow', () => {
       return JSON.stringify(obj)
     }
 
-    checkWindowArgs[0].checkSettings._renderId = removeSalt(
-      checkWindowArgs[0].checkSettings._renderId,
+    checkWindowArgs[0].checkSettings.renderId = removeSalt(
+      checkWindowArgs[0].checkSettings.renderId,
     )
     checkWindowArgs[0].screenshotUrl = removeSalt(checkWindowArgs[0].screenshotUrl)
 
     expect(checkWindowArgs).to.eql([
       {
         checkSettings: {
-          _accessibilityLevel: undefined,
-          _accessibilityRegions: [],
-          _contentRegions: [],
-          _enablePatterns: undefined,
-          _floatingRegions: [],
-          _ignoreCaret: true,
-          _ignoreDisplacements: undefined,
-          _ignoreRegions: [],
-          _layoutRegions: [],
-          _matchLevel: undefined,
-          _renderId: '{"isGood":true,"sizeMode":"full-page"}',
-          _sendDom: undefined,
-          _stitchContent: false,
-          _strictRegions: [],
-          _targetRegion: undefined,
-          _timeout: 0,
-          _useDom: undefined,
-          _variationGroupId: undefined,
+          useDom: undefined,
+          enablePatterns: undefined,
+          ignoreDisplacements: undefined,
+          renderId: '{"isGood":true,"sizeMode":"full-page"}',
+          matchLevel: undefined,
+          variationGroupId: undefined,
         },
         closeAfterMatch: true,
         throwEx: true,

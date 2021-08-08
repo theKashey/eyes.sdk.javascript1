@@ -52,8 +52,7 @@ describe('EyesBase', () => {
       eyes.setBatch('batch-name', 'some-batch-id')
       const result = await eyes.handleScmMergeBaseTime()
 
-      const expected =
-        'some-datetime-of-barnch-name-of-some-batch-id-parent-barnch-name-of-some-batch-id'
+      const expected = 'some-datetime-of-barnch-name-of-some-batch-id-parent-barnch-name-of-some-batch-id'
       assert.deepStrictEqual(result, expected)
     })
 
@@ -61,8 +60,7 @@ describe('EyesBase', () => {
       process.env.APPLITOOLS_BATCH_ID = 'some-batch-id'
       const result = await eyes.handleScmMergeBaseTime()
 
-      const expected =
-        'some-datetime-of-barnch-name-of-some-batch-id-parent-barnch-name-of-some-batch-id'
+      const expected = 'some-datetime-of-barnch-name-of-some-batch-id-parent-barnch-name-of-some-batch-id'
       assert.deepStrictEqual(result, expected)
     })
 
@@ -225,10 +223,10 @@ describe('EyesBase', () => {
           useDom: true,
           enablePatterns: true,
           ignoreDisplacements: true,
-          ignore: [{left: 0, top: 1, width: 2, height: 3, coordinatesType: 'SCREENSHOT_AS_IS'}],
-          layout: [{left: 0, top: 1, width: 2, height: 3, coordinatesType: 'SCREENSHOT_AS_IS'}],
-          strict: [{left: 0, top: 1, width: 2, height: 3, coordinatesType: 'SCREENSHOT_AS_IS'}],
-          content: [{left: 0, top: 1, width: 2, height: 3, coordinatesType: 'SCREENSHOT_AS_IS'}],
+          ignore: [{left: 0, top: 1, width: 2, height: 3}],
+          layout: [{left: 0, top: 1, width: 2, height: 3}],
+          strict: [{left: 0, top: 1, width: 2, height: 3}],
+          content: [{left: 0, top: 1, width: 2, height: 3}],
           accessibility: [{left: 0, top: 1, width: 2, height: 3}],
           floating: [{left: 0, top: 1, width: 2, height: 3}],
           accessibilitySettings: {level: 'AAA', version: 'WCAG_2_0'},

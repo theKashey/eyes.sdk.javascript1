@@ -58,16 +58,7 @@ class BatchInfo {
       return new BatchInfo({id: varArg3, name: varArg1, startedAt: varArg2})
     }
 
-    let {
-      id,
-      name,
-      properties,
-      startedAt,
-      sequenceName,
-      notifyOnCompletion,
-      isCompleted,
-      isGeneratedId,
-    } = varArg1 || {}
+    let {id, name, properties, startedAt, sequenceName, notifyOnCompletion, isCompleted, isGeneratedId} = varArg1 || {}
     ArgumentGuard.isString(id, 'batchId', false)
     ArgumentGuard.isString(name, 'batchName', false)
     ArgumentGuard.isString(sequenceName, 'sequenceName', false)
@@ -90,8 +81,7 @@ class BatchInfo {
     this._properties = properties || []
     this._startedAt = startedAt || new Date()
     this._sequenceName = sequenceName || GeneralUtils.getEnvValue('BATCH_SEQUENCE')
-    this._notifyOnCompletion =
-      notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY', true) || false
+    this._notifyOnCompletion = notifyOnCompletion || GeneralUtils.getEnvValue('BATCH_NOTIFY', true) || false
     this._isCompleted = isCompleted || false
   }
 

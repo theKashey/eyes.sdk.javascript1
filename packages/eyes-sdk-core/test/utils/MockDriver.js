@@ -68,9 +68,7 @@ class MockDriver {
       return element.rect || {x: 0, y: 0, width: 100, height: 100}
     })
     this.mockScript(snippets.getElementComputedStyleProperties, ([element, properties]) => {
-      return properties.map(
-        property => (element.styles || {})[property] || DEFAULT_STYLES[property],
-      )
+      return properties.map(property => (element.styles || {})[property] || DEFAULT_STYLES[property])
     })
     this.mockScript(snippets.getElementProperties, ([element, properties]) => {
       return properties.map(property => (element.props || {})[property] || DEFAULT_PROPS[property])
@@ -129,14 +127,9 @@ class MockDriver {
     })
     this.mockScript(snippets.getElementXpath, ([element]) => {
       if (element.xpath) return element.xpath
-      const elements = Array.from(this._elements.values()).reduce(
-        (elements, array) => elements.concat(array),
-        [],
-      )
+      const elements = Array.from(this._elements.values()).reduce((elements, array) => elements.concat(array), [])
       const index = elements.findIndex(({id}) => id === element.id)
-      return index >= 0
-        ? `/HTML[1]/BODY[1]/DIV[${index + 1}]`
-        : `//[data-fake-selector="${element.selector}"]`
+      return index >= 0 ? `/HTML[1]/BODY[1]/DIV[${index + 1}]` : `//[data-fake-selector="${element.selector}"]`
     })
     this.mockScript(snippets.blurElement, () => {
       return null
@@ -155,10 +148,18 @@ class MockDriver {
         )
       }
     })
+    this.mockScript(snippets.getDocumentSize, () => {
+      // TODO get window for context: `this.contexts.get(this._contextId)`
+      return {width: this._window.rect.width, height: this._window.rect.height}
+    })
+
+    this.mockScript(snippets.getElementContentSize, ([element]) => {
+      return element.rect || {x: 0, y: 0, width: 100, height: 100}
+    })
     this.mockScript('dom-snapshot', () => FakeDomSnapshot.generateDomSnapshot(this))
   }
   mockScript(scriptMatcher, resultGenerator) {
-    this._scripts.set(scriptMatcher, resultGenerator)
+    this._scripts.set(String(scriptMatcher), resultGenerator)
   }
   mockElement(selector, state) {
     const element = {
@@ -204,9 +205,7 @@ class MockDriver {
       if (node.children) {
         this.mockElements(node.children, {
           parentId: element.frame ? null : element.id,
-          parentContextId: element.frame
-            ? this._contexts.get(element.contextId).id
-            : parentContextId,
+          parentContextId: element.frame ? this._contexts.get(element.contextId).id : parentContextId,
         })
       }
     }
@@ -238,8 +237,7 @@ class MockDriver {
   }
   async executeScript(script, args = []) {
     if (this.info.isNative) throw new Error("Native context doesn't support this method")
-    args = serialize(args)
-    let result = this._scripts.get(script)
+    let result = this._scripts.get(String(script))
     if (!result) {
       const name = Object.keys(WELL_KNOWN_SCRIPTS).find(name => WELL_KNOWN_SCRIPTS[name](script))
       if (!name) return null
@@ -323,24 +321,6 @@ class MockDriver {
   }
   [inspect.custom]() {
     return '<MockDriver>'
-  }
-}
-
-function serialize(value) {
-  if (TypeUtils.hasMethod(value, 'toJSON')) {
-    return value.toJSON()
-  } else if (TypeUtils.isArray(value)) {
-    return value.map(serialize)
-  } else if (TypeUtils.isObject(value)) {
-    if (typeof value.id === 'symbol') return value
-    return Object.entries(value).reduce(
-      (json, [key, value]) => Object.assign(json, {[key]: serialize(value)}),
-      {},
-    )
-  } else if (TypeUtils.isFunction(value)) {
-    return value.toString()
-  } else {
-    return value
   }
 }
 

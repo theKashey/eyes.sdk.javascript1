@@ -13,10 +13,7 @@ function createFramesPaths({snapshot, path = [], logger}) {
     }
   }
 
-  logger.verbose(
-    `frames paths for ${snapshot.crossFrames}`,
-    paths.map(({path}) => path.join('-->')).join(' , '),
-  )
+  logger.verbose(`frames paths for ${snapshot.crossFrames}`, paths.map(({path}) => path.join('-->')).join(' , '))
 
   return paths
 }

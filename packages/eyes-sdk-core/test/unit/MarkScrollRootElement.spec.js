@@ -1,7 +1,7 @@
 const assert = require('assert')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
+const {EyesClassic} = require('../utils/FakeSDK')
 
 describe('MarkScrollRootElement', () => {
   let server, serverUrl, driver, eyes
@@ -29,12 +29,7 @@ describe('MarkScrollRootElement', () => {
 
   it('scroll root element is marked', async () => {
     const scrollRootElement = await driver.findElement('scroll-root-element')
-    await eyes.check(
-      'diff',
-      CheckSettings.window()
-        .scrollRootElement(scrollRootElement)
-        .fully(),
-    )
+    await eyes.check({scrollRootElement, fully: true})
     await eyes.close(false)
     assert.ok(scrollRootElement.attrs['data-applitools-scroll'])
   })

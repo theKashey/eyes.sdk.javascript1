@@ -5,12 +5,11 @@ const axios = require('axios')
 const {
   AccessibilityLevel,
   AccessibilityGuidelinesVersion,
-  AccessibilityRegionType,
   VisualGridRunner,
   ClassicRunner,
   ConsoleLogHandler,
 } = require('../../../index')
-const {EyesFactory, CheckSettings} = require('../../utils/FakeSDK')
+const {EyesFactory} = require('../../utils/FakeSDK')
 
 async function runTest(driver, useVisualGrid) {
   const accessibilitySettings = {
@@ -35,14 +34,14 @@ async function runTest(driver, useVisualGrid) {
     height: 460,
   })
 
-  const checkSettings = CheckSettings.window()
-    .accessibilityRegion(
-      {left: 10, top: 20, width: 30, height: 40},
-      AccessibilityRegionType.LargeText,
-    )
-    .accessibilityRegion('element2', AccessibilityRegionType.IgnoreContrast)
+  const checkSettings = {
+    accessibilityRegions: [
+      {region: {x: 10, y: 20, width: 30, height: 40}, type: 'LargeText'},
+      {region: 'element2', type: 'IgnoreContrast'},
+    ],
+  }
 
-  await eyes.check('', checkSettings)
+  await eyes.check(checkSettings)
   const testResults = await eyes.close(false)
 
   const sessionAccessibilityStatus = testResults.getAccessibilityStatus()
@@ -65,37 +64,22 @@ async function runTest(driver, useVisualGrid) {
     version: 'WCAG_2_0',
   }
 
-  assert.deepStrictEqual(
-    startInfo.defaultMatchSettings.accessibilitySettings,
-    expectedAccessibilitySettings,
-  )
+  assert.deepStrictEqual(startInfo.defaultMatchSettings.accessibilitySettings, expectedAccessibilitySettings)
 
-  assert.deepStrictEqual(
-    actualAppOutput[0].imageMatchSettings.accessibility,
-    expectedAccessibilityRegions,
-  )
+  assert.deepStrictEqual(actualAppOutput[0].imageMatchSettings.accessibility, expectedAccessibilityRegions)
 
   // reset value
   eyes.setConfiguration(eyes.getConfiguration().setAccessibilityValidation())
 
-  await eyes.open(
-    driver,
-    'SessionStartInfo',
-    `TestAccessibility_No_Accessibility${useVisualGrid ? '_VG' : ''}`,
-  )
-  await eyes.check('', CheckSettings.window())
+  await eyes.open(driver, 'SessionStartInfo', `TestAccessibility_No_Accessibility${useVisualGrid ? '_VG' : ''}`)
+  await eyes.check()
   const testResultsWithoutAccessibility = await eyes.close(false)
 
   assert.deepStrictEqual(testResultsWithoutAccessibility.getAccessibilityStatus(), undefined)
 
-  const {startInfo: startInfoWithoutAccessibility} = await getApiData(
-    testResultsWithoutAccessibility,
-  )
+  const {startInfo: startInfoWithoutAccessibility} = await getApiData(testResultsWithoutAccessibility)
 
-  assert.strictEqual(
-    startInfoWithoutAccessibility.defaultMatchSettings.accessibilitySettings,
-    undefined,
-  )
+  assert.strictEqual(startInfoWithoutAccessibility.defaultMatchSettings.accessibilitySettings, undefined)
 }
 
 async function getApiData(testResults, apiKey = process.env.APPLITOOLS_API_KEY) {

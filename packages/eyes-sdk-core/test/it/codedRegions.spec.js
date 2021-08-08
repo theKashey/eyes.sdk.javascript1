@@ -1,7 +1,7 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
+const {EyesClassic} = require('../utils/FakeSDK')
 
 describe('codedRegions', async () => {
   let server, serverUrl, driver, eyes
@@ -27,22 +27,20 @@ describe('codedRegions', async () => {
 
   it('check window', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    const ignore = {left: 0, top: 1, width: 11, height: 12}
+    const ignore = {x: 0, y: 1, width: 11, height: 12}
     const floating = await driver.findElement('element1')
     const accessibility = 'element2'
-    const strict = {left: 90, top: 91, width: 91, height: 92}
+    const strict = {x: 90, y: 91, width: 91, height: 92}
     const content = await driver.findElement('element3')
     const layout = 'element4'
-    await eyes.check(
-      '',
-      CheckSettings.window()
-        .ignore(ignore)
-        .floating(floating, 4, 3, 2, 1)
-        .accessibility(accessibility)
-        .strictRegion(strict)
-        .contentRegion(content)
-        .layoutRegion(layout),
-    )
+    await eyes.check({
+      ignoreRegions: [ignore],
+      floatingRegions: [{region: floating, maxUpOffset: 4, maxDownOffset: 3, maxLeftOffset: 2, maxRightOffset: 1}],
+      accessibilityRegions: [accessibility],
+      strictRegions: [strict],
+      contentRegions: [content],
+      layoutRegions: [layout],
+    })
     const results = await eyes.close()
     const regions = await extractRegions(results)
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
@@ -60,28 +58,25 @@ describe('codedRegions', async () => {
   it('check region', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     const region = await driver.findElement('element0')
-    const ignore = {left: 0, top: 1, width: 11, height: 12}
+    const ignore = {x: 0, y: 1, width: 11, height: 12}
     const floating = await driver.findElement('element1')
     const accessibility = 'element2'
-    const strict = {left: 90, top: 91, width: 91, height: 92}
+    const strict = {x: 90, y: 91, width: 91, height: 92}
     const content = await driver.findElement('element3')
     const layout = 'element4'
-    await eyes.check(
-      '',
-      CheckSettings.region(region)
-        .ignore(ignore)
-        .floating(floating, 4, 3, 2, 1)
-        .accessibility(accessibility)
-        .strictRegion(strict)
-        .contentRegion(content)
-        .layoutRegion(layout),
-    )
+    await eyes.check({
+      region,
+      ignoreRegions: [ignore],
+      floatingRegions: [{region: floating, maxUpOffset: 4, maxDownOffset: 3, maxLeftOffset: 2, maxRightOffset: 1}],
+      accessibilityRegions: [accessibility],
+      strictRegions: [strict],
+      contentRegions: [content],
+      layoutRegions: [layout],
+    })
     const results = await eyes.close()
     const regions = await extractRegions(results)
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
-    expect(regions.floating).to.be.deep.equal([
-      relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1), region.rect),
-    ])
+    expect(regions.floating).to.be.deep.equal([relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1), region.rect)])
     expect(regions.accessibility).to.be.deep.equal([
       relatedRegion(
         accessibilityRegion(await driver.findElement(accessibility).then(element => element.rect)),
@@ -89,14 +84,9 @@ describe('codedRegions', async () => {
       ),
     ])
     expect(regions.strict).to.be.deep.equal([strictRegion(strict)])
-    expect(regions.content).to.be.deep.equal([
-      relatedRegion(contentRegion(content.rect), region.rect),
-    ])
+    expect(regions.content).to.be.deep.equal([relatedRegion(contentRegion(content.rect), region.rect)])
     expect(regions.layout).to.be.deep.equal([
-      relatedRegion(
-        layoutRegion(await driver.findElement(layout).then(element => element.rect)),
-        region.rect,
-      ),
+      relatedRegion(layoutRegion(await driver.findElement(layout).then(element => element.rect)), region.rect),
     ])
   })
 
@@ -115,8 +105,8 @@ describe('codedRegions', async () => {
 
   function ignoreRegion(region) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
     }
@@ -124,8 +114,8 @@ describe('codedRegions', async () => {
 
   function floatingRegion(region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
       maxUpOffset: region.maxUpOffset || maxUpOffset,
@@ -137,8 +127,8 @@ describe('codedRegions', async () => {
 
   function accessibilityRegion(region) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
     }
@@ -146,8 +136,8 @@ describe('codedRegions', async () => {
 
   function strictRegion(region) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
     }
@@ -155,8 +145,8 @@ describe('codedRegions', async () => {
 
   function contentRegion(region) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
     }
@@ -164,8 +154,8 @@ describe('codedRegions', async () => {
 
   function layoutRegion(region) {
     return {
-      x: region.x || region.left,
-      y: region.y || region.top,
+      x: region.x || region.left || 0,
+      y: region.y || region.top || 0,
       width: region.width,
       height: region.height,
     }

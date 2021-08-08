@@ -42,8 +42,8 @@ export function isNumber(value: any, {name, strict = true, lt, lte, gt, gte}: Nu
   }
   if (!types.isNull(lt)) isLessThen(value, lt, {name})
   else if (!types.isNull(lte)) isLessThenOrEqual(value, lte, {name})
-  else if (!types.isNull(gt)) isGreaterThenOrEqual(value, gt, {name})
-  else if (!types.isNull(gte)) isGreaterThen(value, gte, {name})
+  else if (!types.isNull(gt)) isGreaterThen(value, gt, {name})
+  else if (!types.isNull(gte)) isGreaterThenOrEqual(value, gte, {name})
 }
 
 export function isInteger(value: any, {name, strict = true, lt, lte, gt, gte}: NumberParam) {

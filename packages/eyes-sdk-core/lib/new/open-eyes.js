@@ -1,4 +1,3 @@
-const FixedCutProvider = require('../cropping/FixedCutProvider')
 const SessionEventHandler = require('../events/SessionEventHandler')
 const RemoteSessionEventHandler = require('../events/RemoteSessionEventHandler')
 
@@ -16,11 +15,7 @@ function makeOpenEyes({sdk, runner}) {
     const eyes = new sdk.EyesFactory(runner)
     eyes.setConfiguration(config)
     if (config.scrollRootElement) eyes.setScrollRootElement(config.scrollRootElement)
-    if (config.cut && config.cut.top !== undefined) {
-      eyes.setCutProvider(
-        new FixedCutProvider(config.cut.top, config.cut.bottom, config.cut.left, config.cut.right),
-      )
-    }
+    if (config.cut) eyes.setCut(config.cut)
     if (config.rotation) eyes.setRotation(config.rotation)
     if (config.scaleRatio) eyes.setScaleRatio(config.scaleRatio)
     if (config.logs) {
@@ -30,15 +25,7 @@ function makeOpenEyes({sdk, runner}) {
         eyes.setLogHandler(new FileLogHandler(true, config.logs.filename, config.logs.append))
       }
     }
-    if (config.debugScreenshots) {
-      eyes.setSaveDebugScreenshots(config.debugScreenshots.save)
-      if (config.debugScreenshots.path) {
-        eyes.setDebugScreenshotsPath(config.debugScreenshots.path)
-      }
-      if (config.debugScreenshots.prefix) {
-        eyes.setDebugScreenshotsPrefix(config.debugScreenshots.prefix)
-      }
-    }
+    if (config.debugScreenshots) eyes.setDebugScreenshots(config.debugScreenshots)
     if (config.remoteEvents) {
       const remoteSessionEventHandler = new RemoteSessionEventHandler(
         config.remoteEvents.serverUrl,

@@ -2,8 +2,8 @@ import * as utils from '@applitools/utils'
 import type * as Playwright from 'playwright'
 
 export type Driver = Playwright.Page
-export type Element = Playwright.ElementHandle
 export type Context = Playwright.Frame
+export type Element = Playwright.ElementHandle
 export type Selector = string | {type: string; selector: string}
 
 // #region HELPERS
@@ -36,7 +36,12 @@ function transformSelector(selector: any): string {
 // #region UTILITY
 
 export function isDriver(page: any): page is Driver {
+  if (!page) return false
   return page.constructor.name === 'Page'
+}
+export function isContext(frame: any): frame is Context {
+  if (!frame) return false
+  return frame.constructor.name === 'Frame'
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
@@ -50,9 +55,6 @@ export function extractContext(page: Driver | Context): Context {
 }
 export function isStaleElementError(err: any): boolean {
   return err && err.message && err.message.includes('Protocol error (DOM.describeNode)')
-}
-export async function isEqualElements(frame: Context, element1: Element, element2: Element): Promise<boolean> {
-  return frame.evaluate(([element1, element2]) => element1 === element2, [element1, element2]).catch(() => false)
 }
 
 // #endregion

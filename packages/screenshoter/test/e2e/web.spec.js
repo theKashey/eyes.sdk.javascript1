@@ -1,0 +1,318 @@
+const assert = require('assert')
+const pixelmatch = require('pixelmatch')
+const makeDriver = require('../util/driver')
+const screenshoter = require('../../index')
+const makeImage = require('../../src/image')
+
+// TODO add overflowed regions tests
+
+describe('screenshoter web', () => {
+  const logger = {log: () => null, verbose: () => null}
+  let driver, destroyDriver
+
+  beforeEach(async () => {
+    ;[driver, destroyDriver] = await makeDriver({type: 'web'})
+    await driver.init()
+    await driver.visit('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await driver.setViewportSize({width: 700, height: 460})
+  })
+
+  afterEach(async () => {
+    await destroyDriver()
+  })
+
+  it('take viewport screenshot', () => {
+    return viewport()
+  })
+
+  it('take full page screenshot with "scroll" scrolling', () => {
+    return fullPage({scrollingMode: 'scroll'})
+  })
+  it('take full page screenshot with "css" scrolling', () => {
+    return fullPage({scrollingMode: 'css'})
+  })
+
+  it('take frame screenshot with "scroll" scrolling', () => {
+    frame({scrollingMode: 'scroll'})
+  })
+  it('take frame screenshot with "css" scrolling', () => {
+    frame({scrollingMode: 'css'})
+  })
+
+  it('take full frame screenshot with "scroll" scrolling', () => {
+    return fullFrame({scrollingMode: 'scroll'})
+  })
+  it('take full frame screenshot with "css" scrolling', () => {
+    return fullFrame({scrollingMode: 'css'})
+  })
+
+  it('take region screenshot with "scroll" scrolling', () => {
+    region({scrollingMode: 'scroll'})
+  })
+  it('take region screenshot with "css" scrolling', () => {
+    region({scrollingMode: 'css'})
+  })
+
+  it('take full region screenshot with "scroll" scrolling', () => {
+    return fullRegion({scrollingMode: 'scroll'})
+  })
+  it('take full region screenshot with "css" scrolling', () => {
+    return fullRegion({scrollingMode: 'css'})
+  })
+
+  it('take element screenshot with "scroll" scrolling', () => {
+    return element({scrollingMode: 'scroll'})
+  })
+  it('take element screenshot with "css" scrolling', () => {
+    return element({scrollingMode: 'css'})
+  })
+
+  it('take full element screenshot with "scroll" scrolling', () => {
+    return fullElement({scrollingMode: 'scroll'})
+  })
+  it('take full element screenshot with "css" scrolling', () => {
+    return fullElement({scrollingMode: 'css'})
+  })
+
+  it('take region in frame screenshot with "scroll" scrolling', () => {
+    return regionInFrame({scrollingMode: 'scroll'})
+  })
+  it('take region in frame screenshot with "css" scrolling', () => {
+    return regionInFrame({scrollingMode: 'css'})
+  })
+
+  it('take full region in frame screenshot with "scroll" scrolling', () => {
+    return fullRegionInFrame({scrollingMode: 'scroll'})
+  })
+  it('take full region in frame screenshot with "css" scrolling', () => {
+    return fullRegionInFrame({scrollingMode: 'css'})
+  })
+
+  it('take element in frame screenshot with "scroll" scrolling', () => {
+    return elementInFrame({scrollingMode: 'scroll'})
+  })
+  it('take element in frame screenshot with "css" scrolling', () => {
+    return elementInFrame({scrollingMode: 'css'})
+  })
+
+  it('take full element in frame screenshot with "scroll" scrolling', () => {
+    return fullElementInFrame({scrollingMode: 'scroll'})
+  })
+  it('take full element in frame screenshot with "css" scrolling', () => {
+    return fullElementInFrame({scrollingMode: 'css'})
+  })
+
+  it('take frame in frame screenshot with "scroll" scrolling', () => {
+    return frameInFrame({scrollingMode: 'scroll'})
+  })
+  it('take frame in frame screenshot with "css" scrolling', () => {
+    return frameInFrame({scrollingMode: 'css'})
+  })
+
+  it('take full frame in frame screenshot with "scroll" scrolling', () => {
+    return fullFrameInFrame({scrollingMode: 'scroll'})
+  })
+  it('take full frame in frame screenshot with "css" scrolling', () => {
+    return fullFrameInFrame({scrollingMode: 'css'})
+  })
+
+  async function viewport(options) {
+    const screenshot = await screenshoter({logger, driver, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/page.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'viewport_failed'})
+      throw err
+    }
+  }
+  async function fullPage(options) {
+    const screenshot = await screenshoter({logger, driver, fully: true, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/page-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_page_failed'})
+      throw err
+    }
+  }
+  async function frame(options) {
+    const screenshot = await screenshoter({logger, driver, frames: [{reference: 'iframe[name="frame1"]'}], ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/frame.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'frame_failed'})
+      throw err
+    }
+  }
+  async function fullFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      fully: true,
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/frame-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_frame_failed'})
+      throw err
+    }
+  }
+  async function region(options) {
+    const region = {x: 30, y: 500, height: 100, width: 200}
+    const screenshot = await screenshoter({logger, driver, region, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/region.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'region_failed'})
+      throw err
+    }
+  }
+  async function fullRegion(options) {
+    const region = {x: 30, y: 500, height: 700, width: 200}
+    const screenshot = await screenshoter({logger, driver, region, fully: true, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/region-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_region_failed'})
+      throw err
+    }
+  }
+  async function element(options) {
+    const screenshot = await screenshoter({logger, driver, region: '#overflowing-div-image', ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/element.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'element_failed'})
+      throw err
+    }
+  }
+  async function fullElement(options) {
+    const screenshot = await screenshoter({logger, driver, region: '#overflowing-div-image', fully: true, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/element-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_element_failed'})
+      throw err
+    }
+  }
+  async function regionInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      region: {x: 10, y: 20, width: 110, height: 120},
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-region.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'region_in_frame_failed'})
+      throw err
+    }
+  }
+  async function fullRegionInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      region: {x: 10, y: 100, width: 1000, height: 120},
+      fully: true,
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-region-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_region_in_frame_failed'})
+      throw err
+    }
+  }
+  async function elementInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      region: '#inner-frame-div',
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-element.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'element_in_frame_failed'})
+      throw err
+    }
+  }
+  async function fullElementInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      region: '#inner-frame-div',
+      fully: true,
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-element-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_element_in_frame_failed'})
+      throw err
+    }
+  }
+  async function frameInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}, {reference: 'iframe[name="frame1-1"]'}],
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-frame.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'frame_in_frame_failed'})
+      throw err
+    }
+  }
+  async function fullFrameInFrame(options) {
+    const screenshot = await screenshoter({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}, {reference: 'iframe[name="frame1-1"]'}],
+      fully: true,
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage('./test/fixtures/web/inner-frame-fully.png').toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_frame_in_frame_failed'})
+      throw err
+    }
+  }
+})

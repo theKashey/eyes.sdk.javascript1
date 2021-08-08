@@ -52,7 +52,7 @@ runs:
         cd "packages/${{inputs.package}}"
         yarn install
         npm run deps --if-present
-        if [ "${{inputs.npm}}" = false ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
+        if [ "${{inputs.skip-npm}}" = "false" ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
         echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
 
         echo "::endgroup::"

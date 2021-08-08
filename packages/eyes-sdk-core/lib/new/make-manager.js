@@ -7,9 +7,7 @@ const makeCloseAllEyes = require('./close-all-eyes')
 function makeMakeManager(sdk) {
   return function makeManager({type, concurrency, legacy} = {}) {
     const runner =
-      type === 'vg'
-        ? new VisualGridRunner(legacy ? concurrency : {testConcurrency: concurrency})
-        : new ClassicRunner()
+      type === 'vg' ? new VisualGridRunner(legacy ? concurrency : {testConcurrency: concurrency}) : new ClassicRunner()
 
     return {
       openEyes: makeOpenEyes({sdk, runner}),

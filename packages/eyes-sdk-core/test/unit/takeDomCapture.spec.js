@@ -1,13 +1,13 @@
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
+const {Driver} = require('@applitools/driver')
 const Axios = require('axios')
-const {Logger} = require('../../index')
 const MockDriver = require('../utils/MockDriver')
-const {Driver} = require('../utils/FakeSDK')
+const spec = require('../utils/FakeSpecDriver')
 const takeDomCapture = require('../../lib/utils/takeDomCapture')
 
 describe('takeDomCapture', () => {
-  let logger = new Logger(false)
+  let logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let mock, driver
 
   function createDomCapture(domCapture) {
@@ -56,7 +56,7 @@ describe('takeDomCapture', () => {
         children: [{selector: 'frame2-2', frame: true, isCORS: true}],
       },
     ])
-    driver = new Driver(logger, mock)
+    driver = new Driver({logger, spec, driver: mock})
     await driver.init()
   })
 
@@ -77,9 +77,7 @@ describe('takeDomCapture', () => {
         this.domCapture = createDomCapture('dom capture')
       }
       const result =
-        this.poll <= 3
-          ? JSON.stringify({status: 'WIP'})
-          : JSON.stringify({status: 'SUCCESS', value: this.domCapture})
+        this.poll <= 3 ? JSON.stringify({status: 'WIP'}) : JSON.stringify({status: 'SUCCESS', value: this.domCapture})
       this.poll += 1
       return result
     })
@@ -93,9 +91,7 @@ describe('takeDomCapture', () => {
     mock.mockScript('dom-capture', function() {
       let value
       if (this.name === null) {
-        value = createDomCapture(
-          'main frame dom capture [@@@@@frame1@@@@@] [@@@@@frame2,frame2-2@@@@@]',
-        )
+        value = createDomCapture('main frame dom capture [@@@@@frame1@@@@@] [@@@@@frame2,frame2-2@@@@@]')
       } else if (this.name === 'frame1') {
         value = createDomCapture('frame1 dom capture [@@@@@frame1-1@@@@@]')
       } else if (this.name === 'frame1-1') {
@@ -147,9 +143,6 @@ describe('takeDomCapture', () => {
       return JSON.stringify({status: 'WIP'})
     })
 
-    assertRejects(
-      takeDomCapture(logger, driver.currentContext, {executionTimeout: 1000}),
-      'dom-capture Timed out',
-    )
+    assertRejects(takeDomCapture(logger, driver.currentContext, {executionTimeout: 1000}), 'dom-capture Timed out')
   })
 })

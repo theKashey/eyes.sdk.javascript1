@@ -21,14 +21,12 @@ async function takeDomSnapshot(logger, driver, options = {}) {
   ArgumentGuard.notNull(driver, 'driver')
   const {
     disableBrowserFetching: dontFetchResources,
-    chunkByteLength = Number(process.env.APPLITOOLS_SCRIPT_RESULT_MAX_BYTE_LENGTH) ||
-      DEFAULT_CHUNK_BYTE_LENGTH,
+    chunkByteLength = Number(process.env.APPLITOOLS_SCRIPT_RESULT_MAX_BYTE_LENGTH) || DEFAULT_CHUNK_BYTE_LENGTH,
     pollTimeout = POLL_TIMEOUT,
     executionTimeout = EXECUTION_TIMEOUT,
     showLogs,
     skipResources,
-    removeReverseProxyURLPrefixes = !!process.env
-      .APPLITOOLS_SCRIPT_REMOVE_REVERSE_PROXY_URL_PREFIXES,
+    removeReverseProxyURLPrefixes = !!process.env.APPLITOOLS_SCRIPT_REMOVE_REVERSE_PROXY_URL_PREFIXES,
     uniqueUrl = generateUniqueUrl,
   } = options
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
@@ -61,9 +59,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
 
   async function takeContextDomSnapshot(context) {
     logger.verbose(
-      `taking dom snapshot. ${
-        context._reference ? `context referece: ${JSON.stringify(context._reference)}` : ''
-      }`,
+      `taking dom snapshot. ${context._reference ? `context referece: ${JSON.stringify(context._reference)}` : ''}`,
     )
 
     const snapshot = await EyesUtils.executePollScript(logger, context, scripts, {
@@ -83,10 +79,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
         .then(context => context.focus())
         .catch(err => {
           const pathMap = selectorMap.map(({path}) => path.join('->')).join(' | ')
-          logger.verbose(
-            `could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`,
-            err,
-          )
+          logger.verbose(`could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`, err)
         })
       if (frameContext) {
         const frameSnapshot = await takeContextDomSnapshot(frameContext)

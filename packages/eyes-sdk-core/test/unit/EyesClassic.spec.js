@@ -4,7 +4,7 @@ const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
+const {EyesClassic} = require('../utils/FakeSDK')
 
 describe('EyesClassic', () => {
   let server, serverUrl, driver, eyes
@@ -21,18 +21,12 @@ describe('EyesClassic', () => {
     await server.close()
   })
 
-  describe('#open()', () => {
-    it('should throw IllegalState: Eyes not open', async () => {
-      await assertRejects(eyes.check('test', CheckSettings.window()), /IllegalState: Eyes not open/)
-    })
-  })
-
   describe('#close()', () => {
     it('should throw if an internal exception happened during close(false)', async () => {
       eyes._serverConnector.stopSession = () => Promise.reject('some error')
       eyes.setMatchTimeout(0)
       await eyes.open(driver, 'FakeApp', 'FakeTest')
-      await eyes.check(CheckSettings.window())
+      await eyes.check()
       await assertRejects(eyes.close(false), /^some error$/)
     })
   })
@@ -50,8 +44,7 @@ describe('EyesClassic', () => {
             networkTimestamp = Date.now()
           } else if (key === 'getScreenshot') {
             const screenshotTimestamp = Date.now()
-            duration =
-              screenshotTimestamp - checkTimestamp - (screenshotTimestamp - networkTimestamp)
+            duration = screenshotTimestamp - checkTimestamp - (screenshotTimestamp - networkTimestamp)
             throw thrownScreenshotDone
           }
           return Reflect.get(target, key, receiver)
@@ -61,13 +54,13 @@ describe('EyesClassic', () => {
     })
 
     afterEach(() => {
-      eyes.setWaitBeforeScreenshots(undefined)
+      eyes._configuration.setWaitBeforeScreenshots(undefined)
     })
 
     it('should wait default amount of time', async () => {
-      const delay = eyes.getWaitBeforeScreenshots()
+      const delay = eyes._configuration.getWaitBeforeScreenshots()
       try {
-        await eyes.check('wait', CheckSettings.window())
+        await eyes.check()
       } catch (caught) {
         if (caught === thrownScreenshotDone) {
           assert(duration >= delay && duration <= delay + 10)
@@ -80,8 +73,8 @@ describe('EyesClassic', () => {
     it('should wait specified amount of time', async () => {
       const delay = 500
       try {
-        eyes.setWaitBeforeScreenshots(delay)
-        await eyes.check('wait', CheckSettings.window())
+        eyes._configuration.setWaitBeforeScreenshots(delay)
+        await eyes.check()
       } catch (caught) {
         if (caught === thrownScreenshotDone) {
           assert(duration >= delay && duration <= delay + 10)
@@ -92,10 +85,10 @@ describe('EyesClassic', () => {
     })
 
     it('should wait default amount of time set null', async () => {
-      const delay = eyes.getWaitBeforeScreenshots()
+      const delay = eyes._configuration.getWaitBeforeScreenshots()
       try {
-        eyes.setWaitBeforeScreenshots(null)
-        await eyes.check('wait', CheckSettings.window())
+        eyes._configuration.setWaitBeforeScreenshots(null)
+        await eyes.check()
       } catch (caught) {
         if (caught === thrownScreenshotDone) {
           assert(duration >= delay && duration <= delay + 10)

@@ -1,8 +1,7 @@
-const assertRejects = require('assert-rejects')
+const assert = require('assert')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesFactory, CheckSettings} = require('../utils/FakeSDK')
-const {ElementNotFoundError} = require('../../index')
+const {EyesFactory} = require('../utils/FakeSDK')
 
 describe('Bad Selectors', () => {
   let server, serverUrl, driver, eyes
@@ -26,15 +25,15 @@ describe('Bad Selectors', () => {
 
   it('check region with bad selector', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    await assertRejects(
-      eyes.check('', CheckSettings.region('element that does not exist')),
-      ElementNotFoundError,
-    )
+    // eslint-disable-next-line
+    await assert.rejects(eyes.check({region: 'element that does not exist'}), error => {
+      return error.message === 'Element not found!'
+    })
   })
 
   it('test check region with bad ignore selector', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    await eyes.check('', CheckSettings.window().ignore('element that does not exist'))
+    await eyes.check('', {ignoreRegions: ['element that does not exist']})
     await eyes.close()
   })
 })

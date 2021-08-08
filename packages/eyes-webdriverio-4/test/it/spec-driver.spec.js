@@ -112,17 +112,6 @@ describe('spec driver', async () => {
         },
       })
     })
-  })
-
-  describe('onscreen desktop (@webdriver)', async () => {
-    before(async () => {
-      ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', headless: false})
-    })
-
-    after(async () => {
-      await destroyBrowser()
-    })
-
     it('getWindowSize()', async () => {
       await getWindowSize()
     })

@@ -42,10 +42,7 @@ const getSubRegionsWithFixedSize = (containerRegion, subRegionSize) => {
   }
 
   // If the requested size is greater or equal to the entire region size, we return a copy of the region.
-  if (
-    subRegionWidth === containerRegion.getWidth() &&
-    subRegionHeight === containerRegion.getHeight()
-  ) {
+  if (subRegionWidth === containerRegion.getWidth() && subRegionHeight === containerRegion.getHeight()) {
     subRegions.push(new Region(containerRegion))
     return subRegions
   }
@@ -164,7 +161,7 @@ class Region {
       })
     }
 
-    const {left, top, width, height, coordinatesType, error} = varArg1
+    const {left = varArg1.x, top = varArg1.y, width, height, coordinatesType, error} = varArg1
 
     if (error) {
       this._error = error
@@ -398,11 +395,7 @@ class Region {
    * @return {Region} - A new region which is a scaled version of the current region.
    */
   scale(scaleRatio) {
-    return new Region(
-      this.getLocation().scale(scaleRatio),
-      this.getSize().scale(scaleRatio),
-      this.getCoordinatesType(),
-    )
+    return new Region(this.getLocation().scale(scaleRatio), this.getSize().scale(scaleRatio), this.getCoordinatesType())
   }
 
   /**
@@ -469,10 +462,8 @@ class Region {
     const otherBottom = otherTop + other.getHeight()
 
     return (
-      ((this._left <= otherLeft && otherLeft <= right) ||
-        (otherLeft <= this._left && this._left <= otherRight)) &&
-      ((this._top <= otherTop && otherTop <= bottom) ||
-        (otherTop <= this._top && this._top <= otherBottom))
+      ((this._left <= otherLeft && otherLeft <= right) || (otherLeft <= this._left && this._left <= otherRight)) &&
+      ((this._top <= otherTop && otherTop <= bottom) || (otherTop <= this._top && this._top <= otherBottom))
     )
   }
 
@@ -537,7 +528,7 @@ class Region {
       top: this._top,
       width: this._width,
       height: this._height,
-      coordinatesType: this._coordinatesType,
+      // coordinatesType: this._coordinatesType,
     }
   }
 

@@ -2,7 +2,21 @@
 
 ## Unreleased
 
+
+## 1.1.1 - 2021/8/7
+
+- improve context and element location calculations
+- updated to @applitools/utils@1.2.2 (from 1.2.1)
+
+## 1.1.0 - 2021/8/4
+
+- add types support
 - add default implementation for element comparison
+- add native device automation support
+- updated to @applitools/types@1.0.5 (from 1.0.4)
+- updated to @applitools/snippets@2.1.4 (from 2.1.3)
+- updated to @applitools/types@1.0.6 (from 1.0.5)
+- updated to @applitools/utils@1.2.1 (from 1.2.0)
 
 ## 1.0.7 - 2021/6/8
 

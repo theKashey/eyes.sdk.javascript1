@@ -153,10 +153,7 @@ describe('GeneralUtils', () => {
     })
 
     it('should return ISO string for dates', () => {
-      assert.strictEqual(
-        GeneralUtils.stringify(new Date(1575117044000)),
-        '2019-11-30T12:30:44.000Z',
-      )
+      assert.strictEqual(GeneralUtils.stringify(new Date(1575117044000)), '2019-11-30T12:30:44.000Z')
     })
 
     it('should concat multiple arguments', () => {
@@ -164,10 +161,7 @@ describe('GeneralUtils', () => {
     })
 
     it('should stringify array of objects', () => {
-      assert.strictEqual(
-        GeneralUtils.stringify([{prop: 'bla'}, {prop: 'blo'}]),
-        '[{"prop":"bla"},{"prop":"blo"}]',
-      )
+      assert.strictEqual(GeneralUtils.stringify([{prop: 'bla'}, {prop: 'blo'}]), '[{"prop":"bla"},{"prop":"blo"}]')
     })
 
     it('should convert class to object', () => {

@@ -2,7 +2,6 @@ const {performance} = require('perf_hooks')
 
 const MS_IN_S = 1000
 const MS_IN_M = 60000
-const NS_IN_MS = 1000000
 
 const timeStorage = {}
 

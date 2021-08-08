@@ -11,14 +11,7 @@ exports.RectangleSize = require('../lib/geometry/RectangleSize')
 exports.Location = require('../lib/geometry/Location')
 
 exports.Region = require('../lib/geometry/Region')
-exports.CheckSettings = require('../lib/fluent/CheckSettings')
-exports.GetRegion = require('../lib/fluent/GetRegion')
-exports.GetFloatingRegion = require('../lib/fluent/GetFloatingRegion')
-exports.GetAccessibilityRegion = require('../lib/fluent/GetAccessibilityRegion')
 exports.AccessibilityRegionType = require('../lib/config/AccessibilityRegionType')
-exports.IgnoreRegionByRectangle = require('../lib/fluent/IgnoreRegionByRectangle')
-exports.FloatingRegionByRectangle = require('../lib/fluent/FloatingRegionByRectangle')
-exports.AccessibilityRegionByRectangle = require('../lib/fluent/AccessibilityRegionByRectangle')
 
 exports.RenderInfo = require('../lib/renderer/RenderInfo')
 exports.RenderingInfo = require('../lib/server/RenderingInfo')
@@ -29,7 +22,6 @@ exports.RenderStatusResults = require('../lib/renderer/RenderStatusResults')
 exports.RGridResource = require('../lib/renderer/RGridResource')
 exports.RGridDom = require('../lib/renderer/RGridDom')
 
-exports.NullRegionProvider = require('../lib/positioning/NullRegionProvider')
 exports.EyesBase = require('../lib/sdk/EyesBase')
 
 exports.getTunnelAgentFromProxy = require('../lib/server/getTunnelAgentFromProxy')
@@ -38,6 +30,8 @@ exports.BrowserType = require('../lib/config/BrowserType')
 exports.TypeUtils = require('../lib/utils/TypeUtils')
 exports.GeneralUtils = require('../lib/utils/GeneralUtils')
 exports.ConfigUtils = require('../lib/utils/ConfigUtils')
+
+exports.ImageMatchSettings = require('../lib/config/ImageMatchSettings')
 
 exports.RunnerStartedEvent = require('../lib/logging/RunnerStartedEvent')
 exports.MatchResult = require('../lib/match/MatchResult')

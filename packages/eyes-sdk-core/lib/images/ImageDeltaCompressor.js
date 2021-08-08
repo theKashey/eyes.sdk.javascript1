@@ -82,8 +82,7 @@ const compareAndCopyBlockChannelData = (
   // Actually comparing and copying the pixels
   let sourceByte, targetByte
   for (let h = 0; h < actualBlockHeight; h += 1) {
-    let offset =
-      (blockSize * blockRow + h) * stride + blockSize * blockColumn * pixelLength + channel
+    let offset = (blockSize * blockRow + h) * stride + blockSize * blockColumn * pixelLength + channel
     for (let w = 0; w < actualBlockWidth; w += 1) {
       sourceByte = sourcePixels[offset]
       targetByte = targetPixels[offset]
@@ -139,12 +138,8 @@ class ImageDeltaCompressor {
     const sourcePixels = rgbaToAbgrColors(sourceData.data, pixelLength)
 
     // Calculating how many block columns and rows we've got.
-    const blockColumnsCount = Math.trunc(
-      targetData.width / blockSize + (targetData.width % blockSize === 0 ? 0 : 1),
-    )
-    const blockRowsCount = Math.trunc(
-      targetData.height / blockSize + (targetData.height % blockSize === 0 ? 0 : 1),
-    )
+    const blockColumnsCount = Math.trunc(targetData.width / blockSize + (targetData.width % blockSize === 0 ? 0 : 1))
+    const blockRowsCount = Math.trunc(targetData.height / blockSize + (targetData.height % blockSize === 0 ? 0 : 1))
 
     // Writing the header
     const stream = new WritableBufferStream()

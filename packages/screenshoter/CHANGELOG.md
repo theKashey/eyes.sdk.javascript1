@@ -4,14 +4,25 @@
 ## Unreleased
 
 
+## 3.2.0 - 2021/8/7
+
+- change image processing order and improve general algorithm
+- updated to @applitools/utils@1.2.2 (from 1.2.1)
+
+## 3.1.0 - 2021/8/4
+
+- improve support of native devices
+- updated to @applitools/snippets@2.1.4 (from 2.1.3)
+- updated to @applitools/utils@1.2.1 (from 1.2.0)
+
 ## 3.0.8 - 2021/5/24
 
 - updated to @applitools/utils@1.2.0 (from 1.1.3)
 
 ## 3.0.7 - 2021/5/13
 
-fixed image cropping algorithm to not copy data into a heap
-optimized image rotation and image copping algorithms
+- fixed image cropping algorithm to not copy data into a heap
+- optimized image rotation and image copping algorithms
 
 ## 3.0.6 - 2021/5/11
 

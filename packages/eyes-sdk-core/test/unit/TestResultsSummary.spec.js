@@ -12,13 +12,7 @@ describe('TestResultsSummary', function() {
     const testResult4 = new TestResults({id: 'fake_04'})
     const testResult5 = new TestResults({id: 'fake_05'})
 
-    const testResults = new TestResultsSummary([
-      testResult1,
-      testResult2,
-      testResult3,
-      testResult4,
-      testResult5,
-    ])
+    const testResults = new TestResultsSummary([testResult1, testResult2, testResult3, testResult4, testResult5])
 
     let counter = 0
     for (const testResult of testResults) {

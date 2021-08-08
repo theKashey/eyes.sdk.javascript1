@@ -22,11 +22,6 @@ exports.ScreenOrientation = require('./lib/config/ScreenOrientation').ScreenOrie
 exports.SessionType = require('./lib/config/SessionType').SessionType
 exports.StitchMode = require('./lib/config/StitchMode').StitchMode
 
-// debug
-exports.DebugScreenshotsProvider = require('./lib/debug/DebugScreenshotsProvider').DebugScreenshotsProvider
-// exports.FileDebugScreenshotsProvider = require('./lib/debug/FileDebugScreenshotsProvider').FileDebugScreenshotsProvider; uses `fs` library
-exports.NullDebugScreenshotProvider = require('./lib/debug/NullDebugScreenshotProvider').NullDebugScreenshotProvider
-
 // errors
 exports.EyesError = require('./lib/errors/EyesError').EyesError
 
@@ -43,7 +38,6 @@ exports.SimplePropertyHandler = require('./lib/handler/SimplePropertyHandler').S
 
 // images
 exports.ImageDeltaCompressor = require('./lib/images/ImageDeltaCompressor').ImageDeltaCompressor
-exports.MutableImage = require('./lib/images/MutableImage').MutableImage
 
 // logging
 exports.ConsoleLogHandler = require('./lib/logging/ConsoleLogHandler').ConsoleLogHandler
@@ -53,18 +47,12 @@ exports.Logger = require('./lib/logging/Logger').Logger
 exports.LogHandler = require('./lib/logging/LogHandler').LogHandler
 exports.NullLogHandler = require('./lib/logging/NullLogHandler').NullLogHandler
 
-// useragent
-exports.BrowserNames = require('./lib/useragent/BrowserNames').BrowserNames
-exports.OSNames = require('./lib/useragent/OSNames').OSNames
-exports.UserAgent = require('./lib/useragent/UserAgent').UserAgent
-
 // utils
 exports.ArgumentGuard = require('./lib/utils/ArgumentGuard').ArgumentGuard
 // exports.ConfigUtils = require('./lib/utils/ConfigUtils').ConfigUtils;                  uses `fs` library
 exports.DateTimeUtils = require('./lib/utils/DateTimeUtils').DateTimeUtils
 // exports.FileUtils = require('./lib/utils/FileUtils').FileUtils;                        uses `fs` library
 exports.GeneralUtils = require('./lib/utils/GeneralUtils').GeneralUtils
-exports.ImageUtils = require('./lib/utils/ImageUtils').ImageUtils
 exports.PerformanceUtils = require('./lib/utils/PerformanceUtils').PerformanceUtils
 exports.StreamUtils = require('./lib/utils/StreamUtils')
 exports.TypeUtils = require('./lib/utils/TypeUtils').TypeUtils

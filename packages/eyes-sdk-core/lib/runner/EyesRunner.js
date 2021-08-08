@@ -36,9 +36,7 @@ class EyesRunner {
     if (this._getRenderingInfo) {
       return this._getRenderingInfo()
     } else {
-      throw new Error(
-        'Eyes runner could not get rendering info since attachEyes was not called before',
-      )
+      throw new Error('Eyes runner could not get rendering info since attachEyes was not called before')
     }
   }
 
@@ -69,9 +67,7 @@ class EyesRunner {
           eyes._closePromise.catch(err => {
             this._eyesInstances[0]
               .getLogger()
-              .verbose(
-                `Properly handling close error while await all close promises in getAllTestResults: ${err}`,
-              )
+              .verbose(`Properly handling close error while await all close promises in getAllTestResults: ${err}`)
           }),
         ),
       )

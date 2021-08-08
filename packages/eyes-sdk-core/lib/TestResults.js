@@ -64,13 +64,7 @@ class ApiUrls {
    * @param {string} data.checkpointImageThumbnail
    * @param {string} data.diffImage
    */
-  constructor({
-    baselineImage,
-    currentImage,
-    checkpointImage,
-    checkpointImageThumbnail,
-    diffImage,
-  } = {}) {
+  constructor({baselineImage, currentImage, checkpointImage, checkpointImageThumbnail, diffImage} = {}) {
     this._baselineImage = baselineImage
     this._currentImage = currentImage
     this._checkpointImage = checkpointImage
@@ -214,15 +208,7 @@ class StepInfo {
    * @param {ApiUrls|object} info.apiUrls
    * @param {string[]} [info.renderId]
    */
-  constructor({
-    name,
-    isDifferent,
-    hasBaselineImage,
-    hasCurrentImage,
-    appUrls,
-    apiUrls,
-    renderId,
-  } = {}) {
+  constructor({name, isDifferent, hasBaselineImage, hasCurrentImage, appUrls, apiUrls, renderId} = {}) {
     if (appUrls && !(appUrls instanceof AppUrls)) {
       appUrls = new AppUrls(appUrls)
     }
@@ -933,10 +919,7 @@ class TestResults {
    */
   toString() {
     const isNewTestStr = this._isNew ? 'new test' : 'existing test'
-    return `TestResults of ${isNewTestStr} ${GeneralUtils.toString(this, [
-      '_secretToken',
-      '_serverConnector',
-    ])}`
+    return `TestResults of ${isNewTestStr} ${GeneralUtils.toString(this, ['_secretToken', '_serverConnector'])}`
   }
 }
 

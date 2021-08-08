@@ -7,12 +7,12 @@
   resolved "https://registry.npmjs.org/@applitools/functional-commons/-/functional-commons-1.6.0.tgz#ea850c4f7832fcb6396b79b35faccac69f6482a9"
   integrity sha512-fwiF0CbeYHDEOTD/NKaFgaI8LvRcGYG2GaJJiRwcedKko16sQ8F3TK5wXfj2Ytjf+8gjwHwsEEX550z3yvDWxA==
 
-"@applitools/logger@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.1.tgz#7a6007cd6b029ad91aeeb173df96b7a04b56a590"
-  integrity sha512-nGQ7Ov4/R35yUPmOoxQEViAMtQFz6ep4dKdW1wytQp0+B4fu3G1Q1q+rQse81iLBcA9UcVpZk1rRCRqbO0mvlA==
+"@applitools/logger@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.3.tgz#f480734ae75e48c87364e8a0135eb7048c0d6faf"
+  integrity sha512-065XI94zCqxWLc7VmW0EeHuTNTAx9fS7B2t35Df9TMans7o1N2ZFqwijWwVU1I0YfduYJUndf15jx+kUiAwc/A==
   dependencies:
-    "@applitools/utils" "1.2.0"
+    "@applitools/utils" "1.2.2"
     chalk "3.0.0"
 
 "@applitools/sdk-coverage-tests@2.3.6":
@@ -66,15 +66,15 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/types@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.5.tgz#038e0036573e387c97de6b50fa87dd5dbfb5cbc6"
-  integrity sha512-8kUgOJvhyA747HkaGIOAiyV9ae/zeHpWyIG7Wvr6QfcyiEzM+bxuzSoQyuS+18s7UNjrffdri9SBr2IGHvGcQQ==
+"@applitools/types@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.6.tgz#f17390e9bd5679b70ffd03cb9538a08208d83d47"
+  integrity sha512-g0dC0+l8lPVsdblloVSX26rFTt6t3RAZnf5G0hZtjPDjT89oICtPytGRNmSqG7Sm1+DhywmEwtL+07ZzWE9uXw==
 
-"@applitools/utils@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.0.tgz#a79774ffdb894a73fbca5d24eba66ef17119a7c6"
-  integrity sha512-NzynRgRavbTns5M85DJXXaMY/57xBte3F/tnK5nr3DSBhKTQnkjXIFwryPU5bVwEcpoGEVF0T1Gyq37WnDe38Q==
+"@applitools/utils@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.2.tgz#ea59bdbbdaf7da8c97bc496c7e3876c0d025b6fe"
+  integrity sha512-SyHY41J+hkZR9gma/M8gjbJXLXeLoVS5DQVYd/RinzWAq62Yvg9eA97+8oHDl8s+6ELK6wMcs4yajjqCPdpF0A==
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.4"

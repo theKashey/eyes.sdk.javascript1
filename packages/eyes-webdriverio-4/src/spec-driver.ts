@@ -36,6 +36,7 @@ function transformSelector(selector: Selector): string {
 // #region UTILITY
 
 export function isDriver(browser: any): browser is Driver {
+  if (!browser) return false
   return Boolean(browser.getPrototype && browser.desiredCapabilities && browser.requestHandler)
 }
 export function isElement(element: any): element is Element {
@@ -48,6 +49,14 @@ export function isSelector(selector: any): selector is Selector {
   return (
     utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector']) || selector instanceof legacy.By
   )
+}
+export function transformDriver(browser: Driver): Driver {
+  return new Proxy(browser, {
+    get: (target, key) => {
+      if (key === 'then') return undefined
+      return Reflect.get(target, key)
+    },
+  })
 }
 export function transformElement(element: Element): Element {
   const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
@@ -63,7 +72,7 @@ export function isStaleElementError(error: any, selector: Selector): boolean {
     ? (errOrResult as any).seleniumStack && (errOrResult as any).seleniumStack.type === 'StaleElementReference'
     : errOrResult.value && errOrResult.selector && errOrResult.selector === selector
 }
-export function isEqualElements(_browser: Driver, element1: Element, element2: Element): boolean {
+export async function isEqualElements(_browser: Driver, element1: Element, element2: Element): Promise<boolean> {
   if (!element1 || !element2) return false
   const elementId1 = extractElementId(element1)
   const elementId2 = extractElementId(element2)
@@ -78,14 +87,17 @@ export async function executeScript(browser: Driver, script: ((arg: any) => any)
   const {value} = await browser.execute(script, arg)
   return value
 }
-export async function mainContext(browser: Driver): Promise<void> {
+export async function mainContext(browser: Driver): Promise<Driver> {
   await browser.frame(null)
+  return browser
 }
-export async function parentContext(browser: Driver): Promise<void> {
+export async function parentContext(browser: Driver): Promise<Driver> {
   await browser.frameParent()
+  return browser
 }
-export async function childContext(browser: Driver, element: Element): Promise<any> {
+export async function childContext(browser: Driver, element: Element): Promise<Driver> {
   await browser.frame(element)
+  return browser
 }
 export async function findElement(browser: Driver, selector: Selector): Promise<Element> {
   const {value} = await browser.element(transformSelector(selector))
@@ -93,13 +105,6 @@ export async function findElement(browser: Driver, selector: Selector): Promise<
 }
 export async function findElements(browser: Driver, selector: Selector): Promise<Element[]> {
   const {value} = await browser.elements(transformSelector(selector))
-  return value
-}
-export async function getElementRect(
-  browser: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {value} = await browser.elementIdRect(extractElementId(element))
   return value
 }
 export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {
@@ -110,25 +115,42 @@ export async function setWindowSize(browser: Driver, size: {width: number; heigh
   await browser.windowHandlePosition({x: 0, y: 0})
   await browser.windowHandleSize(size)
 }
-export async function getOrientation(browser: Driver): Promise<string> {
-  const orientation = ((await browser.getOrientation()) as unknown) as string
-  return orientation.toLowerCase()
-}
 export async function getDriverInfo(browser: Driver): Promise<any> {
-  return {
+  const capabilities = browser.desiredCapabilities as any
+
+  const info: any = {
     sessionId: (browser as any).requestHandler.sessionID || browser.sessionId,
     isMobile: browser.isMobile,
-    isNative: browser.isMobile && !browser.desiredCapabilities.browserName,
-    deviceName: browser.desiredCapabilities.deviceName,
+    isNative: browser.isMobile && !capabilities.browserName,
+    deviceName: capabilities.deviceName,
     platformName:
       (browser.isIOS && 'iOS') ||
       (browser.isAndroid && 'Android') ||
-      browser.desiredCapabilities.platformName ||
-      browser.desiredCapabilities.platform,
-    platformVersion: browser.desiredCapabilities.platformVersion,
-    browserName: browser.desiredCapabilities.browserName ?? (browser.desiredCapabilities as any).name,
-    browserVersion: browser.desiredCapabilities.browserVersion ?? browser.desiredCapabilities.version,
+      capabilities.platformName ||
+      capabilities.platform,
+    platformVersion: capabilities.platformVersion,
+    browserName: capabilities.browserName ?? capabilities.name,
+    browserVersion: capabilities.browserVersion ?? capabilities.version,
+    pixelRatio: capabilities.pixelRatio,
   }
+
+  if (info.isNative) {
+    const {pixelRatio, viewportRect}: any = utils.types.has(capabilities, ['viewportRect', 'pixelRatio'])
+      ? capabilities
+      : await browser.session().then(({value}) => value)
+
+    info.pixelRatio = pixelRatio
+    if (viewportRect) {
+      info.viewportRegion = {
+        x: viewportRect.left,
+        y: viewportRect.top,
+        width: viewportRect.width,
+        height: viewportRect.height,
+      }
+    }
+  }
+
+  return info
 }
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()
@@ -167,6 +189,31 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
 }
 
 // #endregion
+
+// #region MOBILE COMMANDS
+
+export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
+  const orientation = ((await browser.getOrientation()) as unknown) as string
+  return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function getElementRegion(
+  browser: Driver,
+  element: Element,
+): Promise<{x: number; y: number; width: number; height: number}> {
+  const {value} = await browser.elementIdRect(extractElementId(element))
+  return value
+}
+export async function getElementAttribute(browser: Driver, element: Element, attr: string): Promise<string> {
+  const result = await browser.elementIdAttribute(extractElementId(element), attr)
+  return result.value
+}
+export async function getElementText(browser: Driver, element: Element): Promise<string> {
+  const result = browser.elementIdText(extractElementId(element))
+  return result.value
+}
+export async function performAction(browser: Driver, steps: any[]): Promise<void> {
+  await browser.touchPerform(steps.map(({action, ...options}) => ({action, options})))
+}
 
 // #region TESTING
 

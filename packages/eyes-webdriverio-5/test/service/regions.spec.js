@@ -8,7 +8,7 @@ describe('EyesServiceTest', () => {
     browser.url('https://cooking.nytimes.com/see-our-features')
   })
 
-  it('checkWindow', () => {
+  it.skip('checkWindow', () => {
     browser.eyesCheck(
       'see our features',
       Target.window()

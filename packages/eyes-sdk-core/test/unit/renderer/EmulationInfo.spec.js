@@ -9,10 +9,7 @@ describe('EmulationInfo', () => {
     const emulationInfo = new EmulationInfo()
     assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationInfo, '_device'), true)
     assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationInfo, '_deviceName'), true)
-    assert.strictEqual(
-      Object.prototype.hasOwnProperty.call(emulationInfo, '_screenOrientation'),
-      true,
-    )
+    assert.strictEqual(Object.prototype.hasOwnProperty.call(emulationInfo, '_screenOrientation'), true)
   })
 
   it('constructor with arguments', () => {

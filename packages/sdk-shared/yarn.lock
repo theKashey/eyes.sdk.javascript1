@@ -58,12 +58,12 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/test-server@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.3.tgz#5dae54bddfaa510bad3cf7a927042d29ae91aed3"
-  integrity sha512-Gxxp1JyOVoiyBaafw9mVaTz7Kl+qOkc/g8wRj7YTuiuutFWCiff2dOPV8JER4KBw+EIZNMnT3QvHoPDs26t9fg==
+"@applitools/test-server@1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.4.tgz#e83b9687c996a88cf1927b90035d3a34d53b999f"
+  integrity sha512-0tfv06enMSnkXmTFcc6BRtEWSbbdjw55yHB81ZaqvgwqGdsLAvEYvkJbVS7JgTotW9yReitb6QK7dMaTQnBicA==
   dependencies:
-    "@applitools/utils" "1.2.0"
+    "@applitools/utils" "1.2.2"
     chalk "3.0.0"
     cookie-parser "1.4.5"
     cors "2.8.5"
@@ -71,18 +71,18 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.3.tgz#5ab233a087e5e6a4e356a22c9adcab23e959e03f"
-  integrity sha512-70V6g/jDqGGCxL5Eip2aydJbjZ3ULHQxNWhUSVDAuzyCZav5pR0hE03Cx/R2rvMoapXltScG4SOkXp+JmR7Haw==
+"@applitools/test-utils@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.5.tgz#a1246ba050d1bc55bb1c6c603aea86b5adb03486"
+  integrity sha512-qHOHbVc/TRbKs8WSokO6LPfrCe1nOz2IhZhcxlba1FEiFfTZmrZCygzci4vsec9jVxhT+se0Vjsz/+FpzVM81Q==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/utils@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.0.tgz#a79774ffdb894a73fbca5d24eba66ef17119a7c6"
-  integrity sha512-NzynRgRavbTns5M85DJXXaMY/57xBte3F/tnK5nr3DSBhKTQnkjXIFwryPU5bVwEcpoGEVF0T1Gyq37WnDe38Q==
+"@applitools/utils@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.2.tgz#ea59bdbbdaf7da8c97bc496c7e3876c0d025b6fe"
+  integrity sha512-SyHY41J+hkZR9gma/M8gjbJXLXeLoVS5DQVYd/RinzWAq62Yvg9eA97+8oHDl8s+6ELK6wMcs4yajjqCPdpF0A==
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.1"

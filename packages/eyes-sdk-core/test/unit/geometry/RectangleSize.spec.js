@@ -63,10 +63,6 @@ describe('RectangleSize', () => {
     const size = new RectangleSize({width, height})
     const actualSerialization = JSON.stringify(size)
 
-    assert.strictEqual(
-      expectedSerialization,
-      actualSerialization,
-      'RectangleSize serialization does not match!',
-    )
+    assert.strictEqual(expectedSerialization, actualSerialization, 'RectangleSize serialization does not match!')
   })
 })

@@ -77,29 +77,28 @@ describe('EyesFactory', function() {
       sendDom: false,
     })
 
-    assert.ok(eyes.getConfiguration() instanceof Configuration)
-    assert.strictEqual(eyes.getApiKey(), 'sameApiKey')
-    assert.strictEqual(eyes.getForceFullPageScreenshot(), true)
-    assert.strictEqual(eyes.getStitchMode(), StitchMode.SCROLL)
-    assert.strictEqual(eyes.getConfiguration().getBrowsersInfo().length, 2)
-    assert.deepStrictEqual(eyes.getConfiguration().getBrowsersInfo()[0], {
+    const configuration = eyes.getConfiguration()
+
+    assert.ok(configuration instanceof Configuration)
+    assert.strictEqual(configuration.getApiKey(), 'sameApiKey')
+    assert.strictEqual(configuration.getForceFullPageScreenshot(), true)
+    assert.strictEqual(configuration.getStitchMode(), StitchMode.SCROLL)
+    assert.strictEqual(configuration.getBrowsersInfo().length, 2)
+    assert.deepStrictEqual(configuration.getBrowsersInfo()[0], {
       width: 800,
       height: 600,
       name: 'firefox',
     })
-    assert.deepStrictEqual(eyes.getConfiguration().getBrowsersInfo()[1], {
+    assert.deepStrictEqual(configuration.getBrowsersInfo()[1], {
       deviceName: 'iPhone 4',
       screenOrientation: 'portrait',
     })
-    assert.deepStrictEqual(eyes.getConfiguration().getViewportSize(), new RectangleSize(450, 500))
-    assert.deepStrictEqual(eyes.getProxy(), new ProxySettings('http://localhost:8888'))
-    assert.deepStrictEqual(eyes.getBatch(), new BatchInfo('Batch name', date, 'randomId'))
-    assert.strictEqual(eyes.getConfiguration().getProperties().length, 1)
-    assert.deepStrictEqual(
-      eyes.getConfiguration().getProperties()[0],
-      new PropertyData('prop', 'value'),
-    )
-    assert.strictEqual(eyes.getBaselineEnvName(), 'baselineEnvName')
-    assert.strictEqual(eyes.getSendDom(), false)
+    assert.deepStrictEqual(configuration.getViewportSize(), new RectangleSize(450, 500))
+    assert.deepStrictEqual(configuration.getProxy(), new ProxySettings('http://localhost:8888'))
+    assert.deepStrictEqual(configuration.getBatch(), new BatchInfo('Batch name', date, 'randomId'))
+    assert.strictEqual(configuration.getProperties().length, 1)
+    assert.deepStrictEqual(configuration.getProperties()[0], new PropertyData('prop', 'value'))
+    assert.strictEqual(configuration.getBaselineEnvName(), 'baselineEnvName')
+    assert.strictEqual(configuration.getSendDom(), false)
   })
 })

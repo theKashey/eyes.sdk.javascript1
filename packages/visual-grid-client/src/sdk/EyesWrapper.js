@@ -1,5 +1,5 @@
 'use strict'
-const {EyesBase, NullRegionProvider, Location} = require('@applitools/eyes-sdk-core/shared')
+const {EyesBase, Location, ImageMatchSettings} = require('@applitools/eyes-sdk-core/shared')
 const {presult} = require('@applitools/functional-commons')
 const VERSION = require('../../package.json').version
 
@@ -166,13 +166,50 @@ class EyesWrapper extends EyesBase {
     closeAfterMatch,
     throwEx,
   }) {
-    const regionProvider = new NullRegionProvider()
     this.screenshotUrl = screenshotUrl
     this.domUrl = domUrl
     this.imageLocation = imageLocation || Location.ZERO
+    this.matchSettings = new ImageMatchSettings({
+      ...checkSettings,
+      matchLevel:
+        checkSettings.matchLevel || this._configuration.getDefaultMatchSettings().getMatchLevel(),
+      ignoreCaret:
+        checkSettings.ignoreCaret || this._configuration.getDefaultMatchSettings().getIgnoreCaret(),
+      useDom: checkSettings.useDom || this._configuration.getDefaultMatchSettings().getUseDom(),
+      enablePatterns:
+        checkSettings.enablePatterns ||
+        this._configuration.getDefaultMatchSettings().getEnablePatterns(),
+      ignoreDisplacements:
+        checkSettings.ignoreDisplacements ||
+        this._configuration.getDefaultMatchSettings().getIgnoreDisplacements(),
+      accessibilitySettings: this._configuration
+        .getDefaultMatchSettings()
+        .getAccessibilitySettings(),
+      exact: null,
+    })
     return closeAfterMatch
-      ? this.checkWindowAndCloseBase(regionProvider, tag, false, checkSettings, url, throwEx)
-      : this.checkWindowBase(regionProvider, tag, false, checkSettings, url)
+      ? this.checkWindowAndCloseBase({
+          name: tag,
+          url,
+          renderId: checkSettings.renderId,
+          variationGroupId: checkSettings.variationGroupId,
+          sendDom: checkSettings.sendDom,
+          retryTimeout: checkSettings.timeout,
+          closeAfterMatch,
+          throwEx,
+        })
+      : this.checkWindowBase({
+          name: tag,
+          url,
+          renderId: checkSettings.renderId,
+          variationGroupId: checkSettings.variationGroupId,
+          sendDom: checkSettings.sendDom,
+          retryTimeout: checkSettings.timeout,
+        })
+  }
+
+  getMatchSettings() {
+    return this.matchSettings
   }
 
   setProxy(proxy) {

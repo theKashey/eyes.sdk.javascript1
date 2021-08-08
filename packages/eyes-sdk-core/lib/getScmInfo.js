@@ -10,17 +10,13 @@ async function doGetScmInfo(branchName, parentBranchName, _opts) {
   let missingBranch = _missingBranchName(stderr)
   if (missingBranch) {
     const fetchBranchCmd = `git fetch origin ${missingBranch}:${missingBranch}`
-    ;[{stderr} = {}, {stdout} = {}] = await presult(
-      pexec(`${fetchBranchCmd} && ${commitTimeCmd}`, _opts),
-    )
+    ;[{stderr} = {}, {stdout} = {}] = await presult(pexec(`${fetchBranchCmd} && ${commitTimeCmd}`, _opts))
   }
 
   // missing current branch commits
   if (!stdout) {
     const fetchBranchCmd = 'git fetch origin --unshallow'
-    ;[{stderr} = {}, {stdout} = {}] = await presult(
-      pexec(`${fetchBranchCmd} && ${commitTimeCmd}`, _opts),
-    )
+    ;[{stderr} = {}, {stdout} = {}] = await presult(pexec(`${fetchBranchCmd} && ${commitTimeCmd}`, _opts))
   }
 
   if (stdout) {

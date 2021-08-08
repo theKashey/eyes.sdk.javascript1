@@ -6,15 +6,7 @@ const {URL} = require('url')
 const https = require('https')
 const axios = require('axios')
 const {ProxySettings, TypeUtils, GeneralUtils} = require('../../index')
-const {
-  presult,
-  userConfig,
-  pexec,
-  getProxyStr,
-  getServer,
-  configuration,
-  apiKey,
-} = require('./utils')
+const {presult, userConfig, pexec, getProxyStr, getServer, configuration, apiKey} = require('./utils')
 const {configAxiosProxy} = require('../server/requestHelpers')
 require('@applitools/isomorphic-fetch')
 
@@ -65,12 +57,7 @@ const Eyes = {
       if (TypeUtils.isString(proxy)) {
         proxySettings = new ProxySettings(proxy)
       } else {
-        proxySettings = new ProxySettings(
-          proxy.url,
-          proxy.username,
-          proxy.password,
-          proxy.isHttpOnly,
-        )
+        proxySettings = new ProxySettings(proxy.url, proxy.username, proxy.password, proxy.isHttpOnly)
       }
       configAxiosProxy({axiosConfig: config, proxy: proxySettings, logger: {log: () => {}}})
     }

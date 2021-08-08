@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "types",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+
+    "target": "ES2017",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "stripInternal": false,
+    "experimentalDecorators": true,
+    "esModuleInterop": true
+  },
+  "exclude" : ["test/**/*.spec.ts", "types/**/*"],
+}

@@ -20,7 +20,7 @@ class AccessibilityMatchSettings {
    * @param {number} settings.height
    * @param {AccessibilityRegionType} [settings.type]
    */
-  constructor({left, top, width, height, type} = {}) {
+  constructor({left, top, width, height, type, accessibilityType} = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }
@@ -30,7 +30,7 @@ class AccessibilityMatchSettings {
     this._top = top
     this._width = width
     this._height = height
-    this._type = type
+    this._type = type || accessibilityType
   }
 
   /**

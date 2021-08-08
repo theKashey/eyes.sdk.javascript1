@@ -114,10 +114,7 @@ describe('ConfigUtils', () => {
   describe('toEnvVarName()', () => {
     it('works', () => {
       assert.strictEqual(ConfigUtils.toEnvVarName('someCamelCase'), 'SOME_CAMEL_CASE')
-      assert.strictEqual(
-        ConfigUtils.toEnvVarName('CapitalSomeCamelCase'),
-        'CAPITAL_SOME_CAMEL_CASE',
-      )
+      assert.strictEqual(ConfigUtils.toEnvVarName('CapitalSomeCamelCase'), 'CAPITAL_SOME_CAMEL_CASE')
     })
   })
 })

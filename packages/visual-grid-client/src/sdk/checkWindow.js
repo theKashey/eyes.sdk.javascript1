@@ -2,7 +2,6 @@
 
 const {presult} = require('@applitools/functional-commons')
 const createRenderRequest = require('./createRenderRequest')
-const createCheckSettings = require('./createCheckSettings')
 const isInvalidAccessibility = require('./isInvalidAccessibility')
 const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 const makeWaitForTestEnd = require('./makeWaitForTestEnd')
@@ -266,7 +265,7 @@ function makeCheckWindow({
 
       const regions = getMatchRegions({selectorRegions, imageLocation})
 
-      const checkSettings = createCheckSettings({
+      const checkSettings = {
         ...regions,
         useDom,
         enablePatterns,
@@ -274,7 +273,7 @@ function makeCheckWindow({
         renderId,
         matchLevel,
         variationGroupId,
-      })
+      }
 
       logger.verbose(
         `checkWindow waiting for openEyes. test=${testName}, stepCount #${currStepCount}`,

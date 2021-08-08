@@ -1,7 +1,7 @@
 const assert = require('assert')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const MockDriver = require('../utils/MockDriver')
-const {EyesClassic, CheckSettings} = require('../utils/FakeSDK')
+const {EyesClassic} = require('../utils/FakeSDK')
 
 describe('PreserveCheckSettingsFrameAfterCheck', () => {
   let server, serverUrl, driver, eyes
@@ -59,7 +59,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await driver.switchToFrame('frame1')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('window', CheckSettings.window())
+    await eyes.check()
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -72,7 +72,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await driver.switchToFrame('frame1')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('nested frame', CheckSettings.frame('frame1-2').frame('frame1-2-3'))
+    await eyes.check({frames: ['frame1-2', 'frame1-2-3']})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -87,7 +87,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await driver.switchToFrame('frame1-2-3')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('region', CheckSettings.region('element_3'))
+    await eyes.check({region: 'element_3'})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -104,7 +104,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     const element = await driver.findElement('element_3')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('region', CheckSettings.region(element))
+    await eyes.check({region: element})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -118,7 +118,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await driver.switchToFrame('frame1-2')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('nested frame fully', CheckSettings.frame('frame1-2-3').fully())
+    await eyes.check({frame: ['frame1-2-3'], fully: true})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -132,7 +132,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await driver.switchToFrame('frame1-cors')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('region in cors frame', CheckSettings.region('element_cors'))
+    await eyes.check({region: 'element_cors'})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)
@@ -148,7 +148,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     const element = await driver.findElement('element_cors')
 
     const frameElementBeforeCheck = await getDocumentElement()
-    await eyes.check('region in cors frame', CheckSettings.region(element))
+    await eyes.check({region: element})
     const frameElementAfterCheck = await getDocumentElement()
 
     assert.deepStrictEqual(frameElementAfterCheck, frameElementBeforeCheck)

@@ -106,11 +106,7 @@ describe('Region', () => {
 
   it('getLocation()', () => {
     const region = new Region(left, top, width, height)
-    assert.deepStrictEqual(
-      region.getLocation(),
-      new Location({x: left, y: top}),
-      'invalid location',
-    )
+    assert.deepStrictEqual(region.getLocation(), new Location({x: left, y: top}), 'invalid location')
 
     region.setLocation(new Location({x: 5, y: 6}))
     assert.deepStrictEqual(region.getLocation(), new Location(5, 6), 'invalid location')
@@ -121,11 +117,7 @@ describe('Region', () => {
     assert.deepStrictEqual(region.getSize(), new RectangleSize({width, height}), 'invalid location')
 
     region.setSize(new RectangleSize({width: 5, height: 6}))
-    assert.deepStrictEqual(
-      region.getSize(),
-      new RectangleSize({width: 5, height: 6}),
-      'invalid location',
-    )
+    assert.deepStrictEqual(region.getSize(), new RectangleSize({width: 5, height: 6}), 'invalid location')
   })
 
   it('equals()', () => {
@@ -153,10 +145,7 @@ describe('Region', () => {
       new Region(8, 6, 3, 5),
     ]
 
-    assert.deepStrictEqual(
-      region.getSubRegions(new RectangleSize({width: 7, height: 5})),
-      expectedSubRegions,
-    )
+    assert.deepStrictEqual(region.getSubRegions(new RectangleSize({width: 7, height: 5})), expectedSubRegions)
   })
 
   it('contains()', () => {
@@ -168,11 +157,7 @@ describe('Region', () => {
 
     assert.strictEqual(region.contains(containedRegion), true, 'region contains containedRegion')
     assert.strictEqual(region.contains(outsideRegion), false, "region doesn't contain region")
-    assert.strictEqual(
-      region.contains(containedLocation),
-      true,
-      'region contains containedLocation',
-    )
+    assert.strictEqual(region.contains(containedLocation), true, 'region contains containedLocation')
     assert.strictEqual(region.contains(outsideLocation), false, "region doesn't contain location")
   })
 
@@ -212,15 +197,11 @@ describe('Region', () => {
   })
 
   it('toJSON()', () => {
-    const expectedSerialization = `{"left":${left},"top":${top},"width":${width},"height":${height},"coordinatesType":"SCREENSHOT_AS_IS"}`
+    const expectedSerialization = `{"left":${left},"top":${top},"width":${width},"height":${height}}`
 
     const region = new Region(left, top, width, height)
     const actualSerialization = JSON.stringify(region)
 
-    assert.strictEqual(
-      expectedSerialization,
-      actualSerialization,
-      'Region serialization does not match!',
-    )
+    assert.strictEqual(expectedSerialization, actualSerialization, 'Region serialization does not match!')
   })
 })

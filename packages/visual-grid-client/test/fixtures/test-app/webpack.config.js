@@ -14,6 +14,11 @@ module.exports = {
     child_process: 'empty',
     module: 'empty',
   },
+  resolve: {
+    alias: {
+      perf_hooks: require.resolve('./src/builtins/perf_hooks.js'),
+    },
+  },
   module: {
     rules: [
       {

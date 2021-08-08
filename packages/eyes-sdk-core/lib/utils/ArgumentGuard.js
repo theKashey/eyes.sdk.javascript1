@@ -262,9 +262,7 @@ function isValidEnumValue(value, enumObject, strict = true) {
  */
 function hasProperties(object, properties, paramName) {
   if (!TypeUtils.has(object, properties)) {
-    throw new Error(
-      `IllegalArgument: ${paramName} should have the following properties: '${properties}'`,
-    )
+    throw new Error(`IllegalArgument: ${paramName} should have the following properties: '${properties}'`)
   }
 }
 

@@ -57,9 +57,7 @@ describe('closeBatch', () => {
     await closeBatch({batchIds, serverUrl, apiKey})
     batchIds.forEach((batchId, index) => {
       expect(scopes[index].basePath).to.equal(serverUrl)
-      expect(scopes[index].interceptors[0].path).to.equal(
-        `/api/sessions/batches/${batchId}/close/bypointerid`,
-      )
+      expect(scopes[index].interceptors[0].path).to.equal(`/api/sessions/batches/${batchId}/close/bypointerid`)
       expect(scopes[index].interceptors[0].queries).to.eql({apiKey})
     })
   })

@@ -52,9 +52,7 @@ const Utils = {
     let promiseResolved = false
     const hasAborted = () => promiseResolved
 
-    const promise = promiseOrPromiseFunc.then
-      ? promiseOrPromiseFunc
-      : promiseOrPromiseFunc(hasAborted)
+    const promise = promiseOrPromiseFunc.then ? promiseOrPromiseFunc : promiseOrPromiseFunc(hasAborted)
 
     let cancel
     const v = await Promise.race([

@@ -134,7 +134,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
   screenshoter:
-    needs: [setup, utils]
+    needs: [setup, utils, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -154,7 +154,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
   driver:
-    needs: [setup, utils, snippets]
+    needs: [setup, types, utils, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -235,7 +235,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).api.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).api.releaseVersion}}
   core:
-    needs: [setup, driver, screenshoter, snippets]
+    needs: [setup, types, utils, test-utils, logger, driver, screenshoter, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).core && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:

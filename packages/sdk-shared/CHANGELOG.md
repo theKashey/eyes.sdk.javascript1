@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+
+## 0.9.5 - 2021/8/8
+
+- updated to @applitools/test-server@1.0.4 (from 1.0.3)
+
+## 0.9.4 - 2021/8/4
+
 - add script for linking
+- updated to @applitools/test-utils@1.0.5 (from 1.0.3)
 
 ## 0.9.3 - 2021/5/25
 

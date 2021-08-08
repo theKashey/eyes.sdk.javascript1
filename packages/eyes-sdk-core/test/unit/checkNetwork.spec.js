@@ -91,9 +91,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n' +
-        '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' +
-        '\n',
+      'Eyes Check Network. Running with:\n' + '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' + '\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ OK ]  +0 \n',
@@ -125,9 +123,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n' +
-        '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' +
-        '\n',
+      'Eyes Check Network. Running with:\n' + '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' + '\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ X  ]  +0 eyes:Curl \n',

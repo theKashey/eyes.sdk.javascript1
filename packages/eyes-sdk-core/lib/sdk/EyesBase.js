@@ -14,21 +14,10 @@ const TypeUtils = require('../utils/TypeUtils')
 const ImageDeltaCompressor = require('../images/ImageDeltaCompressor')
 const SimplePropertyHandler = require('../handler/SimplePropertyHandler')
 const ReadOnlyPropertyHandler = require('../handler/ReadOnlyPropertyHandler')
-const FileDebugScreenshotsProvider = require('../debug/FileDebugScreenshotsProvider')
-const NullDebugScreenshotProvider = require('../debug/NullDebugScreenshotProvider')
 const SessionType = require('../config/SessionType')
 const Configuration = require('../config/Configuration')
 
-const AppOutputProvider = require('../capture/AppOutputProvider')
-const AppOutputWithScreenshot = require('../capture/AppOutputWithScreenshot')
 const AppOutput = require('../match/AppOutput')
-
-const FixedScaleProvider = require('../scaling/FixedScaleProvider')
-const NullScaleProvider = require('../scaling/NullScaleProvider')
-
-const NullCutProvider = require('../cropping/NullCutProvider')
-
-const InvalidPositionProvider = require('../positioning/InvalidPositionProvider')
 
 const TextTrigger = require('../triggers/TextTrigger')
 const MouseTrigger = require('../triggers/MouseTrigger')
@@ -45,8 +34,6 @@ const ValidationInfo = require('../events/ValidationInfo')
 const ValidationResult = require('../events/ValidationResult')
 const SessionEventHandlers = require('../events/SessionEventHandlers')
 
-const CheckSettings = require('../fluent/CheckSettings')
-
 const SessionStartInfo = require('../server/SessionStartInfo')
 const TestResultsStatus = require('../TestResultsStatus')
 const TestResults = require('../TestResults')
@@ -57,8 +44,6 @@ const AppEnvironment = require('../AppEnvironment')
 const MatchWindowTask = require('../MatchWindowTask')
 const MatchWindowAndCloseTask = require('../MatchWindowAndCloseTask')
 const getScmInfo = require('../getScmInfo')
-
-const USE_DEFAULT_TIMEOUT = -1
 
 /**
  * Core/Base class for Eyes - to allow code reuse for different SDKs (images, selenium, etc).
@@ -178,11 +163,7 @@ class EyesBase {
    * @param {Configuration|object} configuration
    */
   setConfiguration(configuration) {
-    if (
-      !configuration ||
-      !configuration.constructor ||
-      configuration.constructor.name !== 'Configuration'
-    ) {
+    if (!configuration || !configuration.constructor || configuration.constructor.name !== 'Configuration') {
       configuration = new Configuration(configuration)
     }
 
@@ -845,40 +826,13 @@ class EyesBase {
    */
   _initProviders(hardReset = false) {
     if (hardReset) {
-      this._scaleProviderHandler = undefined
-      this._cutProviderHandler = undefined
-      this._positionProviderHandler = undefined
       this._viewportSizeHandler = undefined
-      this._debugScreenshotsProvider = undefined
-    }
-
-    if (!this._scaleProviderHandler) {
-      /** @type {PropertyHandler<ScaleProvider>} */
-      this._scaleProviderHandler = new SimplePropertyHandler()
-      this._scaleProviderHandler.set(new NullScaleProvider())
-    }
-
-    if (!this._cutProviderHandler) {
-      /** @type {PropertyHandler<CutProvider>} */
-      this._cutProviderHandler = new SimplePropertyHandler()
-      this._cutProviderHandler.set(new NullCutProvider())
-    }
-
-    if (!this._positionProviderHandler) {
-      /** @type {PropertyHandler<PositionProvider>} */
-      this._positionProviderHandler = new SimplePropertyHandler()
-      this._positionProviderHandler.set(new InvalidPositionProvider())
     }
 
     if (!this._viewportSizeHandler) {
       /** @type {PropertyHandler<RectangleSize>} */
       this._viewportSizeHandler = new SimplePropertyHandler()
       this._viewportSizeHandler.set(null)
-    }
-
-    if (!this._debugScreenshotsProvider) {
-      /** @type {DebugScreenshotsProvider} */
-      this._debugScreenshotsProvider = new NullDebugScreenshotProvider()
     }
   }
 
@@ -901,8 +855,7 @@ class EyesBase {
     let scmSourceBranch = this._configuration.getBranchName()
     let scmTargetBranch = this._configuration.getParentBranchName()
 
-    const isLocalBranchTest =
-      scmSourceBranch && scmTargetBranch && scmSourceBranch !== scmTargetBranch
+    const isLocalBranchTest = scmSourceBranch && scmTargetBranch && scmSourceBranch !== scmTargetBranch
     const isCiBranchTest = batchId && !scmSourceBranch && !scmTargetBranch
 
     let err
@@ -918,9 +871,7 @@ class EyesBase {
 
     let mergeBaseTime
     if ((isLocalBranchTest || isCiBranchTest) && !err) {
-      ;[err, mergeBaseTime] = await GeneralUtils.presult(
-        this._getScmMergeBaseTime(scmSourceBranch, scmTargetBranch),
-      )
+      ;[err, mergeBaseTime] = await GeneralUtils.presult(this._getScmMergeBaseTime(scmSourceBranch, scmTargetBranch))
       this._logger.log('_getScmMergeBaseTime done,', `mergeBaseTime: ${mergeBaseTime} err: ${err}`)
     }
 
@@ -984,9 +935,7 @@ class EyesBase {
    * @return {string} - The full agent id composed of both the base agent id and the user given agent id.
    */
   getFullAgentId() {
-    return this.getAgentId()
-      ? `${this.getAgentId()} [${this.getBaseAgentId()}]`
-      : this.getBaseAgentId()
+    return this.getAgentId() ? `${this.getAgentId()} [${this.getBaseAgentId()}]` : this.getBaseAgentId()
   }
 
   /**
@@ -996,127 +945,12 @@ class EyesBase {
     return this._isOpen
   }
 
-  /**
-   * Manually set the the sizes to cut from an image before it's validated.
-   *
-   * @param {CutProvider} [cutProvider] - the provider doing the cut.
-   */
-  setCutProvider(cutProvider) {
-    if (cutProvider) {
-      this._cutProviderHandler = new ReadOnlyPropertyHandler(this._logger, cutProvider)
-    } else {
-      this._cutProviderHandler = new SimplePropertyHandler(new NullCutProvider())
-    }
-  }
-
-  /**
-   * Manually set the the sizes to cut from an image before it's validated.
-   *
-   * @param {CutProvider} [cutProvider] - the provider doing the cut.
-   */
-  setImageCut(cutProvider) {
-    this.setCutProvider(cutProvider)
-  }
-
-  /**
-   * @return {boolean}
-   */
-  getIsCutProviderExplicitlySet() {
-    return this._cutProviderHandler && !(this._cutProviderHandler.get() instanceof NullCutProvider)
-  }
-
-  /**
-   * Manually set the scale ratio for the images being validated.
-   *
-   * @param {number} [scaleRatio=1] - The scale ratio to use, or {@code null} to reset back to automatic scaling.
-   */
-  setScaleRatio(scaleRatio) {
-    if (scaleRatio) {
-      this._scaleProviderHandler = new ReadOnlyPropertyHandler(
-        this._logger,
-        new FixedScaleProvider(scaleRatio),
-      )
-    } else {
-      this._scaleProviderHandler = new SimplePropertyHandler(new NullScaleProvider())
-    }
-  }
-
-  /**
-   * @return {number} - The ratio used to scale the images being validated.
-   */
-  getScaleRatio() {
-    return this._scaleProviderHandler.get().getScaleRatio()
-  }
-
   setRender(_value) {
     GeneralUtils.deprecationWarning({deprecatedThing: 'setRender', isDead: true})
   }
 
   getRender() {
     GeneralUtils.deprecationWarning({deprecatedThing: 'getRender', isDead: true})
-  }
-
-  /**
-   * @param {boolean} saveDebugScreenshots - If true, will save all screenshots to local directory.
-   */
-  setSaveDebugScreenshots(saveDebugScreenshots) {
-    const prev = this._debugScreenshotsProvider
-    if (saveDebugScreenshots) {
-      this._debugScreenshotsProvider = new FileDebugScreenshotsProvider()
-    } else {
-      this._debugScreenshotsProvider = new NullDebugScreenshotProvider()
-    }
-    this._debugScreenshotsProvider.setPrefix(prev.getPrefix())
-    this._debugScreenshotsProvider.setPath(prev.getPath())
-  }
-
-  /**
-   * @return {boolean}
-   */
-  getSaveDebugScreenshots() {
-    return !(this._debugScreenshotsProvider instanceof NullDebugScreenshotProvider)
-  }
-
-  /**
-   * @param {string} pathToSave - Path where you want to save the debug screenshots.
-   */
-  setDebugScreenshotsPath(pathToSave) {
-    this._debugScreenshotsProvider.setPath(pathToSave)
-  }
-
-  /**
-   * @return {string} - The path where you want to save the debug screenshots.
-   */
-  getDebugScreenshotsPath() {
-    return this._debugScreenshotsProvider.getPath()
-  }
-
-  /**
-   * @param {string} prefix - The prefix for the screenshots' names.
-   */
-  setDebugScreenshotsPrefix(prefix) {
-    this._debugScreenshotsProvider.setPrefix(prefix)
-  }
-
-  /**
-   * @return {string} - The prefix for the screenshots' names.
-   */
-  getDebugScreenshotsPrefix() {
-    return this._debugScreenshotsProvider.getPrefix()
-  }
-
-  /**
-   * @param {DebugScreenshotsProvider} debugScreenshotsProvider
-   */
-  setDebugScreenshotsProvider(debugScreenshotsProvider) {
-    this._debugScreenshotsProvider = debugScreenshotsProvider
-  }
-
-  /**
-   * @return {DebugScreenshotsProvider}
-   */
-  getDebugScreenshotsProvider() {
-    return this._debugScreenshotsProvider
   }
 
   /**
@@ -1181,9 +1015,7 @@ class EyesBase {
 
       if (status === TestResultsStatus.Unresolved) {
         if (results.getIsNew()) {
-          this._logger.log(
-            `--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`,
-          )
+          this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
             throw new NewTestError(results, this._sessionStartInfo)
           }
@@ -1264,24 +1096,6 @@ class EyesBase {
   }
 
   /**
-   * @return {PositionProvider} - The currently set position provider.
-   */
-  getPositionProvider() {
-    return this._positionProviderHandler.get()
-  }
-
-  /**
-   * @param {PositionProvider} positionProvider - The position provider to be used.
-   */
-  setPositionProvider(positionProvider) {
-    if (positionProvider) {
-      this._positionProviderHandler = new ReadOnlyPropertyHandler(this._logger, positionProvider)
-    } else {
-      this._positionProviderHandler = new SimplePropertyHandler(new InvalidPositionProvider())
-    }
-  }
-
-  /**
    * Takes a snapshot of the application under test and matches it with the expected output.
    *
    * @protected
@@ -1293,42 +1107,32 @@ class EyesBase {
    * @return {Promise<MatchResult>} - The result of matching the output with the expected output.
    * @throws DiffsFoundError - Thrown if a mismatch is detected and immediate failure reports are enabled.
    */
-  async checkWindowBase(
-    regionProvider,
-    tag = '',
+  async checkWindowBase({
+    name = '',
+    url,
+    renderId,
+    variationGroupId,
+    sendDom,
+    retryTimeout = -1,
     ignoreMismatch = false,
-    checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT),
-    source,
     closeAfterMatch,
     throwEx,
-  ) {
+  } = {}) {
     if (closeAfterMatch) {
-      return this.checkWindowAndCloseBase(
-        regionProvider,
-        tag,
+      return this.checkWindowAndCloseBase({
+        name,
+        url,
+        renderId,
+        variationGroupId,
+        sendDom,
+        retryTimeout,
         ignoreMismatch,
-        checkSettings,
-        source,
         throwEx,
-      )
+      })
     }
-    if (this._configuration.getIsDisabled()) {
-      this._logger.verbose('Ignored')
-      const result = new MatchResult()
-      result.setAsExpected(true)
-      return result
-    }
-
-    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
-    ArgumentGuard.notNull(regionProvider, 'regionProvider')
 
     this._validationId += 1
-    const validationInfo = new ValidationInfo()
-    validationInfo.setValidationId(this._validationId)
-    validationInfo.setTag(tag)
-
-    // default result
-    const validationResult = new ValidationResult()
+    const validationInfo = new ValidationInfo(this._validationId, name)
 
     await GeneralUtils.sleep(this._configuration.getWaitBeforeScreenshots())
 
@@ -1336,38 +1140,39 @@ class EyesBase {
     await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo)
 
     await this._ensureRunningSession()
-    const outputProvider = new AppOutputProvider()
-    // A callback which will call getAppOutput
-    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
-      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
 
-    this._matchWindowTask = new MatchWindowTask(
-      this._logger,
-      this._serverConnector,
-      this._runningSession,
-      this._configuration.getMatchTimeout(),
-      this,
-      outputProvider,
-    )
+    this._matchWindowTask = new MatchWindowTask({
+      getMatchData: (...args) => this._getAppOutputWithScreenshot(...args),
+      serverConnector: this._serverConnector,
+      runningSession: this._runningSession,
+      retryTimeout: this._configuration.getMatchTimeout(),
+      logger: this._logger,
+    })
 
-    const matchResult = await EyesBase.matchWindow(
-      regionProvider,
-      tag,
+    this._logger.verbose('Calling match window...')
+
+    const matchResult = await this._matchWindowTask.match({
+      name,
+      url,
+      renderId,
+      variationGroupId,
       ignoreMismatch,
-      checkSettings,
-      this,
-      source,
-    )
+      sendDom,
+      retryTimeout,
+      shouldRunOnceOnTimeout: this._shouldMatchWindowRunOnceOnTimeout,
+      userInputs: this.getUserInputs(),
+    })
+
     await this.afterMatchWindow()
 
     this._logger.verbose('MatchWindow Done!')
-    validationResult.setAsExpected(matchResult.getAsExpected())
+    const validationResult = new ValidationResult(matchResult.getAsExpected())
 
     if (!ignoreMismatch) {
       this.clearUserInputs()
     }
 
-    this._validateResult(tag, matchResult)
+    this._validateResult(name, matchResult)
     this._logger.verbose('Done!')
     await this._sessionEventHandlers.validationEnded(
       this._autSessionId,
@@ -1388,54 +1193,54 @@ class EyesBase {
    * @param {CheckSettings} [checkSettings] - The settings to use.
    * @return {Promise<TestResults>} - The result of matching the output with the expected output.
    */
-  async checkWindowAndCloseBase(
-    regionProvider,
-    tag = '',
+  async checkWindowAndCloseBase({
+    name = '',
+    url,
+    renderId,
+    variationGroupId,
+    sendDom,
+    retryTimeout = -1,
     ignoreMismatch = false,
-    checkSettings = new CheckSettings(USE_DEFAULT_TIMEOUT),
-    source,
-    throwEx = true,
-  ) {
-    if (this._configuration.getIsDisabled()) {
-      this._logger.verbose('checkWindowAndCloseBase Ignored')
-      const result = new TestResults()
-      result.setStatus(TestResultsStatus.Passed)
-      return result
-    }
+    throwEx,
+  }) {
+    this._validationId += 1
+    const validationInfo = new ValidationInfo(this._validationId, name)
 
-    ArgumentGuard.isValidState(this._isOpen, 'Eyes not open')
-    ArgumentGuard.notNull(regionProvider, 'regionProvider')
+    await GeneralUtils.sleep(this._configuration.getWaitBeforeScreenshots())
 
     await this.beforeMatchWindow()
+    await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo)
 
     await this._ensureRunningSession()
-    const outputProvider = new AppOutputProvider()
-    // A callback which will call getAppOutput
-
-    outputProvider.getAppOutput = (region, lastScreenshot, checkSettingsLocal) =>
-      this._getAppOutputWithScreenshot(region, lastScreenshot, checkSettingsLocal)
 
     this._shouldMatchWindowRunOnceOnTimeout = true
-    this._matchWindowTask = new MatchWindowAndCloseTask(
-      this._logger,
-      this._serverConnector,
-      this._runningSession,
-      this._configuration.getMatchTimeout(),
-      this,
-      outputProvider,
-      this._configuration.getSaveNewTests(),
-      this._configuration.getSaveFailedTests(),
-    )
+    this._matchWindowTask = new MatchWindowAndCloseTask({
+      getMatchData: (...args) => this._getAppOutputWithScreenshot(...args),
+      serverConnector: this._serverConnector,
+      runningSession: this._runningSession,
+      retryTimeout: this._configuration.getMatchTimeout(),
+      updateBaselineIfNew: this._configuration.getSaveNewTests(),
+      updateBaselineIfDifferent: this._configuration.getSaveFailedTests(),
+      logger: this._logger,
+    })
 
-    const results = await EyesBase.matchWindow(
-      regionProvider,
-      tag,
+    this._logger.verbose('Calling match window...')
+
+    const results = await this._matchWindowTask.match({
+      name,
+      url,
+      renderId,
+      variationGroupId,
       ignoreMismatch,
-      checkSettings,
-      this,
-      source,
-    )
+      sendDom,
+      retryTimeout,
+      shouldRunOnceOnTimeout: this._shouldMatchWindowRunOnceOnTimeout,
+      userInputs: this.getUserInputs(),
+    })
+
     await this.afterMatchWindow()
+
+    this._logger.verbose('MatchWindow Done!')
 
     try {
       if (!ignoreMismatch) {
@@ -1447,7 +1252,7 @@ class EyesBase {
 
       const matchResult = new MatchResult()
       matchResult.setAsExpected(!results.getIsDifferent())
-      this._validateResult(tag, matchResult)
+      this._validateResult(name, matchResult)
 
       this._logger.verbose('Done!')
 
@@ -1470,9 +1275,7 @@ class EyesBase {
 
       if (status === TestResultsStatus.Unresolved) {
         if (results.getIsNew()) {
-          this._logger.log(
-            `--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`,
-          )
+          this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
             throw new NewTestError(results, this._sessionStartInfo)
           }
@@ -1526,14 +1329,6 @@ class EyesBase {
    * @protected
    * @return {Promise<?string>}
    */
-  async tryCaptureDom() {
-    return undefined
-  }
-
-  /**
-   * @protected
-   * @return {Promise<?string>}
-   */
   async getOrigin() {
     return undefined
   }
@@ -1568,62 +1363,9 @@ class EyesBase {
       tag,
     })
 
-    const result = await this._serverConnector.replaceWindow(
-      this._runningSession,
-      stepIndex,
-      replaceWindowData,
-    )
+    const result = await this._serverConnector.replaceWindow(this._runningSession, stepIndex, replaceWindowData)
     this._logger.verbose('EyesBase.replaceWindow done')
     return result
-  }
-
-  /**
-   * @private
-   * @param {RegionProvider} regionProvider
-   * @param {string} tag
-   * @param {boolean} ignoreMismatch
-   * @param {CheckSettings} checkSettings
-   * @param {EyesBase} self
-   * @param {string} [source]
-   * @return {Promise<MatchResult>}
-   */
-  static async matchWindow(regionProvider, tag, ignoreMismatch, checkSettings, self, source) {
-    let retryTimeout = -1
-
-    if (checkSettings) {
-      retryTimeout = checkSettings.getTimeout()
-    }
-
-    self._logger.verbose(
-      `CheckWindowBase(${regionProvider.constructor.name}, '${tag}', ${ignoreMismatch}, ${retryTimeout})`,
-    )
-
-    const region = await regionProvider.getRegion()
-    self._logger.verbose('Calling match window...')
-
-    return self._matchWindowTask.matchWindow(
-      self.getUserInputs(),
-      region,
-      tag,
-      self._shouldMatchWindowRunOnceOnTimeout,
-      ignoreMismatch,
-      checkSettings,
-      retryTimeout,
-      source,
-    )
-  }
-
-  /**
-   * @private
-   * @param {string} domJson
-   * @return {Promise<?string>}
-   */
-  async _tryPostDomSnapshot(domJson) {
-    if (!domJson) {
-      return null
-    }
-    const id = GeneralUtils.guid()
-    return this._serverConnector.postDomSnapshot(id, domJson)
   }
 
   /**
@@ -1663,13 +1405,7 @@ class EyesBase {
    * @param {skipStartingSession} [skipStartingSession=false] - If {@code true} skip starting the session.
    * @return {Promise}
    */
-  async openBase(
-    appName,
-    testName,
-    viewportSize,
-    sessionType = SessionType.SEQUENTIAL,
-    skipStartingSession = false,
-  ) {
+  async openBase(appName, testName, viewportSize, sessionType = SessionType.SEQUENTIAL, skipStartingSession = false) {
     this._logger.getLogHandler().open()
 
     if (viewportSize) this._configuration.setViewportSize(viewportSize)
@@ -1687,16 +1423,13 @@ class EyesBase {
       ArgumentGuard.notNull(testName, 'testName')
 
       this._logger.verbose(`Agent = ${this.getFullAgentId()}`)
-      this._logger.verbose(
-        `openBase('${appName}', '${testName}', '${this._configuration.getViewportSize()}')`,
-      )
+      this._logger.verbose(`openBase('${appName}', '${testName}', '${this._configuration.getViewportSize()}')`)
 
       if (!this._renderingInfoPromise) {
         this._renderingInfoPromise = this.getAndSaveRenderingInfo()
       }
 
-      if (!this._configuration.getIgnoreGitMergeBase())
-        this._scmMergeBaseTimePromise = this.handleScmMergeBaseTime()
+      if (!this._configuration.getIgnoreGitMergeBase()) this._scmMergeBaseTimePromise = this.handleScmMergeBaseTime()
 
       await this._sessionEventHandlers.testStarted(await this.getAUTSessionId())
 
@@ -1778,9 +1511,7 @@ class EyesBase {
     this._logger.verbose(`Eyes server URL is '${this._configuration.getServerUrl()}'`)
     this._logger.verbose(`Timeout = '${this._configuration.getConnectionTimeout()}'`)
     this._logger.verbose(`matchTimeout = '${this._configuration.getMatchTimeout()}'`)
-    this._logger.verbose(
-      `Default match settings = '${this._configuration.getDefaultMatchSettings()}'`,
-    )
+    this._logger.verbose(`Default match settings = '${this._configuration.getDefaultMatchSettings()}'`)
     this._logger.verbose(`FailureReports = '${this._failureReports}'`)
   }
 
@@ -1812,10 +1543,7 @@ class EyesBase {
     }
 
     this._logger.verbose(`Viewport size explicitly set to ${explicitViewportSize}`)
-    this._viewportSizeHandler = new ReadOnlyPropertyHandler(
-      this._logger,
-      new RectangleSize(explicitViewportSize),
-    )
+    this._viewportSizeHandler = new ReadOnlyPropertyHandler(this._logger, new RectangleSize(explicitViewportSize))
     this._configuration.setViewportSize(explicitViewportSize)
     this._isViewportSizeSet = true
   }
@@ -2007,8 +1735,7 @@ class EyesBase {
     await this._sessionEventHandlers.initEnded()
 
     let parentBranchBaselineSavedBefore
-    if (this._scmMergeBaseTimePromise)
-      parentBranchBaselineSavedBefore = await this._scmMergeBaseTimePromise
+    if (this._scmMergeBaseTimePromise) parentBranchBaselineSavedBefore = await this._scmMergeBaseTimePromise
 
     this._sessionStartInfo = new SessionStartInfo({
       agentId: this.getFullAgentId(),
@@ -2076,8 +1803,7 @@ class EyesBase {
   }
 
   getUserSetBatchId() {
-    const isGeneratedId =
-      this._configuration._batch && this._configuration._batch.getIsGeneratedId()
+    const isGeneratedId = this._configuration._batch && this._configuration._batch.getIsGeneratedId()
     if (!isGeneratedId) {
       return this.getBatchIdWithoutGenerating()
     }
@@ -2092,10 +1818,7 @@ class EyesBase {
     // TODO
     // we need the Configuration to check for default values like getEnvValue('BATCH_ID') instead of
     // it creating new Objects (with defaults) on demand, see Configuration#getBatch().
-    return (
-      (this._configuration._batch && this._configuration._batch.getId()) ||
-      GeneralUtils.getEnvValue('BATCH_ID')
-    )
+    return (this._configuration._batch && this._configuration._batch.getId()) || GeneralUtils.getEnvValue('BATCH_ID')
   }
 
   /**
@@ -2135,38 +1858,25 @@ class EyesBase {
    * @param {CheckSettings} checkSettings - The check settings object of the current test.
    * @return {Promise<AppOutputWithScreenshot>} - The updated app output and screenshot.
    */
-  async _getAppOutputWithScreenshot(region, lastScreenshot, checkSettings) {
+  async _getAppOutputWithScreenshot({lastScreenshot, sendDom}) {
     this._logger.verbose('getting screenshot...')
-    let screenshot, screenshotUrl, screenshotBuffer
 
     // Getting the screenshot (abstract function implemented by each SDK).
-    screenshot = await this.getScreenshot()
+    const screenshot = await this.getScreenshot()
     this._logger.verbose('Done getting screenshot!')
 
+    let screenshotUrl, domUrl
     if (screenshot) {
-      // Cropping by region if necessary
-      if (!region.isSizeEmpty()) {
-        this._imageLocation = screenshot
-          .getIntersectedRegion(region, CoordinatesType.SCREENSHOT_AS_IS)
-          .getLocation()
-        screenshot = await screenshot.getSubScreenshot(region, false)
-        await this._debugScreenshotsProvider.save(screenshot.getImage(), 'SUB_SCREENSHOT')
-      }
-
-      const targetBuffer = await screenshot.getImage().getImageBuffer()
-      screenshotBuffer = targetBuffer
+      const targetBuffer = await screenshot.image.toPng()
+      let screenshotBuffer = targetBuffer
 
       if (this._useImageDeltaCompression && lastScreenshot) {
         try {
           this._logger.verbose('Compressing screenshot...')
-          const sourceData = await lastScreenshot.getImage().getImageData()
-          const targetData = await screenshot.getImage().getImageData()
+          const sourceData = await lastScreenshot.image.toObject()
+          const targetData = await screenshot.image.toObject()
 
-          screenshotBuffer = ImageDeltaCompressor.compressByRawBlocks(
-            targetData,
-            targetBuffer,
-            sourceData,
-          )
+          screenshotBuffer = ImageDeltaCompressor.compressByRawBlocks(targetData, targetBuffer, sourceData)
           const savedSize = targetBuffer.length - screenshotBuffer.length
           if (savedSize === 0) {
             this._logger.verbose('Compression skipped, because of significant difference.')
@@ -2177,35 +1887,38 @@ class EyesBase {
           this._logger.log('Failed to compress screenshot!', err)
         }
       }
+
+      await this._renderingInfoPromise
+      screenshotUrl = await this._serverConnector.uploadScreenshot(GeneralUtils.guid(), screenshotBuffer)
+      this._logger.verbose('Done uploading screenshot!')
+
+      if (screenshot.dom) {
+        domUrl = await this._serverConnector.postDomSnapshot(GeneralUtils.guid(), screenshot.dom)
+        this._logger.verbose('Done uploading dom!')
+      }
     } else {
       this._logger.verbose('getting screenshot url...')
       screenshotUrl = await this.getScreenshotUrl()
       this._logger.verbose('Done getting screenshotUrl!')
+      this._logger.verbose('Getting dom url...')
+      domUrl = await this.getDomUrl()
+      this._logger.verbose('Done getting domUrl!')
     }
 
-    this._logger.verbose('Getting title, domUrl, imageLocation...')
+    this._logger.verbose(`screenshotUrl: ${screenshotUrl}`)
+    this._logger.verbose(`domUrl: ${domUrl}`)
+
     const title = await this.getTitle()
-    let domUrl = await this.getDomUrl()
     const imageLocation = await this.getImageLocation()
-    this._logger.verbose('Done getting title, domUrl, imageLocation!')
-
-    if (!domUrl && TypeUtils.getOrDefault(checkSettings.getSendDom(), await this.getSendDom())) {
-      const domJson = await this.tryCaptureDom()
-
-      domUrl = await this._tryPostDomSnapshot(domJson)
-      this._logger.verbose(`domUrl: ${domUrl}`)
-    }
 
     const appOutput = new AppOutput({
       title,
-      screenshot: screenshotBuffer,
       screenshotUrl,
       domUrl,
       imageLocation,
     })
-    const result = new AppOutputWithScreenshot(appOutput, screenshot)
     this._logger.verbose('Done!')
-    return result
+    return {screenshot, appOutput, matchSettings: this.getMatchSettings()}
   }
 
   /**

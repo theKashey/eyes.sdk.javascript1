@@ -7,16 +7,18 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
     element,
     moveTo,
     getInnerOffset,
-    getSize,
-    getClientRect,
+    getContentSize,
+    getClientRegion,
     getScrollOffset,
     getTranslateOffset,
     getShiftOffset,
     scrollTo,
     translateTo,
     shiftTo,
-    getState,
+    preserveState,
     restoreState,
+    hideScrollbars,
+    restoreScrollbars,
   }
 
   async function moveTo(offset, element = defaultElement) {
@@ -31,13 +33,13 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
     if (scrollingMode === 'mixed') return getShiftOffset(element)
   }
 
-  async function getSize() {
+  async function getContentSize() {
     const size = await element.getContentSize()
     return size
   }
 
-  async function getClientRect() {
-    const region = await element.getClientRect()
+  async function getClientRegion() {
+    const region = await element.getClientRegion()
     // const location = await element.context.getLocationInPage()
     return region
   }
@@ -78,6 +80,7 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
 
   async function scrollTo(offset, element = defaultElement) {
     try {
+      // offset = {x: Math.max(offset.x, 0), y: Math.max(offset.y, 0)}
       const scrollOffset = await element.scrollTo(offset)
       return scrollOffset
     } catch (err) {
@@ -89,6 +92,7 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
 
   async function translateTo(offset, element = defaultElement) {
     try {
+      // offset = {x: Math.max(offset.x, 0), y: Math.max(offset.y, 0)}
       await element.scrollTo({x: 0, y: 0})
       const translateOffset = await element.translateTo(offset)
       return translateOffset
@@ -101,6 +105,7 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
 
   async function shiftTo(offset, element = defaultElement) {
     try {
+      // offset = {x: Math.max(offset.x, 0), y: Math.max(offset.y, 0)}
       const scrollOffset = await element.scrollTo(offset)
       const remainingOffset = utils.geometry.offsetNegative(offset, scrollOffset)
       const translateOffset = await element.translateTo(remainingOffset)
@@ -113,11 +118,9 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
     }
   }
 
-  async function getState(element = defaultElement) {
+  async function preserveState(element = defaultElement) {
     try {
-      const scroll = await element.getScrollOffset()
-      const transforms = await element.getTransforms()
-      return {scroll, transforms}
+      return element.preserveState()
     } catch (err) {
       logger.verbose(`Failed to get current transforms!.`, err)
       return {}
@@ -126,12 +129,24 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
 
   async function restoreState(state, element = defaultElement) {
     try {
-      if (state.scroll) {
-        await element.scrollTo(state.scroll)
-      }
-      if (state.transforms) {
-        await element.setTransforms(state.transforms)
-      }
+      await element.restoreState(state)
+    } catch (err) {
+      logger.verbose(`Failed to restore state!.`, err)
+    }
+  }
+
+  async function hideScrollbars(element = defaultElement) {
+    try {
+      return element.hideScrollbars()
+    } catch (err) {
+      logger.verbose(`Failed to get current transforms!.`, err)
+      return {}
+    }
+  }
+
+  async function restoreScrollbars(state, element = defaultElement) {
+    try {
+      await element.restoreScrollbars(state)
     } catch (err) {
       logger.verbose(`Failed to restore state!.`, err)
     }

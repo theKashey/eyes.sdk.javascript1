@@ -54,7 +54,7 @@
     "test:coverage:custom": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe (custom)' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/custom --reporter spec,xunit:coverage-test-report.xml",
     "report": "coverage-tests report ./test/coverage/config.js --name 'eyes-testcafe'",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe' -f links='eyes-sdk-core eyes-api types utils sdk-shared visual-grid-client' -f linking-depth='1'",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe' -f links='eyes-sdk-core eyes-api types test-utils utils driver screenshoter sdk-shared visual-grid-client' -f linking-depth=2",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe'",
     "preversion": "yarn deps && bongo preversion && yarn build",
     "version": "bongo version",

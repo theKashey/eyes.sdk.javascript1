@@ -1,4 +1,4 @@
-import {Size, DriverInfo} from './data'
+import {Size, DriverInfo, Region} from './data'
 
 export type SpecSelector<TSelector> = TSelector | string | {type: string; selector: string}
 
@@ -11,7 +11,7 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   transformElement?(element: any): TElement
   extractContext?(element: TDriver | TContext): TContext
   extractSelector?(element: TElement): SpecSelector<TSelector>
-  isStaleElementError(error: any): boolean
+  isStaleElementError(error: any, selector?: SpecSelector<TSelector>): boolean
   isEqualElements?(context: TContext, element1: TElement, element2: TElement): Promise<boolean>
   mainContext(context: TContext): Promise<TContext>
   parentContext?(context: TContext): Promise<TContext>
@@ -19,15 +19,20 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   executeScript(context: TContext, script: ((arg?: any) => any) | string, arg?: any): Promise<any>
   findElement(context: TContext, selector: SpecSelector<TSelector>): Promise<TElement | null>
   findElements(context: TContext, selector: SpecSelector<TSelector>): Promise<TElement[]>
-  takeScreenshot(driver: TDriver): Promise<Buffer | string>
-  getDriverInfo?(driver: TDriver): Promise<DriverInfo>
-  getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape'>
-  getTitle(driver: TDriver): Promise<string>
-  getUrl(driver: TDriver): Promise<string>
-  getElementRect?(driver: TDriver, element: TElement): Promise<Size>
+  click?(context: TContext, element: TElement | SpecSelector<TSelector>): Promise<void>
   setWindowSize?(driver: TDriver, size: Size): Promise<void>
   getWindowSize?(driver: TDriver): Promise<Size>
   setViewportSize?(driver: TDriver, size: Size): Promise<void>
   getViewportSize?(driver: TDriver): Promise<Size>
+  getDriverInfo?(driver: TDriver): Promise<DriverInfo>
+  getTitle(driver: TDriver): Promise<string>
+  getUrl(driver: TDriver): Promise<string>
+  takeScreenshot(driver: TDriver): Promise<Buffer | string>
   visit?(driver: TDriver, url: string): Promise<void>
+
+  getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape'>
+  getElementRegion?(driver: TDriver, element: TElement): Promise<Region>
+  getElementAttribute?(driver: TDriver, element: TElement, attr: string): Promise<string>
+  getElementText?(driver: TDriver, element: TElement): Promise<string>
+  performAction?(driver: TDriver, steps: any[]): Promise<void>
 }

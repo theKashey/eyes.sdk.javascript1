@@ -70,9 +70,7 @@ class TestResultsFormatter {
     for (let i = 0; i < this._resultsList.length; i += 1) {
       /** @type {TestResults} */ const currentResult = this._resultsList[i]
 
-      const testTitle = `${currentResult.getName()} [${currentResult
-        .getHostDisplaySize()
-        .toString()}]`
+      const testTitle = `${currentResult.getName()} [${currentResult.getHostDisplaySize().toString()}]`
       let testResult = ''
 
       if (currentResult.getIsNew()) {
@@ -225,9 +223,7 @@ class TestResultsFormatter {
           stepsCounter += 1
           const currentStep = currentResult.getStepsInfo()[j]
           tapString += currentStep.getIsDifferent() ? NOT_OK : OK
-          tapString += ` ${stepsCounter} '${currentStep.getName()}', URL: ${currentStep
-            .getAppUrls()
-            .getStep()}\n`
+          tapString += ` ${stepsCounter} '${currentStep.getName()}', URL: ${currentStep.getAppUrls().getStep()}\n`
         }
       } else {
         tapString += '#\tNo steps exist for this test.\n'
@@ -248,9 +244,7 @@ class TestResultsFormatter {
     output += `\n<testsuite name="${suiteName}" tests="${testResults.length}" time="${totalTime}">`
     testResults.forEach(result => {
       const duration = result.getDuration()
-      output += `\n<testcase name="${result.getName()}"${
-        duration ? ' time="' + duration + '"' : ''
-      }>`
+      output += `\n<testcase name="${result.getName()}"${duration ? ' time="' + duration + '"' : ''}>`
       if (result.getIsDifferent()) {
         output += `\n<failure>`
         output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`

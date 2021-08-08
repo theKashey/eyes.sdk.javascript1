@@ -82,18 +82,14 @@ function configureAxios({axiosConfig, configuration, agentId, logger}) {
   if (!axiosConfig.isPollingRequest) {
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT_VERSION] = '2'
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT] = '202+location'
-    axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_DATE] = DateTimeUtils.toRfc1123DateTime(
-      axiosConfig.timestamp,
-    )
+    axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_DATE] = DateTimeUtils.toRfc1123DateTime(axiosConfig.timestamp)
   }
   // ---
 }
 
 async function delayRequest({axiosConfig, logger}) {
   if (axiosConfig.delay) {
-    logger.verbose(
-      `axios request interceptor - ${axiosConfig.name} request delayed for ${axiosConfig.delay} ms.`,
-    )
+    logger.verbose(`axios request interceptor - ${axiosConfig.name} request delayed for ${axiosConfig.delay} ms.`)
     await GeneralUtils.sleep(axiosConfig.delay)
   }
 }
@@ -223,12 +219,9 @@ async function handleRequestError({err, axios, logger}) {
 
   if (
     config.retry > 0 &&
-    ((response && HTTP_FAILED_CODES.includes(response.status)) ||
-      REQUEST_FAILED_CODES.includes(err.code))
+    ((response && HTTP_FAILED_CODES.includes(response.status)) || REQUEST_FAILED_CODES.includes(err.code))
   ) {
-    logger.verbose(
-      `axios error interceptor retrying request with delay ${config.delayBeforeRetry}...`,
-    )
+    logger.verbose(`axios error interceptor retrying request with delay ${config.delayBeforeRetry}...`)
 
     if (config.delayBeforeRetry) {
       config.delay = config.delayBeforeRetry

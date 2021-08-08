@@ -2,7 +2,7 @@ const {TypeUtils} = require('../../index')
 
 module.exports = {
   isDriver(driver) {
-    return driver.constructor.name === 'MockDriver'
+    return driver && driver.constructor.name === 'MockDriver'
   },
   isElement(element) {
     return TypeUtils.has(element, 'id')

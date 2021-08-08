@@ -90,11 +90,10 @@ describe('EyesVisualGrid', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     const err = await eyes.check().catch(err => err)
     expect(err.message).to.contain(
-      `Response is not a valid JSON string. length: ${
-        response.length
-      }, first 100 chars: "${response.substr(0, 100)}", last 100 chars: "${response.substr(
-        -100,
-      )}". error: SyntaxError: Unexpected number in JSON at position 1`,
+      `Response is not a valid JSON string. length: ${response.length}, first 100 chars: "${response.substr(
+        0,
+        100,
+      )}", last 100 chars: "${response.substr(-100)}". error: SyntaxError: Unexpected number in JSON at position 1`,
     )
   })
 

@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+## 1.0.3 - 2021/8/7
+
+- updated to @applitools/utils@1.2.2 (from 1.2.1)
+
+## 1.0.2 - 2021/8/4
+
+- updated to @applitools/utils@1.2.1 (from 1.2.0)
+
 ## 1.0.1 - 2021/5/23
 
 - updated to @applitools/utils@1.2.0 (from 1.1.3)
