@@ -73,11 +73,13 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   async equals(element: Element<TDriver, TContext, TElement, TSelector> | TElement): Promise<boolean> {
     if (this.isRef) return false
 
+    element = element instanceof Element ? element.target : element
     if (this._spec.isEqualElements) {
-      element = element instanceof Element ? element.target : element
       return this._spec.isEqualElements(this.context.target, this.target, element)
     } else {
-      return this.context.execute(snippets.isEqualElements, [this, element]).catch(() => false)
+      return this._spec
+        .executeScript(this.context.target, snippets.isEqualElements, [this.target, element])
+        .catch(() => false)
     }
   }
 

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix default method to compare elements
 
 ## 1.1.1 - 2021/8/7
 
