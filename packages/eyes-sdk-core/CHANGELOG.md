@@ -1,6 +1,9 @@
 # Change Log
 
 ## Unreleased
+
+## 12.22.3 - 2021/8/8
+
 - updated to @applitools/driver@1.1.2 (from 1.1.1)
 - updated to @applitools/screenshoter@3.2.1 (from 3.2.0)
 
