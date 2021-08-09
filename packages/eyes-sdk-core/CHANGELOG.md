@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.22.4 - 2021/8/9
+
 - fix ignoreMismatch issue
 
 ## 12.22.3 - 2021/8/8
