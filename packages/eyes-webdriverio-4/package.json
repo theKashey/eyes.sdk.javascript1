@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "@applitools/eyes-api": "1.0.11",
-    "@applitools/eyes-sdk-core": "12.22.2",
+    "@applitools/eyes-sdk-core": "12.22.4",
     "@applitools/utils": "1.2.2",
-    "@applitools/visual-grid-client": "15.8.16"
+    "@applitools/visual-grid-client": "15.8.18"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.1.3",
