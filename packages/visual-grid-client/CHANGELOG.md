@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- set retryTimeout to 0
 
 ## 15.8.17 - 2021/8/8
 

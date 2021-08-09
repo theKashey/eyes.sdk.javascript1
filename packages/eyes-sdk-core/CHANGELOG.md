@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fix ignoreMismatch issue
+
 ## 12.22.3 - 2021/8/8
 
 - updated to @applitools/driver@1.1.2 (from 1.1.1)
