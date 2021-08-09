@@ -250,11 +250,8 @@ function parseEnv(
   const env = {browser, device, headless, protocol, ...options}
   if (protocol === 'wd') {
     env.url = new URL(url || process.env.CVG_TESTS_WD_REMOTE || process.env.CVG_TESTS_REMOTE)
-    env.capabilities = {
-      browserName: browser,
-      ...env.capabilities,
-    }
-    if (app) env.capabilities.app = app
+    if (browser != null) env.capabilities = {...env.capabilities, browserName: browser}
+    else if (app) env.capabilities = {...env.capabilities, app, browserName: ''}
     const preset = DEVICES[device] || BROWSERS[browser]
     if (preset) {
       env.url = preset.url ? new URL(preset.url) : env.url

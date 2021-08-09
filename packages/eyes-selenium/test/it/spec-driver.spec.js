@@ -96,17 +96,6 @@ describe('spec driver', async () => {
         },
       })
     })
-  })
-
-  describe('onscreen desktop (@webdriver)', async () => {
-    before(async () => {
-      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', headless: false})
-    })
-
-    after(async () => {
-      await destroyDriver()
-    })
-
     it('getWindowSize()', async () => {
       await getWindowSize()
     })
@@ -149,9 +138,10 @@ describe('spec driver', async () => {
     })
   })
 
-  describe('mobile driver (@mobile)', async () => {
+  describe('mobile driver (@mobile @android)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL'})
+      driver = spec.transformDriver(driver)
     })
 
     after(async () => {
@@ -173,6 +163,40 @@ describe('spec driver', async () => {
           isNative: false,
           platformName: 'Android',
           platformVersion: '10',
+        },
+      })
+    })
+  })
+
+  describe('mobile driver (@mobile @native @ios)', async () => {
+    before(async () => {
+      ;[driver, destroyDriver] = await spec.build({
+        app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.5/app/IOSTestApp-1.5.zip',
+        device: 'iPhone 11 Pro',
+      })
+      driver = spec.transformDriver(driver)
+    })
+
+    after(async () => {
+      await destroyDriver()
+    })
+
+    it('getWindowSize()', async () => {
+      await getWindowSize({expected: {width: 375, height: 812}})
+    })
+    it('getOrientation()', async () => {
+      await getOrientation({expected: 'portrait'})
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          deviceName: 'iPhone 11 Pro',
+          isMobile: true,
+          isNative: true,
+          platformName: 'iOS',
+          platformVersion: '13.4',
+          pixelRatio: 3,
+          viewportRegion: {x: 0, y: 132, width: 1125, height: 2304},
         },
       })
     })
@@ -267,13 +291,16 @@ describe('spec driver', async () => {
       assert.ok(await spec.isEqualElements(driver, element, result[index]))
     }
   }
-  async function getWindowSize() {
+  async function getWindowSize({expected} = {}) {
     let size
-    if (driver.manage().window().getRect) {
+    const window = driver.manage().window()
+    if (expected) {
+      size = expected
+    } else if (window.getSize) {
+      size = await driver.manage().window().getSize()
+    } else if (window.getRect) {
       const rect = await driver.manage().window().getRect()
       size = {width: rect.width, height: rect.height}
-    } else {
-      size = await driver.manage().window().getSize()
     }
     const result = await spec.getWindowSize(driver)
     assert.deepStrictEqual(result, size)

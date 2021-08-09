@@ -46,10 +46,11 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
-  const {CommandName} = require('protractor')
-
-  CommandName.SWITCH_TO_PARENT_FRAME = 'switchToParentFrame'
-  driver.getExecutor().defineCommand(CommandName.SWITCH_TO_PARENT_FRAME, 'POST', '/session/:sessionId/frame/parent')
+  driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
+  driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
+  driver.getExecutor().defineCommand('getElementRect', 'GET', '/session/:sessionId/elements/:elementId/rect')
+  driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
+  driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
   return driver
 }
 export function transformElement(element: Element): Element {
@@ -80,9 +81,8 @@ export async function mainContext(driver: Driver): Promise<Driver> {
   return driver
 }
 export async function parentContext(driver: Driver): Promise<Driver> {
-  const {Command, CommandName} = require('protractor')
-
-  await driver.schedule(new Command(CommandName.SWITCH_TO_PARENT_FRAME), '')
+  const {Command} = require('protractor')
+  await driver.schedule(new Command('switchToParentFrame'), '')
   return driver
 }
 export async function childContext(driver: Driver, element: Element): Promise<Driver> {
@@ -100,14 +100,6 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(transformSelector(selector))
 }
-export async function getElementRect(
-  _driver: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {x, y} = await element.getLocation()
-  const {width, height} = await element.getSize()
-  return {x, y, width, height}
-}
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   const size = await driver.manage().window().getSize()
   return {width: size.width, height: size.height}
@@ -117,34 +109,45 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
   await window.setPosition(0, 0)
   await window.setSize(size.width, size.height)
 }
-export async function getOrientation(driver: Driver): Promise<'landscape' | 'portrait'> {
-  const capabilities = await driver.getCapabilities()
-  const orientation = capabilities.get('orientation') || capabilities.get('deviceOrientation')
-  return orientation.toLowerCase()
-}
 export async function getDriverInfo(driver: Driver): Promise<any> {
+  const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
   const desiredCapabilities = capabilities.get('desired') ?? {}
-  const session = await driver.getSession()
-  const sessionId = session.getId()
-  const deviceName = desiredCapabilities.deviceName ?? capabilities.get('deviceName')
   const platformName =
     capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
-  const platformVersion = capabilities.get('platformVersion')
-  const browserName = capabilities.get('browserName') ?? desiredCapabilities.browserName
-  const browserVersion = capabilities.get('browserVersion') ?? capabilities.get('version')
   const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
 
-  return {
-    sessionId,
+  const info: any = {
+    sessionId: session.getId(),
     isMobile,
-    isNative: isMobile && !browserName,
-    deviceName,
+    isNative: isMobile && !capabilities.get('browserName'),
+    deviceName: desiredCapabilities.deviceName ?? capabilities.get('deviceName'),
     platformName,
-    platformVersion,
-    browserName,
-    browserVersion,
+    platformVersion: capabilities.get('platformVersion'),
+    browserName: capabilities.get('browserName') ?? desiredCapabilities.browserName,
+    browserVersion: capabilities.get('browserVersion') ?? capabilities.get('version'),
   }
+
+  if (info.isNative) {
+    let details: any
+    if (capabilities.has('viewportRect') && capabilities.has('pixelRatio')) {
+      details = {viewportRect: capabilities.get('viewportRect'), pixelRatio: capabilities.get('pixelRatio')}
+    } else {
+      const {Command} = require('protractor')
+      details = await driver.schedule(new Command('getSessionDetails'), '')
+    }
+
+    info.pixelRatio = details.pixelRatio
+    if (details.viewportRect) {
+      info.viewportRegion = {
+        x: details.viewportRect.left,
+        y: details.viewportRect.top,
+        width: details.viewportRect.width,
+        height: details.viewportRect.height,
+      }
+    }
+  }
+  return info
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return driver.getTitle()
@@ -181,6 +184,36 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   const {until} = require('protractor')
   const element = await findElement(driver, selector)
   await driver.wait(until.elementIsVisible(element), timeout)
+}
+
+// #endregion
+
+// #region MOBILE COMMANDS
+
+export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
+  const {Command} = require('protractor')
+  const orientation: string = await driver.schedule(new Command('getOrientation'), '')
+  return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function getElementRegion(
+  driver: Driver,
+  element: Element,
+): Promise<{x: number; y: number; width: number; height: number}> {
+  const {Command} = require('protractor')
+  return driver.schedule(new Command('getElementRect').setParameters({elementId: await extractElementId(element)}), '')
+}
+export async function getElementAttribute(_driver: Driver, element: Element, attr: string): Promise<string> {
+  return element.getAttribute(attr)
+}
+export async function getElementText(_driver: Driver, element: Element): Promise<string> {
+  return element.getText()
+}
+export async function performAction(driver: Driver, steps: any[]): Promise<void> {
+  const {Command} = require('protractor')
+  await driver.schedule(
+    new Command('performTouch').setParameters({actions: steps.map(({action, ...options}) => ({action, options}))}),
+    '',
+  )
 }
 
 // #endregion

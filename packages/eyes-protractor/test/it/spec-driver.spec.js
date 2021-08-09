@@ -98,6 +98,15 @@ describe('spec driver', async () => {
         },
       })
     })
+    it('getWindowSize()', async () => {
+      await getWindowSize()
+    })
+    it('setWindowSize({width, height})', async () => {
+      await setWindowSize({
+        input: {width: 551, height: 552},
+        expected: {width: 551, height: 552},
+      })
+    })
   })
 
   describe('headless desktop (@angular)', async () => {
@@ -117,26 +126,6 @@ describe('spec driver', async () => {
     })
     it('findElements(by-ng)', async () => {
       await findElements({input: () => driver.by.model('name')})
-    })
-  })
-
-  describe('onscreen desktop (@webdriver)', async () => {
-    before(async () => {
-      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', headless: false})
-    })
-
-    after(async () => {
-      await destroyDriver()
-    })
-
-    it('getWindowSize()', async () => {
-      await getWindowSize()
-    })
-    it('setWindowSize({width, height})', async () => {
-      await setWindowSize({
-        input: {width: 551, height: 552},
-        expected: {width: 551, height: 552},
-      })
     })
   })
 
@@ -171,9 +160,10 @@ describe('spec driver', async () => {
     })
   })
 
-  describe('mobile driver (@mobile)', async () => {
+  describe('mobile driver (@mobile @android)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL'})
+      driver = spec.transformDriver(driver)
     })
 
     after(async () => {
@@ -195,6 +185,40 @@ describe('spec driver', async () => {
           isNative: false,
           platformName: 'Android',
           platformVersion: '10',
+        },
+      })
+    })
+  })
+
+  describe('mobile driver (@mobile @native @ios)', async () => {
+    before(async () => {
+      ;[driver, destroyDriver] = await spec.build({
+        app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.5/app/IOSTestApp-1.5.zip',
+        device: 'iPhone 11 Pro',
+      })
+      driver = spec.transformDriver(driver)
+    })
+
+    after(async () => {
+      await destroyDriver()
+    })
+
+    it('getWindowSize()', async () => {
+      await getWindowSize({expected: {width: 375, height: 812}})
+    })
+    it('getOrientation()', async () => {
+      await getOrientation({expected: 'portrait'})
+    })
+    it('getDriverInfo()', async () => {
+      await getDriverInfo({
+        expected: {
+          deviceName: 'iPhone 11 Pro',
+          isMobile: true,
+          isNative: true,
+          platformName: 'iOS',
+          platformVersion: '13.4',
+          pixelRatio: 3,
+          viewportRegion: {x: 0, y: 132, width: 1125, height: 2304},
         },
       })
     })
