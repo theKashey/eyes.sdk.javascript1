@@ -454,7 +454,7 @@ function argsToCheckConfig(args) {
     layoutBreakpoints: args.layoutBreakpoints,
     ignoreDisplacements: args.ignoreDisplacements,
     timeout: args.matchTimeout,
-    isFully: args.fully,
+    fully: args.fully,
     hooks: args.bcsHook ? {beforeCaptureScreenshot: args.bcsHook} : undefined,
   }
 }
