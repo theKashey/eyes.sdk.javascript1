@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+
+## 1.0.7 - 2021/8/9
+
+- fix `parseEnv`
 - fix `parseEnv`
 ## 1.0.6 - 2021/8/9
 
