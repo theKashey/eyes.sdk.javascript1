@@ -64,7 +64,7 @@ class MatchWindowTask {
           sendDom,
         })
         lastScreenshot = screenshot
-        result = await this._perform({...matchOptions, appOutput, matchSettings})
+        result = await this._perform({...matchOptions, ignoreMismatch: true, appOutput, matchSettings})
         if (result.isSuccess) break
         await utils.general.sleep(MatchWindowTask.MATCH_INTERVAL)
         timeSpent = Date.now() - startTime

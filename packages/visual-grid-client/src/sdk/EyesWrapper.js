@@ -194,7 +194,7 @@ class EyesWrapper extends EyesBase {
           renderId: checkSettings.renderId,
           variationGroupId: checkSettings.variationGroupId,
           sendDom: checkSettings.sendDom,
-          retryTimeout: checkSettings.timeout,
+          retryTimeout: 0,
           closeAfterMatch,
           throwEx,
         })
@@ -204,7 +204,7 @@ class EyesWrapper extends EyesBase {
           renderId: checkSettings.renderId,
           variationGroupId: checkSettings.variationGroupId,
           sendDom: checkSettings.sendDom,
-          retryTimeout: checkSettings.timeout,
+          retryTimeout: 0,
         })
   }
 
