@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix `parseEnv`
 ## 1.0.6 - 2021/8/9
 
 - add empty `browserName` if `app` is passed to `parseEnv`

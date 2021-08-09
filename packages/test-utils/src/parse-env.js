@@ -255,10 +255,10 @@ function parseEnv(
     const preset = DEVICES[device] || BROWSERS[browser]
     if (preset) {
       env.url = preset.url ? new URL(preset.url) : env.url
-      env.capabilities = Object.assign(
-        env.capabilities,
-        (legacy ? preset.capabilities.legacy : preset.capabilities.w3c) || preset.capabilities,
-      )
+      env.capabilities = {
+        ...env.capabilities,
+        ...((legacy ? preset.capabilities.legacy : preset.capabilities.w3c) || preset.capabilities),
+      }
       env.configurable = preset.type !== 'sauce'
       env.appium = Boolean(env.device)
       if (preset.type === 'sauce') {

@@ -5,7 +5,7 @@ const tags = [
   'webdriver',
   'mobile',
   'native',
-  // 'native-selectors',
+  'native-selectors',
   'chrome',
   'firefox',
   'ie',
