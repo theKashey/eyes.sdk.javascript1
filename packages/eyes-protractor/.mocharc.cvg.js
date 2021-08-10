@@ -4,8 +4,6 @@ const tags = [
   'headfull',
   'webdriver',
   'mobile',
-  'native',
-  'native-selectors',
   'chrome',
   'firefox',
   'ie',

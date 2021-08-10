@@ -12,12 +12,13 @@ const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLink
 function extractElementId(element: Element): Promise<string> {
   return element.getId() as Promise<string>
 }
-function transformSelector(selector: Selector): Protractor.Locator {
+function transformSelector(selector: Selector): Protractor.Locator | {using: string; value: string} {
   if (utils.types.isString(selector)) {
     return {css: selector}
   } else if (utils.types.has(selector, ['type', 'selector'])) {
     if (selector.type === 'css') return {css: selector.selector}
     else if (selector.type === 'xpath') return {xpath: selector.selector}
+    else return {using: selector.type, value: selector.selector}
   }
   return selector
 }
@@ -46,10 +47,7 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
-  driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
   driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
-  driver.getExecutor().defineCommand('getElementRect', 'GET', '/session/:sessionId/elements/:elementId/rect')
-  driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
   driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
   return driver
 }
@@ -117,7 +115,7 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
   const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
 
-  const info: any = {
+  return {
     sessionId: session.getId(),
     isMobile,
     isNative: isMobile && !capabilities.get('browserName'),
@@ -127,27 +125,6 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     browserName: capabilities.get('browserName') ?? desiredCapabilities.browserName,
     browserVersion: capabilities.get('browserVersion') ?? capabilities.get('version'),
   }
-
-  if (info.isNative) {
-    let details: any
-    if (capabilities.has('viewportRect') && capabilities.has('pixelRatio')) {
-      details = {viewportRect: capabilities.get('viewportRect'), pixelRatio: capabilities.get('pixelRatio')}
-    } else {
-      const {Command} = require('protractor')
-      details = await driver.schedule(new Command('getSessionDetails'), '')
-    }
-
-    info.pixelRatio = details.pixelRatio
-    if (details.viewportRect) {
-      info.viewportRegion = {
-        x: details.viewportRect.left,
-        y: details.viewportRect.top,
-        width: details.viewportRect.width,
-        height: details.viewportRect.height,
-      }
-    }
-  }
-  return info
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return driver.getTitle()
@@ -194,26 +171,6 @@ export async function getOrientation(driver: Driver): Promise<'portrait' | 'land
   const {Command} = require('protractor')
   const orientation: string = await driver.schedule(new Command('getOrientation'), '')
   return orientation.toLowerCase() as 'portrait' | 'landscape'
-}
-export async function getElementRegion(
-  driver: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {Command} = require('protractor')
-  return driver.schedule(new Command('getElementRect').setParameters({elementId: await extractElementId(element)}), '')
-}
-export async function getElementAttribute(_driver: Driver, element: Element, attr: string): Promise<string> {
-  return element.getAttribute(attr)
-}
-export async function getElementText(_driver: Driver, element: Element): Promise<string> {
-  return element.getText()
-}
-export async function performAction(driver: Driver, steps: any[]): Promise<void> {
-  const {Command} = require('protractor')
-  await driver.schedule(
-    new Command('performTouch').setParameters({actions: steps.map(({action, ...options}) => ({action, options}))}),
-    '',
-  )
 }
 
 // #endregion
