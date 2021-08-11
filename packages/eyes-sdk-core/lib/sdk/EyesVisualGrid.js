@@ -234,6 +234,7 @@ class EyesVisualGrid extends EyesCore {
         if (this._runner) {
           this._runner._allTestResult.push(...results)
         }
+        return results
       })
 
     return this._closePromise
