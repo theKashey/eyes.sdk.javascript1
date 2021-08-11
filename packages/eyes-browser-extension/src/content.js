@@ -24,8 +24,8 @@ const apiMessenger = makeMessenger({
   sendMessage: detail => window.dispatchEvent(new CustomEvent('applitools-message', {detail})),
 })
 const frameMessenger = makeMessenger({
-  onMessage: fn => window.addEventListener('applitools-frame-message', ({detail}) => fn(detail)),
-  sendMessage: detail => window.dispatchEvent(new CustomEvent('applitools-frame-message', {detail})),
+  onMessage: fn => window.addEventListener('message', ({data}) => data.isApplitools && fn(data)),
+  sendMessage: data => window.postMessage({...data, isApplitools: true}, '*'),
 })
 const backgroundMessenger = makeMessenger({
   onMessage: fn => browser.runtime.onMessage.addListener(message => fn(message)),

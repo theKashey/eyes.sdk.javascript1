@@ -1,7 +1,6 @@
 'use strict'
 
 const GeneralUtils = require('../utils/GeneralUtils')
-const TestResultsSummary = require('./TestResultsSummary')
 
 class EyesRunner {
   constructor() {
@@ -40,24 +39,11 @@ class EyesRunner {
     }
   }
 
-  /**
-   * @param {boolean} [throwEx=true]
-   * @return {Promise<TestResultsSummary>}
-   */
-  async getAllTestResults(throwEx = true) {
+  async getAllTestResults() {
     await this._closeAllBatches()
     await this._awaitAllClosePromises()
 
-    const summary = new TestResultsSummary(this._allTestResult)
-
-    if (throwEx === true) {
-      for (let result of summary.getAllResults()) {
-        if (result.getException()) {
-          throw result.getException()
-        }
-      }
-    }
-    return summary
+    return this._allTestResult
   }
 
   async _awaitAllClosePromises() {

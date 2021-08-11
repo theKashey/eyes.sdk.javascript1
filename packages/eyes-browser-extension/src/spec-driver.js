@@ -48,7 +48,7 @@ export async function childContext(context, element) {
     await browser.tabs.executeScript(context.tabId, {
       code: `refer.deref(${JSON.stringify(
         element,
-      )}).contentWindow.dispatchEvent(new CustomEvent('applitools-frame-message', {detail: {key: '${key}'}}))`,
+      )}).contentWindow.postMessage({key: '${key}', isApplitools: true}, '*')`,
       frameId: context.frameId,
     })
     setTimeout(() => reject(new Error('No such frame')), 5000)
@@ -152,6 +152,7 @@ export async function getWindowSize(driver) {
 
 export async function setWindowSize(driver, size) {
   await browser.windows.update(driver.windowId, {
+    state: 'normal',
     left: 0,
     top: 0,
     width: size.width,

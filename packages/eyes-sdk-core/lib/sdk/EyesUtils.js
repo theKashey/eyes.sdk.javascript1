@@ -11,7 +11,7 @@ async function executePollScript(logger, context, scripts, {executionTimeout = 5
     let chunks = ''
     while (!isExecutionTimedOut) {
       if (response.status === 'ERROR') {
-        throw new EyesError(`Error during execute poll script: '${response.error}'`, response.error)
+        throw new EyesError(`Error during execute poll script: '${response.error}'`, {error: response.error})
       } else if (response.status === 'SUCCESS') {
         return response.value
       } else if (response.status === 'SUCCESS_CHUNKED') {
@@ -24,7 +24,7 @@ async function executePollScript(logger, context, scripts, {executionTimeout = 5
       const {script, args = []} = scripts.poll
       response = deserialize(await context.execute(script, ...args))
     }
-    throw new EyesError('Poll script execution is timed out')
+    throw new EyesError('Poll script execution is timed out', {reason: 'timeout'})
   } finally {
     clearTimeout(executionTimer)
   }

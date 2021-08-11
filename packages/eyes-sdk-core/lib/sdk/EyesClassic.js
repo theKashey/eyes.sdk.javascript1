@@ -148,7 +148,7 @@ class EyesClassic extends EyesCore {
     return {...screenshot, dom}
   }
 
-  async close(throwEx = true) {
+  async close() {
     let isErrorCaught = false
     this._closePromise = super
       .close(true)
@@ -157,14 +157,16 @@ class EyesClassic extends EyesCore {
         return err
       })
       .then(results => {
-        if (this._runner) {
-          this._runner._allTestResult.push(results)
-        }
         if (isErrorCaught) {
-          if (throwEx || !results.getTestResults) throw results
-          else return results.getTestResults()
+          if (!results.info || !results.info.result) throw results
+          else return [results.info.result]
         }
-        return results
+        return [results]
+      })
+      .then(results => {
+        if (this._runner) {
+          this._runner._allTestResult.push(...results)
+        }
       })
 
     return this._closePromise

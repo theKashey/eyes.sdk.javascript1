@@ -9,7 +9,6 @@ const CoordinatesType = require('../geometry/CoordinatesType')
 
 const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
-const TypeUtils = require('../utils/TypeUtils')
 
 const ImageDeltaCompressor = require('../images/ImageDeltaCompressor')
 const SimplePropertyHandler = require('../handler/SimplePropertyHandler')
@@ -27,7 +26,6 @@ const MatchWindowData = require('../match/MatchWindowData')
 
 const DiffsFoundError = require('../errors/DiffsFoundError')
 const NewTestError = require('../errors/NewTestError')
-const OutOfBoundsError = require('../errors/OutOfBoundsError')
 const TestFailedError = require('../errors/TestFailedError')
 
 const ValidationInfo = require('../events/ValidationInfo')
@@ -1017,18 +1015,18 @@ class EyesBase {
         if (results.getIsNew()) {
           this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
-            throw new NewTestError(results, this._sessionStartInfo)
+            throw new NewTestError(results.toJSON())
           }
         } else {
           this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
           if (throwEx) {
-            throw new DiffsFoundError(results, this._sessionStartInfo)
+            throw new DiffsFoundError(results.toJSON())
           }
         }
       } else if (status === TestResultsStatus.Failed) {
         this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
         if (throwEx) {
-          throw new TestFailedError(results, this._sessionStartInfo)
+          throw new TestFailedError(results.toJSON())
         }
       } else {
         this._logger.log(`--- Test passed. See details at ${sessionResultsUrl}`)
@@ -1277,18 +1275,18 @@ class EyesBase {
         if (results.getIsNew()) {
           this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
-            throw new NewTestError(results, this._sessionStartInfo)
+            throw new NewTestError(results.toJSON())
           }
         } else {
           this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
           if (throwEx) {
-            throw new DiffsFoundError(results, this._sessionStartInfo)
+            throw new DiffsFoundError(results.toJSON())
           }
         }
       } else if (status === TestResultsStatus.Failed) {
         this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
         if (throwEx) {
-          throw new TestFailedError(results, this._sessionStartInfo)
+          throw new TestFailedError(results.toJSON())
         }
       } else {
         this._logger.log(`--- Test passed. See details at ${sessionResultsUrl}`)
@@ -1636,11 +1634,6 @@ class EyesBase {
         .getLastScreenshot()
         .getLocationInScreenshot(cursorInScreenshot, CoordinatesType.CONTEXT_RELATIVE)
     } catch (err) {
-      if (err instanceof OutOfBoundsError) {
-        this._logger.verbose(`"Ignoring ${action} (out of bounds)`)
-        return
-      }
-
       throw err
     }
 
@@ -1724,9 +1717,9 @@ class EyesBase {
 
     try {
       await this._ensureViewportSize()
-    } catch (err) {
+    } catch (error) {
       // Throw to skip execution of all consecutive "then" blocks.
-      throw new EyesError('Failed to set/get viewport size', err)
+      throw new EyesError('Failed to set/get viewport size', {reason: 'driver', error})
     }
 
     await this._sessionEventHandlers.initStarted()

@@ -1,6 +1,5 @@
 import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
-import {TestResultsStatusEnum} from './enums/TestResultsStatus'
 import {NewTestError} from './errors/NewTestError'
 import {DiffsFoundError} from './errors/DiffsFoundError'
 import {TestFailedError} from './errors/TestFailedError'
@@ -46,38 +45,28 @@ export abstract class EyesRunner {
 
   async getAllTestResults(throwErr = true): Promise<TestResultsSummaryData> {
     if (!this._manager) return new TestResultsSummaryData([])
-    const results = await this._manager.closeAllEyes()
     const [eyes] = this._eyes
-
-    const summary = new TestResultsSummaryData(
-      results.map(result => {
-        const results = new TestResultsData(result, options =>
-          this._spec.deleteTest({
-            ...options,
-            serverUrl: eyes.configuration.serverUrl,
-            apiKey: eyes.configuration.apiKey,
-            proxy: eyes.configuration.proxy,
-          }),
-        )
-
-        if (results.status === TestResultsStatusEnum.Unresolved) {
-          if (results.isNew) return new NewTestError(results)
-          else return new DiffsFoundError(results)
-        } else if (results.status === TestResultsStatusEnum.Failed) {
-          return new TestFailedError(results)
-        } else {
-          return results
-        }
-      }),
-    )
-
-    if (throwErr) {
-      for (const result of summary) {
-        if (result.exception) throw result.exception
+    const deleteTest = (options: any) =>
+      this._spec.deleteTest({
+        ...options,
+        serverUrl: eyes.configuration.serverUrl,
+        apiKey: eyes.configuration.apiKey,
+        proxy: eyes.configuration.proxy,
+      })
+    try {
+      const results = await this._manager.closeAllEyes({throwErr})
+      return new TestResultsSummaryData(results.map(result => new TestResultsData(result, deleteTest)))
+    } catch (err) {
+      if (!err.info?.result) throw err
+      const result = new TestResultsData(err.info.result, deleteTest)
+      if (err.reason === 'test failed') {
+        throw new TestFailedError(err.message, result)
+      } else if (err.reason === 'test different') {
+        throw new DiffsFoundError(err.message, result)
+      } else if (err.reason === 'test new') {
+        throw new NewTestError(err.message, result)
       }
     }
-
-    return summary
   }
 }
 
