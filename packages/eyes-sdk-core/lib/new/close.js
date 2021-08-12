@@ -6,11 +6,7 @@ function makeClose({eyes}) {
   return async function close({throwErr = false} = {}) {
     let results = await eyes.close()
 
-    if (!results) return []
-
-    return results.map(result => {
-      result = result.toJSON()
-
+    results.forEach(result => {
       if (throwErr) {
         if (result.status === 'Unresolved') {
           if (result.isNew) throw new NewTestError(result)
@@ -19,9 +15,9 @@ function makeClose({eyes}) {
           throw new TestFailedError(result)
         }
       }
-
-      return result
     })
+
+    return results
   }
 }
 

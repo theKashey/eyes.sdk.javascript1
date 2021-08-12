@@ -161,7 +161,7 @@ class EyesClassic extends EyesCore {
           if (results.info && results.info.testResult) return [results.info.testResult]
           else throw results
         }
-        return [results]
+        return [results.toJSON()]
       })
       .then(results => {
         if (this._runner) {
@@ -171,6 +171,10 @@ class EyesClassic extends EyesCore {
       })
 
     return this._closePromise
+  }
+
+  async abort() {
+    return [await super.abort()]
   }
 
   async getAppEnvironment() {
