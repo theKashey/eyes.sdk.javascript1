@@ -4,7 +4,7 @@ function makeAbort({eyes}) {
 
     if (!results) return []
 
-    return results.map(result => result.toJSON())
+    return results.map(result => (result ? result.toJSON() : null))
   }
 }
 
