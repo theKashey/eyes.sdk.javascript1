@@ -3,6 +3,9 @@
 ## Unreleased
 
 - upgrade to latest puppeteer
+- updated to @applitools/eyes-puppeteer@1.8.1 (from 1.8.0)
+- updated to @applitools/eyes-sdk-core@12.22.4 (from 12.22.3)
+- updated to @applitools/visual-grid-client@15.8.18 (from 15.8.17)
 
 ## 3.22.8 - 2021/8/8
 
