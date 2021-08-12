@@ -8,11 +8,17 @@ const logger = require('../util/testLogger');
 const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core');
 
 describe('getStoryData', () => {
+  const pageFunctions = {
+    waitForTimeout: async () => {},
+    waitForFunction: async () => {},
+    waitForSelector: async () => {},
+    waitForXPath: async () => {},
+  };
   it('works', async () => {
     const page = {
       goto: async () => {},
-      waitFor: async () => {},
       evaluate: func => Promise.resolve(func()),
+      ...pageFunctions,
     };
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
@@ -47,9 +53,7 @@ describe('getStoryData', () => {
     const waitBeforeScreenshot = 'someValue';
     const page = {
       goto: async () => {},
-      waitFor: async value => {
-        waitedValue = value;
-      },
+      ...pageFunctions,
       evaluate: func =>
         waitedValue === waitBeforeScreenshot
           ? Promise.resolve(func())
@@ -89,9 +93,7 @@ describe('getStoryData', () => {
     const waitBeforeScreenshot = 'someValue';
     const page = {
       goto: async () => {},
-      waitFor: async value => {
-        waitedValue = value;
-      },
+      ...pageFunctions,
       evaluate: func =>
         waitedValue === waitBeforeScreenshot
           ? Promise.resolve(func())
@@ -130,7 +132,6 @@ describe('getStoryData', () => {
   it('throws when getting a negative waitBeforeScreenshot', async () => {
     const page = {
       goto: async () => {},
-      waitFor: async () => {},
       evaluate: func => Promise.resolve(func()),
     };
     const valueBuffer = Buffer.from('value');
@@ -160,7 +161,6 @@ describe('getStoryData', () => {
   it('throws when getting a negative waitBeforeScreenshot', async () => {
     const page = {
       goto: async () => {},
-      waitFor: async () => {},
       evaluate: func => Promise.resolve(func()),
     };
     const valueBuffer = Buffer.from('value');
@@ -227,7 +227,6 @@ describe('getStoryData', () => {
         }
       },
       goto: async () => {},
-      waitFor: async () => {},
     };
     const getStoryData = makeGetStoryData({
       logger,
