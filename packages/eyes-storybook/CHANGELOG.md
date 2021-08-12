@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- upgrade to latest puppeteer
 
 ## 3.22.8 - 2021/8/8
 

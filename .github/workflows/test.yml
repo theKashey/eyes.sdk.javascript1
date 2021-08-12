@@ -30,6 +30,7 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
   DISPLAY: ':99'
+  STDOUT_LEVEL: 1
 jobs:
   setup:
     name: Setup

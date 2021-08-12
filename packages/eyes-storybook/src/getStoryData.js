@@ -6,6 +6,7 @@ const runRunBeforeScript = require('../dist/runRunBeforeScript');
 const getStoryTitle = require('./getStoryTitle');
 const {URL} = require('url');
 const runRunAfterScript = require('../dist/runRunAfterScript');
+const waitFor = require('./waitFor');
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
@@ -37,7 +38,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloa
     }
     if (wait) {
       logger.log(`waiting before screenshot of ${title} ${wait}`);
-      await page.waitFor(wait);
+      await waitFor(page, wait);
     }
 
     if (eyesParameters && eyesParameters.runBefore) {

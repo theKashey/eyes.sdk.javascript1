@@ -49,11 +49,11 @@
   ],
   "stderr": [
     "- Starting storybook server",
-    "\u001b[32m✔\u001b[39m Storybook was started",
+    "✔ Storybook was started",
     "- Reading stories",
-    "\u001b[32m✔\u001b[39m Reading stories",
+    "✔ Reading stories",
     "- Done 0 stories out of 20 ",
-    "\u001b[32m✔\u001b[39m Done 20 stories out of 20 ",
+    "✔ Done 20 stories out of 20 ",
     ""
   ],
   "undetermined version stdout": [
@@ -64,7 +64,7 @@
   ],
   "undetermined version stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when reading stories: could not determine storybook version in order to extract stories",
+    "✖ Error when reading stories: could not determine storybook version in order to extract stories",
     ""
   ],
   "navigation timeout stdout": [
@@ -75,7 +75,7 @@
   ],
   "navigation timeout stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when loading storybook. Navigation Timeout Exceeded: 10ms exceeded",
+    "✖ Error when loading storybook. Navigation timeout of 10 ms exceeded",
     ""
   ],
   "too slowly stdout": [
@@ -86,7 +86,7 @@
   ],
   "too slowly stderr": [
     "- Reading stories",
-    "\u001b[31m✖\u001b[39m Error when reading stories: storybook is loading for too long",
+    "✖ Error when reading stories: storybook is loading for too long",
     ""
   ],
   "multi browser stdout": [
@@ -118,11 +118,11 @@
   ],
   "multi browser stderr": [
     "- Starting storybook server",
-    "\u001b[32m✔\u001b[39m Storybook was started",
+    "✔ Storybook was started",
     "- Reading stories",
-    "\u001b[32m✔\u001b[39m Reading stories",
+    "✔ Reading stories",
     "- Done 0 stories out of 1 ",
-    "\u001b[32m✔\u001b[39m Done 1 stories out of 1 ",
+    "✔ Done 1 stories out of 1 ",
     ""
   ]
 }
