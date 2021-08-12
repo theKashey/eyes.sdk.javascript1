@@ -1,10 +1,11 @@
 # Changelog
 
 ## Unreleased
+
+- support richer core api for throwing errors
 - updated to @applitools/eyes-sdk-core@12.22.4 (from 12.21.3)
 - updated to @applitools/utils@1.2.2 (from 1.2.0)
 - updated to @applitools/visual-grid-client@15.8.18 (from 15.8.13)
-
 
 ## 0.1.8 - 2021/7/12
 

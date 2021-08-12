@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- use core implementation for error throwing in `Eyes#close` and `EyesRunner#getAllTestResults`
 
 ## 1.0.11 - 2021/8/7
 
