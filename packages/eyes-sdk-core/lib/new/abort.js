@@ -3,7 +3,6 @@ function makeAbort({eyes}) {
     let results = await eyes.abort()
 
     if (!results) return []
-    else if (!Array.isArray(results)) results = [results]
 
     return results.map(result => result.toJSON())
   }

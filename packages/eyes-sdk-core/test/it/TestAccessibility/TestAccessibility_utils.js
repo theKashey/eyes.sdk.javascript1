@@ -42,7 +42,7 @@ async function runTest(driver, useVisualGrid) {
   }
 
   await eyes.check(checkSettings)
-  const [testResults] = await eyes.close(false)
+  const [testResults] = await eyes.close()
 
   const sessionAccessibilityStatus = testResults.getAccessibilityStatus()
 
@@ -73,7 +73,7 @@ async function runTest(driver, useVisualGrid) {
 
   await eyes.open(driver, 'SessionStartInfo', `TestAccessibility_No_Accessibility${useVisualGrid ? '_VG' : ''}`)
   await eyes.check()
-  const [testResultsWithoutAccessibility] = await eyes.close(false)
+  const [testResultsWithoutAccessibility] = await eyes.close()
 
   assert.deepStrictEqual(testResultsWithoutAccessibility.getAccessibilityStatus(), undefined)
 

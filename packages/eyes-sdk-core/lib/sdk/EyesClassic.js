@@ -158,8 +158,8 @@ class EyesClassic extends EyesCore {
       })
       .then(results => {
         if (isErrorCaught) {
-          if (!results.info || !results.info.result) throw results
-          else return [results.info.result]
+          if (results.info && results.info.testResult) return [results.info.testResult]
+          else throw results
         }
         return [results]
       })

@@ -226,9 +226,9 @@ class EyesVisualGrid extends EyesCore {
         this._isOpen = false
         if (isErrorCaught) {
           const error = TypeUtils.isArray(results) ? results.find(result => result instanceof Error) : results
-          if (!error.info || !error.info.result) throw error
+          if (!error.info || !error.info.testResult) throw error
         }
-        return results.map(result => (result instanceof Error ? result.info.result : result))
+        return results.map(result => (result instanceof Error ? result.info.testResult : result))
       })
       .then(results => {
         if (this._runner) {

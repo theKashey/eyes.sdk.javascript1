@@ -4,10 +4,9 @@ const TestFailedError = require('../errors/TestFailedError')
 
 function makeClose({eyes}) {
   return async function close({throwErr = false} = {}) {
-    let results = await eyes.close(false)
+    let results = await eyes.close()
 
     if (!results) return []
-    else if (!Array.isArray(results)) results = [results]
 
     return results.map(result => {
       result = result.toJSON()
@@ -21,7 +20,7 @@ function makeClose({eyes}) {
         }
       }
 
-      return results
+      return result
     })
   }
 }

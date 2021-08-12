@@ -308,14 +308,14 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
       const [result] = await this._eyes.close({throwErr})
       return new TestResultsData(result, deleteTest)
     } catch (err) {
-      if (!err.info?.result) throw err
-      const result = new TestResultsData(err.info.result, deleteTest)
+      if (!err.info?.testResult) throw err
+      const testResult = new TestResultsData(err.info.testResult, deleteTest)
       if (err.reason === 'test failed') {
-        throw new TestFailedError(err.message, result)
+        throw new TestFailedError(err.message, testResult)
       } else if (err.reason === 'test different') {
-        throw new DiffsFoundError(err.message, result)
+        throw new DiffsFoundError(err.message, testResult)
       } else if (err.reason === 'test new') {
-        throw new NewTestError(err.message, result)
+        throw new NewTestError(err.message, testResult)
       }
     } finally {
       this._eyes = null
