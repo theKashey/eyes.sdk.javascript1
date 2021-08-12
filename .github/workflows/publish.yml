@@ -18,6 +18,7 @@ env:
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  STDOUT_LEVEL: 1
 jobs:
   setup:
     name: Setup
@@ -693,5 +694,3 @@ jobs:
         with:
           package: ${{fromJSON(needs.setup.outputs.packages).storybook.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
-    env:
-      STDOUT_LEVEL: 1
