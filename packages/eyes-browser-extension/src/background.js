@@ -72,8 +72,8 @@ messenger.command('EyesManager.openEyes', async ({manager, config, on}, sender) 
   })
   return refer.ref(eyes)
 })
-messenger.command('EyesManager.closeAllEyes', async ({manager}) => {
-  return refer.deref(manager).closeAllEyes()
+messenger.command('EyesManager.closeAllEyes', async ({manager, throwErr}) => {
+  return refer.deref(manager).closeAllEyes({throwErr})
 })
 
 messenger.command('Eyes.check', async ({eyes, settings, config}) => {
@@ -88,8 +88,8 @@ messenger.command('Eyes.extractTextRegions', async ({eyes, settings, config}) =>
 messenger.command('Eyes.extractText', async ({eyes, regions, config}) => {
   return refer.deref(eyes).extractText({regions, config})
 })
-messenger.command('Eyes.close', async ({eyes}) => {
-  return refer.deref(eyes).close()
+messenger.command('Eyes.close', async ({eyes, throwErr}) => {
+  return refer.deref(eyes).close({throwErr})
 })
 messenger.command('Eyes.abort', async ({eyes}) => {
   return refer.deref(eyes).abort()

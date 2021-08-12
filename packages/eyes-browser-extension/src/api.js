@@ -41,8 +41,8 @@ class EyesManager {
     const eyes = await messenger.request('EyesManager.openEyes', {manager: this._manager, ...options})
     return new Eyes({eyes})
   }
-  async closeAllEyes() {
-    return messenger.request('EyesManager.closeAllEyes', {manager: this._manager})
+  async closeAllEyes(options) {
+    return messenger.request('EyesManager.closeAllEyes', {manager: this._manager, ...options})
   }
 }
 
@@ -62,8 +62,8 @@ class Eyes {
   async extractTextRegions(options) {
     return messenger.request('Eyes.extractTextRegions', {eyes: this._eyes, ...options})
   }
-  async close() {
-    return messenger.request('Eyes.close', {eyes: this._eyes})
+  async close(options) {
+    return messenger.request('Eyes.close', {eyes: this._eyes, ...options})
   }
   async abort() {
     return messenger.request('Eyes.abort', {eyes: this._eyes})
