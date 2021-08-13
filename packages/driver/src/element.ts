@@ -299,7 +299,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return this.withRefresh(async () => {
       offset = {x: Math.round(offset.x), y: Math.round(offset.y)}
       if (this.driver.isWeb) {
-        return this.context.execute(snippets.scrollTo, [this, offset])
+        let actualOffset = await this.context.execute(snippets.scrollTo, [this, offset])
+        // iOS has an issue when scroll offset is read immediately after it is been set it will always return the exact value that was set
+        if (this.driver.isIOS) actualOffset = await this.getScrollOffset()
+        return actualOffset
       } else {
         const currentScrollOffset = await this.getScrollOffset()
         if (utils.geometry.equals(offset, currentScrollOffset)) return currentScrollOffset

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- add `statusBarHeight` getter to the driver
+- handle base64 screenshots with line breaks
+- handle iOS issue with returning actual scroll position after scrolling
 
 ## 1.1.2 - 2021/8/8
 

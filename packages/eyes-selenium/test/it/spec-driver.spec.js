@@ -171,8 +171,9 @@ describe('spec driver', async () => {
   describe('mobile driver (@mobile @native @ios)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({
-        app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.5/app/IOSTestApp-1.5.zip',
-        device: 'iPhone 11 Pro',
+        app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
+        device: 'Pixel 3a XL',
+        orientation: 'landscape',
       })
       driver = spec.transformDriver(driver)
     })
@@ -182,21 +183,22 @@ describe('spec driver', async () => {
     })
 
     it('getWindowSize()', async () => {
-      await getWindowSize({expected: {width: 375, height: 812}})
+      await getWindowSize({expected: {width: 2040, height: 1080}})
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'portrait'})
+      await getOrientation({expected: 'landscape'})
     })
     it('getDriverInfo()', async () => {
       await getDriverInfo({
         expected: {
-          deviceName: 'iPhone 11 Pro',
+          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
           isMobile: true,
           isNative: true,
-          platformName: 'iOS',
-          platformVersion: '13.4',
-          pixelRatio: 3,
-          viewportRegion: {x: 0, y: 132, width: 1125, height: 2304},
+          platformName: 'Android',
+          platformVersion: '10',
+          pixelRatio: 2.5,
+          statusBarHeight: 60,
+          navigationBarHeight: 1080,
         },
       })
     })

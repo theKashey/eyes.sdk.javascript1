@@ -12,6 +12,7 @@ async function screenshoter({
   scrollingMode,
   hideScrollbars,
   hideCaret,
+  withStatusBar,
   overlap,
   framed,
   wait,
@@ -24,6 +25,8 @@ async function screenshoter({
   const window = !region && (!frames || frames.length === 0)
   // framed screenshots could be taken only when screenshot of window/app fully was requested
   framed = framed && fully && window
+  // screenshots with status bar could be taken only when screenshot of app or framed app fully was requested
+  withStatusBar = withStatusBar && driver.isNative && window && (!fully || framed)
 
   const activeContext = driver.currentContext
   const context =
@@ -52,8 +55,8 @@ async function screenshoter({
     if (!window) await scrollIntoViewport({...target, logger})
 
     const screenshot = fully
-      ? await takeStitchedScreenshot({...target, overlap, framed, wait, stabilization, debug, logger})
-      : await takeViewportScreenshot({...target, wait, stabilization, debug, logger})
+      ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
+      : await takeViewportScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 
     if (hooks && hooks.afterScreenshot) {
       // imitate image-like state for the hook

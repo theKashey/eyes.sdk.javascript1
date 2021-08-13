@@ -1,6 +1,5 @@
 const webdriverio = require('webdriverio')
 const utils = require('@applitools/utils')
-const {Driver} = require('@applitools/driver')
 
 // #region HELPERS
 
@@ -130,19 +129,19 @@ async function getDriverInfo(browser) {
   }
 
   if (driverInfo.isNative) {
-    const {pixelRatio, viewportRect} =
-      browser.capabilities.viewportRect && browser.capabilities.pixelRatio
-        ? browser.capabilities
-        : await browser.getSession()
+    const capabilities = utils.types.has(browser.capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
+      ? browser.capabilities
+      : await browser.getSession()
 
-    driverInfo.pixelRatio = pixelRatio
-    if (viewportRect) {
-      driverInfo.viewportRegion = {
-        x: viewportRect.left,
-        y: viewportRect.top,
-        width: viewportRect.width,
-        height: viewportRect.height,
-      }
+    driverInfo.pixelRatio = capabilities.pixelRatio
+
+    try {
+      const {statusBar, navigationBar} = await browser.getSystemBars()
+      driverInfo.statusBarHeight = statusBar.visible ? statusBar.height : 0
+      driverInfo.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
+    } catch (err) {
+      driverInfo.statusBarHeight = capabilities.statBarHeight || (capabilities.viewportRect || {}).top || 0
+      driverInfo.navigationBarHeight = 0
     }
   }
 
@@ -168,33 +167,7 @@ async function getElementText(browser, element) {
 
 // #endregion
 
-const spec = {
-  isDriver,
-  isElement,
-  isSelector,
-  transformElement,
-  extractSelector,
-  isEqualElements,
-  executeScript,
-  mainContext,
-  parentContext,
-  childContext,
-  findElement,
-  findElements,
-  getElementRegion,
-  getElementAttribute,
-  getWindowSize,
-  setWindowSize,
-  getOrientation,
-  getDriverInfo,
-  takeScreenshot,
-  visit,
-  click,
-  performAction,
-  getElementText,
-}
-
-async function makeDriver({type = 'web'} = {}) {
+async function build({type = 'web'} = {}) {
   const capabilities = {
     web: {
       protocol: 'http',
@@ -262,13 +235,55 @@ async function makeDriver({type = 'web'} = {}) {
         accessKey: process.env.SAUCE_ACCESS_KEY,
       },
     },
+    'web-ios': {
+      protocol: 'https',
+      hostname: 'ondemand.saucelabs.com',
+      path: '/wd/hub',
+      port: 443,
+      logLevel: 'silent',
+      capabilities: {
+        name: 'iOS Web Screenshoter Test',
+        deviceName: 'iPhone 11 Pro Simulator',
+        browserName: 'safari',
+        platformName: 'iOS',
+        platformVersion: '14.5',
+        appiumVersion: '1.20.1',
+        automationName: 'XCUITest',
+        username: process.env.SAUCE_USERNAME,
+        accessKey: process.env.SAUCE_ACCESS_KEY,
+      },
+    },
   }
 
   const browser = await webdriverio.remote(capabilities[type])
 
-  const logger = {log: () => {}, warn: () => {}, error: () => {}}
-
-  return [new Driver({spec, logger, driver: browser}), () => browser.deleteSession()]
+  return [browser, () => browser.deleteSession()]
 }
 
-module.exports = makeDriver
+module.exports = {
+  isDriver,
+  isElement,
+  isSelector,
+  transformElement,
+  extractSelector,
+  isEqualElements,
+  executeScript,
+  mainContext,
+  parentContext,
+  childContext,
+  findElement,
+  findElements,
+  getElementRegion,
+  getElementAttribute,
+  getWindowSize,
+  setWindowSize,
+  getOrientation,
+  getDriverInfo,
+  takeScreenshot,
+  visit,
+  click,
+  performAction,
+  getElementText,
+
+  build,
+}

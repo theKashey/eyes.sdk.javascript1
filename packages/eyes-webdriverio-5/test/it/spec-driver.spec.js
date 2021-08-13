@@ -218,8 +218,8 @@ describe('spec driver', async () => {
 
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({
-        app: 'http://saucelabs.com/example_files/ContactManager.apk',
-        device: 'Android Emulator',
+        app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
+        device: 'Pixel 3a XL',
         orientation: 'landscape',
       })
     })
@@ -238,11 +238,14 @@ describe('spec driver', async () => {
     it('getDeviceInfo()', async () => {
       await getDeviceInfo({
         expected: {
-          deviceName: 'Android Emulator',
+          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
           isMobile: true,
           isNative: true,
           platformName: 'Android',
-          platformVersion: '6.0',
+          platformVersion: '10',
+          pixelRatio: 2.5,
+          statusBarHeight: 60,
+          navigationBarHeight: 1080,
         },
       })
     })

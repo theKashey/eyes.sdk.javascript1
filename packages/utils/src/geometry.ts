@@ -97,18 +97,6 @@ export function intersect(region1: Region, region2: Region): Region {
   return result
 }
 
-export function subtraction(region1: Region, region2: Region): Region {
-  if (!isIntersected(region1, region2)) return {x: 0, y: 0, width: 0, height: 0}
-
-  const result = {} as Region
-  result.x = Math.max(region1.x - region2.x, 0)
-  result.y = Math.max(region1.y - region2.y, 0)
-  result.width = Math.min(region1.x + region1.width, region2.x + region2.width) - (result.x + region2.x)
-  result.height = Math.min(region1.y + region1.height, region2.y + region2.height) - (result.y + region2.y)
-
-  return result
-}
-
 export function isIntersected(region1: Region, region2: Region): boolean {
   return (
     ((region1.x <= region2.x && region2.x <= region1.x + region1.width) ||

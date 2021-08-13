@@ -47,6 +47,7 @@ export function isSelector(selector: any): selector is Selector {
 export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
   driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
+  driver.getExecutor().defineCommand('getSystemBars', 'GET', '/session/:sessionId/appium/device/system_bars')
   driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
@@ -144,11 +145,16 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
   }
 
   if (info.isNative) {
+    const {Command} = require('selenium-webdriver/lib/command')
+
     let details
-    if (capabilities.has('viewportRect') && capabilities.has('pixelRatio')) {
-      details = {viewportRect: capabilities.get('viewportRect'), pixelRatio: capabilities.get('pixelRatio')}
+    if (capabilities.has('viewportRect') && capabilities.has('pixelRatio') && capabilities.has('statBarHeight')) {
+      details = {
+        viewportRect: capabilities.get('viewportRect'),
+        pixelRatio: capabilities.get('pixelRatio'),
+        statBarHeight: capabilities.get('statBarHeight'),
+      }
     } else {
-      const {Command} = require('selenium-webdriver/lib/command')
       const getSessionDetailsCommand = new Command('getSessionDetails')
       details =
         process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
@@ -157,13 +163,19 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     }
 
     info.pixelRatio = details.pixelRatio
-    if (details.viewportRect) {
-      info.viewportRegion = {
-        x: details.viewportRect.left,
-        y: details.viewportRect.top,
-        width: details.viewportRect.width,
-        height: details.viewportRect.height,
-      }
+
+    try {
+      const getSystemBars = new Command('getSystemBars')
+      const {statusBar, navigationBar} =
+        process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+          ? await (driver as any).schedule(getSystemBars)
+          : await driver.execute(getSystemBars)
+
+      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
+      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
+    } catch (err) {
+      info.statusBarHeight = details.statBarHeight ?? details.viewportRect?.top ?? 0
+      info.navigationBarHeight = 0
     }
   }
   return info

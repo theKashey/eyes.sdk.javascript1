@@ -1,24 +1,28 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
-const makeDriver = require('../util/driver')
+const {Driver} = require('@applitools/driver')
+const spec = require('../util/spec-driver')
 const screenshoter = require('../../index')
 const makeImage = require('../../src/image')
 
 // TODO add overflowed regions tests
 
 describe('screenshoter web', () => {
-  const logger = {log: () => null, verbose: () => null}
-  let driver, destroyDriver
+  const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
+  let driver, browser, destroyBrowser
 
-  beforeEach(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'web'})
-    await driver.init()
-    await driver.visit('https://applitools.github.io/demo/TestPages/FramesTestPage/')
-    await driver.setViewportSize({width: 700, height: 460})
+  before(async () => {
+    ;[browser, destroyBrowser] = await spec.build({type: 'web'})
   })
 
-  afterEach(async () => {
-    await destroyDriver()
+  after(async () => {
+    await destroyBrowser()
+  })
+
+  beforeEach(async () => {
+    driver = await new Driver({driver: browser, spec, logger}).init()
+    await driver.visit('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await driver.setViewportSize({width: 700, height: 460})
   })
 
   it('take viewport screenshot', () => {

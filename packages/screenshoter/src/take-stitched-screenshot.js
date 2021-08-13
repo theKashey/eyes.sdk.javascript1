@@ -7,6 +7,7 @@ async function takeStitchedScreenshot({
   context,
   scroller,
   region,
+  withStatusBar,
   overlap = 50,
   framed,
   wait,
@@ -26,7 +27,7 @@ async function takeStitchedScreenshot({
   await utils.general.sleep(wait)
 
   logger.verbose('Getting initial image...')
-  let image = await takeScreenshot({name: 'initial'})
+  let image = await takeScreenshot({name: 'initial', withStatusBar})
   const firstImage = framed ? makeImage(image) : null
 
   const targetRegion = region
@@ -41,7 +42,7 @@ async function takeStitchedScreenshot({
   const cropRegion = driver.isNative ? targetRegion : await driver.getRegionInViewport(context, targetRegion)
 
   logger.verbose('cropping...')
-  image.crop(cropRegion)
+  image.crop(withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion)
   await image.debug({...debug, name: 'initial', suffix: 'region'})
 
   const contentRegion = utils.geometry.region({x: 0, y: 0}, await scroller.getContentSize())
@@ -122,7 +123,11 @@ async function takeStitchedScreenshot({
   await stitchedImage.debug({...debug, name: 'stitched'})
 
   if (framed) {
-    await stitchedImage.combine(firstImage, lastImage, cropRegion)
+    await stitchedImage.combine(
+      firstImage,
+      lastImage,
+      withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion,
+    )
     await stitchedImage.debug({...debug, name: 'framed'})
 
     return {

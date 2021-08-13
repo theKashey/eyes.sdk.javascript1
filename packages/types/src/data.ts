@@ -47,7 +47,9 @@ export type DriverInfo = {
   browserVersion?: string
   userAgent?: string
   pixelRatio?: number
-  viewportRegion?: Region
+  statusBarHeight?: number
+  navigationBarHeight?: number
+  viewportSize?: Size
 }
 
 export type Location = {

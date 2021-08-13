@@ -116,37 +116,43 @@ export async function setWindowSize(browser: Driver, size: {width: number; heigh
   await browser.windowHandleSize(size)
 }
 export async function getDriverInfo(browser: Driver): Promise<any> {
-  const capabilities = browser.desiredCapabilities as any
+  const desiredCapabilities = browser.desiredCapabilities as any
 
   const info: any = {
     sessionId: (browser as any).requestHandler.sessionID || browser.sessionId,
     isMobile: browser.isMobile,
-    isNative: browser.isMobile && !capabilities.browserName,
-    deviceName: capabilities.deviceName,
+    isNative: browser.isMobile && !desiredCapabilities.browserName,
+    deviceName: desiredCapabilities.deviceName,
     platformName:
       (browser.isIOS && 'iOS') ||
       (browser.isAndroid && 'Android') ||
-      capabilities.platformName ||
-      capabilities.platform,
-    platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName ?? capabilities.name,
-    browserVersion: capabilities.browserVersion ?? capabilities.version,
-    pixelRatio: capabilities.pixelRatio,
+      desiredCapabilities.platformName ||
+      desiredCapabilities.platform,
+    platformVersion: desiredCapabilities.platformVersion,
+    browserName: desiredCapabilities.browserName ?? desiredCapabilities.name,
+    browserVersion: desiredCapabilities.browserVersion ?? desiredCapabilities.version,
+    pixelRatio: desiredCapabilities.pixelRatio,
   }
 
   if (info.isNative) {
-    const {pixelRatio, viewportRect}: any = utils.types.has(capabilities, ['viewportRect', 'pixelRatio'])
-      ? capabilities
+    const capabilities = utils.types.has(desiredCapabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
+      ? desiredCapabilities
       : await browser.session().then(({value}) => value)
 
-    info.pixelRatio = pixelRatio
-    if (viewportRect) {
-      info.viewportRegion = {
-        x: viewportRect.left,
-        y: viewportRect.top,
-        width: viewportRect.width,
-        height: viewportRect.height,
-      }
+    info.pixelRatio = capabilities.pixelRatio
+
+    try {
+      const {statusBar, navigationBar} = await (browser as any).requestHandler
+        .create({
+          method: 'GET',
+          path: '/session/:sessionId/appium/device/system_bars',
+        })
+        .then(({value}: any) => value)
+      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
+      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
+    } catch (err) {
+      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
+      info.navigationBarHeight = 0
     }
   }
 

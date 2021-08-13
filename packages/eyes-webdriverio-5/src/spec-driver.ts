@@ -191,18 +191,19 @@ export async function getDriverInfo(browser: Driver): Promise<any> {
   }
 
   if (info.isNative) {
-    const {pixelRatio, viewportRect} = utils.types.has(capabilities, ['viewportRect', 'pixelRatio'])
+    const capabilities = utils.types.has(browser.capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
       ? browser.capabilities
       : await browser.getSession()
 
-    info.pixelRatio = pixelRatio
-    if (viewportRect) {
-      info.viewportRegion = {
-        x: viewportRect.left,
-        y: viewportRect.top,
-        width: viewportRect.width,
-        height: viewportRect.height,
-      }
+    info.pixelRatio = capabilities.pixelRatio
+
+    try {
+      const {statusBar, navigationBar} = (await browser.getSystemBars()) as any
+      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
+      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
+    } catch (err) {
+      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
+      info.navigationBarHeight = 0
     }
   }
 

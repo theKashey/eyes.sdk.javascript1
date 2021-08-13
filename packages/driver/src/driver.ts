@@ -73,6 +73,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get pixelRatio() {
     return this._driverInfo.pixelRatio ?? 1
   }
+  get statusBarHeight() {
+    return this._driverInfo.statusBarHeight ?? (this.isNative ? 0 : undefined)
+  }
+  get navigationBarHeight() {
+    return this._driverInfo.navigationBarHeight ?? (this.isNative ? 0 : undefined)
+  }
   get isNative(): boolean {
     return this._driverInfo?.isNative ?? false
   }
@@ -115,6 +121,19 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         browserVersion: userAgentInfo.browserVersion ?? this._driverInfo?.browserVersion,
         userAgent,
         pixelRatio,
+      }
+    } else {
+      if (this.isAndroid) {
+        this._driverInfo.statusBarHeight = this._driverInfo.statusBarHeight / this.pixelRatio
+        this._driverInfo.navigationBarHeight = this._driverInfo.navigationBarHeight / this.pixelRatio
+      }
+
+      if (!this._driverInfo.viewportSize) {
+        const displaySize = await this.getDisplaySize()
+        this._driverInfo.viewportSize = {
+          width: displaySize.width,
+          height: displaySize.height - this._driverInfo.statusBarHeight,
+        }
       }
     }
 
@@ -293,14 +312,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async normalizeRegion(region: types.Region): Promise<types.Region> {
-    if (!this._driverInfo.viewportRegion || !this.isNative) return region
-    const viewportRegion = this.isIOS
-      ? utils.geometry.scale(this._driverInfo.viewportRegion, 1 / this.pixelRatio)
-      : this._driverInfo.viewportRegion
-
-    const offsetRegion = utils.geometry.offsetNegative(region, utils.geometry.location(viewportRegion))
-
-    return this.isAndroid ? utils.geometry.scale(offsetRegion, 1 / this.pixelRatio) : offsetRegion
+    if (this.isWeb || !utils.types.has(this._driverInfo, ['viewportSize', 'statusBarHeight'])) return region
+    const scaledRegion = this.isAndroid ? utils.geometry.scale(region, 1 / this.pixelRatio) : region
+    return utils.geometry.offsetNegative(scaledRegion, {x: 0, y: this.statusBarHeight})
   }
 
   async getRegionInViewport(
@@ -324,17 +338,18 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async takeScreenshot(): Promise<Buffer | string> {
-    return this._spec.takeScreenshot(this.target)
+    const data = await this._spec.takeScreenshot(this.target)
+    return utils.types.isString(data) ? data.replace(/[\r\n]+/g, '') : data
   }
 
   async getViewportSize(): Promise<types.Size> {
     let size
     if (this.isNative) {
       this._logger.log('Extracting viewport size from native driver')
-      if (this._driverInfo?.viewportRegion) {
-        size = utils.geometry.scale(utils.geometry.size(this._driverInfo.viewportRegion), 1 / this.pixelRatio)
+      if (this._driverInfo?.viewportSize) {
+        size = this._driverInfo.viewportSize
       } else {
-        size = await this._spec.getWindowSize(this.target)
+        size = await this.getDisplaySize()
         if (size.height > size.width) {
           const orientation = await this.getOrientation()
           if (orientation === 'landscape') {
@@ -393,7 +408,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   async getDisplaySize(): Promise<types.Size> {
     if (this.isWeb) return
     const size = await this._spec.getWindowSize(this.target)
-    return utils.geometry.scale(size, 1 / this.pixelRatio)
+    return this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
   }
 
   async getOrientation(): Promise<'portrait' | 'landscape'> {

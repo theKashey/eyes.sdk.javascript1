@@ -1,33 +1,56 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
-const makeDriver = require('../util/driver')
-const screenshoter = require('../../index')
+const {Driver} = require('@applitools/driver')
+const spec = require('../util/spec-driver')
 const makeImage = require('../../src/image')
+const screenshoter = require('../../index')
 
 describe('screenshoter', () => {
-  const logger = {log: () => null, verbose: () => null}
-  let driver, destroyDriver
+  const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
+  let driver, browser, destroyBrowser
+
+  async function sanitizeStatusBar(image) {
+    const patchImage = makeImage({
+      width: 85,
+      height: 18,
+      data: Buffer.alloc(85 * 18 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
+    })
+    await image.copy(patchImage, {x: 270, y: 4})
+  }
 
   describe('android app', () => {
-    beforeEach(async () => {
-      ;[driver, destroyDriver] = await makeDriver({type: 'android'})
-      await driver.init()
+    before(async () => {
+      ;[browser, destroyBrowser] = await spec.build({type: 'android'})
     })
 
-    afterEach(async () => {
-      await destroyDriver()
+    after(async () => {
+      await destroyBrowser()
+    })
+
+    beforeEach(async () => {
+      await browser.closeApp()
+      await browser.launchApp()
+      driver = await new Driver({driver: browser, spec, logger}).init()
     })
 
     it('take viewport screenshot', () => {
-      return viewport()
+      return app()
+    })
+
+    it('take viewport screenshot with status bar', () => {
+      return app({withStatusBar: true})
     })
 
     it('take full app screenshot (scroll view)', () => {
-      return fullAppScrollView()
+      return fullApp({type: 'scroll'})
+    })
+
+    it('take full app screenshot with status bar (scroll view)', () => {
+      return fullApp({type: 'scroll', withStatusBar: true})
     })
 
     it('take full app screenshot (recycler view)', () => {
-      return fullAppRecyclerView()
+      return fullApp({type: 'recycler'})
     })
 
     it('take region screenshot', () => {
@@ -44,37 +67,59 @@ describe('screenshoter', () => {
   })
 
   describe('androidx app', () => {
-    beforeEach(async () => {
-      ;[driver, destroyDriver] = await makeDriver({type: 'androidx'})
-      await driver.init()
+    before(async () => {
+      ;[browser, destroyBrowser] = await spec.build({type: 'androidx'})
     })
 
-    afterEach(async () => {
-      await destroyDriver()
+    after(async () => {
+      await destroyBrowser()
+    })
+
+    beforeEach(async () => {
+      await browser.closeApp()
+      await browser.launchApp()
+      driver = await new Driver({driver: browser, spec, logger}).init()
     })
 
     it('take full app screenshot (recycler view)', () => {
-      return fullAppRecyclerViewX()
+      return fullApp({type: 'recycler', x: true})
     })
 
     it('take full element screenshot', () => {
-      return fullElementX()
+      return fullElement()
     })
   })
 
-  async function viewport(options) {
-    const screenshot = await screenshoter({logger, driver, ...options})
+  async function app(options = {}) {
+    const expectedPath = `./test/fixtures/android/app${options.withStatusBar ? '-statusbar' : ''}.png`
+
+    const screenshot = await screenshoter({logger, driver, wait: 1500, ...options})
     try {
+      if (options.withStatusBar) await sanitizeStatusBar(screenshot.image)
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/android/app.png').toObject()
+      const expected = await makeImage(expectedPath).toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'viewport_failed'})
+      await screenshot.image.debug({path: './logs', name: 'viewport_failed', suffix: Date.now()})
       throw err
     }
   }
-  async function fullAppScrollView(options) {
-    const button = await driver.element({type: 'id', selector: 'btn_scroll_view_footer_header'})
+  async function fullApp({type, x, ...options} = {}) {
+    let buttonSelector, expectedPath
+    if (type === 'recycler') {
+      if (x) {
+        buttonSelector = {type: 'id', selector: 'btn_recycler_view_activity'}
+        expectedPath = `./test/fixtures/android/x-app-fully-recycler${options.withStatusBar ? '-statusbar' : ''}.png`
+      } else {
+        buttonSelector = {type: 'id', selector: 'btn_recycler_view'}
+        expectedPath = `./test/fixtures/android/app-fully-recycler${options.withStatusBar ? '-statusbar' : ''}.png`
+      }
+    } else {
+      buttonSelector = {type: 'id', selector: 'btn_scroll_view_footer_header'}
+      expectedPath = `./test/fixtures/android/app-fully-scroll${options.withStatusBar ? '-statusbar' : ''}.png`
+    }
+
+    const button = await driver.element(buttonSelector)
     await button.click()
 
     const screenshot = await screenshoter({
@@ -87,55 +132,12 @@ describe('screenshoter', () => {
       ...options,
     })
     try {
+      if (options.withStatusBar) await sanitizeStatusBar(screenshot.image)
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/android/app-fully.png').toObject()
+      const expected = await makeImage(expectedPath).toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_scroll_failed'})
-      throw err
-    }
-  }
-  async function fullAppRecyclerView(options) {
-    const button = await driver.element({type: 'id', selector: 'btn_recycler_view'})
-    await button.click()
-
-    const screenshot = await screenshoter({
-      logger,
-      driver,
-      fully: true,
-      framed: true,
-      scrollingMode: 'scroll',
-      wait: 1500,
-      ...options,
-    })
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/android/app-fully-recycler.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_recycler_failed'})
-      throw err
-    }
-  }
-  async function fullAppRecyclerViewX(options) {
-    const button = await driver.element({type: 'id', selector: 'btn_recycler_view_activity'})
-    await button.click()
-
-    const screenshot = await screenshoter({
-      logger,
-      driver,
-      fully: true,
-      framed: true,
-      scrollingMode: 'scroll',
-      wait: 1500,
-      ...options,
-    })
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/android/app-fully-recycler-x.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_recycler_x_failed'})
+      await screenshot.image.debug({path: './logs', name: 'full_app_failed', suffix: Date.now()})
       throw err
     }
   }
@@ -152,7 +154,7 @@ describe('screenshoter', () => {
       const expected = await makeImage('./test/fixtures/android/region.png').toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'region_failed'})
+      await screenshot.image.debug({path: './logs', name: 'region_failed', suffix: Date.now()})
       throw err
     }
   }
@@ -170,7 +172,7 @@ describe('screenshoter', () => {
       const expected = await makeImage('./test/fixtures/android/region-fully.png').toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_region_failed'})
+      await screenshot.image.debug({path: './logs', name: 'full_region_failed', suffix: Date.now()})
       throw err
     }
   }
@@ -187,11 +189,11 @@ describe('screenshoter', () => {
       const expected = await makeImage('./test/fixtures/android/element.png').toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'element_failed'})
+      await screenshot.image.debug({path: './logs', name: 'element_failed', suffix: Date.now()})
       throw err
     }
   }
-  async function fullElementX(options) {
+  async function fullElement(options) {
     const button = await driver.element({
       type: 'id',
       selector: 'btn_recycler_view_in_scroll_view_activity',
@@ -209,10 +211,10 @@ describe('screenshoter', () => {
     })
     try {
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/android/element-fully-x.png').toObject()
+      const expected = await makeImage('./test/fixtures/android/x-element-fully.png').toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_element_x_failed'})
+      await screenshot.image.debug({path: './logs', name: 'full_element_failed', suffix: Date.now()})
       throw err
     }
   }

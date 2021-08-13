@@ -25,7 +25,8 @@ function makeImage(data) {
     transforms = data.transforms
   } else if (utils.types.has(data, ['width', 'height'])) {
     image = fromSize(data)
-    size = data
+    if (data.data) image.data = data.data
+    size = {width: data.width, height: data.height}
   } else {
     throw new Error('Unable to create an image abstraction from unknown data')
   }
@@ -59,14 +60,14 @@ function makeImage(data) {
         region = {
           x: region.left / transforms.scale,
           y: region.top / transforms.scale,
-          width: image.width - (region.left + region.right) / transforms.scale,
-          height: image.height - (region.top + region.bottom) / transforms.scale,
+          width: size.width - (region.left + region.right) / transforms.scale,
+          height: size.height - (region.top + region.bottom) / transforms.scale,
         }
       } else {
         region = utils.geometry.scale(region, 1 / transforms.scale)
       }
       region = utils.geometry.rotate(region, transforms.rotate)
-      transforms.crop = utils.geometry.intersect(transforms.crop, region)
+      transforms.crop = utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
 
       size = utils.geometry.round(utils.geometry.size(transforms.crop))
 
@@ -82,9 +83,10 @@ function makeImage(data) {
       return this
     },
     async combine(firstImage, lastImage, region) {
-      const [src, first, last] = await Promise.all([this.toObject(), firstImage.toObject(), lastImage.toObject()])
+      const [first, last, src] = await Promise.all([firstImage.toObject(), lastImage.toObject(), this.toObject()])
       image = await combine(first, last, src, region)
       size = {width: image.width, height: image.height}
+      transforms.crop = utils.geometry.region({x: 0, y: 0}, size)
       return this
     },
     async toBuffer() {
@@ -95,7 +97,7 @@ function makeImage(data) {
       return toPng(await this.toObject())
     },
     async toFile(path) {
-      return toFile(await this.toObject(), path)
+      return toFile(await image, path)
     },
     async toRaw() {
       return image
@@ -120,6 +122,10 @@ function extractPngSize(buffer) {
     : {width: 0, height: 0}
 }
 
+function fromSize(size) {
+  return new png.Image({width: size.width, height: size.height})
+}
+
 async function fromBuffer(buffer) {
   return new Promise((resolve, reject) => {
     const image = new png.Image()
@@ -129,10 +135,6 @@ async function fromBuffer(buffer) {
       resolve(image)
     })
   })
-}
-
-async function fromSize(size) {
-  return new png.Image({width: size.width, height: size.height})
 }
 
 async function toPng(image) {
@@ -327,24 +329,33 @@ async function combine(firstImage, lastImage, srcImage, region) {
       height: region.y + region.height,
     })
     await copy(dstImage, topLeftImage, {x: 0, y: 0})
-    const topRightImage = await extract(firstImage, {
+
+    const rightExtImage = await extract(firstImage, {
       x: region.x + region.width,
       y: 0,
       width: firstImage.width - (region.x + region.width),
-      height: region.y + region.height,
+      height: region.y,
     })
-    await copy(dstImage, topRightImage, {x: region.x + srcImage.width, y: 0})
+    await copy(dstImage, rightExtImage, {x: region.x + region.width, y: 0})
+
+    const bottomExtImage = await extract(firstImage, {
+      x: 0,
+      y: region.y + region.height,
+      width: region.x,
+      height: firstImage.height - (region.y + region.height),
+    })
+    await copy(dstImage, bottomExtImage, {x: 0, y: region.y + region.height})
   }
 
-  await copy(dstImage, srcImage, {x: region.x, y: region.y})
-
-  if (lastImage.height > region.y + region.height) {
+  if (lastImage.height > region.y + region.height || lastImage.width > region.x + region.width) {
+    // first image might be higher
+    const yDiff = firstImage.height - lastImage.height
     if (region.width === srcImage.width) {
       const bottomImage = await extract(lastImage, {
         x: 0,
-        y: region.y + region.height,
+        y: region.y - yDiff + region.height,
         width: lastImage.width,
-        height: lastImage.height - (region.y + region.height),
+        height: lastImage.height - (region.y - yDiff + region.height),
       })
       await copy(dstImage, bottomImage, {x: 0, y: region.y + srcImage.height})
     } else if (region.height === srcImage.height) {
@@ -356,25 +367,21 @@ async function combine(firstImage, lastImage, srcImage, region) {
       })
       await copy(dstImage, rightImage, {x: region.x + srcImage.width, y: 0})
     } else {
-      const bottomLeftImage = await extract(lastImage, {
-        x: 0,
-        y: region.y + region.height,
-        width: region.x + region.width,
-        height: lastImage.height - (region.y + region.height),
-      })
-      await copy(dstImage, bottomLeftImage, {x: 0, y: region.y + srcImage.height})
       const bottomRightImage = await extract(lastImage, {
-        x: region.x + region.width,
-        y: region.y + region.height,
-        width: lastImage.width - (region.x + region.width),
-        height: lastImage.height - (region.y + region.height),
+        x: region.x,
+        y: region.y - yDiff,
+        width: lastImage.width - region.x,
+        height: lastImage.height - (region.y - yDiff),
       })
+
       await copy(dstImage, bottomRightImage, {
-        x: region.x + srcImage.width,
-        y: region.y + srcImage.height,
+        x: region.x + srcImage.width - region.width,
+        y: region.y + srcImage.height - region.height,
       })
     }
   }
+
+  await copy(dstImage, srcImage, {x: region.x, y: region.y})
 
   return dstImage
 }

@@ -1,36 +1,65 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
-const makeDriver = require('../util/driver')
-const screenshoter = require('../../index')
+const {Driver} = require('@applitools/driver')
+const spec = require('../util/spec-driver')
 const makeImage = require('../../src/image')
+const screenshoter = require('../../index')
 
 describe('screenshoter ios', () => {
-  const logger = {log: () => null, verbose: () => null}
-  let driver, destroyDriver
+  const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
+  let driver, browser, destroyBrowser
 
-  beforeEach(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'ios'})
-    await driver.init()
+  async function sanitizeStatusBar(image) {
+    const leftPatchImage = makeImage({
+      width: 50,
+      height: 16,
+      data: Buffer.alloc(50 * 16 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
+    })
+    await image.copy(leftPatchImage, {x: 18, y: 15})
+    const rightPatchImage = makeImage({
+      width: 75,
+      height: 16,
+      data: Buffer.alloc(75 * 16 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
+    })
+    await image.copy(rightPatchImage, {x: 290, y: 15})
+  }
+
+  before(async () => {
+    ;[browser, destroyBrowser] = await spec.build({type: 'ios'})
   })
 
-  afterEach(async () => {
-    await destroyDriver()
+  after(async () => {
+    await destroyBrowser()
+  })
+
+  beforeEach(async () => {
+    await browser.closeApp()
+    await browser.launchApp()
+    driver = await new Driver({driver: browser, spec, logger}).init()
   })
 
   it('take viewport screenshot', () => {
-    return viewport()
+    return app()
+  })
+
+  it('take viewport screenshot with status bar', () => {
+    return app({withStatusBar: true})
   })
 
   it('take full app screenshot (scroll view)', () => {
-    return fullAppScrollView()
+    return fullApp({type: 'scroll'})
+  })
+
+  it('take full app screenshot with status bar (scroll view)', () => {
+    return fullApp({type: 'scroll', withStatusBar: true})
   })
 
   it('take full app screenshot (table view)', () => {
-    return fullAppTableView()
+    return fullApp({type: 'table'})
   })
 
   it('take full app screenshot (collection view)', () => {
-    return fullAppCollectionView()
+    return fullApp({type: 'collection'})
   })
 
   it('take region screenshot', () => {
@@ -49,19 +78,34 @@ describe('screenshoter ios', () => {
     return fullElement()
   })
 
-  async function viewport(options) {
+  async function app(options = {}) {
+    const expectedPath = `./test/fixtures/ios/app${options.withStatusBar ? '-statusbar' : ''}.png`
+
     const screenshot = await screenshoter({logger, driver, ...options})
     try {
+      if (options.withStatusBar) await sanitizeStatusBar(screenshot.image)
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/ios/app.png').toObject()
+      const expected = await makeImage(expectedPath).toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'viewport_failed'})
+      await screenshot.image.debug({path: './logs', name: 'viewport_failed', suffix: Date.now()})
       throw err
     }
   }
-  async function fullAppScrollView(options) {
-    const button = await driver.element({type: 'accessibility id', selector: 'Scroll view'})
+  async function fullApp({type, ...options} = {}) {
+    let buttonSelector, expectedPath
+    if (type === 'collection') {
+      buttonSelector = {type: 'accessibility id', selector: 'Collection view'}
+      expectedPath = `./test/fixtures/ios/app-fully-collection${options.withStatusBar ? '-statusbar' : ''}.png`
+    } else if (type === 'table') {
+      buttonSelector = {type: 'accessibility id', selector: 'Table view'}
+      expectedPath = `./test/fixtures/ios/app-fully-table${options.withStatusBar ? '-statusbar' : ''}.png`
+    } else {
+      buttonSelector = {type: 'accessibility id', selector: 'Scroll view'}
+      expectedPath = `./test/fixtures/ios/app-fully-scroll${options.withStatusBar ? '-statusbar' : ''}.png`
+    }
+
+    const button = await driver.element(buttonSelector)
     await button.click()
 
     const screenshot = await screenshoter({
@@ -74,55 +118,12 @@ describe('screenshoter ios', () => {
       ...options,
     })
     try {
+      if (options.withStatusBar) await sanitizeStatusBar(screenshot.image)
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/ios/app-fully.png').toObject()
+      const expected = await makeImage(expectedPath).toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_failed'})
-      throw err
-    }
-  }
-  async function fullAppTableView(options) {
-    const button = await driver.element({type: 'accessibility id', selector: 'Table view'})
-    await button.click()
-
-    const screenshot = await screenshoter({
-      logger,
-      driver,
-      fully: true,
-      framed: true,
-      scrollingMode: 'scroll',
-      wait: 1500,
-      ...options,
-    })
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/ios/app-fully-table.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_table_failed'})
-      throw err
-    }
-  }
-  async function fullAppCollectionView(options) {
-    const button = await driver.element({type: 'accessibility id', selector: 'Collection view'})
-    await button.click()
-
-    const screenshot = await screenshoter({
-      logger,
-      driver,
-      fully: true,
-      framed: true,
-      scrollingMode: 'scroll',
-      wait: 1500,
-      ...options,
-    })
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/ios/app-fully-collection.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_app_collection_failed'})
+      await screenshot.image.debug({path: './logs', name: 'full_app_failed', suffix: Date.now()})
       throw err
     }
   }

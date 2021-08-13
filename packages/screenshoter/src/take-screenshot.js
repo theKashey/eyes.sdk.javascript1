@@ -126,7 +126,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
 
       const viewportSize = await driver.getViewportSize()
 
-      return utils.geometry.region(markerLocation, viewportSize)
+      return utils.geometry.region(utils.geometry.scale(markerLocation, 1 / driver.pixelRatio), viewportSize)
     } finally {
       await driver.mainContext.execute(snippets.cleanupPageMarker)
     }
@@ -134,9 +134,11 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
 }
 
 function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
-  return async function takeScreenshot({name} = {}) {
+  return async function takeScreenshot({name, withStatusBar} = {}) {
     logger.verbose('Taking native driver screenshot...')
-    const image = makeImage(stabilization.crop ? await driver.takeScreenshot() : await takeViewportScreenshot())
+    const base64 = await driver.takeScreenshot()
+    // trimming line breaks since 3rd party grid providers can return them
+    const image = makeImage(base64.replace(/[\r\n]+/g, ''))
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
@@ -145,14 +147,16 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
     if (stabilization.rotate) image.rotate(stabilization.rotate)
 
     if (stabilization.crop) image.crop(stabilization.crop)
+    else {
+      const viewportSize = await driver.getViewportSize()
+      const cropRegion = withStatusBar
+        ? {x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight}
+        : {x: 0, y: driver.statusBarHeight, width: viewportSize.width, height: viewportSize.height}
+      image.crop(cropRegion)
+      await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
+    }
 
     return image
-  }
-
-  async function takeViewportScreenshot() {
-    const base64 = await driver.execute('mobile:viewportScreenshot')
-    // trimming line breaks since 3rd party grid providers can return them
-    return base64.replace(/\r\n/g, '')
   }
 }
 
