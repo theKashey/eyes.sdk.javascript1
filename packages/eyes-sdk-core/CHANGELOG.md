@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.22.5 - 2021/8/13
+
 - add error throwing to `close` and `closeAllEyes`
 - return array of tests results from `close` and `abort`
 - updated to @applitools/dom-snapshot@4.5.7 (from 4.5.6)
