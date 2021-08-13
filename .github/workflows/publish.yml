@@ -135,7 +135,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.package}}
           version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
   screenshoter:
-    needs: [setup, utils, snippets]
+    needs: [setup, utils, driver, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
