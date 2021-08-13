@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.7 - 2021/8/13
+
 - add support for `throwErr` argument to `close` and `closeAllEyes`
 - return array of tests results from `close` and `abort`
 
