@@ -31,7 +31,7 @@ describe('EyesVisualGrid', async () => {
   it('should use default match level', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await eyes.check()
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const {matchLevel} = await extractMatchSettings(results)
     expect(matchLevel).to.be.eql('Strict')
   })
@@ -39,7 +39,7 @@ describe('EyesVisualGrid', async () => {
   it('should use specified match level', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await eyes.check({matchLevel: MatchLevel.Layout})
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const {matchLevel} = await extractMatchSettings(results)
     expect(matchLevel).to.be.eql('Layout')
   })
@@ -50,7 +50,7 @@ describe('EyesVisualGrid', async () => {
     eyes.setConfiguration(config)
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await eyes.check({matchLevel: MatchLevel.Layout})
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const {startInfo} = await getSession(results, serverUrl)
     const {
       environment: {originalRenderRequest},
@@ -100,7 +100,7 @@ describe('EyesVisualGrid', async () => {
   it('should populate agentRunId', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await eyes.check()
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const session = await getSession(results, serverUrl)
     const agentRunId = session.startInfo.agentRunId
     const [testName, random] = agentRunId.split('--')

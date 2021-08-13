@@ -1,22 +1,13 @@
-'use strict'
-
 /**
  * The base Applitools Eyes error type.
  */
 class EyesError extends Error {
-  /**
-   * @param {string} [message] - The error description string
-   * @param {Error} [error] - Another error to inherit from
-   */
-  constructor(message, error) {
+  constructor(message, {reason = 'internal', error, ...info} = {}) {
     super()
-
-    /** @inheritDoc */
     this.name = this.constructor.name
-
-    /** @inheritDoc */
     this.message = message
-
+    this.reason = reason
+    this.info = info
     this.originalError = error
 
     if (error instanceof Error) {

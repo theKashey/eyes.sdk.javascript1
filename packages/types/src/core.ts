@@ -26,7 +26,7 @@ export interface EyesManager<TDriver, TElement, TSelector> {
     config?: EyesConfig<TElement, TSelector>
     on?: (event: string, data?: Record<string, any>) => void
   }): Promise<Eyes<TElement, TSelector>>
-  closeAllEyes: () => Promise<TestResult[]>
+  closeAllEyes: (options?: {throwErr: boolean}) => Promise<TestResult[]>
 }
 
 export interface Eyes<TElement, TSelector> {
@@ -46,6 +46,12 @@ export interface Eyes<TElement, TSelector> {
     settings: OCRSearchSettings<TPattern>
     config?: EyesConfig<TElement, TSelector>
   }): Promise<Record<TPattern, TextRegion[]>>
-  close(): Promise<TestResult>
-  abort(): Promise<TestResult>
+  close(options?: {throwErr: boolean}): Promise<TestResult[]>
+  abort(): Promise<TestResult[]>
+}
+
+export interface EyesError extends Error {
+  reason: string
+  info: Record<string, any>
+  original: Error
 }

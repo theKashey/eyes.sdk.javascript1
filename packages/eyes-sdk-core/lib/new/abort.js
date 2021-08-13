@@ -1,8 +1,10 @@
 function makeAbort({eyes}) {
   return async function abort() {
-    let result = await eyes.abort()
-    if (Array.isArray(result)) [result] = result
-    return result ? result.toJSON() : null
+    let results = await eyes.abort()
+
+    if (!results) return []
+
+    return results.map(result => (result ? result.toJSON() : null))
   }
 }
 

@@ -41,7 +41,7 @@ describe('codedRegions', async () => {
       contentRegions: [content],
       layoutRegions: [layout],
     })
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const regions = await extractRegions(results)
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
     expect(regions.floating).to.be.deep.equal([floatingRegion(floating.rect, 4, 3, 2, 1)])
@@ -73,7 +73,7 @@ describe('codedRegions', async () => {
       contentRegions: [content],
       layoutRegions: [layout],
     })
-    const results = await eyes.close()
+    const [results] = await eyes.close()
     const regions = await extractRegions(results)
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
     expect(regions.floating).to.be.deep.equal([relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1), region.rect)])

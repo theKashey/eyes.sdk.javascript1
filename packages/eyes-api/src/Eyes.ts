@@ -3,7 +3,6 @@ import * as utils from '@applitools/utils'
 import {SessionTypeEnum} from './enums/SessionType'
 import {StitchModeEnum} from './enums/StitchMode'
 import {MatchLevelEnum} from './enums/MatchLevel'
-import {TestResultsStatusEnum} from './enums/TestResultsStatus'
 import {EyesError} from './errors/EyesError'
 import {NewTestError} from './errors/NewTestError'
 import {DiffsFoundError} from './errors/DiffsFoundError'
@@ -298,24 +297,29 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   async close(throwErr = true): Promise<TestResultsData> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
-    const results = new TestResultsData(await this._eyes.close(), options =>
+    const deleteTest = (options: any) =>
       this._spec.deleteTest({
         ...options,
         serverUrl: this._config.serverUrl,
         apiKey: this._config.apiKey,
         proxy: this._config.proxy,
-      }),
-    )
-    this._eyes = null
-    if (throwErr) {
-      if (results.status === TestResultsStatusEnum.Unresolved) {
-        if (results.isNew) throw new NewTestError(results)
-        else throw new DiffsFoundError(results)
-      } else if (results.status === TestResultsStatusEnum.Failed) {
-        throw new TestFailedError(results)
+      })
+    try {
+      const [result] = await this._eyes.close({throwErr})
+      return new TestResultsData(result, deleteTest)
+    } catch (err) {
+      if (!err.info?.testResult) throw err
+      const testResult = new TestResultsData(err.info.testResult, deleteTest)
+      if (err.reason === 'test failed') {
+        throw new TestFailedError(err.message, testResult)
+      } else if (err.reason === 'test different') {
+        throw new DiffsFoundError(err.message, testResult)
+      } else if (err.reason === 'test new') {
+        throw new NewTestError(err.message, testResult)
       }
+    } finally {
+      this._eyes = null
     }
-    return results
   }
   /** @deprecated */
   async closeAsync(): Promise<void> {
@@ -324,16 +328,19 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
   async abort(): Promise<TestResultsData> {
     if (!this.isOpen || this._config.isDisabled) return null
-    const results = new TestResultsData(await this._eyes.abort(), options =>
-      this._spec.deleteTest({
-        ...options,
-        serverUrl: this._config.serverUrl,
-        apiKey: this._config.apiKey,
-        proxy: this._config.proxy,
-      }),
-    )
-    this._eyes = null
-    return results
+    return this._eyes
+      .abort()
+      .then(([result]) => {
+        return new TestResultsData(result, options =>
+          this._spec.deleteTest({
+            ...options,
+            serverUrl: this._config.serverUrl,
+            apiKey: this._config.apiKey,
+            proxy: this._config.proxy,
+          }),
+        )
+      })
+      .finally(() => (this._eyes = null))
   }
   /** @deprecated */
   async abortAsync(): Promise<void> {

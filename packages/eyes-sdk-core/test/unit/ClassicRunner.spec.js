@@ -27,17 +27,6 @@ describe('ClassicRunner', () => {
     await server.close()
   })
 
-  it('getAllTestResults should throw exception', async () => {
-    await eyes.check({})
-    await eyes.close(false)
-
-    const throwEx = true
-    await assertRejects(eyes.getRunner().getAllTestResults(throwEx), err => {
-      assert.strictEqual(err.name, 'NewTestError')
-      return true
-    })
-  })
-
   it("getAllTestResults shouldn't throw exception", async () => {
     await eyes.check({})
     await eyes.close(false)

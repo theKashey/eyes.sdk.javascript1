@@ -1,25 +1,12 @@
-'use strict'
-
-const TestFailedError = require('./TestFailedError')
-const SessionStartInfo = require('../server/SessionStartInfo')
+const EyesError = require('./EyesError')
 
 /**
  * Indicates that an existing test ended, and that differences where found from the baseline.
  */
-class DiffsFoundError extends TestFailedError {
-  /**
-   * Creates a new DiffsFoundError instance.
-   *
-   * @param {TestResults} testResults - The results of the current test if available, {@code null} otherwise.
-   * @param {string|SessionStartInfo} messageOrSession - The error description or SessionStartInfo with test details.
-   */
-  constructor(testResults, messageOrSession) {
-    if (messageOrSession instanceof SessionStartInfo) {
-      const testName = `'${messageOrSession.getScenarioIdOrName()}' of '${messageOrSession.getAppIdOrName()}'`
-      messageOrSession = `Test ${testName} detected differences!. See details at: ${testResults.getUrl()}`
-    }
-
-    super(testResults, messageOrSession)
+class DiffsFoundError extends EyesError {
+  constructor(testResult) {
+    const message = `Test '${testResult.name}' of '${testResult.appName}' detected differences! See details at: ${testResult.url}`
+    super(message, {reason: 'test different', testResult})
   }
 }
 

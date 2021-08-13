@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add error throwing to `close` and `closeAllEyes`
+- return array of tests results from `close` and `abort`
 
 ## 12.22.4 - 2021/8/9
 

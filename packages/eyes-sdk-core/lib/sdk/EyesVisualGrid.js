@@ -215,7 +215,7 @@ class EyesVisualGrid extends EyesCore {
     return undefined
   }
 
-  async close(throwEx = true) {
+  async close() {
     let isErrorCaught = false
     this._closePromise = this._closeCommand(true)
       .catch(err => {
@@ -224,15 +224,17 @@ class EyesVisualGrid extends EyesCore {
       })
       .then(results => {
         this._isOpen = false
+        if (isErrorCaught) {
+          const error = TypeUtils.isArray(results) ? results.find(result => result instanceof Error) : results
+          if (!error.info || !error.info.testResult) throw error
+        }
+        return results.map(result => (result instanceof Error ? result.info.testResult : result.toJSON()))
+      })
+      .then(results => {
         if (this._runner) {
           this._runner._allTestResult.push(...results)
         }
-        if (isErrorCaught) {
-          const error = TypeUtils.isArray(results) ? results.find(result => result instanceof Error) : results
-          if (throwEx || !error.getTestResults) throw error
-          else return error.getTestResults()
-        }
-        return TypeUtils.isArray(results) ? results[0] : results
+        return results
       })
 
     return this._closePromise
