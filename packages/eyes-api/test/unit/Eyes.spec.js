@@ -166,10 +166,7 @@ describe('Eyes', () => {
     await eyes.open(driver, {appName: 'app', testName: 'test'})
     await eyes.check({region: 'diff'})
     await assert.rejects(eyes.close(true), err => {
-      return (
-        err instanceof api.TestFailedError &&
-        err.message === `Test 'test' of 'app' detected differences! See details at: https://eyes.applitools.com`
-      )
+      return err instanceof api.TestFailedError
     })
   })
 
