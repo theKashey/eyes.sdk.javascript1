@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 3.2.3 - 2021/8/13
+
+- remove base64 sanitizing
+
 ## 3.2.2 - 2021/8/13
 
 - add `withStatusBar` capability property to take app and full app screenshots with status bar
