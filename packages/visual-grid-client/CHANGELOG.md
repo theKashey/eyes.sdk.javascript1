@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 15.8.19 - 2021/8/13
+
+- updated to @applitools/eyes-sdk-core@12.22.5 (from 12.22.4)
+
 ## 15.8.18 - 2021/8/9
 
 - set retryTimeout to 0
