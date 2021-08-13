@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.2.0 - 2021/8/13
+
 - support richer core api for throwing errors
 - updated to @applitools/eyes-sdk-core@12.22.4 (from 12.21.3)
 - updated to @applitools/utils@1.2.2 (from 1.2.0)
