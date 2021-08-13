@@ -3,6 +3,7 @@
 ## Unreleased
 
 - use core implementation for error throwing in `Eyes#close` and `EyesRunner#getAllTestResults`
+- updated to @applitools/types@1.0.7 (from 1.0.6)
 
 ## 1.0.11 - 2021/8/7
 
