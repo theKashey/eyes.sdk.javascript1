@@ -83,7 +83,7 @@ function makeSDK(settings = {}) {
         return {}
       }
 
-      function close() {
+      function close({throwErr} = {}) {
         const isDifferent = test.steps.some(step => step.settings.region && step.settings.region.includes('diff'))
         const isNew = test.steps.some(step => step.settings.region && step.settings.region.includes('new'))
         const testResults = {
@@ -102,7 +102,14 @@ function makeSDK(settings = {}) {
 
         on('testEnded', {sessionId: 'session-id', testResults})
 
-        return testResults
+        if (throwErr && testResults.status === 'Unresolved') {
+          const error = new Error('error')
+          error.reason = 'test different'
+          error.info = {testResult: testResults}
+          throw error
+        }
+
+        return [testResults]
       }
 
       function abort() {

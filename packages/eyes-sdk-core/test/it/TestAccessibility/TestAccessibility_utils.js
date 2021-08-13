@@ -44,7 +44,7 @@ async function runTest(driver, useVisualGrid) {
   await eyes.check(checkSettings)
   const [testResults] = await eyes.close()
 
-  const sessionAccessibilityStatus = testResults.getAccessibilityStatus()
+  const sessionAccessibilityStatus = testResults.accessibilityStatus
 
   assert.ok(sessionAccessibilityStatus)
   assert.ok(sessionAccessibilityStatus.status)
@@ -75,7 +75,7 @@ async function runTest(driver, useVisualGrid) {
   await eyes.check()
   const [testResultsWithoutAccessibility] = await eyes.close()
 
-  assert.deepStrictEqual(testResultsWithoutAccessibility.getAccessibilityStatus(), undefined)
+  assert.deepStrictEqual(testResultsWithoutAccessibility.accessibilityStatus, undefined)
 
   const {startInfo: startInfoWithoutAccessibility} = await getApiData(testResultsWithoutAccessibility)
 
@@ -83,9 +83,7 @@ async function runTest(driver, useVisualGrid) {
 }
 
 async function getApiData(testResults, apiKey = process.env.APPLITOOLS_API_KEY) {
-  const url = `${testResults
-    .getApiUrls()
-    .getSession()}?format=json&AccessToken=${testResults.getSecretToken()}&apiKey=${apiKey}`
+  const url = `${testResults.apiUrls.session}?format=json&AccessToken=${testResults.secretToken}&apiKey=${apiKey}`
 
   let response = await axios.get(url)
   return response.data
