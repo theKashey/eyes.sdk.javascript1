@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+
+## 1.1.3 - 2021/8/13
+
 - add `statusBarHeight` getter to the driver
 - handle base64 screenshots with line breaks
 - handle iOS issue with returning actual scroll position after scrolling
+- updated to @applitools/types@1.0.8 (from 1.0.6)
 
 ## 1.1.2 - 2021/8/8
 
