@@ -136,9 +136,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
 function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
   return async function takeScreenshot({name, withStatusBar} = {}) {
     logger.verbose('Taking native driver screenshot...')
-    const base64 = await driver.takeScreenshot()
-    // trimming line breaks since 3rd party grid providers can return them
-    const image = makeImage(base64.replace(/[\r\n]+/g, ''))
+    const image = makeImage(await driver.takeScreenshot())
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
