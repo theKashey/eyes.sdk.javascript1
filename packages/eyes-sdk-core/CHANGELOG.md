@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `checkSpecDriver` API
 
 ## 12.22.7 - 2021/8/13
 

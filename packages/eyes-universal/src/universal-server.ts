@@ -1,13 +1,12 @@
 import type * as types from '@applitools/types'
 import type {Socket} from './socket'
 import type {Driver, Context, Element, Selector} from './spec-driver'
-import {makeSDK} from '@applitools/eyes-sdk-core'
+import {makeSDK, checkSpecDriver} from '@applitools/eyes-sdk-core'
 import {makeSpec, webdriverSpec} from './spec-driver'
 import {makeHandler} from './handler'
 import {makeSocket} from './socket'
 import {makeRefer} from './refer'
 import {makeTracker} from './debug/tracker'
-import {checkSpecDriver} from './debug/spec-driver'
 
 const IDLE_TIMEOUT = 900000 // 15min
 
