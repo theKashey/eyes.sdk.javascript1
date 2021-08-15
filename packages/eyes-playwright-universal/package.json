@@ -45,11 +45,11 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.0.3",
-    "@applitools/eyes-universal": "file:../eyes-universal",
-    "@applitools/types": "1.0.1",
+    "@applitools/eyes-api": "1.0.11",
+    "@applitools/eyes-universal": "0.1.0",
+    "@applitools/types": "1.0.6",
     "@applitools/utils": "1.2.0",
-    "chalk": "^4.1.0",
+    "chalk": "4.1.0",
     "ws": "7.4.0"
   },
   "devDependencies": {

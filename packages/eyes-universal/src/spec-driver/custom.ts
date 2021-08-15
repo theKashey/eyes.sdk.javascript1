@@ -8,7 +8,7 @@ export type Selector = types.SpecSelector<types.Ref>
 
 type SpecDriver = Omit<
   types.SpecDriver<Driver, Context, Element, Selector>,
-  'transformDriver' | 'transformElement' | 'getElementRegion' | 'getElementAttribute'
+  'transformDriver' | 'transformElement' | 'getElementRegion' | 'getElementAttribute' | 'performAction'
 >
 
 export function makeSpec(options: {
