@@ -132,36 +132,38 @@ await eyes.check({
 
 #### eyes.checkAndClose
 
+**IMPORTANT: this is still under development. In the meantime, use `await eyes.check(); await eyes.close()` instead**
+
 Creates a visual checkpoint and closes the test.
 
 Parameters (passed as a single destructured object):
 
 - `settings` - [CheckSettings](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/setting.ts#L66)
 - `config` - [EyesConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L25)
-- `throwOnDiff` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests.
+- `throwErr` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests. Default: `false`.
 
 Returns: [TestResults](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205)
 
 For example:
 
 ```js
-const testResults = await eyes.checkAndClose({settings, config})
+const testResults = await eyes.checkAndClose({settings, config, throwErr: true})
 ```
 
 #### eyes.close
 
 Closes the visual test.
 
-Parameters:
+Parameters (passed as a single destructured object):
 
-- `throwOnDiff` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests.
+- `throwErr` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests. Default: `false`.
 
 Returns: [TestResults](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205)
 
 For example:
 
 ```js
-const testResults = await eyes.close()
+const testResults = await eyes.close({throwErr: true})
 ```
 
 #### eyes.abort
@@ -180,7 +182,57 @@ For example:
 const testResults = await eyes.abort()
 ```
 
-## Examples
+## Developing the SpecDriver
+
+Implementing the interface [SpecDriver](https://github.com/applitools/eyes.sdk.javascript1/blob/dd4f511566873684ff0d8fec6266a065b01ba98d/packages/types/src/spec-driver.ts#L5) is one of the more tedious tasks involved in creating an SDK for Eyes. For this, we can offer tooling and reference implementations.
+
+### `checkSpecDriver` method
+
+The `@applitools/eyes-sdk-core` package exports a debugging tool to help detect if `SpecDriver` is implemented correctly.
+
+To use it, require and call the following:
+
+```js
+const {checkSpecDriver} = require('@applitools/eyes-sdk-core')
+const result = await checkSpecDriver({driver, spec})
+```
+
+Where `driver` is the driver you would pass in `manager.openEyes`, and `spec` is the object implementing `SpecDriver`.
+
+Example script for using this tool with Selenium:
+
+```js
+const {checkSpecDriver} = require('@applitools/eyes-sdk-core')
+const {Builder} = require('selenium-webdriver')
+const spec = require('./spec-driver')
+const chalk = require('chalk')
+
+;(async function main() {
+    const driver = await new Builder()
+      .withCapabilities({browserName: 'chrome', 'goog:chromeOptions': {args: ['headless']}})
+      .build()
+
+    try {
+        const results = await checkSpecDriver({driver, spec})
+        
+        let errCount = 0
+        results.forEach(result => {
+            if (result.error) {
+                console.log(chalk.red(`${++errCount})`), result.test)
+                console.log(`\t${chalk.cyan(result.error.message)}`)
+                console.log(`\texpected:`, result.error.expected)
+                console.log(`\tactual:`, result.error.actual)
+            } else if (result.skipped) {
+                console.log(chalk.yellow('?'), result.test)
+            } else {
+                console.log(chalk.green('✓'), result.test)
+            }
+        })
+    } finally {
+        await driver.close()
+    }
+})()
+```
 
 ### SpecDriver for browser extension
 
@@ -189,6 +241,8 @@ Reference implementation can be found [here](https://github.com/applitools/eyes.
 ### SpecDriver for Selenium
 
 Reference implementation can be found [here](https://github.com/applitools/eyes.sdk.javascript1/blob/e90ce45bacf3a13b11b5ded4fb3900f75501066c/packages/eyes-selenium/src/spec-driver.ts).
+
+## Examples
 
 ### Using selenium-webdriver
 
