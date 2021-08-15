@@ -1,4 +1,4 @@
-const spec = require('../../../../../eyes-selenium/dist/spec-driver')
+const spec = require('../../../../../eyes-selenium/dist/spec-driver') // eslint-disable-line node/no-missing-require
 const checkSpecDriver = require('../../../../lib/new/debug/check-spec-driver')
 const chalk = require('chalk')
 
