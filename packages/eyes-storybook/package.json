@@ -55,7 +55,6 @@
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "4.5.7",
     "@applitools/driver": "1.1.3",
     "@applitools/eyes-puppeteer": "1.8.2",
     "@applitools/eyes-sdk-core": "12.23.0",
