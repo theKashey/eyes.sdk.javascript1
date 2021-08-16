@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix hanging tests when calling open before visit
 
 
 ## 3.22.2 - 2021/8/3

@@ -35,6 +35,7 @@ describe('handlers', () => {
   beforeEach(() => {
     const visualGridClient = {openEyes: fakeOpenEyes};
     handlers = makeHandlers({visualGridClient});
+    runningTests.reset()
   });
 
   it('handles "open"', async () => {
@@ -390,15 +391,9 @@ describe('handlers', () => {
     });
   });
 
-  it('handles "batchStart"', async () => {
-    runningTests.add({test: 'test'});
-    handlers.batchStart({});
-    expect(runningTests.tests).to.deep.equal([]);
-  });
-
   it('handles "close"', async () => {
     let flag;
-    const open = () => ({checkWindow: async x => x, close: () => (flag = 'flag')});
+    const open = () => ({checkWindow: async x => x, close: () => (flag = 'flag'), abort: async () => {}});
     const visualGridClient = {
       openEyes: open,
     };
@@ -542,4 +537,19 @@ describe('handlers', () => {
     );
     expect(err).to.equal(undefined);
   });
+
+  it('abort tests when calling "open" before batchStart', async () => {
+    await handlers.open({});
+    const runningTest = {
+      isAborted: false,
+      testName: 'aborted test',
+      abort: function() {
+        this.isAborted = true; 
+      },
+    };
+    runningTests.add(runningTest);
+    handlers.batchStart({});
+    expect(runningTests.tests.filter(t => t.testName && t.testName == 'aborted test')[0].isAborted).to.be.equal(true);
+  });
+
 });
