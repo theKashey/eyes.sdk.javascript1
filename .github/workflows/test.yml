@@ -79,6 +79,5 @@ jobs:
           name: coverage-tests-report-${{matrix.name}}
           retention-days: 2
           path: |
-            packages/${{matrix.package}}/test/e2e/snapshots/*.json
             packages/${{matrix.package}}/coverage-tests-metadata.json
             packages/${{matrix.package}}/coverage-test-report.xml

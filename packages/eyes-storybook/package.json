@@ -14,11 +14,11 @@
     "eyes-storybook": "./bin/eyes-storybook.js"
   },
   "scripts": {
-    "test": "STDOUT_LEVEL=1 yarn build && yarn test:mocha && yarn lint",
+    "test": "yarn build && yarn test:mocha && yarn lint",
     "test:mocha": "mocha --no-timeouts --trace-warnings 'test/unit/*.test.js' 'test/it/*.test.js' 'test/e2e/*.test.js'",
     "test:unit": "mocha --no-timeouts --trace-warnings 'test/unit/*.test.js'",
     "test:it": "mocha --no-timeouts --trace-warnings 'test/it/*.test.js'",
-    "test:e2e": "STDOUT_LEVEL=1 mocha --no-timeouts --trace-warnings 'test/e2e/*.test.js'",
+    "test:e2e": "mocha --no-timeouts --trace-warnings 'test/e2e/*.test.js'",
     "build": "rollup -c rollup.config.js",
     "build:heavy": "node scripts/bitmap.js",
     "lint": "eslint '**/*.js'",
