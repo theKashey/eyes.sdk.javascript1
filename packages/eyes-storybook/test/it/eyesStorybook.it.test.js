@@ -275,7 +275,7 @@ describe('eyesStorybook', () => {
     expect(maxRunning).to.equal(10);
   });
 
-  it('sends parentBranchBaselineSavedBefore when branchName and parentBranchName are specified, and there is a merge-base time for them', async () => {
+  it.skip('sends parentBranchBaselineSavedBefore when branchName and parentBranchName are specified, and there is a merge-base time for them', async () => {
     const {stream} = testStream();
     const configPath = path.resolve(
       __dirname,
