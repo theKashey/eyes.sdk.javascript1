@@ -5,7 +5,6 @@ const {promisify: p} = require('util');
 const path = require('path');
 const pexec = p(exec);
 const fs = require('fs');
-const fc = require('@applitools/functional-commons');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
 const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-simple');

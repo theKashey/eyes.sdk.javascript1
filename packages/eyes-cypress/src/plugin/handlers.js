@@ -43,7 +43,7 @@ function makeHandlers({
     batchStart: data => {
       logger.log('[handlers] batchStart with data', data);
       // this is due to Cypress' weird behavior of firing the event that triggers batchStart twice - once in the global hook, and once in cy.visit
-      runningTests.abortTests().catch((err) => {
+      runningTests.abortTests().catch(err => {
         logger.log('error when aborting tests at the beginning of batchStart', err);
       });
       const {testConcurrency} = config;

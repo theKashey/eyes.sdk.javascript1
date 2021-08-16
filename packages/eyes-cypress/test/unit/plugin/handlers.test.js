@@ -35,7 +35,7 @@ describe('handlers', () => {
   beforeEach(() => {
     const visualGridClient = {openEyes: fakeOpenEyes};
     handlers = makeHandlers({visualGridClient});
-    runningTests.reset()
+    runningTests.reset();
   });
 
   it('handles "open"', async () => {
@@ -393,7 +393,11 @@ describe('handlers', () => {
 
   it('handles "close"', async () => {
     let flag;
-    const open = () => ({checkWindow: async x => x, close: () => (flag = 'flag'), abort: async () => {}});
+    const open = () => ({
+      checkWindow: async x => x,
+      close: () => (flag = 'flag'),
+      abort: async () => {},
+    });
     const visualGridClient = {
       openEyes: open,
     };
@@ -544,12 +548,13 @@ describe('handlers', () => {
       isAborted: false,
       testName: 'aborted test',
       abort: function() {
-        this.isAborted = true; 
+        this.isAborted = true;
       },
     };
     runningTests.add(runningTest);
     handlers.batchStart({});
-    expect(runningTests.tests.filter(t => t.testName && t.testName == 'aborted test')[0].isAborted).to.be.equal(true);
+    expect(
+      runningTests.tests.filter(t => t.testName && t.testName == 'aborted test')[0].isAborted,
+    ).to.be.equal(true);
   });
-
 });
