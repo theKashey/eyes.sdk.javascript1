@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.23.0 - 2021/8/17
+
 - add `sendDom` config param
 
 ## 3.22.11 - 2021/8/16
