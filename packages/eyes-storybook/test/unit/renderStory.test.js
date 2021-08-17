@@ -72,6 +72,7 @@ describe('renderStory', () => {
       tag: 'tag',
       ignoreDisplacements: true,
       properties: [{name: 'Custom property', value: null}],
+      sendDom: 'sendDom',
     };
 
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
@@ -112,6 +113,7 @@ describe('renderStory', () => {
         selector: 'selector',
         region: 'region',
         tag: 'tag',
+        sendDom: 'sendDom',
       },
     });
   });
@@ -126,6 +128,7 @@ describe('renderStory', () => {
       strictRegions: 'strict',
       layoutRegions: 'layout',
       contentRegions: 'content',
+      sendDom: 'sendDom',
     };
 
     const renderStory = makeRenderStory({
@@ -164,6 +167,7 @@ describe('renderStory', () => {
         strict: 'strict',
         layout: 'layout',
         content: 'content',
+        sendDom: 'sendDom',
       },
     });
   });
@@ -180,6 +184,7 @@ describe('renderStory', () => {
       contentRegions: 'global content',
       ignoreDisplacements: true,
       properties: [{name: 'global Custom property', value: null}],
+      sendDom: 'global sendDom',
     };
 
     const renderStory = makeRenderStory({
@@ -205,6 +210,7 @@ describe('renderStory', () => {
       tag: 'tag',
       ignoreDisplacements: true,
       properties: [{name: 'Custom property', value: null}],
+      sendDom: 'sendDom',
     };
 
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
@@ -246,6 +252,7 @@ describe('renderStory', () => {
         selector: 'selector',
         region: 'region',
         tag: 'tag',
+        sendDom: 'sendDom',
       },
     });
   });

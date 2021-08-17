@@ -25,6 +25,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       properties,
       ignore,
       accessibilityValidation,
+      sendDom,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -72,6 +73,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       selector,
       region,
       tag,
+      sendDom: sendDom !== undefined ? sendDom : config.sendDom,
     };
 
     return timeItAsync(title, async () => {

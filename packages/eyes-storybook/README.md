@@ -185,9 +185,8 @@ In addition to command-line arguments, it's possible to define the following con
 | `contentRegions`          | undefined                   | An array of regions to consider as match level **Content** when comparing the checkpoint screenshot with the baseline screenshot. For more information, see [per component  configuration - contentRegions](#contentRegions)|
 | `accessibilityRegions`    | undefined                   | An array of regions to validate accessibility when comparing the checkpoint screenshot with the baseline screenshot. Validation is according to the configured `accessibilityValidation`. For more information, see [per component  configuration - contentRegions](#contentRegions)|
 | `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`. For more information, see [per component  configuration - accessibilityValidation](#accessibilityValidation)|
-|`enablePatterns`| false | |
-|`useDom`| false | |
 |`layoutBreakpoints`| undefined | When set to `true`, a snapshot of the DOM will be taken once for each browser/device size in the `browser` configuration. For optimization purposes, an array of numbers can be passed. The DOM snapshot will be taken once for every **width** in the array. For more information, see [per component  configuration - layoutBreakpoints](#layoutBreakpoints)|
+|`sendDom`| true | A flag to specify whether a capture of DOM and CSS should be taken when rendering the screenshot. The default value is true. This should only be modified to troubleshoot unexpected behavior, and not for normal production use. For more information, see [per component  configuration - sendDom](#sendDom)|
 
 There are 2 ways to specify test configuration:
 
@@ -764,6 +763,20 @@ An object with the following properties:
         <div>Some Story</div>, { 
           eyes: { 
             layoutBreakpoints: [500, 1200]
+          }
+        })
+```
+
+### `sendDom`
+
+```js
+  storiesOf('Components', module)
+    .add(
+      'Some story ',
+      () =>
+        <div>Some Story</div>, { 
+          eyes: { 
+            sendDom: false
           }
         })
 ```
