@@ -6,7 +6,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
   return function renderStory({config, story, snapshot, url}) {
     const {name, kind, parameters} = story;
     const title = getStoryTitle({name, kind, parameters});
-    const eyesOptions = (parameters && parameters.eyes) || {};
+    const eyesOptions = Object.assign(config, (parameters && parameters.eyes) || {});
     const {
       ignoreDisplacements,
       ignoreRegions,
@@ -26,6 +26,9 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       ignore,
       accessibilityValidation,
       sendDom,
+      visualGridOptions,
+      useDom,
+      enablePatterns,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -46,26 +49,20 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       properties: [
         {name: 'Component name', value: kind},
         {name: 'State', value: name},
-        ...(properties !== undefined ? properties : config.properties || []),
+        ...(properties || []),
       ],
-      ignoreDisplacements,
-      accessibilitySettings:
-        accessibilityValidation !== undefined
-          ? accessibilityValidation
-          : config.accessibilityValidation,
+      accessibilitySettings: accessibilityValidation,
     };
 
     const checkParams = {
       url,
       snapshot,
-      ignore:
-        ignoreRegionsBackCompat !== undefined ? ignoreRegionsBackCompat : config.ignoreRegions,
-      floating: floatingRegions !== undefined ? floatingRegions : config.floatingRegions,
-      layout: layoutRegions !== undefined ? layoutRegions : config.layoutRegions,
-      strict: strictRegions !== undefined ? strictRegions : config.strictRegions,
-      content: contentRegions !== undefined ? contentRegions : config.contentRegions,
-      accessibility:
-        accessibilityRegions !== undefined ? accessibilityRegions : config.accessibilityRegions,
+      ignore: ignoreRegionsBackCompat,
+      floating: floatingRegions,
+      layout: layoutRegions,
+      strict: strictRegions,
+      content: contentRegions,
+      accessibility: accessibilityRegions,
       scriptHooks,
       sizeMode,
       target,
@@ -73,7 +70,11 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       selector,
       region,
       tag,
-      sendDom: sendDom !== undefined ? sendDom : config.sendDom,
+      sendDom,
+      visualGridOptions,
+      useDom,
+      enablePatterns,
+      ignoreDisplacements,
     };
 
     return timeItAsync(title, async () => {

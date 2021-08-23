@@ -213,7 +213,7 @@ const eyesConfig = {
     describe: 'comma-separated list of browser to render in vg mode (e.g. chrome(800x600))',
     type: 'string',
     coerce(str) {
-      const regexp = /^(chrome|chrome-1|chrome-2|chrome-canary|firefox|firefox-1|firefox-2|ie11|ie10|edge|safari|safari-1|safari-2|ie-vmware|edge-chromium|edge-chromium-1|edge-chromium-2)(\( *(\d+) *(x|,) *(\d+) *\))?$/
+      const regexp = /^(chrome|chrome-one-version-back|chrome-two-versions-back|chrome-canary|firefox|firefox-one-version-back|firefox-two-versions-back|ie11|ie10|edge|safari|safari-one-version-back|safari-two-versions-back|ie-vmware|edgechromium|edgechromium-one-version-back|edgechromium-two-versions-back)(\( *(\d+) *(x|,) *(\d+) *\))?$/
       return utils.parseList(str).map(browser => {
         const match = browser.match(regexp)
         if (!match) {

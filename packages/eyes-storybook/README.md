@@ -187,6 +187,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`. For more information, see [per component  configuration - accessibilityValidation](#accessibilityValidation)|
 |`layoutBreakpoints`| undefined | When set to `true`, a snapshot of the DOM will be taken once for each browser/device size in the `browser` configuration. For optimization purposes, an array of numbers can be passed. The DOM snapshot will be taken once for every **width** in the array. For more information, see [per component  configuration - layoutBreakpoints](#layoutBreakpoints)|
 |`sendDom`| true | A flag to specify whether a capture of DOM and CSS should be taken when rendering the screenshot. The default value is true. This should only be modified to troubleshoot unexpected behavior, and not for normal production use. For more information, see [per component  configuration - sendDom](#sendDom)|
+| `visualGridOptions` | undefined | An object that specifies options to configure renderings on the Ultrafast grid. See more information [per component  configuration - visualGridOptions](#visualgridoptions) |
 
 There are 2 ways to specify test configuration:
 
@@ -664,6 +665,68 @@ storiesOf('Components with ignoreDisplacements', module)
 });
 ```
 
+### `sendDom`
+
+```js
+  storiesOf('Components', module)
+    .add(
+      'Some story ',
+      () =>
+        <div>Some Story</div>, { 
+          eyes: { 
+            sendDom: false
+          }
+        })
+```
+
+### `visualGridOptions`
+
+An object that specifies options to configure renderings on the Ultrafast grid.
+Available options:
+
+* `polyfillAdoptedStyleSheets`: Creates a polyfill when the DOM contains `adoptedStyleSheets` ([reference](https://developers.google.com/web/updates/2019/02/constructable-stylesheets)) for browsers that don't support it (It is currently supported only in Chrome). When `true`, those browsers will successfully include the css as inline style tags. When `false`, the css will not be included. When `undefined`, an error will be thrown with a message stating that this feature is not supported in the desired browser. 
+* `ieV2`: Use IE environment v2 in the UFG.
+
+```js
+  storiesOf('Components', module)
+    .add(
+      'Some story ',
+      () =>
+        <div>Some Story</div>, { 
+          eyes: { 
+            visualGridOptions: {
+              polyfillAdoptedStyleSheets: true,
+              ieV2: true
+            }
+          }
+        })
+```
+
+
+
+### `scriptHooks`
+
+A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering. 
+An object with the following properties:
+
+  #### beforeCaptureScreenshot 
+  A script that runs after the page is loaded but before taking the screenshot. For example:
+
+
+  ```js
+  storiesOf('Components', module)
+    .add(
+      'Some story',
+      () =>
+        <div>Some Story</div>, { 
+          eyes: { 
+            scriptHooks: {
+              beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
+            }
+          }
+        })
+  ```
+
 ## Parameters that cannot be set as an [advanced configuration](#advanced-configuration)
 
 ### `runBefore` and `runAfter` functions
@@ -722,29 +785,6 @@ For example, reverting back to the original background color that was changed by
 })
 ```
 
-### `scriptHooks`
-
-A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering. 
-An object with the following properties:
-
-  #### beforeCaptureScreenshot 
-  A script that runs after the page is loaded but before taking the screenshot. For example:
-
-
-  ```js
-  storiesOf('Components', module)
-    .add(
-      'Some story',
-      () =>
-        <div>Some Story</div>, { 
-          eyes: { 
-            scriptHooks: {
-              beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
-            }
-          }
-        })
-  ```
-
 ### `layoutBreakpoints`
 
 ```js
@@ -763,20 +803,6 @@ An object with the following properties:
         <div>Some Story</div>, { 
           eyes: { 
             layoutBreakpoints: [500, 1200]
-          }
-        })
-```
-
-### `sendDom`
-
-```js
-  storiesOf('Components', module)
-    .add(
-      'Some story ',
-      () =>
-        <div>Some Story</div>, { 
-          eyes: { 
-            sendDom: false
           }
         })
 ```
