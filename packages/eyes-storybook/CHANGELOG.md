@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.23.1 - 2021/8/23
+
 - add `visualGridOptions`, `useDom`, and `enablePatterns` config params
 
 ## 3.23.0 - 2021/8/17
