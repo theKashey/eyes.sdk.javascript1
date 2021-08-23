@@ -6,7 +6,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
   return function renderStory({config, story, snapshot, url}) {
     const {name, kind, parameters} = story;
     const title = getStoryTitle({name, kind, parameters});
-    const eyesOptions = Object.assign(config, (parameters && parameters.eyes) || {});
+    const eyesOptions = Object.assign({}, config, (parameters && parameters.eyes) || {});
     const {
       ignoreDisplacements,
       ignoreRegions,
