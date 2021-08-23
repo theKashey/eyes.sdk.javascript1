@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.24.0 - 2021/8/23
+
 - add `startStorybookServerTimeout` config param
 
 ## 3.23.1 - 2021/8/23
