@@ -86,11 +86,14 @@ class StorybookConnector extends EventEmitter {
       this.on('stderr', portBusyListener);
       this.on('stderr', successMessageListener);
 
-      const minutes = timeout / 1000 / 60;
+      const minutes = Math.floor(timeout / 1000 / 60);
+      const seconds = (timeout / 1000) % 60;
       const timeoutID = setTimeout(
         reject,
         timeout,
-        `Storybook didn't start after ${minutes} min waiting.`,
+        `Storybook dev server didn't start after waiting ${minutes ? `${minutes} minutes` : ''}${
+          minutes && seconds ? ' and ' : ''
+        }${seconds ? `${seconds} seconds` : ''}.`,
       );
     });
   }
@@ -114,8 +117,6 @@ class StorybookConnector extends EventEmitter {
     this._logger.log(`${this._storybookPath} ${args.join(' ')}`);
     this._childProcess = spawn(this._storybookPath, args, {detached: false});
     this._addListeners();
-
-    console.log(this._storybookPath);
 
     this._childProcess.once('exit', code => {
       if (!code) return;

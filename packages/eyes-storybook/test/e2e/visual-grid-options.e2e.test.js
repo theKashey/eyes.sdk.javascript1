@@ -5,6 +5,9 @@ const utils = require('@applitools/utils');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
+const envWithColor = {...process.env, FORCE_COLOR: true};
+const spawnOptions = {stdio: 'pipe', env: envWithColor};
+
 describe('eyes-storybook', () => {
   it('visual-grid-options', async () => {
     const [err, result] = await presult(
@@ -13,14 +16,11 @@ describe('eyes-storybook', () => {
           __dirname,
           'happy-config/visual-grid-options.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
     const output = stdout
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,

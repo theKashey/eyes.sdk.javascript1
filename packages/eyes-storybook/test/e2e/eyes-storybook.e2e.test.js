@@ -7,6 +7,9 @@ const {delay: psetTimeout, presult} = require('@applitools/functional-commons');
 const {version} = require('../../package.json');
 const snap = require('@applitools/snaptdout');
 
+const envWithColor = {...process.env, FORCE_COLOR: true};
+const spawnOptions = {stdio: 'pipe', env: envWithColor};
+
 describe('eyes-storybook', () => {
   let closeTestServer, showLogsOrig;
   before(async () => {
@@ -32,9 +35,7 @@ describe('eyes-storybook', () => {
           __dirname,
           'happy-config/applitools.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
 
@@ -47,7 +48,6 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
     await snap(normalizedStdout, 'stdout');
     await snap(stderr, 'stderr');
@@ -57,9 +57,7 @@ describe('eyes-storybook', () => {
     const promise = presult(
       utils.process.sh(
         `node ./bin/eyes-storybook -u http://localhost:7272 --read-stories-timeout=500`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
@@ -74,17 +72,13 @@ describe('eyes-storybook', () => {
     const promise = presult(
       utils.process.sh(
         `node ./bin/eyes-storybook --read-stories-timeout=10 -u http://localhost:9001`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const results = await Promise.race([promise, psetTimeout(3000).then(() => 'not ok')]);
 
     expect(results).not.to.equal('not ok');
-    const stdout = results[0].stdout
-      .replace(version, '<version>')
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>');
+    const stdout = results[0].stdout.replace(version, '<version>');
     await snap(stdout, 'navigation timeout stdout');
     await snap(results[0].stderr, 'navigation timeout stderr');
   });
@@ -93,9 +87,7 @@ describe('eyes-storybook', () => {
     const promise = presult(
       utils.process.sh(
         `node ./bin/eyes-storybook --read-stories-timeout=1000 -u http://localhost:7272/storybook-loading.html`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const results = await Promise.race([promise, psetTimeout(5000).then(() => 'not ok')]);
@@ -113,9 +105,7 @@ describe('eyes-storybook', () => {
           __dirname,
           'happy-config/single.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
 
@@ -127,7 +117,6 @@ describe('eyes-storybook', () => {
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
         'See details at <some_url>',
       )
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(version, '<version>')
       .replace(/\[(Chrome|Firefox) \d+\.\d+\]/g, '[$1]');

@@ -6,6 +6,9 @@ const utils = require('@applitools/utils');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
+const envWithColor = {...process.env, FORCE_COLOR: true};
+const spawnOptions = {stdio: 'pipe', env: envWithColor};
+
 describe('eyes-storybook', () => {
   let closeStorybook;
   before(async () => {
@@ -24,15 +27,12 @@ describe('eyes-storybook', () => {
           __dirname,
           'happy-config/layout-breakpoints-global.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
     //const stderr = err ? err.stderr : result.stderr;
     const output = stdout
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
@@ -50,14 +50,11 @@ describe('eyes-storybook', () => {
           __dirname,
           'happy-config/layout-breakpoints-local.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const stdout = err ? err.stdout : result.stdout;
     const output = stdout
-      .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
       .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds')
       .replace(
         /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,

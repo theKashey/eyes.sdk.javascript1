@@ -41,6 +41,7 @@ async function validateAndPopulateConfig({config, packagePath, logger}) {
 
     config.storybookUrl = await startStorybookServer(Object.assign({packagePath, logger}, config));
 
+    // NOTE (Amit): I don't understand why this condition is here. It shouldn't happen. I might have been the one to put it here, but it seems like a mistake. We should take a thorough look and remove it.
     if (!config.storybookUrl) {
       console.log(startStorybookFailMsg);
       process.exit(1);

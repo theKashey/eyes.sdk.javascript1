@@ -2,7 +2,6 @@
 const {resolve} = require('path');
 const ora = require('ora');
 const StorybookConnector = require('./storybookConnector');
-const timeout = 5 * 60 * 1000; // 5 minutes
 
 async function startStorybookServer({
   packagePath,
@@ -12,6 +11,7 @@ async function startStorybookServer({
   storybookStaticDir,
   showStorybookOutput,
   logger,
+  startStorybookServerTimeout,
 }) {
   const isWindows = process.platform.startsWith('win');
   const storybookPath = resolve(packagePath, 'node_modules/.bin/start-storybook');
@@ -42,7 +42,13 @@ async function startStorybookServer({
 
   const spinner = ora('Starting storybook server');
   spinner.start();
-  await storybookConnector.start(timeout);
+
+  try {
+    await storybookConnector.start(startStorybookServerTimeout * 1000);
+  } catch (error) {
+    spinner.fail(error);
+    process.exit(1);
+  }
   spinner.succeed('Storybook was started');
 
   return `http://${storybookHost}:${storybookPort}`;

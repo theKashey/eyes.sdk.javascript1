@@ -5,6 +5,9 @@ const utils = require('@applitools/utils');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
+const envWithColor = {...process.env, FORCE_COLOR: true};
+const spawnOptions = {stdio: 'pipe', env: envWithColor};
+
 describe('fake ie', () => {
   it('fake ie in storybook', async () => {
     const [err, result] = await presult(
@@ -13,9 +16,7 @@ describe('fake ie', () => {
           __dirname,
           '../fixtures/fakeIE/applitools.config.js',
         )}`,
-        {
-          spawnOptions: {stdio: 'pipe'},
-        },
+        {spawnOptions},
       ),
     );
     const stdout = err ? err.stdout : result.stdout;

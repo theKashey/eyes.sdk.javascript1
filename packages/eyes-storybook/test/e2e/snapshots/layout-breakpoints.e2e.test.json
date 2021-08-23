@@ -2,7 +2,6 @@
   "layout breakpoints config": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "<story-book path>",
     "\u001b[33mThe following configuration's viewport-widths are smaller than the smallest configured layout breakpoint (500 pixels): [(Pixel 4 XL, 412)]. As a fallback, the resources that will be used for these configurations have been captured on a viewport-width of 500 - 1 pixels. If an additional layout breakpoint is needed for you to achieve better results - please add it to your configuration.\u001b[39m",
     "",
     "See details at <some_url>",
@@ -30,7 +29,6 @@
   "layoutBreakpoints in story params": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "<story-book path>",
     "\u001b[33mThe following configuration's viewport-widths are smaller than the smallest configured layout breakpoint (500 pixels): [(Pixel 4 XL, 412)]. As a fallback, the resources that will be used for these configurations have been captured on a viewport-width of 500 - 1 pixels. If an additional layout breakpoint is needed for you to achieve better results - please add it to your configuration.\u001b[39m",
     "",
     "See details at <some_url>",

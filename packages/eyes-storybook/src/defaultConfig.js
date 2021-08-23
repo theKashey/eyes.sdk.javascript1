@@ -16,4 +16,5 @@ module.exports = {
   readStoriesTimeout: 60000,
   reloadPagePerStory: false,
   include: undefined,
+  startStorybookServerTimeout: 300,
 };

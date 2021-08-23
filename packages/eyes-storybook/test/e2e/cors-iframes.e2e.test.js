@@ -6,6 +6,9 @@ const utils = require('@applitools/utils');
 const snap = require('@applitools/snaptdout');
 const {version} = require('../../package.json');
 
+const envWithColor = {...process.env, FORCE_COLOR: true};
+const spawnOptions = {stdio: 'pipe', env: envWithColor};
+
 describe('eyes-storybook', () => {
   it('renders cross-origin iframes', async () => {
     let closeServerA, closeServerB;
@@ -35,15 +38,12 @@ describe('eyes-storybook', () => {
             __dirname,
             'happy-config/cross-origin-iframe.config.js',
           )}`,
-          {
-            spawnOptions: {stdio: 'pipe'},
-          },
+          {spawnOptions},
         ),
       );
       const stdout = err ? err.stdout : result.stdout;
       const output = stdout
         .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
-        .replace(/\/.*.bin\/start-storybook/, '<story-book path>')
         .replace(
           /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
           'See details at <some_url>',

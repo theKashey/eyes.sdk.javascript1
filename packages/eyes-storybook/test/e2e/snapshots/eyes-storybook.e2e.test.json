@@ -2,7 +2,6 @@
   "stdout": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "<story-book path>",
     "\u001b[31m\u001b[39m",
     "\u001b[31mIgnoring parameters for story: \"with some emoji Button\" since they are not serilizable. Error: \"Converting circular structure to JSON\u001b[39m",
     "\u001b[31m    --> starting at object with constructor 'Object'\u001b[39m",
@@ -92,7 +91,6 @@
   "multi browser stdout": [
     "Using @applitools/eyes-storybook version <version>.",
     "",
-    "<story-book path>",
     "",
     "See details at <some_url>",
     "",
