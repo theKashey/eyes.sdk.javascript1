@@ -1,22 +1,28 @@
-const assert = require('assert')
+import type * as types from '@applitools/types'
+import assert from 'assert/strict'
+import * as api from '../../src'
+
 const makeSDK = require('../utils/fake-sdk')
-const api = require('../../dist')
 
 describe('Eyes', () => {
-  class Eyes extends api.Eyes {}
+  let sdk: types.Core<any, any, any> & {history: Record<string, any>[]; settings: Record<string, any>}
   const driver = {isDriver: true}
-  let sdk
+
+  class Eyes extends api.Eyes {
+    protected static get _spec() {
+      return sdk
+    }
+  }
 
   beforeEach(() => {
     sdk = makeSDK()
-    Eyes._spec = sdk
   })
 
   it('should create classic eyes by default', async () => {
     const eyes = new Eyes()
     assert.ok(eyes.runner instanceof api.ClassicRunner)
     await eyes.open(driver)
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'makeManager'),
       [{command: 'makeManager', data: {type: 'classic'}}],
     )
@@ -26,7 +32,7 @@ describe('Eyes', () => {
     const eyes = new Eyes(new api.VisualGridRunner({testConcurrency: 7}))
     assert.ok(eyes.runner instanceof api.VisualGridRunner)
     await eyes.open(driver)
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'makeManager'),
       [{command: 'makeManager', data: {type: 'vg', concurrency: 7, legacy: false}}],
     )
@@ -36,7 +42,7 @@ describe('Eyes', () => {
     const eyes = new Eyes(new api.VisualGridRunner(7))
     assert.ok(eyes.runner instanceof api.VisualGridRunner)
     await eyes.open(driver)
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'makeManager'),
       [{command: 'makeManager', data: {type: 'vg', concurrency: 7, legacy: true}}],
     )
@@ -61,14 +67,14 @@ describe('Eyes', () => {
     }
     await eyes.open(driver, openConfig)
 
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
       [{command: 'openEyes', data: {driver, config: {...config, ...openConfig}}}],
     )
   })
 
   it('should override configuration from eyes instance using "open" method arguments', async () => {
-    const config = {
+    const config = <const>{
       appName: 'app',
       testName: 'test',
       displayName: 'name',
@@ -77,14 +83,14 @@ describe('Eyes', () => {
     }
     const eyes = new Eyes(config)
 
-    const openConfig = {
+    const openConfig = <const>{
       appName: 'app-o',
       testName: 'test-o',
       viewportSize: {width: 300, height: 400},
       sessionType: 'PROGRESSION',
     }
     await eyes.open(driver, openConfig.appName, openConfig.testName, openConfig.viewportSize, openConfig.sessionType)
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
       [{command: 'openEyes', data: {driver, config: {...config, ...openConfig}}}],
     )
@@ -93,21 +99,21 @@ describe('Eyes', () => {
   it('should return driver from "open" method if eyes instance is disabled', async () => {
     const eyes = new Eyes()
     eyes.setIsDisabled(true)
-    assert.deepStrictEqual(eyes.driver, undefined)
+    assert.deepEqual(eyes.driver, undefined)
     const actualDriver = await eyes.open(driver)
-    assert.deepStrictEqual(actualDriver, driver)
-    assert.deepStrictEqual(eyes.driver, driver)
-    assert.deepStrictEqual(eyes.getDriver(), driver)
+    assert.deepEqual(actualDriver, driver)
+    assert.deepEqual(eyes.driver, driver)
+    assert.deepEqual(eyes.getDriver(), driver)
     assert.ok(sdk.history.every(h => h.command !== 'open'))
   })
 
   it('should return driver from "open" method', async () => {
     const eyes = new Eyes()
-    assert.deepStrictEqual(eyes.driver, undefined)
+    assert.deepEqual(eyes.driver, undefined)
     const actualDriver = await eyes.open(driver)
-    assert.deepStrictEqual(actualDriver, driver)
-    assert.deepStrictEqual(eyes.driver, driver)
-    assert.deepStrictEqual(eyes.getDriver(), driver)
+    assert.deepEqual(actualDriver, driver)
+    assert.deepEqual(eyes.driver, driver)
+    assert.deepEqual(eyes.getDriver(), driver)
   })
 
   it('should return null from "check" method if eyes instance is disabled', async () => {
@@ -115,7 +121,7 @@ describe('Eyes', () => {
     await eyes.open(driver)
     eyes.setIsDisabled(true)
     const actualResult = await eyes.check()
-    assert.strictEqual(actualResult, null)
+    assert.equal(actualResult, null)
     assert.ok(sdk.history.every(h => h.command !== 'check'))
   })
 
@@ -137,7 +143,7 @@ describe('Eyes', () => {
     await eyes.check()
     eyes.setIsDisabled(true)
     const actualResult = await eyes.close()
-    assert.strictEqual(actualResult, null)
+    assert.equal(actualResult, null)
     assert.ok(sdk.history.every(h => h.command !== 'close'))
   })
 
@@ -175,7 +181,7 @@ describe('Eyes', () => {
     await eyes.open(driver, {appName: 'app', testName: 'test'})
     await eyes.check({region: 'diff'})
     const actualResult = await eyes.close(false)
-    assert.strictEqual(actualResult.status, 'Unresolved')
+    assert.equal(actualResult.status, 'Unresolved')
   })
 
   it('should return null from "abort" method if eyes instance is disabled', async () => {
@@ -184,19 +190,19 @@ describe('Eyes', () => {
     await eyes.open(driver, {appName: 'app', testName: 'test'})
     await eyes.check({region: 'diff'})
     const actualResult = await eyes.abort()
-    assert.strictEqual(actualResult, null)
+    assert.equal(actualResult, null)
   })
 
   it('should return null from "abort" method if it was called before "open" method', async () => {
     const eyes = new Eyes()
     const actualResult = await eyes.abort()
-    assert.strictEqual(actualResult, null)
+    assert.equal(actualResult, null)
   })
 
   it('should listen session events using "on" method', async () => {
     const viewportSize = {width: 200, height: 300}
     const eyes = new Eyes({viewportSize})
-    const events = {}
+    const events = {} as any
     eyes.on('setSizeWillStart', data => (events.setSizeWillStart = data))
     eyes.on('setSizeEnded', () => (events.setSizeEnded = true))
     eyes.on('initStarted', () => (events.initStarted = true))
@@ -210,21 +216,21 @@ describe('Eyes', () => {
     await eyes.check()
     const expectedTestResults = await eyes.close()
 
-    assert.deepStrictEqual(events.setSizeWillStart, {viewportSize})
-    assert.deepStrictEqual(events.setSizeEnded, true)
-    assert.deepStrictEqual(events.initStarted, true)
-    assert.deepStrictEqual(events.initEnded, true)
-    assert.deepStrictEqual(events.testStarted, {sessionId: 'session-id'})
-    assert.deepStrictEqual(events.validationWillStart, {
+    assert.deepEqual(events.setSizeWillStart, {viewportSize})
+    assert.deepEqual(events.setSizeEnded, true)
+    assert.deepEqual(events.initStarted, true)
+    assert.deepEqual(events.initEnded, true)
+    assert.deepEqual(events.testStarted, {sessionId: 'session-id'})
+    assert.deepEqual(events.validationWillStart, {
       sessionId: 'session-id',
       validationInfo: {validationId: 0, tag: ''},
     })
-    assert.deepStrictEqual(events.validationEnded, {
+    assert.deepEqual(events.validationEnded, {
       sessionId: 'session-id',
       validationId: 0,
       validationResult: {asExpected: true},
     })
-    assert.deepStrictEqual(events.testEnded, {
+    assert.deepEqual(events.testEnded, {
       sessionId: 'session-id',
       testResults: expectedTestResults.toObject(),
     })
@@ -233,43 +239,57 @@ describe('Eyes', () => {
   it('should listen session events using legacy session event handler', async () => {
     const viewportSize = {width: 200, height: 300}
     const eyes = new Eyes({viewportSize})
-    const events = {}
-    const handler = new api.SessionEventHandler()
-    handler.setSizeWillStart = viewportSize => (events.setSizeWillStart = {viewportSize})
-    handler.setSizeEnded = () => (events.setSizeEnded = true)
-    handler.initStarted = () => (events.initStarted = true)
-    handler.initEnded = () => (events.initEnded = true)
-    handler.testStarted = sessionId => (events.testStarted = {sessionId})
-    handler.validationWillStart = (sessionId, validationInfo) => {
-      events.validationWillStart = {sessionId, validationInfo}
+    const events = {} as any
+
+    class SessionEventHandler extends api.SessionEventHandler {
+      setSizeWillStart(viewportSize: any) {
+        events.setSizeWillStart = {viewportSize}
+      }
+      setSizeEnded() {
+        events.setSizeEnded = true
+      }
+      initStarted() {
+        events.initStarted = true
+      }
+      initEnded() {
+        events.initEnded = true
+      }
+      testStarted(sessionId: any) {
+        events.testStarted = {sessionId}
+      }
+      validationWillStart(sessionId: any, validationInfo: any) {
+        events.validationWillStart = {sessionId, validationInfo}
+      }
+      validationEnded(sessionId: any, validationId: any, validationResult: any) {
+        events.validationEnded = {sessionId, validationId, validationResult}
+      }
+      testEnded(sessionId: any, testResults: any) {
+        events.testEnded = {sessionId, testResults}
+      }
     }
-    handler.validationEnded = (sessionId, validationId, validationResult) => {
-      events.validationEnded = {sessionId, validationId, validationResult}
-    }
-    handler.testEnded = (sessionId, testResults) => {
-      events.testEnded = {sessionId, testResults}
-    }
+
+    const handler = new SessionEventHandler()
     eyes.addSessionEventHandler(handler)
 
     await eyes.open(driver)
     await eyes.check()
     const expectedTestResults = await eyes.close()
 
-    assert.deepStrictEqual(events.setSizeWillStart, {viewportSize: new api.RectangleSize(viewportSize)})
-    assert.deepStrictEqual(events.setSizeEnded, true)
-    assert.deepStrictEqual(events.initStarted, true)
-    assert.deepStrictEqual(events.initEnded, true)
-    assert.deepStrictEqual(events.testStarted, {sessionId: 'session-id'})
-    assert.deepStrictEqual(events.validationWillStart, {
+    assert.deepEqual(events.setSizeWillStart, {viewportSize: new api.RectangleSize(viewportSize)})
+    assert.deepEqual(events.setSizeEnded, true)
+    assert.deepEqual(events.initStarted, true)
+    assert.deepEqual(events.initEnded, true)
+    assert.deepEqual(events.testStarted, {sessionId: 'session-id'})
+    assert.deepEqual(events.validationWillStart, {
       sessionId: 'session-id',
       validationInfo: new api.ValidationInfo({validationId: 0, tag: ''}),
     })
-    assert.deepStrictEqual(events.validationEnded, {
+    assert.deepEqual(events.validationEnded, {
       sessionId: 'session-id',
       validationId: 0,
       validationResult: new api.ValidationResult({asExpected: true}),
     })
-    assert.deepStrictEqual(events.testEnded, {
+    assert.deepEqual(events.testEnded, {
       sessionId: 'session-id',
       testResults: new api.TestResults(expectedTestResults.toObject()),
     })
@@ -281,7 +301,7 @@ describe('Eyes', () => {
     const viewportSizeData = new api.RectangleSize(200, 201)
     await Eyes.setViewportSize(driver, viewportSizeData)
 
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'setViewportSize'),
       [
         {command: 'setViewportSize', data: [driver, viewportSize]},
@@ -294,10 +314,10 @@ describe('Eyes', () => {
     const eyes = new Eyes()
     const viewportSize = {width: 100, height: 101}
     await eyes.setViewportSize(viewportSize)
-    assert.deepStrictEqual(eyes.configuration.viewportSize, viewportSize)
+    assert.deepEqual(eyes.configuration.viewportSize, viewportSize)
     const viewportSizeData = new api.RectangleSize(200, 201)
     await eyes.setViewportSize(viewportSizeData)
-    assert.deepStrictEqual(eyes.configuration.viewportSize, viewportSizeData)
+    assert.deepEqual(eyes.configuration.viewportSize, viewportSizeData)
   })
 
   it('should set viewport size with instance method after open', async () => {
@@ -305,12 +325,12 @@ describe('Eyes', () => {
     await eyes.open(driver)
     const viewportSize = {width: 100, height: 101}
     await eyes.setViewportSize(viewportSize)
-    assert.deepStrictEqual(eyes.configuration.viewportSize, viewportSize)
+    assert.deepEqual(eyes.configuration.viewportSize, viewportSize)
     const viewportSizeData = new api.RectangleSize(200, 201)
     await eyes.setViewportSize(viewportSizeData)
-    assert.deepStrictEqual(eyes.configuration.viewportSize, viewportSizeData)
+    assert.deepEqual(eyes.configuration.viewportSize, viewportSizeData)
 
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'setViewportSize'),
       [
         {command: 'setViewportSize', data: [driver, viewportSize]},
@@ -327,9 +347,9 @@ describe('Eyes', () => {
 
     await eyes.open(driver)
     const actualViewportSize = await eyes.getViewportSize()
-    assert.deepStrictEqual(actualViewportSize.toObject(), viewportSize)
+    assert.deepEqual(actualViewportSize.toObject(), viewportSize)
 
-    assert.deepStrictEqual(
+    assert.deepEqual(
       sdk.history.filter(h => h.command === 'getViewportSize'),
       [{command: 'getViewportSize', data: [driver], result: viewportSize}],
     )

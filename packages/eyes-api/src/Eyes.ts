@@ -1,6 +1,6 @@
 import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
-import {SessionTypeEnum} from './enums/SessionType'
+import {SessionType, SessionTypeEnum} from './enums/SessionType'
 import {StitchModeEnum} from './enums/StitchMode'
 import {MatchLevelEnum} from './enums/MatchLevel'
 import {EyesError} from './errors/EyesError'
@@ -162,14 +162,14 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     appName?: string,
     testName?: string,
     viewportSize?: RectangleSize,
-    sessionType?: SessionTypeEnum,
+    sessionType?: SessionType,
   ): Promise<TDriver>
   async open(
     driver: TDriver,
     configOrAppName?: Configuration | string,
     testName?: string,
     viewportSize?: RectangleSize,
-    sessionType?: SessionTypeEnum,
+    sessionType?: SessionType,
   ): Promise<TDriver> {
     this._driver = driver
 

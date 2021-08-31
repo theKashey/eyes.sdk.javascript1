@@ -14,6 +14,8 @@
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "stripInternal": false,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "esModuleInterop": true
   },
+  "exclude" : ["test/**/*.spec.ts", "types/**/*"],
 }

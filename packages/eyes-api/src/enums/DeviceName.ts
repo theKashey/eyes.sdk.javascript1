@@ -9,14 +9,15 @@ export enum DeviceNameEnum {
   Galaxy_Note_4 = 'Galaxy Note 4',
   Galaxy_Note_8 = 'Galaxy Note 8',
   Galaxy_Note_9 = 'Galaxy Note 9',
-  Galaxy_S10 = 'Galaxy S10',
-  Galaxy_S10_Plus = 'Galaxy S10 Plus',
   Galaxy_S3 = 'Galaxy S3',
   Galaxy_S5 = 'Galaxy S5',
   Galaxy_S8 = 'Galaxy S8',
   Galaxy_S8_Plus = 'Galaxy S8 Plus',
   Galaxy_S9 = 'Galaxy S9',
   Galaxy_S9_Plus = 'Galaxy S9 Plus',
+  Galaxy_S10 = 'Galaxy S10',
+  Galaxy_S10_Plus = 'Galaxy S10 Plus',
+  Galaxy_S20 = 'Galaxy S20',
   iPad = 'iPad',
   iPad_6th_Gen = 'iPad 6th Gen',
   iPad_7th_Gen = 'iPad 7th Gen',
@@ -61,6 +62,7 @@ export enum DeviceNameEnum {
   Pixel_3_XL = 'Pixel 3 XL',
   Pixel_4 = 'Pixel 4',
   Pixel_4_XL = 'Pixel 4 XL',
+  Pixel_5 = 'Pixel 5',
 }
 
 export type DeviceName = `${DeviceNameEnum}`

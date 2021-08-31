@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- updated to @applitools/types@1.0.9 (from 1.0.7)
 
 
 ## 1.0.12 - 2021/8/13
