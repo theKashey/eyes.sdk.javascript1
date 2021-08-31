@@ -2,11 +2,16 @@
 
 ## Unreleased
 
+
+## 0.1.1 - 2021/8/31
+
 - add support for native screenshots and newest spec driver methods
 - rename EyesManager.makeEyes to EyesManager.openEyes
 - updated to @applitools/eyes-sdk-core@12.23.0 (from 12.21.1)
 - updated to @applitools/utils@1.2.2 (from 1.2.0)
 - updated to @applitools/visual-grid-client@15.8.21 (from 15.8.11)
+- updated to @applitools/eyes-sdk-core@12.23.1 (from 12.23.0)
+- updated to @applitools/visual-grid-client@15.8.22 (from 15.8.21)
 
 ## 0.1.0 - 2021/6/15
 
