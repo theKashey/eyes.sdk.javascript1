@@ -33,7 +33,6 @@ export function isDriver(driver: any): driver is Driver {
   return utils.types.instanceOf(driver, 'Browser')
 }
 export function isElement(element: any): element is Element {
-
   return Boolean(element && extractElementId(element))
 }
 export function isSelector(selector: any): selector is Selector {
@@ -112,12 +111,6 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(...transformSelector(selector))
 }
-// export async function getElementRect(
-//   driver: Driver,
-//   element: Element,
-// ): Promise<{x: number; y: number; width: number; height: number}> {
-//   return driver.getElementRect(extractElementId(element))
-// }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(driver.getWindowRect)) {
     const rect = await driver.getWindowRect()
@@ -134,24 +127,38 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
     await driver._setWindowSize(size.width, size.height)
   }
 }
-export async function getOrientation(_driver: Driver): Promise<'portrait' | 'landscape'> {
-  // const capabilities = await driver.getCapabilities()
-  // const orientation = capabilities.get('orientation') || capabilities.get('deviceOrientation')
-  // return orientation.toLowerCase()
-  return 'portrait'
-}
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = driver.capabilities as any
-  return {
+  const info: any = {
     sessionId: driver.sessionId,
     isMobile: driver.isMobile,
     isNative: driver.isMobile && !capabilities.browserName,
-    deviceName: capabilities.desired ? capabilities.desired.deviceName : capabilities.deviceName,
-    platformName: capabilities.platformName ?? capabilities.platform,
+    deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
+    platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
     platformVersion: capabilities.platformVersion,
     browserName: capabilities.browserName ?? capabilities.desired.browserName,
     browserVersion: capabilities.browserVersion ?? capabilities.version,
+    pixelRatio: capabilities.pixelRatio,
   }
+
+  if (info.isNative) {
+    const capabilities = utils.types.has(driver.capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
+      ? driver.capabilities
+      : await driver.getSession()
+
+    info.pixelRatio = capabilities.pixelRatio
+
+    try {
+      const {statusBar, navigationBar} = (await driver.getSystemBars()) as any
+      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
+      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
+    } catch (err) {
+      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
+      info.navigationBarHeight = 0
+    }
+  }
+
+  return info
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return driver.getTitle()
@@ -164,6 +171,31 @@ export async function visit(driver: Driver, url: string): Promise<void> {
 }
 export async function takeScreenshot(driver: Driver): Promise<string> {
   return driver.takeScreenshot()
+}
+export async function click(driver: Driver, element: Element | Selector): Promise<void> {
+  if (isSelector(element)) element = await findElement(driver, element)
+  await driver.elementClick(extractElementId(element))
+}
+
+// #endregion
+
+// #region NATIVE COMMANDS
+
+export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
+  const orientation = await browser.getOrientation()
+  return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function getElementRegion(driver: Driver, element: Element): Promise<types.Region> {
+  return driver.getElementRect(extractElementId(element))
+}
+export async function getElementAttribute(driver: Driver, element: Element, attr: string): Promise<string> {
+  return driver.getElementAttribute(extractElementId(element), attr)
+}
+export async function getElementText(driver: Driver, element: Element): Promise<string> {
+  return driver.getElementText(extractElementId(element))
+}
+export async function performAction(driver: Driver, steps: any[]): Promise<void> {
+  return driver.touchPerform(steps.map(({action, ...options}) => ({action, options})))
 }
 
 // #endregion

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- add types for newest spec driver methods for universal interface
 ## 1.0.8 - 2021/8/13
 
 - add optional property `statusBarHeight` to the `DriverInfo` type

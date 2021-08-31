@@ -112,8 +112,8 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
   ): () => void
 
   command(
-    name: 'Driver.getElementRect',
-    handler: (options: {driver: TDriver; element: TElement}) => Promise<Region>,
+    name: 'Driver.click',
+    handler: (options: {context: TContext; element: TElement | TSelector}) => Promise<void>,
   ): () => void
 
   command(name: 'Driver.getWindowSize', handler: (options: {driver: TDriver}) => Promise<Size>): () => void
@@ -129,11 +129,6 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
 
   command(name: 'Driver.getDriverInfo', handler: (options: {driver: TDriver}) => Promise<DriverInfo>): () => void
 
-  command(
-    name: 'Driver.getOrientation',
-    handler: (options: {driver: TDriver}) => Promise<'portrait' | 'landscape'>,
-  ): () => void
-
   command(name: 'Driver.getTitle', handler: (options: {driver: TDriver}) => Promise<string>): () => void
 
   command(name: 'Driver.getUrl', handler: (options: {driver: TDriver}) => Promise<string>): () => void
@@ -141,6 +136,31 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
   command(name: 'Driver.takeScreenshot', handler: (options: {driver: TDriver}) => Promise<string>): () => void
 
   command(name: 'Driver.visit', handler: (options: {driver: TDriver; url: string}) => Promise<void>): () => void
+
+  command(
+    name: 'Driver.getOrientation',
+    handler: (options: {driver: TDriver}) => Promise<'portrait' | 'landscape'>,
+  ): () => void
+
+  command(
+    name: 'Driver.getElementRegion',
+    handler: (options: {driver: TDriver; element: TElement}) => Promise<Region>,
+  ): () => void
+
+  command(
+    name: 'Driver.getElementAttribute',
+    handler: (options: {driver: TDriver; element: TElement; attr: string}) => Promise<string>,
+  ): () => void
+
+  command(
+    name: 'Driver.getElementText',
+    handler: (options: {driver: TDriver; element: TElement}) => Promise<string>,
+  ): () => void
+
+  command(
+    name: 'Driver.performAction',
+    handler: (options: {driver: TDriver; steps: any[]}) => Promise<void>,
+  ): () => void
 }
 
 export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
@@ -161,7 +181,7 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
 
   request(name: 'Driver.findElements', options: {context: TContext; selector: TSelector}): Promise<TElement[]>
 
-  request(name: 'Driver.getElementRect', options: {driver: TDriver; element: TElement}): Promise<Region>
+  request(name: 'Driver.click', options: {context: TContext; element: TElement | TSelector}): Promise<void>
 
   request(name: 'Driver.getWindowSize', options: {driver: TDriver}): Promise<Size>
 
@@ -173,8 +193,6 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
 
   request(name: 'Driver.getDriverInfo', options: {driver: TDriver}): Promise<DriverInfo>
 
-  request(name: 'Driver.getOrientation', options: {driver: TDriver}): Promise<'portrait' | 'landscape'>
-
   request(name: 'Driver.getTitle', options: {driver: TDriver}): Promise<string>
 
   request(name: 'Driver.getUrl', options: {driver: TDriver}): Promise<string>
@@ -182,6 +200,19 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
   request(name: 'Driver.takeScreenshot', options: {driver: TDriver}): Promise<string>
 
   request(name: 'Driver.visit', options: {driver: TDriver; url: string}): Promise<void>
+
+  request(name: 'Driver.getOrientation', options: {driver: TDriver}): Promise<'portrait' | 'landscape'>
+
+  request(name: 'Driver.getElementRegion', options: {driver: TDriver; element: TElement}): Promise<Region>
+
+  request(
+    name: 'Driver.getElementAttribute',
+    options: {driver: TDriver; element: TElement; attr: string},
+  ): Promise<string>
+
+  request(name: 'Driver.getElementText', options: {driver: TDriver; element: TElement}): Promise<string>
+
+  request(name: 'Driver.performAction', options: {driver: TDriver; steps: any[]}): Promise<void>
 
   command(
     name: 'Core.makeManager',

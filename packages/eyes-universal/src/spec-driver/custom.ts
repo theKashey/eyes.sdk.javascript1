@@ -6,10 +6,7 @@ export type Context = types.Ref
 export type Element = types.Ref
 export type Selector = types.SpecSelector<types.Ref>
 
-type SpecDriver = Omit<
-  types.SpecDriver<Driver, Context, Element, Selector>,
-  'transformDriver' | 'transformElement' | 'getElementRegion' | 'getElementAttribute' | 'performAction'
->
+type SpecDriver = Omit<types.SpecDriver<Driver, Context, Element, Selector>, 'transformDriver' | 'transformElement'>
 
 export function makeSpec(options: {
   socket: types.ServerSocket<Driver, Context, Element, Selector>
@@ -68,27 +65,9 @@ export function makeSpec(options: {
     async findElements(context: Context, selector: Selector): Promise<Element[]> {
       return socket.request('Driver.findElements', {context, selector})
     },
-    async takeScreenshot(driver: Driver): Promise<string> {
-      return socket.request('Driver.takeScreenshot', {driver})
+    async click(context: Context, element: Element | Selector): Promise<void> {
+      return socket.request('Driver.click', {context, element})
     },
-    async getDriverInfo(driver: Driver): Promise<any> {
-      return socket.request('Driver.getDriverInfo', {driver})
-    },
-    async getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
-      return socket.request('Driver.getOrientation', {driver})
-    },
-    async getTitle(driver) {
-      return socket.request('Driver.getTitle', {driver})
-    },
-    async getUrl(driver) {
-      return socket.request('Driver.getUrl', {driver})
-    },
-    // async getElementRegion(driver: Driver, element: Element): Promise<types.Size> {
-    //   return socket.request('Driver.getElementRect', {driver, element})
-    // },
-    // async getElementAttribute(driver: Driver, element: Element): Promise<types.Size> {
-    //   return socket.request('Driver.getElementRect', {driver, element})
-    // },
     async getWindowSize(driver: Driver): Promise<types.Size> {
       return socket.request('Driver.getWindowSize', {driver})
     },
@@ -101,8 +80,38 @@ export function makeSpec(options: {
     async setViewportSize(driver: Driver, size: types.Size): Promise<void> {
       return socket.request('Driver.setViewportSize', {driver, size})
     },
+    async getDriverInfo(driver: Driver): Promise<any> {
+      return socket.request('Driver.getDriverInfo', {driver})
+    },
+    async getTitle(driver: Driver): Promise<string> {
+      return socket.request('Driver.getTitle', {driver})
+    },
+    async getUrl(driver: Driver): Promise<string> {
+      return socket.request('Driver.getUrl', {driver})
+    },
+    async takeScreenshot(driver: Driver): Promise<string> {
+      return socket.request('Driver.takeScreenshot', {driver})
+    },
     async visit(driver: Driver, url: string): Promise<void> {
       return socket.request('Driver.visit', {driver, url})
+    },
+    // #endregion
+
+    // #region NATIVE COMMANDS
+    async getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
+      return socket.request('Driver.getOrientation', {driver})
+    },
+    async getElementRegion(driver: Driver, element: Element): Promise<types.Region> {
+      return socket.request('Driver.getElementRegion', {driver, element})
+    },
+    async getElementAttribute(driver: Driver, element: Element, attr: string): Promise<string> {
+      return socket.request('Driver.getElementAttribute', {driver, element, attr})
+    },
+    async getElementText(driver: Driver, element: Element): Promise<string> {
+      return socket.request('Driver.getElementText', {driver, element})
+    },
+    async performAction(driver: Driver, steps: any[]): Promise<void> {
+      return socket.request('Driver.performAction', {driver, steps})
     },
     // #endregion
   }

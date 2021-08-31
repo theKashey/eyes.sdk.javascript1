@@ -1,7 +1,9 @@
 # Change Log
 
 ## Unreleased
- - make sure that we are not adding the same browser environment more than once when marging configs
+
+ - make sure that we are not adding the same browser environment more than once when merging configs
+ - add types for `checkSpecDriver` API
 
 ## 12.23.0 - 2021/8/15
 
