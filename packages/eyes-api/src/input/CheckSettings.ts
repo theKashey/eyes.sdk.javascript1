@@ -334,10 +334,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   }
 
   accessibilityRegion(region: AccessibilityRegionReference<TElement, TSelector>): this
-  accessibilityRegion(region: RegionReference<TElement, TSelector>, type?: AccessibilityRegionTypeEnum): this
+  accessibilityRegion(region: RegionReference<TElement, TSelector>, type?: AccessibilityRegionType): this
   accessibilityRegion(
     region: AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>,
-    type?: AccessibilityRegionTypeEnum,
+    type?: AccessibilityRegionType,
   ): this {
     const accessibilityRegion = utils.types.has(region, 'region') ? region : {region, type}
     utils.guard.custom(accessibilityRegion.region, value => this._isRegionReference(value), {
@@ -354,12 +354,12 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   accessibilityRegions(
     ...regions: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
   ): this
-  accessibilityRegions(type: AccessibilityRegionTypeEnum, ...regions: RegionReference<TElement, TSelector>[]): this
+  accessibilityRegions(type: AccessibilityRegionType, ...regions: RegionReference<TElement, TSelector>[]): this
   accessibilityRegions(
     regionOrType:
       | AccessibilityRegionReference<TElement, TSelector>
       | RegionReference<TElement, TSelector>
-      | AccessibilityRegionTypeEnum,
+      | AccessibilityRegionType,
     ...regions: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
   ): this {
     if (utils.types.isEnumValue(regionOrType, AccessibilityRegionTypeEnum)) {
@@ -397,7 +397,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return this.fully(stitchContent)
   }
 
-  matchLevel(matchLevel: MatchLevelEnum): this {
+  matchLevel(matchLevel: MatchLevel): this {
     utils.guard.isEnumValue(matchLevel, MatchLevelEnum, {name: 'matchLevel'})
     this._settings.matchLevel = matchLevel
     return this

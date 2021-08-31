@@ -77,7 +77,7 @@ export class AccessibilityMatchSettingsData implements Required<AccessibilityMat
   getType(): AccessibilityRegionTypeEnum {
     return this.type as AccessibilityRegionTypeEnum
   }
-  setType(type: AccessibilityRegionTypeEnum) {
+  setType(type: AccessibilityRegionType) {
     this.type = type
   }
 

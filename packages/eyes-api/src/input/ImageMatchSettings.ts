@@ -61,7 +61,7 @@ export class ImageMatchSettingsData implements Required<ImageMatchSettings> {
   getMatchLevel(): MatchLevelEnum {
     return this.matchLevel as MatchLevelEnum
   }
-  setMatchLevel(matchLevel: MatchLevelEnum) {
+  setMatchLevel(matchLevel: MatchLevel) {
     this.matchLevel = matchLevel
   }
 
