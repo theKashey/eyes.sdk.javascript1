@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add 'Pixel 5', 'Samsung Galaxy 20' and 'iPhone 12' to supported device names
 
 ## 1.0.9 - 2021/8/31
 
