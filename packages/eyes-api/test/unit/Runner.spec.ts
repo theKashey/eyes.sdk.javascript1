@@ -1,5 +1,5 @@
 import type * as types from '@applitools/types'
-import assert from 'assert/strict'
+import {strict as assert} from 'assert'
 import * as api from '../../src'
 
 const makeSDK = require('../utils/fake-sdk')

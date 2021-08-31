@@ -1,4 +1,4 @@
-import assert from 'assert/strict'
+import {strict as assert} from 'assert'
 import fetch from 'node-fetch'
 import {DeviceName, IosDeviceName} from '../../src'
 
