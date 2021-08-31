@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.1.1 - 2021/8/31
+
 - add support for native screenshots and newest spec driver methods
 - rename EyesManager.makeEyes to EyesManager.openEyes
 - updated to @applitools/eyes-sdk-core@12.23.0 (from 12.21.1)
