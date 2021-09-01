@@ -18,6 +18,8 @@ inputs:
     default: 0
   grep:
     description: grep pattern to filter tests
+  jobs:
+    description: number of jobs to run tests in parallel
   report:
     description: report level
     default: sandbox
@@ -28,6 +30,7 @@ runs:
       env:
         APPLITOOLS_TEST_REMOTE: ${{inputs.remote}}
         MOCHA_GREP: ${{inputs.grep}}
+        MOCHA_JOBS: ${{inputs.remote == 'eg' && 50 || inputs.jobs}}
       run: |
         echo "::group::Configure NPM"
         echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc

@@ -19,7 +19,7 @@ module.exports = {
     './node_modules/@applitools/sdk-shared/coverage-tests/custom/**/*.spec.js',
   ],
   parallel: true,
-  jobs: 15,
+  jobs: process.env.MOCHA_JOBS || 15,
   timeout: 0,
   reporter: 'spec-xunit-file',
   require: ['@applitools/test-utils/mocha-hooks/docker.js'],
