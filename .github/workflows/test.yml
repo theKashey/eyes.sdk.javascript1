@@ -9,6 +9,10 @@ on:
       type:
         description: testing type (unit, it, e2e, coverage)
         required: false
+      remote:
+        description: remote type (local, eg)
+        default: local
+        required: false
       links:
         description: linked package names
         default: eyes-sdk-core
@@ -67,6 +71,7 @@ jobs:
         with:
           package: ${{matrix.package}}
           type: ${{github.event.inputs.type}}
+          remote: ${{github.event.inputs.remote}}
           install: ${{matrix.install}}
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs['linking-depth']}}
