@@ -13,6 +13,8 @@ const tags = [
   'safari',
 ]
 
+console.log(process.env.MOCHA_JOBS)
+
 module.exports = {
   spec: [
     './test/generic/*.spec.js',
