@@ -44,7 +44,7 @@ jobs:
           packages: ${{github.event.inputs.packages}}
           allow-variations: true
       - name: Debug log
-        run: echo ${{toJSON(github.event.inputs)}}
+        run: echo "${{toJSON(github.event.inputs)}}"
   test:
     needs: setup
     strategy:
