@@ -225,6 +225,11 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.10.tgz#80141f49f0cde99b7f8d859dac06015ae445cdb8"
   integrity sha512-BqaHI7mw5SeH+fL+LpU2VYhBpye6SYciObU5qbKDZT2v8x+H7pveUKYf3FpwXZKCXbwcpjQ/WkOQ9kD8aHZBdA==
 
+"@applitools/types@1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.11.tgz#c1d7372ead312f59dc0581e56d713480691e1cdf"
+  integrity sha512-tTIuNS1izXgesCMzvEUREwbaxI23HUmPP38xNG8a2a+pX58Aytor0XlB7QVUJwL77tmZIKd93ixyoQKVmmhYyA==
+
 "@applitools/types@1.0.8":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.8.tgz#8aa8412de04df43e86faf96e23102b6a02893f6b"

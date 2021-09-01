@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.1.3 - 2021/9/1
+
 - fix default webdriver spec driver implementation for `isDriver` to allow driver declarations with `sessionId` and `serverUrl`
 
 ## 0.1.2 - 2021/9/1
