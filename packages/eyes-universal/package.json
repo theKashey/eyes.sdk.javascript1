@@ -58,7 +58,7 @@
     "@applitools/sdk-coverage-tests": "^2.3.14",
     "@applitools/sdk-release-kit": "^0.13.0",
     "@applitools/test-utils": "^1.0.7",
-    "@applitools/types": "1.0.10",
+    "@applitools/types": "1.0.11",
     "@types/ws": "^7.4.4",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
