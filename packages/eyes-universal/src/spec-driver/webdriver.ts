@@ -30,10 +30,12 @@ function transformSelector(selector: Selector): [string, string] {
 // #region UTILITY
 
 export function isDriver(driver: any): driver is Driver {
-  return utils.types.instanceOf(driver, 'Browser')
+  if (!driver) return false
+  return utils.types.has(driver, ['sessionId', 'serverUrl']) && utils.types.instanceOf(driver, 'Browser')
 }
 export function isElement(element: any): element is Element {
-  return Boolean(element && extractElementId(element))
+  if (!element) return false
+  return Boolean(extractElementId(element))
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false

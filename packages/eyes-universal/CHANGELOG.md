@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix default webdriver spec driver implementation for `isDriver` to allow driver declarations with `sessionId` and `serverUrl`
 ## 0.1.1 - 2021/8/31
 
 - add support for native screenshots and newest spec driver methods
