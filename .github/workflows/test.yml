@@ -37,11 +37,14 @@ jobs:
       packages: ${{steps.setup.outputs.packages}}
     steps:
       - uses: actions/checkout@v2
-      - uses: ./.github/actions/parser
+      - name: Setup
+        uses: ./.github/actions/parser
         id: setup
         with:
           packages: ${{github.event.inputs.packages}}
           allow-variations: true
+      - name: Debug log
+        run: echo ${{toJSON(github.event.inputs)}}
   test:
     needs: setup
     strategy:
