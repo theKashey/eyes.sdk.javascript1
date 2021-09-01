@@ -30,6 +30,8 @@ const DEVICES = {
     },
   },
   'Pixel 3 XL': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
     capabilities: {
       deviceName: 'Google Pixel 3 XL GoogleAPI Emulator',
       platformName: 'Android',
@@ -37,8 +39,6 @@ const DEVICES = {
       deviceOrientation: 'portrait',
       ...SAUCE_CREDENTIALS,
     },
-    url: SAUCE_SERVER_URL,
-    sauce: true,
   },
   'Samsung Galaxy S8': {
     type: 'sauce',
@@ -121,6 +121,7 @@ const DEVICES = {
     },
   },
   'Android 8.0 Chrome Emulator': {
+    type: 'local',
     capabilities: {
       browserName: 'chrome',
       'goog:chromeOptions': {
@@ -230,13 +231,14 @@ const BROWSERS = {
     },
   },
   firefox: {
+    type: 'local',
     url: 'http://localhost:4445/wd/hub',
     capabilities: {
       browserName: 'firefox',
     },
   },
   chrome: {
-    // url: 'https://exec-wus.applitools.com/int-rel-tok-coverage-tests-js',
+    type: 'local',
     capabilities: {
       browserName: 'chrome',
     },
@@ -244,7 +246,7 @@ const BROWSERS = {
 }
 
 function parseEnv(
-  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, ...options} = {},
+  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, eg, ...options} = {},
   protocol = 'wd',
 ) {
   const env = {browser, device, headless, protocol, ...options}
@@ -271,6 +273,9 @@ function parseEnv(
         env.options = preset.options || {}
       }
       env.options.deviceOrientation = env.orientation
+    }
+    if (eg && (!preset || preset.type === 'local')) {
+      env.url = new URL(process.env.CVG_TESTS_EG_REMOTE)
     }
   } else if (protocol === 'cdp') {
     url = url || process.env.CVG_TESTS_CDP_REMOTE

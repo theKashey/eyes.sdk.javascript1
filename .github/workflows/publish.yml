@@ -4,14 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       packages:
-        description: 'package names (aliases)'
+        description: package names (aliases)
         required: true
       version:
-        description: "version type (specify 'major', 'minor, or 'patch')"
-        default: 'patch'
+        description: version type (major, minor, or patch)
+        default: patch
+        required: false
 env:
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  CVG_TESTS_EG_REMOTE: ${{secret.CVG_TESTS_EG_REMOTE}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
