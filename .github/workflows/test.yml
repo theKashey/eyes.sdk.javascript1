@@ -21,7 +21,6 @@ on:
         description: grep pattern
         required: false
 env:
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
