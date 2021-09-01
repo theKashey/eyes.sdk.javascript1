@@ -26,7 +26,7 @@ runs:
   steps:
     - shell: bash
       env:
-        CVG_TESTS_REMOTE: ${{inputs.remote == 'eg' && secrets.CVG_TESTS_EG_REMOTE || 'http://localhost:4444/wd/hub'}}
+        CVG_TESTS_REMOTE: 'http://localhost:4444/wd/hub'
         MOCHA_GREP: ${{inputs.grep}}
       run: |
         echo "::group::Configure NPM"
