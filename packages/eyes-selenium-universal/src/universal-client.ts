@@ -168,11 +168,11 @@ export class Eyes implements types.Eyes<Element, Selector> {
     })
   }
 
-  close() {
-    return this._socket.request('Eyes.close', {eyes: this._eyes})
+  close(options: {throwErr: boolean}): Promise<types.TestResult[]> {
+    return this._socket.request('Eyes.close', {eyes: this._eyes, throwErr: options.throwErr})
   }
 
-  abort() {
+  abort(): Promise<types.TestResult[]> {
     return this._socket.request('Eyes.abort', {eyes: this._eyes})
   }
 }

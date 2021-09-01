@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update universal `close` and `closeAllEyes` methods
 
 ## 1.0.10 - 2021/8/31
 

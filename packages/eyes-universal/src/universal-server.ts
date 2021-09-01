@@ -72,8 +72,8 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       tracker.openEyes({manager, driver, config}, eyesRef)
       return eyesRef
     })
-    socket.command('EyesManager.closeAllEyes', async ({manager}) => {
-      return refer.deref(manager).closeAllEyes()
+    socket.command('EyesManager.closeAllEyes', async ({manager, throwErr}) => {
+      return refer.deref(manager).closeAllEyes({throwErr})
     })
 
     socket.command('Eyes.check', async ({eyes, settings, config}) => {
@@ -96,17 +96,17 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       tracker.extractText({eyes, regions, config}, result)
       return result
     })
-    socket.command('Eyes.close', async ({eyes}) => {
-      const result = await refer.deref(eyes).close()
+    socket.command('Eyes.close', async ({eyes, throwErr}) => {
+      const results = await refer.deref(eyes).close({throwErr})
       refer.destroy(eyes)
-      tracker.close({eyes}, result)
-      return result
+      tracker.close({eyes, throwErr}, results)
+      return results
     })
     socket.command('Eyes.abort', async ({eyes}) => {
-      const result = await refer.deref(eyes).abort()
+      const results = await refer.deref(eyes).abort()
       refer.destroy(eyes)
-      tracker.abort({eyes}, result)
-      return result
+      tracker.abort({eyes}, results)
+      return results
     })
 
     socket.command('Debug.checkSpecDriver', async ({driver, commands}) => {

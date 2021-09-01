@@ -39,7 +39,7 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
 
   request(
     name: 'EyesManager.closeAllEyes',
-    options: {manager: Ref<EyesManager<TDriver, TElement, TSelector>>},
+    options: {manager: Ref<EyesManager<TDriver, TElement, TSelector>>; throwErr?: boolean},
   ): Promise<TestResult[]>
 
   request(
@@ -78,9 +78,12 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
     },
   ): Promise<Record<TPattern, TextRegion[]>>
 
-  request(name: 'Eyes.close', options: {eyes: Ref<Eyes<TElement, TSelector>>}): Promise<TestResult>
+  request(
+    name: 'Eyes.close',
+    options: {eyes: Ref<Eyes<TElement, TSelector>>; throwErr?: boolean},
+  ): Promise<TestResult[]>
 
-  request(name: 'Eyes.abort', options: {eyes: Ref<Eyes<TElement, TSelector>>}): Promise<TestResult>
+  request(name: 'Eyes.abort', options: {eyes: Ref<Eyes<TElement, TSelector>>}): Promise<TestResult[]>
 
   command(
     name: 'Driver.isEqualElements',
@@ -239,7 +242,10 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
 
   command(
     name: 'EyesManager.closeAllEyes',
-    handler: (options: {manager: Ref<EyesManager<TDriver, TElement, TSelector>>}) => Promise<TestResult[]>,
+    handler: (options: {
+      manager: Ref<EyesManager<TDriver, TElement, TSelector>>
+      throwErr?: boolean
+    }) => Promise<TestResult[]>,
   ): () => void
 
   command(
@@ -280,11 +286,11 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
 
   command(
     name: 'Eyes.close',
-    handler: (options: {eyes: Ref<Eyes<TElement, TSelector>>}) => Promise<TestResult>,
+    handler: (options: {eyes: Ref<Eyes<TElement, TSelector>>; throwErr?: boolean}) => Promise<TestResult[]>,
   ): () => void
 
   command(
     name: 'Eyes.abort',
-    handler: (options: {eyes: Ref<Eyes<TElement, TSelector>>}) => Promise<TestResult>,
+    handler: (options: {eyes: Ref<Eyes<TElement, TSelector>>}) => Promise<TestResult[]>,
   ): () => void
 }

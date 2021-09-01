@@ -61,6 +61,7 @@ export enum DeviceName {
   Galaxy_Note_9 = 'Galaxy Note 9',
   Galaxy_S10 = 'Galaxy S10',
   Galaxy_S10_Plus = 'Galaxy S10 Plus',
+  Galaxy_S20 = 'Galaxy S20',
   Galaxy_S3 = 'Galaxy S3',
   Galaxy_S5 = 'Galaxy S5',
   Galaxy_S8 = 'Galaxy S8',
@@ -92,6 +93,7 @@ export enum DeviceName {
   Pixel_3_XL = 'Pixel 3 XL',
   Pixel_4 = 'Pixel 4',
   Pixel_4_XL = 'Pixel 4 XL',
+  Pixel_5 = 'Pixel 5',
   iPad = 'iPad',
   iPad_6th_Gen = 'iPad 6th Gen',
   iPad_7th_Gen = 'iPad 7th Gen',
@@ -123,6 +125,10 @@ export enum IosDeviceName {
   iPhone_11 = 'iPhone 11',
   iPhone_11_Pro = 'iPhone 11 Pro',
   iPhone_11_Pro_Max = 'iPhone 11 Pro Max',
+  iPhone_12 = 'iPhone 12',
+  iPhone_12_Pro = 'iPhone 12 Pro',
+  iPhone_12_Pro_Max = 'iPhone 12 Pro Max',
+  iPhone_12_mini = 'iPhone 12 mini',
   iPhone_7 = 'iPhone 7',
   iPhone_8 = 'iPhone 8',
   iPhone_X = 'iPhone X',
@@ -171,13 +177,17 @@ export enum TestResultsStatus {
 export class AccessibilityMatchSettings implements Required<AccessibilityMatchSettingsPlain> {
   constructor(settings: AccessibilityMatchSettingsPlain);
   constructor(region: RegionPlain);
-  constructor(x: number, y: number, width: number, height: number, type?: AccessibilityRegionType);
+  constructor(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    type?: 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject',
+  );
   get region(): RegionPlain;
   set region(region: RegionPlain);
-  get type(): AccessibilityRegionType | 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject';
-  set type(
-    type: AccessibilityRegionType | 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject',
-  );
+  get type(): 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject';
+  set type(type: 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject');
   getHeight(): number;
   getLeft(): number;
   getRegion(): Region;
@@ -188,7 +198,7 @@ export class AccessibilityMatchSettings implements Required<AccessibilityMatchSe
   setLeft(left: number): void;
   setRegion(region: RegionPlain): void;
   setTop(top: number): void;
-  setType(type: AccessibilityRegionType): void;
+  setType(type: AccessibilityRegionTypePlain): void;
   setWidth(width: number): void;
 }
 
@@ -275,22 +285,19 @@ export class BatchInfo implements Required<BatchInfoPlain> {
 
 export class CheckSettings {
   constructor(settings?: CheckSettingsPlain);
-  accessibilityRegion(region: {
-    region: RegionPlain | Element | Selector;
-    type?: AccessibilityRegionType | undefined;
-  }): this;
-  accessibilityRegion(region: RegionPlain, type?: AccessibilityRegionType): this;
-  accessibilityRegion(region: Element, type?: AccessibilityRegionType): this;
-  accessibilityRegion(region: Selector, type?: AccessibilityRegionType): this;
+  accessibilityRegion(region: {region: RegionPlain | Element | Selector; type?: AccessibilityRegionTypePlain}): this;
+  accessibilityRegion(region: RegionPlain, type?: AccessibilityRegionTypePlain): this;
+  accessibilityRegion(region: Element, type?: AccessibilityRegionTypePlain): this;
+  accessibilityRegion(region: Selector, type?: AccessibilityRegionTypePlain): this;
   accessibilityRegions(
     ...regions: (
-      | {region: RegionPlain | Element | Selector; type?: AccessibilityRegionType | undefined}
+      | {region: RegionPlain | Element | Selector; type?: AccessibilityRegionTypePlain}
       | RegionPlain
       | Element
       | Selector
     )[]
   ): this;
-  accessibilityRegions(type: AccessibilityRegionType, ...regions: (RegionPlain | Element | Selector)[]): this;
+  accessibilityRegions(type: AccessibilityRegionTypePlain, ...regions: (RegionPlain | Element | Selector)[]): this;
   beforeRenderScreenshotHook(script: string): this;
   content(): this;
   contentRegion(region: RegionPlain): this;
@@ -406,7 +413,7 @@ export class CheckSettings {
   layoutRegion(layoutRegion: Element): this;
   layoutRegion(layoutRegion: Selector): this;
   layoutRegions(...layoutRegions: (RegionPlain | Element | Selector)[]): this;
-  matchLevel(matchLevel: MatchLevel): this;
+  matchLevel(matchLevel: MatchLevelPlain): this;
   /** @undocumented */
   name(name: string): this;
   region(region: RegionPlain): this;
@@ -539,10 +546,10 @@ export class Configuration {
   set sendDom(sendDom: boolean);
   get serverUrl(): string;
   set serverUrl(serverUrl: string);
-  get sessionType(): SessionType | 'SEQUENTIAL' | 'PROGRESSION';
-  set sessionType(sessionType: SessionType | 'SEQUENTIAL' | 'PROGRESSION');
-  get stitchMode(): StitchMode | 'Scroll' | 'CSS';
-  set stitchMode(stitchMode: StitchMode | 'Scroll' | 'CSS');
+  get sessionType(): 'SEQUENTIAL' | 'PROGRESSION';
+  set sessionType(sessionType: 'SEQUENTIAL' | 'PROGRESSION');
+  get stitchMode(): 'Scroll' | 'CSS';
+  set stitchMode(stitchMode: 'Scroll' | 'CSS');
   get stitchOverlap(): number;
   set stitchOverlap(stitchOverlap: number);
   get testName(): string;
@@ -556,20 +563,17 @@ export class Configuration {
   addBrowser(browserInfo: DesktopBrowserInfo): this;
   addBrowser(browserInfo: ChromeEmulationInfo): this;
   addBrowser(browserInfo: IOSDeviceInfo): this;
-  addBrowser(browserInfo: {
-    deviceName: DeviceName | undefined;
-    screenOrientation?: ScreenOrientation | undefined;
-  }): this;
-  addBrowser(width: number, height: number, name?: BrowserType): this;
+  addBrowser(browserInfo: {deviceName: DeviceNamePlain; screenOrientation?: ScreenOrientationPlain}): this;
+  addBrowser(width: number, height: number, name?: BrowserTypePlain): this;
   addBrowsers(
     ...browsersInfo: (
       | DesktopBrowserInfo
       | ChromeEmulationInfo
       | IOSDeviceInfo
-      | {deviceName: DeviceName | undefined; screenOrientation?: ScreenOrientation | undefined}
+      | {deviceName: DeviceNamePlain; screenOrientation?: ScreenOrientationPlain}
     )[]
   ): this;
-  addDeviceEmulation(deviceName: DeviceName, screenOrientation?: ScreenOrientation): this;
+  addDeviceEmulation(deviceName: DeviceNamePlain, screenOrientation?: ScreenOrientationPlain): this;
   addProperty(name: string, value: string): this;
   addProperty(prop: PropertyDataPlain): this;
   clearProperties(): this;
@@ -585,7 +589,7 @@ export class Configuration {
     | DesktopBrowserInfo
     | ChromeEmulationInfo
     | IOSDeviceInfo
-    | {deviceName: DeviceName | undefined; screenOrientation?: ScreenOrientation | undefined}
+    | {deviceName: DeviceNamePlain; screenOrientation?: ScreenOrientationPlain}
   )[];
   getCompareWithParentBranch(): boolean;
   /** @undocumented */
@@ -661,7 +665,7 @@ export class Configuration {
       | DesktopBrowserInfo
       | ChromeEmulationInfo
       | IOSDeviceInfo
-      | {deviceName: DeviceName | undefined; screenOrientation?: ScreenOrientation | undefined}
+      | {deviceName: DeviceNamePlain; screenOrientation?: ScreenOrientationPlain}
     )[],
   ): this;
   setCompareWithParentBranch(compareWithParentBranch: boolean): this;
@@ -697,7 +701,7 @@ export class Configuration {
   setLayoutBreakpoints(layoutBreakpoints: number[]): this;
   /** @undocumented */
   setLogHandler(handler: LogHandlerPlain): this;
-  setMatchLevel(matchLevel: MatchLevel): this;
+  setMatchLevel(matchLevel: MatchLevelPlain): this;
   setMatchTimeout(matchTimeout: number): this;
   setParentBranchName(parentBranchName: string): this;
   setProperties(properties: PropertyDataPlain[]): this;
@@ -720,10 +724,10 @@ export class Configuration {
   setScrollRootElement(scrollRootElement: Selector): this;
   setSendDom(sendDom: boolean): this;
   setServerUrl(serverUrl: string): this;
-  setSessionType(sessionType: SessionType): this;
+  setSessionType(sessionType: SessionTypePlain): this;
   /** @undocumented */
   setShowLogs(show: boolean): this;
-  setStitchMode(stitchMode: StitchMode): this;
+  setStitchMode(stitchMode: StitchModePlain): this;
   setStitchOverlap(stitchOverlap: number): this;
   setTestName(testName: string): this;
   setUseDom(useDom: boolean): this;
@@ -868,7 +872,7 @@ export class Eyes {
   close(throwErr?: boolean): Promise<TestResults>;
   /** @deprecated */
   closeAsync(): Promise<void>;
-  extractText(regions: OCRRegion<Element, Selector>[]): Promise<string[]>;
+  extractText(regions: OCRRegion[]): Promise<string[]>;
   extractTextRegions<TPattern extends string>(settings: OCRSettings<TPattern>): Promise<Record<TPattern, TextRegion[]>>;
   getApiKey(): string;
   getAppName(): string;
@@ -954,14 +958,7 @@ export class Eyes {
     appName?: string,
     testName?: string,
     viewportSize?: RectangleSizePlain,
-    sessionType?: SessionType,
-  ): Promise<Driver>;
-  open(
-    driver: Driver,
-    appName?: string,
-    testName?: string,
-    viewportSize?: RectangleSizePlain,
-    sessionType?: undefined,
+    sessionType?: SessionTypePlain,
   ): Promise<Driver>;
   /**
    * @undocumented
@@ -994,7 +991,7 @@ export class Eyes {
   setImageCut(cutProvider: CutProvider): void;
   setIsDisabled(isDisabled: boolean): void;
   setLogHandler(handler: LogHandler): void;
-  setMatchLevel(matchLevel: MatchLevel): void;
+  setMatchLevel(matchLevel: MatchLevelPlain): void;
   setMatchTimeout(matchTimeout: number): void;
   setParentBranchName(parentBranchName: string): void;
   setProxy(proxy: ProxySettingsPlain): void;
@@ -1010,7 +1007,7 @@ export class Eyes {
   setScrollRootElement(scrollRootElement: Selector): void;
   setSendDom(sendDom: boolean): void;
   setServerUrl(serverUrl: string): void;
-  setStitchMode(stitchMode: StitchMode): void;
+  setStitchMode(stitchMode: StitchModePlain): void;
   setStitchOverlap(stitchOverlap: number): void;
   setTestName(testName: string): void;
   setViewportSize(size: RectangleSizePlain): Promise<void>;
@@ -1039,15 +1036,16 @@ export class FixedCutProvider extends CutProvider {}
 /** @undocumented */
 export class FloatingMatchSettings implements Required<FloatingMatchSettingsPlain> {
   constructor(settings: FloatingMatchSettingsPlain);
+  constructor(region: RegionPlain);
   constructor(
     x: number,
     y: number,
     width: number,
     height: number,
-    maxUpOffset: number,
-    maxDownOffset: number,
-    maxLeftOffset: number,
-    maxRightOffset: number,
+    maxUpOffset?: number,
+    maxDownOffset?: number,
+    maxLeftOffset?: number,
+    maxRightOffset?: number,
   );
   get maxDownOffset(): number;
   set maxDownOffset(maxDownOffset: number);
@@ -1110,8 +1108,8 @@ export class ImageMatchSettings implements Required<ImageMatchSettingsPlain> {
   set layout(layoutRegions: RegionPlain[]);
   get layoutRegions(): RegionPlain[];
   set layoutRegions(layoutRegions: RegionPlain[]);
-  get matchLevel(): MatchLevel | 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'Strict' | 'Exact';
-  set matchLevel(matchLevel: MatchLevel | 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'Strict' | 'Exact');
+  get matchLevel(): 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'Strict' | 'Exact';
+  set matchLevel(matchLevel: 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'Strict' | 'Exact');
   get strict(): RegionPlain[];
   set strict(strictRegions: RegionPlain[]);
   get strictRegions(): RegionPlain[];
@@ -1141,7 +1139,7 @@ export class ImageMatchSettings implements Required<ImageMatchSettingsPlain> {
   setIgnoreDisplacements(ignoreDisplacements: boolean): void;
   setIgnoreRegions(ignoreRegions: RegionPlain[]): void;
   setLayoutRegions(layoutRegions: RegionPlain[]): void;
-  setMatchLevel(matchLevel: MatchLevel): void;
+  setMatchLevel(matchLevel: MatchLevelPlain): void;
   setStrictRegions(strictRegions: RegionPlain[]): void;
   setUseDom(useDom: boolean): void;
 }
@@ -1431,7 +1429,7 @@ export class TestResults implements Required<TestResultsPlain> {
   get noneMatches(): number;
   get secretToken(): string;
   get startedAt(): string | Date;
-  get status(): 'Passed' | 'Failed' | TestResultsStatus | 'Unresolved';
+  get status(): 'Passed' | 'Failed' | 'Unresolved';
   get steps(): number;
   get stepsInfo(): StepInfoPlain[];
   get strictMatches(): number;
@@ -1572,12 +1570,20 @@ export class VisualGridRunner extends EyesRunner {
   getConcurrentSessions(): number;
 }
 
-export type AccessibilityMatchSettingsPlain = {region: RegionPlain; type?: AccessibilityRegionType | undefined};
+export type AccessibilityGuidelinesVersionPlain = undefined;
+
+export type AccessibilityLevelPlain = undefined;
+
+export type AccessibilityMatchSettingsPlain = {region: RegionPlain; type?: AccessibilityRegionTypePlain};
+
+export type AccessibilityRegionTypePlain = undefined;
 
 export type AccessibilitySettings = {
-  guidelinesVersion?: AccessibilityGuidelinesVersion | undefined;
-  level?: AccessibilityLevel | undefined;
+  guidelinesVersion?: AccessibilityGuidelinesVersionPlain;
+  level?: AccessibilityLevelPlain;
 };
+
+export type AccessibilityStatusPlain = undefined;
 
 export type ApiUrlsPlain = {
   readonly baselineImage?: string;
@@ -1598,6 +1604,8 @@ export type BatchInfoPlain = {
   startedAt?: Date | string;
 };
 
+export type BrowserTypePlain = undefined;
+
 export type CheckSettingsPlain = {
   name?: string;
   region?: RegionPlain | Element | Selector;
@@ -1610,7 +1618,7 @@ export type CheckSettingsPlain = {
   )[];
   scrollRootElement?: Element | Selector;
   fully?: boolean;
-  matchLevel?: MatchLevel | undefined;
+  matchLevel?: MatchLevelPlain;
   useDom?: boolean;
   sendDom?: boolean;
   enablePatterns?: boolean;
@@ -1633,7 +1641,7 @@ export type CheckSettingsPlain = {
     | Selector
   )[];
   accessibilityRegions?: (
-    | {region: RegionPlain | Element | Selector; type?: AccessibilityRegionType | undefined}
+    | {region: RegionPlain | Element | Selector; type?: AccessibilityRegionTypePlain}
     | RegionPlain
     | Element
     | Selector
@@ -1648,7 +1656,7 @@ export type CheckSettingsPlain = {
 };
 
 export type ChromeEmulationInfo = {
-  chromeEmulationInfo: {deviceName: DeviceName | undefined; screenOrientation?: ScreenOrientation | undefined};
+  chromeEmulationInfo: {deviceName: DeviceNamePlain; screenOrientation?: ScreenOrientationPlain};
 };
 
 export type ConfigurationPlain = {
@@ -1667,7 +1675,7 @@ export type ConfigurationPlain = {
   testName?: string;
   displayName?: string;
   viewportSize?: RectangleSizePlain;
-  sessionType?: SessionType | undefined;
+  sessionType?: SessionTypePlain;
   properties?: PropertyDataPlain[];
   batch?: BatchInfoPlain;
   defaultMatchSettings?: ImageMatchSettingsPlain;
@@ -1689,7 +1697,7 @@ export type ConfigurationPlain = {
   dontCloseBatches?: boolean;
 } & {sendDom?: boolean; matchTimeout?: number; forceFullPageScreenshot?: boolean} & {
   waitBeforeScreenshots?: number;
-  stitchMode?: StitchMode | undefined;
+  stitchMode?: StitchModePlain;
   hideScrollbars?: boolean;
   hideCaret?: boolean;
   stitchOverlap?: number;
@@ -1707,6 +1715,8 @@ export type ConfigurationPlain = {
 
 export type ConsoleLogHandlerPlain = {type: 'console'};
 
+export type CorsIframeHandlePlain = undefined;
+
 export type CustomLogHandlerPlain = {
   log(message: any): void;
   warn?(message: any): void;
@@ -1720,7 +1730,9 @@ export type CutProviderPlain =
   | {top: number; right: number; bottom: number; left: number}
   | {x: number; y: number; width: number; height: number};
 
-export type DesktopBrowserInfo = {height: number; name?: BrowserType | undefined; width: number};
+export type DesktopBrowserInfo = {height: number; name?: BrowserTypePlain; width: number};
+
+export type DeviceNamePlain = undefined;
 
 export type Driver = import('selenium-webdriver').WebDriver;
 
@@ -1733,6 +1745,8 @@ export type ExactMatchSettingsPlain = {
   minDiffIntensity: number;
   minDiffWidth: number;
 };
+
+export type FailureReportPlain = undefined;
 
 export type FileLogHandlerPlain = {type: 'file'; filename?: string; append?: boolean};
 
@@ -1747,9 +1761,9 @@ export type FloatingMatchSettingsPlain = {
 
 export type IOSDeviceInfo = {
   iosDeviceInfo: {
-    deviceName: IosDeviceName | undefined;
-    iosVersion?: IosVersion | undefined;
-    screenOrientation?: ScreenOrientation | undefined;
+    deviceName: IosDeviceNamePlain;
+    iosVersion?: IosVersionPlain;
+    screenOrientation?: ScreenOrientationPlain;
   };
 };
 
@@ -1765,25 +1779,26 @@ export type ImageMatchSettingsPlain = {
   ignoreDisplacements?: boolean;
   ignoreRegions?: RegionPlain[];
   layoutRegions?: RegionPlain[];
-  matchLevel?: MatchLevel | undefined;
+  matchLevel?: MatchLevelPlain;
   strictRegions?: RegionPlain[];
   useDom?: boolean;
 };
 
 export type ImageRotationPlain = -270 | -180 | -90 | 0 | 90 | 180 | 270;
 
+export type IosDeviceNamePlain = undefined;
+
+export type IosVersionPlain = undefined;
+
 export type LocationPlain = {x: number; y: number};
 
 export type LogHandlerPlain = CustomLogHandlerPlain | FileLogHandlerPlain | ConsoleLogHandlerPlain;
 
+export type MatchLevelPlain = undefined;
+
 export type MatchResultPlain = {readonly asExpected?: boolean; readonly windowId?: number};
 
-export type OCRRegion<TElement = unknown, TSelector = unknown> = {
-  hint?: string;
-  language?: string;
-  minMatch?: number;
-  target: RegionPlain | TElement | TSelector;
-};
+export type OCRRegion = {target: RegionPlain | Element | Selector; hint?: string; minMatch?: number; language?: string};
 
 export type OCRSettings<TPattern extends string = string> = {
   firstOnly?: boolean;
@@ -1802,11 +1817,15 @@ export type RegionPlain = LocationPlain & RectangleSizePlain;
 
 export type RunnerOptionsPlain = {testConcurrency?: number};
 
+export type ScreenOrientationPlain = undefined;
+
 export type Selector =
   | import('selenium-webdriver').By
   | import('selenium-webdriver').ByHash
   | string
   | {type: string; selector: string};
+
+export type SessionTypePlain = undefined;
 
 export type SessionUrlsPlain = {readonly batch?: string; readonly session?: string};
 
@@ -1820,10 +1839,12 @@ export type StepInfoPlain = {
   readonly renderId?: string[];
 };
 
+export type StitchModePlain = undefined;
+
 export type TestAccessibilityStatus = {
-  readonly level: AccessibilityLevel | undefined;
-  readonly status: AccessibilityStatus | undefined;
-  readonly version: AccessibilityGuidelinesVersion | undefined;
+  readonly level: AccessibilityLevelPlain;
+  readonly status: AccessibilityStatusPlain;
+  readonly version: AccessibilityGuidelinesVersionPlain;
 };
 
 export type TestResultContainerPlain = {readonly exception: EyesError; readonly testResults: TestResultsPlain};
@@ -1853,13 +1874,15 @@ export type TestResultsPlain = {
   readonly noneMatches?: number;
   readonly secretToken?: string;
   readonly startedAt?: Date | string;
-  readonly status?: TestResultsStatus | undefined;
+  readonly status?: TestResultsStatusPlain;
   readonly steps?: number;
   readonly stepsInfo?: StepInfoPlain[];
   readonly strictMatches?: number;
   readonly testId?: string;
   readonly url?: string;
 };
+
+export type TestResultsStatusPlain = undefined;
 
 export type TestResultsSummaryPlain = Iterable<TestResultContainerPlain>;
 

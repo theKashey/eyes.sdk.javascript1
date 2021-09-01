@@ -31,7 +31,7 @@ function transformSelector(selector: Selector): [string, string] {
 
 export function isDriver(driver: any): driver is Driver {
   if (!driver) return false
-  return utils.types.has(driver, ['sessionId', 'serverUrl']) && utils.types.instanceOf(driver, 'Browser')
+  return utils.types.has(driver, ['sessionId', 'serverUrl']) || utils.types.instanceOf(driver, 'Browser')
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
