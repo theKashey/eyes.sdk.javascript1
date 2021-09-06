@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/driver@1.1.5 (from 1.1.4)
+- updated to @applitools/snippets@2.1.6 (from 2.1.5)
 
 
 ## 12.23.2 - 2021/9/6
