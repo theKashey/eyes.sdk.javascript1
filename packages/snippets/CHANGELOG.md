@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- return array instead of object from `addElementIds`
 
 ## 2.1.5 - 2021/9/6
 

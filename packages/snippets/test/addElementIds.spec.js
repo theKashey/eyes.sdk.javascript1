@@ -17,21 +17,18 @@ describe('addElementIds', () => {
     it('standard dom', async () => {
       await page.goto(url)
       const elements = await page.$$('#scrollable,#static,#fixed')
-      const elementMapping = {1: elements[0], 2: elements[1], 3: elements[2]}
-      const selectorMapping = await page.evaluate(addElementIds, [
-        Object.values(elementMapping),
-        Object.keys(elementMapping),
-      ])
-      assert.deepStrictEqual(Object.keys(elementMapping), Object.keys(selectorMapping))
+      const ids = ['1', '2', '3']
+      const selectors = await page.evaluate(addElementIds, [elements, ids])
+      assert.deepStrictEqual(selectors.length, elements.length)
       const results = await page.evaluate(
-        ([elementMapping, selectorMapping]) => {
-          return Object.entries(selectorMapping).map(([elementId, [selector]]) => {
-            const requiredElement = elementMapping[elementId]
+        ([elements, selectors]) => {
+          return selectors.map(([selector], index) => {
+            const requiredElement = elements[index]
             const element = document.querySelector(selector)
             return element === requiredElement
           })
         },
-        [elementMapping, selectorMapping],
+        [elements, selectors],
       )
       assert.deepStrictEqual(results, Array(elements.length).fill(true))
     })
@@ -39,16 +36,13 @@ describe('addElementIds', () => {
     it('shadow dom', async () => {
       await page.goto(url)
       const elements = await page.$$('#shadow,#shadow-child,#shadow-inner-child')
-      const elementMapping = {1: elements[0], 2: elements[1], 3: elements[2]}
-      const selectorMapping = await page.evaluate(addElementIds, [
-        Object.values(elementMapping),
-        Object.keys(elementMapping),
-      ])
-      assert.deepStrictEqual(Object.keys(elementMapping), Object.keys(selectorMapping))
+      const ids = ['1', '2', '3']
+      const selectors = await page.evaluate(addElementIds, [elements, ids])
+      assert.deepStrictEqual(selectors.length, elements.length)
       const results = await page.evaluate(
-        ([elementMapping, selectorMapping]) => {
-          return Object.entries(selectorMapping).map(([elementId, selectors]) => {
-            const requiredElement = elementMapping[elementId]
+        ([elements, selectors]) => {
+          return selectors.map((selectors, index) => {
+            const requiredElement = elements[index]
             const elementSelector = selectors[selectors.length - 1]
             const shadowRootSelectors = selectors.slice(0, -1)
             let root = document
@@ -59,7 +53,7 @@ describe('addElementIds', () => {
             return element === requiredElement
           })
         },
-        [elementMapping, selectorMapping],
+        [elements, selectors],
       )
       assert.deepStrictEqual(results, Array(elements.length).fill(true))
     })
@@ -79,12 +73,9 @@ describe('addElementIds', () => {
       it('standard dom', async () => {
         await driver.url(url)
         const elements = await driver.$$('#scrollable,#static,#fixed')
-        const elementMapping = {1: elements[0], 2: elements[1], 3: elements[2]}
-        const selectorMapping = await driver.execute(addElementIds, [
-          Object.values(elementMapping),
-          Object.keys(elementMapping),
-        ])
-        assert.deepStrictEqual(Object.keys(elementMapping), Object.keys(selectorMapping))
+        const ids = ['1', '2', '3']
+        const selectors = await driver.execute(addElementIds, [elements, ids])
+        assert.deepStrictEqual(selectors.length, elements.length)
         const results = await driver.execute(
           function(elements, selectors) {
             return selectors.map(function(selectors, index) {
@@ -93,8 +84,8 @@ describe('addElementIds', () => {
               return element === requiredElement
             })
           },
-          Object.values(elementMapping),
-          Object.values(selectorMapping),
+          elements,
+          selectors,
         )
         assert.deepStrictEqual(results, Array(elements.length).fill(true))
       })

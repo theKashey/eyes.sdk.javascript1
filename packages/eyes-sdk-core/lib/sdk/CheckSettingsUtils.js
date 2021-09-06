@@ -4,8 +4,11 @@ const snippets = require('@applitools/snippets')
 const ImageMatchSettings = require('../config/ImageMatchSettings')
 
 async function toPersistedCheckSettings({checkSettings, context, logger}) {
-  const elementMapping = {}
-  const resolverMapping = {}
+  const mapping = {
+    ids: [],
+    elements: [],
+    resolvers: [],
+  }
 
   const persistedCheckSettings = {
     ...checkSettings,
@@ -34,9 +37,9 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
       } else if (referenceRegion) {
         const elements = await context.elements(referenceRegion)
         for (const element of elements) {
-          const elementId = utils.general.guid()
-          elementMapping[elementId] = element
-          resolverMapping[elementId] = selector => persistedRegions.push(persistReference(reference, selector))
+          mapping.ids.push(utils.general.guid())
+          mapping.elements.push(element)
+          mapping.resolvers.push(selector => persistedRegions.push(persistReference(reference, selector)))
         }
       }
     }
@@ -48,12 +51,9 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
   }
 
   async function makePersistance() {
-    const selectorMapping = await context.execute(snippets.addElementIds, [
-      Object.values(elementMapping),
-      Object.keys(elementMapping),
-    ])
-    Object.entries(selectorMapping).forEach(([elementId, selectors]) => {
-      const resolver = resolverMapping[elementId]
+    const selectors = await context.execute(snippets.addElementIds, [mapping.elements, mapping.ids])
+    selectors.forEach((selectors, index) => {
+      const resolver = mapping.resolvers[index]
       const persistedSelector = selectors.map((selector, index) => ({
         type: 'css',
         selector,
@@ -61,12 +61,12 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
       }))
       resolver(persistedSelector.length === 1 ? persistedSelector[0] : persistedSelector)
     })
-    logger.verbose(`elements marked: ${Object.keys(elementMapping)}`)
+    logger.verbose(`elements marked: ${mapping.ids}`)
   }
 
   async function cleanupPersistance() {
-    await context.execute(snippets.cleanupElementIds, [Object.values(elementMapping)])
-    logger.verbose(`elements cleaned up: ${Object.keys(elementMapping)}`)
+    await context.execute(snippets.cleanupElementIds, [mapping.elements])
+    logger.verbose(`elements cleaned up: ${mapping.ids}`)
   }
 }
 

@@ -139,14 +139,16 @@ class MockDriver {
       return null
     })
     this.mockScript(snippets.addElementIds, ([elements, ids]) => {
-      for (const [index, el] of elements.entries()) {
+      const selectors = []
+      for (const [index, element] of elements.entries()) {
+        const elementId = ids[index]
         el.attributes = el.attributes || []
-        el.attributes.push({name: 'data-applitools-marker', value: ids[index]})
+        el.attributes.push({name: 'data-applitools-selector', value: elementId})
+        const selector = `[data-applitools-selector~="${elementId}"]`
+        this.mockSelector(selector, element)
+        selectors.push([selector])
       }
-      return ids.reduce((selectors, id) => {
-        selectors[id] = [`[data-applitools-selector~="${id}"]`]
-        return selectors
-      }, {})
+      return selectors
     })
     this.mockScript(snippets.cleanupElementIds, ([elements]) => {
       for (const el of elements) {
@@ -175,15 +177,9 @@ class MockDriver {
       parentRootId: null,
       ...state,
     }
-    let elements = this._elements.get(selector)
-    if (!elements) {
-      elements = []
-      this._elements.set(selector, elements)
-    }
     if (element.shadow) {
       element.shadowRootId = Symbol('shadowId' + (element.name || Math.floor(Math.random() * 100)))
     }
-    elements.push(element)
     if (element.frame) {
       const contextId = Symbol('contextId' + (element.name || Math.floor(Math.random() * 100)))
       this._contexts.set(contextId, {
@@ -204,6 +200,7 @@ class MockDriver {
         scrollPosition: {x: 0, y: 0},
       })
     }
+    this.mockSelector(selector, element)
     return element
   }
   mockElements(nodes, {parentId = null, parentContextId = null, parentRootId = null} = {}) {
@@ -217,6 +214,14 @@ class MockDriver {
         })
       }
     }
+  }
+  mockSelector(selector, element) {
+    let elements = this._elements.get(selector)
+    if (!elements) {
+      elements = []
+      this._elements.set(selector, elements)
+    }
+    elements.push(element)
   }
   wrapMethod(name, wrapper) {
     if (!this[name] || name.startsWith('_') || !utils.types.isFunction(this[name])) return
