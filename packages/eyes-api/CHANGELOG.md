@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add `CheckSettingsFluent#shadow` method to allow specifying region selectors for elements in shadow dom
+- updated to @applitools/types@1.0.12 (from 1.0.10)
 
 ## 1.0.13 - 2021/8/31
 
