@@ -6,6 +6,8 @@ module.exports = {
     {
       'check region by selector with vg classic': {},
       'check frame after manual switch to frame with vg classic': {},
+      // 'check region by selector within shadow dom with vg': {skipEmit: true},
+      'check region by element within shadow dom with vg': {skipEmit: true},
     },
   ],
 }
