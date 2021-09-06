@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 1.1.4 - 2021/9/6
+
 - add support of reach spec selectors with shadow properties
+- updated to @applitools/snippets@2.1.5 (from 2.1.4)
+- updated to @applitools/types@1.0.12 (from 1.0.8)
 
 ## 1.1.3 - 2021/8/13
 
