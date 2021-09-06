@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 2.3.15 - 2021/9/6
+
+- remove unused dependencies
+
 ## 2.3.14 - 2021/7/30
 
 - fix path resolution
