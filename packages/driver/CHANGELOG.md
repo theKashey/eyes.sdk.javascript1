@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/snippets@2.1.6 (from 2.1.5)
 
 
 ## 1.1.4 - 2021/9/6
