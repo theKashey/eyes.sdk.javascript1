@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 0.13.1 - 2021/9/6
+
+- replace `@applitools/sdk-shared` with `@applitools/utils`
+
 ## 0.13.0 - 2021/2/4
 
 - make postversion command just "postversion" (instead of having two command names) - fixes logging for postversion
