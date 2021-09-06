@@ -58,15 +58,15 @@
     prettier "1.18.2"
     yargs "15.3.1"
 
-"@applitools/snippets@2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.4.tgz#5b47556574ee898f581b7d1cf6b169c0a9b4aef8"
-  integrity sha512-Jmp+DM9Kj24+ByMaqoKxhMNsefsSshN5+MLyMyrFurb1FGRGoSMmAT5bZCI7zKFG02pxZmjBmenMhpNQbzZR/A==
+"@applitools/snippets@2.1.5":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.5.tgz#1a103678a7ad3bcbda26b13494ca2649d25946ce"
+  integrity sha512-kgTE5NoSBauhpW+0klJRSsCD9Y/FCprVfUZXbrdM/QApnn1rmIYj5eY3IQ0KIxE7ekaIdM+UKzPp4wPN4gjN0g==
 
-"@applitools/types@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.8.tgz#8aa8412de04df43e86faf96e23102b6a02893f6b"
-  integrity sha512-JypIIWukLRHe0lg5gB1anW1OHNOeZFVDujvHfETvgbXw4HZC4Q1DcStH9yBzJtJiNPY9s15nPuhZ3CmTEUddsA==
+"@applitools/types@1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.12.tgz#f68d930905dea9a5e91336e2588ae9a599fc44cf"
+  integrity sha512-CM5w3gb9lkNL7yOT3WLrCF1T/21yWH/mw+v79ePvzByizw2qWGJwJImRC9Od0tnIg3QMZI5xrV72b32OUcZvbA==
 
 "@applitools/utils@1.2.2":
   version "1.2.2"
