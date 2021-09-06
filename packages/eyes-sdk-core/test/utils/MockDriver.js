@@ -134,16 +134,20 @@ class MockDriver {
     this.mockScript(snippets.blurElement, () => {
       return null
     })
-    this.mockScript(snippets.setElementMarkers, ([elements, ids]) => {
+    this.mockScript(snippets.addElementIds, ([elements, ids]) => {
       for (const [index, el] of elements.entries()) {
         el.attributes = el.attributes || []
-        el.attributes.push({name: 'data-applitools-marker', value: ids[index]})
+        el.attributes.push({name: 'data-applitools-selector', value: ids[index]})
       }
+      return ids.reduce((selectors, id) => {
+        selectors[id] = [`[data-applitools-selector~="${id}"]`]
+        return selectors
+      }, {})
     })
-    this.mockScript(snippets.cleanupElementMarkers, ([elements]) => {
+    this.mockScript(snippets.cleanupElementIds, ([elements]) => {
       for (const el of elements) {
         el.attributes.splice(
-          el.attributes.findIndex(({name}) => name === 'data-applitools-marker'),
+          el.attributes.findIndex(({name}) => name === 'data-applitools-selector'),
           1,
         )
       }
@@ -177,7 +181,7 @@ class MockDriver {
       this._elements.set(selector, elements)
     }
     elements.push(element)
-    if (element.frame) {
+    if (element.frame || element.shadow) {
       const contextId = Symbol('contextId' + (element.name || Math.floor(Math.random() * 100)))
       this._contexts.set(contextId, {
         id: contextId,
@@ -204,8 +208,8 @@ class MockDriver {
       const element = this.mockElement(node.selector, {...node, parentId, parentContextId})
       if (node.children) {
         this.mockElements(node.children, {
-          parentId: element.frame ? null : element.id,
-          parentContextId: element.frame ? this._contexts.get(element.contextId).id : parentContextId,
+          parentId: element.frame || element.shadow ? null : element.id,
+          parentContextId: element.frame || element.shadow ? this._contexts.get(element.contextId).id : parentContextId,
         })
       }
     }

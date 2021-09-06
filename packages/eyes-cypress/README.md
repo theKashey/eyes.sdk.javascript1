@@ -187,6 +187,7 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [strict](#strict)
     - [content](#content)
     - [accessibility](#accessibility)
+    - [region in shadow DOM](#region-in-shadow-dom)
     - [scriptHooks](#scriptHooks)
     - [layoutBreakpoints](#layoutBreakpoints)
     - [sendDom](#sendDom)
@@ -387,6 +388,24 @@ cy.eyesCheckWindow({
 
   Possible accessibilityType values are: `IgnoreContrast`,`RegularText`,`LargeText`,`BoldText` and `GraphicalObject`.
 
+##### `region in shadow DOM`
+
+When the target region is within shadow DOM, there is a need to specify the path to that region by passing an array of selectors. Each entry in the array should contain a `json` with the following entries: `type:css` ***only***, `selector` and `nodeType`. The element that contains the `shadowRoot` should be specified as `nodeType:'shadow-root'` and the final target region should contain `nodeType:'element'`
+
+```js
+cy.eyesCheckWindow({
+      target: 'region',
+      selector: [{
+        type: 'css',
+        selector: 'ContainShadowRoot' ,
+        nodeType: 'shadow-root'
+      },{
+        type: 'css',
+        selector: 'targetRegion',
+        nodeType: 'element'
+      }]
+    });
+```
 ##### `scriptHooks`
 
 (optional): A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering.

@@ -67,6 +67,7 @@ export type Target<TElement, TSelector> = {
     frame: FrameReference<TElement, TSelector>,
     scrollRootElement?: ElementReference<TElement, TSelector>,
   ): CheckSettingsFluent<TElement, TSelector>
+  shadow(selector: TSelector): CheckSettingsFluent<TSelector>
 }
 
 export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
@@ -82,7 +83,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   static frame(contextOrFrame: unknown, scrollRootElement?: unknown): CheckSettingsFluent {
     return new this().frame(contextOrFrame, scrollRootElement)
   }
-
+  /** @internal */
+  static shadow(selector: unknown): CheckSettingsFluent {
+    return new this().shadow(selector)
+  }
   protected static readonly _spec: CheckSettingsSpec
   protected get _spec(): CheckSettingsSpec<TElement, TSelector> {
     return (this.constructor as typeof CheckSettingsFluent)._spec as CheckSettingsSpec<TElement, TSelector>
@@ -176,7 +180,41 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
 
   region(region: RegionReference<TElement, TSelector>): this {
     utils.guard.custom(region, value => this._isRegionReference(value), {name: 'region'})
-    this._settings.region = region
+
+    if (
+      this._spec.isSelector(region) &&
+      this._spec.isSelector(this._settings.region) &&
+      utils.types.has(this._settings.region, 'selector')
+    ) {
+      let lastSelector: any = this._settings.region
+      while (lastSelector.shadow) lastSelector = lastSelector.shadow
+      lastSelector.shadow = region
+    } else {
+      this._settings.region = region
+    }
+
+    return this
+  }
+
+  shadow(selector: TSelector): this {
+    // this method feels a bit clunky, because we are building a selector, but type-wise we don't have a clue about its format
+    utils.guard.custom(selector, value => this._spec.isSelector(value), {name: 'selector'})
+
+    selector = utils.types.has(selector, 'selector') ? selector : ({selector} as any)
+
+    if (!this._settings.region) {
+      this._settings.region = selector
+    } else if (this._spec.isSelector(this._settings.region)) {
+      let lastSelector: any
+      if (utils.types.has(this._settings.region, 'selector')) {
+        lastSelector = this._settings.region
+        while (lastSelector.shadow) lastSelector = lastSelector.shadow
+      } else {
+        lastSelector = {selector: this._settings.region}
+      }
+      lastSelector.shadow = selector
+    }
+
     return this
   }
 

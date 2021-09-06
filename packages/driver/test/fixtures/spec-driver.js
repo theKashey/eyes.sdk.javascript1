@@ -11,7 +11,7 @@ module.exports = {
     return (
       utils.types.isString(selector) ||
       utils.types.has(selector, ['using', 'value']) ||
-      utils.types.has(selector, ['type', 'selector'])
+      utils.types.has(selector, ['selector'])
     )
   },
   isStaleElementError() {
@@ -23,11 +23,11 @@ module.exports = {
   executeScript(driver, script, ...args) {
     return driver.executeScript(script, args)
   },
-  findElement(driver, selector) {
-    return driver.findElement(selector.selector || selector)
+  findElement(driver, selector, parent) {
+    return driver.findElement(selector.selector || selector, parent)
   },
-  findElements(driver, selector) {
-    return driver.findElements(selector)
+  findElements(driver, selector, parent) {
+    return driver.findElements(selector.selector || selector, parent)
   },
   mainContext(driver) {
     return driver.switchToFrame(null)

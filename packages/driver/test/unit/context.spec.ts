@@ -32,6 +32,18 @@ describe('context', () => {
             frame: true,
             children: [{selector: 'frame2--element1'}],
           },
+          {
+            selector: 'shadow1',
+            shadow: true,
+            children: [
+              {selector: 'shadow1--element1'},
+              {
+                selector: 'shadow1-1',
+                shadow: true,
+                children: [{selector: 'shadow1-1--element1'}],
+              },
+            ],
+          },
         ],
       },
     ])
@@ -76,6 +88,74 @@ describe('context', () => {
     const element = await childContext11.element('frame1-1--element1')
 
     assert.strictEqual(element.selector, 'frame1-1--element1')
+  })
+
+  it('element(shadow-selector)', async () => {
+    const selector = {
+      selector: 'shadow1',
+      shadow: {selector: 'shadow1-1', shadow: {selector: 'shadow1-1--element1'}},
+    }
+    const element = await context.element(selector)
+    assert.deepStrictEqual(element.selector, selector)
+  })
+
+  it('elements(non-existent)', async () => {
+    const selector = 'non-existent'
+    const element = await context.element(selector)
+
+    assert.strictEqual(element, null)
+  })
+
+  it('elements(non-existent-shadow)', async () => {
+    const selector = {
+      selector: 'shadow1',
+      shadow: {selector: 'shadow1-non-existent', shadow: {selector: 'shadow1-non-existent--element1'}},
+    }
+    const element = await context.element(selector)
+
+    assert.strictEqual(element, null)
+  })
+
+  it('elements(selector)', async () => {
+    const childContext1 = await context.context('frame1')
+    const childContext11 = await childContext1.context('frame1-1')
+    const selector = 'frame1-1--element1'
+    const elements = await childContext11.elements(selector)
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 1)
+    assert.strictEqual(elements[0].selector, selector)
+  })
+
+  it('elements(shadow-selector)', async () => {
+    const selector = {
+      selector: 'shadow1',
+      shadow: {selector: 'shadow1-1', shadow: {selector: 'shadow1-1--element1'}},
+    }
+    const elements = await context.elements(selector)
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 1)
+    assert.deepStrictEqual(elements[0].selector, selector)
+  })
+
+  it('elements(non-existent)', async () => {
+    const selector = 'non-existent'
+    const elements = await context.elements(selector)
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 0)
+  })
+
+  it('elements(non-existent-shadow)', async () => {
+    const selector = {
+      selector: 'shadow1',
+      shadow: {selector: 'shadow1-non-existent', shadow: {selector: 'shadow1-non-existent--element1'}},
+    }
+    const elements = await context.elements(selector)
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 0)
   })
 
   it('getContextElement()', async () => {

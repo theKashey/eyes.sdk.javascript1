@@ -101,6 +101,12 @@ describe('spec driver', async () => {
     it('findElements(non-existent)', async () => {
       findElements({input: 'non-existent', expected: []})
     })
+    it('findElement(within-element)', async () => {
+      await findElement({input: {selector: 'div', parentSelector: '#stretched'}})
+    })
+    it('findElements(within-element)', async () => {
+      findElements({input: {selector: 'div', parentSelector: '#stretched'}})
+    })
     it('mainContext()', async () => {
       await mainContext()
     })
@@ -346,6 +352,12 @@ describe('spec driver', async () => {
     it('findElements(non-existent)', async () => {
       await findElements({input: 'non-existent', expected: []})
     })
+    it('findElement(within-element)', async () => {
+      await findElement({input: {selector: 'div', parentSelector: '#stretched'}})
+    })
+    it('findElements(within-element)', async () => {
+      findElements({input: {selector: 'div', parentSelector: '#stretched'}})
+    })
     it('getTitle()', async () => {
       await getTitle()
     })
@@ -455,15 +467,19 @@ describe('spec driver', async () => {
     }
   }
   async function findElement({input, expected} = {}) {
-    const result = expected !== undefined ? expected : await browser.$(input)
-    const element = await spec.findElement(browser, input)
+    const {selector, parentSelector} = input.selector ? input : {selector: input}
+    const root = parentSelector ? await browser.$(parentSelector) : browser
+    const result = expected !== undefined ? expected : await root.$(selector)
+    const element = await spec.findElement(browser, selector, parentSelector ? root : null)
     if (element !== result) {
       assert.ok(await spec.isEqualElements(browser, element, result))
     }
   }
   async function findElements({input, expected} = {}) {
-    const result = expected !== undefined ? expected : await browser.$$(input)
-    const elements = await spec.findElements(browser, input)
+    const {selector, parentSelector} = input.selector ? input : {selector: input}
+    const root = parentSelector ? await browser.$(parentSelector) : browser
+    const result = expected !== undefined ? expected : await root.$$(selector)
+    const elements = await spec.findElements(browser, selector, parentSelector ? root : null)
     assert.strictEqual(elements.length, result.length)
     for (const [index, element] of elements.entries()) {
       assert.ok(await spec.isEqualElements(browser, element, result[index]))

@@ -4,11 +4,12 @@ const snippets = require('@applitools/snippets')
 const ImageMatchSettings = require('../config/ImageMatchSettings')
 
 async function toPersistedCheckSettings({checkSettings, context, logger}) {
-  const elementsById = {}
+  const elementMapping = {}
+  const resolverMapping = {}
 
   const persistedCheckSettings = {
     ...checkSettings,
-    region: (await referencesToPersistedRegions(checkSettings.region && [checkSettings.region]))[0],
+    region: await referencesToPersistedRegions([checkSettings.region]),
     ignoreRegions: await referencesToPersistedRegions(checkSettings.ignoreRegions),
     floatingRegions: await referencesToPersistedRegions(checkSettings.floatingRegions),
     strictRegions: await referencesToPersistedRegions(checkSettings.strictRegions),
@@ -19,40 +20,53 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 
   await makePersistance()
 
+  persistedCheckSettings.region = persistedCheckSettings.region[0]
+
   return {persistedCheckSettings, cleanupPersistance}
 
   async function referencesToPersistedRegions(references = []) {
     const persistedRegions = []
     for (const reference of references) {
-      const {region, ...options} = reference.region ? reference : {region: reference}
-      let referenceRegions
-      if (utils.types.has(region, ['width', 'height'])) {
-        referenceRegions = [region]
-      } else {
-        const elements = await context.elements(region)
-        referenceRegions = elements.map(element => {
+      if (!reference) continue
+      const referenceRegion = reference.region || reference
+      if (utils.types.has(referenceRegion, ['width', 'height'])) {
+        persistedRegions.push(persistReference(reference, referenceRegion))
+      } else if (referenceRegion) {
+        const elements = await context.elements(referenceRegion)
+        for (const element of elements) {
           const elementId = utils.general.guid()
-          elementsById[elementId] = element
-          return {
-            type: 'css',
-            selector: `[data-applitools-marker~="${elementId}"]`,
-          }
-        })
+          elementMapping[elementId] = element
+          resolverMapping[elementId] = selector => persistedRegions.push(persistReference(reference, selector))
+        }
       }
-
-      persistedRegions.push(...referenceRegions.map(region => (reference.region ? {region, ...options} : region)))
     }
     return persistedRegions
+
+    function persistReference(reference, persistedRegion) {
+      return reference.region ? {...reference, region: persistedRegion} : persistedRegion
+    }
   }
 
   async function makePersistance() {
-    await context.execute(snippets.setElementMarkers, [Object.values(elementsById), Object.keys(elementsById)])
-    logger.verbose(`elements marked: ${Object.keys(elementsById)}`)
+    const selectorMapping = await context.execute(snippets.addElementIds, [
+      Object.values(elementMapping),
+      Object.keys(elementMapping),
+    ])
+    Object.entries(selectorMapping).forEach(([elementId, selectors]) => {
+      const resolver = resolverMapping[elementId]
+      const persistedSelector = selectors.map((selector, index) => ({
+        type: 'css',
+        selector,
+        nodeType: index < selectors.length - 1 ? 'shadow-root' : 'element',
+      }))
+      resolver(persistedSelector.length === 1 ? persistedSelector[0] : persistedSelector)
+    })
+    logger.verbose(`elements marked: ${Object.keys(elementMapping)}`)
   }
 
   async function cleanupPersistance() {
-    await context.execute(snippets.cleanupElementMarkers, [Object.values(elementsById)])
-    logger.verbose(`elements cleaned up: ${Object.keys(elementsById)}`)
+    await context.execute(snippets.cleanupElementIds, [Object.values(elementMapping)])
+    logger.verbose(`elements cleaned up: ${Object.keys(elementMapping)}`)
   }
 }
 

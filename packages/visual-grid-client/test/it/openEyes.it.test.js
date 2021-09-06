@@ -2181,6 +2181,29 @@ Received: 'firefox-1'.`,
     expect(JSON.parse(r).visualGridOptions).to.eql({aaa: true})
   })
 
+  it('handles selector as array in checkWindow', async () => {
+    openEyes = makeRenderingGridClient({
+      apiKey,
+      renderWrapper: wrapper,
+    }).openEyes
+
+    const {checkWindow, close} = await openEyes({
+      apiKey,
+      wrappers: [wrapper],
+      appName,
+    })
+
+    await checkWindow({
+      snapshot: {cdt: []},
+      url: '',
+      visualGridOptions: {aaa: true},
+      selector: ['.something-1', '.something-2'],
+    })
+    await close()
+
+    expect(wrapper.selector).to.eql(['.something-1', '.something-2'])
+  })
+
   it('doesnt throw error on chrome canary browser name', async () => {
     const [err] = await presult(
       openEyes({

@@ -119,6 +119,9 @@ class MockDriver {
     this.mockScript(snippets.getPixelRatio, () => {
       return 1
     })
+    this.mockScript(snippets.getShadowRoot, element => {
+      return element
+    })
     this.mockScript(snippets.getUserAgent, () => {
       if (this._ua !== undefined) return this._ua
       return this.info.isMobile ? DEFAULT_MOBILE_UA : DEFAULT_DESKTOP_UA
@@ -135,13 +138,17 @@ class MockDriver {
     this.mockScript(snippets.blurElement, () => {
       return null
     })
-    this.mockScript(snippets.setElementMarkers, ([elements, ids]) => {
+    this.mockScript(snippets.addElementIds, ([elements, ids]) => {
       for (const [index, el] of elements.entries()) {
         el.attributes = el.attributes || []
         el.attributes.push({name: 'data-applitools-marker', value: ids[index]})
       }
+      return ids.reduce((selectors, id) => {
+        selectors[id] = [`[data-applitools-selector~="${id}"]`]
+        return selectors
+      }, {})
     })
-    this.mockScript(snippets.cleanupElementMarkers, ([elements]) => {
+    this.mockScript(snippets.cleanupElementIds, ([elements]) => {
       for (const el of elements) {
         el.attributes.splice(
           el.attributes.findIndex(({name}) => name === 'data-applitools-marker'),
@@ -165,12 +172,16 @@ class MockDriver {
       selector,
       parentId: null,
       parentContextId: null,
+      parentRootId: null,
       ...state,
     }
     let elements = this._elements.get(selector)
     if (!elements) {
       elements = []
       this._elements.set(selector, elements)
+    }
+    if (element.shadow) {
+      element.shadowRootId = Symbol('shadowId' + (element.name || Math.floor(Math.random() * 100)))
     }
     elements.push(element)
     if (element.frame) {
@@ -195,13 +206,14 @@ class MockDriver {
     }
     return element
   }
-  mockElements(nodes, {parentId = null, parentContextId = null} = {}) {
+  mockElements(nodes, {parentId = null, parentContextId = null, parentRootId = null} = {}) {
     for (const node of nodes) {
-      const element = this.mockElement(node.selector, {...node, parentId, parentContextId})
+      const element = this.mockElement(node.selector, {...node, parentId, parentContextId, parentRootId})
       if (node.children) {
         this.mockElements(node.children, {
           parentId: element.frame ? null : element.id,
-          parentContextId: element.frame ? this._contexts.get(element.contextId).id : parentContextId,
+          parentContextId: element.frame ? element.contextId : parentContextId,
+          parentRootId: element.shadow ? element.shadowRootId : parentRootId,
         })
       }
     }
@@ -242,13 +254,25 @@ class MockDriver {
     const {state} = this._contexts.get(this._contextId)
     return utils.types.isFunction(result) ? result.call(state, ...args) : result
   }
-  async findElement(selector) {
+  async findElement(selector, rootElement) {
     const elements = this._elements.get(selector)
-    return elements ? elements.find(element => element.parentContextId === this._contextId) : null
+    return elements
+      ? elements.find(
+          element =>
+            element.parentContextId === this._contextId &&
+            element.parentRootId === ((rootElement || {}).shadowRootId || null),
+        )
+      : null
   }
-  async findElements(selector) {
+  async findElements(selector, rootElement) {
     const elements = this._elements.get(selector)
-    return elements ? elements.filter(element => element.parentContextId === this._contextId) : []
+    return elements
+      ? elements.filter(
+          element =>
+            element.parentContextId === this._contextId &&
+            element.parentRootId === ((rootElement || {}).shadowRootId || null),
+        )
+      : []
   }
   async switchToFrame(reference) {
     if (reference === null) {

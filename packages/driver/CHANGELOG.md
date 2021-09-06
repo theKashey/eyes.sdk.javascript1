@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support of reach spec selectors with shadow properties
 
 ## 1.1.3 - 2021/8/13
 

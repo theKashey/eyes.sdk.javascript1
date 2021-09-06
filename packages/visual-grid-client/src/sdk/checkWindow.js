@@ -79,8 +79,6 @@ function makeCheckWindow({
     }
 
     const {selectorsToFindRegionsFor, getMatchRegions} = calculateSelectorsToFindRegionsFor({
-      sizeMode,
-      selector,
       ignore,
       layout,
       strict,

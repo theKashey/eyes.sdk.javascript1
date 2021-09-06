@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- Update README to include an example about region within shadow DOM
 
 ## 3.22.3 - 2021/8/16
 

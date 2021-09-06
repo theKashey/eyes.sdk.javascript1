@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+- add `getShadowRoot` snippet
+- replace `setElementMarkers` with `addElementIds` snippet, which will return a selector mapping
 
 ## 2.1.4 - 2021/8/4
 

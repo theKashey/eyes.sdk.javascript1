@@ -1,6 +1,9 @@
 import {Size, DriverInfo, Region} from './data'
 
-export type SpecSelector<TSelector> = TSelector | string | {type: string; selector: string}
+export type SpecSelector<TSelector> =
+  | TSelector
+  | string
+  | {selector: TSelector | string; type?: string; shadow?: SpecSelector<TSelector>}
 
 export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   isDriver(driver: any): driver is TDriver
@@ -17,8 +20,8 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   parentContext?(context: TContext): Promise<TContext>
   childContext(context: TContext, element: TElement): Promise<TContext>
   executeScript(context: TContext, script: ((arg?: any) => any) | string, arg?: any): Promise<any>
-  findElement(context: TContext, selector: SpecSelector<TSelector>): Promise<TElement | null>
-  findElements(context: TContext, selector: SpecSelector<TSelector>): Promise<TElement[]>
+  findElement(context: TContext, selector: SpecSelector<TSelector>, parent?: TElement): Promise<TElement | null>
+  findElements(context: TContext, selector: SpecSelector<TSelector>, parent?: TElement): Promise<TElement[]>
   click?(context: TContext, element: TElement | SpecSelector<TSelector>): Promise<void>
   setWindowSize?(driver: TDriver, size: Size): Promise<void>
   getWindowSize?(driver: TDriver): Promise<Size>

@@ -72,39 +72,34 @@ test('Cookies', async t => {
 <br/>
 
 ### Index
-- [API](#API)
-  - [Open](#open)
-  - [CheckWindow](#checkWindow)
-    - [tag](#tag)
-    - [target](#target)
-    - [fully](#fully)
-    - [selector](#selector)
-    - [region](#region)
-    - [ignore](#ignore)
-    - [floating](#floating)
-    - [layout](#layout)
-    - [strict](#strict)
-    - [content](#content)
-    - [accessibility](#accessibility)
-    - [scriptHooks](#scriptHooks)
-    - [sendDom](#sendDom)
-  - [Close](#Close)
-  - [waitForResults](#waitForResults)
-  - [Best practices](#Best-practice-for-using-the-SDK)
-- [Concurrency](#Concurrency)
-  - [Running wih testcafe concurrency](#Running-wih-testcafe-concurrency)
-  - [Applitools concurrency](#Applitools-concurrency)
-- [Advanced configuration](#Advanced-configuration)
-  - [Scoped configuration](#configuration-properties)
-  - [Global configuration](#global-configuration-properties)
-  - [Examples](#Method-1-Arguments-for-eyesOpen)
-    - [Arguments for `eyesOpen`](#Method-1-Arguments-for-eyesOpen)
-    - [Environment variables](#Method-2-Environment-variables)
-    - [The `applitools.config.js` file](#Method-3-The-applitoolsconfigjs-file)
-- [Configuring the browser](#Configuring-the-browser)
-  - [Device emulation](#Device-emulation)
-  - [iOS device](#iOS-device)
-- [Troubleshooting](#Troubleshooting)
+- [Eyes-Testcafe](#eyes-testcafe)
+  - [Installation](#installation)
+  - [Applitools API key](#applitools-api-key)
+  - [Usage](#usage)
+    - [Example](#example)
+    - [Index](#index)
+- [API](#api)
+    - [**open**](#open)
+    - [**checkWindow**](#checkwindow)
+      - [Arguments to `eyes.checkWindow`](#arguments-to-eyescheckwindow)
+    - [**close**](#close)
+    - [**waitForResults**](#waitforresults)
+  - [Best practice for using the SDK](#best-practice-for-using-the-sdk)
+  - [Concurrency](#concurrency)
+    - [Running wih testcafe concurrency](#running-wih-testcafe-concurrency)
+    - [Applitools concurrency](#applitools-concurrency)
+  - [Advanced configuration](#advanced-configuration)
+      - [Configuration properties:](#configuration-properties)
+    - [Global configuration properties:](#global-configuration-properties)
+    - [Method 1: Arguments for `eyes.open`](#method-1-arguments-for-eyesopen)
+    - [Method 2: Environment variables](#method-2-environment-variables)
+    - [Method 3: The `applitools.config.js` file](#method-3-the-applitoolsconfigjs-file)
+  - [Configuring the browser](#configuring-the-browser)
+    - [Previous browser versions](#previous-browser-versions)
+    - [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
+    - [Device emulation](#device-emulation)
+    - [iOS device](#ios-device)
+  - [Troubleshooting](#troubleshooting)
 
 <br/><br/><br/>
 
@@ -161,6 +156,20 @@ eyes.checkWindow({ tag: 'your tag', target: 'your target mode' })
   (optional) In case [target](#target) is `region`, this should be the actual css, xpath or [a Testcafe Selector](https://devexpress.github.io/testcafe/documentation/test-api/selecting-page-elements/selectors/) to an element, and the screenshot would be the content of that element. For example:
 
   ```js
+      // Using a Testcafe Selector
+      import {Selector} from 'testcafe';
+      eyes.checkWindow({
+        target: 'region',
+        selector: Selector('.my-region')
+      });
+
+      // Using a Testcafe Selector to reference an element within a shadow DOM
+      import {Selector} from 'testcafe';
+      eyes.checkWindow({
+        target: 'region',
+        selector: Selector('#has-shadow-root').shadowRoot().find('.my-region')
+      });
+
       // The shorthand string version defaults to css selectors
       eyes.checkWindow({
         target: 'region',
@@ -174,13 +183,6 @@ eyes.checkWindow({ tag: 'your tag', target: 'your target mode' })
           type: 'css',
           selector: '.my-element' // or '//button'
         }
-      });
-
-      // Using a Testcafe Selector
-      import {Selector} from 'testcafe';
-      eyes.checkWindow({
-        target: 'region',
-        selector: Selector('.my-region')
       });
 
       // Using an xpath selector

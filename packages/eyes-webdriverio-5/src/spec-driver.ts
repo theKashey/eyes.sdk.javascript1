@@ -6,7 +6,11 @@ export type Element =
   | Applitools.WebdriverIO.Element
   | {ELEMENT: string}
   | {'element-6066-11e4-a52e-4f735466cecf': string}
-export type Selector = Applitools.WebdriverIO.Selector | string | legacy.By | {type: string; selector: string}
+export type Selector =
+  | Applitools.WebdriverIO.Selector
+  | string
+  | legacy.By
+  | {selector: string | legacy.By | Applitools.WebdriverIO.Selector; type?: string; shadow?: Selector}
 // #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
@@ -17,13 +21,12 @@ function extractElementId(element: Element): string {
   else if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID] as string
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID] as string
 }
-function transformSelector(
-  selector: Selector,
-): string | ((element: HTMLElement) => HTMLElement) | ((element: HTMLElement) => HTMLElement[]) {
+function transformSelector(selector: Selector): Applitools.WebdriverIO.Selector {
   if (selector instanceof legacy.By) {
     return selector.toString()
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return `css selector:${selector.selector}`
+  } else if (utils.types.has(selector, ['selector'])) {
+    if (!selector.type) return selector.selector.toString()
+    else if (selector.type === 'css') return `css selector:${selector.selector}`
     else if (selector.type === 'xpath') return `xpath:${selector.selector}`
     else return `${selector.type}:${selector.selector}`
   }
@@ -97,6 +100,9 @@ export function isSelector(selector: any): selector is Selector {
     utils.types.isString(selector) ||
     utils.types.isFunction(selector) ||
     utils.types.has(selector, ['type', 'selector']) ||
+    (utils.types.has(selector, ['selector']) &&
+      isSelector(selector.selector) &&
+      selector.constructor.name === 'Object') ||
     selector instanceof legacy.By
   )
 }
@@ -152,12 +158,22 @@ export async function childContext(browser: Driver, element: Element): Promise<D
   await browser.switchToFrame(element)
   return browser
 }
-export async function findElement(browser: Driver, selector: Selector): Promise<Applitools.WebdriverIO.Element> {
-  const element = await browser.$(transformSelector(selector))
+export async function findElement(
+  browser: Driver,
+  selector: Selector,
+  parent?: Element,
+): Promise<Applitools.WebdriverIO.Element> {
+  const root = parent ? await browser.$(parent as any) : browser
+  const element = await root.$(transformSelector(selector))
   return !utils.types.has(element, 'error') ? element : null
 }
-export async function findElements(browser: Driver, selector: Selector): Promise<Applitools.WebdriverIO.Element[]> {
-  const elements = await browser.$$(transformSelector(selector))
+export async function findElements(
+  browser: Driver,
+  selector: Selector,
+  parent?: Element,
+): Promise<Applitools.WebdriverIO.Element[]> {
+  const root = parent ? await browser.$(parent as any) : browser
+  const elements = await root.$$(transformSelector(selector))
   return Array.from(elements)
 }
 export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {

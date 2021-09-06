@@ -35,12 +35,13 @@ function XPathSelector(selector: string, options?: TestCafe.SelectorOptions): Te
   return testcafe.Selector(getElementsByXPath(selector), options)
 }
 function transformSelector(selector: Selector): TestCafe.Selector {
-  if (utils.types.has(selector, ['type', 'selector'])) {
+  if (utils.types.has(selector, 'selector')) {
     if (selector.type === 'xpath') return XPathSelector(selector.selector)
     return testcafe.Selector(selector.selector)
   }
   return testcafe.Selector(selector)
 }
+
 function deserializeResult(result: any, elements: Element[]): any {
   if (!result) {
     return result
@@ -130,10 +131,12 @@ export function isElement(element: any): element is Element {
   )
 }
 export function isSelector(selector: any): selector is Selector {
+  if (!selector) return
   return (
     utils.types.has(selector, ['type', 'selector']) ||
     utils.types.isString(selector) ||
-    Boolean(selector.addCustomMethods && selector.find && selector.parent)
+    Boolean(selector.addCustomMethods && selector.find && selector.parent) ||
+    (utils.types.has(selector, ['selector']) && isSelector(selector.selector) && selector.constructor.name === 'Object')
   )
 }
 export function transformElement(element: Element): TestCafe.Selector {

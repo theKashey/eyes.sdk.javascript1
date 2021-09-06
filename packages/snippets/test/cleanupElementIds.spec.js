@@ -1,7 +1,7 @@
 const assert = require('assert')
-const {cleanupElementMarkers, setElementMarkers} = require('../dist/index')
+const {cleanupElementIds, addElementIds} = require('../dist/index')
 
-describe('cleanupElementMarkers', () => {
+describe('cleanupElementIds', () => {
   const url = 'https://applitools.github.io/demo/TestPages/SnippetsTestPage/'
 
   describe('chrome', () => {
@@ -14,15 +14,20 @@ describe('cleanupElementMarkers', () => {
       }
     })
 
-    it('cleanupElementMarkers', async () => {
+    it('cleanupElementIds', async () => {
       await page.goto(url)
       const elements = await page.$$('#scrollable,#static,#fixed')
-      const ids = ['1', '2', '3']
-      await page.evaluate(setElementMarkers, [elements, ids])
-      const selector = ids.map(id => `[data-applitools-marker="${id}"]`).join(', ')
+      const elementMapping = {1: elements[0], 2: elements[1], 3: elements[2]}
+      const selectorMapping = await page.evaluate(addElementIds, [
+        Object.values(elementMapping),
+        Object.keys(elementMapping),
+      ])
+      const selector = Object.values(selectorMapping)
+        .map(([selector]) => selector)
+        .join(', ')
       const markedElements = await page.$$(selector)
       assert.strictEqual(markedElements.length, 3)
-      await page.evaluate(cleanupElementMarkers, [elements])
+      await page.evaluate(cleanupElementIds, [elements])
       const markedElementsAfterCleanup = await page.$$(selector)
       assert.strictEqual(markedElementsAfterCleanup.length, 0)
     })
@@ -39,15 +44,21 @@ describe('cleanupElementMarkers', () => {
         }
       })
 
-      it('cleanupElementMarkers', async () => {
+      it('cleanupElementIds', async () => {
         await driver.url(url)
         const elements = await driver.$$('#scrollable,#static,#fixed')
-        const ids = ['1', '2', '3']
-        await driver.execute(setElementMarkers, [elements, ids])
-        const selector = ids.map(id => `[data-applitools-marker="${id}"]`).join(', ')
+        const elementMapping = {1: elements[0], 2: elements[1], 3: elements[2]}
+
+        const selectorMapping = await driver.execute(addElementIds, [
+          Object.values(elementMapping),
+          Object.keys(elementMapping),
+        ])
+        const selector = Object.values(selectorMapping)
+          .map(([selector]) => selector)
+          .join(', ')
         const markedElements = await driver.$$(selector)
         assert.strictEqual(markedElements.length, 3)
-        await driver.execute(cleanupElementMarkers, [elements])
+        await driver.execute(cleanupElementIds, [elements])
         const markedElementsAfterCleanup = await driver.$$(selector)
         assert.strictEqual(markedElementsAfterCleanup.length, 0)
       })

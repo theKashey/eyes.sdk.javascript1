@@ -77,6 +77,101 @@ describe('CheckSettingsUtils', () => {
       })),
     )
   })
+  // this test is currently not passing, I might need to add some functionalty to MockDriver
+  it('toCheckWindowConfiguration handles shadow, frames with target region', async () => {
+    const mockDriver = new MockDriver()
+    mockDriver.mockElements([
+      {
+        selector: 'frame1',
+        frame: true,
+        children: [
+          {
+            selector: 'shadow1',
+            children: [
+              {
+                selector: 'shadowDoc',
+                shadow: true,
+                children: [{selector: 'r1'}],
+              },
+            ],
+          },
+        ],
+      },
+    ])
+    const driver = new Driver({logger, spec, driver: mockDriver})
+    const checkSettings = {
+      frame: ['frame1'],
+      shadow: ['shadow1'],
+      region: 'r1',
+      target: 'region',
+    }
+
+    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
+      checkSettings,
+      context: driver.currentContext,
+      logger,
+    })
+
+    const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: persistedCheckSettings,
+      configuration: new Configuration(),
+    })
+
+    const persistedCheckRes = persistedCheckSettings.frame
+      .concat(persistedCheckSettings.shadow)
+      .concat(persistedCheckSettings.region)
+
+    assert.deepStrictEqual(checkWindowConfiguration.selector, persistedCheckRes)
+  })
+
+  it('toCheckWindowConfiguration handles window target', async () => {
+    const windowCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: {},
+      configuration: new Configuration(),
+    })
+
+    assert.strictEqual(windowCheckWindowConfiguration.target, 'window')
+  })
+
+  it('toCheckWindowConfiguration handles region target with selector', async () => {
+    const mockDriver = new MockDriver()
+    mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
+    const driver = new Driver({logger, spec, driver: mockDriver})
+
+    const regionCheckSettings = {region: 'some selector'}
+    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
+      checkSettings: regionCheckSettings,
+      context: driver,
+      logger,
+    })
+
+    const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: persistedCheckSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+  })
+
+  it('toCheckWindowConfiguration handles region target with element', async () => {
+    const mockDriver = new MockDriver()
+    mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
+    const driver = new Driver({logger, spec, driver: mockDriver})
+
+    const regionCheckSettings = {region: await mockDriver.findElement('some selector')}
+    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
+      checkSettings: regionCheckSettings,
+      context: driver,
+      logger,
+    })
+
+    const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: persistedCheckSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+  })
 
   it('toCheckWindowConfiguration handles window target', async () => {
     const windowCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({

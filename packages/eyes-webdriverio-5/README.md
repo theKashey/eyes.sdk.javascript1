@@ -24,6 +24,7 @@
         * [Page screenshot](#page-screenshot)
         * [Region screenshot](#region-screenshot)
         * [Switching into frames](#switching-into-frames)
+        * [Region in shadow DOM](#region-in-shadow-dom)
         * [Ignore Regions](#ignore-regions)
         * [Floating Regions](#floating-regions)
         * [Content/Strict/Layout Regions](#content-strict-layout-regions)
@@ -242,6 +243,12 @@ Multiple frame calls can be made, thus creating a "frame chain". For example:
 
 ```js
 eyes.check('element inside nested frames', Target.frame('frame-1').frame('frame-1-1').region(by.css('.nested-element')))
+```
+
+###### Region in shadow DOM
+
+```js
+eyes.check('region in shadow DOM', Target.shadow('EleWithShadowRoot').region('nested-region').fully())
 ```
 
 ###### Ignore Regions

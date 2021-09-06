@@ -247,7 +247,18 @@ export class Context<TDriver, TContext, TElement, TSelector> {
         return new Element({spec: this._spec, context: this, selector: selectorOrElement, logger: this._logger})
       }
       await this.focus()
-      const element = await this._spec.findElement(this.target, selectorOrElement)
+
+      let rootElement = null
+      let selector = selectorOrElement
+      while (utils.types.has(selector, ['selector', 'shadow']) && this._spec.isSelector(selector.shadow)) {
+        const element: TElement = await this._spec.findElement(this.target, selector, rootElement)
+        if (!element) return null
+        rootElement = await this.execute(snippets.getShadowRoot, element)
+        if (!rootElement) return null
+        selector = selector.shadow
+      }
+
+      const element = await this._spec.findElement(this.target, selector, rootElement)
       return element
         ? new Element({spec: this._spec, context: this, element, selector: selectorOrElement, logger: this._logger})
         : null
@@ -266,7 +277,18 @@ export class Context<TDriver, TContext, TElement, TSelector> {
         return [new Element({spec: this._spec, context: this, selector: selectorOrElement, logger: this._logger})]
       }
       await this.focus()
-      const elements = await this._spec.findElements(this.target, selectorOrElement)
+
+      let rootElement = null
+      let selector = selectorOrElement
+      while (utils.types.has(selector, ['selector', 'shadow']) && this._spec.isSelector(selector.shadow)) {
+        const element: TElement = await this._spec.findElement(this.target, selector, rootElement)
+        if (!element) return []
+        rootElement = await this.execute(snippets.getShadowRoot, element)
+        if (!rootElement) return []
+        selector = selector.shadow
+      }
+
+      const elements = await this._spec.findElements(this.target, selector, rootElement)
       return elements.map((element, index) => {
         return new Element({
           spec: this._spec,

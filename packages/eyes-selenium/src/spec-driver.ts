@@ -90,6 +90,7 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   await driver.switchTo().frame(element)
   return driver
 }
+
 export async function findElement(driver: Driver, selector: Selector): Promise<Element> {
   try {
     return await driver.findElement(transformSelector(selector))
@@ -98,7 +99,8 @@ export async function findElement(driver: Driver, selector: Selector): Promise<E
     else throw err
   }
 }
-export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
+export async function findElements(driver: Driver, selector: Selector, element?: Element): Promise<Element[]> {
+  if (element) return element.findElements(transformSelector(selector))
   return driver.findElements(transformSelector(selector))
 }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {

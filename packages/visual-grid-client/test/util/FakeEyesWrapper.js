@@ -251,7 +251,7 @@ class FakeEyesWrapper extends EventEmitter {
     const asExpected =
       isGood &&
       (!this.sizeMode || sizeMode === this.sizeMode) &&
-      (!this.selector || selector === this.selector) &&
+      (!this.selector || compare(selector, this.selector)) &&
       compare(region, this.region) &&
       compare(emulationInfo, this.emulationInfo) &&
       compare(iosDeviceInfo, this.iosDeviceInfo) &&

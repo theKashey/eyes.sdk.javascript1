@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add functionality to find element within another element to the spec driver
 
 ## 5.32.2 - 2021/8/13
 
