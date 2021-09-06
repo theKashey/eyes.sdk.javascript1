@@ -25,27 +25,27 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.1.4.tgz#afb24a38bb0c85dc5c03c1562868c285de9c7889"
-  integrity sha512-Ngz1nDaID4VjHpUM4v4utB7baDWJsyWxiPFTRFTY43CRpuGCnIMqsEx7hwV3TS5Yim6xbXK/iHalD3pGqkuA/Q==
+"@applitools/driver@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.1.5.tgz#502846f1a066dc30ed4396bb87850bd119a0a678"
+  integrity sha512-OXOKbYJOnoFis19oGu+G4/YsrhuP/B3za1peMhG1GsVGzSDkVL/cjW7A41jDnyu1smtgg8UZ5HnbGfdoSRm+lg==
   dependencies:
-    "@applitools/snippets" "2.1.5"
+    "@applitools/snippets" "2.1.6"
     "@applitools/types" "1.0.12"
     "@applitools/utils" "1.2.2"
 
-"@applitools/eyes-sdk-core@12.23.2":
-  version "12.23.2"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.2.tgz#480749b73e73723af9817ecc19af61fbebb0d323"
-  integrity sha512-KlAVwmfxutdRcQOxYtyb3w6ZYhgJLwXqh64tys2jB8rwNIavLS3gk/e/DQYLzjxwMQzDIIthwqlaQG6V+fP1NA==
+"@applitools/eyes-sdk-core@12.23.3":
+  version "12.23.3"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.3.tgz#d28c8b10ff21ef61af4d9730b10593d441bbde82"
+  integrity sha512-+7ispNP6sei6MflO2idV+DcUFQn92d2NHImpy7jXKmDZHVwolKPMX6qYaoPoF4rh3MdePt0G6VDg4AZcnpVYUQ==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.7"
-    "@applitools/driver" "1.1.4"
+    "@applitools/driver" "1.1.5"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.3"
     "@applitools/screenshoter" "3.2.3"
-    "@applitools/snippets" "2.1.5"
+    "@applitools/snippets" "2.1.6"
     "@applitools/types" "1.0.12"
     "@applitools/utils" "1.2.2"
     axios "0.21.1"
@@ -155,10 +155,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.4.tgz#5b47556574ee898f581b7d1cf6b169c0a9b4aef8"
   integrity sha512-Jmp+DM9Kj24+ByMaqoKxhMNsefsSshN5+MLyMyrFurb1FGRGoSMmAT5bZCI7zKFG02pxZmjBmenMhpNQbzZR/A==
 
-"@applitools/snippets@2.1.5":
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.5.tgz#1a103678a7ad3bcbda26b13494ca2649d25946ce"
-  integrity sha512-kgTE5NoSBauhpW+0klJRSsCD9Y/FCprVfUZXbrdM/QApnn1rmIYj5eY3IQ0KIxE7ekaIdM+UKzPp4wPN4gjN0g==
+"@applitools/snippets@2.1.6":
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.6.tgz#9b03e58dedc51703a91ac4a8ff5e0b07435e1807"
+  integrity sha512-0TIUBzPWyYNvCoKkpZEAPWh4K0ceGkB+OFuquinCHDoV1yjQr63b9jglNNQkCbg3cYtL3VfF6VEi0vyHRF6xrg==
 
 "@applitools/test-server@1.0.4":
   version "1.0.4"
