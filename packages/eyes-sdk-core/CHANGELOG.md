@@ -2,11 +2,12 @@
 
 ## Unreleased
 
+- add support for shadow dom for ufg
 
- ## 12.23.1 - 2021/8/31
+## 12.23.1 - 2021/8/31
 
- - make sure that we are not adding the same browser environment more than once when merging configs
- - add types for `checkSpecDriver` API
+- make sure that we are not adding the same browser environment more than once when merging configs
+- add types for `checkSpecDriver` API
 - updated to @applitools/types@1.0.10 (from 1.0.8)
 
 ## 12.23.0 - 2021/8/15
