@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 5.32.3 - 2021/9/6
+
 - add functionality to find element within another element to the spec driver
 - updated to @applitools/eyes-api@1.1.0 (from 1.0.12)
 - updated to @applitools/eyes-sdk-core@12.23.3 (from 12.22.6)
