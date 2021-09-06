@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 0.13.2 - 2021/9/6
+
+- updated to @applitools/utils@1.1.3 (from 1.2.2)
+
 ## 0.13.1 - 2021/9/6
 
 - replace `@applitools/sdk-shared` with `@applitools/utils`
