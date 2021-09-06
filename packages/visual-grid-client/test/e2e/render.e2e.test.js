@@ -32,7 +32,7 @@ describe('render e2e', () => {
       {width: 640, height: 480, name: 'safari-2'},
       {width: 640, height: 480, name: 'edgechromium'},
       {width: 640, height: 480, name: 'edgechromium-1'},
-      {width: 640, height: 480, name: 'edgechromium-2'},
+      // {width: 640, height: 480, name: 'edgechromium-2'},
     ]
 
     const {createRGridDOMAndGetResourceMapping, render, waitForRenderedStatus} = makeRenderer({
@@ -81,7 +81,7 @@ describe('render e2e', () => {
       safari2,
       edgechromium,
       edgechromium1,
-      edgechromium2,
+      // edgechromium2,
     ] = majorVersions
 
     expect(chrome1).to.equal(chrome - 1)
@@ -91,6 +91,6 @@ describe('render e2e', () => {
     expect(safari1).to.equal(safari - 1)
     expect(safari2).to.equal(safari - 2)
     expect(edgechromium1).to.equal(edgechromium - 1)
-    expect(edgechromium2).to.equal(edgechromium - 2)
+    // expect(edgechromium2).to.equal(edgechromium - 2)
   })
 })
