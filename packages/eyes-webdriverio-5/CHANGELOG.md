@@ -3,6 +3,9 @@
 ## Unreleased
 
 - add functionality to find element within another element to the spec driver
+- updated to @applitools/eyes-api@1.1.0 (from 1.0.12)
+- updated to @applitools/eyes-sdk-core@12.23.3 (from 12.22.6)
+- updated to @applitools/visual-grid-client@15.8.24 (from 15.8.20)
 
 ## 5.32.2 - 2021/8/13
 
