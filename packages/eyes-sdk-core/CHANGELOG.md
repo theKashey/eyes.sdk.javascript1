@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.23.2 - 2021/9/6
+
 - add support for shadow dom for ufg
 - updated to @applitools/driver@1.1.4 (from 1.1.3)
 - updated to @applitools/snippets@2.1.5 (from 2.1.4)
