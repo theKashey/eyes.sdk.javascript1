@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add functionality to find element within an element to `SpecDriver`
+- extend `SpecSelector` to support nested structures
 
 ## 1.0.11 - 2021/9/1
 
