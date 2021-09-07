@@ -7,7 +7,10 @@ const pexec = p(exec);
 const fs = require('fs');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
-const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-region-in-shadow-dom');
+const targetTestAppPath = path.resolve(
+  __dirname,
+  '../fixtures/testAppCopies/testApp-region-in-shadow-dom',
+);
 
 describe('region in shadow dom', () => {
   before(async () => {
