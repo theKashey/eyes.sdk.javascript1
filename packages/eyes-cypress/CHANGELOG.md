@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.4 - 2021/9/7
+
 - Update README to include an example about region within shadow DOM
 - updated to @applitools/visual-grid-client@15.8.24 (from 15.8.21)
 
