@@ -4,6 +4,10 @@
 
 - handle selectors that evaluate to elements from a different context
 
+## 12.23.4 - 2021/9/9
+
+- update axios dependency to 0.21.4
+
 ## 12.23.3 - 2021/9/6
 
 - updated to @applitools/driver@1.1.5 (from 1.1.4)
