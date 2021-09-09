@@ -142,10 +142,9 @@ class MockDriver {
       const selectors = []
       for (const [index, element] of elements.entries()) {
         const elementId = ids[index]
-        el.attributes = el.attributes || []
-        el.attributes.push({name: 'data-applitools-selector', value: elementId})
+        element.attributes = element.attributes || []
+        element.attributes.push({name: 'data-applitools-selector', value: elementId})
         const selector = `[data-applitools-selector~="${elementId}"]`
-        this.mockSelector(selector, element)
         selectors.push([selector])
       }
       return selectors
