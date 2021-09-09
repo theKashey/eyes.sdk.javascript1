@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.23.5 - 2021/9/9
+
 - handle selectors that evaluate to elements from a different context
 - updated to @applitools/driver@1.2.0 (from 1.1.5)
 - updated to @applitools/logger@1.0.4 (from 1.0.3)
