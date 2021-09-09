@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update axios dependency to 0.21.4
 
 ## 12.23.3 - 2021/9/6
 

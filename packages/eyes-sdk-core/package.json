@@ -42,7 +42,7 @@
     "@applitools/snippets": "2.1.6",
     "@applitools/types": "1.0.12",
     "@applitools/utils": "1.2.2",
-    "axios": "0.21.1",
+    "axios": "0.21.4",
     "chalk": "3.0.0",
     "cosmiconfig": "6.0.0",
     "dateformat": "3.0.3",
