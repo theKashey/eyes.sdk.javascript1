@@ -3,6 +3,9 @@
 ## Unreleased
 
 - add `EyesSelector` type and use it to wrap framework selector type all over api
+- updated to @applitools/logger@1.0.4 (from 1.0.3)
+- updated to @applitools/types@1.0.13 (from 1.0.12)
+- updated to @applitools/utils@1.2.3 (from 1.2.2)
 
 ## 1.1.0 - 2021/9/6
 
