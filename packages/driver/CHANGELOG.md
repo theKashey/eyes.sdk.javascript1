@@ -3,6 +3,9 @@
 ## Unreleased
 
 - add support for deep selectors
+- updated to @applitools/snippets@2.1.7 (from 2.1.6)
+- updated to @applitools/types@1.0.13 (from 1.0.12)
+- updated to @applitools/utils@1.2.3 (from 1.2.2)
 
 ## 1.1.5 - 2021/9/6
 
