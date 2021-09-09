@@ -9,6 +9,7 @@
 - updated to @applitools/snippets@2.1.7 (from 2.1.6)
 - updated to @applitools/types@1.0.13 (from 1.0.12)
 - updated to @applitools/utils@1.2.3 (from 1.2.2)
+- updated to @applitools/driver@1.2.2 (from 1.2.0)
 
 ## 12.23.4 - 2021/9/9
 
