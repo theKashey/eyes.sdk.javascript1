@@ -10,12 +10,6 @@ function extractElementId(element) {
   return element.elementId || element[ELEMENT_ID] || element[LEGACY_ELEMENT_ID]
 }
 
-function transformSelector(selector) {
-  if (!utils.types.has(selector, ['type', 'selector'])) return selector
-  else if (selector.type === 'css') return `css selector:${selector.selector}`
-  else return `${selector.type}:${selector.selector}`
-}
-
 // #endregion
 
 // #region UTILITY
@@ -29,15 +23,19 @@ function isElement(element) {
   return Boolean(element.elementId || element[ELEMENT_ID] || element[LEGACY_ELEMENT_ID])
 }
 function isSelector(selector) {
-  return (
-    utils.types.isString(selector) ||
-    utils.types.isFunction(selector) ||
-    utils.types.has(selector, ['type', 'selector'])
-  )
+  return utils.types.isString(selector) || utils.types.isFunction(selector)
 }
 function transformElement(element) {
   const elementId = extractElementId(element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
+}
+function transformSelector(selector) {
+  if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.has(selector, 'type')) return selector.selector
+    if (selector.type === 'css') return `css selector:${selector.selector}`
+    else return `${selector.type}:${selector.selector}`
+  }
+  return selector
 }
 function extractSelector(element) {
   return element.selector
@@ -74,11 +72,11 @@ async function childContext(browser, element) {
   return browser
 }
 async function findElement(browser, selector) {
-  const element = await browser.$(transformSelector(selector))
+  const element = await browser.$(selector)
   return !element.error ? element : null
 }
 async function findElements(browser, selector) {
-  const elements = await browser.$$(transformSelector(selector))
+  const elements = await browser.$$(selector)
   return Array.from(elements)
 }
 async function getElementRegion(browser, element) {
@@ -265,6 +263,7 @@ module.exports = {
   isElement,
   isSelector,
   transformElement,
+  transformSelector,
   extractSelector,
   isEqualElements,
   executeScript,
