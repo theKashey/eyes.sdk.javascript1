@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.2.1 - 2021/9/10
+
+- fix mocked scripts in MockDriver
+
 ## 1.2.0 - 2021/9/9
 
 - add support for deep selectors
