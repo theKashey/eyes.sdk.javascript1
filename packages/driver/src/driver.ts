@@ -1,7 +1,9 @@
 import type * as types from '@applitools/types'
+import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
 import {Context, ContextReference} from './context'
 import {Element} from './element'
+import {makeSpecUtils} from './utils'
 import {parseUserAgent} from './user-agent'
 
 const snippets = require('@applitools/snippets')
@@ -14,6 +16,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _currentContext: Context<TDriver, TContext, TElement, TSelector>
   private _driverInfo: types.DriverInfo
   private _logger: any
+  private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -25,6 +28,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (options.driver instanceof Driver) return options.driver
 
     this._spec = options.spec
+    this._utils = makeSpecUtils(options.spec)
 
     if (options.logger) this._logger = options.logger
 
@@ -52,6 +56,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get mainContext(): Context<TDriver, TContext, TElement, TSelector> {
     return this._mainContext
   }
+  get features() {
+    return this._driverInfo?.features
+  }
   get deviceName(): string {
     return this._driverInfo?.deviceName
   }
@@ -70,13 +77,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get userAgent(): string {
     return this._driverInfo?.userAgent
   }
-  get pixelRatio() {
+  get pixelRatio(): number {
     return this._driverInfo.pixelRatio ?? 1
   }
-  get statusBarHeight() {
+  get statusBarHeight(): number {
     return this._driverInfo.statusBarHeight ?? (this.isNative ? 0 : undefined)
   }
-  get navigationBarHeight() {
+  get navigationBarHeight(): number {
     return this._driverInfo.navigationBarHeight ?? (this.isNative ? 0 : undefined)
   }
   get isNative(): boolean {
@@ -146,6 +153,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isNative) return this.currentContext
 
     const spec = this._spec
+    const utils = this._utils
 
     let currentContext = this.currentContext.target
     let contextInfo = await getContextInfo(currentContext)
@@ -182,14 +190,17 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
     async function findContextReference(context: TContext, contextInfo: any): Promise<TElement> {
       if (contextInfo.selector) {
-        const contextElement = await spec.findElement(context, {type: 'xpath', selector: contextInfo.selector})
+        const contextElement = await spec.findElement(
+          context,
+          utils.transformSelector({type: 'xpath', selector: contextInfo.selector}),
+        )
         if (contextElement) return contextElement
       }
 
       for (const childContextInfo of await getChildContextsInfo(context)) {
         if (childContextInfo.isCORS !== contextInfo.isCORS) continue
         const childContext = await spec.childContext(context, childContextInfo.contextElement)
-        const contentDocument = await spec.findElement(childContext, {type: 'css', selector: 'html'})
+        const contentDocument = await spec.findElement(childContext, utils.transformSelector('html'))
         const isWantedContext = await isEqualElements(childContext, contentDocument, contextInfo.documentElement)
         await spec.parentContext(childContext)
         if (isWantedContext) return childContextInfo.contextElement
@@ -201,7 +212,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       contextInfo: any,
       contextPath: TElement[] = [],
     ): Promise<TElement[]> {
-      const contentDocument = await spec.findElement(context, {type: 'css', selector: 'html'})
+      const contentDocument = await spec.findElement(context, utils.transformSelector('html'))
 
       if (await isEqualElements(context, contentDocument, contextInfo.documentElement)) {
         return contextPath
@@ -325,11 +336,11 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return context.getRegionInViewport(region)
   }
 
-  async element(selector: types.SpecSelector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>> {
+  async element(selector: types.Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     return this.currentContext.element(selector)
   }
 
-  async elements(selector: types.SpecSelector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
+  async elements(selector: types.Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
     return this.currentContext.elements(selector)
   }
 

@@ -32,6 +32,10 @@ export function isObject(value: any): value is Record<PropertyKey, any> {
   return typeof value === 'object' && value !== null
 }
 
+export function isPlainObject(value: any): value is Record<PropertyKey, any> {
+  return isObject(value) && (!value.constructor || value.constructor.name === 'Object')
+}
+
 export function isEmpty(value: Record<PropertyKey, unknown>): value is Record<PropertyKey, never>
 export function isEmpty(value: any[]): value is []
 export function isEmpty(value: string): value is ''

@@ -1,6 +1,8 @@
 import type * as types from '@applitools/types'
 import type {Context} from './context'
+import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
+import {makeSpecUtils} from './utils'
 
 const snippets = require('@applitools/snippets')
 
@@ -14,12 +16,13 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   private _target: TElement
 
   private _context: Context<TDriver, TContext, TElement, TSelector>
-  private _selector: types.SpecSelector<TSelector>
+  private _selector: types.Selector<TSelector>
   private _index: number
   private _state: ElementState = {}
   private _originalOverflow: any
   private _touchPadding: number
   private _logger: any
+  private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -27,13 +30,14 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
     element?: TElement | Element<TDriver, TContext, TElement, TSelector>
     context?: Context<TDriver, TContext, TElement, TSelector>
-    selector?: types.SpecSelector<TSelector>
+    selector?: types.Selector<TSelector>
     index?: number
     logger?: any
   }) {
     if (options.element instanceof Element) return options.element
 
     this._spec = options.spec
+    this._utils = makeSpecUtils(options.spec)
 
     if (options.context) this._context = options.context
     if (options.logger) this._logger = options.logger
@@ -43,7 +47,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       // Some frameworks contains information about the selector inside an element
       this._selector = options.selector ?? this._spec.extractSelector?.(options.element)
       this._index = options.index
-    } else if (this._spec.isSelector(options.selector)) {
+    } else if (this._utils.isSelector(options.selector)) {
       this._selector = options.selector
     } else {
       throw new TypeError('Element constructor called with argument of unknown type!')
@@ -478,7 +482,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     try {
       const result = await operation()
       // Some frameworks could handle stale element reference error by itself or doesn't throw an error
-      if (this._spec.isStaleElementError(result, this.selector)) {
+      if (this._spec.isStaleElementError(result, this.selector as TSelector)) {
         await this.refresh()
         return operation()
       }

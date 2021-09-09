@@ -1,10 +1,12 @@
+import type * as Selenium from 'selenium-webdriver'
 import * as utils from '@applitools/utils'
 import * as legacy from './legacy'
-import type * as Selenium from 'selenium-webdriver'
 
 export type Driver = Selenium.WebDriver
 export type Element = Selenium.WebElement
-export type Selector = Selenium.Locator | {using: string; value: string} | string | {type: string; selector: string}
+export type Selector = Selenium.Locator | {using: string; value: string}
+
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
@@ -12,17 +14,6 @@ const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLink
 
 function extractElementId(element: Element): Promise<string> {
   return element.getId()
-}
-
-function transformSelector(selector: Selector): Selenium.Locator {
-  if (utils.types.isString(selector)) {
-    return {css: selector}
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return {css: selector.selector}
-    else if (selector.type === 'xpath') return {xpath: selector.selector}
-    else return {using: selector.type, value: selector.selector}
-  }
-  return selector
 }
 
 // #endregion
@@ -37,12 +28,7 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
-  return (
-    utils.types.has(selector, ['type', 'selector']) ||
-    utils.types.has(selector, ['using', 'value']) ||
-    Object.keys(selector).some(key => byHash.includes(key)) ||
-    utils.types.isString(selector)
-  )
+  return utils.types.has(selector, ['using', 'value']) || byHash.includes(Object.keys(selector)[0])
 }
 export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
@@ -53,6 +39,17 @@ export function transformDriver(driver: Driver): Driver {
     driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
   }
   return driver
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.isString(selector)) {
+    return {css: selector}
+  } else if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.isString(selector.selector)) return selector.selector
+    if (!utils.types.has(selector, 'type')) return {css: selector.selector}
+    if (selector.type === 'css') return {css: selector.selector}
+    else return {using: selector.type, value: selector.selector}
+  }
+  return selector
 }
 export function isStaleElementError(error: any): boolean {
   if (!error) return false
@@ -91,17 +88,18 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   return driver
 }
 
-export async function findElement(driver: Driver, selector: Selector): Promise<Element> {
+export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
   try {
-    return await driver.findElement(transformSelector(selector))
+    const root = parent ?? driver
+    return await root.findElement(selector)
   } catch (err) {
     if (err.name === 'NoSuchElementError') return null
     else throw err
   }
 }
-export async function findElements(driver: Driver, selector: Selector, element?: Element): Promise<Element[]> {
-  if (element) return element.findElements(transformSelector(selector))
-  return driver.findElements(transformSelector(selector))
+export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
+  const root = parent ?? driver
+  return root.findElements(selector)
 }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   try {

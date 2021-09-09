@@ -1,6 +1,6 @@
-import * as utils from '@applitools/utils'
 import * as testcafe from 'testcafe'
 import * as fs from 'fs'
+import * as utils from '@applitools/utils'
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace TestCafe {
@@ -12,7 +12,11 @@ namespace TestCafe {
 
 export type Driver = TestCafe.TestController
 export type Element = TestCafe.Selector | TestCafe.NodeSnapshot
-export type Selector = TestCafe.Selector | {type: string; selector: string} | string
+export type Selector = TestCafe.Selector
+
+type CommonSelector<TSelector = Selector | string> =
+  | string
+  | {selector: TSelector; type?: string; shadow?: CommonSelector<string>}
 
 // #region HELPERS
 
@@ -33,13 +37,6 @@ function XPathSelector(selector: string, options?: TestCafe.SelectorOptions): Te
     return items
   }, options)
   return testcafe.Selector(getElementsByXPath(selector), options)
-}
-function transformSelector(selector: Selector): TestCafe.Selector {
-  if (utils.types.has(selector, 'selector')) {
-    if (selector.type === 'xpath') return XPathSelector(selector.selector)
-    return testcafe.Selector(selector.selector)
-  }
-  return testcafe.Selector(selector)
 }
 
 function deserializeResult(result: any, elements: Element[]): any {
@@ -132,15 +129,23 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return
-  return (
-    utils.types.has(selector, ['type', 'selector']) ||
-    utils.types.isString(selector) ||
-    Boolean(selector.addCustomMethods && selector.find && selector.parent) ||
-    (utils.types.has(selector, ['selector']) && isSelector(selector.selector) && selector.constructor.name === 'Object')
-  )
+  return Boolean(selector.addCustomMethods && selector.find && selector.parent)
 }
 export function transformElement(element: Element): TestCafe.Selector {
   return utils.types.isFunction((element as any).selector) ? (element as any).selector : element
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.has(selector, 'selector')) {
+    let current = selector
+    let transformed =
+      selector.type === 'xpath' ? XPathSelector(current.selector as string) : testcafe.Selector(current.selector)
+    while (current.shadow) {
+      current = utils.types.has(current.shadow, 'selector') ? current.shadow : {selector: current.shadow}
+      transformed = transformed.shadowRoot().find(current.selector as string)
+    }
+    return transformed
+  }
+  return testcafe.Selector(selector)
 }
 export function extractSelector(element: Element): Selector {
   return utils.types.isFunction((element as any).selector) ? (element as any).selector : element
@@ -149,15 +154,6 @@ export function isStaleElementError(_err: any): boolean {
   // NOTE:
   // TestCafe doesn't have a stale element error
   return false
-}
-export async function isEqualElements(t: Driver, element1: Element, element2: Element): Promise<boolean> {
-  if (!element1 || !element2) return false
-  // @ts-ignore
-  const compareElements = testcafe.ClientFunction(() => element1() === element2(), {
-    boundTestRun: t,
-    dependencies: {element1, element2},
-  })
-  return compareElements()
 }
 
 // #endregion
@@ -193,16 +189,13 @@ export async function mainContext(t: Driver): Promise<Driver> {
 // TestCafe (yet). See the following for reference:
 // - https://github.com/DevExpress/testcafe/issues/5429
 // - https://stackoverflow.com/questions/63453228/how-to-traverse-a-nested-frame-tree-by-its-hierarchy-in-testcafe
-// A workaround was implemented in core to minimize on the performance overhead
-// needed to construct and walk through the frame tree with DFS.
-// See `findPathToChildContext` in core/lib/sdk/EyesDriver.js for details.
 // export async function parentContext(t: Driver): Promise<void> {}
 export async function childContext(t: Driver, element: Element): Promise<Driver> {
   await t.switchToIframe(element)
   return t
 }
 export async function findElement(t: Driver, selector: Selector): Promise<Element> {
-  const element = await transformSelector(selector).with({boundTestRun: t})()
+  const element = await selector.with({boundTestRun: t})()
   return element ? (element as any).selector : null
 }
 export async function findElements(t: Driver, selector: Selector): Promise<Element[]> {
@@ -211,15 +204,11 @@ export async function findElements(t: Driver, selector: Selector): Promise<Eleme
   const elements = transformSelector(selector).with({boundTestRun: t})
   return Array.from({length: await elements.count}, (_, index) => elements.nth(index))
 }
-export async function getElementRect(
-  _t: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {left: x, top: y, width, height} = await element.boundingClientRect
-  return {x, y, width, height}
-}
 export async function setViewportSize(t: Driver, size: {width: number; height: number}): Promise<void> {
   await t.resizeWindow(size.width, size.height)
+}
+export async function getDriverInfo(_t: Driver): Promise<any> {
+  return {features: {shadowSelector: true}}
 }
 export async function getTitle(t: Driver): Promise<string> {
   try {

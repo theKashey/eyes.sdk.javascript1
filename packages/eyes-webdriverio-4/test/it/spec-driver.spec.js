@@ -6,6 +6,10 @@ describe('spec driver', async () => {
   let browser, destroyBrowser
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
+  function extractElementId(element) {
+    return element['ELEMENT'] || element['element-6066-11e4-a52e-4f735466cecf']
+  }
+
   describe('headless desktop', async () => {
     before(async () => {
       ;[browser, destroyBrowser] = await spec.build({browser: 'chrome'})
@@ -52,6 +56,15 @@ describe('spec driver', async () => {
         expected: true,
       })
     })
+    it('transformSelector(string)', async () => {
+      await transformSelector({input: '.element'})
+    })
+    it('transformSelector(by)', async () => {
+      await transformSelector({input: By.xpath('//element')})
+    })
+    it('transformSelector(common-selector)', async () => {
+      await transformSelector({input: {selector: '.element', type: 'css'}, expected: 'css selector:.element'})
+    })
     it('isEqualElements(element1, element2)', async () => {
       await isEqualElements({
         input: async () => ({
@@ -84,6 +97,12 @@ describe('spec driver', async () => {
     })
     it('findElements(non-existent)', async () => {
       await findElements({input: 'non-existent', expected: []})
+    })
+    it('findElement(within-element)', async () => {
+      await findElement({input: {selector: 'div', parentSelector: '#stretched'}})
+    })
+    it('findElements(within-element)', async () => {
+      findElements({input: {selector: 'div', parentSelector: '#stretched'}})
     })
     it('mainContext()', async () => {
       await mainContext()
@@ -235,14 +254,16 @@ describe('spec driver', async () => {
   }
   async function transformElement({input}) {
     const element = await input()
-    const elementId = element.value
-      ? element.value['element-6066-11e4-a52e-4f735466cecf'] || element.value.ELEMENT
-      : element['element-6066-11e4-a52e-4f735466cecf'] || element.ELEMENT
+    const elementId = element.value ? extractElementId(element.value) : extractElementId(element)
     const result = spec.transformElement(element)
     assert.deepStrictEqual(result, {
       ELEMENT: elementId,
       'element-6066-11e4-a52e-4f735466cecf': elementId,
     })
+  }
+  async function transformSelector({input, expected}) {
+    const result = spec.transformSelector(input)
+    assert.deepStrictEqual(result, expected || input)
   }
   async function extractSelector({input, expected}) {
     const selector = spec.extractSelector(await input())
@@ -296,8 +317,14 @@ describe('spec driver', async () => {
     }
   }
   async function findElement({input, expected} = {}) {
-    const result = expected !== undefined ? expected : await browser.element(input).then(({value}) => value)
-    const element = await spec.findElement(browser, input)
+    const {selector, parentSelector} = input.selector ? input : {selector: input}
+    const parentElement = parentSelector ? await spec.findElement(browser, parentSelector) : null
+    const {value: result} =
+      expected ||
+      (parentElement
+        ? await browser.elementIdElement(extractElementId(parentElement), selector)
+        : await browser.element(selector))
+    const element = await spec.findElement(browser, selector, parentElement)
     if (element !== result) {
       assert.ok(await spec.isEqualElements(browser, element, result))
     }

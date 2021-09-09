@@ -1,6 +1,6 @@
 const utils = require('@applitools/utils')
 
-module.exports = {
+const spec = {
   isDriver(driver) {
     return driver && driver.constructor.name === 'MockDriver'
   },
@@ -8,11 +8,10 @@ module.exports = {
     return utils.types.has(element, 'id')
   },
   isSelector(selector) {
-    return (
-      utils.types.isString(selector) ||
-      utils.types.has(selector, ['using', 'value']) ||
-      utils.types.has(selector, ['selector'])
-    )
+    return utils.types.isString(selector) || utils.types.has(selector, ['using', 'value'])
+  },
+  transformSelector(selector) {
+    return selector.selector || selector
   },
   isStaleElementError() {
     return false
@@ -63,3 +62,5 @@ module.exports = {
     await driver.visit(url)
   },
 }
+
+module.exports = {spec}

@@ -35,23 +35,6 @@ export type Batch = {
   properties?: CustomProperty[]
 }
 
-export type DriverInfo = {
-  sessionId?: string
-  isMobile?: boolean
-  isNative?: boolean
-  isCDP?: boolean
-  deviceName?: string
-  platformName?: string
-  platformVersion?: string
-  browserName?: string
-  browserVersion?: string
-  userAgent?: string
-  pixelRatio?: number
-  statusBarHeight?: number
-  navigationBarHeight?: number
-  viewportSize?: Size
-}
-
 export type Location = {
   x: number
   y: number

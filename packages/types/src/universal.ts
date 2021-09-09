@@ -1,4 +1,5 @@
-import {Region, Size, TextRegion, DriverInfo, MatchResult, TestResult} from './data'
+import {Region, Size, TextRegion, MatchResult, TestResult} from './data'
+import {DriverInfo, Selector} from './driver'
 import {EyesConfig, EyesManagerConfig} from './config'
 import {
   CheckSettings,
@@ -106,17 +107,17 @@ export interface ClientSocket<TDriver, TContext, TElement, TSelector> {
 
   command(
     name: 'Driver.findElement',
-    handler: (options: {context: TContext; selector: TSelector}) => Promise<TElement | null>,
+    handler: (options: {context: TContext; selector: Selector<TSelector>}) => Promise<TElement | null>,
   ): () => void
 
   command(
     name: 'Driver.findElements',
-    handler: (options: {context: TContext; selector: TSelector}) => Promise<TElement[]>,
+    handler: (options: {context: TContext; selector: Selector<TSelector>}) => Promise<TElement[]>,
   ): () => void
 
   command(
     name: 'Driver.click',
-    handler: (options: {context: TContext; element: TElement | TSelector}) => Promise<void>,
+    handler: (options: {context: TContext; element: TElement | Selector<TSelector>}) => Promise<void>,
   ): () => void
 
   command(name: 'Driver.getWindowSize', handler: (options: {driver: TDriver}) => Promise<Size>): () => void
@@ -180,11 +181,14 @@ export interface ServerSocket<TDriver, TContext, TElement, TSelector> {
 
   request(name: 'Driver.executeScript', options: {context: TContext; script: string; arg: any}): Promise<any>
 
-  request(name: 'Driver.findElement', options: {context: TContext; selector: TSelector}): Promise<TElement | null>
+  request(
+    name: 'Driver.findElement',
+    options: {context: TContext; selector: Selector<TSelector>},
+  ): Promise<TElement | null>
 
-  request(name: 'Driver.findElements', options: {context: TContext; selector: TSelector}): Promise<TElement[]>
+  request(name: 'Driver.findElements', options: {context: TContext; selector: Selector<TSelector>}): Promise<TElement[]>
 
-  request(name: 'Driver.click', options: {context: TContext; element: TElement | TSelector}): Promise<void>
+  request(name: 'Driver.click', options: {context: TContext; element: TElement | Selector<TSelector>}): Promise<void>
 
   request(name: 'Driver.getWindowSize', options: {driver: TDriver}): Promise<Size>
 

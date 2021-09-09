@@ -1,13 +1,10 @@
 import assert from 'assert'
-import {Driver} from '../../src/index'
-
-const MockDriver = require('../fixtures/mock-driver')
-const spec = require('../fixtures/spec-driver')
+import {Driver, MockDriver, fake} from '../../src/index'
 
 const logger = {log: () => null as any, warn: () => null as any, error: () => null as any}
 
 describe('driver', () => {
-  let mock: any, driver: Driver<any, any, any, any>
+  let mock: MockDriver, driver: Driver<fake.Driver, fake.Context, fake.Element, fake.Selector>
 
   before(async () => {
     mock = new MockDriver()
@@ -43,7 +40,7 @@ describe('driver', () => {
         ],
       },
     ])
-    driver = new Driver({logger, spec, driver: mock})
+    driver = new Driver({logger, spec: fake.spec, driver: mock})
     await driver.init()
   })
 
@@ -327,7 +324,7 @@ describe('driver native', () => {
   let driver: Driver<any, any, any, any>
 
   before(async () => {
-    driver = new Driver({logger, spec, driver: new MockDriver({device: {isNative: true}})})
+    driver = new Driver({logger, spec: fake.spec, driver: new MockDriver({device: {isNative: true}})})
     await driver.init()
   })
 
@@ -344,7 +341,7 @@ describe('driver native', () => {
     before(async () => {
       driver = new Driver({
         logger,
-        spec,
+        spec: fake.spec,
         driver: new MockDriver({
           device: {isNative: true, name: 'MobilePhone'},
           platform: {name: 'OS', version: 'V'},
@@ -378,7 +375,7 @@ describe('driver native', () => {
     before(async () => {
       driver = new Driver({
         logger,
-        spec,
+        spec: fake.spec,
         driver: new MockDriver({device: {isNative: true}}),
       })
       await driver.init()
@@ -410,7 +407,7 @@ describe('driver mobile', () => {
   let driver: Driver<any, any, any, any>
 
   before(async () => {
-    driver = new Driver({logger, spec, driver: new MockDriver({device: {isNative: true}})})
+    driver = new Driver({logger, spec: fake.spec, driver: new MockDriver({device: {isNative: true}})})
     await driver.init()
   })
 
@@ -418,7 +415,7 @@ describe('driver mobile', () => {
     before(async () => {
       driver = new Driver({
         logger,
-        spec,
+        spec: fake.spec,
         driver: new MockDriver({
           ua: null,
           device: {isMobile: true, name: 'MobilePhone'},
@@ -454,7 +451,7 @@ describe('driver mobile', () => {
     before(async () => {
       driver = new Driver({
         logger,
-        spec,
+        spec: fake.spec,
         driver: new MockDriver({
           ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
         }),

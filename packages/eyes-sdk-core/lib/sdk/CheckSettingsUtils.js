@@ -207,7 +207,7 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
         referenceRegions.push(region)
       } else {
         const elements = await context.elements(region)
-        const contextLocationInViewport = await context.getLocationInViewport()
+        const contextLocationInViewport = await elements[0].context.getLocationInViewport()
 
         for (const element of elements) {
           const region = utils.geometry.offset(await element.getRegion(), contextLocationInViewport)

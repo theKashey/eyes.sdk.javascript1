@@ -9,6 +9,8 @@ export type Element =
   | WebdriverIO.RawResult<WebdriverIO.Element | {ELEMENT: string} | {'element-6066-11e4-a52e-4f735466cecf': string}>
 export type Selector = string | legacy.By
 
+type CommonSelector = string | {selector: Selector | string; type?: string}
+
 // #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
@@ -18,17 +20,6 @@ function extractElementId(element: Element): string {
   if (utils.types.has(element, 'elementId')) return element.elementId as string
   else if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID]
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID]
-}
-
-function transformSelector(selector: Selector): string {
-  if (selector instanceof legacy.By) {
-    return selector.toString()
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return `css selector:${selector.selector}`
-    else if (selector.type === 'xpath') return `xpath:${selector.selector}`
-    else return `${selector.type}:${selector.selector}`
-  }
-  return selector
 }
 
 // #endregion
@@ -46,9 +37,7 @@ export function isElement(element: any): element is Element {
     : Boolean(element[ELEMENT_ID] || element[LEGACY_ELEMENT_ID])
 }
 export function isSelector(selector: any): selector is Selector {
-  return (
-    utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector']) || selector instanceof legacy.By
-  )
+  return utils.types.isString(selector) || selector instanceof legacy.By
 }
 export function transformDriver(browser: Driver): Driver {
   return new Proxy(browser, {
@@ -61,6 +50,14 @@ export function transformDriver(browser: Driver): Driver {
 export function transformElement(element: Element): Element {
   const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.has(selector, 'type')) return selector.selector
+    if (selector.type === 'css') return `css selector:${selector.selector}`
+    else return `${selector.type}:${selector.selector}`
+  }
+  return selector
 }
 export function extractSelector(element: Element): Selector {
   return utils.types.has(element, 'selector') ? (element.selector as string) : undefined
@@ -99,12 +96,18 @@ export async function childContext(browser: Driver, element: Element): Promise<D
   await browser.frame(element)
   return browser
 }
-export async function findElement(browser: Driver, selector: Selector): Promise<Element> {
-  const {value} = await browser.element(transformSelector(selector))
+export async function findElement(browser: Driver, selector: Selector, parent?: Element): Promise<Element> {
+  selector = selector instanceof legacy.By ? selector.toString() : selector
+  const {value} = parent
+    ? await browser.elementIdElement(extractElementId(parent), selector)
+    : await browser.element(selector)
   return value
 }
-export async function findElements(browser: Driver, selector: Selector): Promise<Element[]> {
-  const {value} = await browser.elements(transformSelector(selector))
+export async function findElements(browser: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
+  selector = selector instanceof legacy.By ? selector.toString() : selector
+  const {value} = parent
+    ? await browser.elementIdElements(extractElementId(parent), selector)
+    : await browser.elements(selector)
   return value
 }
 export async function getWindowSize(browser: Driver): Promise<{width: number; height: number}> {
@@ -183,7 +186,7 @@ export async function hover(
   await browser.moveTo(extractElementId(element), offset?.x, offset?.y)
 }
 export async function type(browser: Driver, element: Element | Selector, keys: string): Promise<void> {
-  if (isSelector(element)) browser.setValue(transformSelector(element), keys)
+  if (isSelector(element)) element = await findElement(browser, element)
   else browser.elementIdValue(extractElementId(element), keys)
 }
 export async function scrollIntoView(browser: Driver, element: Element | Selector, align = false): Promise<void> {

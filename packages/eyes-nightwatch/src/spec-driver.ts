@@ -6,30 +6,18 @@ export type Element =
   | {ELEMENT: string}
   | {'element-6066-11e4-a52e-4f735466cecf': string}
   | Nightwatch.NightwatchTypedCallbackResult<{ELEMENT: string} | {'element-6066-11e4-a52e-4f735466cecf': string}>
-export type Selector =
-  | {locateStrategy: Nightwatch.LocateStrategy; selector: 'string'}
-  | string
-  | {type: string; selector: string}
+export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string}
+
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 //// #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
+
 function extractElementId(element: Element): string {
   if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID]
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID]
-}
-function transformSelector(selector: Selector): [Nightwatch.LocateStrategy, string] {
-  if (utils.types.isString(selector)) {
-    return ['css selector', selector]
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return ['css selector', selector.selector]
-    else if (selector.type === 'xpath') return ['xpath', selector.selector]
-    else return [selector.type as Nightwatch.LocateStrategy, selector.selector]
-  } else if (utils.types.has(selector, ['locateStrategy', 'selector'])) {
-    return [selector.locateStrategy, selector.selector]
-  }
-  // else if (isNative) return ['id', selector]
 }
 function call<
   TCommand extends keyof {
@@ -66,15 +54,22 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
-  return (
-    utils.types.has(selector, ['locateStrategy', 'selector']) ||
-    utils.types.isString(selector) ||
-    utils.types.has(selector, ['type', 'selector'])
-  )
+  return utils.types.has(selector, ['locateStrategy', 'selector'])
 }
 export function transformElement(element: Element): Element {
   const elementId = extractElementId(element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.isString(selector)) {
+    return {locateStrategy: 'css selector', selector}
+  } else if (utils.types.has(selector, 'selector') && !utils.types.has(selector, 'locateStrategy')) {
+    if (!utils.types.isString(selector.selector)) return selector.selector
+    if (!utils.types.has(selector, 'type')) return {locateStrategy: 'css selector', selector: selector.selector}
+    if (selector.type === 'css') return {locateStrategy: 'css selector', selector: selector.selector}
+    else return {locateStrategy: selector.type as Nightwatch.LocateStrategy, selector: selector.selector}
+  }
+  return selector
 }
 export function isStaleElementError(err: any): boolean {
   if (!err) return false
@@ -108,28 +103,24 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   await call(driver, 'frame', element)
   return driver
 }
-export async function findElement(driver: Driver, selector: Selector): Promise<Element> {
+export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
   try {
-    return await call(driver, 'element', ...transformSelector(selector))
+    return parent
+      ? await call(driver, 'elementIdElement', extractElementId(parent), selector.locateStrategy, selector.selector)
+      : await call(driver, 'element', selector.locateStrategy, selector.selector)
   } catch {
     return null
   }
 }
-export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
-  return call(driver, 'elements', ...transformSelector(selector))
-}
-export async function getElementRect(
-  driver: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {x, y} = await call(driver, 'elementIdLocation', extractElementId(element))
-  const {width, height} = await call(driver, 'elementIdSize', extractElementId(element))
-  return {x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height)}
+export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
+  return parent
+    ? await call(driver, 'elementIdElements', extractElementId(parent), selector.locateStrategy, selector.selector)
+    : await call(driver, 'elements', selector.locateStrategy, selector.selector)
 }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   // NOTE:
   // https://github.com/nightwatchjs/nightwatch/blob/fd4aff1e2cc3e691a82e61c7e550fb088ee47d5a/lib/transport/jsonwire/actions.js#L165-L167
-  // getWindowSize is implemented on JWP drivers even though it won't work
+  // getWindowRect is implemented on JWP drivers even though it won't work
   // So we need to catch and retry a window size command that will work on JWP
   try {
     const rect = (await call(driver, 'getWindowRect' as any)) as any
@@ -140,7 +131,7 @@ export async function getWindowSize(driver: Driver): Promise<{width: number; hei
 }
 export async function setWindowSize(driver: Driver, size: {width: number; height: number}): Promise<void> {
   // NOTE:
-  // Same deal as with getWindowRect. If running on JWP, need to catch and retry
+  // Same deal as with getWindowSize. If running on JWP, need to catch and retry
   // with a different command.
   try {
     await call(driver, 'setWindowRect' as any, size)
@@ -206,7 +197,7 @@ export async function scrollIntoView(driver: Driver, element: Element | Selector
   await call(driver, 'moveTo', extractElementId(element), 0, 0)
 }
 export async function waitUntilDisplayed(driver: Driver, selector: Selector, timeout: number): Promise<void> {
-  await call(driver, 'waitForElementVisible' as any, ...transformSelector(selector), timeout)
+  await call(driver, 'waitForElementVisible' as any, selector.locateStrategy, selector.selector, timeout)
 }
 
 // #endregion

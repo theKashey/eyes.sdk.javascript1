@@ -1,3 +1,4 @@
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import {AccessibilityRegionType, AccessibilityRegionTypeEnum} from '../enums/AccessibilityRegionType'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
@@ -5,7 +6,9 @@ import {Region} from './Region'
 
 type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
 
-type ElementReference<TElement, TSelector> = TElement | TSelector
+type ElementReference<TElement, TSelector> = TElement | SelectorReference<TSelector>
+
+type SelectorReference<TSelector> = types.Selector<TSelector>
 
 type FrameReference<TElement, TSelector> = ElementReference<TElement, TSelector> | string | number
 
@@ -67,7 +70,7 @@ export type Target<TElement, TSelector> = {
     frame: FrameReference<TElement, TSelector>,
     scrollRootElement?: ElementReference<TElement, TSelector>,
   ): CheckSettingsFluent<TElement, TSelector>
-  shadow(selector: TSelector): CheckSettingsFluent<TSelector>
+  shadow(selector: SelectorReference<TSelector>): CheckSettingsFluent<TSelector>
 }
 
 export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
@@ -107,7 +110,18 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   }
 
   private _isElementReference(value: any): value is ElementReference<TSelector, TElement> {
-    return this._spec.isElement(value) || this._spec.isSelector(value)
+    return this._spec.isElement(value) || this._isSelectorReference(value)
+  }
+
+  private _isSelectorReference(selector: any): selector is SelectorReference<TSelector> {
+    return (
+      this._spec.isSelector(selector) ||
+      utils.types.isString(selector) ||
+      (utils.types.isPlainObject(selector) &&
+        utils.types.has(selector, 'selector') &&
+        ((utils.types.has(selector, 'type') && utils.types.isString(selector.selector)) ||
+          this._spec.isSelector(selector.selector)))
+    )
   }
 
   constructor(settings?: CheckSettings<TElement, TSelector>) {
@@ -182,8 +196,8 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     utils.guard.custom(region, value => this._isRegionReference(value), {name: 'region'})
 
     if (
-      this._spec.isSelector(region) &&
-      this._spec.isSelector(this._settings.region) &&
+      this._isSelectorReference(region) &&
+      this._isSelectorReference(this._settings.region) &&
       utils.types.has(this._settings.region, 'selector')
     ) {
       let lastSelector: any = this._settings.region
@@ -196,15 +210,14 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return this
   }
 
-  shadow(selector: TSelector): this {
-    // this method feels a bit clunky, because we are building a selector, but type-wise we don't have a clue about its format
-    utils.guard.custom(selector, value => this._spec.isSelector(value), {name: 'selector'})
+  shadow(selector: SelectorReference<TSelector>): this {
+    utils.guard.custom(selector, value => this._isSelectorReference(value), {name: 'selector'})
 
-    selector = utils.types.has(selector, 'selector') ? selector : ({selector} as any)
+    selector = utils.types.has(selector, 'selector') ? selector : {selector}
 
     if (!this._settings.region) {
       this._settings.region = selector
-    } else if (this._spec.isSelector(this._settings.region)) {
+    } else if (this._isSelectorReference(this._settings.region)) {
       let lastSelector: any
       if (utils.types.has(this._settings.region, 'selector')) {
         lastSelector = this._settings.region

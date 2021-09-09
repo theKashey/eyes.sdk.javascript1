@@ -109,22 +109,24 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       const element = await context.element(region)
       if (!element) throw new Error('Element not found!')
 
+      const elementContext = element.context
+
       if (fully) {
         const isScrollable = await element.isScrollable()
         // if element is scrollable, then take screenshot of the full element content, otherwise take screenshot of full element
         const region = isScrollable ? null : await element.getRegion()
-        const scrollingElement = isScrollable ? element : await context.getScrollingElement()
+        const scrollingElement = isScrollable ? element : await elementContext.getScrollingElement()
         // css stitching could be applied only to root element of its context
         scrollingMode = scrollingMode === 'css' && !(await scrollingElement.isRoot()) ? 'mixed' : scrollingMode
         return {
-          context,
+          context: elementContext,
           region,
           scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
         }
       } else {
         const scrollingElement = await context.getScrollingElement()
         return {
-          context,
+          context: elementContext,
           region: await element.getRegion(),
           scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
         }

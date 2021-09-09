@@ -4,7 +4,9 @@ import type * as Puppeteer from 'puppeteer'
 export type Driver = Puppeteer.Page
 export type Context = Puppeteer.Frame
 export type Element = Puppeteer.ElementHandle
-export type Selector = string | {type: string; selector: string}
+export type Selector = string
+
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
@@ -22,13 +24,6 @@ async function handleToObject(handle: Puppeteer.JSHandle): Promise<any> {
   } else {
     return handle.jsonValue()
   }
-}
-function transformSelector(selector: Selector): string {
-  if (utils.types.has(selector, ['type', 'selector'])) return selector.selector
-  return selector
-}
-function isXpath(selector: string): boolean {
-  return selector.startsWith('//') || selector.startsWith('..')
 }
 function transformArgument(arg: any) {
   const elements: Element[] = []
@@ -79,6 +74,9 @@ function scriptRunner(script: string, arg: any, ...elements: HTMLElement[]) {
     }
   }
 }
+function isXpath(selector: Selector): boolean {
+  return selector.startsWith('//') || selector.startsWith('..')
+}
 
 // #endregion
 
@@ -86,18 +84,22 @@ function scriptRunner(script: string, arg: any, ...elements: HTMLElement[]) {
 
 export function isDriver(page: any): page is Driver {
   if (!page) return false
-  return page.constructor.name === 'Page'
+  return utils.types.instanceOf(page, 'Page')
 }
 export function isContext(frame: any): frame is Context {
   if (!frame) return false
-  return frame.constructor.name === 'Frame'
+  return utils.types.instanceOf(frame, 'Frame')
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
-  return element.constructor.name === 'ElementHandle'
+  return utils.types.instanceOf(element, 'ElementHandle')
 }
 export function isSelector(selector: any): selector is Selector {
-  return utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector'])
+  return utils.types.isString(selector)
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.has(selector, 'selector')) return selector.selector
+  return selector
 }
 export function extractContext(page: Driver | Context): Context {
   return isDriver(page) ? page.mainFrame() : page
@@ -116,7 +118,7 @@ export function isStaleElementError(err: any): boolean {
 // #region COMMANDS
 
 export async function executeScript(frame: Context, script: ((arg: any) => any) | string, arg: any): Promise<any> {
-  script = utils.types.isString(script) ? script : script.toString()
+  script = utils.types.isString(script) ? script : `function() {return (${script.toString()}).apply(null, arguments)}`
   const result = await frame.evaluateHandle(scriptRunner, script, ...transformArgument(arg))
   return handleToObject(result)
 }
@@ -135,20 +137,13 @@ export async function parentContext(frame: Context): Promise<Context> {
 export async function childContext(_frame: Context, element: Element): Promise<Context> {
   return element.contentFrame()
 }
-export async function findElement(frame: Context, selector: Selector): Promise<Element> {
-  selector = transformSelector(selector)
-  return isXpath(selector) ? frame.$x(selector).then(elements => elements[0]) : frame.$(selector)
+export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
+  const root = parent ?? frame
+  return isXpath(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)
 }
-export async function findElements(frame: Context, selector: Selector): Promise<Element[]> {
-  selector = transformSelector(selector)
-  return isXpath(selector) ? frame.$x(selector) : frame.$$(selector)
-}
-export async function getElementRect(
-  _frame: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
-  const {x, y, width, height} = await element.boundingBox()
-  return {x: Math.round(x), y: Math.round(y), width: Math.round(width), height: Math.round(height)}
+export async function findElements(frame: Context, selector: Selector, parent?: Element): Promise<Element[]> {
+  const root = parent ?? frame
+  return isXpath(selector) ? root.$x(selector) : root.$$(selector)
 }
 export async function getViewportSize(page: Driver): Promise<{width: number; height: number}> {
   return page.viewport()
@@ -187,7 +182,7 @@ export async function scrollIntoView(frame: Context, element: Element | Selector
   await frame.evaluate((element, align) => element.scrollIntoView(align), element, align)
 }
 export async function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void> {
-  await frame.waitForSelector(transformSelector(selector))
+  await frame.waitForSelector(selector)
 }
 
 // #endregion

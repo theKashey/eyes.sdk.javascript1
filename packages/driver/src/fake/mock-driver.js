@@ -119,7 +119,7 @@ class MockDriver {
     this.mockScript(snippets.getPixelRatio, () => {
       return 1
     })
-    this.mockScript(snippets.getShadowRoot, element => {
+    this.mockScript(snippets.getShadowRoot, ([element]) => {
       return element
     })
     this.mockScript(snippets.getUserAgent, () => {
@@ -350,4 +350,4 @@ class MockDriver {
   }
 }
 
-module.exports = MockDriver
+module.exports = {MockDriver}

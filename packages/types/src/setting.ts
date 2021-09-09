@@ -1,3 +1,4 @@
+import {Selector} from './driver'
 import {
   MatchLevel,
   Region,
@@ -6,11 +7,10 @@ import {
   AccessibilityLevel,
   Proxy,
 } from './data'
-import {SpecSelector} from './spec-driver'
 
-type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector> | SpecSelector<TSelector>
+type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
 
-type ElementReference<TElement, TSelector> = TElement | SpecSelector<TSelector>
+type ElementReference<TElement, TSelector> = TElement | Selector<TSelector>
 
 type FrameReference<TElement, TSelector> = ElementReference<TElement, TSelector> | string | number
 
@@ -60,7 +60,6 @@ export type MatchSettings<TRegion> = {
 export type ScreenshotSettings<TElement, TSelector> = {
   region?: RegionReference<TElement, TSelector>
   frames?: (ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>)[]
-  shadow?: SpecSelector<TSelector>
   scrollRootElement?: ElementReference<TElement, TSelector>
   fully?: boolean
 }

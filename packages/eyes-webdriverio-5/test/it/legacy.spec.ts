@@ -1,9 +1,10 @@
-const assert = require('assert')
-const spec = require('../../dist/spec-driver')
-const legacy = require('../../dist/legacy')
+import assert from 'assert'
+import * as spec from '../../src/spec-driver'
+import * as legacy from '../../src/legacy'
 
-describe('legacy api', () => {
-  let browser, destroyBrowser, driver
+describe('legacy', () => {
+  let browser: spec.Driver, destroyBrowser: () => void, driver: any
+
   before(async () => {
     ;[browser, destroyBrowser] = await spec.build({browser: 'chrome'})
     driver = legacy.wrapDriver(browser)

@@ -43,9 +43,9 @@
     "build:dist": "tsc",
     "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules playwright",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright'",
-    "test": "yarn build:dist && yarn test:it && yarn test:coverage",
-    "test:it": "mocha --no-timeouts ./test/it/*.spec.js",
-    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
+    "test": "yarn test:it && yarn test:coverage",
+    "test:it": "mocha --no-timeouts -r ts-node/register ./test/it/*.spec.ts",
+    "test:coverage": "yarn build:dist && yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright'",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright' -f links='eyes-sdk-core eyes-api types test-utils utils driver screenshoter sdk-shared visual-grid-client' -f linking-depth=2",
@@ -72,6 +72,7 @@
     "@applitools/sdk-release-kit": "0.13.0",
     "@applitools/sdk-shared": "0.9.5",
     "@applitools/test-utils": "1.0.7",
+    "@types/mocha": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "eslint": "^7.9.0",
@@ -84,6 +85,7 @@
     "playwright": "1.8.0",
     "prettier": "^2.1.2",
     "spec-xunit-file": "0.0.1-3",
+    "ts-node": "^10.2.1",
     "typescript": "^4.1.5"
   },
   "peerDependencies": {

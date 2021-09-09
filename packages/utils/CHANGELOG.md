@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `types.isPlainObject` to check that object is not an instance of any class
 
 ## 1.2.2 - 2021/8/7
 

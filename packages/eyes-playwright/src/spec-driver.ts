@@ -1,10 +1,12 @@
-import * as utils from '@applitools/utils'
 import type * as Playwright from 'playwright'
+import * as utils from '@applitools/utils'
 
 export type Driver = Playwright.Page
 export type Context = Playwright.Frame
 export type Element = Playwright.ElementHandle
-export type Selector = string | {type: string; selector: string}
+export type Selector = string
+
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
@@ -23,13 +25,6 @@ async function handleToObject(handle: Playwright.JSHandle): Promise<any> {
     return handle.jsonValue()
   }
 }
-function transformSelector(selector: any): string {
-  if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return `css=${selector.selector}`
-    else if (selector.type === 'xpath') return `xpath=${selector.selector}`
-  }
-  return selector
-}
 
 // #endregion
 
@@ -37,18 +32,25 @@ function transformSelector(selector: any): string {
 
 export function isDriver(page: any): page is Driver {
   if (!page) return false
-  return page.constructor.name === 'Page'
+  return utils.types.instanceOf(page, 'Page')
 }
 export function isContext(frame: any): frame is Context {
   if (!frame) return false
-  return frame.constructor.name === 'Frame'
+  return utils.types.instanceOf(frame, 'Frame')
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
-  return element.constructor.name === 'ElementHandle'
+  return utils.types.instanceOf(element, 'ElementHandle')
 }
 export function isSelector(selector: any): selector is Selector {
-  return utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector'])
+  return utils.types.isString(selector)
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.has(selector, 'type')) return selector.selector
+    else return `${selector.type}=${selector.selector}`
+  }
+  return selector
 }
 export function extractContext(page: Driver | Context): Context {
   return isDriver(page) ? page.mainFrame() : page
@@ -81,11 +83,13 @@ export async function parentContext(frame: Context): Promise<Context> {
 export async function childContext(_frame: Context, element: Element): Promise<Context> {
   return element.contentFrame()
 }
-export async function findElement(frame: Context, selector: Selector): Promise<Element> {
-  return frame.$(transformSelector(selector))
+export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
+  const root = parent ?? frame
+  return root.$(selector)
 }
-export async function findElements(frame: Context, selector: Selector): Promise<Element[]> {
-  return frame.$$(transformSelector(selector))
+export async function findElements(frame: Context, selector: Selector, parent?: Element): Promise<Element[]> {
+  const root = parent ?? frame
+  return root.$$(selector)
 }
 export async function getViewportSize(page: Driver): Promise<{width: number; height: number}> {
   return page.viewportSize()
@@ -123,7 +127,7 @@ export async function scrollIntoView(frame: Context, element: Element | Selector
   await frame.evaluate(([element, align]) => element.scrollIntoView(align), [element, align])
 }
 export async function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void> {
-  await frame.waitForSelector(transformSelector(selector))
+  await frame.waitForSelector(selector)
 }
 
 // #endregion

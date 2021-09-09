@@ -29,14 +29,20 @@ describe('spec driver', async () => {
     it('isElement(wrong)', async () => {
       await isElement({input: () => ({}), expected: false})
     })
-    it('isSelector(string)', async () => {
-      await isSelector({input: 'div', expected: true})
-    })
     it('isSelector(by)', async () => {
       await isSelector({input: By.xpath('//div'), expected: true})
     })
     it('isSelector(wrong)', async () => {
       await isSelector({input: {}, expected: false})
+    })
+    it('transformSelector(by)', async () => {
+      await transformSelector({input: By.xpath('//element')})
+    })
+    it('transformSelector(string)', async () => {
+      await transformSelector({input: '.element', expected: {css: '.element'}})
+    })
+    it('transformSelector(common-selector)', async () => {
+      await transformSelector({input: {selector: '.element', type: 'css'}, expected: {css: '.element'}})
     })
     it('isEqualElements(element, element)', async () => {
       await isEqualElements({
@@ -216,6 +222,10 @@ describe('spec driver', async () => {
   async function isSelector({input, expected}) {
     const isSelector = await spec.isSelector(input)
     assert.strictEqual(isSelector, expected)
+  }
+  async function transformSelector({input, expected}) {
+    const result = spec.transformSelector(input)
+    assert.deepStrictEqual(result, expected || input)
   }
   async function isEqualElements({input, expected}) {
     const {element1, element2} = await input()

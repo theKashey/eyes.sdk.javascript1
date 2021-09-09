@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `EyesSelector` type and use it to wrap framework selector type all over api
 
 ## 1.1.0 - 2021/9/6
 

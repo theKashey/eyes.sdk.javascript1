@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- handle selectors that evaluate to elements from a different context
 
 ## 12.23.3 - 2021/9/6
 

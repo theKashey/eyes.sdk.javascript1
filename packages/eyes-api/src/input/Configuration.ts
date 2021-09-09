@@ -1,3 +1,4 @@
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import {SessionType, SessionTypeEnum} from '../enums/SessionType'
 import {StitchMode, StitchModeEnum} from '../enums/StitchMode'
@@ -82,7 +83,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   hideScrollbars?: boolean
   hideCaret?: boolean
   stitchOverlap?: number
-  scrollRootElement?: TElement | TSelector
+  scrollRootElement?: TElement | types.Selector<TSelector>
   cut?: CutProvider
   rotation?: ImageRotation
   scaleRatio?: number
@@ -112,6 +113,17 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   private _config: Configuration<TElement, TSelector> = {}
+
+  private _isSelector(selector: any): selector is types.Selector<TSelector> {
+    return (
+      this._spec.isSelector(selector) ||
+      utils.types.isString(selector) ||
+      (utils.types.isPlainObject(selector) &&
+        utils.types.has(selector, 'selector') &&
+        ((utils.types.has(selector, 'type') && utils.types.isString(selector.selector)) ||
+          this._spec.isSelector(selector.selector)))
+    )
+  }
 
   constructor(config?: Configuration<TElement, TSelector>) {
     if (!config) return this
@@ -852,21 +864,21 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get scrollRootElement(): TElement | TSelector {
+  get scrollRootElement(): TElement | types.Selector<TSelector> {
     return this._config.scrollRootElement
   }
-  set scrollRootElement(scrollRootElement: TElement | TSelector) {
-    utils.guard.custom(scrollRootElement, value => this._spec.isElement(value) || this._spec.isSelector(value), {
+  set scrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>) {
+    utils.guard.custom(scrollRootElement, value => this._spec.isElement(value) || this._isSelector(value), {
       name: 'scrollRootElement',
       message: 'must be element or selector',
       strict: false,
     })
     this._config.scrollRootElement = scrollRootElement
   }
-  getScrollRootElement(): TElement | TSelector {
+  getScrollRootElement(): TElement | types.Selector<TSelector> {
     return this.scrollRootElement
   }
-  setScrollRootElement(scrollRootElement: TElement | TSelector): this {
+  setScrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>): this {
     this.scrollRootElement = scrollRootElement
     return this
   }

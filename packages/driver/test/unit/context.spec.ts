@@ -1,11 +1,10 @@
 import assert from 'assert'
-import {Driver, Context} from '../../src/index'
-
-const MockDriver = require('../fixtures/mock-driver')
-const spec = require('../fixtures/spec-driver')
+import {Driver, Context, MockDriver, fake} from '../../src/index'
 
 describe('context', () => {
-  let mock: any, driver: Driver<any, any, any, any>, context: Context<any, any, any, any>
+  let mock: MockDriver,
+    driver: Driver<fake.Driver, fake.Context, fake.Element, fake.Selector>,
+    context: Context<fake.Driver, fake.Context, fake.Element, fake.Selector>
   const logger = {log: () => null as any, warn: () => null as any, error: () => null as any}
 
   beforeEach(() => {
@@ -23,7 +22,7 @@ describe('context', () => {
                 selector: 'frame1-1',
                 frame: true,
                 rect: {x: 1, y: 2, width: 101, height: 102},
-                children: [{selector: 'frame1-1--element1'}],
+                children: [{selector: 'frame1-1--element1', name: 'element within frame'}],
               },
             ],
           },
@@ -40,14 +39,14 @@ describe('context', () => {
               {
                 selector: 'shadow1-1',
                 shadow: true,
-                children: [{selector: 'shadow1-1--element1'}],
+                children: [{selector: 'shadow1-1--element1', name: 'element within shadow'}],
               },
             ],
           },
         ],
       },
     ])
-    driver = new Driver({logger, spec, driver: mock})
+    driver = new Driver({logger, spec: fake.spec, driver: mock})
     context = driver.currentContext
   })
 
@@ -85,33 +84,48 @@ describe('context', () => {
   it('element(selector)', async () => {
     const childContext1 = await context.context('frame1')
     const childContext11 = await childContext1.context('frame1-1')
+    await childContext11.focus()
     const element = await childContext11.element('frame1-1--element1')
 
-    assert.strictEqual(element.selector, 'frame1-1--element1')
+    assert.strictEqual(element.target.name, 'element within frame')
   })
 
   it('element(shadow-selector)', async () => {
-    const selector = {
+    const element = await context.element({
       selector: 'shadow1',
       shadow: {selector: 'shadow1-1', shadow: {selector: 'shadow1-1--element1'}},
-    }
-    const element = await context.element(selector)
-    assert.deepStrictEqual(element.selector, selector)
+    })
+    assert.deepStrictEqual(element.target.name, 'element within shadow')
   })
 
-  it('elements(non-existent)', async () => {
-    const selector = 'non-existent'
-    const element = await context.element(selector)
+  it('element(frame-selector)', async () => {
+    const element = await context.element({
+      selector: 'frame1',
+      frame: {selector: 'frame1-1', frame: {selector: 'frame1-1--element1'}},
+    })
+    assert.deepStrictEqual(element.target.name, 'element within frame')
+  })
+
+  it('element(non-existent)', async () => {
+    const element = await context.element('non-existent')
 
     assert.strictEqual(element, null)
   })
 
-  it('elements(non-existent-shadow)', async () => {
-    const selector = {
+  it('element(non-existent-shadow)', async () => {
+    const element = await context.element({
       selector: 'shadow1',
       shadow: {selector: 'shadow1-non-existent', shadow: {selector: 'shadow1-non-existent--element1'}},
-    }
-    const element = await context.element(selector)
+    })
+
+    assert.strictEqual(element, null)
+  })
+
+  it('element(non-existent-frame)', async () => {
+    const element = await context.element({
+      selector: 'frame1',
+      frame: {selector: 'frame1-non-existent', frame: {selector: 'frame1-non-existent--element1'}},
+    })
 
     assert.strictEqual(element, null)
   })
@@ -119,40 +133,58 @@ describe('context', () => {
   it('elements(selector)', async () => {
     const childContext1 = await context.context('frame1')
     const childContext11 = await childContext1.context('frame1-1')
-    const selector = 'frame1-1--element1'
-    const elements = await childContext11.elements(selector)
+    await childContext11.focus()
+    const elements = await childContext11.elements('frame1-1--element1')
 
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 1)
-    assert.strictEqual(elements[0].selector, selector)
+    assert.strictEqual(elements[0].target.name, 'element within frame')
   })
 
   it('elements(shadow-selector)', async () => {
-    const selector = {
+    const elements = await context.elements({
       selector: 'shadow1',
       shadow: {selector: 'shadow1-1', shadow: {selector: 'shadow1-1--element1'}},
-    }
-    const elements = await context.elements(selector)
+    })
 
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 1)
-    assert.deepStrictEqual(elements[0].selector, selector)
+    assert.strictEqual(elements[0].target.name, 'element within shadow')
+  })
+
+  it('elements(shadow-selector)', async () => {
+    const elements = await context.elements({
+      selector: 'frame1',
+      frame: {selector: 'frame1-1', frame: {selector: 'frame1-1--element1'}},
+    })
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 1)
+    assert.strictEqual(elements[0].target.name, 'element within frame')
   })
 
   it('elements(non-existent)', async () => {
-    const selector = 'non-existent'
-    const elements = await context.elements(selector)
+    const elements = await context.elements('non-existent')
 
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 0)
   })
 
   it('elements(non-existent-shadow)', async () => {
-    const selector = {
+    const elements = await context.elements({
       selector: 'shadow1',
       shadow: {selector: 'shadow1-non-existent', shadow: {selector: 'shadow1-non-existent--element1'}},
-    }
-    const elements = await context.elements(selector)
+    })
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 0)
+  })
+
+  it('elements(non-existent-frame)', async () => {
+    const elements = await context.elements({
+      selector: 'frame1',
+      frame: {selector: 'frame1-non-existent', frame: {selector: 'frame1-non-existent--element1'}},
+    })
 
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 0)
