@@ -1,10 +1,6 @@
-'use strict'
-
-const {Driver} = require('@applitools/driver')
-const utils = require('@applitools/utils')
 const assert = require('assert')
-const MockDriver = require('../../utils/MockDriver')
-const spec = require('../../utils/FakeSpecDriver')
+const utils = require('@applitools/utils')
+const {Driver, MockDriver, fake} = require('@applitools/driver')
 const {Configuration} = require('../../../index')
 const CheckSettingsUtils = require('../../../lib/sdk/CheckSettingsUtils')
 const {getResourceAsText} = require('../../testUtils')
@@ -30,7 +26,7 @@ describe('CheckSettingsUtils', () => {
       {selector: 'element4', rect: {x: 40, y: 41, width: 401, height: 402}},
       {selector: 'element4', rect: {x: 42, y: 43, width: 403, height: 404}},
     ])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
     const checkSettings = {
       ignoreRegions: [await mockDriver.findElement('element0'), 'element1', {x: 1, y: 2, width: 3, height: 5}],
       floatingRegions: [
@@ -98,7 +94,7 @@ describe('CheckSettingsUtils', () => {
         ],
       },
     ])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
     const checkSettings = {
       frame: ['frame1'],
       shadow: ['shadow1'],
@@ -136,7 +132,7 @@ describe('CheckSettingsUtils', () => {
   it('toCheckWindowConfiguration handles region target with selector', async () => {
     const mockDriver = new MockDriver()
     mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
 
     const regionCheckSettings = {region: 'some selector'}
     const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
@@ -156,7 +152,7 @@ describe('CheckSettingsUtils', () => {
   it('toCheckWindowConfiguration handles region target with element', async () => {
     const mockDriver = new MockDriver()
     mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
 
     const regionCheckSettings = {region: await mockDriver.findElement('some selector')}
     const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
@@ -185,7 +181,7 @@ describe('CheckSettingsUtils', () => {
   it('toCheckWindowConfiguration handles region target with selector', async () => {
     const mockDriver = new MockDriver()
     mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
 
     const regionCheckSettings = {region: 'some selector'}
     const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
@@ -205,7 +201,7 @@ describe('CheckSettingsUtils', () => {
   it('toCheckWindowConfiguration handles region target with element', async () => {
     const mockDriver = new MockDriver()
     mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
+    const driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
 
     const regionCheckSettings = {region: await mockDriver.findElement('some selector')}
     const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
@@ -445,7 +441,7 @@ describe('CheckSettingsUtils', () => {
       mockDriver = new MockDriver()
       mockDriver.mockElement('custom selector', {rect: region1})
       mockDriver.mockElement('custom selector', {rect: region2})
-      driver = new Driver({logger, spec, driver: mockDriver})
+      driver = new Driver({logger, spec: fake.spec, driver: mockDriver})
     })
 
     it('handle region by coordinates', async () => {

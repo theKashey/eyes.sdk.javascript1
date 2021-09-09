@@ -1,13 +1,19 @@
 const assert = require('assert')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
-const MockDriver = require('../utils/MockDriver')
+const snippets = require('@applitools/snippets')
+const {MockDriver} = require('@applitools/driver')
 const {EyesClassic} = require('../utils/FakeSDK')
+const {generateScreenshot} = require('../utils/FakeScreenshot')
 
 describe('MarkScrollRootElement', () => {
   let server, serverUrl, driver, eyes
 
   before(async () => {
     driver = new MockDriver()
+    driver.takeScreenshot = generateScreenshot
+    driver.mockScript(snippets.getElementContentSize, ([element]) => {
+      return element.rect || {x: 0, y: 0, width: 100, height: 100}
+    })
     driver.mockElement('scroll-root-element')
     eyes = new EyesClassic()
     server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'never'})

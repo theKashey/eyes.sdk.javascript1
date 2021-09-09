@@ -1,14 +1,16 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
-const MockDriver = require('../utils/MockDriver')
+const {MockDriver} = require('@applitools/driver')
 const {EyesClassic} = require('../utils/FakeSDK')
 const TestResults = require('../../lib/TestResults')
+const {generateScreenshot} = require('../utils/FakeScreenshot')
 
 describe('codedRegions', async () => {
   let server, serverUrl, driver, eyes
 
   before(async () => {
     driver = new MockDriver()
+    driver.takeScreenshot = generateScreenshot
     driver.mockElements([
       {selector: 'element0', rect: {x: 1, y: 2, width: 500, height: 501}},
       {selector: 'element1', rect: {x: 10, y: 11, width: 101, height: 102}},

@@ -158,6 +158,9 @@ class MockDriver {
         )
       }
     })
+    this.mockScript(snippets.getElementContentSize, ([element]) => {
+      return element.rect || {x: 0, y: 0, width: 100, height: 100}
+    })
     this.mockScript(snippets.getDocumentSize, () => {
       // TODO get window for context: `this.contexts.get(this._contextId)`
       return {width: this._window.rect.width, height: this._window.rect.height}

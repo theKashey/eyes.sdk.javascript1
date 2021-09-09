@@ -2,8 +2,8 @@ const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
 const Logger = require('../../../lib/logging/Logger')
-const MockDriver = require('../../utils/MockDriver')
-const spec = require('../../utils/FakeSpecDriver')
+const {MockDriver, fake} = require('@applitools/driver')
+const {generateScreenshot} = require('../../utils/FakeScreenshot')
 const makeSDK = require('../../../lib/new/sdk')
 
 describe('close', async () => {
@@ -11,6 +11,7 @@ describe('close', async () => {
 
   before(async () => {
     driver = new MockDriver()
+    driver.takeScreenshot = generateScreenshot
     driver.mockElements([
       {selector: 'element0', rect: {x: 1, y: 2, width: 500, height: 501}},
       {selector: 'element1', rect: {x: 10, y: 11, width: 101, height: 102}},
@@ -18,7 +19,7 @@ describe('close', async () => {
       {selector: 'element3', rect: {x: 30, y: 31, width: 301, height: 302}},
       {selector: 'element4', rect: {x: 40, y: 41, width: 401, height: 402}},
     ])
-    const core = new makeSDK({spec})
+    const core = new makeSDK({spec: fake.spec})
     server = await startFakeEyesServer({logger: new Logger(), matchMode: 'never'})
     serverUrl = `http://localhost:${server.port}`
     manager = await core.makeManager()

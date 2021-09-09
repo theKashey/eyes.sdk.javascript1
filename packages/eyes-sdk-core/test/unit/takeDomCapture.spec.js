@@ -1,9 +1,7 @@
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
-const {Driver} = require('@applitools/driver')
 const Axios = require('axios')
-const MockDriver = require('../utils/MockDriver')
-const spec = require('../utils/FakeSpecDriver')
+const {Driver, MockDriver, fake} = require('@applitools/driver')
 const takeDomCapture = require('../../lib/utils/takeDomCapture')
 
 describe('takeDomCapture', () => {
@@ -56,7 +54,7 @@ describe('takeDomCapture', () => {
         children: [{selector: 'frame2-2', frame: true, isCORS: true}],
       },
     ])
-    driver = new Driver({logger, spec, driver: mock})
+    driver = new Driver({logger, spec: fake.spec, driver: mock})
     await driver.init()
   })
 

@@ -3,6 +3,12 @@
 ## Unreleased
 
 - handle selectors that evaluate to elements from a different context
+- updated to @applitools/driver@1.2.0 (from 1.1.5)
+- updated to @applitools/logger@1.0.4 (from 1.0.3)
+- updated to @applitools/screenshoter@3.2.4 (from 3.2.3)
+- updated to @applitools/snippets@2.1.7 (from 2.1.6)
+- updated to @applitools/types@1.0.13 (from 1.0.12)
+- updated to @applitools/utils@1.2.3 (from 1.2.2)
 
 ## 12.23.4 - 2021/9/9
 

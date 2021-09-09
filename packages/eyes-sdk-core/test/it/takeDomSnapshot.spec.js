@@ -1,41 +1,40 @@
+const {Driver, MockDriver, fake} = require('@applitools/driver')
 const takeDomSnapshot = require('../../lib/utils/takeDomSnapshot')
 const {expect} = require('chai')
-const {createFakeDriver} = require('../utils/FakeEyesDriver')
-const MockDriver = require('../utils/MockDriver')
 const Logger = require('../../lib/logging/Logger')
 const {presult} = require('../../lib/utils/GeneralUtils')
 
 const logger = new Logger(!!process.env.APPLITOOLS_SHOW_LOGS)
 
 describe('takeDomSnapshot', () => {
-  let driver, eyesDriver
+  let mock, driver
 
   beforeEach(async () => {
-    driver = new MockDriver()
-    eyesDriver = createFakeDriver(driver)
-    await eyesDriver.init()
+    mock = new MockDriver()
+    driver = new Driver({logger, spec: fake.spec, driver: mock})
+    await driver.init()
   })
 
   it('should throw an error if snapshot failed', async () => {
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       return JSON.stringify({status: 'ERROR', error: 'some error'})
     })
-    const [error] = await presult(takeDomSnapshot(logger, eyesDriver))
+    const [error] = await presult(takeDomSnapshot(logger, driver))
     expect(error).not.to.be.undefined
     expect(error.message).to.equal("Error during execute poll script: 'some error'")
   })
 
   it('should throw an error if timeout is reached', async () => {
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       return JSON.stringify({status: 'WIP'})
     })
-    const [error] = await presult(takeDomSnapshot(logger, eyesDriver, {executionTimeout: 0}))
+    const [error] = await presult(takeDomSnapshot(logger, driver, {executionTimeout: 0}))
     expect(error).not.to.be.undefined
     expect(error.message).to.equal('Poll script execution is timed out')
   })
 
   it('should take a dom snapshot', async () => {
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       return generateSnapshotResponse({
         cdt: 'cdt',
         resourceUrls: 'resourceUrls',
@@ -43,7 +42,7 @@ describe('takeDomSnapshot', () => {
         frames: [],
       })
     })
-    const actualSnapshot = await takeDomSnapshot(logger, eyesDriver)
+    const actualSnapshot = await takeDomSnapshot(logger, driver)
     expect(actualSnapshot).to.eql({
       cdt: 'cdt',
       frames: [],
@@ -56,13 +55,13 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should take a dom snapshot with cross origin frames', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
       },
     ])
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       return this.name === '[data-applitools-selector="123"]'
         ? generateSnapshotResponse({cdt: 'frame-cdt', url: 'http://cors.com'})
         : generateSnapshotResponse({
@@ -70,7 +69,7 @@ describe('takeDomSnapshot', () => {
             crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
           })
     })
-    const snapshot = await takeDomSnapshot(logger, eyesDriver, {
+    const snapshot = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(snapshot).to.eql({
@@ -102,7 +101,7 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should take a dom snapshot with cross origin frames with the same src attr', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
@@ -112,7 +111,7 @@ describe('takeDomSnapshot', () => {
         frame: true,
       },
     ])
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
@@ -139,7 +138,7 @@ describe('takeDomSnapshot', () => {
     })
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, eyesDriver, {
+    const snapshot = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
     expect(snapshot).to.eql({
@@ -193,7 +192,7 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should take a dom snapshot with nested cross origin frames', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
@@ -206,7 +205,7 @@ describe('takeDomSnapshot', () => {
       },
     ])
 
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
@@ -229,7 +228,7 @@ describe('takeDomSnapshot', () => {
 
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, eyesDriver, {
+    const snapshot = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
 
@@ -286,7 +285,7 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should take a dom snapshot with nested frames containing cross origin frames', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
@@ -299,7 +298,7 @@ describe('takeDomSnapshot', () => {
       },
     ])
 
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       switch (this.name) {
         case '[data-applitools-selector="456"]':
           return generateSnapshotResponse({
@@ -324,7 +323,7 @@ describe('takeDomSnapshot', () => {
 
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, eyesDriver, {
+    const snapshot = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
 
@@ -370,25 +369,25 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should handle failure to switch to frame', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
       },
     ])
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       return generateSnapshotResponse({
         cdt: 'top frame',
         crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
       })
     })
 
-    const snapshot = await takeDomSnapshot(logger, eyesDriver)
+    const snapshot = await takeDomSnapshot(logger, driver)
     expect(snapshot.frames).to.deep.equal([])
   })
 
   it('should handle failure to switch to nested frame', async () => {
     const url = 'https://some_url.com'
-    driver.mockElements([
+    mock.mockElements([
       {
         selector: '[data-applitools-selector="123"]',
         frame: true,
@@ -400,7 +399,7 @@ describe('takeDomSnapshot', () => {
         ],
       },
     ])
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
@@ -416,7 +415,7 @@ describe('takeDomSnapshot', () => {
       }
     })
 
-    const snapshot = await takeDomSnapshot(logger, eyesDriver, {
+    const snapshot = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(snapshot.frames).to.eql([
@@ -433,7 +432,7 @@ describe('takeDomSnapshot', () => {
   })
 
   it('should add data-applitools-src to the cors frame cdt node', async () => {
-    driver.mockElements([
+    mock.mockElements([
       {
         name: 'cors-frame',
         selector: '[data-applitools-selector="1"]',
@@ -441,7 +440,7 @@ describe('takeDomSnapshot', () => {
         isCORS: true,
       },
     ])
-    driver.mockScript('dom-snapshot', function() {
+    mock.mockScript('dom-snapshot', function() {
       switch (this.name) {
         case 'cors-frame':
           return generateSnapshotResponse({
@@ -455,7 +454,7 @@ describe('takeDomSnapshot', () => {
           })
       }
     })
-    const {cdt} = await takeDomSnapshot(logger, eyesDriver, {
+    const {cdt} = await takeDomSnapshot(logger, driver, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(cdt).to.deep.equal([

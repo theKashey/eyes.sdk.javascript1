@@ -6,7 +6,8 @@ const {Writable} = require('stream')
 const chalk = require('chalk')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {EyesVisualGrid} = require('../../utils/FakeSDK')
-const MockDriver = require('../../utils/MockDriver')
+const {MockDriver} = require('@applitools/driver')
+const {generateDomSnapshot} = require('../../utils/FakeDomSnapshot')
 const {Logger, Configuration} = require('../../../index')
 
 describe('EyesVisualGrid', () => {
@@ -20,6 +21,7 @@ describe('EyesVisualGrid', () => {
       })
 
       driver = new MockDriver({viewport: {width: 600, height: 700}})
+      driver.mockScript('dom-snapshot', () => generateDomSnapshot(driver))
       driver.wrapMethod('setWindowRect', (method, driver, [rect]) => {
         if (!Number.isNaN(Number(rect.width))) {
           rect.width = Math.min(Math.max(rect.width, 300), 800)

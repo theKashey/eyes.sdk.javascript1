@@ -1,13 +1,15 @@
 const assert = require('assert')
+const {MockDriver} = require('@applitools/driver')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
-const MockDriver = require('../utils/MockDriver')
 const {EyesFactory} = require('../utils/FakeSDK')
+const {generateScreenshot} = require('../utils/FakeScreenshot')
 
 describe('Bad Selectors', () => {
   let server, serverUrl, driver, eyes
 
   before(async () => {
     driver = new MockDriver()
+    driver.takeScreenshot = generateScreenshot
     driver.mockElement('element0')
     eyes = new EyesFactory()
     server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'always'})
