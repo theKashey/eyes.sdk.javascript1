@@ -34,7 +34,7 @@
     "types"
   ],
   "scripts": {
-    "lint": "eslint '**/*.ts' '**/*.js'",
+    "lint": "eslint '**/*.ts'",
     "build": "tsc",
     "test": "yarn test:unit",
     "test:unit": "mocha --no-timeouts -r ts-node/register './test/unit/*.spec.ts'",

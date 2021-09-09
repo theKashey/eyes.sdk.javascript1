@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for deep selectors
 
 ## 1.1.5 - 2021/9/6
 

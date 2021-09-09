@@ -119,8 +119,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
       utils.types.isString(selector) ||
       (utils.types.isPlainObject(selector) &&
         utils.types.has(selector, 'selector') &&
-        ((utils.types.has(selector, 'type') && utils.types.isString(selector.selector)) ||
-          this._spec.isSelector(selector.selector)))
+        (utils.types.isString(selector.selector) || this._spec.isSelector(selector.selector)))
     )
   }
 

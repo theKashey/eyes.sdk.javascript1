@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "declarationDir": "types",
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declarationMap": false,
+    "sourceMap": false,
 
-    "target": "ES2015",
     "module": "commonjs",
+    "target": "es2017",
     "noImplicitAny": true,
     "preserveConstEnums": true,
     "downlevelIteration": true,
-    "stripInternal": true,
+    "esModuleInterop": true,
+    "stripInternal": false,
+    "removeComments": false,
   },
+  "ts-node": {
+    "transpileOnly": true
+  },
+  "exclude" : ["dist", "types", "test"],
 }

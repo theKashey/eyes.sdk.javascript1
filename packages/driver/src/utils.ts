@@ -24,8 +24,7 @@ export function makeSpecUtils<TDriver, TContext, TElement, TSelector>(
       utils.types.isString(selector) ||
       (utils.types.isPlainObject(selector) &&
         utils.types.has(selector, 'selector') &&
-        ((utils.types.has(selector, 'type') && utils.types.isString(selector.selector)) ||
-          spec.isSelector(selector.selector)))
+        (utils.types.isString(selector.selector) || spec.isSelector(selector.selector)))
     )
   }
   function transformSelector(selector: types.Selector<TSelector>): TSelector {

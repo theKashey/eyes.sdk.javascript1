@@ -2,18 +2,16 @@ module.exports = {
   compilerOptions: {
     rootDir: 'src',
     outDir: 'dist',
-    sourceMap: true,
+    sourceMap: false,
 
-    target: 'ES2017',
     module: 'commonjs',
+    target: 'es2017',
     noImplicitAny: true,
-    removeComments: true,
     preserveConstEnums: true,
     downlevelIteration: true,
-    stripInternal: true,
-    experimentalDecorators: false,
-    resolveJsonModule: true,
     esModuleInterop: true,
+    stripInternal: true,
+    removeComments: true,
     typeRoots: ['./node_modules', './node_modules/@types', './types'],
     types: [
       'mocha',
@@ -22,5 +20,8 @@ module.exports = {
         : ['webdriverio/async', 'v7']),
     ],
   },
-  exclude: ['test/**/*.spec.ts', 'types/**/*'],
+  'ts-node': {
+    transpileOnly: true,
+  },
+  exclude: ['dist', 'types', 'test'],
 }

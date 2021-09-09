@@ -6,16 +6,19 @@
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
+    "allowJs": true,
 
-    "target": "ES2017",
     "module": "commonjs",
+    "target": "es2017",
     "noImplicitAny": true,
-    "removeComments": false,
     "preserveConstEnums": true,
     "downlevelIteration": true,
+    "esModuleInterop": true,
     "stripInternal": false,
-    "experimentalDecorators": true,
-    "esModuleInterop": true
+    "removeComments": false,
   },
-  "exclude" : ["test/**/*.spec.ts", "types/**/*"],
+  "ts-node": {
+    "transpileOnly": true
+  },
+  "exclude" : ["dist", "types", "test"],
 }
