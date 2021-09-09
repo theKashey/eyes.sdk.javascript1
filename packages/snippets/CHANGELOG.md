@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.1.7 - 2021/9/9
+
 - fix `getShadowRoot` to follow convention for arguments
 
 ## 2.1.6 - 2021/9/6
