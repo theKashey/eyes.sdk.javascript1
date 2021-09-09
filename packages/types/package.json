@@ -1,6 +1,6 @@
 {
   "name": "@applitools/types",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "keywords": [
     "applitools",
     "eyes",
@@ -48,7 +48,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.0",
+    "@applitools/sdk-release-kit": "0.13.2",
     "@types/node": "^14.14.7",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",

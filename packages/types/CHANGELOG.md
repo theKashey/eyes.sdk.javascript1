@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.13 - 2021/9/9
+
 - add `Selector` type to wrap framework selectors with additional functionality
 - remove `SpecSelector` type, so `SpecDriver` methods could now only accept framework selectors
 - add `transformSelector` method to `SpecDriver` type
