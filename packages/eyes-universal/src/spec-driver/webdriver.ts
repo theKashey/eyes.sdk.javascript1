@@ -5,24 +5,16 @@ import WebDriver from 'webdriver'
 
 export type Driver = WD.Client
 export type Element = {'element-6066-11e4-a52e-4f735466cecf': string}
-export type Selector = types.SpecSelector<{using: string; value: string}>
+export type Selector = {using: string; value: string}
+
+type StaticDriver = {sessionId: string; serverUrl: string; capabilities: Record<string, any>}
+type StaticElement = {elementId: string}
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
 function extractElementId(element: Element): string {
   return (element as any).elementId ?? element['element-6066-11e4-a52e-4f735466cecf']
-}
-
-function transformSelector(selector: Selector): [string, string] {
-  if (utils.types.isString(selector)) {
-    return ['css selector', selector]
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return ['css selector', selector.selector]
-    else if (selector.type === 'xpath') return ['xpath', selector.selector]
-    else return [selector.type, selector.selector]
-  } else {
-    return [selector.using, selector.value]
-  }
 }
 
 // #endregion
@@ -31,7 +23,7 @@ function transformSelector(selector: Selector): [string, string] {
 
 export function isDriver(driver: any): driver is Driver {
   if (!driver) return false
-  return utils.types.has(driver, ['sessionId', 'serverUrl']) || utils.types.instanceOf(driver, 'Browser')
+  return utils.types.has(driver, ['sessionId', 'serverUrl']) || utils.types.instanceOf<WD.Client>(driver, 'Browser')
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
@@ -39,17 +31,10 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
-  return (
-    utils.types.isString(selector) ||
-    utils.types.has(selector, ['type', 'selector']) ||
-    utils.types.has(selector, ['using', 'value'])
-  )
+  return utils.types.has(selector, ['using', 'value'])
 }
-export function transformDriver(driver: {
-  sessionId: string
-  serverUrl: string
-  capabilities: Record<string, any>
-}): Driver {
+export function transformDriver(driver: Driver | StaticDriver): Driver {
+  if (!utils.types.has(driver, ['sessionId', 'serverUrl'])) return driver
   const url = new URL(driver.serverUrl)
   const options: WD.AttachOptions = {
     sessionId: driver.sessionId,
@@ -66,11 +51,21 @@ export function transformDriver(driver: {
   }
   return WebDriver.attachToSession(options)
 }
-export function transformElement(element: {elementId: string} | Element): Element {
-  if (utils.types.has(element, 'elementId')) {
-    return {'element-6066-11e4-a52e-4f735466cecf': element.elementId}
+export function transformElement(element: Element | StaticElement): Element {
+  if (!utils.types.has(element, 'elementId')) return element
+  return {'element-6066-11e4-a52e-4f735466cecf': element.elementId}
+}
+export function transformSelector(selector: Selector | CommonSelector): Selector {
+  if (utils.types.isString(selector)) {
+    return {using: 'css selector', value: selector}
+  } else if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.isString(selector.selector)) return selector.selector
+    if (!utils.types.has(selector, 'type')) return {using: 'css selector', value: selector.selector}
+    if (selector.type === 'css') return {using: 'css selector', value: selector.selector}
+    else return {using: selector.type, value: selector.selector}
+  } else {
+    return selector
   }
-  return element
 }
 export function isStaleElementError(error: any): boolean {
   if (!error) return false
@@ -107,11 +102,11 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   return driver
 }
 export async function findElement(driver: Driver, selector: Selector): Promise<Element | null> {
-  const element = await driver.findElement(...transformSelector(selector))
+  const element = await driver.findElement(selector.using, selector.value)
   return !utils.types.has(element, 'error') ? element : null
 }
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
-  return driver.findElements(...transformSelector(selector))
+  return driver.findElements(selector.using, selector.value)
 }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(driver.getWindowRect)) {

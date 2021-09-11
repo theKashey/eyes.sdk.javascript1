@@ -4,9 +4,12 @@ import * as utils from '@applitools/utils'
 export type Driver = types.Ref
 export type Context = types.Ref
 export type Element = types.Ref
-export type Selector = types.SpecSelector<types.Ref>
+export type Selector = types.Selector
 
-type SpecDriver = Omit<types.SpecDriver<Driver, Context, Element, Selector>, 'transformDriver' | 'transformElement'>
+type SpecDriver = Omit<
+  types.SpecDriver<Driver, Context, Element, Selector>,
+  'transformDriver' | 'transformElement' | 'transformSelector'
+>
 
 export function makeSpec(options: {
   socket: types.ServerSocket<Driver, Context, Element, Selector>
@@ -27,9 +30,11 @@ export function makeSpec(options: {
     },
     isSelector(selector: any): selector is Selector {
       return (
+        utils.types.has(selector, 'applitools-ref-id') ||
         utils.types.isString(selector) ||
-        utils.types.has(selector, ['type', 'selector']) ||
-        utils.types.has(selector, 'applitools-ref-id')
+        (utils.types.isPlainObject(selector) &&
+          utils.types.has(selector, 'selector') &&
+          (utils.types.isString(selector.selector) || utils.types.has(selector, 'applitools-ref-id')))
       )
     },
     extractContext(element: Driver & {context: Context}): Context {

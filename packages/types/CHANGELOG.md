@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add `never` as default type argument value to  `Selector` type to use it as stand alone type
+- make `transformSelector` optional same as other transformers 
 
 ## 1.0.13 - 2021/9/9
 

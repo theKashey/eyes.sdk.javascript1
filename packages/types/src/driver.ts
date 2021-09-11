@@ -19,7 +19,7 @@ export type DriverInfo = {
   }
 }
 
-export type Selector<TSelector> =
+export type Selector<TSelector = never> =
   | TSelector
   | string
   | {selector: TSelector | string; type?: string; shadow?: Selector<TSelector>; frame?: Selector<TSelector>}
@@ -29,9 +29,9 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   isContext?(context: any): context is TContext
   isElement(element: any): element is TElement
   isSelector(selector: any): selector is TSelector
-  transformDriver?(driver: TDriver): TDriver
-  transformElement?(element: TElement): TElement
-  transformSelector(selector: TSelector | Selector<TSelector>): TSelector
+  transformDriver?(driver: any): TDriver
+  transformElement?(element: any): TElement
+  transformSelector?(selector: Selector<TSelector>): TSelector
   extractContext?(element: TDriver | TContext): TContext
   extractSelector?(element: TElement): TSelector
   isStaleElementError(error: any, selector?: TSelector): boolean

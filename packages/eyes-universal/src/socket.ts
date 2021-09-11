@@ -10,6 +10,7 @@ export interface Socket {
   off(type: string | {name: string; key: string}, fn: (payload?: any, key?: string) => any): boolean
   request(name: string, payload?: any): Promise<any>
   command(name: string, fn: (payload?: any) => any): () => void
+  create<TResult>(name: string, fn: (payload?: any) => TResult): PromiseLike<TResult>
   ref(): () => void
   unref(): () => void
 }
@@ -30,6 +31,7 @@ export function makeSocket(ws: WebSocket): Socket {
     off,
     request,
     command,
+    create,
     ref,
     unref,
   }
@@ -134,6 +136,33 @@ export function makeSocket(ws: WebSocket): Socket {
         emit({name, key}, {error: {message: error.message, stack: error.stack}})
       }
     })
+  }
+
+  function create<TResult>(name: string, fn: (payload?: any) => TResult): PromiseLike<TResult> {
+    let temporary = makeState()
+    let result = temporary
+    on(name, async payload => {
+      result = temporary
+      try {
+        result.resolve(await fn(payload))
+      } catch (error) {
+        result.reject(error)
+      } finally {
+        temporary = makeState()
+      }
+    })
+    return {
+      then: () => result.promise,
+    }
+
+    function makeState() {
+      const state = {} as {promise: Promise<any>; resolve: (value: any) => void; reject: (error: Error) => void}
+      state.promise = new Promise<TResult>((resolve, reject) => {
+        state.resolve = resolve
+        state.reject = reject
+      })
+      return state
+    }
   }
 
   function ref() {
