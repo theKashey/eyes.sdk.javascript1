@@ -1,8 +1,8 @@
 'use strict'
 
 const fs = require('fs')
+const assert = require('assert')
 const path = require('path')
-const {expect} = require('chai')
 const {Target} = require('../../../dist')
 const {setupEyes} = require('@applitools/test-utils')
 const ncp = require('ncp')
@@ -36,7 +36,7 @@ describe('JS Coverage tests', () => {
       // verify that the specific API that this test was written to fix is working
       const {By: By2} = require(targetSeleniumFolder)
       const el = await driver.findElement(By2.css('html'))
-      expect(spec.isElement(el)).to.be.true
+      assert.ok(spec.isElement(el))
 
       // verify that overall everything is working
       const eyes = setupEyes()
