@@ -33,7 +33,15 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
       if (!reference) continue
       const referenceRegion = reference.region || reference
       if (utils.types.has(referenceRegion, ['width', 'height'])) {
-        persistedRegions.push(persistReference(reference, referenceRegion))
+        const persistedRegion = utils.types.has(referenceRegion, ['x', 'y'])
+          ? persistReference(reference, referenceRegion)
+          : persistReference(reference, {
+              x: referenceRegion.left,
+              y: referenceRegion.top,
+              width: referenceRegion.width,
+              height: referenceRegion.height,
+            })
+        persistedRegions.push(persistedRegion)
       } else if (referenceRegion) {
         const elements = await context.elements(referenceRegion)
         for (const element of elements) {
@@ -72,49 +80,12 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 
 function toCheckWindowConfiguration({checkSettings, configuration}) {
   const config = {
-    ignore:
-      checkSettings.ignoreRegions &&
-      checkSettings.ignoreRegions.map(region => {
-        return utils.types.has(region, ['x', 'y'])
-          ? {left: region.x, top: region.y, width: region.width, height: region.height}
-          : region
-      }),
-    floating:
-      checkSettings.floatingRegions &&
-      checkSettings.floatingRegions.map(({region, ...offsets}) => {
-        return utils.types.has(region, ['x', 'y'])
-          ? {left: region.x, top: region.y, width: region.width, height: region.height, ...offsets}
-          : {...region, ...offsets}
-      }),
-    strict:
-      checkSettings.strictRegions &&
-      checkSettings.strictRegions.map(region => {
-        return utils.types.has(region, ['x', 'y'])
-          ? {left: region.x, top: region.y, width: region.width, height: region.height}
-          : region
-      }),
-    layout:
-      checkSettings.layoutRegions &&
-      checkSettings.layoutRegions.map(region => {
-        return utils.types.has(region, ['x', 'y'])
-          ? {left: region.x, top: region.y, width: region.width, height: region.height}
-          : region
-      }),
-    content:
-      checkSettings.contentRegions &&
-      checkSettings.contentRegions.map(region => {
-        return utils.types.has(region, ['x', 'y'])
-          ? {left: region.x, top: region.y, width: region.width, height: region.height}
-          : region
-      }),
-    accessibility:
-      checkSettings.accessibilityRegions &&
-      checkSettings.accessibilityRegions.map(({region, type}) => {
-        if (utils.types.has(region, ['x', 'y'])) {
-          region = {left: region.x, top: region.y, width: region.width, height: region.height}
-        }
-        return {...region, accessibilityType: type}
-      }),
+    ignore: transformRegions(checkSettings.ignoreRegions),
+    floating: transformRegions(checkSettings.floatingRegions),
+    strict: transformRegions(checkSettings.strictRegions),
+    layout: transformRegions(checkSettings.layoutRegions),
+    content: transformRegions(checkSettings.contentRegions),
+    accessibility: transformRegions(checkSettings.accessibilityRegions),
     target: checkSettings.region ? 'region' : 'window',
     fully: configuration.getForceFullPageScreenshot() || checkSettings.fully || false,
     tag: checkSettings.name,
@@ -144,6 +115,23 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
   }
 
   return config
+
+  function transformRegions(regions) {
+    if (!regions || regions.length === 0) return regions
+    return regions.map(target => {
+      const {region, ...options} = target.region ? target : {region: target}
+      if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
+        return {
+          left: Math.round(region.x),
+          top: Math.round(region.y),
+          width: Math.round(region.width),
+          height: Math.round(region.height),
+          ...options,
+        }
+      }
+      return region
+    })
+  }
 }
 
 function toMatchSettings({checkSettings = {}, configuration}) {
@@ -203,8 +191,11 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
     for (const reference of references) {
       const referenceRegions = []
       const {region, ...options} = reference.region ? reference : {region: reference}
-      if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
-        referenceRegions.push(region)
+      if (utils.types.has(region, ['width', 'height'])) {
+        const referenceRegion = utils.types.has(region, ['x', 'y'])
+          ? region
+          : {x: region.left, y: region.top, width: region.width, height: region.height}
+        referenceRegions.push(referenceRegion)
       } else {
         const elements = await context.elements(region)
         const contextLocationInViewport = await elements[0].context.getLocationInViewport()

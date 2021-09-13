@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix issue with fractional metrics/coordinates in regions
 
 ## 12.23.5 - 2021/9/9
 
