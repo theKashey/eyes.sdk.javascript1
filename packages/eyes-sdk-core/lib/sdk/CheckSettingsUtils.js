@@ -120,6 +120,10 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
     if (!regions || regions.length === 0) return regions
     return regions.map(target => {
       const {region, ...options} = target.region ? target : {region: target}
+      if (options.type) {
+        options.accessibilityType = options.type
+        delete options.type
+      }
       if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
         return {
           left: Math.round(region.x),
@@ -129,7 +133,7 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
           ...options,
         }
       }
-      return region
+      return {...region, ...options}
     })
   }
 }
