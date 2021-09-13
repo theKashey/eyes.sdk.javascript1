@@ -34,10 +34,10 @@
     "@applitools/types" "1.0.13"
     "@applitools/utils" "1.2.3"
 
-"@applitools/eyes-sdk-core@12.23.5":
-  version "12.23.5"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.5.tgz#4c543c62df87756e9ea2181d7d45d2ea746e659e"
-  integrity sha512-u0nG9atdU9ESyBOHMxPaJkAXUpQpVak3cHUf9O60t2dyneEyqMhgPXL/9OvBHE5UB6tcSkTfymGA0+pgoqKunA==
+"@applitools/eyes-sdk-core@12.23.6":
+  version "12.23.6"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.6.tgz#e4facd81da0c6f41040e804fd54d69621610b1e8"
+  integrity sha512-NtD8rnNPbqQtd4bHkZHNTCLZuZuLuR4OhKxLS8OqdVwBm/zBkWwkqeMd86OwkP/cvNL1cb6WUoz/AIWAJ5KGvw==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.7"
@@ -155,12 +155,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.7.tgz#bcd89152b83ce49dc51f4a44dec6d0dba7338317"
   integrity sha512-Tr4Gj7Qov/oPy+8WI4oVmmubxqpOzr8P3Wjzpl6rA57xKLg6/TiIg5oZNb4+jEmO2ShjNYLaEwRWHl7kPgb4fw==
 
-"@applitools/test-server@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.4.tgz#e83b9687c996a88cf1927b90035d3a34d53b999f"
-  integrity sha512-0tfv06enMSnkXmTFcc6BRtEWSbbdjw55yHB81ZaqvgwqGdsLAvEYvkJbVS7JgTotW9yReitb6QK7dMaTQnBicA==
+"@applitools/test-server@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.5.tgz#45eaa91c4a672d91b379d15314e13ff76129122f"
+  integrity sha512-Ks2oJ9tSDAeiL7ro6hi2YAp8Jbedz52Ufhy3uSn52TilXSvZDsASFkWfJe6j0ki0bnR+VYtQfBg1OQdUP0PaKQ==
   dependencies:
-    "@applitools/utils" "1.2.2"
+    "@applitools/utils" "1.2.3"
     chalk "3.0.0"
     cookie-parser "1.4.5"
     cors "2.8.5"
@@ -180,11 +180,6 @@
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.13.tgz#02b6c809098ba1083c2f7a041d487b31bfa5db6f"
   integrity sha512-LypJhuCxs0/FafnQoV7XDUuDAoF73Q16ZwbUIUwzKPYyO42oAuAKq1UaO5uJVOG+m07aFXb7RpbYMQZ8MuUQGg==
-
-"@applitools/utils@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.2.tgz#ea59bdbbdaf7da8c97bc496c7e3876c0d025b6fe"
-  integrity sha512-SyHY41J+hkZR9gma/M8gjbJXLXeLoVS5DQVYd/RinzWAq62Yvg9eA97+8oHDl8s+6ELK6wMcs4yajjqCPdpF0A==
 
 "@applitools/utils@1.2.3":
   version "1.2.3"
