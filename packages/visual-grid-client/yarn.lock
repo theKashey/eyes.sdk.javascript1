@@ -34,10 +34,10 @@
     "@applitools/types" "1.0.13"
     "@applitools/utils" "1.2.3"
 
-"@applitools/eyes-sdk-core@12.23.6":
-  version "12.23.6"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.6.tgz#e4facd81da0c6f41040e804fd54d69621610b1e8"
-  integrity sha512-NtD8rnNPbqQtd4bHkZHNTCLZuZuLuR4OhKxLS8OqdVwBm/zBkWwkqeMd86OwkP/cvNL1cb6WUoz/AIWAJ5KGvw==
+"@applitools/eyes-sdk-core@12.23.7":
+  version "12.23.7"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.7.tgz#5f4e0f91afe7fc56228126a4bb10dbce51dd1cce"
+  integrity sha512-1rCg3hjB/Ex03JkvDOadftWAcR9py/EF0mL91aKR1FJewtZCUYkutrkQdeS5OUMPe/5zl5ZjKySgxUU5212p4w==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.7"
@@ -46,7 +46,7 @@
     "@applitools/logger" "1.0.4"
     "@applitools/screenshoter" "3.2.4"
     "@applitools/snippets" "2.1.7"
-    "@applitools/types" "1.0.13"
+    "@applitools/types" "1.0.14"
     "@applitools/utils" "1.2.3"
     axios "0.21.4"
     chalk "3.0.0"
@@ -180,6 +180,11 @@
   version "1.0.13"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.13.tgz#02b6c809098ba1083c2f7a041d487b31bfa5db6f"
   integrity sha512-LypJhuCxs0/FafnQoV7XDUuDAoF73Q16ZwbUIUwzKPYyO42oAuAKq1UaO5uJVOG+m07aFXb7RpbYMQZ8MuUQGg==
+
+"@applitools/types@1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.14.tgz#d6a7a138fba8b59b2ff6a27e43a78c0f2c1b5cc2"
+  integrity sha512-Exfi8EOGGBwpRpaLizXmsUXInXGXNU26qup7AjLJSJLYETwn3Q3W+0aLHBUbdFA87w9fPCQjXJuZxJgqsNpVig==
 
 "@applitools/utils@1.2.3":
   version "1.2.3"
