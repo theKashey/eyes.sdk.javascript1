@@ -40,7 +40,7 @@
     "@applitools/logger": "1.0.4",
     "@applitools/screenshoter": "3.2.4",
     "@applitools/snippets": "2.1.7",
-    "@applitools/types": "1.0.13",
+    "@applitools/types": "1.0.14",
     "@applitools/utils": "1.2.3",
     "axios": "0.21.4",
     "chalk": "3.0.0",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "2.1.1",
     "@applitools/sdk-release-kit": "0.13.3",
-    "@applitools/visual-grid-client": "15.8.25",
+    "@applitools/visual-grid-client": "15.8.26",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
