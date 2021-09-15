@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+
+
+## 0.1.4 - 2021/9/15
+
 - replace `Session.init` with `Core.makeSDK`
 - improve command tracking in debug mode
 - update spec drivers to match latest requirements
@@ -10,7 +14,6 @@
 - updated to @applitools/visual-grid-client@15.8.25 (from 15.8.22)
 - updated to @applitools/eyes-sdk-core@12.23.7 (from 12.23.5)
 - updated to @applitools/visual-grid-client@15.8.27 (from 15.8.25)
-
 
 ## 0.1.3 - 2021/9/1
 
