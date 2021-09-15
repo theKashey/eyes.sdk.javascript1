@@ -152,7 +152,7 @@ export function makeSocket(ws: WebSocket): Socket {
       }
     })
     return {
-      then: () => result.promise,
+      then: (onResolved, onRejected) => result.promise.then(onResolved, onRejected),
     }
 
     function makeState() {

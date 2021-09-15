@@ -1,15 +1,16 @@
 import type * as types from '@applitools/types'
 import type * as Selenium from 'selenium-webdriver'
 import * as utils from '@applitools/utils'
-import {By} from 'selenium-webdriver'
 
 export type Driver = Selenium.WebDriver
 export type Element = Selenium.WebElement
-export type Selector = types.SpecSelector<Selenium.By | Selenium.ByHash>
+export type Selector = Selenium.By | Selenium.ByHash
 
 export type TransformedDriver = {sessionId: string; serverUrl: string; capabilities: Record<string, any>}
 export type TransformedElement = {elementId: string}
-export type TransformedSelector = {using: string; value: string}
+export type TransformedSelector = types.Selector<never>
+
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 const byHash = ['className', 'css', 'id', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath'] as const
 
@@ -21,19 +22,14 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
-  return (
-    utils.types.isString(selector) ||
-    utils.types.has(selector, ['type', 'selector']) ||
-    utils.types.has(selector, ['using', 'value']) ||
-    Object.keys(selector).some(key => byHash.includes(key as any))
-  )
+  return utils.types.has(selector, ['using', 'value']) || Object.keys(selector).some(key => byHash.includes(key as any))
 }
 
 export async function transformDriver(driver: Driver): Promise<TransformedDriver> {
   const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
   return {
-    serverUrl: 'http://localhost:4444/wd/hub',
+    serverUrl: 'https://ondemand.saucelabs.com/wd/hub',
     sessionId: session.getId(),
     capabilities: Array.from(capabilities.keys()).reduce((caps, key) => {
       caps[key] = capabilities.get(key)
@@ -46,21 +42,16 @@ export async function transformElement(element: Element): Promise<TransformedEle
   return {elementId: await element.getId()}
 }
 
-export function transformSelector(selector: Selector): TransformedSelector {
+export function transformSelector(selector: Selector | CommonSelector): Selector {
   if (utils.types.isString(selector)) {
-    return {using: 'css selector', value: selector}
-  } else if (utils.types.has(selector, ['type', 'selector'])) {
-    if (selector.type === 'css') return {using: 'css selector', value: selector.selector}
-    else if (selector.type === 'xpath') return {using: 'xpath', value: selector.selector}
+    return {css: selector}
+  } else if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.isString(selector.selector)) return selector.selector
+    if (!utils.types.has(selector, 'type')) return {css: selector.selector}
+    if (selector.type === 'css') return {css: selector.selector}
     else return {using: selector.type, value: selector.selector}
-  } else {
-    const method = Object.keys(selector).find(key => byHash.includes(key as any)) as typeof byHash[number]
-    if (method) {
-      const by = By[method]((<any>selector)[method])
-      return {using: by.using, value: by.value}
-    }
-    return selector as Selenium.By
   }
+  return selector
 }
 
 // #region TESTING
@@ -87,38 +78,38 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
 }
 export async function findElement(driver: Driver, selector: Selector): Promise<Element> {
   try {
-    return await driver.findElement(transformSelector(selector))
+    return await driver.findElement(selector)
   } catch (err) {
     if (err.name === 'NoSuchElementError') return null
     else throw err
   }
 }
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
-  return driver.findElements(transformSelector(selector))
+  return driver.findElements(selector)
 }
 
 export async function visit(driver: Driver, url: string): Promise<void> {
   await driver.get(url)
 }
 export async function click(driver: Driver, element: Element | Selector): Promise<void> {
-  if (isSelector(element)) element = await driver.findElement(transformSelector(element))
+  if (isSelector(element)) element = await driver.findElement(element)
   await element.click()
 }
 export async function hover(driver: Driver, element: Element | Selector) {
-  if (isSelector(element)) element = await driver.findElement(transformSelector(element))
+  if (isSelector(element)) element = await driver.findElement(element)
   await driver.actions().move({origin: element}).perform()
 }
 export async function type(driver: Driver, element: Element | Selector, keys: string): Promise<void> {
-  if (isSelector(element)) element = await driver.findElement(transformSelector(element))
+  if (isSelector(element)) element = await driver.findElement(element)
   await element.sendKeys(keys)
 }
 export async function scrollIntoView(driver: Driver, element: Element | Selector, align = false): Promise<void> {
-  if (isSelector(element)) element = await driver.findElement(transformSelector(element))
+  if (isSelector(element)) element = await driver.findElement(element)
   await driver.executeScript('arguments[0].scrollIntoView(arguments[1])', element, align)
 }
 export async function waitUntilDisplayed(driver: Driver, selector: Selector, timeout: number): Promise<void> {
   const {until} = require('selenium-webdriver')
-  const element = await driver.findElement(transformSelector(selector))
+  const element = await driver.findElement(selector)
   await driver.wait(until.elementIsVisible(element), timeout)
 }
 

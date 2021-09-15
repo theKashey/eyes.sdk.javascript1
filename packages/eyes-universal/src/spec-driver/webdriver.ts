@@ -4,7 +4,7 @@ import * as utils from '@applitools/utils'
 import WebDriver from 'webdriver'
 
 export type Driver = WD.Client
-export type Element = {'element-6066-11e4-a52e-4f735466cecf': string}
+export type Element = {'element-6066-11e4-a52e-4f735466cecf': string} | {ELEMENT: string}
 export type Selector = {using: string; value: string}
 
 type StaticDriver = {sessionId: string; serverUrl: string; capabilities: Record<string, any>}
@@ -13,8 +13,11 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
+const LEGACY_ELEMENT_ID = 'ELEMENT'
+const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
+
 function extractElementId(element: Element): string {
-  return (element as any).elementId ?? element['element-6066-11e4-a52e-4f735466cecf']
+  return (element as any).elementId ?? (element as any)[ELEMENT_ID] ?? (element as any)[LEGACY_ELEMENT_ID]
 }
 
 // #endregion
@@ -103,7 +106,7 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
 }
 export async function findElement(driver: Driver, selector: Selector): Promise<Element | null> {
   const element = await driver.findElement(selector.using, selector.value)
-  return !utils.types.has(element, 'error') ? element : null
+  return isElement(element) ? element : null
 }
 export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
   return driver.findElements(selector.using, selector.value)
@@ -126,12 +129,14 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = driver.capabilities as any
+  const platformName = capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName
+  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
   const info: any = {
     sessionId: driver.sessionId,
-    isMobile: driver.isMobile,
-    isNative: driver.isMobile && !capabilities.browserName,
+    isMobile,
+    isNative: isMobile && !capabilities.browserName,
     deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
-    platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
+    platformName,
     platformVersion: capabilities.platformVersion,
     browserName: capabilities.browserName ?? capabilities.desired.browserName,
     browserVersion: capabilities.browserVersion ?? capabilities.version,

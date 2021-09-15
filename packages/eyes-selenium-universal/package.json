@@ -39,7 +39,7 @@
     "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "deps": "echo 'bongo deps'",
+    "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='selenium-universal' -f links='eyes-sdk-core eyes-api types test-utils utils driver screenshoter sdk-shared visual-grid-client' -f linking-depth=2",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='selenium-universal'",
     "preversion": "bongo preversion && yarn build",
@@ -47,9 +47,9 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.0.3",
+    "@applitools/eyes-api": "1.1.1",
     "@applitools/eyes-universal": "file:../eyes-universal",
-    "@applitools/types": "1.0.1",
+    "@applitools/types": "1.0.13",
     "@applitools/utils": "1.2.0",
     "chalk": "^4.1.0",
     "ws": "7.4.0"

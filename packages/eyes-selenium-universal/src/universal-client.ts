@@ -27,7 +27,7 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
       this._server.stdout.destroy()
       const [port] = String(data).split('\n', 1)
       this._socket.connect(`http://localhost:${port}/eyes`)
-      this._socket.emit('Session.init', {protocol: 'webdriver'})
+      this._socket.emit('Core.makeSDK', {protocol: 'webdriver'})
     })
     // important: this allows the client process to exit without hanging, while the server process still runs
     this._server.unref()
