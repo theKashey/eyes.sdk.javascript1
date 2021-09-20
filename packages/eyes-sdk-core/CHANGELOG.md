@@ -1,7 +1,7 @@
 # Change Log
 
 ## Unreleased
-
+ - prevent trimming CDT and increase body request size to the grid from 16MB to 30MB
 
 ## 12.23.7 - 2021/9/15
 

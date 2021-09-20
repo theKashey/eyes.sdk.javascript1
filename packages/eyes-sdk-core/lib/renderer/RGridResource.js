@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const GeneralUtils = require('../utils/GeneralUtils')
 
-const VISUAL_GRID_MAX_BUFFER_SIZE = 15 * 1000000
+const VISUAL_GRID_MAX_BUFFER_SIZE = 34.5 * 1024 * 1024
 
 class RGridResource {
   /**
@@ -22,7 +22,7 @@ class RGridResource {
     /** @type {string} */
     this._sha256hash = undefined
 
-    this._trimContent()
+    if (contentType != 'x-applitools-html/cdt') this._trimContent()
   }
 
   /**
@@ -69,8 +69,7 @@ class RGridResource {
     ArgumentGuard.notNull(value, this._url ? `content (of ${this._url})` : 'content')
     this._content = value
     this._sha256hash = undefined
-
-    this._trimContent()
+    if (this._contentType != 'x-applitools-html/cdt') this._trimContent()
   }
 
   _trimContent() {

@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 
-const {RenderRequest} = require('../../../index')
+const {RenderRequest, RGridResource} = require('../../../index')
 
 describe('RenderRequest', () => {
   describe('constructor', () => {
@@ -157,5 +157,22 @@ describe('RenderRequest', () => {
         'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"enableMultipleResultsPerSelector":true,"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom","options":{"polyfillAdoptedStyleSheets":true}} }',
       )
     })
+  })
+
+  it('dont trim CDT - constructor', async () => {
+    const LENGTH = 36000000
+    const content = Buffer.alloc(LENGTH)
+    const r1 = new RGridResource({content, contentType: 'x-applitools-html/cdt'})
+
+    assert.equal(r1._content.length, LENGTH)
+  })
+
+  it('dont trim CDT - setContent', async () => {
+    const LENGTH = 36000000
+    const content = Buffer.alloc(LENGTH)
+    const r1 = new RGridResource({contentType: 'x-applitools-html/cdt'})
+    r1.setContent(content)
+
+    assert.equal(r1._content.length, LENGTH)
   })
 })
