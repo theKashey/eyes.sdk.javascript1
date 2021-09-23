@@ -2,6 +2,7 @@ const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
+const utils = require('@applitools/utils')
 const makeLogger = require('../../src/logger')
 
 describe('logger', () => {
@@ -128,12 +129,13 @@ describe('logger', () => {
     })
 
     logger.log('info')
+    await setTimeout(100)
     logger.warn('warn')
+    await setTimeout(100)
     logger.error('error')
+    await setTimeout(100)
     logger.fatal('fatal')
     logger.close()
-
-    await new Promise(resolve => setTimeout(resolve, 500))
 
     const output = fs.readFileSync(filename, {encoding: 'utf8'})
 
@@ -146,6 +148,42 @@ describe('logger', () => {
         '2021-03-19T16:49:00.000Z [ERROR] {"tag":"&&&"} error\n' +
         '2021-03-19T16:49:00.000Z [FATAL] {"tag":"&&&"} fatal\n',
     )
+  })
+
+  it('handler rolling file', async () => {
+    const dirname = path.resolve(__dirname, 'test-logs')
+    const logger = makeLogger({
+      handler: {type: 'rolling-file', dirname, name: 'test', maxFileLength: 100},
+      level: 'info',
+      tags: {tag: '&&&'},
+      timestamp: new Date('2021-03-19T16:49:00.000Z'),
+    })
+
+    logger.log('info')
+    await utils.general.sleep(10)
+    logger.warn('warn')
+    await utils.general.sleep(10)
+    logger.error('error')
+    await utils.general.sleep(10)
+    logger.fatal('fatal')
+    await utils.general.sleep(10)
+    logger.close()
+
+    const filenames = fs.readdirSync(dirname)
+
+    const expected = [
+      '2021-03-19T16:49:00.000Z [INFO ] {"tag":"&&&"} info\n',
+      '2021-03-19T16:49:00.000Z [WARN ] {"tag":"&&&"} warn\n',
+      '2021-03-19T16:49:00.000Z [ERROR] {"tag":"&&&"} error\n',
+      '2021-03-19T16:49:00.000Z [FATAL] {"tag":"&&&"} fatal\n',
+    ]
+
+    filenames.forEach((filename, index) => {
+      const output = fs.readFileSync(path.resolve(dirname, filename), {encoding: 'utf8'})
+      assert.strictEqual(output, expected[index])
+    })
+
+    fs.rmSync(dirname, {recursive: true})
   })
 
   it('handler custom', () => {

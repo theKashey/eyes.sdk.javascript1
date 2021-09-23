@@ -60,6 +60,14 @@ export type FileHandler = {
   append?: boolean
 }
 
+export type RollingFileHandler = {
+  type: 'rolling-file'
+  dirname?: string
+  name?: string
+  maxFileLength?: number
+  maxFileNumber?: number
+}
+
 export type ConsoleHandler = {
   type: 'console'
 }

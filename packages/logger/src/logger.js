@@ -1,6 +1,7 @@
 const utils = require('@applitools/utils')
 const makeConsoleHandler = require('./console-handler')
 const makeFileHandler = require('./file-handler')
+const makeRollingFileHandler = require('./rolling-file-handler')
 
 const LEVELS = {
   silent: 0,
@@ -43,6 +44,9 @@ function makeLogger({
   } else if (handler.type === 'file') {
     colors = {}
     handler = makeFileHandler(handler)
+  } else if (handler.type === 'rolling-file') {
+    colors = {}
+    handler = makeRollingFileHandler(handler)
   } else {
     if (colors === true) colors = COLORS
     else colors = {}
