@@ -88,7 +88,7 @@ export {OCRSettings} from './input/OCRSettings'
 export {PropertyData as PropertyDataPlain, PropertyDataData as PropertyData} from './input/PropertyData'
 export {ProxySettings as ProxySettingsPlain, ProxySettingsData as ProxySettings} from './input/ProxySettings'
 export {RectangleSize as RectangleSizePlain, RectangleSizeData as RectangleSize} from './input/RectangleSize'
-export {Region as RegionPlain, RegionData as Region} from './input/Region'
+export {Region as RegionPlain, LegacyRegion as LegacyRegionPlain, RegionData as Region} from './input/Region'
 export {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo} from './input/RenderInfo'
 export {
   RunnerOptions as RunnerOptionsPlain,

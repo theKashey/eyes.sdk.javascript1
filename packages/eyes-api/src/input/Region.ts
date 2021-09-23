@@ -2,6 +2,9 @@ import * as utils from '@applitools/utils'
 import {Location} from './Location'
 import {RectangleSize} from './RectangleSize'
 
+/** @deprecated */
+export type LegacyRegion = {left: number; top: number; width: number; height: number}
+
 export type Region = Location & RectangleSize
 
 export class RegionData implements Required<Region> {
