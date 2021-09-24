@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.4 - 2021/9/24
+
 - fix issue with switching to the duplicated context
 
 ## 1.2.3 - 2021/9/24
