@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- extract region coordinates before taking dom capture
 
 ## 12.23.11 - 2021/9/24
 
