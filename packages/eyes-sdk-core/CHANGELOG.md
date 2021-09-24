@@ -1,6 +1,9 @@
 # Change Log
 
 ## Unreleased
+
+## 12.23.9 - 2021/9/24
+
 - updated to @applitools/dom-snapshot@4.5.8 (from 4.5.7)
 - updated to @applitools/driver@1.2.3 (from 1.2.2)
 
