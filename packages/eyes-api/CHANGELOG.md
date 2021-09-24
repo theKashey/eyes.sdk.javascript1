@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.1.2 - 2021/9/24
+
 - add `LegacyRegion` type to support regions with `left` and `top` instead of `x` and `y`
 - updated to @applitools/types@1.0.14 (from 1.0.13)
 
