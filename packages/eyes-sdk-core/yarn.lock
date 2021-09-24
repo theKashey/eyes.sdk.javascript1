@@ -15,12 +15,27 @@
   resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.5.tgz#d67d9bd8c2c612da6dd9dcdea2b08f9630b22a3a"
   integrity sha512-O2zgnnqVi3/Atq7EQjURLa73XNaDFJCj8wHht6WQtxIv1EWYnPutNTmnJSKwK7FnbJAg65OVjZylcz4EezyYZA==
 
+"@applitools/dom-shared@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.6.tgz#944e9f9c915764765edf0daaa57fb53ff38802bd"
+  integrity sha512-GnMhI0aOea+WLSFQmlFqs0pFemT4JtdB0CBwNdxdS19t+X4FL4uKthkMU1A2e7JmxIhe0nn6iJchGWzlNsXyQQ==
+
 "@applitools/dom-snapshot@4.5.7":
   version "4.5.7"
   resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.7.tgz#f143d0432dff6246a753c5dbfe48ab210113a29b"
   integrity sha512-8XEO8RTgrYVA+HZ5+G7J/gm+V+8leKLW64wdSEixiB2r/0c0NfYV4OMg/V3tiGsPsk/3rTcUxaBCjpqYYSkyDQ==
   dependencies:
     "@applitools/dom-shared" "1.0.5"
+    "@applitools/functional-commons" "1.6.0"
+    css-tree "1.0.0-alpha.39"
+    pako "1.0.11"
+
+"@applitools/dom-snapshot@4.5.8":
+  version "4.5.8"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.8.tgz#300e3d6eb8eb4c5d0677ebe071c1783677af2f87"
+  integrity sha512-Fp52Wqnto9UqDltB9SVbcIvTqDXF0l78uAlZh0ddDbPY8Kcq7eT6YsfQjzyl3cO9uZW/c75OFEHVzUrLJkn6jA==
+  dependencies:
+    "@applitools/dom-shared" "1.0.6"
     "@applitools/functional-commons" "1.6.0"
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
@@ -32,6 +47,15 @@
   dependencies:
     "@applitools/snippets" "2.1.7"
     "@applitools/types" "1.0.13"
+    "@applitools/utils" "1.2.3"
+
+"@applitools/driver@1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.2.3.tgz#b8222c47ad93077d2de3e7aeace31733c6fd6009"
+  integrity sha512-lkqMFD8+YWYc7NoiwdhSTjtOldJr0f58WMjUc/ebHurE6jUJdyrDGFxmCP1bGxtIQVJN+QlQRsdVKApIzgMHrw==
+  dependencies:
+    "@applitools/snippets" "2.1.7"
+    "@applitools/types" "1.0.14"
     "@applitools/utils" "1.2.3"
 
 "@applitools/eyes-sdk-core@12.23.7":

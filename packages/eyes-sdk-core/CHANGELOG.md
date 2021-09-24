@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 12.23.9 - 2021/9/24
+
+- updated to @applitools/dom-snapshot@4.5.8 (from 4.5.7)
+- updated to @applitools/driver@1.2.3 (from 1.2.2)
+
  ## 12.23.8 - 2021/9/20
 
  - prevent trimming CDT and increase body request size to the grid from 16MB to 30MB
