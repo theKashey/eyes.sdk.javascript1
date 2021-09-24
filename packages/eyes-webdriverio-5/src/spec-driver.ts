@@ -182,7 +182,7 @@ export async function getDriverInfo(browser: Driver): Promise<any> {
     deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
     platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
     platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName ?? capabilities.desired.browserName,
+    browserName: capabilities.browserName ?? capabilities.desired?.browserName,
     browserVersion: capabilities.browserVersion ?? capabilities.version,
     pixelRatio: capabilities.pixelRatio,
   }

@@ -140,7 +140,7 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     deviceName: desiredCapabilities.deviceName ?? capabilities.get('deviceName'),
     platformName,
     platformVersion: capabilities.get('platformVersion'),
-    browserName: capabilities.get('browserName') ?? desiredCapabilities.browserName,
+    browserName: capabilities.get('browserName') ?? desiredCapabilities?.browserName,
     browserVersion: capabilities.get('browserVersion') ?? capabilities.get('version'),
   }
 
