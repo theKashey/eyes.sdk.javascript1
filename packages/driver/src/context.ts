@@ -225,7 +225,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     reference: ContextPlain<TDriver, TContext, TElement, TSelector>,
   ): Promise<Context<TDriver, TContext, TElement, TSelector>> {
     if (reference instanceof Context) {
-      if (reference.parent !== this) {
+      if (reference.parent !== this && !(await this.equals(reference.parent))) {
         throw Error('Cannot attach a child context because it has a different parent')
       }
       return reference

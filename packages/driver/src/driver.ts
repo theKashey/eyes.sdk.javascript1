@@ -236,7 +236,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   async switchTo(
     context: Context<TDriver, TContext, TElement, TSelector>,
   ): Promise<Context<TDriver, TContext, TElement, TSelector>> {
-    if (await this.currentContext.equals(context)) return
+    if (await this.currentContext.equals(context)) {
+      this._currentContext = context
+      return
+    }
     const currentPath = this.currentContext.path
     const requiredPath = context.path
 
@@ -316,9 +319,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     this._logger.log('Switching to a child context with depth:', references.length)
     for (const reference of references) {
       if (reference === this.mainContext) continue
-      const context = await this.currentContext.context(
-        reference instanceof Context ? await reference.getContextElement() : reference,
-      )
+      const context = await this.currentContext.context(reference)
       await context.focus()
     }
     return this.currentContext

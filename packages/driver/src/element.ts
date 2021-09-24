@@ -78,12 +78,12 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     if (this.isRef) return false
 
     element = element instanceof Element ? element.target : element
-    if (this._spec.isEqualElements) {
-      return this._spec.isEqualElements(this.context.target, this.target, element)
-    } else {
+    if (this.driver.isWeb) {
       return this._spec
         .executeScript(this.context.target, snippets.isEqualElements, [this.target, element])
         .catch(() => false)
+    } else {
+      return this._spec.isEqualElements(this.context.target, this.target, element)
     }
   }
 
