@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.23.11 - 2021/9/24
+
 - prevent context location extraction during coded region calculation if elements are not found
 
 ## 12.23.10 - 2021/9/24
