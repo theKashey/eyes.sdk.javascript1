@@ -9,6 +9,7 @@ const snippets = require('@applitools/snippets')
 
 export type ContextReference<TDriver, TContext, TElement, TSelector> =
   | Context<TDriver, TContext, TElement, TSelector>
+  | Element<TDriver, TContext, TElement, TSelector>
   | TElement
   | types.Selector<TSelector>
   | string
