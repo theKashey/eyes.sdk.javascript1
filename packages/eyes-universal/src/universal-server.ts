@@ -18,7 +18,7 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
     return null
   }
-  const logger = makeLogger()
+  const _logger = makeLogger()
   let idle = setTimeout(() => server.close(), idleTimeout)
 
   server.on('connection', client => {
