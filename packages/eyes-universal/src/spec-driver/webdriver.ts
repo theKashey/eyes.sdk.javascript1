@@ -16,8 +16,35 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
 
+const W3C_CAPABILITIES = ['platformName', 'platformVersion']
+const W3C_SAFARI_CAPABILITIES = ['browserVersion', 'setWindowRect']
+const APPIUM_CAPABILITIES = ['appiumVersion', 'deviceType', 'deviceOrientation', 'deviceName', 'automationName']
+const LEGACY_APPIUM_CAPABILITIES = ['appium-version', 'device-type', 'device-orientation']
+const CHROME_CAPABILITIES = ['chrome', 'goog:chromeOptions']
+const MOBILE_BROWSER_NAMES = ['ipad', 'iphone', 'android']
+
 function extractElementId(element: Element): string {
   return (element as any).elementId ?? (element as any)[ELEMENT_ID] ?? (element as any)[LEGACY_ELEMENT_ID]
+}
+
+function extractEnvironment(capabilities: Record<string, any>) {
+  const isAppium = APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
+  const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
+  const isW3C =
+    isAppium ||
+    W3C_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
+    W3C_SAFARI_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability))
+  const isMobile =
+    capabilities.browserName === '' ||
+    isAppium ||
+    LEGACY_APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
+    MOBILE_BROWSER_NAMES.includes(capabilities.browserName?.toLowerCase())
+
+  return {
+    isW3C,
+    isMobile,
+    isChrome,
+  }
 }
 
 // #endregion
@@ -39,6 +66,7 @@ export function isSelector(selector: any): selector is Selector {
 export function transformDriver(driver: Driver | StaticDriver): Driver {
   if (!utils.types.has(driver, ['sessionId', 'serverUrl'])) return driver
   const url = new URL(driver.serverUrl)
+
   const options: WD.AttachOptions = {
     sessionId: driver.sessionId,
     protocol: url.protocol ? url.protocol.replace(/:$/, '') : undefined,
@@ -47,6 +75,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     path: url.pathname,
     capabilities: driver.capabilities,
     logLevel: 'silent',
+    ...extractEnvironment(driver.capabilities),
   }
   if (!options.port) {
     if (options.protocol === 'http') options.port = 80
@@ -129,16 +158,14 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = driver.capabilities as any
-  const platformName = capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName
-  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
   const info: any = {
     sessionId: driver.sessionId,
-    isMobile,
-    isNative: isMobile && !capabilities.browserName,
+    isMobile: driver.isMobile,
+    isNative: driver.isMobile && !capabilities.browserName,
     deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
-    platformName,
+    platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
     platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName ?? capabilities.desired.browserName,
+    browserName: capabilities.browserName ?? capabilities.desired?.browserName,
     browserVersion: capabilities.browserVersion ?? capabilities.version,
     pixelRatio: capabilities.pixelRatio,
   }

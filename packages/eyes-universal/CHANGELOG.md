@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-- fix issue with switching to the duplicated context
-
 ## 0.1.4 - 2021/9/15
 
 - replace `Session.init` with `Core.makeSDK`

@@ -280,7 +280,7 @@ jobs:
           version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
 
   universal:
-    needs: [setup, utils, types, core, vgc]
+    needs: [setup, types, utils, logger, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -306,9 +306,11 @@ jobs:
         with:
           tag_name: ${{steps.publish.outputs.tag}}
           files: |
-            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/cli-linux
-            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/cli-macos
-            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/cli-win.exe
+            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/eyes-universal-linux
+            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/eyes-universal-macos
+            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/eyes-universal-win.exe
+            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/eyes-universal.zip
+            packages/${{fromJSON(needs.setup.outputs.packages).universal.package}}/bin/eyes-universal.tar.gz
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 

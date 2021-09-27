@@ -1,6 +1,7 @@
 import type * as types from '@applitools/types'
 import type {Socket} from './socket'
 import type {Driver, Context, Element, Selector} from './spec-driver'
+import makeLogger from '@applitools/logger'
 import {makeSDK, checkSpecDriver} from '@applitools/eyes-sdk-core'
 import {makeSpec, webdriverSpec} from './spec-driver'
 import {makeHandler} from './handler'
@@ -17,6 +18,7 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
     return null
   }
+  const logger = makeLogger()
   let idle = setTimeout(() => server.close(), idleTimeout)
 
   server.on('connection', client => {
