@@ -4,7 +4,7 @@ describe('JS layout', () => {
     cy.visit('https://applitools.github.io/demo/TestPages/JsLayout/');
     cy.eyesOpen({
       appName: 'JS layout',
-      testName: 'testing js layout support in cypress',
+      testName: 'should support js layouts in open',
       browser: [
         {width: 1000, height: 800},
         {iosDeviceInfo: {deviceName: 'iPad (7th generation)'}},
@@ -20,7 +20,7 @@ describe('JS layout', () => {
     cy.visit('https://applitools.github.io/demo/TestPages/JsLayout/');
     cy.eyesOpen({
       appName: 'JS layout',
-      testName: 'testing js layout support in cypress',
+      testName: 'should support js layouts in check',
       browser: [
         {name: 'chrome', width: 1000, height: 800},
         {iosDeviceInfo: {deviceName: 'iPad (7th generation)'}},
@@ -38,7 +38,7 @@ describe('JS layout', () => {
     cy.visit('https://applitools.github.io/demo/TestPages/JsLayout/');
     cy.eyesOpen({
       appName: 'JS layout',
-      testName: 'testing js layout support in cypress',
+      testName: 'should support js layouts = true',
       browser: [
         {name: 'chrome', width: 1000, height: 800},
         {iosDeviceInfo: {deviceName: 'iPad (7th generation)'}},
@@ -52,9 +52,10 @@ describe('JS layout', () => {
 
   it('should not hit the cypress default command timeout', () => {
     cy.visit('http://localhost:5555/breakpoints.html');
+    cy.get('#smurfs-img')
     cy.eyesOpen({
       appName: 'JS layout',
-      testName: 'testing js layout support in cypress',
+      testName: 'should not hit the cypress default command timeout',
       browser: [
         {name: 'chrome', width: 1000, height: 800},
         {iosDeviceInfo: {deviceName: 'iPad (7th generation)'}},

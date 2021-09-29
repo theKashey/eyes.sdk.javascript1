@@ -6,8 +6,6 @@ test/cypress/videos
 .applitools
 .private
 .History.md.swp
-test/fixtures/testAppCopies/*
-!test/fixtures/testAppCopies/noempty
 *.tap
 cdt.json
 .vscode

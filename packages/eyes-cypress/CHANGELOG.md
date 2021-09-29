@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-
+ - fix layout-breakpoints should not hit cypress timeout
 
 ## 3.22.4 - 2021/9/7
 
