@@ -13,7 +13,7 @@ describe('spec driver', async () => {
   describe('onscreen desktop (@chrome)', async () => {
     before(async () => {
       const userDataPath = fs.mkdtempSync(path.join(os.tmpdir(), 'chrome-user-data-dir'))
-      const extensionPath = path.resolve(process.cwd(), './build')
+      const extensionPath = path.resolve(process.cwd(), './dist')
       const context = await playwright.chromium.launchPersistentContext(userDataPath, {
         headless: false,
         args: [`--load-extension=${extensionPath}`, `--disable-extensions-except=${extensionPath}`],

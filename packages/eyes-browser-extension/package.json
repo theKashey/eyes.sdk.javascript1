@@ -15,7 +15,7 @@
     "build:zip": "cd dist; zip -r eyes-browser-extension.zip *; mv eyes-browser-extension.zip ../",
     "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-testcafe'",
     "test": "yarn build && yarn test:it && yarn test:coverage",
-    "test:it": "mocha --no-timeouts ./test/it/*.spec.js",
+    "test:it": "mocha --no-timeouts --exit ./test/it/*.spec.js",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-browser-extension' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-browser-extension'",
     "deps": "bongo deps",
