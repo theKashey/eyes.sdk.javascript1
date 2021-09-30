@@ -22,6 +22,7 @@ export function transformSelector(selector) {
     return {type: 'css', selector: selector}
   } else if (utils.types.has(selector, 'selector')) {
     if (!utils.types.isString(selector.selector)) return selector.selector
+    if (!utils.types.has(selector.selector, 'type')) return {type: 'css', selector: selector.selector}
   }
   return selector
 }
@@ -93,8 +94,6 @@ export async function executeScript(context, script, arg) {
 }
 
 export async function findElement(context, selector) {
-  console.log('findElement', selector)
-  selector = utils.types.isString(selector) ? {type: 'css', selector} : selector
   if (selector.type === 'css') {
     const [element] = await browser.tabs.executeScript(context.tabId, {
       frameId: context.frameId,
@@ -111,7 +110,7 @@ export async function findElement(context, selector) {
 }
 
 export async function findElements(context, selector) {
-  selector = utils.types.isString(selector) ? {type: 'css', selector} : selector
+  console.log(selector)
   if (selector.type === 'css') {
     const [elements] = await browser.tabs.executeScript(context.tabId, {
       frameId: context.frameId,

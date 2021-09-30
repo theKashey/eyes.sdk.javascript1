@@ -43,7 +43,7 @@ function setupEyes({driver, vg, ...config} = {}) {
       return driver.evaluate(settings => window.__eyes && window.__eyes.extractTextRegions({settings}), settings)
     },
     async close(throwErr = true) {
-      const result = await driver.evaluate(() => window.__eyes && window.__eyes.close())
+      const [result] = await driver.evaluate(() => window.__eyes && window.__eyes.close())
 
       if (throwErr) {
         if (result.status !== 'Passed') throw result

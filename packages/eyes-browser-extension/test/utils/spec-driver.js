@@ -26,14 +26,15 @@ async function handleToObject(handle) {
     }
 }
 function transformSelector(selector) {
-    if (utils.types.has(selector, ['type', 'selector'])) {
-        if (selector.type === 'css')
-            return `css=${selector.selector}`;
-        else if (selector.type === 'xpath')
-            return `xpath=${selector.selector}`;
+    if (utils.types.has(selector, 'selector')) {
+        if (!utils.types.has(selector, 'type'))
+            return selector.selector;
+        else
+            return `${selector.type}=${selector.selector}`;
     }
     return selector;
 }
+exports.transformSelector = transformSelector;
 function isDriver(page) {
     return page.constructor.name === 'Page';
 }
@@ -173,12 +174,12 @@ async function build(env) {
         };
     }
     const context = await launcher.launchPersistentContext(userDataPath, options);
-    // const backgroundPage = await context.waitForEvent('backgroundpage')
+    const backgroundPage = await context.waitForEvent('backgroundpage')
     
-    // backgroundPage.on('console', async msg => {
-    //     for (let i = 0; i < msg.args().length; ++i)
-    //         console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`);
-    // });
+    backgroundPage.on('console', async msg => {
+        for (let i = 0; i < msg.args().length; ++i)
+            console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`);
+    });
 
     const page = await context.newPage();
     return [page, () => context.close()];
