@@ -12,9 +12,6 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "webRequest",
-    "webRequestBlocking",
-    "webNavigation",
     "<all_urls>"
   ],
   "background": {
