@@ -27,6 +27,8 @@ export default {
       url: require.resolve('./src/builtins/url.js'),
       perf_hooks: require.resolve('./src/builtins/perf_hooks.js'),
       assert: require.resolve('assert/'),
+      buffer: require.resolve('buffer/'),
+      process: require.resolve('process/'),
       util: require.resolve('util/'),
       crypto: require.resolve('crypto-browserify'),
       os: require.resolve('os-browserify/browser'),
@@ -35,6 +37,8 @@ export default {
       zlib: require.resolve('browserify-zlib'),
       module: false,
       child_process: false,
+      buffer: false,
+      process: false,
     },
   },
   plugins: [
@@ -62,8 +66,6 @@ export default {
       ],
     }),
     new webpack.ProvidePlugin({
-      Buffer: [require.resolve('buffer'), 'Buffer'],
-      process: [require.resolve('process')],
       setImmediate: [require.resolve('core-js/features/set-immediate')],
     }),
   ],
