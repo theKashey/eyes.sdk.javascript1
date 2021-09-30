@@ -28,7 +28,7 @@ export default {
       perf_hooks: require.resolve('./src/builtins/perf_hooks.js'),
       assert: require.resolve('assert/'),
       buffer: require.resolve('buffer/'),
-      process: require.resolve('process/'),
+      process: require.resolve('process/browser'),
       util: require.resolve('util/'),
       crypto: require.resolve('crypto-browserify'),
       os: require.resolve('os-browserify/browser'),
@@ -65,11 +65,8 @@ export default {
     }),
     new webpack.ProvidePlugin({
       Buffer: [require.resolve('buffer'), 'Buffer'],
-      process: [require.resolve('process')],
+      process: [require.resolve('process/browser')],
       setImmediate: [require.resolve('core-js/features/set-immediate')],
-    }),
-    new webpack.DefinePlugin({
-      'process.env': {},
     }),
   ],
 }

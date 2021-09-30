@@ -17,6 +17,15 @@ export function isSelector(selector) {
   return utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector'])
 }
 
+export function transformSelector(selector) {
+  if (utils.types.isString(selector)) {
+    return {type: 'css', selector: selector}
+  } else if (utils.types.has(selector, 'selector')) {
+    if (!utils.types.isString(selector.selector)) return selector.selector
+  }
+  return selector
+}
+
 export function isStaleElementError(error) {
   if (!error) return false
   error = error.originalError || error
@@ -84,6 +93,7 @@ export async function executeScript(context, script, arg) {
 }
 
 export async function findElement(context, selector) {
+  console.log('findElement', selector)
   selector = utils.types.isString(selector) ? {type: 'css', selector} : selector
   if (selector.type === 'css') {
     const [element] = await browser.tabs.executeScript(context.tabId, {

@@ -158,7 +158,7 @@ async function build(env) {
         throw new Error(`Browser "${browser}" is not supported.`);
 
     const userDataPath = fs.mkdtempSync(path.join(os.tmpdir(), 'chrome-user-data-dir'))
-    const extensionPath = path.resolve(process.cwd(), './build')
+    const extensionPath = path.resolve(process.cwd(), './dist')
     const options = {
         headless: false,
         args: [`--load-extension=${extensionPath}`, `--disable-extensions-except=${extensionPath}`, ...args],
@@ -178,7 +178,7 @@ async function build(env) {
     // backgroundPage.on('console', async msg => {
     //     for (let i = 0; i < msg.args().length; ++i)
     //         console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`);
-    // });      
+    // });
 
     const page = await context.newPage();
     return [page, () => context.close()];
