@@ -55,7 +55,7 @@ async function takeStitchedScreenshot({
 
   // TODO padding should be provided from args instead of overlap
   const padding = {top: overlap, bottom: overlap}
-  const [initialRegion, ...partRegions] = utils.geometry.divide(region, image.size, padding)
+  const [initialRegion, ...partRegions] = utils.geometry.divide(region, utils.geometry.round(image.size), padding)
   logger.verbose('Part regions', partRegions)
 
   logger.verbose('Creating stitched image composition container')
