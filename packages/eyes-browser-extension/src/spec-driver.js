@@ -14,7 +14,7 @@ export function isElement(element) {
 }
 
 export function isSelector(selector) {
-  return utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector'])
+  return utils.types.has(selector, ['type', 'selector'])
 }
 
 export function transformSelector(selector) {
@@ -93,11 +93,13 @@ export async function executeScript(context, script, arg) {
   } else return result
 }
 
-export async function findElement(context, selector) {
+export async function findElement(context, selector, parent) {
   if (selector.type === 'css') {
     const [element] = await browser.tabs.executeScript(context.tabId, {
       frameId: context.frameId,
-      code: `JSON.stringify(refer.ref(document.querySelector('${selector.selector}')))`,
+      code: parent
+        ? `JSON.stringify(refer.ref(refer.deref(${JSON.stringify(parent)}).querySelector('${selector.selector}')))`
+        : `JSON.stringify(refer.ref(document.querySelector('${selector.selector}')))`,
     })
     return JSON.parse(element)
   } else if (selector.type === 'xpath') {
@@ -109,12 +111,15 @@ export async function findElement(context, selector) {
   }
 }
 
-export async function findElements(context, selector) {
-  console.log(selector)
+export async function findElements(context, selector, parent) {
   if (selector.type === 'css') {
     const [elements] = await browser.tabs.executeScript(context.tabId, {
       frameId: context.frameId,
-      code: `JSON.stringify(Array.from(document.querySelectorAll('${selector.selector}'), refer.ref))`,
+      code: parent
+        ? `JSON.stringify(Array.from((refer.deref(${JSON.stringify(parent)}).querySelectorAll('${
+            selector.selector
+          }'), refer.ref))`
+        : `JSON.stringify(Array.from(document.querySelectorAll('${selector.selector}'), refer.ref))`,
     })
     return JSON.parse(elements)
   } else if (selector.type === 'xpath') {
