@@ -174,12 +174,12 @@ async function build(env) {
         };
     }
     const context = await launcher.launchPersistentContext(userDataPath, options);
-    const backgroundPage = await context.waitForEvent('backgroundpage')
+    // const backgroundPage = await context.waitForEvent('backgroundpage')
     
-    backgroundPage.on('console', async msg => {
-        for (let i = 0; i < msg.args().length; ++i)
-            console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`);
-    });
+    // backgroundPage.on('console', async msg => {
+    //     for (let i = 0; i < msg.args().length; ++i)
+    //         console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`);
+    // });
 
     const page = await context.newPage();
     return [page, () => context.close()];
