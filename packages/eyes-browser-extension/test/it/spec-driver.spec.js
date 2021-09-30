@@ -45,8 +45,8 @@ describe('spec driver', async () => {
     it('isElement(wrong)', async () => {
       await isElement({input: {}, expected: false})
     })
-    it('isSelector(string)', async () => {
-      await isSelector({input: 'div', expected: true})
+    it('isSelector({type, selector}})', async () => {
+      await isSelector({input: {type: 'css', selector: 'div'}, expected: true})
     })
     it('isSelector(wrong)', async () => {
       await isSelector({input: {}, expected: false})
