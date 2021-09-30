@@ -64,16 +64,16 @@ describe('spec driver', async () => {
       await childContext()
     })
     it('findElement(string)', async () => {
-      findElement({input: 'h1'})
+      findElement({input: {type: 'css', selector: 'h1'}})
     })
     it('findElement(non-existent)', async () => {
-      findElement({input: 'non-existent', expected: null})
+      findElement({input: {type: 'css', selector: 'non-existent'}, expected: null})
     })
     it('findElements(string)', async () => {
-      await findElements({input: 'div'})
+      await findElements({input: {type: 'css', selector: 'div'}})
     })
     it('findElements(non-existent)', async () => {
-      await findElements({input: 'non-existent', expected: []})
+      await findElements({input: {type: 'css', selector: 'non-existent'}, expected: []})
     })
     it('getTitle()', async () => {
       await getTitle()
@@ -161,7 +161,7 @@ describe('spec driver', async () => {
       [driver, input],
     )
     if (element === expected) return
-    const elementKey = await contentPage.$eval(input, element => (element.dataset.key = 'element-key'))
+    const elementKey = await contentPage.$eval(input.selector, element => (element.dataset.key = 'element-key'))
     const isCorrectElement = await backgroundPage.evaluate(
       async ([context, element, elementKey]) => {
         const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
@@ -179,7 +179,7 @@ describe('spec driver', async () => {
       ([driver, selector]) => spec.findElements(driver, selector),
       [driver, input],
     )
-    const elementKeys = await contentPage.$$eval(input, elements =>
+    const elementKeys = await contentPage.$$eval(input.selector, elements =>
       elements.map((element, index) => (element.dataset.key = `element-key-${index}`)),
     )
     assert.strictEqual(elements.length, elementKeys.length)
