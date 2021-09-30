@@ -53,12 +53,12 @@ export default {
         {from: './assets', to: './assets'},
         {
           from: path.resolve(path.dirname(require.resolve('@applitools/dom-snapshot')), './dist/*.js'),
-          to: './assets/dom-snapshot/[name].[ext]',
+          to: './assets/dom-snapshot/[name][ext]',
           filter: resourcePath => /(processPagePoll|pollResult)\.js$/.test(resourcePath),
         },
         {
           from: path.resolve(path.dirname(require.resolve('@applitools/dom-capture')), './dist/*.js'),
-          to: './assets/dom-capture/[name].[ext]',
+          to: './assets/dom-capture/[name][ext]',
           filter: resourcePath => /(captureDomAndPoll|pollResult)\.js$/.test(resourcePath),
         },
       ],

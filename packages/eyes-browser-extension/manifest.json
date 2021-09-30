@@ -13,7 +13,6 @@
     "tabs",
     "activeTab",
     "webNavigation",
-    "webRequest",
     "<all_urls>"
   ],
   "background": {
