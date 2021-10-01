@@ -1,12 +1,31 @@
 /* eslint-disable */
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.build = exports.waitUntilDisplayed = exports.scrollIntoView = exports.hover = exports.type = exports.click = exports.takeScreenshot = exports.visit = exports.getUrl = exports.getTitle = exports.setViewportSize = exports.getViewportSize = exports.findElements = exports.findElement = exports.childContext = exports.parentContext = exports.mainContext = exports.executeScript = exports.isEqualElements = exports.isStaleElementError = exports.extractContext = exports.isSelector = exports.isElement = exports.isDriver = void 0;
 const utils = require("@applitools/utils");
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.build = exports.waitUntilDisplayed = exports.scrollIntoView = exports.hover = exports.type = exports.click = exports.takeScreenshot = exports.visit = exports.getUrl = exports.getTitle = exports.setViewportSize = exports.getViewportSize = exports.findElements = exports.findElement = exports.childContext = exports.parentContext = exports.mainContext = exports.executeScript = exports.isStaleElementError = exports.extractContext = exports.transformSelector = exports.isSelector = exports.isElement = exports.isContext = exports.isDriver = void 0;
 async function handleToObject(handle) {
     const [, type] = handle.toString().split('@');
     if (type === 'array') {
@@ -25,6 +44,28 @@ async function handleToObject(handle) {
         return handle.jsonValue();
     }
 }
+function isDriver(page) {
+    if (!page)
+        return false;
+    return utils.types.instanceOf(page, 'Page');
+}
+exports.isDriver = isDriver;
+function isContext(frame) {
+    if (!frame)
+        return false;
+    return utils.types.instanceOf(frame, 'Frame');
+}
+exports.isContext = isContext;
+function isElement(element) {
+    if (!element)
+        return false;
+    return utils.types.instanceOf(element, 'ElementHandle');
+}
+exports.isElement = isElement;
+function isSelector(selector) {
+    return utils.types.isString(selector);
+}
+exports.isSelector = isSelector;
 function transformSelector(selector) {
     if (utils.types.has(selector, 'selector')) {
         if (!utils.types.has(selector, 'type'))
@@ -35,20 +76,6 @@ function transformSelector(selector) {
     return selector;
 }
 exports.transformSelector = transformSelector;
-function isDriver(page) {
-    return page.constructor.name === 'Page';
-}
-exports.isDriver = isDriver;
-function isElement(element) {
-    if (!element)
-        return false;
-    return element.constructor.name === 'ElementHandle';
-}
-exports.isElement = isElement;
-function isSelector(selector) {
-    return utils.types.isString(selector) || utils.types.has(selector, ['type', 'selector']);
-}
-exports.isSelector = isSelector;
 function extractContext(page) {
     return isDriver(page) ? page.mainFrame() : page;
 }
@@ -57,10 +84,6 @@ function isStaleElementError(err) {
     return err && err.message && err.message.includes('Protocol error (DOM.describeNode)');
 }
 exports.isStaleElementError = isStaleElementError;
-async function isEqualElements(frame, element1, element2) {
-    return frame.evaluate(([element1, element2]) => element1 === element2, [element1, element2]).catch(() => false);
-}
-exports.isEqualElements = isEqualElements;
 async function executeScript(frame, script, arg) {
     script = utils.types.isString(script) ? new Function(script) : script;
     const result = await frame.evaluateHandle(script, arg);
@@ -85,12 +108,14 @@ async function childContext(_frame, element) {
     return element.contentFrame();
 }
 exports.childContext = childContext;
-async function findElement(frame, selector) {
-    return frame.$(transformSelector(selector));
+async function findElement(frame, selector, parent) {
+    const root = parent !== null && parent !== void 0 ? parent : frame;
+    return root.$(selector);
 }
 exports.findElement = findElement;
-async function findElements(frame, selector) {
-    return frame.$$(transformSelector(selector));
+async function findElements(frame, selector, parent) {
+    const root = parent !== null && parent !== void 0 ? parent : frame;
+    return root.$$(selector);
 }
 exports.findElements = findElements;
 async function getViewportSize(page) {
@@ -142,9 +167,10 @@ async function scrollIntoView(frame, element, align = false) {
 }
 exports.scrollIntoView = scrollIntoView;
 async function waitUntilDisplayed(frame, selector) {
-    await frame.waitForSelector(transformSelector(selector));
+    await frame.waitForSelector(selector);
 }
 exports.waitUntilDisplayed = waitUntilDisplayed;
+
 const browserNames = {
     chrome: 'chromium',
     safari: 'webkit',

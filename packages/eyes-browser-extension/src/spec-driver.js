@@ -116,7 +116,7 @@ export async function findElements(context, selector, parent) {
     const [elements] = await browser.tabs.executeScript(context.tabId, {
       frameId: context.frameId,
       code: parent
-        ? `JSON.stringify(Array.from((refer.deref(${JSON.stringify(parent)}).querySelectorAll('${
+        ? `JSON.stringify(Array.from(refer.deref(${JSON.stringify(parent)}).querySelectorAll('${
             selector.selector
           }'), refer.ref))`
         : `JSON.stringify(Array.from(document.querySelectorAll('${selector.selector}'), refer.ref))`,

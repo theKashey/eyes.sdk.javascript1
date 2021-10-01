@@ -6,19 +6,17 @@ export function makeMark() {
   return function mark(value) {
     if (value instanceof HTMLElement) {
       const elementId = utils.general.guid()
-      const path = [value]
-      for (let root = value.getRootNode(); root !== document; root = root.host.getRootNode()) {
-        path.push(root.host)
+      for (let element = value; element; element = element.getRootNode().host) {
+        const oldElementId = element.getAttribute(MARKER)
+        const newElementId = oldElementId ? `${oldElementId} ${elementId}` : elementId
+        element.setAttribute(MARKER, newElementId)
       }
 
-      return {
-        [MARKER]: path.map(element => {
-          const oldElementId = element.getAttribute(MARKER)
-          const newElementId = oldElementId ? `${oldElementId} ${elementId}` : elementId
-          element.setAttribute(MARKER, newElementId)
-          return `[${MARKER}~="${elementId}"]`
-        }),
-      }
+      const f = {[MARKER]: `[${MARKER}~="${elementId}"]`}
+
+      console.log(f)
+
+      return f
     } else if (utils.types.isArray(value)) {
       return value.map(mark)
     } else if (utils.types.isObject(value)) {
@@ -32,12 +30,14 @@ export function makeMark() {
 export function makeUnmark({refer}) {
   return function unmark(value) {
     if (utils.types.has(value, MARKER)) {
+      const selector = value[MARKER]
       let root = document
-      let element
-      for (const selector of value[MARKER]) {
-        element = root.querySelector(selector)
+      let element = root.querySelector(selector)
+      while (element.shadowRoot) {
         element.removeAttribute(MARKER)
-        root = element.shadowRoot
+        const nextElement = element.shadowRoot.querySelector(selector)
+        if (!nextElement) break
+        element = nextElement
       }
       const ref = refer.ref(element)
       return ref

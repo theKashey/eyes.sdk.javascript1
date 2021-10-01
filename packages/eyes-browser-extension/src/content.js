@@ -8,7 +8,7 @@ apiScript.src = browser.runtime.getURL('api.js')
 window.document.body.appendChild(apiScript)
 
 window.refer = makeRefer({
-  check: element => element instanceof HTMLElement,
+  check: element => element instanceof Node,
   validate: element => {
     if (!element || !element.isConnected) {
       throw new Error('StaleElementReferenceError')
