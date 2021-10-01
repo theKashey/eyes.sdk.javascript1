@@ -107,6 +107,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     else {
       if (!viewportRegion) viewportRegion = await getViewportRegion()
       image.crop(viewportRegion)
+      await image.debug({...debug, name, suffix: 'viewport'})
     }
 
     return image

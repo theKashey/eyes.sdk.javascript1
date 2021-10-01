@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix issue with wrong user agent overrides valid driver info
 
 ## 1.2.4 - 2021/9/24
 

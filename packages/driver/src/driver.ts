@@ -122,8 +122,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._driverInfo = {
         ...this._driverInfo,
         isMobile: this._driverInfo?.isMobile ?? ['iOS', 'Android'].includes(userAgentInfo.platformName),
-        platformName: userAgentInfo.platformName ?? this._driverInfo?.platformName,
-        platformVersion: userAgentInfo.platformVersion ?? this._driverInfo?.platformVersion,
+        platformName: this._driverInfo?.isMobile
+          ? this._driverInfo?.platformName ?? userAgentInfo.platformName
+          : userAgentInfo.platformName ?? this._driverInfo?.platformName,
+        platformVersion: this._driverInfo?.isMobile
+          ? this._driverInfo?.platformVersion ?? userAgentInfo.platformVersion
+          : userAgentInfo.platformVersion ?? this._driverInfo?.platformVersion,
         browserName: userAgentInfo.browserName ?? this._driverInfo?.browserName,
         browserVersion: userAgentInfo.browserVersion ?? this._driverInfo?.browserVersion,
         userAgent,
