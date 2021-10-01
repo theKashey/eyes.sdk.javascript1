@@ -27,6 +27,10 @@ export function transformSelector(selector) {
   return selector
 }
 
+export function extractContext(driver) {
+  return {...driver, frameId: 0}
+}
+
 export function isStaleElementError(error) {
   if (!error) return false
   error = error.originalError || error
@@ -34,9 +38,7 @@ export function isStaleElementError(error) {
 }
 
 export async function mainContext(context) {
-  const frames = await browser.webNavigation.getAllFrames({tabId: context.tabId})
-  const mainFrame = frames.find(frame => frame.parentFrameId === -1)
-  return {...context, frameId: mainFrame.frameId}
+  return {...context, frameId: 0}
 }
 
 export async function parentContext(context) {
