@@ -20,6 +20,10 @@ module.exports = {
       // not possible because of core api
       'should throw if no checkpoints before close': {skipEmit: true},
       'should return actual viewport size': {skipEmit: true}, // no data classes
+      'should not check if disabled': {skipEmit: true},
+      // not possible due to onscreen mode
+      'check window with layout breakpoints': {skipEmit: true},
+      'check window with layout breakpoints in config': {skipEmit: true},
     },
   ],
   emitOnly: test => {

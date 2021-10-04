@@ -85,14 +85,20 @@ export async function executeScript(context, script, arg) {
   })
   const {result, error} = JSON.parse(response)
 
-  if (error) {
-    if (utils.types.has(error, ['message', 'stack'])) {
-      const err = new Error(error.message)
-      err.stack = error.stack
-      throw err
-    }
-    throw error
-  } else return result
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (error) {
+        if (utils.types.has(error, ['message', 'stack'])) {
+          const err = new Error(error.message)
+          err.stack = error.stack
+          reject(err)
+        }
+        throw error
+      } else {
+        resolve(result)
+      }
+    })
+  }, 100)
 }
 
 export async function findElement(context, selector, parent) {
