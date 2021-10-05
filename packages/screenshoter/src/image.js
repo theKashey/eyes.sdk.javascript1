@@ -40,7 +40,7 @@ function makeImage(data) {
       return true
     },
     get size() {
-      return {...utils.geometry.scale(size, transforms.scale)}
+      return utils.geometry.round(utils.geometry.scale(size, transforms.scale))
     },
     get transforms() {
       return {...transforms}
