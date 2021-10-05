@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- rename `testId` to `id` in `TestResults`
 
 ## 1.1.2 - 2021/9/24
 

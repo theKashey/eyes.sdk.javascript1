@@ -7,7 +7,7 @@ import {SessionUrls, SessionUrlsData} from './SessionUrls'
 import {StepInfo, StepInfoData} from './StepInfo'
 
 export type TestResults = {
-  readonly testId?: string
+  readonly id?: string
   readonly name?: string
   readonly secretToken?: string
   readonly status?: TestResultsStatus
@@ -53,15 +53,15 @@ export class TestResultsData implements Required<TestResults> {
     this._results = results instanceof TestResultsData ? results.toJSON() : results
   }
 
-  get testId(): string {
-    return this._results.testId
+  get id(): string {
+    return this._results.id
   }
   getId(): string {
-    return this.testId
+    return this.id
   }
   /** @deprecated */
   setId(id: string) {
-    this._results.testId = id
+    this._results.id = id
   }
 
   get name(): string {
@@ -389,7 +389,7 @@ export class TestResultsData implements Required<TestResults> {
 
   async delete(): Promise<void> {
     if (!this._deleteTest) return
-    return this._deleteTest({testId: this.testId, batchId: this.batchId, secretToken: this.secretToken})
+    return this._deleteTest({testId: this.id, batchId: this.batchId, secretToken: this.secretToken})
   }
   /** @deprecated */
   async deleteSession(): Promise<void> {
