@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 3.2.5 - 2021/10/5
+
 - fix issue with fractional image size after scaling
 
 ## 3.2.4 - 2021/9/9
