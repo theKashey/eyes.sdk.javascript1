@@ -35,10 +35,10 @@
   "dependencies": {
     "@applitools/dom-capture": "11.0.1",
     "@applitools/dom-snapshot": "4.5.8",
-    "@applitools/driver": "1.2.4",
+    "@applitools/driver": "1.2.5",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/logger": "1.0.4",
-    "@applitools/screenshoter": "3.2.4",
+    "@applitools/screenshoter": "3.2.5",
     "@applitools/snippets": "2.1.7",
     "@applitools/types": "1.0.14",
     "@applitools/utils": "1.2.3",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "2.1.1",
     "@applitools/sdk-release-kit": "0.13.3",
-    "@applitools/visual-grid-client": "15.8.30",
+    "@applitools/visual-grid-client": "15.8.31",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
