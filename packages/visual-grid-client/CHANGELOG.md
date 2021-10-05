@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 15.8.32 - 2021/10/5
+
+- updated to @applitools/eyes-sdk-core@12.23.13 (from 12.23.12)
+- updated to @applitools/http-commons@2.4.5 (from 2.4.3)
+
 ## 15.8.31 - 2021/9/24
 
 - updated to @applitools/eyes-sdk-core@12.23.12 (from 12.23.11)
