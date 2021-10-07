@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/driver@1.2.6 (from 1.2.5)
 
 
 ## 12.23.13 - 2021/10/5
