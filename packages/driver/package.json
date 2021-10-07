@@ -29,6 +29,10 @@
     "lib": "./src",
     "test": "./test"
   },
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "lint": "eslint '**/*.ts' '**/*.js'",
     "build": "tsc",

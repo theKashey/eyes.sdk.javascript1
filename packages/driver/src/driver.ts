@@ -375,6 +375,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           }
         }
       }
+      size = utils.geometry.round(size)
     } else if (this._spec.getViewportSize) {
       this._logger.log('Extracting viewport size from web driver using spec method')
       size = await this._spec.getViewportSize(this.target)
