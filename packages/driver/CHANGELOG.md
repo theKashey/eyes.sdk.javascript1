@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.6 - 2021/10/7
+
 - fix issue with fractional viewport size on mobile devices
 
 ## 1.2.5 - 2021/10/5
