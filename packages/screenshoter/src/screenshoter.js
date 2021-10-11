@@ -54,9 +54,10 @@ async function screenshoter({
   try {
     if (!window) await scrollIntoViewport({...target, logger})
 
-    const screenshot = fully
-      ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
-      : await takeViewportScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
+    const screenshot =
+      fully && target.scroller
+        ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
+        : await takeViewportScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 
     if (hooks && hooks.afterScreenshot) {
       // imitate image-like state for the hook
@@ -68,7 +69,9 @@ async function screenshoter({
 
     return screenshot
   } finally {
-    await target.scroller.restoreScrollbars()
+    if (target.scroller) {
+      await target.scroller.restoreScrollbars()
+    }
 
     // if there was active element and we have blurred it, then restore focus
     if (activeElement) await context.focusElement(activeElement)
@@ -93,7 +96,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
     const scrollingElement = await context.main.getScrollingElement()
     return {
       context: context.main,
-      scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
+      scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
     }
   } else if (region) {
     if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
@@ -102,7 +105,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       return {
         context,
         region,
-        scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
+        scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
       }
     } else {
       // region by element or selector
@@ -121,14 +124,14 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
         return {
           context: elementContext,
           region,
-          scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
+          scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
         }
       } else {
         const scrollingElement = await context.getScrollingElement()
         return {
           context: elementContext,
           region: await element.getRegion(),
-          scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
+          scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
         }
       }
     }
@@ -138,7 +141,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       const scrollingElement = await context.getScrollingElement()
       return {
         context,
-        scroller: makeScroller({logger, element: scrollingElement, scrollingMode}),
+        scroller: scrollingElement ? makeScroller({logger, element: scrollingElement, scrollingMode}) : null,
       }
     } else {
       const scrollingElement = await context.parent.getScrollingElement()
@@ -146,7 +149,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       return {
         context: context.parent,
         region: await element.getRegion(), // IMHO we should use CLIENT (without borders) region here
-        scroller: makeScroller({logger, element: scrollingElement, scrollingMode}),
+        scroller: scrollingElement ? makeScroller({logger, element: scrollingElement, scrollingMode}) : null,
       }
     }
   }

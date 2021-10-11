@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- handle a case when scrolling element does not exist
 
 ## 3.2.5 - 2021/10/5
 

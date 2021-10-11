@@ -53,8 +53,12 @@ describe('screenshoter', () => {
       return fullApp({type: 'recycler'})
     })
 
+    it('take full app screenshot (non-scrollable)', () => {
+      return fullApp({type: 'non-scrollable'})
+    })
+
     it('take region screenshot', () => {
-      region()
+      return region()
     })
 
     it.skip('take full region screenshot', () => {
@@ -114,6 +118,9 @@ describe('screenshoter', () => {
         buttonSelector = {type: 'id', selector: 'btn_recycler_view'}
         expectedPath = `./test/fixtures/android/app-fully-recycler${options.withStatusBar ? '-statusbar' : ''}.png`
       }
+    } else if (type === 'non-scrollable') {
+      buttonSelector = {type: 'id', selector: 'btn_edit_text'}
+      expectedPath = `./test/fixtures/android/app-fully-non-scrollable${options.withStatusBar ? '-statusbar' : ''}.png`
     } else {
       buttonSelector = {type: 'id', selector: 'btn_scroll_view_footer_header'}
       expectedPath = `./test/fixtures/android/app-fully-scroll${options.withStatusBar ? '-statusbar' : ''}.png`
