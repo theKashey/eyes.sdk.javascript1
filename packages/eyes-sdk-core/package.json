@@ -41,7 +41,7 @@
     "@applitools/screenshoter": "3.2.5",
     "@applitools/snippets": "2.1.7",
     "@applitools/types": "1.0.14",
-    "@applitools/utils": "^1.2.3",
+    "@applitools/utils": "1.2.3",
     "axios": "0.21.4",
     "chalk": "3.0.0",
     "cosmiconfig": "6.0.0",
