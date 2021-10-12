@@ -58,6 +58,7 @@ const BOOLEAN_CONFIGS = [
 
 const NUMBER_CONFIGS = [
   '_waitBeforeScreenshots',
+  '_waitBeforeCapture',
   '_stitchOverlap',
   '_concurrentSessions',
   '_matchTimeout',
@@ -151,6 +152,7 @@ describe('Configuration', () => {
 
       const origValue = config[`get${methodName}`]()
       const modifiedValue = _modifyValue(pi, origValue)
+      console.log(origValue, modifiedValue)
       assert.notStrictEqual(origValue, modifiedValue, `Member not modified: ${pi}`)
       config[`set${methodName}`](modifiedValue)
     }

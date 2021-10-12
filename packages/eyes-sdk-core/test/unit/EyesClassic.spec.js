@@ -90,7 +90,7 @@ describe('EyesClassic', () => {
     it('should wait default amount of time set null', async () => {
       const delay = eyes._configuration.getWaitBeforeScreenshots()
       try {
-        eyes._configuration.setBetweenSubScreenshots(null)
+        eyes._configuration.setWaitBeforeScreenshots(null)
         await eyes.check()
       } catch (caught) {
         if (caught === thrownScreenshotDone) {
