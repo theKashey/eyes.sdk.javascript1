@@ -1,6 +1,5 @@
 import type * as types from '@applitools/types'
 import {strict as assert} from 'assert'
-import { isTypedArray } from 'util/types'
 import * as api from '../../src'
 
 const makeSDK = require('../utils/fake-sdk')
@@ -37,5 +36,4 @@ describe('CheckSettings', () => {
     const checkSettings = new CheckSettings().waitBeforeCapture(1000)
     assert.equal(checkSettings.toJSON().waitBeforeCapture, 1000)
   })
-
 })
