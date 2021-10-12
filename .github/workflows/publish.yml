@@ -449,7 +449,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   playwright:
-    needs: [setup, utils, test-utils, api, core, vgc]
+    needs: [setup, test-utils, spec-playwright, api, core, vgc]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
