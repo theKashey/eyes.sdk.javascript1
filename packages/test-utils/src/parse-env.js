@@ -263,7 +263,6 @@ function parseEnv(
     env.url = new URL(url || process.env.CVG_TESTS_WD_REMOTE || process.env.CVG_TESTS_REMOTE)
     env.capabilities = {...env.capabilities}
     env.capabilities.browserName = browser || env.capabilities.browserName || ''
-    if (app) env.capabilities[legacy ? 'app' : 'appium:app'] = app
     const preset = DEVICES[device] || BROWSERS[browser]
     if (preset) {
       env.url = preset.url ? new URL(preset.url) : env.url
@@ -271,6 +270,7 @@ function parseEnv(
         ...env.capabilities,
         ...((legacy ? preset.capabilities.legacy : preset.capabilities.w3c) || preset.capabilities),
       }
+      legacy = legacy || env.capabilities.deviceName || env.capabilities.platform || env.capabilities.version
       env.configurable = preset.type !== 'sauce'
       env.appium = Boolean(env.device)
       if (preset.type === 'sauce') {
@@ -282,7 +282,12 @@ function parseEnv(
       } else {
         env.options = preset.options || {}
       }
-      env.options.deviceOrientation = env.orientation
+      if (env.orientation) {
+        env.options.deviceOrientation = env.orientation
+      }
+    }
+    if (app) {
+      env.capabilities[legacy ? 'app' : 'appium:app'] = app
     }
     if (eg && (!preset || preset.type === 'local')) {
       env.url = new URL(process.env.CVG_TESTS_EG_REMOTE)

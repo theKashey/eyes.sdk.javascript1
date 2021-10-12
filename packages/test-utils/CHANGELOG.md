@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix non-w3c appium capabilities for sauce
 
 ## 1.0.8 - 2021/10/12
 
