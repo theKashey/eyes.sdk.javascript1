@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `waitBeforeCapture` property
 
 ## 1.0.14 - 2021/9/15
 
