@@ -42,10 +42,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.8.tgz#b713d0ba596863d294aa85475d4e07e2030a8a33"
-  integrity sha512-G7uumVOGL/RtQwW0mky3l+53u+qPrrw9TM6KS12dtFacJH/UeTqTHh8L/FUaYFY6PKvDyQjoXD7fJqFdHR8p4w==
+"@applitools/test-utils@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.9.tgz#413b5f28728ad3bd4ed423cf81e2eceecc3e68a2"
+  integrity sha512-ct1b/2t6XNccNv9P59IVn/MXjxTKUJOq4doDlcncxQ34l5H/Hv8zRwB7Gvkv+xwFVVUXuUw90DEH3ceBniIh/Q==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
