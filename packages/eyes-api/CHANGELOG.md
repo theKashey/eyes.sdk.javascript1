@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add `waitBeforeCapture` configuration property
+- updated to @applitools/types@1.0.15 (from 1.0.14)
 
 ## 1.1.3 - 2021/10/7
 
