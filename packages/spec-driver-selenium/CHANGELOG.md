@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.2 - 2021/10/12
+
 - handle non-w3c appium driver
 
 ## 1.0.1 - 2021/10/12
