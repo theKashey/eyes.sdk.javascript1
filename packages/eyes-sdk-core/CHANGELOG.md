@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/screenshoter@3.2.6 (from 3.2.5)
+- updated to @applitools/types@1.0.15 (from 1.0.14)
 
 
 ## 12.23.14 - 2021/10/7
