@@ -22,10 +22,19 @@ const DEVICES = {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
     capabilities: {
-      deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-      platformName: 'Android',
-      platformVersion: '10.0',
-      deviceOrientation: 'portrait',
+      w3c: {
+        platformName: 'Android',
+        'appium:platformVersion': '10.0',
+        'appium:deviceName': 'Google Pixel 3a XL GoogleAPI Emulator',
+      },
+      legacy: {
+        deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+        platformName: 'Android',
+        platformVersion: '10.0',
+      },
+    },
+    options: {
+      appiumVersion: '1.20.2',
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -252,8 +261,9 @@ function parseEnv(
   const env = {browser, device, headless, protocol, ...options}
   if (protocol === 'wd') {
     env.url = new URL(url || process.env.CVG_TESTS_WD_REMOTE || process.env.CVG_TESTS_REMOTE)
-    if (browser != null) env.capabilities = {...env.capabilities, browserName: browser}
-    else if (app) env.capabilities = {...env.capabilities, app, browserName: ''}
+    env.capabilities = {...env.capabilities}
+    env.capabilities.browserName = browser || env.capabilities.browserName || ''
+    if (app) env.capabilities[legacy ? 'app' : 'appium:app'] = app
     const preset = DEVICES[device] || BROWSERS[browser]
     if (preset) {
       env.url = preset.url ? new URL(preset.url) : env.url
@@ -264,7 +274,7 @@ function parseEnv(
       env.configurable = preset.type !== 'sauce'
       env.appium = Boolean(env.device)
       if (preset.type === 'sauce') {
-        if (legacy || env.device) {
+        if (legacy) {
           env.options = env.capabilities = {...env.capabilities, ...preset.options}
         } else {
           env.options = env.capabilities['sauce:options'] = {...preset.options}

@@ -1,5 +1,6 @@
 import type * as types from '@applitools/types'
 import {strict as assert} from 'assert'
+import { isTypedArray } from 'util/types'
 import * as api from '../../src'
 
 const makeSDK = require('../utils/fake-sdk')
@@ -23,7 +24,6 @@ describe('CheckSettings', () => {
   })
 
   it('sets shadow selector with framework selector', () => {
-    debugger
     const checkSettings = CheckSettings.shadow({fakeSelector: 'el-with-shadow'}).region({fakeSelector: 'el'})
     assert.deepStrictEqual(checkSettings.toJSON(), {
       region: {
@@ -32,4 +32,10 @@ describe('CheckSettings', () => {
       },
     })
   })
+
+  it('set waitBeforeCapture', () => {
+    const checkSettings = new CheckSettings().waitBeforeCapture(1000)
+    assert.equal(checkSettings.toJSON().waitBeforeCapture, 1000)
+  })
+
 })

@@ -33,17 +33,17 @@ function generateNetworkConfigForPlatform(platform) {
         ports: [
           '4444:4444',
           {
-            target: '5555',
+            target: 5555,
             protocol: 'tcp',
             mode: 'host',
           },
           {
-            target: '5556',
+            target: 5556,
             protocol: 'tcp',
             mode: 'host',
           },
           {
-            target: '5557',
+            target: 5557,
             protocol: 'tcp',
             mode: 'host',
           },

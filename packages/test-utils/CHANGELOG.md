@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add w3c preset for `Pixel 3a`
 
 ## 1.0.7 - 2021/8/9
 

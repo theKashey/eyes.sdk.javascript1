@@ -85,6 +85,7 @@ export type EyesClassicConfig<TElement = unknown, TSelector = unknown> = {
   cut?: ImageCropRect | ImageCropRegion
   rotation?: ImageRotation
   scaleRatio?: number
+  waitBeforeCapture?: number
 }
 
 export type EyesUFGConfig = {

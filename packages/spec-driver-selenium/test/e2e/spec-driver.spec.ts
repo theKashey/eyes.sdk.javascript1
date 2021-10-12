@@ -1,9 +1,9 @@
-const assert = require('assert')
-const spec = require('../../dist/spec-driver')
-const {By} = require('selenium-webdriver')
+import assert from 'assert'
+import {By} from 'selenium-webdriver'
+import * as spec from '../../src'
 
 describe('spec driver', async () => {
-  let driver, destroyDriver
+  let driver: spec.Driver, destroyDriver: () => void
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
   describe('headless desktop', async () => {
@@ -18,25 +18,28 @@ describe('spec driver', async () => {
     })
 
     it('isDriver(driver)', async () => {
-      await isDriver({expected: true})
+      await isDriver({input: driver, expected: true})
     })
     it('isDriver(wrong)', async () => {
-      await isDriver({input: {}, expected: false})
+      await isDriver({input: {} as spec.Driver, expected: false})
     })
     it('isElement(element)', async () => {
-      await isElement({input: () => driver.findElement(By.css('div')), expected: true})
+      await isElement({input: await driver.findElement({css: 'div'}), expected: true})
     })
     it('isElement(wrong)', async () => {
-      await isElement({input: () => ({}), expected: false})
+      await isElement({input: {} as spec.Element, expected: false})
     })
     it('isSelector(by)', async () => {
       await isSelector({input: By.xpath('//div'), expected: true})
     })
+    it('isSelector(by-hash)', async () => {
+      await isSelector({input: {xpath: '//div'}, expected: true})
+    })
     it('isSelector(wrong)', async () => {
-      await isSelector({input: {}, expected: false})
+      await isSelector({input: {} as spec.Selector, expected: false})
     })
     it('transformSelector(by)', async () => {
-      await transformSelector({input: By.xpath('//element')})
+      await transformSelector({input: By.css('div'), expected: By.css('div')})
     })
     it('transformSelector(string)', async () => {
       await transformSelector({input: '.element', expected: {css: '.element'}})
@@ -45,34 +48,35 @@ describe('spec driver', async () => {
       await transformSelector({input: {selector: '.element', type: 'css'}, expected: {css: '.element'}})
     })
     it('isEqualElements(element, element)', async () => {
-      await isEqualElements({
-        input: () => driver.findElement(By.css('div')).then(element => ({element1: element, element2: element})),
-        expected: true,
-      })
+      const element = await driver.findElement({css: 'div'})
+      await isEqualElements({input: {element1: element, element2: element}, expected: true})
     })
     it('isEqualElements(element1, element2)', async () => {
       await isEqualElements({
-        input: async () => ({
-          element1: await driver.findElement(By.css('div')),
-          element2: await driver.findElement(By.css('h1')),
-        }),
+        input: {element1: await driver.findElement({css: 'div'}), element2: await driver.findElement({css: 'h1'})},
         expected: false,
       })
     })
     it('executeScript(strings, args)', async () => {
       await executeScript()
     })
-    it('findElement(string)', async () => {
-      await findElement({input: By.id('overflowing-div')})
+    it('findElement(selector)', async () => {
+      await findElement({input: {selector: {css: '#overflowing-div'}}})
     })
-    it('findElements(string)', async () => {
-      await findElements({input: By.css('div')})
+    it('findElement(selector, parent-element)', async () => {
+      await findElement({input: {selector: {css: 'div'}, parent: await driver.findElement({css: '#stretched'})}})
     })
     it('findElement(non-existent)', async () => {
-      await findElement({input: By.css('non-existent'), expected: null})
+      await findElement({input: {selector: {css: 'non-existent'}}, expected: null})
+    })
+    it('findElements(string)', async () => {
+      await findElements({input: {selector: {css: 'div'}}})
+    })
+    it('findElements(string, parent-element)', async () => {
+      await findElements({input: {selector: {css: 'div'}, parent: await driver.findElement({css: '#stretched'})}})
     })
     it('findElements(non-existent)', async () => {
-      await findElements({input: By.css('non-existent'), expected: []})
+      await findElements({input: {selector: {css: 'non-existent'}}, expected: []})
     })
     it('mainContext()', async () => {
       await mainContext()
@@ -106,16 +110,14 @@ describe('spec driver', async () => {
       await getWindowSize()
     })
     it('setWindowSize({width, height})', async () => {
-      await setWindowSize({
-        input: {width: 551, height: 552},
-        expected: {width: 551, height: 552},
-      })
+      await setWindowSize({input: {width: 551, height: 552}})
     })
   })
 
   describe('legacy driver (@webdriver)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'ie-11', legacy: true})
+      driver = spec.transformDriver(driver)
     })
 
     after(async () => {
@@ -123,13 +125,10 @@ describe('spec driver', async () => {
     })
 
     it('getWindowSize()', async () => {
-      await getWindowSize({legacy: true})
+      await getWindowSize()
     })
     it('setWindowSize({width, height})', async () => {
-      await setWindowSize({
-        input: {width: 551, height: 552},
-        expected: {width: 551, height: 552},
-      })
+      await setWindowSize({input: {width: 551, height: 552}})
     })
     it('getDriverInfo()', async () => {
       await getDriverInfo({
@@ -174,7 +173,7 @@ describe('spec driver', async () => {
     })
   })
 
-  describe('mobile driver (@mobile @native @ios)', async () => {
+  describe('mobile driver (@mobile @native @android)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({
         app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
@@ -189,7 +188,7 @@ describe('spec driver', async () => {
     })
 
     it('getWindowSize()', async () => {
-      await getWindowSize({expected: {width: 2040, height: 1080}})
+      await getWindowSize()
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
@@ -210,26 +209,30 @@ describe('spec driver', async () => {
     })
   })
 
-  async function isDriver({input, expected}) {
-    const isDriver = await spec.isDriver(input || driver)
-    assert.strictEqual(isDriver, expected)
+  async function isDriver({input, expected}: {input: spec.Driver; expected: boolean}) {
+    const result = await spec.isDriver(input || driver)
+    assert.strictEqual(result, expected)
   }
-  async function isElement({input, expected}) {
-    const element = await input()
-    const isElement = await spec.isElement(element)
-    assert.strictEqual(isElement, expected)
+  async function isElement({input, expected}: {input: spec.Element; expected: boolean}) {
+    const result = await spec.isElement(input)
+    assert.strictEqual(result, expected)
   }
-  async function isSelector({input, expected}) {
-    const isSelector = await spec.isSelector(input)
-    assert.strictEqual(isSelector, expected)
+  async function isSelector({input, expected}: {input: spec.Selector; expected: boolean}) {
+    const result = await spec.isSelector(input)
+    assert.strictEqual(result, expected)
   }
-  async function transformSelector({input, expected}) {
+  async function transformSelector({input, expected}: {input: any; expected: spec.Selector}) {
     const result = spec.transformSelector(input)
     assert.deepStrictEqual(result, expected || input)
   }
-  async function isEqualElements({input, expected}) {
-    const {element1, element2} = await input()
-    const result = await spec.isEqualElements(driver, element1, element2)
+  async function isEqualElements({
+    input,
+    expected,
+  }: {
+    input: {element1: spec.Element; element2: spec.Element}
+    expected: boolean
+  }) {
+    const result = await spec.isEqualElements(driver, input.element1, input.element2)
     assert.deepStrictEqual(result, expected)
   }
   async function executeScript() {
@@ -288,48 +291,61 @@ describe('spec driver', async () => {
         .catch(() => null)
     }
   }
-  async function findElement({input, expected} = {}) {
-    const result = expected !== undefined ? expected : await driver.findElement(input)
-    const element = await spec.findElement(driver, input)
-    if (element !== result) {
-      assert.ok(await spec.isEqualElements(driver, element, result))
+  async function findElement({
+    input,
+    expected,
+  }: {
+    input: {selector: spec.Selector; parent?: spec.Element}
+    expected?: spec.Element
+  }) {
+    const root = input.parent ?? driver
+    expected = expected === undefined ? await root.findElement(input.selector) : expected
+    const element = await spec.findElement(driver, input.selector, input.parent)
+    if (element !== expected) {
+      assert.ok(await spec.isEqualElements(driver, element, expected))
     }
   }
-  async function findElements({input, expected} = {}) {
-    const result = expected !== undefined ? expected : await driver.findElements(input)
-    const elements = await spec.findElements(driver, input)
-    assert.strictEqual(elements.length, result.length)
+  async function findElements({
+    input,
+    expected,
+  }: {
+    input: {selector: spec.Selector; parent?: spec.Element}
+    expected?: spec.Element[]
+  }) {
+    const root = input.parent ?? driver
+    expected = expected === undefined ? await root.findElements(input.selector) : expected
+    const elements = await spec.findElements(driver, input.selector, input.parent)
+    assert.strictEqual(elements.length, expected.length)
     for (const [index, element] of elements.entries()) {
-      assert.ok(await spec.isEqualElements(driver, element, result[index]))
+      assert.ok(await spec.isEqualElements(driver, element, expected[index]))
     }
   }
-  async function getWindowSize({expected} = {}) {
-    let size
+  async function getWindowSize() {
+    let expected
     const window = driver.manage().window()
-    if (expected) {
-      size = expected
-    } else if (window.getSize) {
-      size = await driver.manage().window().getSize()
-    } else if (window.getRect) {
-      const rect = await driver.manage().window().getRect()
-      size = {width: rect.width, height: rect.height}
+    if (window.getSize) {
+      expected = await window.getSize()
+    } else {
+      const {width, height} = await window.getRect()
+      expected = {width, height}
     }
     const result = await spec.getWindowSize(driver)
-    assert.deepStrictEqual(result, size)
+    assert.deepStrictEqual(result, expected)
   }
-  async function setWindowSize({input, expected} = {}) {
+  async function setWindowSize({input}: {input: {width: number; height: number}}) {
     await spec.setWindowSize(driver, input)
-    let rect
-    if (driver.manage().window().getRect) {
-      rect = await driver.manage().window().getRect()
+    let result
+    const window = driver.manage().window()
+    if (window.getSize) {
+      const {x, y} = await window.getPosition()
+      const {width, height} = await window.getSize()
+      result = {x, y, width, height}
     } else {
-      const {x, y} = await driver.manage().window().getPosition()
-      const {width, height} = await driver.manage().window().getSize()
-      rect = {x, y, width, height}
+      result = await window.getRect()
     }
-    assert.deepStrictEqual(rect, {x: 0, y: 0, ...expected})
+    assert.deepStrictEqual(result, {x: 0, y: 0, ...input})
   }
-  async function getOrientation({expected} = {}) {
+  async function getOrientation({expected}: {expected: 'portrait' | 'landscape'}) {
     const result = await spec.getOrientation(driver)
     assert.strictEqual(result, expected)
   }
@@ -349,7 +365,7 @@ describe('spec driver', async () => {
     assert.deepStrictEqual(actual, blank)
     await driver.get(url)
   }
-  async function getDriverInfo({expected} = {}) {
+  async function getDriverInfo({expected}: {expected: Record<string, any>}) {
     const info = await spec.getDriverInfo(driver)
     assert.deepStrictEqual(
       Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),

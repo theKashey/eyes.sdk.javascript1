@@ -14,6 +14,11 @@ const PACKAGES = [
   {name: 'core', dirname: 'eyes-sdk-core', aliases: ['@applitools/eyes-sdk-core']},
   {name: 'vgc', dirname: 'visual-grid-client', aliases: ['@applitools/visual-grid-client']},
 
+  {name: 'spec-playwright', dirname: 'spec-driver-playwright', framework: 'playwright', aliases: ['@applitools/spec-driver-playwright']},
+  {name: 'spec-puppeteer', dirname: 'spec-driver-puppeteer', framework: 'puppeteer', aliases: ['spec-pptr', '@applitools/spec-driver-puppeteer']},
+  {name: 'spec-webdriverio', dirname: 'spec-driver-webdriverio', framework: 'webdriverio', aliases: ['spec-wdio', '@applitools/spec-driver-webdriverio']},
+  {name: 'spec-selenium', dirname: 'spec-driver-selenium', framework: 'selenium-webdriver', aliases: ['@applitools/spec-driver-selenium']},
+
   {name: 'universal', dirname: 'eyes-universal', sdk: true, aliases: ['usdk', '@applitools/eyes-universal']},
   {name: 'playwright-universal', dirname: 'eyes-playwright-universal', framework: 'playwright', sdk: true, aliases: ['playwright/u', '@applitools/eyes-playwright']},
   {name: 'playwright', dirname: 'eyes-playwright', framework: 'playwright', sdk: true, aliases: ['@applitools/eyes-playwright']},
@@ -48,12 +53,12 @@ const packages = packageSettings.split(/[\s,]+/).reduce((packages, packageSettin
     return packages
   }
   if (allowVariations) {
-    if (!packageInfo.sdk && (frameworkVersion | frameworkProtocol)) {
+    if (!packageInfo.framework && (frameworkVersion || frameworkProtocol)) {
       console.warn(`Framework modifiers are not allowed for package "${packageInfo.name}"! Package configured as "${packageSetting}" will be ignored!`)
       return packages
     }
   } else {
-    if (frameworkVersion | frameworkProtocol) {
+    if (frameworkVersion || frameworkProtocol) {
       console.warn(`Modifiers are not allowed! Package configured as "${packageSetting}" will be ignored!`)
       return packages
     }

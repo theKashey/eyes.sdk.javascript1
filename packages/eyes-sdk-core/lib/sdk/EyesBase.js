@@ -1132,7 +1132,11 @@ class EyesBase {
     this._validationId += 1
     const validationInfo = new ValidationInfo(this._validationId, name)
 
-    await GeneralUtils.sleep(this._configuration.getWaitBeforeScreenshots())
+    await GeneralUtils.sleep(
+      this._configuration.getWaitBeforeCapture() > 100
+        ? this._configuration.getWaitBeforeCapture()
+        : this._configuration.getWaitBeforeScreenshots(),
+    )
 
     await this.beforeMatchWindow()
     await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo)
@@ -1204,7 +1208,13 @@ class EyesBase {
     this._validationId += 1
     const validationInfo = new ValidationInfo(this._validationId, name)
 
-    await GeneralUtils.sleep(this._configuration.getWaitBeforeScreenshots())
+    // should add the option to get waitBeforeCapture from checkSettings.
+    // in eyesClassic
+    await GeneralUtils.sleep(
+      this._configuration.getWaitBeforeCapture() > 100
+        ? this._configuration.getWaitBeforeCapture()
+        : this._configuration.getWaitBeforeScreenshots(),
+    )
 
     await this.beforeMatchWindow()
     await this._sessionEventHandlers.validationWillStart(this._autSessionId, validationInfo)

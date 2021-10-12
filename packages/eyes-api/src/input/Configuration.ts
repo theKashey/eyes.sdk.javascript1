@@ -87,6 +87,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   cut?: CutProvider
   rotation?: ImageRotation
   scaleRatio?: number
+  waitBeforeCapture?: number
 }
 
 export type VGConfiguration = {
@@ -96,6 +97,7 @@ export type VGConfiguration = {
   visualGridOptions?: Record<string, any>
   layoutBreakpoints?: boolean | number[]
   disableBrowserFetching?: boolean
+  waitBeforeCapture?: number
 }
 
 export type Configuration<TElement = unknown, TSelector = unknown> = GeneralConfiguration &
@@ -802,6 +804,24 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
   setWaitBeforeScreenshots(waitBeforeScreenshots: number): this {
     this.waitBeforeScreenshots = waitBeforeScreenshots
+    return this
+  }
+
+  get waitBeforeCapture(): number {
+    return this._config.waitBeforeCapture
+  }
+
+  set waitBeforeCapture(waitBeforeCapture: number) {
+    utils.guard.isInteger(waitBeforeCapture, {name: 'waitBeforeCapture', gt: 0})
+    this._config.waitBeforeCapture = waitBeforeCapture
+  }
+
+  getWaitBeforeCapture(): number {
+    return this.waitBeforeCapture
+  }
+
+  setWaitBeforeCapture(waitBeforeCapture: number): this {
+    this.waitBeforeCapture = waitBeforeCapture
     return this
   }
 

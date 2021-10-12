@@ -60,6 +60,7 @@ export type CheckSettings<TElement, TSelector> = {
   renderId?: string
   variationGroupId?: string
   timeout?: number
+  waitBeforeCapture?: number
 }
 
 export type Target<TElement, TSelector> = {
@@ -90,6 +91,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   static shadow(selector: unknown): CheckSettingsFluent {
     return new this().shadow(selector)
   }
+
   protected static readonly _spec: CheckSettingsSpec
   protected get _spec(): CheckSettingsSpec<TElement, TSelector> {
     return (this.constructor as typeof CheckSettingsFluent)._spec as CheckSettingsSpec<TElement, TSelector>
@@ -175,6 +177,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     if (settings.renderId) this.renderId(settings.renderId)
     if (settings.variationGroupId) this.variationGroupId(settings.variationGroupId)
     if (!utils.types.isNull(settings.timeout)) this.timeout(settings.timeout)
+    if (!utils.types.isNull(settings.waitBeforeCapture)) this.waitBeforeCapture(settings.waitBeforeCapture)
   }
 
   /** @undocumented */
@@ -584,6 +587,12 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   timeout(timeout: number): this {
     utils.guard.isNumber(timeout, {name: 'timeout'})
     this._settings.timeout = timeout
+    return this
+  }
+
+  waitBeforeCapture(waitBeforeCapture: number): this {
+    utils.guard.isNumber(waitBeforeCapture, {name: 'waitBeforeCapture'})
+    this._settings.waitBeforeCapture = waitBeforeCapture
     return this
   }
 

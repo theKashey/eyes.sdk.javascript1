@@ -71,6 +71,7 @@ class EyesClassic extends EyesCore {
     )
   }
 
+  // set waitBeofreCpature from checkSettings in configuration.
   async _check(checkSettings = {}, closeAfterMatch = false, throwEx = true) {
     this._context = await this._driver.refreshContexts()
     await this._context.main.setScrollingElement(this._scrollRootElement)
