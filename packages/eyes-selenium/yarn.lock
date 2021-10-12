@@ -218,10 +218,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.7.tgz#bcd89152b83ce49dc51f4a44dec6d0dba7338317"
   integrity sha512-Tr4Gj7Qov/oPy+8WI4oVmmubxqpOzr8P3Wjzpl6rA57xKLg6/TiIg5oZNb4+jEmO2ShjNYLaEwRWHl7kPgb4fw==
 
-"@applitools/spec-driver-selenium@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.0.2.tgz#24e5a164691c7b354084c8d78e2335f5f36bec5e"
-  integrity sha512-aXO1QYJuP7bQ56+75pw6hj12Ww5KMCSiSvxdr2KO5htxI1Y3i9AEadSCUw+TJzHJcb+ZU6gblDx9/6jN5D8TvQ==
+"@applitools/spec-driver-selenium@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.1.0.tgz#6fa0ac9ef1c3ff78ee23f8b1a7a0a8c8beeb2af9"
+  integrity sha512-5khrR4rhp0rExEQNLVAeswlENGgSs4R7FZMvbV8l0RD3qzReEYkp1WyL1tMxA5cc8PKpbBQDGMbN7ySSEMtkbg==
   dependencies:
     "@applitools/utils" "1.2.3"
 
@@ -254,10 +254,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.8.tgz#b713d0ba596863d294aa85475d4e07e2030a8a33"
-  integrity sha512-G7uumVOGL/RtQwW0mky3l+53u+qPrrw9TM6KS12dtFacJH/UeTqTHh8L/FUaYFY6PKvDyQjoXD7fJqFdHR8p4w==
+"@applitools/test-utils@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.9.tgz#413b5f28728ad3bd4ed423cf81e2eceecc3e68a2"
+  integrity sha512-ct1b/2t6XNccNv9P59IVn/MXjxTKUJOq4doDlcncxQ34l5H/Hv8zRwB7Gvkv+xwFVVUXuUw90DEH3ceBniIh/Q==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
