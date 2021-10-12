@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 4.56.4 - 2021/10/12
+
 - move spec driver implementation to the separate package
 - updated to @applitools/eyes-api@1.1.4 (from 1.1.3)
 - updated to @applitools/eyes-sdk-core@12.23.15 (from 12.23.14)
