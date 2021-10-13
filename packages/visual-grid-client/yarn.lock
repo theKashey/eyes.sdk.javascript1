@@ -39,17 +39,17 @@
     "@applitools/types" "1.0.14"
     "@applitools/utils" "1.2.3"
 
-"@applitools/eyes-sdk-core@12.23.15":
-  version "12.23.15"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.15.tgz#7b112b947ec11cd9fbf8af390a30c4cbf055f0f1"
-  integrity sha512-1cKJI0RCdFm/UjjxTdtaNtgRSTLKsD+Sgu06vTMYKMrRHh+wM+IpjzrbwLpZPhWpKVIV2ZB6RqshAXKubExc5A==
+"@applitools/eyes-sdk-core@12.23.16":
+  version "12.23.16"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.16.tgz#b3c9fd987a6ef84584fccd87d9f17042cc8e303f"
+  integrity sha512-eVHha4qtw9XFOS3pS/pwoZdYp2S3tmb8EKMLfm7TRCk5DiNyDtz6l1+4oj3iugCg/T3hSRTLpUV2otD7qrYEEQ==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.8"
     "@applitools/driver" "1.2.6"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.4"
-    "@applitools/screenshoter" "3.2.6"
+    "@applitools/screenshoter" "3.2.7"
     "@applitools/snippets" "2.1.7"
     "@applitools/types" "1.0.15"
     "@applitools/utils" "1.2.3"
@@ -134,10 +134,10 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/screenshoter@3.2.6":
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.2.6.tgz#2e6405393e3063114fd1597292398400f2f4ef7e"
-  integrity sha512-brtTBISAh5Eho/3u5tw6Vghh5fSWEN2DDlX54DSTqdjyD7f7DTC8oP0Xi7viGkE86BT2PFSA0AYRWbUH5qz42Q==
+"@applitools/screenshoter@3.2.7":
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.2.7.tgz#50d8a3a0a6e2f184af1b47b670c265aaf53755fe"
+  integrity sha512-g3whjP3odQuACEYz1RyULRZuCQGnfEMcskjYTkIqx3dUHiy9EwEMTCdRo25m6QrRDoDf2I8nHk+2FhG47DO/vQ==
   dependencies:
     "@applitools/snippets" "2.1.7"
     "@applitools/utils" "1.2.3"
@@ -173,10 +173,10 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.8.tgz#b713d0ba596863d294aa85475d4e07e2030a8a33"
-  integrity sha512-G7uumVOGL/RtQwW0mky3l+53u+qPrrw9TM6KS12dtFacJH/UeTqTHh8L/FUaYFY6PKvDyQjoXD7fJqFdHR8p4w==
+"@applitools/test-utils@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.9.tgz#413b5f28728ad3bd4ed423cf81e2eceecc3e68a2"
+  integrity sha512-ct1b/2t6XNccNv9P59IVn/MXjxTKUJOq4doDlcncxQ34l5H/Hv8zRwB7Gvkv+xwFVVUXuUw90DEH3ceBniIh/Q==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
