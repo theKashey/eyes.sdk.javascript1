@@ -121,11 +121,13 @@ describe('spec driver', async () => {
   }
   async function executeScript() {
     const num = 0
+    const nil = null
+    const undef = undefined
     const str = 'string'
-    const obj = {key: 'value', obj: {key: 0}}
+    const obj = {key: 'value', obj: {key: ''}}
     const arr = [0, 1, 2, {key: 3}]
     const el = await page.$('div')
-    const result = await spec.executeScript(page.mainFrame(), arg => arg, {num, str, obj, arr, el})
+    const result = await spec.executeScript(page.mainFrame(), arg => arg, {num, str, obj, arr, el, nil, undef})
     assert.strictEqual(result.num, num)
     assert.strictEqual(result.str, str)
     assert.deepStrictEqual(result.obj, obj)

@@ -11,8 +11,8 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 // #region HELPERS
 
 async function handleToObject(handle: Playwright.JSHandle): Promise<any> {
-  let [, type] = handle.toString().match(/(?:.+@)?(\w+)(?:\(\d+\))?/i) ?? []
-  type = type.toLowerCase()
+  let [, type] = handle.toString().match(/(?:.+@)?(\w*)(?:\(\d+\))?/i) ?? []
+  type = type?.toLowerCase()
   if (type === 'array') {
     const map = await handle.getProperties()
     return Promise.all(Array.from(map.values(), handleToObject))
