@@ -15,17 +15,17 @@
   resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.5.tgz#d67d9bd8c2c612da6dd9dcdea2b08f9630b22a3a"
   integrity sha512-O2zgnnqVi3/Atq7EQjURLa73XNaDFJCj8wHht6WQtxIv1EWYnPutNTmnJSKwK7FnbJAg65OVjZylcz4EezyYZA==
 
-"@applitools/dom-shared@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.6.tgz#944e9f9c915764765edf0daaa57fb53ff38802bd"
-  integrity sha512-GnMhI0aOea+WLSFQmlFqs0pFemT4JtdB0CBwNdxdS19t+X4FL4uKthkMU1A2e7JmxIhe0nn6iJchGWzlNsXyQQ==
+"@applitools/dom-shared@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.7.tgz#797bf91ad41521ca278ed7e9a0946f46632501d2"
+  integrity sha512-F0VO2YZVakHfEhilgyQzb4gNQ/By5RLcIAnUOL1uU4Th56k8+ls2qLWRbCsOpDeaiobLF8gKeQSTW8PtMlNoUQ==
 
-"@applitools/dom-snapshot@4.5.8":
-  version "4.5.8"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.8.tgz#300e3d6eb8eb4c5d0677ebe071c1783677af2f87"
-  integrity sha512-Fp52Wqnto9UqDltB9SVbcIvTqDXF0l78uAlZh0ddDbPY8Kcq7eT6YsfQjzyl3cO9uZW/c75OFEHVzUrLJkn6jA==
+"@applitools/dom-snapshot@4.5.9":
+  version "4.5.9"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.9.tgz#92c08251cfe962f2498f91f5b362b0e548728527"
+  integrity sha512-YBFRMdVHCItD16mgodQHrwQjlZinZ1t9sY7wMTA38N/BgUXT+tlToidKTiej/vhQbAz9kayFU6L/3Xbp2WxOjg==
   dependencies:
-    "@applitools/dom-shared" "1.0.6"
+    "@applitools/dom-shared" "1.0.7"
     "@applitools/functional-commons" "1.6.0"
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
@@ -39,13 +39,13 @@
     "@applitools/types" "1.0.14"
     "@applitools/utils" "1.2.3"
 
-"@applitools/eyes-sdk-core@12.23.16":
-  version "12.23.16"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.16.tgz#b3c9fd987a6ef84584fccd87d9f17042cc8e303f"
-  integrity sha512-eVHha4qtw9XFOS3pS/pwoZdYp2S3tmb8EKMLfm7TRCk5DiNyDtz6l1+4oj3iugCg/T3hSRTLpUV2otD7qrYEEQ==
+"@applitools/eyes-sdk-core@12.23.17":
+  version "12.23.17"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.17.tgz#cec2126b5bd3e7e93bdb0922304ae0abe3923a51"
+  integrity sha512-1COGZQG5ANapX0AhDLVqi99Rf7vdsoyZKpfG7USvDaYt3rNZaEj6zgagoHhSN5bZisldCr5BftOzr78dOy1g2Q==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
-    "@applitools/dom-snapshot" "4.5.8"
+    "@applitools/dom-snapshot" "4.5.9"
     "@applitools/driver" "1.2.6"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.4"
