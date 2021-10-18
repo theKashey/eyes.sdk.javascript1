@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- updated to @applitools/dom-snapshot@4.5.9 (from 4.5.8)
+- updated to @applitools/visual-grid-client@15.8.36 (from 15.8.31)
 
  ## 3.22.5 - 2021/9/29
 
