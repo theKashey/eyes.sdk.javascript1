@@ -1,12 +1,15 @@
 # Changelog
 
 ## Unreleased
+
+
+## 3.25.0 - 2021/10/18
+
 - updated to @applitools/driver@1.2.6 (from 1.1.3)
 - updated to @applitools/eyes-puppeteer@1.8.3 (from 1.8.2)
 - updated to @applitools/eyes-sdk-core@12.23.17 (from 12.23.0)
 - updated to @applitools/test-server@1.0.5 (from 1.0.4)
 - updated to @applitools/visual-grid-client@15.8.36 (from 15.8.21)
-
 
 ## 3.24.0 - 2021/8/23
 
