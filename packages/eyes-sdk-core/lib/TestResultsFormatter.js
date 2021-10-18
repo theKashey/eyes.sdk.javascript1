@@ -245,6 +245,18 @@ class TestResultsFormatter {
     testResults.forEach(result => {
       const duration = result.getDuration()
       output += `\n<testcase name="${result.getName()}"${duration ? ' time="' + duration + '"' : ''}>`
+      const properties = {}
+      if (result.getHostOS()) properties.hostOS = result.getHostOS()
+      if (result.getHostApp()) properties.hostApp = result.getHostApp()
+      if (result.getHostDisplaySize()) properties.viewportSize = result.getHostDisplaySize()
+
+      if (properties.hostOS || properties.hostApp || properties.viewportSize) {
+        output += `\n<properties>`
+        for (const [name, value] of Object.entries(properties)) {
+          output += `\n<property name="${name}" value="${value}"/>`
+        }
+        output += `\n</properties>`
+      }
       if (result.getIsDifferent()) {
         output += `\n<failure>`
         output += `\nDifference found. See ${result.getAppUrls().getBatch()} for details.`

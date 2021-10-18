@@ -11,13 +11,11 @@ describe('TestResultsFormatter', () => {
         new TestResults({
           name: 'someName1',
           appName: 'My Component | Button1',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
           name: 'someName2',
           appName: 'My Component | Button2',
-          hostDisplaySize: {width: 100, height: 200},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
       ]
@@ -37,16 +35,12 @@ describe('TestResultsFormatter', () => {
         new TestResults({
           status: TestResultsStatuses.Passed,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
           status: TestResultsStatuses.Unresolved,
           isDifferent: true,
           name: 'My Component | Button1',
-          hostApp: 'Firefox',
-          hostDisplaySize: {width: 100, height: 200},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
       ]
@@ -70,16 +64,12 @@ Difference found. See https://eyes.com/results for details.
           status: TestResultsStatuses.Unresolved,
           isDifferent: true,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
           status: TestResultsStatuses.Unresolved,
           isDifferent: true,
           name: 'My Component | Button1',
-          hostApp: 'Firefox',
-          hostDisplaySize: {width: 100, height: 200},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
       ]
@@ -106,8 +96,6 @@ Difference found. See https://eyes.com/results for details.
           status: TestResultsStatuses.Passed,
           isDifferent: false,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResultsError({
@@ -135,8 +123,6 @@ some error message
           status: TestResultsStatuses.Passed,
           isDifferent: false,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResultsError({
@@ -173,8 +159,6 @@ some error message
           status: TestResultsStatuses.Unresolved,
           isDifferent: true,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResultsError({
@@ -214,8 +198,6 @@ some error message
           status: TestResultsStatuses.Passed,
           isDifferent: false,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
           appUrls: {batch: 'https://eyes.com/results'},
         }),
       ]
@@ -252,9 +234,6 @@ some error message
           status: TestResultsStatuses.Passed,
           isDifferent: false,
           name: 'My Component | Button2',
-          hostApp: 'Chrome',
-          hostDisplaySize: {width: 10, height: 20},
-          appUrls: {batch: 'https://eyes.com/results'},
           duration: 10,
         }),
         new TestResultsError({
@@ -265,6 +244,55 @@ some error message
       const expected = `<?xml version="1.0" encoding="UTF-8" ?>
 <testsuite name="Eyes Test Suite" tests="2" time="20">
 <testcase name="My Component | Button2" time="10">
+</testcase>
+<testcase name="My Component | Button1">
+<failure>
+some error message
+</failure>
+</testcase>
+</testsuite>`
+      const formatter = new TestResultsFormatter()
+      testResults.forEach(r => formatter.addTestResults(r))
+      assert.deepStrictEqual(formatter.toXmlOutput({totalTime: 20}), expected)
+    })
+    it('display properties if provided', async () => {
+      const testResults = [
+        new TestResults({
+          status: TestResultsStatuses.Passed,
+          isDifferent: false,
+          name: 'My Component | Button3',
+          hostApp: 'Chrome',
+          hostDisplaySize: {width: 11, height: 21},
+          appUrls: {batch: 'https://eyes.com/results'},
+        }),
+        new TestResults({
+          status: TestResultsStatuses.Passed,
+          isDifferent: false,
+          name: 'My Component | Button2',
+          hostOS: 'Linux',
+          hostApp: 'Chrome',
+          hostDisplaySize: {width: 10, height: 20},
+          appUrls: {batch: 'https://eyes.com/results'},
+        }),
+        new TestResultsError({
+          name: 'My Component | Button1',
+          error: new Error('some error message'),
+        }),
+      ]
+      const expected = `<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite name="Eyes Test Suite" tests="3" time="20">
+<testcase name="My Component | Button3">
+<properties>
+<property name="hostApp" value="Chrome"/>
+<property name="viewportSize" value="11x21"/>
+</properties>
+</testcase>
+<testcase name="My Component | Button2">
+<properties>
+<property name="hostOS" value="Linux"/>
+<property name="hostApp" value="Chrome"/>
+<property name="viewportSize" value="10x20"/>
+</properties>
 </testcase>
 <testcase name="My Component | Button1">
 <failure>

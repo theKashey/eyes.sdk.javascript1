@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `hostOS`, `hostApp`, and `viewportSize` properties to XML formatted test results
 
 ## 12.23.16 - 2021/10/13
 
