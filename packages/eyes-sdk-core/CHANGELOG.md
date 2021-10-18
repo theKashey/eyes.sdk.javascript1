@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add `hostOS`, `hostApp`, and `viewportSize` properties to XML formatted test results
+- updated to @applitools/dom-snapshot@4.5.9 (from 4.5.8)
 
 ## 12.23.16 - 2021/10/13
 
