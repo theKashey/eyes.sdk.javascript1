@@ -38,7 +38,7 @@
     "types"
   ],
   "scripts": {
-    "lint": "eslint '**/*.js' '**/*.ts'",
+    "lint": "eslint '**/*.ts'",
     "build": "yarn build:dist && yarn build:types",
     "build:dist": "tsc",
     "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules puppeteer",
