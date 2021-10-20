@@ -4,16 +4,19 @@ const path = require('path')
 function generateDockerComposeConfig({saveToDisk, platform = process.platform} = {}) {
   const volumes = ['/dev/shm:/dev/shm']
   if (process.env.VOLUME) volumes.push(process.env.VOLUME)
+  const environment = ['SE_NODE_OVERRIDE_MAX_SESSIONS=true', 'SE_NODE_MAX_SESSIONS=15']
   const config = {
     version: '3.4',
     services: {
       chrome: {
         image: 'selenium/standalone-chrome',
+        environment,
         volumes,
         ...generateNetworkConfigForPlatform(platform),
       },
       firefox: {
         image: 'selenium/standalone-firefox',
+        environment,
         volumes,
         ports: ['4445:4444'],
       },
