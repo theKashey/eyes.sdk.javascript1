@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 1.9.4 - 2021/10/20
+
+- updated to @applitools/eyes-sdk-core@12.23.18 (from 12.23.17)
+- updated to @applitools/spec-driver-playwright@1.1.1 (from 1.1.0)
+- updated to @applitools/visual-grid-client@15.8.37 (from 15.8.36)
+
 ## 1.9.3 - 2021/10/18
 
 - updated to @applitools/eyes-sdk-core@12.23.17 (from 12.23.15)
