@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+- updated to @applitools/eyes-puppeteer@1.8.4 (from 1.8.3)
+- updated to @applitools/eyes-sdk-core@12.23.18 (from 12.23.17)
+- updated to @applitools/visual-grid-client@15.8.37 (from 15.8.36)
 
 
 ## 3.25.0 - 2021/10/18
