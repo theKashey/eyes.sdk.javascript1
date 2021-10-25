@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/logger"
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": {

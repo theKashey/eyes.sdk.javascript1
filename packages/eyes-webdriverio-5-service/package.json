@@ -13,7 +13,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/applitools/eyes-webdriverio5-service.git"
+    "url": "git://github.com/applitools/eyes-webdriverio5-service.git",
+    "directory": "packages/eyes-webdriverio-5-service"
   },
   "bugs": {
     "url": "https://github.com/applitools/eyes-webdriverio5-service/issues"

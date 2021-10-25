@@ -15,7 +15,8 @@
   "types": "./src/coverage-tests/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/sdk-coverage-tests"
   },
   "scripts": {
     "lint": "eslint . --ext .js",

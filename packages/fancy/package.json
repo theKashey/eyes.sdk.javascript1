@@ -14,7 +14,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:applitools/fancy.git"
+    "url": "git://github.com/applitools/eyes-webdriverio5-service.git",
+    "directory": "packages/fancy"
   },
   "bugs": {
     "url": "https://github.com/applitools/fancy/issues"

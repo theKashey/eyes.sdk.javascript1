@@ -7,7 +7,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/test-utils"
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools team <team@applitools.com>",

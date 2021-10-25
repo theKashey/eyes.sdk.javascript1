@@ -20,7 +20,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:applitools/snaptdout.git"
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/snaptdout"
   },
   "bugs": {
     "url": "https://github.com/applitools/snaptdout/issues"

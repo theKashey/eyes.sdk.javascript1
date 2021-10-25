@@ -2,7 +2,11 @@
   "name": "@applitools/eyes.webdriverio",
   "version": "2.32.0",
   "description": "Applitools Eyes SDK for WebdriverIO",
-  "repository": "https://github.com/applitools/eyes.sdk.javascript1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-webdriverio-4"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools Team <team@applitools.com> (http://www.applitools.com/)",
   "main": "./dist/index.js",

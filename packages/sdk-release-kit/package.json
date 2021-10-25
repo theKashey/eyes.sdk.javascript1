@@ -20,7 +20,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/sdk-release-kit"
   },
   "scripts": {
     "test": "mocha test/**/*.spec.js",

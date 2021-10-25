@@ -22,7 +22,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/sdk-fake-eyes-server"
   },
   "scripts": {
     "start": "node ./scripts/run-fake-eyes-server.js",

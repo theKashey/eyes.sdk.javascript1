@@ -23,7 +23,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-protractor"
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": {
