@@ -24,6 +24,11 @@
     "dist",
     "types"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-testcafe"
+  },
   "main": "./dist/index-legacy.js",
   "types": "./types/index-legacy.d.ts",
   "scripts": {

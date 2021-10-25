@@ -24,6 +24,11 @@
       "pre-push": "yarn bongo lint"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/snippets"
+  },
   "dependencies": {},
   "devDependencies": {
     "@applitools/sdk-release-kit": "^0.3.3",

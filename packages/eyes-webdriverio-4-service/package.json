@@ -17,6 +17,11 @@
     "docker:teardown": "docker-compose down",
     "prepublish:setup": "yarn docker:setup"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-webdriverio4-service"
+  },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
