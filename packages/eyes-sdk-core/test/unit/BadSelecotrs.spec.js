@@ -12,7 +12,7 @@ describe('Bad Selectors', () => {
     driver.takeScreenshot = generateScreenshot
     driver.mockElement('element0')
     eyes = new EyesFactory()
-    server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'always'})
+    server = await startFakeEyesServer({logger: {log: () => {}}, matchMode: 'always'})
     serverUrl = `http://localhost:${server.port}`
     eyes.setServerUrl(serverUrl)
   })

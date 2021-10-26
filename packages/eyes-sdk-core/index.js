@@ -45,14 +45,6 @@ exports.SimplePropertyHandler = require('./lib/handler/SimplePropertyHandler')
 // images
 exports.ImageDeltaCompressor = require('./lib/images/ImageDeltaCompressor')
 
-// logging
-exports.ConsoleLogHandler = require('./lib/logging/ConsoleLogHandler')
-exports.DebugLogHandler = require('./lib/logging/DebugLogHandler')
-exports.FileLogHandler = require('./lib/logging/FileLogHandler') // -browser
-exports.Logger = require('./lib/logging/Logger')
-exports.LogHandler = require('./lib/logging/LogHandler')
-exports.NullLogHandler = require('./lib/logging/NullLogHandler')
-
 // utils
 exports.ArgumentGuard = require('./lib/utils/ArgumentGuard')
 exports.ConfigUtils = require('./lib/utils/ConfigUtils')

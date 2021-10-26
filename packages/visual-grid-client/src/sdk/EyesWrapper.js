@@ -4,10 +4,10 @@ const {presult} = require('@applitools/functional-commons')
 const VERSION = require('../../package.json').version
 
 class EyesWrapper extends EyesBase {
-  constructor({apiKey, logHandler, getBatchInfoWithCache} = {}) {
+  constructor({apiKey, logger, getBatchInfoWithCache} = {}) {
     super()
     apiKey && this.setApiKey(apiKey)
-    logHandler && this.setLogHandler(logHandler)
+    logger && (this.logger = logger)
     this._getBatchInfoWithCache = getBatchInfoWithCache
   }
 

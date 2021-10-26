@@ -39,14 +39,6 @@ exports.SimplePropertyHandler = require('./lib/handler/SimplePropertyHandler').S
 // images
 exports.ImageDeltaCompressor = require('./lib/images/ImageDeltaCompressor').ImageDeltaCompressor
 
-// logging
-exports.ConsoleLogHandler = require('./lib/logging/ConsoleLogHandler').ConsoleLogHandler
-// exports.DebugLogHandler = require('./lib/logging/DebugLogHandler').DebugLogHandler;
-// exports.FileLogHandler = require('./lib/logging/FileLogHandler').FileLogHandler;       uses `fs` library
-exports.Logger = require('./lib/logging/Logger').Logger
-exports.LogHandler = require('./lib/logging/LogHandler').LogHandler
-exports.NullLogHandler = require('./lib/logging/NullLogHandler').NullLogHandler
-
 // utils
 exports.ArgumentGuard = require('./lib/utils/ArgumentGuard').ArgumentGuard
 // exports.ConfigUtils = require('./lib/utils/ConfigUtils').ConfigUtils;                  uses `fs` library

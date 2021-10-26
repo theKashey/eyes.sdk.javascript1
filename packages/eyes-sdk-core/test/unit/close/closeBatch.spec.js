@@ -1,9 +1,9 @@
 const nock = require('nock')
-const closeBatch = require('../../../lib/close/closeBatch')
+const closeBatches = require('../../../lib/close/closeBatch')
 const {expect} = require('chai')
 const {presult} = require('../../../lib/troubleshoot/utils')
 
-describe('closeBatch', () => {
+describe('closeBatches', () => {
   it('should throw if delete batch failed', async () => {
     const serverUrl = 'http://localhost:1234'
     const apiKey = '12345'
@@ -13,7 +13,7 @@ describe('closeBatch', () => {
       .delete(`/api/sessions/batches/678/close/bypointerid`)
       .query({apiKey})
       .replyWithError({message, code: 500})
-    const [err] = await presult(closeBatch({batchIds: ['678'], serverUrl, apiKey}))
+    const [err] = await presult(closeBatches({batchIds: ['678'], serverUrl, apiKey}))
     expect(err.message).to.equal(message)
   })
 
@@ -38,7 +38,7 @@ describe('closeBatch', () => {
 
   it('should throw if no batchIds were provided', async () => {
     const message = 'no batchIds were set'
-    const [err] = await presult(closeBatch({}))
+    const [err] = await presult(closeBatches({}))
     expect(err.message).to.equal(message)
   })
 
@@ -54,7 +54,7 @@ describe('closeBatch', () => {
         .reply(200)
     })
 
-    await closeBatch({batchIds, serverUrl, apiKey})
+    await closeBatches({batchIds, serverUrl, apiKey})
     batchIds.forEach((batchId, index) => {
       expect(scopes[index].basePath).to.equal(serverUrl)
       expect(scopes[index].interceptors[0].path).to.equal(`/api/sessions/batches/${batchId}/close/bypointerid`)

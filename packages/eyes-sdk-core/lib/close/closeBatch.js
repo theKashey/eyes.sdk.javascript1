@@ -1,14 +1,14 @@
 'use strict'
 
-const Logger = require('../logging/Logger')
+const {makeLogger} = require('@applitools/logger')
 const ServerConnector = require('../server/ServerConnector')
 const Configuration = require('../config/Configuration')
 const {presult} = require('../utils/GeneralUtils')
 
-async function closeBatch({batchIds, serverUrl, apiKey, proxy}) {
+async function closeBatch({batchIds, serverUrl, apiKey, proxy, logger}) {
   if (!batchIds) throw new Error('no batchIds were set')
   const serverConnector = new ServerConnector({
-    logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS),
+    logger: logger || makeLogger(),
     configuration: new Configuration({serverUrl, apiKey, proxy}),
     getAgentId: () => '',
   })

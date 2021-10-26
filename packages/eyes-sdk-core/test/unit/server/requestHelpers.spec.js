@@ -2,9 +2,10 @@
 
 const assert = require('assert')
 const Axios = require('axios')
-const {ProxySettings, Logger, Configuration} = require('../../..')
+const {makeLogger} = require('@applitools/logger')
+const {ProxySettings, Configuration} = require('../../..')
 const {configureAxios, configAxiosProxy, handleRequestError} = require('../../../lib/server/requestHelpers')
-const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
+const logger = makeLogger()
 
 describe('requestHelpers', () => {
   it('configureAxios works', () => {

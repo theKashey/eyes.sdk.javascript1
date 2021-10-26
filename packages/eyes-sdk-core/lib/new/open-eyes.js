@@ -1,3 +1,4 @@
+const {makeLogger} = require('@applitools/logger')
 const SessionEventHandler = require('../events/SessionEventHandler')
 const RemoteSessionEventHandler = require('../events/RemoteSessionEventHandler')
 
@@ -7,24 +8,19 @@ const makeExtractText = require('./extract-text')
 const makeExtractTextRegions = require('./extract-text-regions')
 const makeClose = require('./close')
 const makeAbort = require('./abort')
-const ConsoleLogHandler = require('../logging/ConsoleLogHandler')
-const FileLogHandler = require('../logging/FileLogHandler')
 
 function makeOpenEyes({sdk, runner}) {
-  return async function openEyes({driver, config, on}) {
+  return async function openEyes({driver, config, logger, on}) {
     const eyes = new sdk.EyesFactory(runner)
     eyes.setConfiguration(config)
+    if (logger) eyes.logger = logger
+    else if (config.logs) {
+      eyes.logger = makeLogger({handler: config.logs, level: 'info', colors: true})
+    }
     if (config.scrollRootElement) eyes.setScrollRootElement(config.scrollRootElement)
     if (config.cut) eyes.setCut(config.cut)
     if (config.rotation) eyes.setRotation(config.rotation)
     if (config.scaleRatio) eyes.setScaleRatio(config.scaleRatio)
-    if (config.logs) {
-      if (config.logs.type === 'console') {
-        eyes.setLogHandler(new ConsoleLogHandler(true))
-      } else if (config.logs.type === 'file') {
-        eyes.setLogHandler(new FileLogHandler(true, config.logs.filename, config.logs.append))
-      }
-    }
     if (config.debugScreenshots) eyes.setDebugScreenshots(config.debugScreenshots)
     if (config.remoteEvents) {
       const remoteSessionEventHandler = new RemoteSessionEventHandler(

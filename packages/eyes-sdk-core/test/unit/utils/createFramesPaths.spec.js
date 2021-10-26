@@ -1,8 +1,8 @@
 const createFramesPaths = require('../../../lib/utils/createFramesPaths')
 const assert = require('assert')
-const {Logger} = require('../../../')
+const {makeLogger} = require('@applitools/logger')
 
-const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
+const logger = makeLogger()
 
 describe('createFramesPaths', () => {
   it('should return an empty array when no cross frames exist', () => {

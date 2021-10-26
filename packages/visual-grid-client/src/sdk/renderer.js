@@ -20,12 +20,7 @@ const fetchResourceTimeout = 120000
 function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo, renderTimeout}) {
   const logger = new Logger(showLogs)
 
-  const renderWrapper = createRenderWrapper({
-    apiKey,
-    logHandler: logger.getLogHandler(),
-    serverUrl,
-    proxy,
-  })
+  const renderWrapper = createRenderWrapper({apiKey, logger, serverUrl, proxy})
 
   const {doRenderBatch, doCheckResources, doPutResource, doGetRenderStatus} = getRenderMethods(
     renderWrapper,

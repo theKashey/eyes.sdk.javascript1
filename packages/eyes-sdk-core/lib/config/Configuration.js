@@ -136,6 +136,8 @@ class Configuration {
    */
   constructor(configuration) {
     /** @private @type {boolean} */
+    this._logs = undefined
+    /** @private @type {boolean} */
     this._showLogs = undefined
 
     /** @type {string} */
@@ -256,6 +258,14 @@ class Configuration {
     if (configuration) {
       this.mergeConfig(configuration)
     }
+  }
+
+  getLogs() {
+    return this._logs
+  }
+
+  setLogs(logs) {
+    this._logs = logs
   }
 
   /**

@@ -1,8 +1,8 @@
 const closeBatch = require('../close/closeBatch')
 
 function makeCloseBatches() {
-  return function closeBatches(options) {
-    return closeBatch(options)
+  return function closeBatches({settings, logger}) {
+    return closeBatch({...settings, logger})
   }
 }
 

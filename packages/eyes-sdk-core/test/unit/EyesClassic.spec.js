@@ -3,7 +3,6 @@
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
-const snippets = require('@applitools/snippets')
 const {MockDriver} = require('@applitools/driver')
 const {EyesClassic} = require('../utils/FakeSDK')
 const {generateScreenshot} = require('../utils/FakeScreenshot')
@@ -15,7 +14,7 @@ describe('EyesClassic', () => {
     driver = new MockDriver()
     driver.takeScreenshot = generateScreenshot
     eyes = new EyesClassic()
-    server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'always'})
+    server = await startFakeEyesServer({logger: {log: () => {}}, matchMode: 'always'})
     serverUrl = `http://localhost:${server.port}`
     eyes.setServerUrl(serverUrl)
   })

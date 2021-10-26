@@ -1,5 +1,4 @@
 exports.deserializeDomSnapshotResult = require('../lib/utils/deserializeDomSnapshotResult')
-exports.Logger = require('../lib/logging/Logger')
 
 exports.DiffsFoundError = require('../lib/errors/DiffsFoundError')
 exports.TestResults = require('../lib/TestResults')

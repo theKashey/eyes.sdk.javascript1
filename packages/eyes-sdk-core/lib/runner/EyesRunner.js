@@ -53,7 +53,7 @@ class EyesRunner {
           eyes._closePromise.catch(err => {
             this._eyesInstances[0]
               .getLogger()
-              .verbose(`Properly handling close error while await all close promises in getAllTestResults: ${err}`)
+              .log(`Properly handling close error while await all close promises in getAllTestResults: ${err}`)
           }),
         ),
       )

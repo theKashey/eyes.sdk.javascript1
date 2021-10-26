@@ -32,66 +32,84 @@ function makeLogger({
   label,
   tags,
   timestamp,
-  level = LEVELS.silent,
+  level = process.env.APPLITOOLS_LOG_LEVEL || (process.env.APPLITOOLS_SHOW_LOGS ? LEVELS.info : LEVELS.silent),
   colors = false,
   console = true,
+  extended = false,
 } = {}) {
   if (!utils.types.isNumber(level)) level = LEVELS[level] || 0
+  if (colors === true) colors = COLORS
 
   if (!handler || handler.type === 'console') {
-    if (colors === true) colors = COLORS
     handler = makeConsoleHandler(handler)
   } else if (handler.type === 'file') {
-    colors = {}
     handler = makeFileHandler(handler)
-  } else if (handler.type === 'rolling-file') {
-    colors = {}
+    colors = undefined
+  } else if (handler.type === 'rolling file') {
     handler = makeRollingFileHandler(handler)
-  } else {
-    if (colors === true) colors = COLORS
-    else colors = {}
+    colors = undefined
+  } else if (!utils.types.isFunction(handler.log)) {
+    throw new Error('Handler have to implement `log` method or use one of the built-in handler names under `type` prop')
   }
 
   return {
     ...makeAPI({handler, format, label, tags, timestamp, level, colors}),
-    console: makeAPI({handler: console ? makeConsoleHandler() : handler, format, formatting: false}),
-    extend(label, color) {
-      return makeLogger({handler, format, label, timestamp, level, colors: {...colors, label: color}})
+    console: makeAPI({
+      handler: console ? (utils.types.isObject(console) ? console : makeConsoleHandler()) : handler,
+      format,
+      prelude: false,
+    }),
+    extend(options = {}) {
+      return makeLogger({
+        format,
+        label,
+        tags,
+        timestamp,
+        level,
+        ...options,
+        colors: {...colors, ...options.colors},
+        handler,
+        extended: true,
+      })
+    },
+    tag(name, value) {
+      if (!tags) tags = {}
+      tags[name] = value
     },
     open() {
-      if (handler.open) handler.open()
+      if (!extended && handler.open) handler.open()
     },
     close() {
-      if (handler.close) handler.close()
+      if (!extended && handler.close) handler.close()
     },
   }
 
   function makeAPI({handler, format, level, ...defaults}) {
-    return {
-      log(message, options = {}) {
-        if (level < LEVELS.info) return
-        const opts = {...defaults, ...options, tags: {...defaults.tags, ...options.tags}, level: 'info'}
-        handler.log(format(message, opts))
-      },
-      warn(message, options = {}) {
-        if (level < LEVELS.warn) return
-        const opts = {...defaults, ...options, tags: {...defaults.tags, ...options.tags}, level: 'warn'}
-        if (handler.warn) handler.warn(format(message, opts))
-        else handler.log(format(message, opts))
-      },
-      error(message, options = {}) {
-        if (level < LEVELS.error) return
-        const opts = {...defaults, ...options, tags: {...defaults.tags, ...options.tags}, level: 'error'}
-        if (handler.error) handler.error(format(message, opts))
-        else handler.log(format(message, opts))
-      },
-      fatal(message, options = {}) {
-        if (level < LEVELS.fatal) return
-        const opts = {...defaults, ...options, tags: {...defaults.tags, ...options.tags}, level: 'fatal'}
-        if (handler.fatal) handler.fatal(format(message, opts))
-        else if (handler.error) handler.error(format(message, opts))
-        else handler.log(format(message, opts))
-      },
+    return {log, warn, error, fatal, verbose: log}
+
+    function log(...messages) {
+      if (level < LEVELS.info) return
+      const options = {...defaults, level: 'info'}
+      handler.log(format(messages, options))
+    }
+    function warn(...messages) {
+      if (level < LEVELS.warn) return
+      const options = {...defaults, level: 'warn'}
+      if (handler.warn) handler.warn(format(messages, options))
+      else handler.log(format(messages, options))
+    }
+    function error(...messages) {
+      if (level < LEVELS.error) return
+      const options = {...defaults, level: 'error'}
+      if (handler.error) handler.error(format(messages, options))
+      else handler.log(format(messages, options))
+    }
+    function fatal(...messages) {
+      if (level < LEVELS.fatal) return
+      const options = {...defaults, level: 'fatal'}
+      if (handler.fatal) handler.fatal(format(messages, options))
+      else if (handler.error) handler.error(format(messages, options))
+      else handler.log(format(messages, options))
     }
   }
 }

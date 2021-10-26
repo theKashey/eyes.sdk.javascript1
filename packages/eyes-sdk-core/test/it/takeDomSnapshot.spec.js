@@ -1,10 +1,10 @@
 const {Driver, MockDriver, fake} = require('@applitools/driver')
+const {makeLogger} = require('@applitools/logger')
 const takeDomSnapshot = require('../../lib/utils/takeDomSnapshot')
 const {expect} = require('chai')
-const Logger = require('../../lib/logging/Logger')
 const {presult} = require('../../lib/utils/GeneralUtils')
 
-const logger = new Logger(!!process.env.APPLITOOLS_SHOW_LOGS)
+const logger = makeLogger()
 
 describe('takeDomSnapshot', () => {
   let mock, driver

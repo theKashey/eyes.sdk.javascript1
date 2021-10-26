@@ -3,10 +3,10 @@ const EyesWrapper = require('./EyesWrapper')
 const {RectangleSize, TypeUtils} = require('@applitools/eyes-sdk-core/shared')
 const getDeviceInfoFromBrowserConfig = require('./getDeviceInfoFromBrowserConfig')
 
-function initWrappers({count, apiKey, logHandler, getBatchInfoWithCache}) {
+function initWrappers({count, apiKey, logger, getBatchInfoWithCache}) {
   return Array.from(
     new Array(count),
-    () => new EyesWrapper({apiKey, logHandler, getBatchInfoWithCache}),
+    () => new EyesWrapper({apiKey, logger, getBatchInfoWithCache}),
   )
 }
 
@@ -132,8 +132,8 @@ function openWrappers({
     )
 }
 
-function createRenderWrapper({serverUrl, apiKey, logHandler, proxy, agentId}) {
-  const wrapper = new EyesWrapper({apiKey, logHandler})
+function createRenderWrapper({serverUrl, apiKey, logger, proxy, agentId}) {
+  const wrapper = new EyesWrapper({apiKey, logger})
   serverUrl !== undefined && wrapper.setServerUrl(serverUrl)
   proxy !== undefined && wrapper.setProxy(proxy)
   agentId !== undefined && wrapper.setBaseAgentId(agentId)

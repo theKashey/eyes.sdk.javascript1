@@ -96,7 +96,7 @@ async function takeDomCapture(logger, context, options = {}) {
 
   async function fetchCss(baseUri, href, retriesCount = 1) {
     try {
-      logger.verbose(`Given URL to download: ${href}`)
+      logger.log(`Given URL to download: ${href}`)
       let absHref = href
       if (!GeneralUtils.isAbsoluteUrl(href)) {
         absHref = new URL(href.toString(), baseUri).href
@@ -105,11 +105,11 @@ async function takeDomCapture(logger, context, options = {}) {
       const timeStart = PerformanceUtils.start()
       const response = await axios(absHref)
       const css = response.data
-      logger.verbose(`downloading CSS in length of ${css.length} chars took ${timeStart.end().summary}`)
+      logger.log(`downloading CSS in length of ${css.length} chars took ${timeStart.end().summary}`)
       const escapedCss = GeneralUtils.cleanStringForJSON(css)
       return {href: absHref, css: escapedCss}
     } catch (err) {
-      logger.verbose(err.toString())
+      logger.log(err.toString())
       retriesCount -= 1
       if (retriesCount > 0) {
         return fetchCss(baseUri, href, retriesCount)

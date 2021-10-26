@@ -179,7 +179,7 @@ function makeOpenEyes({
       initWrappers({
         count: browsers.length,
         apiKey,
-        logHandler: logger.getLogHandler(),
+        logger,
         getBatchInfoWithCache,
       })
 

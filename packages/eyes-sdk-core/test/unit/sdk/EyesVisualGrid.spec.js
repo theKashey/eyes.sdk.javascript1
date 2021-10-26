@@ -8,7 +8,7 @@ const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {EyesVisualGrid} = require('../../utils/FakeSDK')
 const {MockDriver} = require('@applitools/driver')
 const {generateDomSnapshot} = require('../../utils/FakeDomSnapshot')
-const {Logger, Configuration} = require('../../../index')
+const {Configuration} = require('../../../index')
 
 describe('EyesVisualGrid', () => {
   describe('_takeDomSnapshot({breakpoints})', () => {
@@ -16,7 +16,7 @@ describe('EyesVisualGrid', () => {
 
     before(async () => {
       server = await startFakeEyesServer({
-        logger: new Logger(process.env.APPLITOOLS_SHOW_LOGS),
+        logger: {log: () => {}},
         matchMode: 'always',
       })
 

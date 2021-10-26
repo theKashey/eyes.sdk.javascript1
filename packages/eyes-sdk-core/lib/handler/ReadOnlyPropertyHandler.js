@@ -21,7 +21,7 @@ class ReadOnlyPropertyHandler extends PropertyHandler {
    */
   set(_obj) {
     // eslint-disable-line no-unused-vars
-    this._logger.verbose('Ignored. (ReadOnlyPropertyHandler)')
+    this._logger.log('Ignored. (ReadOnlyPropertyHandler)')
     return false
   }
 

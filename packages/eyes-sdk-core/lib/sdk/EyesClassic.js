@@ -45,7 +45,7 @@ class EyesClassic extends EyesCore {
   async open(driver, appName, testName, viewportSize, sessionType) {
     ArgumentGuard.notNull(driver, 'driver')
 
-    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger._getNewLogger()}).init()
+    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger}).init()
     this._context = this._driver.currentContext
 
     this._configuration.setAppName(TypeUtils.getOrDefault(appName, this._configuration.getAppName()))
@@ -92,7 +92,7 @@ class EyesClassic extends EyesCore {
   }
 
   async getScreenshot() {
-    this._logger.verbose('getScreenshot()')
+    this._logger.log('getScreenshot()')
 
     const screenshotSettings = {
       frames:
@@ -127,7 +127,7 @@ class EyesClassic extends EyesCore {
             screenshot,
           })
           if (driver.isWeb && TypeUtils.getOrDefault(this._checkSettings.sendDom, this._configuration.getSendDom())) {
-            this._logger.verbose('Getting window DOM...')
+            this._logger.log('Getting window DOM...')
             if (screenshotSettings.fully) {
               await scroller.element.setAttribute('data-applitools-scroll', true)
             }

@@ -1,10 +1,10 @@
 'use strict'
 
 const {cosmiconfigSync} = require('cosmiconfig')
+const {makeLogger} = require('@applitools/logger')
 const GeneralUtils = require('./GeneralUtils')
-const Logger = require('../logging/Logger')
 
-function getConfig({configParams = [], configPath, logger = new Logger(!!process.env.APPLITOOLS_SHOW_LOGS)} = {}) {
+function getConfig({configParams = [], configPath, logger = makeLogger()} = {}) {
   const explorer = cosmiconfigSync('applitools', {
     searchPlaces: ['applitools.config.js', 'package.json', 'eyes.config.js', 'eyes.json'],
   })

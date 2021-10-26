@@ -69,12 +69,12 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
       }))
       resolver(persistedSelector.length === 1 ? persistedSelector[0] : persistedSelector)
     })
-    logger.verbose(`elements marked: ${mapping.ids}`)
+    logger.log(`elements marked: ${mapping.ids}`)
   }
 
   async function cleanupPersistance() {
     await context.execute(snippets.cleanupElementIds, [mapping.elements])
-    logger.verbose(`elements cleaned up: ${mapping.ids}`)
+    logger.log(`elements cleaned up: ${mapping.ids}`)
   }
 }
 

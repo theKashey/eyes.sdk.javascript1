@@ -1,7 +1,6 @@
 const assert = require('assert')
 const assertRejects = require('assert-rejects')
-const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
-const Logger = require('../../../lib/logging/Logger')
+const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {MockDriver, fake} = require('@applitools/driver')
 const {generateScreenshot} = require('../../utils/FakeScreenshot')
 const makeSDK = require('../../../lib/new/sdk')
@@ -20,7 +19,7 @@ describe('close', async () => {
       {selector: 'element4', rect: {x: 40, y: 41, width: 401, height: 402}},
     ])
     const core = new makeSDK({spec: fake.spec})
-    server = await startFakeEyesServer({logger: new Logger(), matchMode: 'never'})
+    server = await startFakeEyesServer({logger: {log: () => {}}, matchMode: 'never'})
     serverUrl = `http://localhost:${server.port}`
     manager = await core.makeManager()
   })

@@ -81,12 +81,12 @@ describe('logger', () => {
   })
 
   it('tags', () => {
-    const logger = makeLogger({handler: {type: 'console'}, level: 'info', tags: {old: '@@@'}, timestamp: false})
+    const logger = makeLogger({handler: {type: 'console'}, level: 'info', tags: {tag: '@@@'}, timestamp: false})
     const output = track(() => {
-      logger.log('info', {tags: {new: '***'}})
+      logger.log('info')
     })
 
-    assert.deepStrictEqual(output.stdout, ['[INFO ] {"old":"@@@","new":"***"} info\n'])
+    assert.deepStrictEqual(output.stdout, ['[INFO ] {"tag":"@@@"} info\n'])
   })
 
   it('colors', () => {
@@ -129,12 +129,10 @@ describe('logger', () => {
     })
 
     logger.log('info')
-    await setTimeout(100)
     logger.warn('warn')
-    await setTimeout(100)
     logger.error('error')
-    await setTimeout(100)
     logger.fatal('fatal')
+    await utils.general.sleep(100)
     logger.close()
 
     const output = fs.readFileSync(filename, {encoding: 'utf8'})
@@ -153,7 +151,7 @@ describe('logger', () => {
   it('handler rolling file', async () => {
     const dirname = path.resolve(__dirname, 'test-logs')
     const logger = makeLogger({
-      handler: {type: 'rolling-file', dirname, name: 'test', maxFileLength: 100},
+      handler: {type: 'rolling file', dirname, name: 'test', maxFileLength: 100},
       level: 'info',
       tags: {tag: '&&&'},
       timestamp: new Date('2021-03-19T16:49:00.000Z'),
@@ -206,7 +204,7 @@ describe('logger', () => {
 
   it('format', () => {
     const output = []
-    const format = (message, options) => ({message, ...options})
+    const format = (chunks, options) => ({chunks, ...options})
     const handler = {log: message => output.push(message)}
     const timestamp = new Date('2021-03-19T16:49:00.000Z')
     const label = 'Test'
@@ -218,10 +216,10 @@ describe('logger', () => {
     logger.fatal('fatal')
 
     assert.deepStrictEqual(output, [
-      {message: 'info', label, level: 'info', tags: {}, timestamp, colors: {}},
-      {message: 'warn', label, level: 'warn', tags: {}, timestamp, colors: {}},
-      {message: 'error', label, level: 'error', tags: {}, timestamp, colors: {}},
-      {message: 'fatal', label, level: 'fatal', tags: {}, timestamp, colors: {}},
+      {chunks: ['info'], label, level: 'info', tags: undefined, timestamp, colors: false},
+      {chunks: ['warn'], label, level: 'warn', tags: undefined, timestamp, colors: false},
+      {chunks: ['error'], label, level: 'error', tags: undefined, timestamp, colors: false},
+      {chunks: ['fatal'], label, level: 'fatal', tags: undefined, timestamp, colors: false},
     ])
   })
 
@@ -236,23 +234,6 @@ describe('logger', () => {
 
     assert.deepStrictEqual(output.stdout, ['info\n'])
     assert.deepStrictEqual(output.stderr, ['warn\n', 'error\n', 'fatal\n'])
-  })
-
-  it('console colored', () => {
-    const logger = makeLogger({level: 'silent'})
-    const output = track(() => {
-      logger.console.log('info', {color: 'blue'})
-      logger.console.warn('warn', {color: 'yellow'})
-      logger.console.error('error', {color: 'redBright'})
-      logger.console.fatal('fatal', {color: 'red'})
-    })
-
-    assert.deepStrictEqual(output.stdout, [`${chalk.blue('info')}\n`])
-    assert.deepStrictEqual(output.stderr, [
-      `${chalk.yellow('warn')}\n`,
-      `${chalk.redBright('error')}\n`,
-      `${chalk.red('fatal')}\n`,
-    ])
   })
 
   it('console custom', () => {

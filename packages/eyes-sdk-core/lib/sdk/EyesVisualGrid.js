@@ -59,7 +59,7 @@ class EyesVisualGrid extends EyesCore {
   async open(driver, optArg1, optArg2, optArg3, optArg4) {
     ArgumentGuard.notNull(driver, 'driver')
 
-    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger._getNewLogger()}).init()
+    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger}).init()
     this._context = this._driver.currentContext
 
     if (optArg1 instanceof Configuration) {
@@ -129,9 +129,7 @@ class EyesVisualGrid extends EyesCore {
   }
 
   async _check(checkSettings, closeAfterMatch = false, throwEx = true) {
-    this._logger.verbose(
-      `check started with tag "${checkSettings.name}" for test "${this._configuration.getTestName()}"`,
-    )
+    this._logger.log(`check started with tag "${checkSettings.name}" for test "${this._configuration.getTestName()}"`)
 
     return this._checkPrepare(checkSettings, async () => {
       const {persistedCheckSettings, cleanupPersistance} = await CheckSettingsUtils.toPersistedCheckSettings({

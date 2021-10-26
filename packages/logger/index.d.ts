@@ -1,4 +1,4 @@
-export default function makeLogger(options?: LoggerOptions): Logger;
+export function makeLogger(options?: LoggerOptions): Logger;
 
 export interface Logger extends Printer<Omit<FormatOptions, 'timestamp' | 'level'>> {
   isLogger: true
@@ -17,13 +17,13 @@ export interface Printer<TPrinterOptions> {
 }
 
 export type LoggerOptions = {
-  handler?: ConsoleHandler | FileHandler | CustomHandler
+  handler?: ConsoleHandler | FileHandler | RollingFileHandler | CustomHandler
   format?: (message: any, options: FormatOptions) => string
   label?: string
   timestamp?: false
   level?: LogLevels | number
   colors?: boolean | ColoringOptions
-  console?: boolean
+  console?: boolean | CustomHandler
 }
 
 export type FormatOptions = {
@@ -61,7 +61,7 @@ export type FileHandler = {
 }
 
 export type RollingFileHandler = {
-  type: 'rolling-file'
+  type: 'rolling file'
   dirname?: string
   name?: string
   maxFileLength?: number

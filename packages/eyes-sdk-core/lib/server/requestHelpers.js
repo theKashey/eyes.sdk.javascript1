@@ -89,7 +89,7 @@ function configureAxios({axiosConfig, configuration, agentId, logger}) {
 
 async function delayRequest({axiosConfig, logger}) {
   if (axiosConfig.delay) {
-    logger.verbose(`axios request interceptor - ${axiosConfig.name} request delayed for ${axiosConfig.delay} ms.`)
+    logger.log(`axios request interceptor - ${axiosConfig.name} request delayed for ${axiosConfig.delay} ms.`)
     await GeneralUtils.sleep(axiosConfig.delay)
   }
 }
@@ -97,7 +97,7 @@ async function delayRequest({axiosConfig, logger}) {
 async function handleRequestResponse({response, axios, logger}) {
   const {config} = response
 
-  logger.verbose(
+  logger.log(
     `axios response interceptor - ${config.name} [${config.requestId}] - result ${response.statusText}, status code ${response.status}, url ${config.url}`,
   )
 
@@ -192,7 +192,7 @@ async function handleRequestError({err, axios, logger}) {
   )
 
   if (response && response.data) {
-    logger.verbose(`axios error interceptor - ${config.name} - failure body:\n${response.data}`)
+    logger.log(`axios error interceptor - ${config.name} - failure body:\n${response.data}`)
   }
 
   if (response && response.status === HTTP_STATUS_CODES.NOT_FOUND && config.dontRetryOn404) {
@@ -221,7 +221,7 @@ async function handleRequestError({err, axios, logger}) {
     config.retry > 0 &&
     ((response && HTTP_FAILED_CODES.includes(response.status)) || REQUEST_FAILED_CODES.includes(err.code))
   ) {
-    logger.verbose(`axios error interceptor retrying request with delay ${config.delayBeforeRetry}...`)
+    logger.log(`axios error interceptor retrying request with delay ${config.delayBeforeRetry}...`)
 
     if (config.delayBeforeRetry) {
       config.delay = config.delayBeforeRetry

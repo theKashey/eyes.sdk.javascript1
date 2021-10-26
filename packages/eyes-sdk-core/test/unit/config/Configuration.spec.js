@@ -139,6 +139,8 @@ describe('Configuration', () => {
       modifiedValue = {polyfillAdoptedStyleSheets: true}
     } else if (type === '_ignoreGitMergeBase') {
       modifiedValue = true
+    } else if (type === '_logs') {
+      return {type: 'file'}
     }
     return modifiedValue
   }

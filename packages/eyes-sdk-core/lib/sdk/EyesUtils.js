@@ -2,7 +2,7 @@ const GeneralUtils = require('../utils/GeneralUtils')
 const EyesError = require('../errors/EyesError')
 
 async function executePollScript(logger, context, scripts, {executionTimeout = 5 * 60 * 1000, pollTimeout = 200} = {}) {
-  logger.verbose('Executing poll script')
+  logger.log('Executing poll script')
   let isExecutionTimedOut = false
   const executionTimer = setTimeout(() => (isExecutionTimedOut = true), executionTimeout)
   try {
@@ -20,7 +20,7 @@ async function executePollScript(logger, context, scripts, {executionTimeout = 5
       } else if (response.status === 'WIP') {
         await GeneralUtils.sleep(pollTimeout)
       }
-      logger.verbose('Polling...')
+      logger.log('Polling...')
       const {script, args = []} = scripts.poll
       response = deserialize(await context.execute(script, ...args))
     }

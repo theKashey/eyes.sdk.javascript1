@@ -2,13 +2,14 @@
 
 const path = require('path')
 const assert = require('assert')
+const {makeLogger} = require('@applitools/logger')
 
-const {ConfigUtils, Logger} = require('../../../index')
+const {ConfigUtils} = require('../../../index')
 
 describe('ConfigUtils', () => {
   describe('getConfig()', () => {
     let prevEnv
-    const logger = new Logger()
+    const logger = makeLogger()
     const configPath = path.resolve(__dirname, '..', '..', 'fixtures')
 
     function getConfigAtConfigPath(args) {

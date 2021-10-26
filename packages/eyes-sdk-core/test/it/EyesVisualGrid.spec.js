@@ -1,8 +1,9 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
 const {MockDriver} = require('@applitools/driver')
+const {makeLogger} = require('@applitools/logger')
 const {EyesVisualGrid} = require('../utils/FakeSDK')
-const {MatchLevel, ConsoleLogHandler, Logger, ServerConnector} = require('../../index')
+const {MatchLevel, ConsoleLogHandler, ServerConnector} = require('../../index')
 const {generateDomSnapshot} = require('../utils/FakeDomSnapshot')
 const TestResults = require('../../lib/TestResults')
 
@@ -11,7 +12,7 @@ describe('EyesVisualGrid', async () => {
 
   before(async () => {
     server = await startFakeEyesServer({
-      logger: new Logger(process.env.APPLITOOLS_SHOW_LOGS),
+      logger: makeLogger(),
       matchMode: 'always',
     })
     serverUrl = `http://localhost:${server.port}`

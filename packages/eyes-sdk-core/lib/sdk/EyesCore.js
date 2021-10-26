@@ -1,5 +1,6 @@
 'use strict'
 const {Driver} = require('@applitools/driver')
+const {makeLogger} = require('@applitools/logger')
 const screenshoter = require('@applitools/screenshoter')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const Region = require('../geometry/Region')
@@ -8,7 +9,6 @@ const RectangleSize = require('../geometry/RectangleSize')
 const ReadOnlyPropertyHandler = require('../handler/ReadOnlyPropertyHandler')
 const TestFailedError = require('../errors/TestFailedError')
 const EyesBase = require('./EyesBase')
-const Logger = require('../logging/Logger')
 const GeneralUtils = require('../utils/GeneralUtils')
 const TypeUtils = require('../utils/TypeUtils')
 const takeDomCapture = require('../utils/takeDomCapture')
@@ -30,13 +30,13 @@ class EyesCore extends EyesBase {
   }
 
   async checkAndClose(checkSettings, throwEx) {
-    this._logger.verbose(`checkAndClose(checkSettings) - begin`)
+    this._logger.log(`checkAndClose(checkSettings) - begin`)
     return this._check(checkSettings, true, throwEx)
   }
 
   async locate(visualLocatorSettings) {
     ArgumentGuard.notNull(visualLocatorSettings, 'visualLocatorSettings')
-    this._logger.verbose('Get locators with given names: ', visualLocatorSettings.locatorNames)
+    this._logger.log('Get locators with given names: ', visualLocatorSettings.locatorNames)
     const screenshot = await screenshoter({
       logger: this._logger,
       driver: this._driver,
@@ -100,7 +100,7 @@ class EyesCore extends EyesBase {
         hooks: {
           afterScreenshot: async ({driver, scroller}) => {
             if (driver.isWeb) {
-              this._logger.verbose('Getting window DOM...')
+              this._logger.log('Getting window DOM...')
               await scroller.element.setAttribute('data-applitools-scroll', true)
               dom = await takeDomCapture(this._logger, driver.mainContext).catch(() => null)
             }
@@ -169,7 +169,7 @@ class EyesCore extends EyesBase {
       hooks: {
         afterScreenshot: async ({driver}) => {
           if (driver.isWeb) {
-            this._logger.verbose('Getting window DOM...')
+            this._logger.log('Getting window DOM...')
             dom = await takeDomCapture(this._logger, driver.mainContext).catch(() => null)
           }
         },
@@ -196,15 +196,13 @@ class EyesCore extends EyesBase {
   /* ------------ Getters/Setters ------------ */
 
   static async getViewportSize(driver) {
-    const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
-    const wrapper = await new Driver({spec: this.spec, driver, logger: logger._getNewLogger()}).init()
+    const wrapper = await new Driver({spec: this.spec, driver, logger: makeLogger()}).init()
     const viewportSize = await wrapper.getViewportSize()
     return viewportSize
   }
 
   static async setViewportSize(driver, viewportSize) {
-    const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
-    const wrapper = await new Driver({spec: this.spec, driver, logger: logger._getNewLogger()}).init()
+    const wrapper = await new Driver({spec: this.spec, driver, logger: makeLogger()}).init()
     if (!wrapper.isMobile) {
       ArgumentGuard.notNull(viewportSize, 'viewportSize')
       await wrapper.setViewportSize(viewportSize)
@@ -218,7 +216,7 @@ class EyesCore extends EyesBase {
 
   async setViewportSize(viewportSize) {
     if (this._viewportSizeHandler instanceof ReadOnlyPropertyHandler) {
-      this._logger.verbose('Ignored (viewport size given explicitly)')
+      this._logger.log('Ignored (viewport size given explicitly)')
       return Promise.resolve()
     }
 

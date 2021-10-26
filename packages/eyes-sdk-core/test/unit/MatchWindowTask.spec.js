@@ -1,11 +1,11 @@
 const assert = require('assert')
-const Logger = require('../../lib/logging/Logger')
+const {makeLogger} = require('@applitools/logger')
 const AppOutput = require('../../lib/match/AppOutput')
 const MatchResult = require('../../lib/match/MatchResult')
 const MatchWindowTask = require('../../lib/MatchWindowTask')
 
 describe('MatchWindowTask', () => {
-  let logger = new Logger(false)
+  let logger = makeLogger()
 
   it('should send ignoreMismatch', async () => {
     const matchAttempts = []

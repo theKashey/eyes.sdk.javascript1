@@ -58,7 +58,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
   return deserializeDomSnapshotResult(snapshot)
 
   async function takeContextDomSnapshot(context) {
-    logger.verbose(
+    logger.log(
       `taking dom snapshot. ${context._reference ? `context referece: ${JSON.stringify(context._reference)}` : ''}`,
     )
 
@@ -79,7 +79,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
         .then(context => context.focus())
         .catch(err => {
           const pathMap = selectorMap.map(({path}) => path.join('->')).join(' | ')
-          logger.verbose(`could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`, err)
+          logger.log(`could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`, err)
         })
       if (frameContext) {
         const frameSnapshot = await takeContextDomSnapshot(frameContext)
@@ -89,9 +89,9 @@ async function takeDomSnapshot(logger, driver, options = {}) {
       }
     }
 
-    logger.verbose(`dom snapshot cdt length: ${snapshot.cdt.length}`)
-    logger.verbose(`blobs urls (${snapshot.blobs.length}):`, JSON.stringify(snapshot.blobs.map(({url}) => url))) // eslint-disable-line prettier/prettier
-    logger.verbose(`resource urls (${snapshot.resourceUrls.length}):`, JSON.stringify(snapshot.resourceUrls)) // eslint-disable-line prettier/prettier
+    logger.log(`dom snapshot cdt length: ${snapshot.cdt.length}`)
+    logger.log(`blobs urls (${snapshot.blobs.length}):`, JSON.stringify(snapshot.blobs.map(({url}) => url))) // eslint-disable-line prettier/prettier
+    logger.log(`resource urls (${snapshot.resourceUrls.length}):`, JSON.stringify(snapshot.resourceUrls)) // eslint-disable-line prettier/prettier
     return snapshot
   }
 }

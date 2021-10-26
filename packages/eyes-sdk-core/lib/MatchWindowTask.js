@@ -40,7 +40,7 @@ class MatchWindowTask {
     utils.guard.isNumber(retryTimeout, {name: 'retryTimeout', strict: false})
 
     if (retryTimeout == null || retryTimeout < 0) retryTimeout = this._defaultRetryTimeout
-    this._logger.verbose(`retryTimeout = ${retryTimeout}`)
+    this._logger.log(`retryTimeout = ${retryTimeout}`)
 
     const timeStart = PerformanceUtils.start()
 
@@ -80,7 +80,7 @@ class MatchWindowTask {
       }
     }
 
-    this._logger.verbose(`Completed in ${timeStart.end().summary}`)
+    this._logger.log(`Completed in ${timeStart.end().summary}`)
 
     if (ignoreMismatch) {
       return result.matchResult

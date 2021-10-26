@@ -4,9 +4,9 @@ const assert = require('assert')
 const assertRejects = require('assert-rejects')
 const settle = require('axios/lib/core/settle')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
+const {makeLogger} = require('@applitools/logger')
 const {
   ServerConnector,
-  Logger,
   Configuration,
   GeneralUtils,
   SessionStartInfo,
@@ -17,7 +17,7 @@ const {
   MatchWindowData,
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
-const logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS)
+const logger = new makeLogger()
 
 function getServerConnector(config = {}) {
   return new ServerConnector({

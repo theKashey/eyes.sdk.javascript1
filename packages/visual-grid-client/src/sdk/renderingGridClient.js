@@ -3,10 +3,10 @@
 
 const {
   BatchInfo,
-  Logger,
   GeneralUtils: {backwardCompatible, deprecationWarning},
   RunnerStartedEvent,
 } = require('@applitools/eyes-sdk-core/shared')
+const {makeLogger} = require('@applitools/logger')
 const {ptimeoutWithError, presult} = require('@applitools/functional-commons')
 const makeGetAllResources = require('./getAllResources')
 const extractCssResources = require('./extractCssResources')
@@ -100,7 +100,7 @@ function makeRenderingGridClient({
     finalConcurrency = defaultConcurrency = 5
   }
 
-  logger = logger || new Logger(showLogs, 'visual-grid-client')
+  logger = logger || makeLogger({label: 'visual-grid-client', level: showLogs ? 'info' : 'silent'})
   logger.verbose('vgc concurrency is', finalConcurrency)
   ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
     [{batchSequenceName}, {batchSequence}],
@@ -117,7 +117,7 @@ function makeRenderingGridClient({
     renderWrapper ||
     createRenderWrapper({
       apiKey,
-      logHandler: logger.getLogHandler(),
+      logger,
       serverUrl,
       proxy,
       agentId,

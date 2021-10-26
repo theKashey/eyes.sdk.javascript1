@@ -17,7 +17,7 @@ async function takeDomSnapshots({
   waitBeforeCapture,
 }) {
   if (!breakpoints) {
-    logger.verbose(`taking single dom snapshot`)
+    logger.log(`taking single dom snapshot`)
     await GeneralUtils.sleep(waitBeforeCapture)
     const snapshot = await takeDomSnapshot(logger, driver, {
       disableBrowserFetching,
@@ -39,11 +39,11 @@ async function takeDomSnapshots({
     const message = chalk.yellow(
       `The following configuration's viewport-widths are smaller than the smallest configured layout breakpoint (${smallestBreakpoint} pixels): [${smallestBrowsers}]. As a fallback, the resources that will be used for these configurations have been captured on a viewport-width of ${smallestBreakpoint} - 1 pixels. If an additional layout breakpoint is needed for you to achieve better results - please add it to your configuration.`,
     )
-    console.log(message)
+    logger.console.log(message)
   }
 
-  logger.verbose(`taking multiple dom snapshots for breakpoints: ${breakpoints}`)
-  logger.verbose(`required widths: ${[...requiredWidths.keys()].join(', ')}`)
+  logger.log(`taking multiple dom snapshots for breakpoints: ${breakpoints}`)
+  logger.log(`required widths: ${[...requiredWidths.keys()].join(', ')}`)
   const viewportSize = await getViewportSize()
   const snapshots = Array(browsers.length)
   if (requiredWidths.has(viewportSize.width)) {
@@ -68,13 +68,13 @@ async function takeDomSnapshots({
         const message = chalk.yellow(
           `One of the configured layout breakpoints is ${requiredWidth} pixels, while your local browser has a limit of ${actualViewportSize.width}, so the SDK couldn't resize it to the desired size. As a fallback, the resources that will be used for the following configurations: [${failedBrowsers}] have been captured on the browser's limit (${actualViewportSize.width} pixels). To resolve this, you may use a headless browser as it can be resized to any size.`,
         )
-        console.log(message)
+        logger.console.log(message)
       } else {
         const failedBrowsers = browsersInfo.map(({name}) => `(${name})`).join(', ')
         const message = chalk.yellow(
           `The following configurations [${failedBrowsers}] have a viewport-width of ${requiredWidth} pixels, while your local browser has a limit of ${actualViewportSize.width} pixels, so the SDK couldn't resize it to the desired size. As a fallback, the resources that will be used for these checkpoints have been captured on the browser's limit (${actualViewportSize.width} pixels). To resolve this, you may use a headless browser as it can be resized to any size.`,
         )
-        console.log(message)
+        logger.console.log(message)
       }
     }
     const snapshot = await takeDomSnapshot(logger, driver, {

@@ -117,7 +117,7 @@ class ServerConnector {
       const dataLength = axiosConfig.data && axiosConfig.data.length
       const dataLengthStr = dataLength ? ` and body length ${axiosConfig.data.length}` : ''
 
-      this._logger.verbose(
+      this._logger.log(
         `axios request interceptor - ${axiosConfig.name} [${axiosConfig.requestId}${
           axiosConfig.originalRequestId ? ` retry of ${axiosConfig.originalRequestId}` : ''
         }] will now call to ${axiosConfig.url} with params ${JSON.stringify(axiosConfig.params)}${dataLengthStr}`,
@@ -157,7 +157,7 @@ class ServerConnector {
    */
   async startSession(sessionStartInfo) {
     ArgumentGuard.notNull(sessionStartInfo, 'sessionStartInfo')
-    this._logger.verbose(`ServerConnector.startSession called with: ${sessionStartInfo}`)
+    this._logger.log(`ServerConnector.startSession called with: ${sessionStartInfo}`)
 
     const config = {
       name: 'startSession',
@@ -175,7 +175,7 @@ class ServerConnector {
       if (response.data.isNew === undefined) {
         runningSession.setIsNew(response.status === HTTP_STATUS_CODES.CREATED)
       }
-      this._logger.verbose('ServerConnector.startSession - post succeeded', runningSession)
+      this._logger.log('ServerConnector.startSession - post succeeded', runningSession)
       return runningSession
     }
 
@@ -192,7 +192,7 @@ class ServerConnector {
    */
   async stopSession(runningSession, isAborted, {updateBaselineIfDifferent, updateBaselineIfNew} = {}) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
-    this._logger.verbose(
+    this._logger.log(
       `ServerConnector.stopSession called with ${JSON.stringify({
         isAborted,
         updateBaselineIfNew,
@@ -221,7 +221,7 @@ class ServerConnector {
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       const testResults = new TestResults(response.data)
-      this._logger.verbose('ServerConnector.stopSession - post succeeded', testResults)
+      this._logger.log('ServerConnector.stopSession - post succeeded', testResults)
       return testResults
     }
 
@@ -236,7 +236,7 @@ class ServerConnector {
    */
   async deleteBatchSessions(batchId) {
     ArgumentGuard.notNull(batchId, 'batchId')
-    this._logger.verbose(`ServerConnector.deleteBatchSessions called for batchId: ${batchId}`)
+    this._logger.log(`ServerConnector.deleteBatchSessions called for batchId: ${batchId}`)
 
     const config = {
       name: 'deleteBatchSessions',
@@ -253,7 +253,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.deleteBatchSessions - delete succeeded')
+      this._logger.log('ServerConnector.deleteBatchSessions - delete succeeded')
       return
     }
 
@@ -268,7 +268,7 @@ class ServerConnector {
    */
   async deleteSession(testResults) {
     ArgumentGuard.notNull(testResults, 'testResults')
-    this._logger.verbose(`ServerConnector.deleteSession called with ${JSON.stringify(testResults)}`)
+    this._logger.log(`ServerConnector.deleteSession called with ${JSON.stringify(testResults)}`)
 
     const config = {
       name: 'deleteSession',
@@ -289,7 +289,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.deleteSession - delete succeeded')
+      this._logger.log('ServerConnector.deleteSession - delete succeeded')
       return
     }
 
@@ -329,7 +329,7 @@ class ServerConnector {
   async matchWindow(runningSession, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
-    this._logger.verbose(`ServerConnector.matchWindow called with ${matchWindowData} for session: ${runningSession}`)
+    this._logger.log(`ServerConnector.matchWindow called with ${matchWindowData} for session: ${runningSession}`)
 
     const config = {
       name: 'matchWindow',
@@ -358,7 +358,7 @@ class ServerConnector {
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       const matchResult = new MatchResult(response.data)
-      this._logger.verbose('ServerConnector.matchWindow - post succeeded', matchResult)
+      this._logger.log('ServerConnector.matchWindow - post succeeded', matchResult)
       return matchResult
     }
 
@@ -367,7 +367,7 @@ class ServerConnector {
 
   async matchWindowAndClose(runningSession, matchWindowData) {
     if (this._matchWindowAndCloseFallback) {
-      this._logger.verbose('ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used')
+      this._logger.log('ServerConnector.matchWindowAndClose was not found in the previous call. Fallback is used')
       await this.matchWindow(runningSession, matchWindowData)
       return this.stopSession(runningSession, false, {
         updateBaselineIfNew: matchWindowData.getUpdateBaselineIfNew(),
@@ -376,7 +376,7 @@ class ServerConnector {
     }
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
-    this._logger.verbose(
+    this._logger.log(
       `ServerConnector.matchWindowAndClose called with ${matchWindowData} for session: ${runningSession}`,
     )
 
@@ -414,11 +414,11 @@ class ServerConnector {
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       const testResults = new TestResults(response.data)
-      this._logger.verbose('ServerConnector.matchWindowAndClose - post succeeded', testResults)
+      this._logger.log('ServerConnector.matchWindowAndClose - post succeeded', testResults)
       return testResults
     } else if (response.status === HTTP_STATUS_CODES.NOT_FOUND) {
       this._matchWindowAndCloseFallback = true
-      this._logger.verbose('ServerConnector.matchWindowAndClose was not found. Fallback is used')
+      this._logger.log('ServerConnector.matchWindowAndClose was not found. Fallback is used')
       await this.matchWindow(runningSession, matchWindowData)
       return this.stopSession(runningSession, false, {
         updateBaselineIfNew: matchWindowData.getUpdateBaselineIfNew(),
@@ -440,7 +440,7 @@ class ServerConnector {
   async replaceWindow(runningSession, stepIndex, matchWindowData) {
     ArgumentGuard.notNull(runningSession, 'runningSession')
     ArgumentGuard.notNull(matchWindowData, 'matchWindowData')
-    this._logger.verbose(`ServerConnector.replaceWindow called with ${matchWindowData} for session: ${runningSession}`)
+    this._logger.log(`ServerConnector.replaceWindow called with ${matchWindowData} for session: ${runningSession}`)
 
     const config = {
       name: 'replaceWindow',
@@ -462,7 +462,7 @@ class ServerConnector {
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       const matchResult = new MatchResult(response.data)
-      this._logger.verbose('ServerConnector.replaceWindow - post succeeded', matchResult)
+      this._logger.log('ServerConnector.replaceWindow - post succeeded', matchResult)
       return matchResult
     }
 
@@ -475,7 +475,7 @@ class ServerConnector {
    * @return {Promise<RenderingInfo>} - The results of the render request
    */
   async renderInfo() {
-    this._logger.verbose('ServerConnector.renderInfo called.')
+    this._logger.log('ServerConnector.renderInfo called.')
 
     const config = {
       name: 'renderInfo',
@@ -487,7 +487,7 @@ class ServerConnector {
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
       this._renderingInfo = new RenderingInfo(response.data)
-      this._logger.verbose('ServerConnector.renderInfo - post succeeded', this._renderingInfo)
+      this._logger.log('ServerConnector.renderInfo - post succeeded', this._renderingInfo)
       return this._renderingInfo
     }
 
@@ -496,7 +496,7 @@ class ServerConnector {
 
   async batchInfo(batchId) {
     ArgumentGuard.notNullOrEmpty(batchId, 'batchId')
-    this._logger.verbose('ServerConnector.batchInfo called.')
+    this._logger.log('ServerConnector.batchInfo called.')
 
     const config = {
       name: 'batchInfo',
@@ -513,7 +513,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.batchInfo - post succeeded', response.data)
+      this._logger.log('ServerConnector.batchInfo - post succeeded', response.data)
       return response.data
     }
 
@@ -528,7 +528,7 @@ class ServerConnector {
    */
   async render(renderRequest) {
     ArgumentGuard.notNull(renderRequest, 'renderRequest')
-    this._logger.verbose(`ServerConnector.render called with ${renderRequest}`)
+    this._logger.log(`ServerConnector.render called with ${renderRequest}`)
 
     const isBatch = Array.isArray(renderRequest)
     const config = {
@@ -550,7 +550,7 @@ class ServerConnector {
         runningRender = runningRender[0]
       }
 
-      this._logger.verbose('ServerConnector.render - post succeeded', runningRender)
+      this._logger.log('ServerConnector.render - post succeeded', runningRender)
       return runningRender
     }
 
@@ -559,7 +559,7 @@ class ServerConnector {
 
   async renderGetRenderJobInfo(renderRequests) {
     ArgumentGuard.notNull(renderRequests, 'renderRequests')
-    this._logger.verbose(`ServerConnector.renderGetRenderJobInfo called with ${renderRequests}`)
+    this._logger.log(`ServerConnector.renderGetRenderJobInfo called with ${renderRequests}`)
 
     const config = {
       name: 'renderGetRenderJobInfo',
@@ -575,7 +575,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.renderGetRenderJobInfo - post succeeded', response.data)
+      this._logger.log('ServerConnector.renderGetRenderJobInfo - post succeeded', response.data)
       return response.data
     }
 
@@ -591,7 +591,7 @@ class ServerConnector {
   async renderCheckResources(resources) {
     ArgumentGuard.notNull(resources, 'resources')
     const hashes = resources.map(resource => resource.getHashAsObject())
-    this._logger.verbose(`ServerConnector.renderCheckResources called with resources - ${hashes.map(({hash}) => hash)}`)
+    this._logger.log(`ServerConnector.renderCheckResources called with resources - ${hashes.map(({hash}) => hash)}`)
 
     const config = {
       name: 'renderCheckResources',
@@ -610,7 +610,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.renderCheckResources - request succeeded')
+      this._logger.log('ServerConnector.renderCheckResources - request succeeded')
       return response.data
     }
 
@@ -626,7 +626,7 @@ class ServerConnector {
   async renderPutResource(resource) {
     ArgumentGuard.notNull(resource, 'resource')
     ArgumentGuard.notNull(resource.getContent(), 'resource.getContent()')
-    this._logger.verbose(`ServerConnector.putResource called with resource#${resource.getSha256Hash()}`)
+    this._logger.log(`ServerConnector.putResource called with resource#${resource.getSha256Hash()}`)
 
     const config = {
       name: 'renderPutResource',
@@ -647,7 +647,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.putResource - request succeeded. Response:', response.data)
+      this._logger.log('ServerConnector.putResource - request succeeded. Response:', response.data)
       return true
     }
 
@@ -677,7 +677,7 @@ class ServerConnector {
    */
   async renderStatusById(renderId, delayBeforeRequest = false) {
     ArgumentGuard.notNull(renderId, 'renderId')
-    this._logger.verbose(`ServerConnector.renderStatus called for render: ${renderId}`)
+    this._logger.log(`ServerConnector.renderStatus called for render: ${renderId}`)
 
     const isBatch = Array.isArray(renderId)
     const config = {
@@ -703,7 +703,7 @@ class ServerConnector {
         renderStatus = renderStatus[0] // eslint-disable-line prefer-destructuring
       }
 
-      this._logger.verbose(`ServerConnector.renderStatus - get succeeded for ${renderId} -`, renderStatus)
+      this._logger.log(`ServerConnector.renderStatus - get succeeded for ${renderId} -`, renderStatus)
       return renderStatus
     }
 
@@ -716,7 +716,7 @@ class ServerConnector {
    */
   async postDomSnapshot(id, domJson) {
     ArgumentGuard.notNull(domJson, 'domJson')
-    this._logger.verbose('ServerConnector.postDomSnapshot called')
+    this._logger.log('ServerConnector.postDomSnapshot called')
     const url = this._renderingInfo.getResultsUrl().replace('__random__', id)
 
     const config = {
@@ -737,7 +737,7 @@ class ServerConnector {
       throw new Error(`ServerConnector.postDomSnapshot - unexpected status (${response.statusText})`)
     }
 
-    this._logger.verbose('ServerConnector.postDomSnapshot - post succeeded')
+    this._logger.log('ServerConnector.postDomSnapshot - post succeeded')
     return url
   }
 
@@ -771,7 +771,7 @@ class ServerConnector {
    */
   async postLocators(visualLocatorData) {
     ArgumentGuard.notNull(visualLocatorData, 'visualLocatorData')
-    this._logger.verbose(`ServerConnector.postLocators called with ${JSON.stringify(visualLocatorData)}`)
+    this._logger.log(`ServerConnector.postLocators called with ${JSON.stringify(visualLocatorData)}`)
 
     const config = {
       name: 'postLocators',
@@ -783,7 +783,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.postLocators - post succeeded', response.data)
+      this._logger.log('ServerConnector.postLocators - post succeeded', response.data)
       return response.data
     }
 
@@ -792,7 +792,7 @@ class ServerConnector {
 
   async extractText({screenshotUrl, domUrl, location, region, minMatch, language}) {
     ArgumentGuard.notNull(screenshotUrl, 'screenshotUrl')
-    this._logger.verbose(
+    this._logger.log(
       `ServerConnector.extractText called with ${JSON.stringify({
         screenshotUrl,
         domUrl,
@@ -818,7 +818,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.extractText - post succeeded', response.data)
+      this._logger.log('ServerConnector.extractText - post succeeded', response.data)
       return response.data
     }
 
@@ -827,7 +827,7 @@ class ServerConnector {
 
   async extractTextRegions({screenshotUrl, domUrl, location, patterns, ignoreCase, firstOnly, language}) {
     ArgumentGuard.notNull(screenshotUrl, 'screenshotUrl')
-    this._logger.verbose(
+    this._logger.log(
       `ServerConnector.extractTextRegions called with ${JSON.stringify({
         screenshotUrl,
         domUrl,
@@ -855,7 +855,7 @@ class ServerConnector {
     const response = await this._axios.request(config)
     const validStatusCodes = [HTTP_STATUS_CODES.OK]
     if (validStatusCodes.includes(response.status)) {
-      this._logger.verbose('ServerConnector.extractTextRegions - post succeeded', response.data)
+      this._logger.log('ServerConnector.extractTextRegions - post succeeded', response.data)
       return response.data
     }
 
@@ -863,7 +863,7 @@ class ServerConnector {
   }
 
   async getEmulatedDevicesSizes(serviceUrl) {
-    this._logger.verbose(`ServerConnector.getEmulatedDevicesSizes`)
+    this._logger.log(`ServerConnector.getEmulatedDevicesSizes`)
 
     const config = {
       name: 'getEmulatedDevicesSizes',
@@ -881,7 +881,7 @@ class ServerConnector {
   }
 
   async getIosDevicesSizes(serviceUrl) {
-    this._logger.verbose(`ServerConnector.getIosDevicesSizes`)
+    this._logger.log(`ServerConnector.getIosDevicesSizes`)
 
     const config = {
       name: 'getIosDevicesSizes',
@@ -903,7 +903,7 @@ class ServerConnector {
    */
   async logEvents(events) {
     ArgumentGuard.isArray(events, 'events')
-    this._logger.verbose(`ServerConnector.logEvents called with ${events.length} events`)
+    this._logger.log(`ServerConnector.logEvents called with ${events.length} events`)
 
     const config = {
       name: 'logEvents',
@@ -914,7 +914,7 @@ class ServerConnector {
 
     const response = await this._axios.request(config)
     if (response.status === HTTP_STATUS_CODES.OK) {
-      this._logger.verbose('ServerConnector.logEvents - post succeeded', response.data)
+      this._logger.log('ServerConnector.logEvents - post succeeded', response.data)
       return response.data
     }
 

@@ -12,7 +12,7 @@ describe('MarkScrollRootElement', () => {
     driver.takeScreenshot = generateScreenshot
     driver.mockElement('scroll-root-element')
     eyes = new EyesClassic()
-    server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'never'})
+    server = await startFakeEyesServer({logger: {log: () => {}}, matchMode: 'never'})
     serverUrl = `http://localhost:${server.port}`
     eyes.setServerUrl(serverUrl)
   })

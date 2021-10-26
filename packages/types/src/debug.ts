@@ -24,3 +24,19 @@ export type ConsoleLogHandler = {
 }
 
 export type LogHandler = CustomLogHandler | FileLogHandler | ConsoleLogHandler
+
+export type Logger = {
+  log(...messages: any[]): void
+  warn(...messages: any[]): void
+  error(...messages: any[]): void
+  fatal(...messages: any[]): void
+  console: {
+    log(...messages: any[]): void
+    warn(...messages: any[]): void
+    error(...messages: any[]): void
+    fatal(...messages: any[]): void
+  }
+  extend(...options: any): Logger
+  open(): void
+  close(): void
+}

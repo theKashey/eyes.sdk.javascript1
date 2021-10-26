@@ -10,7 +10,7 @@ describe('ClassicRunner', () => {
     driver = new MockDriver()
     driver.takeScreenshot = generateScreenshot
     eyes = new EyesClassic()
-    server = await startFakeEyesServer({logger: eyes._logger, matchMode: 'never'})
+    server = await startFakeEyesServer({logger: {log: () => {}}, matchMode: 'never'})
     serverUrl = `http://localhost:${server.port}`
     eyes.setServerUrl(serverUrl)
   })
