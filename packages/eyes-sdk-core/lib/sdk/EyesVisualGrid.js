@@ -14,7 +14,7 @@ const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('./CheckSettingsUtils')
 
 class EyesVisualGrid extends EyesCore {
-  static specialize({agentId, spec, VisualGridClient}) {
+  static specialize({agentId, spec, cwd, VisualGridClient}) {
     return class extends EyesVisualGrid {
       static get spec() {
         return spec
@@ -24,6 +24,9 @@ class EyesVisualGrid extends EyesCore {
       }
       get spec() {
         return spec
+      }
+      getCwd() {
+        return cwd
       }
       getBaseAgentId() {
         return agentId

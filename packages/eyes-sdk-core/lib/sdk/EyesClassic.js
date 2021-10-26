@@ -11,13 +11,16 @@ const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('./CheckSettingsUtils')
 
 class EyesClassic extends EyesCore {
-  static specialize({agentId, spec}) {
+  static specialize({agentId, cwd, spec}) {
     return class extends EyesClassic {
       static get spec() {
         return spec
       }
       get spec() {
         return spec
+      }
+      getCwd() {
+        return cwd
       }
       /**
        * @return {string} base agent id

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add api to provide custom cwd
 
 ## 12.23.18 - 2021/10/20
 

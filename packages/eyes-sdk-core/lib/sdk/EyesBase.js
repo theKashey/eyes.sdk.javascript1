@@ -831,7 +831,7 @@ class EyesBase {
   async _getScmMergeBaseTime(branchName, parentBranchName) {
     ArgumentGuard.notNullOrEmpty(branchName, 'branchName')
     ArgumentGuard.notNullOrEmpty(parentBranchName, 'parentBranchName')
-    return getScmInfo(branchName, parentBranchName)
+    return getScmInfo(branchName, parentBranchName, {cwd: this.getCwd() || process.env.cwd()})
   }
 
   async handleScmMergeBaseTime() {

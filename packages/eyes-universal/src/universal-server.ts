@@ -44,10 +44,11 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       idle = setTimeout(() => server.close(), idleTimeout)
     })
 
-    const sdkPromise = socket.create('Core.makeSDK', ({name, version, commands, protocol}) => {
+    const sdkPromise = socket.create('Core.makeSDK', ({name, version, cwd, commands, protocol}) => {
       return makeSDK<Driver, Context, Element, Selector>({
         name: `eyes-universal/${name}`,
         version: `${require('../package.json').version}/${version}`,
+        cwd,
         spec: protocol === 'webdriver' ? webdriverSpec : makeSpec({socket, commands}),
         VisualGridClient: require('@applitools/visual-grid-client'),
       })
