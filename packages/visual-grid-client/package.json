@@ -89,7 +89,7 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
     "deps": "bongo deps",
-    "preversion": "bongo preversion",
+    "preversion": "bongo preversion --sviv",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
