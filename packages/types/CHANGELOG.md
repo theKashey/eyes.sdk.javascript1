@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.16 - 2021/10/27
+
 - new logger implementation
 - allow passing logger into `Core` 
 
