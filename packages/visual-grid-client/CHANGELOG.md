@@ -3,6 +3,7 @@
 ## Unreleased
 
  - send user agent when fetching google fonts 
+- updated to @applitools/logger@1.0.5 (from 1.0.4)
 
 ## 15.8.37 - 2021/10/20
 
