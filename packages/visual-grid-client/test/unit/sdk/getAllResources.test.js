@@ -14,6 +14,7 @@ const resourceType = require('../../../src/sdk/resourceType')
 const toRGridResource = require('../../util/toRGridResource')
 const getTestCssResources = require('../../util/getTestCssResources')
 const getTestSvgResources = require('../../util/getTestSvgResources')
+const {userAgent} = require('../../../src/sdk/getUserAgentForBrowser')
 require('@applitools/isomorphic-fetch')
 
 describe('getAllResources', () => {
@@ -708,7 +709,7 @@ describe('getAllResources', () => {
     expect(resources[fontResource.url]).to.eql(toRGridResource(fontResource))
   })
 
-  it("doesn't send user-agent header when fetching google fonts", async () => {
+  it('make sure we send user agent when fetching google fonts', async () => {
     const fetchResource = async (url, options) => ({
       url,
       type: 'text/plain',
@@ -721,23 +722,18 @@ describe('getAllResources', () => {
       fetchResource,
       logger: testLogger,
     })
+
     const resources = await getAllResources({
-      resourceUrls: ['https://some/url', 'https://fonts.googleapis.com/css?family=Zilla+Slab'],
+      resourceUrls: ['https://fonts.googleapis.com/css?family=Zilla+Slab'],
       preResources: {},
-      userAgent: 'bla',
+      browserName: 'ie11',
     })
-    expect(resources).to.eql({
-      'https://some/url': toRGridResource({
-        url: 'https://some/url',
-        type: 'text/plain',
-        value: JSON.stringify({headers: {'User-Agent': 'bla'}}),
-      }),
-      'https://fonts.googleapis.com/css?family=Zilla+Slab': toRGridResource({
-        url: 'https://fonts.googleapis.com/css?family=Zilla+Slab',
-        type: 'text/plain',
-        value: JSON.stringify({headers: {}}),
-      }),
-    })
+
+    const useragent = JSON.parse(
+      resources['https://fonts.googleapis.com/css?family=Zilla+Slab']._content,
+    ).headers['User-Agent']
+
+    expect(useragent).to.eql(userAgent.IE)
   })
 
   it('handles resources with errorStatusCode (non-200 resources) from preResources', async () => {

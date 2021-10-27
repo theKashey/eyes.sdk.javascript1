@@ -69,4 +69,32 @@ describe('openEyes', () => {
     expect(results.length).to.eq(1)
     expect(results[0].getStatus()).to.equal('Passed')
   })
+
+  it('renders correctly on IE and iOS device', async () => {
+    await page.goto(`${baseUrl}/google-fonts-icon.html`)
+    const {cdt, url, resourceContents, resourceUrls} = await processPage()
+    const {checkWindow, close} = await openEyes({
+      appName: 'some app',
+      testName: 'renders google font on IE and iOS correctly',
+      browser: [
+        {width: 640, height: 480, name: 'ie11'},
+        {
+          iosDeviceInfo: {
+            deviceName: 'iPhone 11',
+            iosVersion: 'latest',
+          },
+        },
+      ],
+      saveNewTests: false,
+    })
+
+    checkWindow({
+      url,
+      snapshot: {resourceUrls, resourceContents, cdt},
+    })
+
+    const results = await close(false)
+    expect(results.length).to.eq(2)
+    expect(results[0].getStatus()).to.equal('Passed')
+  })
 })

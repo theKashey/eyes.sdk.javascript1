@@ -48,7 +48,14 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     return rGridResource
   }
 
-  return function getAllResources({resourceUrls, preResources, userAgent, referer, proxySettings}) {
+  return function getAllResources({
+    resourceUrls,
+    preResources,
+    userAgent,
+    referer,
+    proxySettings,
+    browserName,
+  }) {
     const handledResources = new Set()
     return getOrFetchResources(resourceUrls, preResources)
 
@@ -80,8 +87,14 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
       await Promise.all(
         missingResourceUrls.map(async url => {
           try {
-            const fetchOptions = getFetchOptions({url, referer, userAgent, proxySettings})
-            const resource = await fetchResource(url, fetchOptions)
+            const fetchOptions = getFetchOptions({
+              url,
+              referer,
+              userAgent,
+              proxySettings,
+              browserName,
+            })
+            const resource = await fetchResource(url, fetchOptions, browserName)
             return assignContentfulResources(resources, await processResource(resource))
           } catch (err) {
             logger.log(

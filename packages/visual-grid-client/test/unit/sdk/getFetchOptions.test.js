@@ -13,12 +13,6 @@ describe('getFetchOptions', () => {
     })
   })
 
-  it("doesn't add user-agent header when fetching google fonts", async () => {
-    const url = 'https://fonts.googleapis.com/css?family=Zilla+Slab'
-    const referer = 'some referer'
-    expect(getFetchOptions({url, referer, userAgent: 'bla'})).to.eql({headers: {Referer: referer}})
-  })
-
   it('sets tunneling agent when proxySettings is isHttpOnly', async () => {
     const proxySettings = new ProxySettings('http://localhost:8888', 'user', 'pass', true)
     expect(getFetchOptions({proxySettings}).agent.constructor.name).to.equal('TunnelingAgent')

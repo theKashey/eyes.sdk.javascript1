@@ -2,6 +2,7 @@
 const retryFetch = require('@applitools/http-commons/src/retryFetch')
 const createResourceCache = require('./createResourceCache')
 const AbortController = require('abort-controller')
+const utils = require('@applitools/utils')
 
 function makeFetchResource({
   logger,
@@ -10,8 +11,14 @@ function makeFetchResource({
   fetch,
   mediaDownloadTimeout = 30 * 1000,
 }) {
-  return (url, opts) =>
-    fetchCache.getValue(url) || fetchCache.setValue(url, doFetchResource(url, opts))
+  return (url, opts, browserName) => {
+    let keyToFetchFromCache = url
+    if (utils.guard.isGoogleFont(url) && browserName) keyToFetchFromCache += `~` + browserName
+    return (
+      fetchCache.getValue(keyToFetchFromCache) ||
+      fetchCache.setValue(keyToFetchFromCache, doFetchResource(url, opts))
+    )
+  }
 
   function doFetchResource(url, opts) {
     return retryFetch(

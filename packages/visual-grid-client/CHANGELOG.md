@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - send user agent when fetching google fonts 
 
 ## 15.8.37 - 2021/10/20
 

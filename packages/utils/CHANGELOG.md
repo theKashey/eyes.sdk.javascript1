@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - add a method to validate that a url is a google font resource
 
 ## 1.2.3 - 2021/9/9
 

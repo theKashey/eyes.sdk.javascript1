@@ -55,6 +55,7 @@
     "@applitools/sdk-release-kit": "0.13.3",
     "@applitools/test-server": "1.0.5",
     "@applitools/test-utils": "1.0.9",
+    "@applitools/utils": "^1.2.3",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
     "chai-uuid": "^1.0.6",
