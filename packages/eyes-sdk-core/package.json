@@ -78,7 +78,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js",
-    "test": "echo \"temporarily skip tests\"",
+    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
