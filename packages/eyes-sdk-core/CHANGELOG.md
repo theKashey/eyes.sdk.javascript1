@@ -3,6 +3,9 @@
 ## Unreleased
 
 - add api to provide custom cwd
+- updated to @applitools/logger@1.0.5 (from 1.0.4)
+- updated to @applitools/types@1.0.16 (from 1.0.15)
+- updated to @applitools/utils@1.2.4 (from 1.2.3)
 
 ## 12.23.18 - 2021/10/20
 
