@@ -2,13 +2,7 @@
 
 const assert = require('assert')
 const axios = require('axios')
-const {
-  AccessibilityLevel,
-  AccessibilityGuidelinesVersion,
-  VisualGridRunner,
-  ClassicRunner,
-  ConsoleLogHandler,
-} = require('../../../index')
+const {AccessibilityLevel, AccessibilityGuidelinesVersion, VisualGridRunner, ClassicRunner} = require('../../../index')
 const {EyesFactory} = require('../../utils/FakeSDK')
 
 async function runTest(driver, useVisualGrid) {
@@ -25,9 +19,6 @@ async function runTest(driver, useVisualGrid) {
       accessibilitySettings,
     },
   })
-  if (process.env.APPLITOOLS_SHOW_LOGS) {
-    eyes.setLogHandler(new ConsoleLogHandler(true))
-  }
 
   await eyes.open(driver, 'SessionStartInfo', `TestAccessibility${useVisualGrid ? '_VG' : ''}`, {
     width: 700,

@@ -3,7 +3,7 @@ const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-ser
 const {MockDriver} = require('@applitools/driver')
 const {makeLogger} = require('@applitools/logger')
 const {EyesVisualGrid} = require('../utils/FakeSDK')
-const {MatchLevel, ConsoleLogHandler, ServerConnector} = require('../../index')
+const {MatchLevel, ServerConnector} = require('../../index')
 const {generateDomSnapshot} = require('../utils/FakeDomSnapshot')
 const TestResults = require('../../lib/TestResults')
 
@@ -22,9 +22,6 @@ describe('EyesVisualGrid', async () => {
     driver = new MockDriver()
     driver.mockScript('dom-snapshot', () => generateDomSnapshot(driver))
     eyes = new EyesVisualGrid()
-    if (process.env.APPLITOOLS_SHOW_LOGS) {
-      eyes.setLogHandler(new ConsoleLogHandler(true))
-    }
     eyes.setServerUrl(serverUrl)
   })
 
