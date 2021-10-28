@@ -81,7 +81,7 @@
     "lint": "eslint . --ext .js",
     "render": "node example/render.js",
     "build:browser": "cd test/fixtures/test-app && yarn install --focused && yarn build",
-    "test": "echo \"skipping tests temporarily\"",
+    "test": "yarn build:browser && yarn test:mocha",
     "test:mocha": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.test.js\"",
     "test:sanity": "mocha --no-timeouts 'test/!(browser||e2e)/**/*.test.js'",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.test.js\"",
@@ -89,7 +89,7 @@
     "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
     "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
     "deps": "bongo deps",
-    "preversion": "bongo preversion --sviv",
+    "preversion": "bongo preversion",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
