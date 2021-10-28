@@ -4,7 +4,8 @@ const {expect} = require('chai');
 const makePluginExport = require('../../../src/plugin/pluginExport');
 const {promisify: p} = require('util');
 const psetTimeout = p(setTimeout);
-const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client');
+const {makeVisualGridClient} = require('@applitools/visual-grid-client');
+const {makeLogger} = require('@applitools/logger');
 const makeConfig = require('../../../src/plugin/config');
 
 describe('pluginExport', () => {
@@ -17,7 +18,7 @@ describe('pluginExport', () => {
   }
 
   beforeEach(() => {
-    logger = new Logger(process.env.APPLITOOLS_SHOW_LOGS, 'eyes');
+    logger = makeLogger({label: 'eyes'});
     visualGridClient = makeVisualGridClient({logger});
     prevEnv = process.env;
     process.env = {};

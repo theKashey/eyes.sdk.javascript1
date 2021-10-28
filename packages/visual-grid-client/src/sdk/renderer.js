@@ -13,12 +13,12 @@ const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetR
 const getRenderMethods = require('./getRenderMethods')
 const {createRenderWrapper} = require('./wrapperUtils')
 const {ptimeoutWithError} = require('@applitools/functional-commons')
-const {Logger} = require('@applitools/eyes-sdk-core/shared')
+const {makeLogger} = require('@applitools/logger')
 
 const fetchResourceTimeout = 120000
 
 function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo, renderTimeout}) {
-  const logger = new Logger(showLogs)
+  const logger = makeLogger({level: showLogs ? 'info' : 'silent'})
 
   const renderWrapper = createRenderWrapper({apiKey, logger, serverUrl, proxy})
 

@@ -1,5 +1,5 @@
 'use strict';
 
-const {Logger} = require('@applitools/eyes-sdk-core');
+const {makeLogger} = require('@applitools/logger');
 
-module.exports = new Logger(process.env.APPLITOOLS_SHOW_LOGS);
+module.exports = makeLogger();

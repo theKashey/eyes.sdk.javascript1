@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const {Eyes, Logger, FileLogHandler, VisualGridRunner} = require('../../index')
+const {Eyes, VisualGridRunner} = require('../../index')
 const {testServer} = require('@applitools/test-server')
 const logDir = path.join(__dirname, 'out', Date.now().toString())
 const NUMBER_OF_TESTS = 5
@@ -33,12 +33,6 @@ async function doTest({t, name}) {
   // eyes setup
   process.env.APPLITOOLS_USE_PRELOADED_CONFIG = true
   const eyes = new Eyes(new VisualGridRunner({testConcurrency: NUMBER_OF_TESTS}))
-  const logger = new Logger()
-  const logHandler = new FileLogHandler(true, path.join(logDir, `${name}.log`))
-  logHandler.open()
-  logger.setLogHandler(logHandler)
-  logger.prefix = name
-  eyes.logger = logger
   const config = eyes.getConfiguration()
   config.setDisableBrowserFetching(true)
   config.setShowLogs(true)

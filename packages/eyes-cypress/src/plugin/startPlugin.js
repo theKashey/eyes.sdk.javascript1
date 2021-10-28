@@ -1,5 +1,6 @@
 'use strict';
-const {makeVisualGridClient, Logger} = require('@applitools/visual-grid-client');
+const {makeVisualGridClient} = require('@applitools/visual-grid-client');
+const {makeLogger} = require('@applitools/logger');
 const makeStartServer = require('./server');
 const makePluginExport = require('./pluginExport');
 const {startApp} = require('./app');
@@ -10,11 +11,9 @@ const makeHandlers = require('./handlers');
 const makeConfig = require('./config');
 
 const {config, eyesConfig} = makeConfig();
-const logger = new Logger(config.showLogs, 'eyes');
+const logger = makeLogger({level: config.showLogs ? 'info' : 'silent', label: 'eyes'});
 
-const visualGridClient = makeVisualGridClient(
-  Object.assign(config, {logger: (logger.extend && logger.extend('vgc')) || logger}),
-);
+const visualGridClient = makeVisualGridClient({...config, logger: logger.extend('vgc')});
 
 const handlers = makeHandlers({
   logger,

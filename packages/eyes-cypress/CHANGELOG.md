@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- replace legacy logger construction with new
+
 ## 3.22.6 - 2021/10/18
 
 - updated to @applitools/dom-snapshot@4.5.9 (from 4.5.8)

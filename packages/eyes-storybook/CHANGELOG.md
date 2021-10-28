@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- replace legacy logger construction with new
 
 ## 3.25.1 - 2021/10/20
 

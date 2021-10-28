@@ -2,14 +2,15 @@
 
 ## Unreleased
 
+- replace legacy logger construction with new
 
 ## 15.8.39 - 2021/10/28
 
 - updated to @applitools/eyes-sdk-core@12.23.19 (from 12.23.18)
 
-  ## 15.8.38 - 2021/10/27
+## 15.8.38 - 2021/10/27
 
- - send user agent when fetching google fonts 
+- send user agent when fetching google fonts 
 - updated to @applitools/logger@1.0.5 (from 1.0.4)
 
 ## 15.8.37 - 2021/10/20

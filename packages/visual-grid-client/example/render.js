@@ -3,7 +3,8 @@
 const puppeteer = require('puppeteer')
 const {makeVisualGridClient} = require('../src/visual-grid-client')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
-const {Logger, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
+const {makeLogger} = require('@applitools/logger')
+const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
 const {delay: _delay} = require('@applitools/functional-commons')
 const debug = require('debug')('eyes:render')
 
@@ -19,7 +20,7 @@ const debug = require('debug')('eyes:render')
 
   const {testWindow} = makeVisualGridClient({
     apiKey: process.env.APPLITOOLS_API_KEY,
-    logger: new Logger(!!process.env.APPLITOOLS_SHOW_LOGS, 'eyes:vgc'),
+    logger: makeLogger({label: 'eyes:vgc'}),
     proxy: process.env.APPLITOOLS_PROXY,
   })
 
