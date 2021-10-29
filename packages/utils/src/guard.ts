@@ -145,8 +145,3 @@ export function custom(value: any, check: (value: any) => boolean, {name, strict
     throw new Error(`IllegalType: ${name} ${message || 'is wrong type'}`)
   }
 }
-
-export function isGoogleFont(url: string): boolean {
-  if (/https:\/\/fonts.googleapis.com/.test(url)) return true
-  else return false
-}

@@ -145,13 +145,9 @@ describe('putResources', () => {
       logger: testLogger,
     })
 
-    const r1 = new RGridResource()
-    r1.setUrl('url1')
-    r1.setContent('content1')
+    const r1 = new RGridResource({url: 'url1', content: 'content1'})
     r1._sha256hash = 'sha256hash'
-    const r2 = new RGridResource()
-    r2.setUrl('url2')
-    r2.setErrorStatusCode(404)
+    const r2 = new RGridResource({url: 'url2', errorStatusCode: 404})
 
     await putResources([r1, r2])
 

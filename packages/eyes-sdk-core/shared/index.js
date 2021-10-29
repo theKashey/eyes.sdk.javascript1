@@ -36,3 +36,5 @@ exports.RunnerStartedEvent = require('../lib/logging/RunnerStartedEvent')
 exports.MatchResult = require('../lib/match/MatchResult')
 
 exports.ProxySettings = require('../lib/config/ProxySettings')
+
+exports.getBrowserKeyForUserAgent = require('../lib/utils/getBrowserKeyForUserAgent')

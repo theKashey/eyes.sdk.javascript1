@@ -2,7 +2,6 @@
 const retryFetch = require('@applitools/http-commons/src/retryFetch')
 const createResourceCache = require('./createResourceCache')
 const AbortController = require('abort-controller')
-const utils = require('@applitools/utils')
 
 function makeFetchResource({
   logger,
@@ -11,16 +10,16 @@ function makeFetchResource({
   fetch,
   mediaDownloadTimeout = 30 * 1000,
 }) {
-  return (url, opts, browserName) => {
-    let keyToFetchFromCache = url
-    if (utils.guard.isGoogleFont(url) && browserName) keyToFetchFromCache += `~` + browserName
+  return (rGridResource, opts) => {
     return (
-      fetchCache.getValue(keyToFetchFromCache) ||
-      fetchCache.setValue(keyToFetchFromCache, doFetchResource(url, opts))
+      fetchCache.getValue(rGridResource.getCacheKey()) ||
+      fetchCache.setValue(rGridResource.getCacheKey(), doFetchResource(rGridResource, opts))
     )
   }
 
-  function doFetchResource(url, opts) {
+  function doFetchResource(rGridResource, opts) {
+    const url = rGridResource.getUrl()
+
     return retryFetch(
       async retry => {
         const retryStr = retry ? `(retry ${retry}/${retries})` : ''
@@ -32,7 +31,8 @@ function makeFetchResource({
 
         if (!resp.ok) {
           logger.verbose(`failed to fetch ${url} status ${resp.status}, returning errorStatusCode`)
-          return {url, errorStatusCode: resp.status}
+          rGridResource.setErrorStatusCode(resp.status)
+          return rGridResource
         }
 
         logger.verbose(`fetched ${url}`)
@@ -50,18 +50,19 @@ function makeFetchResource({
     )
 
     function createResource(resp, buffer) {
-      return {
-        url,
-        type: resp.headers.get('Content-Type'),
-        value: Buffer.from(buffer),
-      }
+      rGridResource.setContentType(
+        resp.headers.get('Content-Type') || 'application/x-applitools-unknown',
+      )
+      rGridResource.setContent(Buffer.from(buffer))
+      return rGridResource
     }
 
     function createStreamingPromise(resp, bufferPromise, controller) {
       return new Promise(async resolve => {
         const timeoutId = setTimeout(() => {
           logger.verbose('streaming timeout reached for resource', url)
-          resolve({url, errorStatusCode: 599})
+          rGridResource.setErrorStatusCode(599)
+          resolve(rGridResource)
           controller.abort()
         }, mediaDownloadTimeout)
 

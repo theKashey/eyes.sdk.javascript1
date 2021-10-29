@@ -2,7 +2,9 @@
 
 ## Unreleased
 
+- adjust the caches logic to recive the extended rGridResource object instead of url to support the new fetchCache and resourceCach logic
 - replace legacy logger construction with new
+- updated to @applitools/eyes-sdk-core@12.23.20 (from 12.23.19)
 
 ## 15.8.39 - 2021/10/28
 

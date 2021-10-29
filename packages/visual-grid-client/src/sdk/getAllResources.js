@@ -1,6 +1,6 @@
 'use strict'
 const mapValues = require('lodash.mapvalues')
-const {URL} = require('url')
+const mapKeys = require('lodash.mapkeys')
 const {RGridResource} = require('@applitools/eyes-sdk-core/shared')
 const absolutizeUrl = require('./absolutizeUrl')
 const resourceType = require('./resourceType')
@@ -56,51 +56,57 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     proxySettings,
     browserName,
   }) {
-    const handledResources = new Set()
+    const handledResourceUrls = new Set()
     return getOrFetchResources(resourceUrls, preResources)
 
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
+      const rGridResources = resourceUrls.map(url => new RGridResource({url, browserName}))
       const resources = {}
       for (const [url, resource] of Object.entries(preResources)) {
         // "preResources" are not fetched and not in "fetchCache" so cache them to "resourceCache".
         const rGridResource = fromFetchedToRGridResource(resource)
-        resourceCache.setValue(url, toCacheEntry(rGridResource))
+        resourceCache.setValue(rGridResource.getCacheKey(), toCacheEntry(rGridResource))
         if (resource.dependencies) {
-          resourceCache.setDependencies(url, resource.dependencies)
+          resourceCache.setDependencies(rGridResource.getCacheKey(), resource.dependencies)
         }
-        handledResources.add(url)
+        handledResourceUrls.add(url)
         assignContentfulResources(resources, {[url]: rGridResource})
       }
 
-      const unhandledResourceUrls = resourceUrls.filter(url => !handledResources.has(url))
-      const missingResourceUrls = []
-      for (const url of unhandledResourceUrls) {
-        handledResources.add(url)
-        const cacheEntry = resourceCache.getWithDependencies(url)
+      const unhandledResources = rGridResources.filter(
+        rGridResource => !handledResourceUrls.has(rGridResource.getUrl()),
+      )
+      const missingResources = []
+      for (const rGridResource of unhandledResources) {
+        handledResourceUrls.add(rGridResource.getUrl())
+        const cacheEntry = resourceCache.getWithDependencies(rGridResource.getCacheKey())
         if (cacheEntry) {
-          assignContentfulResources(resources, mapValues(cacheEntry, fromCacheToRGridResource))
-        } else if (/^https?:$/i.test(new URL(url).protocol)) {
-          missingResourceUrls.push(url)
+          assignContentfulResources(
+            resources,
+            mapKeys(mapValues(cacheEntry, fromCacheToRGridResource), value => value.getUrl()),
+          )
+        } else if (rGridResource.isHttp()) {
+          missingResources.push(rGridResource)
         }
       }
 
       await Promise.all(
-        missingResourceUrls.map(async url => {
+        missingResources.map(async rGridResource => {
           try {
             const fetchOptions = getFetchOptions({
-              url,
+              rGridResource,
               referer,
               userAgent,
               proxySettings,
-              browserName,
             })
-            const resource = await fetchResource(url, fetchOptions, browserName)
+            const resource = await fetchResource(rGridResource, fetchOptions)
             return assignContentfulResources(resources, await processResource(resource))
           } catch (err) {
             logger.log(
-              `error fetching resource at ${url}, setting errorStatusCode to 504. err=${err}`,
+              `error fetching resource at ${rGridResource.getUrl()}, setting errorStatusCode to 504. err=${err}`,
             )
-            resources[url] = new RGridResource({url, errorStatusCode: 504})
+            rGridResource.setErrorStatusCode(504)
+            resources[rGridResource.getUrl()] = rGridResource
           }
         }),
       )
@@ -108,21 +114,22 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
       return resources
     }
 
-    async function processResource(resource) {
-      let {dependentResources, fetchedResources} = await getDependantResources(resource)
-      const rGridResource = fromFetchedToRGridResource(resource)
+    async function processResource(rGridResource) {
+      let {dependentResources, fetchedResources} = await getDependantResources(rGridResource)
       // It is time consuming to process css/svg so use "resourceCache".
       const doesRequireProcessing = !!resourceType(rGridResource.getContentType())
       if (doesRequireProcessing) {
-        resourceCache.setValue(resource.url, toCacheEntry(rGridResource))
+        resourceCache.setValue(rGridResource.getCacheKey(), toCacheEntry(rGridResource))
       }
-      resourceCache.setDependencies(resource.url, dependentResources)
-      return Object.assign({[resource.url]: rGridResource}, fetchedResources)
+      resourceCache.setDependencies(rGridResource.getCacheKey(), dependentResources)
+      return Object.assign({[rGridResource.getUrl()]: rGridResource}, fetchedResources)
     }
 
-    async function getDependantResources({url, type, value}) {
+    async function getDependantResources(rGridResource) {
       let dependentResources, fetchedResources
-      const rType = resourceType(type)
+      const rType = resourceType(rGridResource.getContentType())
+      const value = rGridResource.getContent()
+      const url = rGridResource.getUrl()
 
       try {
         if (rType === 'CSS') {

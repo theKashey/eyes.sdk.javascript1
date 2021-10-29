@@ -9,6 +9,7 @@ const psetTimeout = require('util').promisify(setTimeout)
 const {FetchError} = require('node-fetch')
 const createResourceCache = require('../../../src/sdk/createResourceCache')
 const {presult} = require('@applitools/functional-commons')
+const toRGridResource = require('../../util/toRGridResource')
 require('@applitools/isomorphic-fetch')
 
 describe('fetchResource', () => {
@@ -19,8 +20,15 @@ describe('fetchResource', () => {
       .get('/')
       .reply(200, 'bla', {'content-type': 'some/content-type'})
 
-    const resource = await fetchResource(url)
-    expect(resource).to.eql({url, type: 'some/content-type', value: Buffer.from('bla')})
+    const resource = await fetchResource(toRGridResource({url}))
+
+    expect(resource).to.eql(
+      toRGridResource({
+        url,
+        type: 'some/content-type',
+        value: Buffer.from('bla'),
+      }),
+    )
   })
 
   it('fetches with retries', async () => {
@@ -28,10 +36,10 @@ describe('fetchResource', () => {
     const fetchResourceWithoutRetry = makeFetchResource({logger: testLogger, retries: 0, fetch})
     const url = 'http://something'
     const type = 'some/content-type'
-    const p1 = fetchResourceWithRetry(url).then(resource => {
-      expect(resource).to.eql({url, type, value: Buffer.from('bla')})
+    const p1 = fetchResourceWithRetry(toRGridResource({url})).then(resource => {
+      expect(resource).to.eql(toRGridResource({url, type, value: Buffer.from('bla')}))
     })
-    const p2 = fetchResourceWithoutRetry(url).catch(err => {
+    const p2 = fetchResourceWithoutRetry(toRGridResource({url})).catch(err => {
       expect(err).to.be.an.instanceof(FetchError)
     })
     await psetTimeout(50)
@@ -52,8 +60,8 @@ describe('fetchResource', () => {
       .times(2)
       .reply(200, () => ++counter, {'content-type': 'some/content-type'})
 
-    const r1 = await fetchResource(url)
-    const r2 = await fetchResource(url)
+    const r1 = await fetchResource(toRGridResource({url}))
+    const r2 = await fetchResource(toRGridResource({url}))
     expect(r1).to.eql(r2)
   })
 
@@ -66,7 +74,9 @@ describe('fetchResource', () => {
       fetch: dontFetch,
     })
     const url = 'http://something'
-    expect((await presult(fetchResourceWithRetry(url)))[0].message).to.equal('DONT FETCH')
+    expect((await presult(fetchResourceWithRetry(toRGridResource({url}))))[0].message).to.equal(
+      'DONT FETCH',
+    )
     expect(called).to.equal(4)
   })
 
@@ -80,7 +90,11 @@ describe('fetchResource', () => {
       fetch: dontFetch,
     })
     const url = 'http://something'
-    expect(await fetchResourceWithRetry(url)).to.eql({url, errorStatusCode: 404})
+
+    expect(await fetchResourceWithRetry(toRGridResource({url}))).to.eql(
+      toRGridResource({url, errorStatusCode: 404}),
+    )
+
     expect(called).to.equal(1)
   })
 
@@ -93,7 +107,9 @@ describe('fetchResource', () => {
         .delayBody(200)
         .reply(200, 'bla', {'content-type': 'audio/content-type'})
 
-      expect(await fetchResource(url)).to.eql({url, errorStatusCode: 599})
+      expect(await fetchResource(toRGridResource({url}))).to.eql(
+        toRGridResource({url, errorStatusCode: 599}),
+      )
     })
 
     it("doesn't include headers fetching time", async () => {
@@ -104,11 +120,13 @@ describe('fetchResource', () => {
         .delay(200)
         .reply(200, 'bla', {'content-type': 'audio/content-type'})
 
-      expect(await fetchResource(url)).to.eql({
-        url,
-        type: 'audio/content-type',
-        value: Buffer.from('bla'),
-      })
+      expect(await fetchResource(toRGridResource({url}))).to.eql(
+        toRGridResource({
+          url,
+          type: 'audio/content-type',
+          value: Buffer.from('bla'),
+        }),
+      )
     })
 
     it("doesn't apply to requests with content length", async () => {
@@ -119,11 +137,13 @@ describe('fetchResource', () => {
         .delayBody(200)
         .reply(200, 'bla', {'content-type': 'audio/content-type', 'content-length': 3})
 
-      expect(await fetchResource(url)).to.eql({
-        url,
-        type: 'audio/content-type',
-        value: Buffer.from('bla'),
-      })
+      expect(await fetchResource(toRGridResource({url}))).to.eql(
+        toRGridResource({
+          url,
+          type: 'audio/content-type',
+          value: Buffer.from('bla'),
+        }),
+      )
     })
 
     it("doesn't apply to requests with non media content type", async () => {
@@ -134,11 +154,13 @@ describe('fetchResource', () => {
         .delayBody(200)
         .reply(200, 'bla', {'content-type': 'some/content-type'})
 
-      expect(await fetchResource(url)).to.eql({
-        url,
-        type: 'some/content-type',
-        value: Buffer.from('bla'),
-      })
+      expect(await fetchResource(toRGridResource({url}))).to.eql(
+        toRGridResource({
+          url,
+          type: 'some/content-type',
+          value: Buffer.from('bla'),
+        }),
+      )
     })
   })
 })

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- remove isGoogleFont method form utils and transfer it to rGridResource
 
  ## 1.2.4 - 2021/10/27
 

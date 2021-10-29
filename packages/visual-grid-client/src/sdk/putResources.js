@@ -53,11 +53,11 @@ function makePutResources({
     }
     const result = await Promise.all(promises)
     for (const resource of resources) {
-      const url = resource.getUrl()
-      logger.verbose('setting resource to cache: ', url)
-      fetchCache.remove(url)
+      const cacheKey = resource.getCacheKey()
+      logger.verbose('setting resource to cache: ', cacheKey)
+      fetchCache.remove(cacheKey)
       const doesRequireProcessing = Boolean(resourceType(resource.getContentType()))
-      resourceCache.setValue(url, toCacheEntry(resource, doesRequireProcessing))
+      resourceCache.setValue(cacheKey, toCacheEntry(resource, doesRequireProcessing))
     }
     return result
   }

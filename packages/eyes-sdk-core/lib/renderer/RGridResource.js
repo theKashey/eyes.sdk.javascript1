@@ -3,6 +3,8 @@
 const crypto = require('crypto')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const GeneralUtils = require('../utils/GeneralUtils')
+const getBrowserKeyForUserAgent = require('../utils/getBrowserKeyForUserAgent')
+const {URL} = require('url')
 
 const VISUAL_GRID_MAX_BUFFER_SIZE = 34.5 * 1024 * 1024
 
@@ -13,16 +15,19 @@ class RGridResource {
    * @param {string} [data.contentType]
    * @param {Buffer} [data.content]
    */
-  constructor({url, contentType, content, errorStatusCode} = {}) {
+  constructor({url, contentType, content, errorStatusCode, browserName} = {}) {
     this._url = url
     this._contentType = contentType
     this._content = content
     this._errorStatusCode = errorStatusCode
+    this._browserName = browserName
 
     /** @type {string} */
     this._sha256hash = undefined
 
     if (contentType != 'x-applitools-html/cdt') this._trimContent()
+
+    this.setCacheKey()
   }
 
   /**
@@ -38,6 +43,7 @@ class RGridResource {
   setUrl(value) {
     ArgumentGuard.notNull(value, 'url')
     this._url = value
+    this.setCacheKey()
   }
 
   /**
@@ -70,6 +76,17 @@ class RGridResource {
     this._content = value
     this._sha256hash = undefined
     if (this._contentType != 'x-applitools-html/cdt') this._trimContent()
+  }
+
+  /**
+   * set the cacheKey
+   * @private
+   */
+  setCacheKey() {
+    if (!this._cacheKey) {
+      this._cacheKey = this._url
+      if (this.isGoogleFont() && this._browserName) this._cacheKey += '~' + getBrowserKeyForUserAgent(this._browserName)
+    }
   }
 
   _trimContent() {
@@ -110,11 +127,27 @@ class RGridResource {
     }
   }
 
+  getCacheKey() {
+    return this._cacheKey
+  }
+
+  isGoogleFont() {
+    return /https:\/\/fonts.googleapis.com/.test(this._url)
+  }
+
+  getBrowserName() {
+    return this._browserName
+  }
+
+  isHttp() {
+    return /^https?:$/i.test(new URL(this._url).protocol)
+  }
+
   /**
    * @override
    */
   toJSON() {
-    return GeneralUtils.toPlain(this, ['_sha256hash'])
+    return GeneralUtils.toPlain(this, ['_sha256hash', '_cacheKey', '_browserName'])
   }
 
   /**

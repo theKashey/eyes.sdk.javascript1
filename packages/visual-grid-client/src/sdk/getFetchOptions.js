@@ -1,14 +1,13 @@
 'use strict'
 const {getTunnelAgentFromProxy} = require('@applitools/eyes-sdk-core/shared')
-const utils = require('@applitools/utils')
 const {getUserAgentForBrowser} = require('./getUserAgentForBrowser')
 
-function getFetchOptions({url, referer, userAgent, proxySettings, browserName}) {
+function getFetchOptions({rGridResource, referer, userAgent, proxySettings}) {
   const fetchOptions = {headers: {Referer: referer}}
-  if (!utils.guard.isGoogleFont(url)) {
+  if (!rGridResource.isGoogleFont()) {
     fetchOptions.headers['User-Agent'] = userAgent
   } else {
-    fetchOptions.headers['User-Agent'] = getUserAgentForBrowser(browserName)
+    fetchOptions.headers['User-Agent'] = getUserAgentForBrowser(rGridResource.getBrowserName())
   }
 
   if (proxySettings && proxySettings.getIsHttpOnly()) {
