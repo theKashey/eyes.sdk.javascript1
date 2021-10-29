@@ -1,6 +1,9 @@
 # Change Log
 
 ## Unreleased
+
+## 12.23.21 - 2021/10/29
+
 - extend rGridResource to include and calculate a cacheKey , browserName and more to support key that is not only a resource url
 
 ## 12.23.20 - 2021/10/28
