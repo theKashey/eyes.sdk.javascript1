@@ -9,18 +9,13 @@ type BatchCloseOptions = {
 }
 
 type BatchCloseSpec = {
-  closeBatches(options: BatchCloseOptions): Promise<void>
+  closeBatches(options: {settings: BatchCloseOptions}): Promise<void>
 }
 
 export function closeBatch(spec: BatchCloseSpec): (options: BatchCloseOptions) => Promise<void> {
-  return (options: BatchCloseOptions) => {
-    utils.guard.notNull(options.batchIds, {name: 'options.batchIds'})
-    return spec.closeBatches({
-      batchIds: options.batchIds,
-      serverUrl: options.serverUrl,
-      apiKey: options.apiKey,
-      proxy: options.proxy,
-    })
+  return (settings: BatchCloseOptions) => {
+    utils.guard.notNull(settings.batchIds, {name: 'options.batchIds'})
+    return spec.closeBatches({settings})
   }
 }
 
@@ -32,9 +27,9 @@ export class BatchClose {
 
   private _options: BatchCloseOptions = {batchIds: null}
 
-  static async close(options: BatchCloseOptions): Promise<void> {
-    utils.guard.notNull(options.batchIds, {name: 'options.batchIds'})
-    await this._spec.closeBatches(options)
+  static async close(settings: BatchCloseOptions): Promise<void> {
+    utils.guard.notNull(settings.batchIds, {name: 'options.batchIds'})
+    await this._spec.closeBatches({settings})
   }
 
   constructor(options?: BatchCloseOptions) {
@@ -43,7 +38,7 @@ export class BatchClose {
 
   async close(): Promise<void> {
     utils.guard.notNull(this._options.batchIds, {name: 'batchIds'})
-    await this._spec.closeBatches(this._options)
+    await this._spec.closeBatches({settings: this._options})
   }
 
   setBatchIds(batchIds: string[]): this {

@@ -331,12 +331,14 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this._eyes
       .abort()
       .then(([result]) => {
-        return new TestResultsData(result, options =>
+        return new TestResultsData(result, settings =>
           this._spec.deleteTest({
-            ...options,
-            serverUrl: this._config.serverUrl,
-            apiKey: this._config.apiKey,
-            proxy: this._config.proxy,
+            settings: {
+              ...settings,
+              serverUrl: this._config.serverUrl,
+              apiKey: this._config.apiKey,
+              proxy: this._config.proxy,
+            },
           }),
         )
       })

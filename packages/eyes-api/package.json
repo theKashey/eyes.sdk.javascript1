@@ -45,12 +45,12 @@
     "postversion": "bongo postversion --skip-release-notification"
   },
   "dependencies": {
-    "@applitools/logger": "1.0.4",
-    "@applitools/types": "1.0.15",
-    "@applitools/utils": "1.2.3"
+    "@applitools/logger": "1.0.5",
+    "@applitools/types": "1.0.16",
+    "@applitools/utils": "1.2.4"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.3",
+    "@applitools/sdk-release-kit": "0.13.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.7.8",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
