@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.17 - 2021/10/30
+
 - add new iPhone 13 to `IOSDevice` type
 
 ## 1.0.16 - 2021/10/27
