@@ -183,6 +183,7 @@ export type IOSDevice =
   | 'iPhone 7'
   | 'iPad Pro (12.9-inch) (3rd generation)'
   | 'iPad (7th generation)'
+  | 'iPad (9th generation)'
   | 'iPad Air (2nd generation)'
 
 export type IOSVersion = 'latest' | 'latest-1'
