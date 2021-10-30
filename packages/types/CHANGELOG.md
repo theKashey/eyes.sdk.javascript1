@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.18 - 2021/10/30
+
 - add new iPad 9th gen to `IOSDevice` type
 
 ## 1.0.17 - 2021/10/30
