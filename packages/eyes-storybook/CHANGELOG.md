@@ -4,6 +4,11 @@
 
 - replace legacy logger construction with new
 - deprecate `waitBeforeScreenshot` and introduce `waitBeforeCapture` instead
+- updated to @applitools/driver@1.2.7 (from 1.2.6)
+- updated to @applitools/eyes-puppeteer@1.8.5 (from 1.8.4)
+- updated to @applitools/eyes-sdk-core@12.23.24 (from 12.23.18)
+- updated to @applitools/test-server@1.0.6 (from 1.0.5)
+- updated to @applitools/visual-grid-client@15.8.43 (from 15.8.37)
 
 ## 3.25.1 - 2021/10/20
 
