@@ -17,6 +17,9 @@ const {
   MatchWindowData,
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
+const RenderRequest = require('../../../lib/renderer/RenderRequest')
+const createRGridDom = require('../../../../visual-grid-client/src/sdk/createRGridDom')
+const RenderInfo = require('../../../lib/renderer/RenderInfo')
 const logger = new makeLogger()
 
 function getServerConnector(config = {}) {
@@ -203,7 +206,7 @@ describe('ServerConnector', () => {
       const serverUrl = `http://localhost:${port}`
       const serverConnector = getServerConnector({serverUrl})
       const [err] = await presult(serverConnector.startSession({}))
-      assert.deepStrictEqual(err, new Error('socket hang up'))
+      assert.deepStrictEqual(err, new Error('Error in request startSession: socket hang up'))
     } finally {
       await close()
     }
@@ -593,5 +596,62 @@ describe('ServerConnector', () => {
     } finally {
       await close()
     }
+  })
+
+  it('outputs correct error message for bad requests to Eyes server', async () => {
+    const serverConnector = getServerConnector()
+    const [err] = await presult(
+      serverConnector.startSession({
+        appIdOrName: 'app id or name',
+        scenarioIdOrName: 'scenario id or name',
+        agentId: 'agent id',
+        batchInfo: {name: 'batch name'},
+        environment: {os: 'os', hostingApp: 'hosting app', displaySize: {width: 1.5, height: 1.5}},
+        defaultMatchSettings: {},
+      }),
+    )
+
+    // Eyes doesn't handle fractions well, so it fails to parse the environment.displaySize value and therefore detects the entire startInfo as null
+    assert.deepStrictEqual(
+      err,
+      new Error(`Error in request startSession: Request failed with status code 400 (Bad Request)
+Value cannot be null.\r
+Parameter name: 'startInfo' is null\r
+Parameter name: startInfo`),
+    )
+  })
+
+  it('outputs correct error message for bad requests to UFG server', async () => {
+    const serverConnector = getServerConnector()
+    const renderInfo = await serverConnector.renderInfo()
+
+    // case #1: 400 bad request
+    const [renderBadRequestErr] = await presult(
+      serverConnector.render(
+        new RenderRequest({
+          webhook: renderInfo.getResultsUrl(),
+          stitchingService: renderInfo.getStitchingServiceUrl(),
+          url: 'http://bla',
+          dom: createRGridDom({cdt: [], resources: {}}),
+          resources: [],
+          renderInfo: new RenderInfo({iosDeviceInfo: {name: 'iPhone 123456789'}}),
+        }),
+      ),
+    )
+
+    // case #2 400 Internal server error (actually this should be a 400 from server's perspective)
+    assert.deepStrictEqual(
+      renderBadRequestErr,
+      new Error(`Error in request render: Request failed with status code 400 (Bad Request)
+render height & width are required when deviceEmulationInfo is not provided, request #0`),
+    )
+
+    const [renderErr] = await presult(serverConnector.render({}))
+    assert.ok(
+      renderErr.message.includes(
+        `Error in request render: Request failed with status code 500 (Internal Server Error)`,
+      ),
+    )
+    assert.ok(renderErr.message.includes(`Error: combination of url, dom, resources is invalid`))
   })
 })
