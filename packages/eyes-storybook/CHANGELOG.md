@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.25.2 - 2021/10/30
+
 - replace legacy logger construction with new
 - deprecate `waitBeforeScreenshot` and introduce `waitBeforeCapture` instead
 - updated to @applitools/driver@1.2.7 (from 1.2.6)
