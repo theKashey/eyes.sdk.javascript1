@@ -35,8 +35,8 @@
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "dependencies": {
-    "@applitools/test-server": "1.0.5",
-    "@applitools/test-utils": "1.0.7",
+    "@applitools/test-server": "1.0.6",
+    "@applitools/test-utils": "1.0.9",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chalk": "3.0.0",
@@ -45,7 +45,7 @@
     "node-fetch": "2.6.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.3",
+    "@applitools/sdk-release-kit": "0.13.4",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",
