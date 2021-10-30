@@ -8,7 +8,7 @@ const {URL} = require('url');
 const runRunAfterScript = require('../dist/runRunAfterScript');
 const waitFor = require('./waitFor');
 
-function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloadPagePerStory}) {
+function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
     const title = getStoryTitle(story);
     logger.log(`getting data from story`, title);
@@ -32,9 +32,9 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloa
       await renderStoryLegacy();
     }
 
-    const wait = waitBeforeStory || waitBeforeScreenshot;
+    const wait = waitBeforeStory || waitBeforeCapture;
     if (typeof wait === 'number') {
-      ArgumentGuard.greaterThanOrEqualToZero(wait, 'waitBeforeScreenshot', true);
+      ArgumentGuard.greaterThanOrEqualToZero(wait, 'waitBeforeCapture', true);
     }
     if (wait) {
       logger.log(`waiting before screenshot of ${title} ${wait}`);
@@ -52,6 +52,12 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeScreenshot, reloa
     const snapshots = await takeDomSnapshots({
       page,
       layoutBreakpoints: eyesParameters ? eyesParameters.layoutBreakpoints : undefined,
+      waitBeforeCapture: wait
+        ? async () => {
+            logger.log(`waiting before screenshot of ${title} ${wait}`);
+            await waitFor(page, wait);
+          }
+        : undefined,
     });
 
     if (eyesParameters && eyesParameters.runAfter) {

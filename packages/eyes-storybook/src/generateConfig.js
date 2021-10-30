@@ -14,24 +14,29 @@ function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = [
   const result = Object.assign({}, defaultConfig, config, argvConfig);
 
   // backward compatibility
-  if (
-    result.waitBeforeScreenshots !== defaultConfig.waitBeforeScreenshots &&
-    result.waitBeforeScreenshot === defaultConfig.waitBeforeScreenshot
-  ) {
-    console.log(
-      deprecationWarning({
-        deprecatedThing: "'waitBeforeScreenshots'",
-        newThing: "'waitBeforeScreenshot' (no 's')",
-      }),
-    );
-    result.waitBeforeScreenshot = result.waitBeforeScreenshots;
+  if (result.waitBeforeCapture === defaultConfig.waitBeforeCapture) {
+    if (result.waitBeforeScreenshots !== defaultConfig.waitBeforeScreenshots) {
+      console.log(
+        deprecationWarning({
+          deprecatedThing: "'waitBeforeScreenshots'",
+          newThing: "'waitBeforeCapture'",
+        }),
+      );
+      result.waitBeforeCapture = result.waitBeforeScreenshots;
+    }
+    if (result.waitBeforeScreenshot !== defaultConfig.waitBeforeScreenshot) {
+      console.log(
+        deprecationWarning({
+          deprecatedThing: "'waitBeforeScreenshot'",
+          newThing: "'waitBeforeCapture'",
+        }),
+      );
+      result.waitBeforeCapture = result.waitBeforeScreenshot;
+    }
   }
 
-  if (
-    typeof result.waitBeforeScreenshot === 'string' &&
-    !isNaN(parseInt(result.waitBeforeScreenshot))
-  ) {
-    result.waitBeforeScreenshot = Number(result.waitBeforeScreenshot);
+  if (typeof result.waitBeforeCapture === 'string' && !isNaN(parseInt(result.waitBeforeCapture))) {
+    result.waitBeforeCapture = Number(result.waitBeforeCapture);
   }
 
   if (result.showLogs === '1') {

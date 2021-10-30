@@ -172,16 +172,16 @@ describe('renderStories', () => {
     await snap(getEvents().join(''), 'results');
   });
 
-  it('passes waitBeforeScreenshot to getStoryData', async () => {
+  it('passes waitBeforeCapture to getStoryData', async () => {
     const pagePool = createPagePool({
       logger,
       initPage: async ({pageId}) => ({evaluate: async () => pageId + 1}),
     });
     pagePool.addToPool((await pagePool.createPage()).pageId);
 
-    let _waitBeforeScreenshot;
+    let _waitBeforeCapture;
     const getStoryData = async ({waitBeforeStory}) => {
-      _waitBeforeScreenshot = waitBeforeStory;
+      _waitBeforeCapture = waitBeforeStory;
       return {};
     };
 
@@ -201,17 +201,17 @@ describe('renderStories', () => {
     });
 
     const results = await renderStories(
-      [{name: 's1', kind: 'k1', parameters: {eyes: {waitBeforeScreenshot: 'wait_some_value'}}}],
+      [{name: 's1', kind: 'k1', parameters: {eyes: {waitBeforeCapture: 'wait_some_value'}}}],
       {},
     );
 
-    expect(_waitBeforeScreenshot).to.eql('wait_some_value');
+    expect(_waitBeforeCapture).to.eql('wait_some_value');
     expect(results[0].title).to.eql('k1: s1');
     expect(JSON.stringify(results[0].resultsOrErr[0].arg.story)).to.eql(
       JSON.stringify({
         name: 's1',
         kind: 'k1',
-        parameters: {eyes: {waitBeforeScreenshot: 'wait_some_value'}},
+        parameters: {eyes: {waitBeforeCapture: 'wait_some_value'}},
       }),
     );
   });

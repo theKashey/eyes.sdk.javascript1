@@ -167,7 +167,7 @@ class EyesVisualGrid extends EyesCore {
           getEmulatedDevicesSizes: this._getEmulatedDevicesSizes,
           getIosDevicesSizes: this._getIosDevicesSizes,
           showLogs,
-          waitBeforeCapture: waitBeforeCapture,
+          waitBeforeCapture: () => utils.general.sleep(waitBeforeCapture),
         })
         const [{url}] = snapshots
         if (this.getCorsIframeHandle() === CorsIframeHandles.BLANK) {

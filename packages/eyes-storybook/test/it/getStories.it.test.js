@@ -104,7 +104,7 @@ describe('getStories', () => {
             parameters: {
               ...parameters,
               eyes: {
-                waitBeforeScreenshot: '.ready',
+                waitBeforeCapture: '.ready',
               },
             },
           },

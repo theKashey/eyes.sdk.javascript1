@@ -4,43 +4,51 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
 
 ### Table of contents
 
-- [Installation](#installation)
-  * [Install npm package](#install-npm-package)
-  * [Applitools API key](#applitools-api-key)
-- [Usage](#usage)
-  * [Configuring local storybook server](#configuring-local-storybook-server)
-  * [Standalone server](#standalone-server)
-  * [Command line arguments](#command-line-arguments)
-- [Concurrency](#concurrency)
-- [Advanced configuration](#advanced-configuration)
-  * [Method 1: Environment variables](#method-1--environment-variables)
-  * [Method 2: The `applitools.config.js` file](#method-2--the--applitoolsconfigjs--file)
-- [Configuring the browser](#configuring-the-browser)
-  * [Previous browser versions](#previous-browser-versions)
-  * [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
-  * [Device emulation](#device-emulation)
-  * [Faking IE Browser](#faking-ie-browser)
-- [Per component configuration](#per-component-configuration)
-  * [`include`](#include)
-  * [`variations`](#variations)
-  * [`waitBeforeScreenshot`](#waitbeforescreenshot)
-  * [`properties`](#properties)
-  * [`ignoreRegions`](#ignoreregions)
-  * [`floatingRegions`](#floatingregions)
-  * [`layoutRegions`](#layoutregions)
-  * [`contentRegions`](#contentregions)
-  * [`strictRegions`](#strictregions)
-  * [`accessibilityRegions`](#accessibilityregions)
-  * [`accessibilityValidation`](#accessibilityvalidation)
-  * [Parameters that cannot be set as an Advanced configuration](#parameters-that-cannot-be-set-as-an-advanced-configuration)
-  * [`runBefore`](#runbefore)
-  * [`runAfter`](#runafter)
-  * [`scriptHooks`](#scripthooks)
-    + [beforeCaptureScreenshot](#beforecapturescreenshot)
-  * [`layoutBreakpoints`](#layoutBreakpoints)
-- [Running Eyes-Storybook in Docker](#running-eyes-storybook-in-docker)
-- [Dealing with dynamic data](#dealing-with-dynamic-data)
-- [Troubleshooting](#troubleshooting)
+- [Eyes-Storybook](#eyes-storybook)
+    - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Install npm package](#install-npm-package)
+    - [Applitools API key](#applitools-api-key)
+  - [Usage](#usage)
+    - [Configuring local storybook server](#configuring-local-storybook-server)
+    - [Standalone server](#standalone-server)
+    - [Command line arguments](#command-line-arguments)
+  - [Concurrency](#concurrency)
+  - [Advanced configuration](#advanced-configuration)
+    - [Method 1: Environment variables](#method-1-environment-variables)
+    - [Method 2: The `applitools.config.js` file](#method-2-the-applitoolsconfigjs-file)
+  - [Configuring the browser](#configuring-the-browser)
+    - [Previous browser versions](#previous-browser-versions)
+    - [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
+    - [Device emulation](#device-emulation)
+    - [iOS device](#ios-device)
+  - [Faking IE Browser](#faking-ie-browser)
+  - [Per component configuration](#per-component-configuration)
+    - [`include`](#include)
+      - [global](#global)
+      - [component](#component)
+    - [`variations`](#variations)
+    - [`waitBeforeCapture`](#waitbeforecapture)
+    - [`properties`](#properties)
+    - [`ignoreRegions`](#ignoreregions)
+    - [`floatingRegions`](#floatingregions)
+    - [`layoutRegions`](#layoutregions)
+    - [`contentRegions`](#contentregions)
+    - [`strictRegions`](#strictregions)
+    - [`accessibilityRegions`](#accessibilityregions)
+    - [`accessibilityValidation`](#accessibilityvalidation)
+    - [`ignoreDisplacements`](#ignoredisplacements)
+    - [`sendDom`](#senddom)
+    - [`visualGridOptions`](#visualgridoptions)
+    - [`scriptHooks`](#scripthooks)
+      - [beforeCaptureScreenshot](#beforecapturescreenshot)
+  - [Parameters that cannot be set as an advanced configuration](#parameters-that-cannot-be-set-as-an-advanced-configuration)
+    - [`runBefore` and `runAfter` functions](#runbefore-and-runafter-functions)
+      - [`runBefore`](#runbefore)
+      - [`runAfter`](#runafter)
+    - [`layoutBreakpoints`](#layoutbreakpoints)
+  - [Running Eyes-Storybook in Docker](#running-eyes-storybook-in-docker)
+  - [Dealing with dynamic data](#dealing-with-dynamic-data)
 
 ## Installation
 
@@ -169,7 +177,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `jsonFilePath`            | undefined                   | Directory path of a results file. If set, then a [JSON](https://www.json.org/json-en.html) file is created in this directory, the file is created with the name eyes.json and contains the Eyes test results. |
 | `tapFilePath`             | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the file is created with the name eyes.tap and contains the Eyes test results. |
 | `xmlFilePath`             | undefined                   | Directory path of a results file. If set, then a [XUnit XML](https://google.github.io/rich-test-results/xunitxml) file is created in this directory, the file is created with the name eyes.xml and contains the Eyes test results. |
-| `waitBeforeScreenshot`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeScreenshot.](#waitBeforeScreenshot)<br/>Note that we use Puppeteer's [page.waitForTimeout()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitfortimeoutmilliseconds), [page.waitForSelector()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforselectorselector-options), [page.waitForXPath()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforxpathxpath-options) and [page.waitForFunction()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforfunctionpagefunction-options-args), checkout it's API for more details. |
+| `waitBeforeCapture`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeCapture.](#waitBeforeCapture)<br/>Note that we use Puppeteer's [page.waitForTimeout()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitfortimeoutmilliseconds), [page.waitForSelector()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforselectorselector-options), [page.waitForXPath()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforxpathxpath-options) and [page.waitForFunction()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforfunctionpagefunction-options-args), checkout it's API for more details. |
 | `include`                 | true                        | A predicate function, a string or a regular expression specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind```, ```storyTitle```  and ```parameters``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, storyTitle, parameters}) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration - include](#include). |
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component  configuration - variations](#variations).|
 | `notifyOnCompletion`      | false                       | If `true` batch completion notifications are sent. |
@@ -439,20 +447,20 @@ storiesOf('Components that support RTL', module)
   )
 ```
 
-### `waitBeforeScreenshot`
+### `waitBeforeCapture`
 
 Selector or timeout, see [advanced configuration](#advanced-configuration) for more details.
 
 ```js
-storiesOf('Components with a waitBeforeScreenshot', module)
+storiesOf('Components with a waitBeforeCapture', module)
   .add(
     'Some story',
     () => <span id="container" class="loading"></span>,
-    {eyes: { waitBeforeScreenshot: '#container.ready' }}
+    {eyes: { waitBeforeCapture: '#container.ready' }}
   );
 ```
 
-_Note that the predicate option for `waitBeforeScreenshot` is currently not available in the per component configuration._
+_Note that the predicate option for `waitBeforeCapture` is currently not available in the per component configuration._
 
 ### `properties`
 

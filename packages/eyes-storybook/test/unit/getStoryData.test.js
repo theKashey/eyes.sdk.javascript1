@@ -35,7 +35,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots,
-      waitBeforeScreenshot: 50,
+      waitBeforeCapture: 50,
     });
     const [{resourceUrls, resourceContents, cdt}] = await getStoryData({
       story: {},
@@ -48,14 +48,14 @@ describe('getStoryData', () => {
     expect(cdt).to.equal('cdt');
   });
 
-  it('waitsFor correctly with waitBeforeScreenshot before taking the screenshot', async () => {
+  it('waitsFor correctly with waitBeforeCapture before taking the screenshot', async () => {
     let waitedValue;
-    const waitBeforeScreenshot = 'someValue';
+    const waitBeforeCapture = 'someValue';
     const page = {
       goto: async () => {},
       ...pageFunctions,
       evaluate: func =>
-        waitedValue === waitBeforeScreenshot
+        waitedValue === waitBeforeCapture
           ? Promise.resolve(func())
           : Promise.reject('did not wait enough before taking snapshot'),
     };
@@ -74,7 +74,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots,
-      waitBeforeScreenshot,
+      waitBeforeCapture,
     });
 
     const [{resourceUrls, resourceContents, cdt}] = await getStoryData({
@@ -88,14 +88,14 @@ describe('getStoryData', () => {
     expect(cdt).to.equal('cdt');
   });
 
-  it('waitsFor correctly with waitBeforeScreenshot before taking a component screenshot', async () => {
+  it('waitsFor correctly with waitBeforeCapture before taking a component screenshot', async () => {
     let waitedValue;
-    const waitBeforeScreenshot = 'someValue';
+    const waitBeforeCapture = 'someValue';
     const page = {
       goto: async () => {},
       ...pageFunctions,
       evaluate: func =>
-        waitedValue === waitBeforeScreenshot
+        waitedValue === waitBeforeCapture
           ? Promise.resolve(func())
           : Promise.reject('did not wait enough before taking snapshot'),
     };
@@ -114,14 +114,14 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots,
-      waitBeforeScreenshot: 2000,
+      waitBeforeCapture: 2000,
     });
 
     const [{resourceUrls, resourceContents, cdt}] = await getStoryData({
       story: {},
       storyUrl: 'url',
       page,
-      waitBeforeStory: waitBeforeScreenshot,
+      waitBeforeStory: waitBeforeCapture,
     });
 
     expect(resourceUrls).to.eql(['url1']);
@@ -129,7 +129,7 @@ describe('getStoryData', () => {
     expect(cdt).to.equal('cdt');
   });
 
-  it('throws when getting a negative waitBeforeScreenshot', async () => {
+  it('throws when getting a negative waitBeforeCapture', async () => {
     const page = {
       goto: async () => {},
       evaluate: func => Promise.resolve(func()),
@@ -147,7 +147,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshot,
-      waitBeforeScreenshot: 50,
+      waitBeforeCapture: 50,
     });
     let err;
     try {
@@ -155,10 +155,10 @@ describe('getStoryData', () => {
     } catch (e) {
       err = e;
     }
-    expect(err.message).to.eql('IllegalArgument: waitBeforeScreenshot < 0');
+    expect(err.message).to.eql('IllegalArgument: waitBeforeCapture < 0');
   });
 
-  it('throws when getting a negative waitBeforeScreenshot', async () => {
+  it('throws when getting a negative waitBeforeCapture', async () => {
     const page = {
       goto: async () => {},
       evaluate: func => Promise.resolve(func()),
@@ -176,7 +176,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshot,
-      waitBeforeScreenshot: -50,
+      waitBeforeCapture: -50,
     });
     let err;
     try {
@@ -184,7 +184,7 @@ describe('getStoryData', () => {
     } catch (e) {
       err = e;
     }
-    expect(err.message).to.eql('IllegalArgument: waitBeforeScreenshot < 0');
+    expect(err.message).to.eql('IllegalArgument: waitBeforeCapture < 0');
   });
 
   it('throws when fails to render a story with api', async () => {

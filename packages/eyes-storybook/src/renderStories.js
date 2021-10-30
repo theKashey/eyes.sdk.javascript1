@@ -62,7 +62,7 @@ function makeRenderStories({
         const story = stories[currIndex++];
         const storyUrl = getStoryUrl(story, storybookUrl);
         const title = getStoryTitle(story);
-        const {waitBeforeScreenshot} = (story.parameters && story.parameters.eyes) || {};
+        const {waitBeforeCapture} = (story.parameters && story.parameters.eyes) || {};
 
         try {
           let [error, storyData] = await presult(
@@ -70,7 +70,7 @@ function makeRenderStories({
               story,
               storyUrl,
               page,
-              waitBeforeStory: waitBeforeScreenshot,
+              waitBeforeStory: waitBeforeCapture,
             }),
           );
 
@@ -90,7 +90,7 @@ function makeRenderStories({
                 story,
                 storyUrl,
                 page: newPageObj.page,
-                waitBeforeStory: waitBeforeScreenshot,
+                waitBeforeStory: waitBeforeCapture,
               }),
             );
             error = newError;

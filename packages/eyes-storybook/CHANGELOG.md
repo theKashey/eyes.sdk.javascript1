@@ -3,6 +3,7 @@
 ## Unreleased
 
 - replace legacy logger construction with new
+- deprecate `waitBeforeScreenshot` and introduce `waitBeforeCapture` instead
 
 ## 3.25.1 - 2021/10/20
 

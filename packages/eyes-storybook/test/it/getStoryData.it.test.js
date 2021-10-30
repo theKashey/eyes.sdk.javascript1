@@ -23,7 +23,7 @@ describe('getStoryData', () => {
     await closeTestServer();
   });
 
-  it('works with waitBeforeScreenshot as a number', async () => {
+  it('works with waitBeforeCapture as a number', async () => {
     const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: ['url1', await page.evaluate('window.timeout')],
@@ -36,7 +36,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots,
-      waitBeforeScreenshot: 2000,
+      waitBeforeCapture: 2000,
     });
 
     const getStoryPromise = getStoryData({
@@ -57,7 +57,7 @@ describe('getStoryData', () => {
     expect(cdt).to.equal('cdt');
   });
 
-  it('works with waitBeforeScreenshot as a css selector', async () => {
+  it('works with waitBeforeCapture as a css selector', async () => {
     const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: [
@@ -75,7 +75,7 @@ describe('getStoryData', () => {
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots,
-      waitBeforeScreenshot: '#newDiv',
+      waitBeforeCapture: '#newDiv',
     });
 
     const getStoryPromise = getStoryData({
@@ -96,7 +96,7 @@ describe('getStoryData', () => {
     expect(cdt).to.equal('cdt');
   });
 
-  it('works with waitBeforeScreenshot as a function', async () => {
+  it('works with waitBeforeCapture as a function', async () => {
     const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: [
@@ -113,7 +113,7 @@ describe('getStoryData', () => {
       logger,
       takeDomSnapshots,
       // eslint-disable-next-line no-undef
-      waitBeforeScreenshot: () => window.ready === 'ok',
+      waitBeforeCapture: () => window.ready === 'ok',
     });
 
     const getStoryPromise = getStoryData({

@@ -7,8 +7,9 @@ module.exports = {
   storybookUrl: undefined,
   storybookStaticDir: undefined,
   showStorybookOutput: false,
-  waitBeforeScreenshot: 50,
+  waitBeforeScreenshot: 50, // backward compatibility
   waitBeforeScreenshots: 50, // backward compatibility
+  waitBeforeCapture: 50,
   viewportSize: {width: 1024, height: 768},
   tapFilePath: undefined,
   xmlFilePath: undefined,

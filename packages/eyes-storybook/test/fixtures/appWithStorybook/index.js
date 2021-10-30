@@ -112,7 +112,7 @@ storiesOf('Text', module)
       >
         <div id="delay">Not Ready - do not take snapshot!</div>
       </WithScript>,
-    {eyes: {waitBeforeScreenshot: '.ready'}}
+    {eyes: {waitBeforeCapture: '.ready'}}
   );
 
 storiesOf('Interaction', module)

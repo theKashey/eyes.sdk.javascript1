@@ -37,7 +37,7 @@ async function eyesStorybook({
   let transitioning = false;
   takeMemLoop();
   logger.log('eyesStorybook started');
-  const {storybookUrl, waitBeforeScreenshot, readStoriesTimeout, reloadPagePerStory} = config;
+  const {storybookUrl, waitBeforeCapture, readStoriesTimeout, reloadPagePerStory} = config;
 
   let iframeUrl;
   try {
@@ -76,7 +76,7 @@ async function eyesStorybook({
   });
   const pagePool = createPagePool({initPage, logger});
 
-  const doTakeDomSnapshots = async ({page, layoutBreakpoints}) => {
+  const doTakeDomSnapshots = async ({page, layoutBreakpoints, waitBeforeCapture}) => {
     const driver = new Driver({spec, driver: page, logger});
     const skipResources = getResourceUrlsInCache();
     const result = await takeDomSnapshots({
@@ -90,6 +90,7 @@ async function eyesStorybook({
       getViewportSize: () => config.viewportSize,
       getIosDevicesSizes,
       getEmulatedDevicesSizes,
+      waitBeforeCapture,
     });
     return result;
   };
@@ -120,7 +121,7 @@ async function eyesStorybook({
     const getStoryData = makeGetStoryData({
       logger,
       takeDomSnapshots: doTakeDomSnapshots,
-      waitBeforeScreenshot,
+      waitBeforeCapture,
     });
 
     const renderStory = makeRenderStory({

@@ -1,0 +1,9 @@
+<script>
+  function handleResize() {
+    const text = document.querySelector('#text')
+    console.log(text)
+    text.innerText = JSON.stringify({width: window.innerWidth, height: window.innerHeight})
+  }
+  window.addEventListener('load', handleResize)
+  window.addEventListener('resize', () => setTimeout(handleResize, 500))
+</script>
