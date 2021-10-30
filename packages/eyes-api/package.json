@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@applitools/logger": "1.0.5",
-    "@applitools/types": "1.0.16",
+    "@applitools/types": "1.0.18",
     "@applitools/utils": "1.2.4"
   },
   "devDependencies": {
