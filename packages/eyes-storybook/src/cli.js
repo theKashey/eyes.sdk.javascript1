@@ -33,7 +33,6 @@ const {performance, timeItAsync} = makeTiming();
 
     const config = generateConfig({argv, defaultConfig, externalConfigParams});
     const logger = makeLogger({level: config.showLogs ? 'info' : 'silent', label: 'eyes'});
-    logger.setIncludeTime(true);
     await validateAndPopulateConfig({config, logger, packagePath: process.cwd()});
     logger.log(`Running with the following config:\n${configDigest(config)}`);
     const [err, results] = await presult(

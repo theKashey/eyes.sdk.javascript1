@@ -77,7 +77,7 @@ async function eyesStorybook({
   const pagePool = createPagePool({initPage, logger});
 
   const doTakeDomSnapshots = async ({page, layoutBreakpoints}) => {
-    const driver = new Driver({spec, driver: page, logger: logger._getNewLogger()});
+    const driver = new Driver({spec, driver: page, logger});
     const skipResources = getResourceUrlsInCache();
     const result = await takeDomSnapshots({
       logger,
