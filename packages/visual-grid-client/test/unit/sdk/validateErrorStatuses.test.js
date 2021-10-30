@@ -17,7 +17,7 @@ describe('validate error satuses', () => {
       errMessage = e.message
     } finally {
       expect(errMessage).to.equal(
-        'Error in request renderInfo: Request failed with status code 401 (Unauthorized)',
+        'Error in request renderInfo: Request failed with status code 401 (Unauthorized)\n',
       )
     }
   })
