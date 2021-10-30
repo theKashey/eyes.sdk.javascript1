@@ -39,10 +39,10 @@
     "@applitools/types" "1.0.14"
     "@applitools/utils" "1.2.3"
 
-"@applitools/eyes-sdk-core@12.23.19":
-  version "12.23.19"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.19.tgz#7d7f0647b234134ec6d7298d5972247c0a36cc7d"
-  integrity sha512-5bD7Kuva/tw+dd6rJSdAB/kV36koF1k46JvT5L4GnP4HnLBGW2o2rQ5+kdwz/qMlPWQPjk6gWYykfsTsfwqaFg==
+"@applitools/eyes-sdk-core@12.23.21":
+  version "12.23.21"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.23.21.tgz#249581bc540a1e3dc72016c9655da80d8a14c0d4"
+  integrity sha512-lS/Vm5NMy+sWs/peKHL+7/zA8ZlKOBHoqg4JD6y6S9evuFk8FmcQ5MGk0d+DYhoHfYoD9vj7cwU5it30IjGURw==
   dependencies:
     "@applitools/dom-capture" "11.0.1"
     "@applitools/dom-snapshot" "4.5.10"
@@ -207,12 +207,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
   integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
-"@applitools/visual-grid-client@15.8.39":
-  version "15.8.39"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.39.tgz#6cd3192130aecc30a924403313401275bb5106fc"
-  integrity sha512-i1/sVbymjhCsNQs9CyTkVtwsH9CJW1IuoV+3Rk+XRx/xiwzYkqVopzXYMvyJek5gDoAW8dlnGqIhSkDCcd8RrQ==
+"@applitools/visual-grid-client@15.8.40":
+  version "15.8.40"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.40.tgz#2d470894473a23b2d55c831e58580c95dae8656c"
+  integrity sha512-oLPT25JL5DF2L4IKBEF2Sr3HKgwYSsUZWNy8nDCmpoKCHNNWSCjM/Ju5kURcNTCDj4ZULCUMPmsnsDqhn6U0Vw==
   dependencies:
-    "@applitools/eyes-sdk-core" "12.23.19"
+    "@applitools/eyes-sdk-core" "12.23.21"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.5"
     "@applitools/isomorphic-fetch" "3.0.0"
@@ -221,6 +221,7 @@
     abort-controller "3.0.0"
     chalk "3.0.0"
     he "1.2.0"
+    lodash.mapkeys "4.6.0"
     lodash.mapvalues "4.6.0"
     mime-types "2.1.27"
     mkdirp "0.5.5"
@@ -1741,6 +1742,11 @@ lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
   integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
+
+lodash.mapkeys@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.mapkeys/-/lodash.mapkeys-4.6.0.tgz#df2cfa231d7c57c7a8ad003abdad5d73d3ea5195"
+  integrity sha1-3yz6Ix18V8eorQA6va1dc9PqUZU=
 
 lodash.mapvalues@4.6.0:
   version "4.6.0"
