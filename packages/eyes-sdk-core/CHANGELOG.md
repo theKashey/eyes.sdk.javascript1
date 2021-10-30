@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.23.22 - 2021/10/30
+
 - change `takeDomSnapshots` to accept function for `waitBeforeCapture`
 
 ## 12.23.21 - 2021/10/29
