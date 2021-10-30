@@ -5,6 +5,7 @@ test/fixtures/accessibilityStorybook
 test/fixtures/crossOriginIframeStorybook
 test/fixtures/jsLayoutStorybook
 test/fixtures/jsLayoutStorybookLocal
+test/fixtures/waitBeforeCapture
 test/fixtures/customFont
 test/fixtures/fakeIE
 dist
