@@ -14,7 +14,7 @@ describe('closeBatches', () => {
       .query({apiKey})
       .replyWithError({message, code: 500})
     const [err] = await presult(closeBatches({batchIds: ['678'], serverUrl, apiKey}))
-    expect(err.message).to.equal(message)
+    expect(err.message).to.equal(`Error in request deleteBatchSessions: ${message}`)
   })
 
   it('should handle a single batchId deletion failure', async () => {

@@ -181,7 +181,7 @@ async function handleRequestError({err, axios, logger}) {
     throw err
   }
   const {response, config} = err
-  const reason = `${err.message}${response ? `(${response.statusText})` : ''}`
+  const reason = constructReason(err)
 
   logger.log(
     `axios error interceptor - ${config.name} [${config.requestId}] - ${
@@ -232,6 +232,15 @@ async function handleRequestError({err, axios, logger}) {
     return axios.request(config)
   }
   throw new Error(reason)
+}
+
+function constructReason(err) {
+  const {response, config} = err
+  let reason = `Error in request ${config.name}: ${err.message}`
+  if (response) {
+    reason += ` (${response.statusText})\n${response.data}`
+  }
+  return reason
 }
 
 exports.configAxiosProxy = configAxiosProxy
