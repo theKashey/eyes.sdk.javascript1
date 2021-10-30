@@ -9,7 +9,7 @@ const {version} = require('../../package.json');
 const envWithColor = {...process.env, FORCE_COLOR: true};
 const spawnOptions = {stdio: 'pipe', env: envWithColor};
 
-describe.only('eyes-storybook', () => {
+describe('eyes-storybook', () => {
   let closeStorybook;
   before(async () => {
     closeStorybook = await testStorybook({
