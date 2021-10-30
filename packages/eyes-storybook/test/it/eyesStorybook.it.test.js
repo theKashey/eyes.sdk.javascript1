@@ -364,7 +364,9 @@ describe('eyesStorybook', () => {
     } catch (e) {
       errorMessage = e.message;
     } finally {
-      expect(errorMessage).to.equal('Request failed with status code 401(Unauthorized)');
+      expect(errorMessage).to.equal(
+        'Error in request renderInfo: Request failed with status code 401 (Unauthorized)\n',
+      );
     }
   });
 });
