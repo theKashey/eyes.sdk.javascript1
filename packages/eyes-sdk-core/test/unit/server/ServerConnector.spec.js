@@ -18,7 +18,7 @@ const {
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const RenderRequest = require('../../../lib/renderer/RenderRequest')
-const createRGridDom = require('../../../../visual-grid-client/src/sdk/createRGridDom')
+const createRGridDom = require('@applitools/visual-grid-client/src/sdk/createRGridDom')
 const RenderInfo = require('../../../lib/renderer/RenderInfo')
 const logger = new makeLogger()
 
