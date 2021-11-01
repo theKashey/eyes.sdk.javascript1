@@ -8,5 +8,6 @@ test/fixtures/jsLayoutStorybookLocal
 test/fixtures/waitBeforeCapture
 test/fixtures/customFont
 test/fixtures/fakeIE
+test/fixtures/zeroStoriesRetry
 dist
 logs

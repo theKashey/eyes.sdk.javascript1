@@ -2,7 +2,7 @@
 const puppeteer = require('puppeteer');
 const getStories = require('../dist/getStories');
 const {makeVisualGridClient} = require('@applitools/visual-grid-client');
-const {presult} = require('@applitools/functional-commons');
+const {presult, delay} = require('@applitools/functional-commons');
 const chalk = require('./chalkify');
 const makeInitPage = require('./initPage');
 const makeRenderStory = require('./renderStory');
@@ -24,6 +24,8 @@ const {splitConfigsByBrowser} = require('./shouldRenderIE');
 const executeRenders = require('./executeRenders');
 
 const CONCURRENT_PAGES = 3;
+const MAX_RETRIES = 10;
+const RETRY_INTERVAL = 1000;
 
 async function eyesStorybook({
   config,
@@ -203,9 +205,9 @@ async function eyesStorybook({
       spinner.fail(failMsg);
       throw new Error();
     }
-    const [getStoriesErr, stories] = await presult(
-      page.evaluate(getStories, {timeout: readStoriesTimeout}),
-    );
+
+    const [getStoriesErr, stories] = await readStoriesWithRetry(MAX_RETRIES);
+
     if (getStoriesErr) {
       logger.log('Error in getStories:', getStoriesErr);
       const failMsg = refineErrorMessage({
@@ -256,6 +258,19 @@ async function eyesStorybook({
 
   function getTransitiongIntoIE() {
     return transitioning;
+  }
+
+  async function readStoriesWithRetry(remainingRetries) {
+    const [getStoriesErr, stories] = await presult(
+      page.evaluate(getStories, {timeout: readStoriesTimeout}),
+    );
+    if (stories.length > 0 || remainingRetries == 0 || getStoriesErr) {
+      return [getStoriesErr, stories];
+    } else {
+      logger.log(`Got 0 stories, retrying to read stories... ${remainingRetries - 1} are left`);
+      await delay(RETRY_INTERVAL);
+      return await readStoriesWithRetry(remainingRetries - 1);
+    }
   }
 }
 
