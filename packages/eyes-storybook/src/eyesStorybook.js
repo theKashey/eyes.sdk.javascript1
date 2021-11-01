@@ -264,7 +264,7 @@ async function eyesStorybook({
     const [getStoriesErr, stories] = await presult(
       page.evaluate(getStories, {timeout: readStoriesTimeout}),
     );
-    if (stories.length > 0 || remainingRetries == 0 || getStoriesErr) {
+    if (getStoriesErr || stories.length > 0 || remainingRetries == 0) {
       return [getStoriesErr, stories];
     } else {
       logger.log(`Got 0 stories, retrying to read stories... ${remainingRetries - 1} are left`);
