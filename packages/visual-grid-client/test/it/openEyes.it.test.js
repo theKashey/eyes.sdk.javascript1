@@ -2358,4 +2358,110 @@ Received: 'firefox-1'.`,
     expect(err[0].message).to.contain('renderStatusError')
     expect(wrapper.getAppEnvironment().inferred).to.equal('useragent:firefox')
   })
+
+  it('handles backwards compatibility when passing to makeRenderingGridClient', async () => {
+    const logs = []
+    openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      logger: {verbose: msg => logs.push(msg), log: msg => logs.push(msg)},
+      baselineBranch: 'baseline branch',
+      batchSequence: 'batch sequence',
+      branch: 'branch',
+      parentBranch: 'parent branch',
+      batchNotify: true,
+    }).openEyes
+
+    await openEyes({
+      wrappers: [wrapper],
+      appName,
+    })
+
+    expect(logs.filter(log => log.includes('is deprecated'))).to.eql([
+      'warning - "batchSequence" is deprecated and will be removed, please use "batchSequenceName" instead.',
+      'warning - "baselineBranch" is deprecated and will be removed, please use "baselineBranchName" instead.',
+      'warning - "parentBranch" is deprecated and will be removed, please use "parentBranchName" instead.',
+      'warning - "branch" is deprecated and will be removed, please use "branchName" instead.',
+      'warning - "batchNotify" is deprecated and will be removed, please use "notifyOnCompletion" instead.',
+    ])
+  })
+
+  it('handles backwards compatibility when passing to openEyes', async () => {
+    const logs = []
+    openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      logger: {verbose: msg => logs.push(msg), log: msg => logs.push(msg)},
+    }).openEyes
+    await openEyes({
+      wrappers: [wrapper],
+      appName,
+      logger: {verbose: msg => logs.push(msg), log: msg => logs.push(msg)},
+      baselineBranch: 'baseline branch',
+      batchSequence: 'batch sequence',
+      branch: 'branch',
+      parentBranch: 'parent branch',
+      batchNotify: true,
+    })
+
+    expect(wrapper.baselineBranchName).to.equal('baseline branch')
+    expect(wrapper.branchName).to.equal('branch')
+    expect(wrapper.parentBranchName).to.equal('parent branch')
+    expect(wrapper.batch.getSequenceName()).to.equal('batch sequence')
+    expect(wrapper.batch.getNotifyOnCompletion()).to.be.true
+
+    expect(logs.filter(log => log.includes('is deprecated'))).to.eql([
+      'warning - "batchSequence" is deprecated and will be removed, please use "batchSequenceName" instead.',
+      'warning - "baselineBranch" is deprecated and will be removed, please use "baselineBranchName" instead.',
+      'warning - "parentBranch" is deprecated and will be removed, please use "parentBranchName" instead.',
+      'warning - "branch" is deprecated and will be removed, please use "branchName" instead.',
+      'warning - "batchNotify" is deprecated and will be removed, please use "notifyOnCompletion" instead.',
+    ])
+  })
+
+  it('handles backwards compatibility when passing to makeRenderingGridClient', async () => {
+    const logs = []
+    openEyes = makeRenderingGridClient({
+      showLogs: APPLITOOLS_SHOW_LOGS,
+      apiKey,
+      renderWrapper: wrapper,
+      logger: {verbose: msg => logs.push(msg), log: msg => logs.push(msg)},
+      baselineBranch: 'baseline branch',
+      batchSequence: 'batch sequence',
+      branch: 'branch',
+      parentBranch: 'parent branch',
+      batchNotify: true,
+    }).openEyes
+
+    await openEyes({
+      wrappers: [wrapper],
+      appName,
+      baselineBranch: 'baseline branch (open)',
+      batchSequence: 'batch sequence (open)',
+      branch: 'branch (open)',
+      parentBranch: 'parent branch (open)',
+      batchNotify: false,
+    })
+
+    expect(wrapper.baselineBranchName).to.equal('baseline branch (open)')
+    expect(wrapper.branchName).to.equal('branch (open)')
+    expect(wrapper.parentBranchName).to.equal('parent branch (open)')
+    expect(wrapper.batch.getSequenceName()).to.equal('batch sequence (open)')
+    expect(wrapper.batch.getNotifyOnCompletion()).to.be.false
+
+    expect(logs.filter(log => log.includes('is deprecated'))).to.eql([
+      'warning - "batchSequence" is deprecated and will be removed, please use "batchSequenceName" instead.',
+      'warning - "baselineBranch" is deprecated and will be removed, please use "baselineBranchName" instead.',
+      'warning - "parentBranch" is deprecated and will be removed, please use "parentBranchName" instead.',
+      'warning - "branch" is deprecated and will be removed, please use "branchName" instead.',
+      'warning - "batchNotify" is deprecated and will be removed, please use "notifyOnCompletion" instead.',
+      'warning - "batchSequence" is deprecated and will be removed, please use "batchSequenceName" instead.',
+      'warning - "baselineBranch" is deprecated and will be removed, please use "baselineBranchName" instead.',
+      'warning - "parentBranch" is deprecated and will be removed, please use "parentBranchName" instead.',
+      'warning - "branch" is deprecated and will be removed, please use "branchName" instead.',
+      'warning - "batchNotify" is deprecated and will be removed, please use "notifyOnCompletion" instead.',
+    ])
+  })
 })

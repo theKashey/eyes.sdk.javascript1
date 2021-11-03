@@ -37,15 +37,15 @@ function configureWrappers({
   displayName,
   batch,
   properties,
-  baselineBranch,
+  baselineBranchName,
   baselineEnvName,
   baselineName,
   envName,
   ignoreCaret,
   matchLevel,
   accessibilitySettings,
-  parentBranch,
-  branch,
+  parentBranchName,
+  branchName,
   proxy,
   saveDiffs,
   saveFailedTests,
@@ -71,7 +71,7 @@ function configureWrappers({
     wrapper.setBatch(batch)
 
     displayName !== undefined && wrapper.setDisplayName(displayName)
-    baselineBranch !== undefined && wrapper.setBaselineBranchName(baselineBranch)
+    baselineBranchName !== undefined && wrapper.setBaselineBranchName(baselineBranchName)
     baselineEnvName !== undefined && wrapper.setBaselineEnvName(baselineEnvName)
     baselineName !== undefined && wrapper.setBaselineName(baselineName)
     envName !== undefined && wrapper.setEnvName(envName)
@@ -82,8 +82,8 @@ function configureWrappers({
     useDom !== undefined && wrapper.setUseDom(useDom)
     enablePatterns !== undefined && wrapper.setEnablePatterns(enablePatterns)
     ignoreDisplacements !== undefined && wrapper.setIgnoreDisplacements(ignoreDisplacements)
-    parentBranch !== undefined && wrapper.setParentBranchName(parentBranch)
-    branch !== undefined && wrapper.setBranchName(branch)
+    parentBranchName !== undefined && wrapper.setParentBranchName(parentBranchName)
+    branchName !== undefined && wrapper.setBranchName(branchName)
     proxy !== undefined && wrapper.setProxy(proxy)
     saveDiffs !== undefined && wrapper.setSaveDiffs(saveDiffs)
     saveFailedTests !== undefined && wrapper.setSaveFailedTests(saveFailedTests)

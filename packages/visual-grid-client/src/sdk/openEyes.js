@@ -148,12 +148,18 @@ function makeOpenEyes({
       name: supportedBrowsers[browser.name] || browser.name,
     }))
 
-    ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
-      [{batchSequenceName}, {batchSequence}],
-      [{baselineBranchName}, {baselineBranch}],
-      [{parentBranchName}, {parentBranch}],
-      [{branchName}, {branch}],
-      [{notifyOnCompletion}, {batchNotify}],
+    ;({
+      batchSequenceName,
+      baselineBranchName,
+      parentBranchName,
+      branchName,
+      notifyOnCompletion,
+    } = backwardCompatible(
+      [{batchSequence}, {batchSequenceName}],
+      [{baselineBranch}, {baselineBranchName}],
+      [{parentBranch}, {parentBranchName}],
+      [{branch}, {branchName}],
+      [{batchNotify}, {notifyOnCompletion}],
       logger,
     ))
 
@@ -161,8 +167,8 @@ function makeOpenEyes({
       batch,
       batchId,
       batchName,
-      batchSequence,
-      batchNotify,
+      batchSequenceName,
+      notifyOnCompletion,
     })
 
     let doGetBatchInfoWithCache
@@ -192,7 +198,7 @@ function makeOpenEyes({
       displayName,
       batch: mergedBatch,
       properties,
-      baselineBranch,
+      baselineBranchName,
       baselineEnvName,
       baselineName,
       envName,
@@ -202,8 +208,8 @@ function makeOpenEyes({
       useDom,
       enablePatterns,
       ignoreDisplacements,
-      parentBranch,
-      branch,
+      parentBranchName,
+      branchName,
       proxy,
       saveDiffs,
       saveFailedTests,
@@ -348,13 +354,14 @@ function makeOpenEyes({
   }
 }
 
-function mergeBatchProperties({batch, batchId, batchName, batchSequence, batchNotify}) {
+function mergeBatchProperties({batch, batchId, batchName, batchSequenceName, notifyOnCompletion}) {
   const isGeneratedId = batchId !== undefined ? false : batch.getIsGeneratedId()
   return new BatchInfo({
     id: batchId !== undefined ? batchId : batch.getId(),
     name: batchName !== undefined ? batchName : batch.getName(),
-    sequenceName: batchSequence !== undefined ? batchSequence : batch.getSequenceName(),
-    notifyOnCompletion: batchNotify !== undefined ? batchNotify : batch.getNotifyOnCompletion(),
+    sequenceName: batchSequenceName !== undefined ? batchSequenceName : batch.getSequenceName(),
+    notifyOnCompletion:
+      notifyOnCompletion !== undefined ? notifyOnCompletion : batch.getNotifyOnCompletion(),
     properties: batch.getProperties(),
     isGeneratedId,
   })

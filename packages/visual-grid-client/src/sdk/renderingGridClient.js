@@ -102,12 +102,18 @@ function makeRenderingGridClient({
 
   logger = logger || makeLogger({label: 'visual-grid-client', level: showLogs ? 'info' : 'silent'})
   logger.verbose('vgc concurrency is', finalConcurrency)
-  ;({batchSequence, baselineBranch, parentBranch, branch, batchNotify} = backwardCompatible(
-    [{batchSequenceName}, {batchSequence}],
-    [{baselineBranchName}, {baselineBranch}],
-    [{parentBranchName}, {parentBranch}],
-    [{branchName}, {branch}],
-    [{notifyOnCompletion}, {batchNotify}],
+  ;({
+    batchSequenceName,
+    baselineBranchName,
+    parentBranchName,
+    branchName,
+    notifyOnCompletion,
+  } = backwardCompatible(
+    [{batchSequence}, {batchSequenceName}],
+    [{baselineBranch}, {baselineBranchName}],
+    [{parentBranch}, {parentBranchName}],
+    [{branch}, {branchName}],
+    [{batchNotify}, {notifyOnCompletion}],
     logger,
   ))
 
@@ -176,8 +182,8 @@ function makeRenderingGridClient({
     : new BatchInfo({
         name: batchName,
         id: batchId,
-        sequenceName: batchSequence,
-        notifyOnCompletion: batchNotify,
+        sequenceName: batchSequenceName,
+        notifyOnCompletion,
       })
 
   const globalState = _globalState || makeGlobalState({logger})
@@ -188,7 +194,7 @@ function makeRenderingGridClient({
     apiKey,
     batch: batchInfo,
     properties,
-    baselineBranch,
+    baselineBranchName,
     baselineEnvName,
     baselineName,
     envName,
@@ -199,8 +205,8 @@ function makeRenderingGridClient({
     useDom,
     enablePatterns,
     ignoreDisplacements,
-    parentBranch,
-    branch,
+    parentBranchName,
+    branchName,
     proxy,
     saveDiffs,
     saveFailedTests,
