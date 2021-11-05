@@ -31,11 +31,8 @@ describe('spec driver', () => {
     })
     // NOTE: Nightwatch separates the strategy from the selector - so it's always 2 values
     // e.g., using 'css selector', with 'div'
-    it('isSelector(string)', function () {
-      assert.ok(spec.isSelector('div'))
-    })
-    it('isSelector({type, selector})', function () {
-      assert.ok(spec.isSelector({type: 'css', selector: 'div'}))
+    it('isSelector({locateStrategy, selector})', function () {
+      assert.ok(spec.isSelector({locateStrategy: 'css selector', selector: 'div'}))
     })
     it('isSelector(wrong)', function () {
       assert.ok(!spec.isSelector())
@@ -95,25 +92,25 @@ describe('spec driver', () => {
       assert.deepStrictEqual(result, args)
     })
     it('findElement(selector)', async function (driver) {
-      const element = await spec.findElement(driver, '#overflowing-div')
+      const element = await spec.findElement(driver, {locatorStrategy: 'css selector', selector: '#overflowing-div'})
       assert.ok(spec.isElement(element))
     })
     it('findElement(non-existentent)', async function (driver) {
       try {
-        const element = await spec.findElement(driver, 'blah')
+        const element = await spec.findElement(driver, {locatorStrategy: 'css selector', selector: 'blah'})
         assert.ok(!spec.isElement(element))
       } catch (error) {
         assert.ok(!spec.isElement(error))
       }
     })
     it('findElements(selector)', async function (driver) {
-      const elements = await spec.findElements(driver, 'div')
+      const elements = await spec.findElements(driver, {locatorStrategy: 'css selector', selector: 'div'})
       assert.ok(Array.isArray(elements))
       assert.ok(elements.length > 0)
       assert.ok(spec.isElement(elements[0]))
     })
     it('findElements(non-existent)', async function (driver) {
-      const elements = await spec.findElements(driver, 'blah')
+      const elements = await spec.findElements(driver, {locatorStrategy: 'css selector', selector: 'blah'})
       assert.ok(Array.isArray(elements))
       assert.ok(!elements.length)
     })
@@ -200,17 +197,6 @@ describe('spec driver', () => {
         })
       })
       assert.ok(spec.isStaleElementError(error))
-    })
-    it('getElementRect()', async function (driver) {
-      const {value: element} = await driver.element('css selector', '#overflowing-div')
-      const rect = await spec.getElementRect(driver, element)
-
-      assert.deepStrictEqual(rect, {
-        height: 184,
-        width: 304,
-        x: 8,
-        y: 81,
-      })
     })
     it('getDriverInfo()', async function (driver) {
       const info = await spec.getDriverInfo(driver)
