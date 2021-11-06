@@ -106,7 +106,7 @@ describe('spec driver', async () => {
           browserName: 'chrome',
           isMobile: false,
           isNative: false,
-          platformName: 'linux',
+          platformName: 'LINUX',
         },
       })
     })
