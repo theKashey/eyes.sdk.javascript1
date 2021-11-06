@@ -209,12 +209,12 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     if (browserOptionsName) {
       const browserOptions = desiredCapabilities[browserOptionsName] || {}
       browserOptions.args = [...(browserOptions.args || []), ...args]
-      browserOptions.w3c = false
       if (headless) browserOptions.args.push('headless')
       if (attach) {
         browserOptions.debuggerAddress = attach === true ? 'localhost:9222' : attach
       }
       desiredCapabilities[browserOptionsName] = browserOptions
+      if (browser !== 'firefox' && !browserOptions.mobileEmulation) browserOptions.w3c = false
     }
   }
   if (appium && browser === 'chrome') {
