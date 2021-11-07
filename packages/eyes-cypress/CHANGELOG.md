@@ -6,6 +6,8 @@
 - Support running user defined run hooks in Cypress
 - Fix cypress tests not being cleaned up
 - Fix duplicate batch start/end events in cypress
+- updated to @applitools/dom-snapshot@4.5.10 (from 4.5.9)
+- updated to @applitools/visual-grid-client@15.8.43 (from 15.8.36)
 
 ## 3.22.6 - 2021/10/18
 
