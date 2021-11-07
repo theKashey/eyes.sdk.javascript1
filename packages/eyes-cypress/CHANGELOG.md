@@ -3,6 +3,9 @@
 ## Unreleased
 
 - replace legacy logger construction with new
+- Support running user defined run hooks in Cypress
+- Fix cypress tests not being cleaned up
+- Fix duplicate batch start/end events in cypress
 
 ## 3.22.6 - 2021/10/18
 

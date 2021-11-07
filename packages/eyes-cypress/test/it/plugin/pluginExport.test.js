@@ -4,12 +4,10 @@ const {expect} = require('chai');
 const makePluginExport = require('../../../src/plugin/pluginExport');
 const {promisify: p} = require('util');
 const psetTimeout = p(setTimeout);
-const {makeVisualGridClient} = require('@applitools/visual-grid-client');
-const {makeLogger} = require('@applitools/logger');
 const makeConfig = require('../../../src/plugin/config');
 
 describe('pluginExport', () => {
-  let prevEnv, visualGridClient, logger, eyesConfig;
+  let prevEnv, eyesConfig;
 
   async function startServer() {
     return {
@@ -18,8 +16,6 @@ describe('pluginExport', () => {
   }
 
   beforeEach(() => {
-    logger = makeLogger({label: 'eyes'});
-    visualGridClient = makeVisualGridClient({logger});
     prevEnv = process.env;
     process.env = {};
     eyesConfig = makeConfig().eyesConfig;
@@ -30,7 +26,7 @@ describe('pluginExport', () => {
   });
 
   it('sets eyesLegcyHooks', async () => {
-    const pluginExport = makePluginExport({startServer, eyesConfig, visualGridClient, logger});
+    const pluginExport = makePluginExport({startServer, eyesConfig});
     let __module = {
       exports: () => ({bla: 'blah'}),
     };
@@ -72,7 +68,7 @@ describe('pluginExport', () => {
   });
 
   it('handles async module.exports', async () => {
-    const pluginExport = makePluginExport({startServer, eyesConfig, visualGridClient});
+    const pluginExport = makePluginExport({startServer, eyesConfig});
     const __module = {
       exports: async () => {
         await psetTimeout(0);
@@ -96,11 +92,7 @@ describe('pluginExport', () => {
 
   it('works with disabled eyes', async () => {
     eyesConfig.eyesIsDisabled = true;
-    const pluginExport = makePluginExport({
-      startServer,
-      eyesConfig,
-      visualGridClient,
-    });
+    const pluginExport = makePluginExport({startServer, eyesConfig});
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
@@ -124,11 +116,7 @@ describe('pluginExport', () => {
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
-    const pluginExport = makePluginExport({
-      startServer,
-      eyesConfig,
-      visualGridClient,
-    });
+    const pluginExport = makePluginExport({startServer, eyesConfig});
 
     pluginExport(__module);
     const ret = await __module.exports(() => {}, {});
