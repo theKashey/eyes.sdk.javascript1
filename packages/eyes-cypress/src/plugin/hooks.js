@@ -6,14 +6,13 @@ const processCloseAndAbort = require('./processCloseAndAbort');
 const errorDigest = require('./errorDigest');
 const {tests} = require('./runningTests');
 
-function setGlobalRunHooks(on, {visualGridClient, logger, eyesConfig}) {
+function setGlobalRunHooks(on, {visualGridClient, logger}) {
   let waitForBatch;
 
   on('before:run', ({config}) => {
     const {isTextTerminal, eyesTestConcurrency: testConcurrency} = config;
     // ugly but neccessary here - as this is the only place that cypress exposes the run mode on config
     if (!isTextTerminal) return;
-    eyesConfig.eyesLegacyHooks = false;
 
     waitForBatch = makeWaitForBatch({
       logger: (logger.extend && logger.extend('waitForBatch')) || console,

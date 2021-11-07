@@ -13,7 +13,6 @@ describe('config', () => {
       eyesBrowser: undefined,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
     });
@@ -28,7 +27,6 @@ describe('config', () => {
       eyesBrowser: undefined,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
-      eyesLegacyHooks: true,
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
     });
