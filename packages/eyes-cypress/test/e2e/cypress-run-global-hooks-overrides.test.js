@@ -10,6 +10,7 @@ const {presult} = require('@applitools/functional-commons');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
 const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-global-hooks');
+const cwd = process.cwd();
 
 async function runCypress(pluginsFile) {
   return (
@@ -22,7 +23,7 @@ async function runCypress(pluginsFile) {
   ).stdout;
 }
 
-describe('cypress e2e', () => {
+describe('global hooks override', () => {
   before(async () => {
     if (fs.existsSync(targetTestAppPath)) {
       fs.rmdirSync(targetTestAppPath, {recursive: true});
@@ -30,6 +31,7 @@ describe('cypress e2e', () => {
     await pexec(`cp -r ${sourceTestAppPath}/. ${targetTestAppPath}`);
     const packageJsonPath = path.resolve(targetTestAppPath, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    process.chdir(cwd);
     const latestCypressVersion = (await pexec('npm view cypress version')).stdout.trim();
     packageJson.devDependencies['cypress'] = latestCypressVersion;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
