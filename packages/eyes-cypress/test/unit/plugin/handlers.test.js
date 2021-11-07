@@ -553,8 +553,15 @@ describe('handlers', () => {
     };
     runningTests.add(runningTest);
     handlers.batchStart({});
-    expect(
-      runningTests.tests.filter(t => t.testName && t.testName == 'aborted test')[0].isAborted,
-    ).to.be.equal(true);
+    expect(runningTest.isAborted).to.be.true;
+  });
+
+  it('tests are cleaned up on batchStart', async () => {
+    handlers.batchStart({});
+    await handlers.open({});
+    await handlers.batchEnd();
+    expect(runningTests.tests).to.have.lengthOf(1);
+    handlers.batchStart({});
+    expect(runningTests.tests).to.eql([]);
   });
 });
