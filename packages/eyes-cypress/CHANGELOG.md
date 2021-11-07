@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.7 - 2021/11/7
+
 - replace legacy logger construction with new
 - Support running user defined run hooks in Cypress
 - Fix cypress tests not being cleaned up
