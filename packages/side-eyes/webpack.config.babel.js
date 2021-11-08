@@ -24,6 +24,9 @@ export default {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      perf_hooks: require.resolve('./src/background/utils/perf_hooks.js'),
+    },
   },
   module: {
     rules: [
@@ -131,6 +134,7 @@ export default {
     url: true,
     child_process: 'empty',
     module: 'empty',
+    __dirname: true,
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
@@ -138,6 +142,16 @@ export default {
     new CopyWebpackPlugin([
       { from: 'manifest.json', to: '../' },
       { from: 'icons', to: '../icons' },
+      {
+        from: path.resolve(path.dirname(require.resolve('@applitools/dom-snapshot')), './dist/*.js'),
+        to: './dom-snapshot/[name].[ext]',
+        filter: resourcePath => /(processPagePoll|pollResult)\.js$/.test(resourcePath),
+      },
+      {
+        from: path.resolve(path.dirname(require.resolve('@applitools/dom-capture')), './dist/*.js'),
+        to: './dom-capture/[name].[ext]',
+        filter: resourcePath => /(captureDomAndPoll|pollResult)\.js$/.test(resourcePath),
+      },
     ]),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

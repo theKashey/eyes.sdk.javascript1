@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - Add support for CORS frames
 
 ## 1.13.4 - 2021/7/26
 

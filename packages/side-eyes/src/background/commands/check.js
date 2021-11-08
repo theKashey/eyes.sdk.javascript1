@@ -10,13 +10,22 @@ import { Target, ImageProvider } from '@applitools/eyes-images'
 import { buildCheckWindowFullFunction, buildCheckRegionFunction } from '../image-strategies/css-stitching'
 import { buildCheckUsingVisualGrid } from '../image-strategies/visual-grid'
 import { isFirefox } from '../utils/userAgent'
+import { Driver } from '@applitools/driver'
+import { makeLogger } from '@applitools/logger'
+import * as spec from '../../spec-driver'
 
 const imageProvider = new ImageProvider()
 
-export async function checkWindow(runId, testId, commandId, tabId, _windowId, stepName, viewport) {
+export async function checkWindow(runId, testId, commandId, tabId, windowId, frameId, stepName, viewport) {
   const eyes = await getEyes(`${runId}${testId}`)
+  const logger = makeLogger({ level: 'info', label: 'eyes' })
+  const driver = new Driver({
+    spec,
+    driver: { windowId, tabId, frameId },
+    logger,
+  })
   return await (eyes.isVisualGrid
-    ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, tabId), {
+    ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, driver, logger), {
         sizeMode: 'full-page',
         scriptHooks: {
           beforeCaptureScreenshot: eyes.getPreRenderHook(),

@@ -1,4 +1,6 @@
 import browser from 'webextension-polyfill'
+import { makeMessenger } from '../messenger'
+import { makeRefer } from '../refer'
 
 function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
@@ -66,3 +68,29 @@ window.addEventListener('message', event => {
 const elementForInjectingScript = document.createElement('script')
 elementForInjectingScript.src = browser.runtime.getURL('/assets/pageScripts.js')
 window.document.body.appendChild(elementForInjectingScript)
+
+// ********** this section was taken from eyes-browser-extention package //
+
+window.refer = makeRefer({
+  check: element => element instanceof Node,
+  validate: element => {
+    if (!element || !element.isConnected) {
+      throw new Error('StaleElementReferenceError')
+    }
+  },
+})
+
+const frameMessenger = makeMessenger({
+  onMessage: fn => window.addEventListener('message', ({ data }) => data.isApplitools && fn(data)),
+  sendMessage: data => window.postMessage({ ...data, isApplitools: true }, '*'),
+})
+const backgroundMessenger = makeMessenger({
+  onMessage: fn => browser.runtime.onMessage.addListener(message => fn(message)),
+  sendMessage: message => browser.runtime.sendMessage(message),
+})
+
+// NOTE: Listen for one single command triggered from childContext in spec driver
+// This is a workaround to get frameId of cross origin iframe
+frameMessenger.on('*', (_, type) => backgroundMessenger.emit(type))
+
+// this section was taken from eyes-browser-extention package //

@@ -425,6 +425,7 @@ browser.runtime.onMessageExternal.addListener((message, _sender, sendResponse) =
                 message.options.commandId,
                 message.options.tabId,
                 message.options.windowId,
+                message.options.frameId,
                 message.command.target,
                 viewport
               )

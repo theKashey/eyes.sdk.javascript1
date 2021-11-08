@@ -1,8 +1,8 @@
-import { getSnapshot } from './dom-snapshot'
+import { takeDomSnapshot } from '@applitools/eyes-sdk-core'
 
-export function buildCheckUsingVisualGrid(eyes, tabId) {
+export function buildCheckUsingVisualGrid(eyes, driver, logger) {
   return async (params = {}) => {
-    const snapshot = await getSnapshot(tabId)
+    const snapshot = await takeDomSnapshot(logger, driver)
     eyes.checkWindow({
       url: snapshot.url,
       snapshot,

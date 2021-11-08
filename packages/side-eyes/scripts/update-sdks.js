@@ -9,6 +9,10 @@ const SDKS_TO_UPGRADE = [
   '@applitools/dom-snapshot',
   '@applitools/eyes-images',
   '@applitools/visual-grid-client',
+  '@applitools/eyes-sdk-core',
+  '@applitools/logger',
+  '@applitools/driver',
+  '@applitools/utils',
 ]
 
 async function upgradeSDKs() {
@@ -40,10 +44,7 @@ async function writeChangelog() {
 
   await fs.writeFile(
     './CHANGELOG.md',
-    changelog.replace(
-      '# Changelog',
-      `# Changelog\n\n## v${pkg.version}\n- Updated underlying Applitools SDKs`
-    )
+    changelog.replace('# Changelog', `# Changelog\n\n## v${pkg.version}\n- Updated underlying Applitools SDKs`)
   )
 }
 
