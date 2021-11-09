@@ -104,22 +104,31 @@ perform a code export in Selenium IDE to verify it works and contains Eyes code
 
 It's possible to debug the extension with the `debugger` keyword. Place it in the part of the extension's code base that you're working in, build the extension (or wait for the watcher to rebuild if you're using `yarn build --watch`), and reload the extension in the browser. Then open the devtools for the part of the extension where you set the breakpoint (e.g., the devtools panel for the application under test, or by opening the devtools panel for the extension's background page). When you run the application (e.g., click play in SIDE), and the `debugger` keyword will act as a breakpoint.
 
-### Version
-
-You can version the package with `yarn version` (e.g., `yarn --minor`).
-
-This will run the preversion checks used in the other JS SDKs, as well as update the version in the browser extension manifest file (which is needed for publishing).
-
 ### Preparing Build Artifacts for Publishing
 
-Now that you've versioned your release, you need to prepare a production build of it. You can do that with the `yarn:build` script.
+1. verify that you are on the `master` branch
 
-To release you need a zipped archive of both the build directory and the source code of the project. There is a script (e.g., script/gh-release.js) which handles zipping the build directory and attaching it to a tagged release in GitHub. Although it needs to be updated due to deprecation warnings.
+2. `yarn version --patch` (or `--minor` or `--major`)
 
-The script relies on a GitHub personal access token (which you can set up [here](https://github.com/settings/tokens)) stored in an environment variable (e.g., `GH_TOKEN`).
+    This will run the preversion checks used in the other JS SDKs, as well as update the version in the browser extension manifest file (which is needed for publishing).
 
-If the script is successful, then the tagged release will have both a zip of the build directory and a zip of the source directory.
-If for some reason the script was not successful and you need to zip up the source, you can use the following command locally instead -- `git archive --format zip --output /path/to/save/side-eyes-src.zip master`.
+3. `git push`
+
+    Git origin will now have the correct manifest version in the source code.
+
+4. `yarn build`
+
+    Now that you've versioned your release, you need to prepare a production build of it.
+
+5. `yarn release:gh`
+
+    To release you need a zipped archive of both the build directory and the source code of the project. There is a script (e.g., script/gh-release.js) which handles zipping the build directory and attaching it to a tagged release in GitHub. Although it needs to be updated due to deprecation warnings.
+
+    The script relies on a GitHub personal access token (which you can set up [here](https://github.com/settings/tokens)) stored in an environment variable (e.g., `GH_TOKEN`).
+
+    If the script is successful, then the tagged release will have both a zip of the build directory and a zip of the source directory.
+
+    If for some reason the script was not successful and you need to zip up the source, you can use the following command locally instead -- `git archive --format zip --output /path/to/save/side-eyes-src.zip master`.
 
 ### Publishing
 
@@ -141,6 +150,23 @@ To upload for Firefox:
 - Go to the GitHub release page for the project
 - Download the source zip file
 - Upload both the zipped build directory (e.g., `selenium-ide.zip`) and the source zip file
+
+- notes to reviewer:
+
+```
+In order to build the extension from source code, go to the folder
+"packages/side-eyes" and run "yarn && yarn build".
+The built extension will then be found in the "packages/side-eyes/build"
+folder. This folder has the manifest.json file for the extension, and can
+be loaded as a temporary extension into firefox for testing.
+
+The above is also documented in the extension's source, at the file
+"packages/side-eyes/CONTRIBUTING.md" in section "Workflow --> Build".
+
+The extension was built using Linux Ubuntu 20.04 64 bit, Node.js 14.15.1,
+and yarn 1.22.5
+```
+
 - Click to edit the release
 - Set the Firefox version to 56 and Save
 
