@@ -1,7 +1,7 @@
 const CYPRESS_SUPPORTED_VERSION = '6.2.0';
 const CYPRESS_NO_FLAG_VERSION = '6.7.0';
 
-function shouldSetGlobalHooks(config) {
+function isGlobalHooksSupported(config) {
   const {version, experimentalRunEvents} = config;
 
   return (
@@ -10,4 +10,4 @@ function shouldSetGlobalHooks(config) {
   );
 }
 
-module.exports = shouldSetGlobalHooks;
+module.exports = isGlobalHooksSupported;

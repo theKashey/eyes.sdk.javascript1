@@ -7,7 +7,7 @@ const psetTimeout = p(setTimeout);
 const makeConfig = require('../../../src/plugin/config');
 
 describe('pluginExport', () => {
-  let prevEnv, eyesConfig;
+  let prevEnv, eyesConfig, globalHooks;
 
   async function startServer() {
     return {
@@ -19,6 +19,7 @@ describe('pluginExport', () => {
     prevEnv = process.env;
     process.env = {};
     eyesConfig = makeConfig().eyesConfig;
+    globalHooks = {};
   });
 
   afterEach(() => {
@@ -26,7 +27,7 @@ describe('pluginExport', () => {
   });
 
   it('sets eyesLegcyHooks', async () => {
-    const pluginExport = makePluginExport({startServer, eyesConfig});
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
     let __module = {
       exports: () => ({bla: 'blah'}),
     };
@@ -40,6 +41,7 @@ describe('pluginExport', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
     });
@@ -60,6 +62,7 @@ describe('pluginExport', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       version: '6.5.0',
@@ -68,7 +71,7 @@ describe('pluginExport', () => {
   });
 
   it('handles async module.exports', async () => {
-    const pluginExport = makePluginExport({startServer, eyesConfig});
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
     const __module = {
       exports: async () => {
         await psetTimeout(0);
@@ -85,6 +88,7 @@ describe('pluginExport', () => {
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
       eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
     });
@@ -92,7 +96,7 @@ describe('pluginExport', () => {
 
   it('works with disabled eyes', async () => {
     eyesConfig.eyesIsDisabled = true;
-    const pluginExport = makePluginExport({startServer, eyesConfig});
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
@@ -103,6 +107,7 @@ describe('pluginExport', () => {
       bla: 'ret',
       eyesPort: 123,
       eyesIsDisabled: true,
+      eyesIsGlobalHooksSupported: false,
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesFailCypressOnDiff: true,
@@ -116,7 +121,7 @@ describe('pluginExport', () => {
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
-    const pluginExport = makePluginExport({startServer, eyesConfig});
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
 
     pluginExport(__module);
     const ret = await __module.exports(() => {}, {});
@@ -126,6 +131,7 @@ describe('pluginExport', () => {
       eyesDisableBrowserFetching: false,
       eyesLayoutBreakpoints: undefined,
       eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
@@ -134,7 +140,7 @@ describe('pluginExport', () => {
 
   it('works with eyes disableBrowserFetching', async () => {
     eyesConfig.eyesDisableBrowserFetching = true;
-    const pluginExport = makePluginExport({startServer, eyesConfig});
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
     const __module = {
       exports: () => ({bla: 'ret'}),
     };
@@ -147,6 +153,7 @@ describe('pluginExport', () => {
       eyesDisableBrowserFetching: true,
       eyesLayoutBreakpoints: undefined,
       eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,

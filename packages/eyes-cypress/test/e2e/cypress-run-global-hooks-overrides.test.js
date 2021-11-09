@@ -9,7 +9,10 @@ const fs = require('fs');
 const {presult} = require('@applitools/functional-commons');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
-const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-global-hooks');
+const targetTestAppPath = path.resolve(
+  __dirname,
+  '../fixtures/testAppCopies/testApp-global-hooks-overrides',
+);
 const cwd = process.cwd();
 
 async function runCypress(pluginsFile) {
