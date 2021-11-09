@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.22.8 - 2021/11/9
+
 - fix not calling the global hooks before:run and after:run at all, unless the user also called them in his plugins file.
 - fix not calling the browser hooks for Cypress versions < 6.2.0 (where global hooks are not supported).
 
