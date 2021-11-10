@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/driver@1.3.0 (from 1.2.7)
+- updated to @applitools/types@1.0.19 (from 1.0.18)
 
 
 ## 12.23.24 - 2021/10/30
