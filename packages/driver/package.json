@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@applitools/snippets": "2.1.7",
-    "@applitools/types": "1.0.18",
+    "@applitools/types": "1.0.19",
     "@applitools/utils": "1.2.4"
   },
   "devDependencies": {
