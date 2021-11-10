@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+
+## 1.19.0 - 2021/11/10
+
+- support cookies
+- updated to @applitools/eyes-api@1.1.6 (from 1.1.5)
+- updated to @applitools/eyes-sdk-core@12.24.0 (from 12.23.24)
+- updated to @applitools/types@1.0.19 (from 1.0.18)
+- updated to @applitools/visual-grid-client@15.8.44 (from 15.8.43)
+- updated to @applitools/visual-grid-client@15.8.44 (from 15.8.43)
 ## 1.18.0 - 2021/11/6
 
 - updated to @applitools/eyes-api@1.1.5 (from 1.1.3)

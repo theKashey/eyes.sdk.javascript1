@@ -16,7 +16,19 @@ export type DriverInfo = {
   viewportSize?: Size
   features?: {
     shadowSelector?: boolean
+    allCookies?: boolean
   }
+}
+
+export type Cookie = {
+  name: string
+  value: string
+  domain?: string
+  path?: string
+  expiry?: number
+  httpOnly?: boolean
+  secure?: boolean
+  sameSite?: 'Strict' | 'Lax' | 'None'
 }
 
 export type Selector<TSelector = never> =
@@ -52,10 +64,10 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   getUrl(driver: TDriver): Promise<string>
   takeScreenshot(driver: TDriver): Promise<Buffer | string>
   visit?(driver: TDriver, url: string): Promise<void>
-
   getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape'>
   getElementRegion?(driver: TDriver, element: TElement): Promise<Region>
   getElementAttribute?(driver: TDriver, element: TElement, attr: string): Promise<string>
   getElementText?(driver: TDriver, element: TElement): Promise<string>
   performAction?(driver: TDriver, steps: any[]): Promise<void>
+  getCookies?(driver: TDriver | TContext, context?: boolean): Promise<Cookie[]>
 }

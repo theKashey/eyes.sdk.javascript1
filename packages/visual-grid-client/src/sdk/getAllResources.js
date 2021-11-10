@@ -7,6 +7,7 @@ const resourceType = require('./resourceType')
 const toCacheEntry = require('./toCacheEntry')
 const extractSvgResources = require('./extractSvgResources')
 const getFetchOptions = require('./getFetchOptions')
+const getResourceCookies = require('./getResourceCookies')
 
 // NOTE regarding support for errorStatusCode:
 // why is this function still valid? because it is meant to add resources to the return value of getAllResources, if and only if it's not already there OR it is there but there is no content (for some reason I don't remember).
@@ -55,6 +56,7 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     referer,
     proxySettings,
     browserName,
+    cookies,
   }) {
     const handledResourceUrls = new Set()
     return getOrFetchResources(resourceUrls, preResources)
@@ -93,11 +95,13 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
       await Promise.all(
         missingResources.map(async rGridResource => {
           try {
+            const resourceCookies = getResourceCookies(rGridResource.getUrl(), cookies)
             const fetchOptions = getFetchOptions({
               rGridResource,
               referer,
               userAgent,
               proxySettings,
+              resourceCookies,
             })
             const resource = await fetchResource(rGridResource, fetchOptions)
             return assignContentfulResources(resources, await processResource(resource))

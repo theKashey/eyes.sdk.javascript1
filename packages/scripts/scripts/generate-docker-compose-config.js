@@ -35,6 +35,7 @@ function generateNetworkConfigForPlatform(platform) {
     : {
         ports: [
           '4444:4444',
+          '9515:9515',
           {
             target: 5555,
             protocol: 'tcp',

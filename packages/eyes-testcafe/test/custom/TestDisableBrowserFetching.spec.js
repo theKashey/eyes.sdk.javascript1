@@ -14,7 +14,7 @@ fixture`TestDisableBrowserFetching`
     server = await testServer({
       port: 5557,
       staticPath,
-      middlewareFile: path.join(cwd, 'node_modules/@applitools/sdk-shared/coverage-tests/util/ua-middleware.js'),
+      middlewares: ['ua'],
     })
     eyes = setupEyes({vg: true, disableBrowserFetching: true})
   })

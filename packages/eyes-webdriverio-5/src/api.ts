@@ -1,7 +1,7 @@
-import type {Driver, Element, Selector} from './spec-driver'
+import type {Driver, Element, Selector} from '@applitools/spec-driver-webdriverio'
 import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as api from '@applitools/eyes-api'
-import * as spec from './spec-driver'
+import * as spec from '@applitools/spec-driver-webdriverio'
 
 const sdk = makeSDK({
   name: 'eyes.webdriverio',

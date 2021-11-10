@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-api",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "keywords": [
     "applitools",
     "eyes",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@applitools/logger": "1.0.5",
-    "@applitools/types": "1.0.18",
+    "@applitools/types": "1.0.19",
     "@applitools/utils": "1.2.4"
   },
   "devDependencies": {

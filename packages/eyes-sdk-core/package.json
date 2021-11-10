@@ -57,7 +57,7 @@
     "@applitools/sdk-release-kit": "0.13.4",
     "@applitools/spec-driver-selenium": "1.2.0",
     "@applitools/test-utils": "1.0.9",
-    "@applitools/visual-grid-client": "15.8.43",
+    "@applitools/visual-grid-client": "15.8.44",
     "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",

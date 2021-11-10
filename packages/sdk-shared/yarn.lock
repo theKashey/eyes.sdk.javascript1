@@ -14,16 +14,17 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/test-server@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.6.tgz#0dbf6a6258635d50c68e2fcbdb02a9f026adf4bf"
-  integrity sha512-9A7bDWTC9XW9SROIdF0dkYCgYuSEkDC9NoZMMicHCWjNxNDP3b1MoX6lfJGvnRzXggKg8OzamJ395NBnm6Tbww==
+"@applitools/test-server@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.7.tgz#836df811c55ca704591a1e9be19bea26ac982d51"
+  integrity sha512-6rywEAfjACK5oitv9xLBvzW8C/vpph0OudaR/nwjWAO9OO/GXn2N/U9HrcvH8EoHbwDXNiqwiG53fYcKZK9PiA==
   dependencies:
     "@applitools/utils" "1.2.4"
     chalk "3.0.0"
     cookie-parser "1.4.5"
     cors "2.8.5"
     express "4.17.1"
+    handlebars "4.7.7"
     morgan "1.10.0"
     yargs "17.0.1"
 

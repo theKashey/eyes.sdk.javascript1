@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 1.0.7 - 2021/11/10
+
+- add built-in middlewares
+- add multiple middlewares support
+- add https support
+
 ## 1.0.6 - 2021/10/30
 
 - updated to @applitools/utils@1.2.4 (from 1.2.3)

@@ -1,4 +1,2 @@
 tests_output
-test/coverage/generic/*.*
 *.xml
-types/index.d.ts

@@ -5,6 +5,7 @@ const {Target} = require('../../../../')
 setDefaultTimeout(100000)
 
 Given(/^I open Applitools`s demo page$/, async () => {
+  console.log(client.transport)
   await client.url('https://applitools.github.io/demo/')
 })
 

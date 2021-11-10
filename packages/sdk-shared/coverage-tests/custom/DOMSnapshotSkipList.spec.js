@@ -17,7 +17,7 @@ describe('DOMSnapshotSkipList', () => {
     server = await testServer({
       port: 5558,
       staticPath,
-      middlewareFile: path.resolve(__dirname, '../util/ephemeral-middleware'),
+      middlewares: ['ephemeral'],
     })
   })
 

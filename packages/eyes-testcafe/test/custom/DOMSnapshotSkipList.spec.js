@@ -14,7 +14,7 @@ fixture`DOMSnapshotSkipList`
     server = await testServer({
       port: 5558,
       staticPath,
-      middlewareFile: path.join(cwd, 'node_modules/@applitools/sdk-shared/coverage-tests/util/ephemeral-middleware.js'),
+      middlewares: ['ephemeral'],
     })
     eyes = setupEyes({vg: true})
   })

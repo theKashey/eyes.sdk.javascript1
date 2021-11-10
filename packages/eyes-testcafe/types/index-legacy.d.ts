@@ -1,3 +1,2 @@
-import {Eyes} from './index'
-
-export default Eyes
+import { Eyes } from './index';
+export = Eyes;

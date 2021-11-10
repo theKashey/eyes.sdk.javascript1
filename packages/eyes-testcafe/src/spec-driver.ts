@@ -10,9 +10,9 @@ namespace TestCafe {
   export type SelectorOptions = globalThis.SelectorOptions
 }
 
-export type Driver = TestCafe.TestController
-export type Element = TestCafe.Selector | TestCafe.NodeSnapshot
-export type Selector = TestCafe.Selector
+export type Driver = TestCafe.TestController & {__applitoolsBrand?: never}
+export type Element = (TestCafe.Selector | TestCafe.NodeSnapshot) & {__applitoolsBrand?: never}
+export type Selector = TestCafe.Selector & {__applitoolsBrand?: never}
 
 type CommonSelector<TSelector = Selector | string> =
   | string

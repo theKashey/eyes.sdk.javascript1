@@ -1,9 +1,10 @@
 import type * as Selenium from 'selenium-webdriver'
+import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
 import * as utils from '@applitools/utils'
 
-export type Driver = Selenium.WebDriver
-export type Element = Selenium.WebElement
-export type Selector = Selenium.Locator | {using: string; value: string}
+export type Driver = Selenium.WebDriver & {__applitoolsBrand?: never}
+export type Element = Selenium.WebElement & {__applitoolsBrand?: never}
+export type Selector = (Selenium.Locator | {using: string; value: string}) & {__applitoolsBrand?: never}
 
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
@@ -34,6 +35,8 @@ export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
   driver.getExecutor().defineCommand('getSystemBars', 'GET', '/session/:sessionId/appium/device/system_bars')
   driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
+  driver.getExecutor().defineCommand('executeCdp', 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
+
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
   }
@@ -100,7 +103,7 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
   const root = parent ?? driver
   return root.findElements(selector)
 }
-export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
+export async function getWindowSize(driver: Driver): Promise<Size> {
   try {
     const window = driver.manage().window()
     if (utils.types.isFunction(window.getSize)) {
@@ -115,7 +118,7 @@ export async function getWindowSize(driver: Driver): Promise<{width: number; hei
     return driver.execute(new cmd.Command(cmd.Name.GET_WINDOW_SIZE).setParameter('windowHandle', 'current'))
   }
 }
-export async function setWindowSize(driver: Driver, size: {width: number; height: number}) {
+export async function setWindowSize(driver: Driver, size: Size) {
   const window = driver.manage().window()
   if (utils.types.isFunction(window.setRect)) {
     await window.setRect({x: 0, y: 0, width: size.width, height: size.height})
@@ -124,7 +127,36 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
     await window.setSize(size.width, size.height)
   }
 }
-export async function getDriverInfo(driver: Driver): Promise<any> {
+export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
+  if (context) return driver.manage().getCookies()
+
+  let cookies
+  if (utils.types.isFunction(driver, 'sendAndGetDevToolsCommand')) {
+    const response = await driver.sendAndGetDevToolsCommand('Network.getAllCookies')
+    cookies = response.cookies
+  } else {
+    const {Command} = require('selenium-webdriver/lib/command')
+    const executeCdpCommand = new Command('executeCdp').setParameters({cmd: 'Network.getAllCookies', params: {}})
+    const response =
+      process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+        ? await (driver as any).schedule(executeCdpCommand)
+        : await (driver as any).execute(executeCdpCommand)
+    cookies = response.cookies
+  }
+
+  return cookies.map((cookie: any) => {
+    const copy = {...cookie, expiry: cookie.expires}
+    delete copy.expires
+    delete copy.size
+    delete copy.priority
+    delete copy.session
+    delete copy.sameParty
+    delete copy.sourceScheme
+    delete copy.sourcePort
+    return copy
+  })
+}
+export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
   const desiredCapabilities = capabilities.get('desired') ?? {}
@@ -132,7 +164,7 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
   const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
 
-  const info: any = {
+  const info: DriverInfo = {
     sessionId: session.getId(),
     isMobile,
     isNative: isMobile && !capabilities.get('browserName'),
@@ -164,11 +196,11 @@ export async function getDriverInfo(driver: Driver): Promise<any> {
     info.pixelRatio = details.pixelRatio
 
     try {
-      const getSystemBars = new Command('getSystemBars')
+      const getSystemBarsCommand = new Command('getSystemBars')
       const {statusBar, navigationBar} =
         process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-          ? await (driver as any).schedule(getSystemBars)
-          : await driver.execute(getSystemBars)
+          ? await (driver as any).schedule(getSystemBarsCommand)
+          : await driver.execute(getSystemBarsCommand)
 
       info.statusBarHeight = statusBar.visible ? statusBar.height : 0
       info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
@@ -232,10 +264,7 @@ export async function getOrientation(driver: Driver): Promise<'portrait' | 'land
       : await driver.execute(getOrientationCommand)
   return orientation.toLowerCase() as 'portrait' | 'landscape'
 }
-export async function getElementRegion(
-  _driver: Driver,
-  element: Element,
-): Promise<{x: number; y: number; width: number; height: number}> {
+export async function getElementRegion(_driver: Driver, element: Element): Promise<Region> {
   if (utils.types.isFunction(element.getRect)) {
     return element.getRect()
   } else {

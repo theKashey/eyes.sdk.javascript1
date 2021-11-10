@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+## 4.58.0 - 2021/11/10
+
+- support cookies
+- updated to @applitools/eyes-api@1.1.6 (from 1.1.5)
+- updated to @applitools/eyes-sdk-core@12.24.0 (from 12.23.24)
+- updated to @applitools/spec-driver-selenium@1.2.0 (from 1.1.1)
+- updated to @applitools/visual-grid-client@15.8.44 (from 15.8.43)
+
 ## 4.57.0 - 2021/11/5
 
 - updated to @applitools/eyes-api@1.1.5 (from 1.1.4)

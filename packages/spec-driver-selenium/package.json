@@ -1,6 +1,6 @@
 {
   "name": "@applitools/spec-driver-selenium",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "keywords": [
     "selenium",
     "selenium-webdriver",
@@ -27,20 +27,25 @@
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    }
+  },
   "files": [
     "dist",
     "types"
   ],
   "scripts": {
     "lint": "eslint '**/*.ts'",
-    "build": "yarn build:dist",
-    "build:dist": "tsc",
+    "build": "ttsc",
     "test": "mocha ./test/**/*.spec.ts --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
     "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-selenium spec-selenium@3' -f links='test-utils utils'",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-selenium spec-selenium@3' -f links='types utils test-utils'",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-selenium'",
     "preversion": "bongo preversion",
     "version": "bongo version",
@@ -52,11 +57,13 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.3"
+    "@applitools/types": "1.0.19",
+    "@applitools/utils": "1.2.4"
   },
   "devDependencies": {
+    "@applitools/api-extractor": "^1.2.2",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-release-kit": "0.13.3",
+    "@applitools/sdk-release-kit": "0.13.4",
     "@applitools/test-utils": "1.0.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.2",
@@ -71,9 +78,10 @@
     "husky": "^4.3.7",
     "mocha": "^9.1.2",
     "prettier": "^2.4.1",
-    "selenium-webdriver": "^4.0.0-rc-2",
+    "selenium-webdriver": "^4.0.0",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.1-rc"
   },
   "peerDependencies": {
     "selenium-webdriver": ">=3.6.0"

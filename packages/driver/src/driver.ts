@@ -117,7 +117,6 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
     if (this.isWeb) {
       const userAgent = this._driverInfo?.userAgent ?? (await this.execute(snippets.getUserAgent))
-      const pixelRatio = this._driverInfo?.pixelRatio ?? (await this.execute(snippets.getPixelRatio))
       const userAgentInfo = userAgent ? parseUserAgent(userAgent) : ({} as any)
       this._driverInfo = {
         ...this._driverInfo,
@@ -130,8 +129,14 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           : userAgentInfo.platformVersion ?? this._driverInfo?.platformVersion,
         browserName: userAgentInfo.browserName ?? this._driverInfo?.browserName,
         browserVersion: userAgentInfo.browserVersion ?? this._driverInfo?.browserVersion,
+        pixelRatio: this._driverInfo?.pixelRatio ?? (await this.execute(snippets.getPixelRatio)),
         userAgent,
-        pixelRatio,
+      }
+      this._driverInfo.features = {
+        ...this._driverInfo.features,
+        allCookies:
+          this._driverInfo.features?.allCookies ??
+          (/chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile),
       }
     } else {
       if (this.isAndroid) {
@@ -435,6 +440,11 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     const orientation = this._spec.getOrientation(this.target)
     this._logger.log('Extracted device orientation:', orientation)
     return orientation
+  }
+
+  async getCookies(): Promise<types.Cookie[]> {
+    if (this.isNative || !this.features.allCookies) return []
+    return this._spec.getCookies(this.target)
   }
 
   async getTitle(): Promise<string> {

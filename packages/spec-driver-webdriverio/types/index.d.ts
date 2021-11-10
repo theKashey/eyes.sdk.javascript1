@@ -1,3 +1,5 @@
+declare const _default: import('@applitools/types').SpecDriver<Driver, Driver, Element, Selector>;
+export default _default;
 export function isDriver(browser: any): browser is Driver;
 export function isElement(element: any): element is Element;
 export function isSelector(selector: any): selector is Selector;
@@ -31,8 +33,6 @@ export function getElementAttribute(browser: Driver, element: Element, attr: str
 export function getElementText(browser: Driver, element: Element): Promise<string>;
 export function performAction(browser: Driver, steps: Array<any>): Promise<void>;
 export function build(env: any): Promise<[Driver, () => Promise<void>]>;
-export type Driver = Applitools.WebdriverIO.Browser;
-export type Element = Applitools.WebdriverIO.Element | { ELEMENT: string; } | { 'element-6066-11e4-a52e-4f735466cecf': string; };
-export type Selector = Applitools.WebdriverIO.Selector | { using: string; value: string; };
-declare const _default: import('@applitools/types').SpecDriver<Driver, Driver, Element, Selector>;
-export default _default;
+export type Driver = Applitools.WebdriverIO.Browser & { __applitoolsBrand?: never; };
+export type Element = (Applitools.WebdriverIO.Element | { ELEMENT: string; } | { 'element-6066-11e4-a52e-4f735466cecf': string; }) & { __applitoolsBrand?: never; };
+export type Selector = (Applitools.WebdriverIO.Selector | { using: string; value: string; }) & { __applitoolsBrand?: never; };

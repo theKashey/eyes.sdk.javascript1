@@ -19,7 +19,7 @@ describe('TestVisualGridRefererHeader', () => {
       staticPath,
       port: 5556,
       allowCors: false,
-      middlewareFile: path.resolve(__dirname, '../util/cors-middleware'),
+      middlewares: ['cors'],
     })
   })
 

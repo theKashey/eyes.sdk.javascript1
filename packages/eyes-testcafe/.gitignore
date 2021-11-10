@@ -3,4 +3,3 @@ overrides.js
 original-overrides.js
 test/perf/fixtures
 test/perf/out
-types/index.d.ts

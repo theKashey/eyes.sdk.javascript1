@@ -5,7 +5,7 @@ const {createSession, closeSession, startWebDriver, stopWebDriver} = require('ni
 BeforeAll(async () => {
   await startWebDriver({
     env: process.env.NIGHTWATCH_ENV || 'default',
-    configFile: path.join(__dirname, '../../nightwatch.conf.js'),
+    configFile: path.join(__dirname, '../nightwatch.conf.js'),
   })
   await createSession()
 })

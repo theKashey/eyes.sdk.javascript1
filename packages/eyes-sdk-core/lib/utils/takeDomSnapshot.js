@@ -28,6 +28,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     skipResources,
     removeReverseProxyURLPrefixes = !!process.env.APPLITOOLS_SCRIPT_REMOVE_REVERSE_PROXY_URL_PREFIXES,
     uniqueUrl = generateUniqueUrl,
+    onSnapshotContext,
   } = options
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
   const arg = {
@@ -62,13 +63,13 @@ async function takeDomSnapshot(logger, driver, options = {}) {
       `taking dom snapshot. ${context._reference ? `context referece: ${JSON.stringify(context._reference)}` : ''}`,
     )
 
+    if (onSnapshotContext) await onSnapshotContext(context)
     const snapshot = await EyesUtils.executePollScript(logger, context, scripts, {
       executionTimeout,
       pollTimeout,
     })
 
     const selectorMap = createFramesPaths({snapshot, logger})
-
     for (const {path, parentSnapshot, cdtNode} of selectorMap) {
       const references = path.reduce((parent, selector) => {
         return {reference: {type: 'css', selector}, parent}
@@ -81,6 +82,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
           const pathMap = selectorMap.map(({path}) => path.join('->')).join(' | ')
           logger.log(`could not switch to frame during takeDomSnapshot. Path to frame: ${pathMap}`, err)
         })
+
       if (frameContext) {
         const frameSnapshot = await takeContextDomSnapshot(frameContext)
         frameSnapshot.url = uniqueUrl(frameSnapshot.url, 'applitools-iframe')

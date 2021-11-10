@@ -11,10 +11,7 @@ fixture`CORS iframe support in vg`
       port: 7373,
       staticPath,
       allowCors: false,
-      middlewareFile: path.join(
-        cwd,
-        'node_modules/@applitools/sdk-shared/coverage-tests/util/handlebars-middleware.js',
-      ),
+      middlewares: ['handlebars'],
       hbData: {
         src: 'http://localhost:7374/cors_frames/frame.html',
       },

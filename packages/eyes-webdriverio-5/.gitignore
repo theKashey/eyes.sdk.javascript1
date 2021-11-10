@@ -1,2 +1,5 @@
-types/index.d.ts
-tsconfig.json
+!types/service.d.ts
+!types/v5-async.d.ts
+!types/v5-sync.d.ts
+!types/v6.d.ts
+!types/v7.d.ts

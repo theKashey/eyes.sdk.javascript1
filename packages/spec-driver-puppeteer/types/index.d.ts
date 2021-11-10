@@ -1,3 +1,5 @@
+declare const _default: import('@applitools/types').SpecDriver<Driver, Context, Element, Selector>;
+export default _default;
 export function isDriver(page: any): page is Driver;
 export function isContext(frame: any): frame is Context;
 export function isElement(element: any): element is Element;
@@ -24,9 +26,7 @@ export function hover(frame: Context, element: Element | Selector): Promise<void
 export function scrollIntoView(frame: Context, element: Element | Selector, align: boolean): Promise<void>;
 export function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void>;
 export function build(env: any): Promise<[Driver, () => Promise<void>]>;
-export type Driver = import('puppeteer').Page;
-export type Context = import('puppeteer').Frame;
-export type Element = import('puppeteer').ElementHandle<globalThis.Element>;
-export type Selector = string;
-declare const _default: import('@applitools/types').SpecDriver<Driver, Context, Element, Selector>;
-export default _default;
+export type Driver = import('puppeteer').Page & { __applitoolsBrand?: never; };
+export type Context = import('puppeteer').Frame & { __applitoolsBrand?: never; };
+export type Element = import('puppeteer').ElementHandle<globalThis.Element> & { __applitoolsBrand?: never; };
+export type Selector = string & { __applitoolsBrand?: never; };

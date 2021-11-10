@@ -41,11 +41,9 @@
     "run:testcafe:8": "./node_modules/testcafe-8/bin/testcafe-with-v8-flag-filter.js",
     "run:testcafe:7": "./node_modules/testcafe-7/bin/testcafe-with-v8-flag-filter.js",
     "lint": "eslint '**/*.ts' '**/*.js'",
-    "build": "yarn build:dist && yarn build:types",
-    "build:dist": "tsc",
-    "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts",
+    "build": "ttsc",
     "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-testcafe'",
-    "test": "yarn build:dist && yarn test:it && yarn test:coverage",
+    "test": "yarn test:it && yarn test:coverage",
     "test:unit": "mocha --no-timeouts ./test/unit/*.spec.js",
     "test:it": "testcafe chrome:headless test/it && yarn test:it:firefox:headless",
     "test:it:chrome": "testcafe chrome test/it/spec-driver.spec.js",
@@ -100,7 +98,10 @@
     "testcafe-7": "npm:testcafe@1.7.1",
     "testcafe-8": "npm:testcafe@1.8.8",
     "testcafe-9": "npm:testcafe@1.9.4",
-    "testcafe-browser-provider-browserstack": "^1.13.2-alpha.1"
+    "testcafe-browser-provider-browserstack": "^1.13.2-alpha.1",
+    "ts-node": "^10.4.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.1-rc"
   },
   "peerDependencies": {
     "testcafe": "^1.7.1"

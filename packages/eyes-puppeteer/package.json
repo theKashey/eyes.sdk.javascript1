@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-puppeteer",
-  "version": "1.8.5",
+  "version": "1.9.0",
   "description": "Applitools Eyes SDK for Puppeteer",
   "keywords": [
     "eyes-puppeteer",
@@ -40,19 +40,16 @@
   ],
   "scripts": {
     "lint": "eslint '**/*.ts'",
-    "build": "yarn build:dist && yarn build:types",
-    "build:dist": "tsc",
-    "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules puppeteer",
+    "build": "ttsc",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-puppeteer'",
-    "test": "yarn test:it && yarn test:coverage",
-    "test:it": "mocha --exit --no-timeouts -r ts-node/register ./test/it/*.spec.ts",
-    "test:coverage": "yarn build:dist && yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-puppeteer' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --exit --config .mocharc.cvg.js",
+    "test": "yarn test:coverage",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-puppeteer' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --exit --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-puppeteer'",
     "docker:build": "docker build -t applitools/puppeteer-chrome .",
     "docker:rebuild": "docker build --no-cache -t applitools/puppeteer-chrome .",
     "docker:run": "yarn docker:build && docker run -e NODE_AUTH_TOKEN --env APPLITOOLS_API_KEY=$APPLITOOLS_API_KEY_SDK --env APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-puppeteer' --env APPLITOOLS_BATCH_ID=$(uuidgen) --env XUNIT_FILE=coverage-test-report.xml -it --init --rm -v $(pwd):/sandbox applitools/puppeteer-chrome",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client' -f linking-depth=3",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-puppeteer utils driver snippets screenshoter' -f linking-depth=3",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer'",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
@@ -64,17 +61,17 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.1.5",
-    "@applitools/eyes-sdk-core": "12.23.24",
-    "@applitools/utils": "1.2.4",
-    "@applitools/visual-grid-client": "15.8.43"
+    "@applitools/eyes-api": "1.1.6",
+    "@applitools/eyes-sdk-core": "12.24.0",
+    "@applitools/spec-driver-puppeteer": "1.1.0",
+    "@applitools/visual-grid-client": "15.8.44"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.1.3",
+    "@applitools/api-extractor": "1.2.2",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-coverage-tests": "2.3.15",
+    "@applitools/sdk-coverage-tests": "2.3.16",
     "@applitools/sdk-release-kit": "0.13.4",
-    "@applitools/sdk-shared": "0.9.7",
+    "@applitools/sdk-shared": "0.9.8",
     "@applitools/test-utils": "1.0.9",
     "@types/mocha": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -87,9 +84,11 @@
     "husky": "^4.3.8",
     "mocha": "^8.0.1",
     "prettier": "^2.1.2",
-    "puppeteer": "^9.0.0",
+    "puppeteer": "^11.0.0",
     "spec-xunit-file": "0.0.1-3",
-    "ts-node": "^10.2.1"
+    "ts-node": "^10.2.1",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.0-beta"
   },
   "peerDependencies": {
     "puppeteer": ">=5.3.0"

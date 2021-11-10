@@ -12,8 +12,9 @@ const tags = {
     'ie',
     'edge',
     'safari',
+    'all-cookies'
   ],
-  cdp: ['chrome']
+  cdp: ['chrome', 'all-cookies']
 }
 const protocol = process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL in tags ? process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL : 'wd'
 

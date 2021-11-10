@@ -1,0 +1,125 @@
+{
+  "name": "@applitools/spec-driver-webdriverio",
+  "version": "1.1.0",
+  "keywords": [
+    "webdriverio",
+    "wdio",
+    "chrome devtools protocol",
+    "cdp",
+    "devtools",
+    "webdriver",
+    "webdriverjs",
+    "applitools",
+    "automation",
+    "testing",
+    "tests"
+  ],
+  "homepage": "https://applitools.com",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./v7": {
+      "types": "./types/v7.d.ts"
+    },
+    "./v6": {
+      "types": "./types/v6.d.ts"
+    },
+    "./v5": {
+      "types": "./types/v5-async.d.ts"
+    },
+    "./v5/async": {
+      "types": "./types/v5-async.d.ts"
+    },
+    "./v5/sync": {
+      "types": "./types/v5-sync.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "v7": [
+        "./types/v7.d.ts"
+      ],
+      "v6": [
+        "./types/v6.d.ts"
+      ],
+      "v5": [
+        "./types/v5-async.d.ts"
+      ],
+      "v5/async": [
+        "./types/v5-async.d.ts"
+      ],
+      "v5/sync": [
+        "./types/v5-sync.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "lint": "eslint '**/*.ts'",
+    "build": "ttsc --project tsconfig$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo .v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION).json",
+    "test": "mocha ./test/**/*.spec.ts --exit --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
+    "setup": "yarn docker:setup",
+    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:teardown": "docker-compose down",
+    "deps": "bongo deps",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio' -f links='types utils test-utils'",
+    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio'",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {
+    "@applitools/types": "1.0.19",
+    "@applitools/utils": "1.2.4"
+  },
+  "devDependencies": {
+    "@applitools/api-extractor": "1.2.2",
+    "@applitools/scripts": "1.0.1",
+    "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/test-utils": "1.0.9",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.2",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "chromedriver": "^95.0.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.7",
+    "mocha": "^9.1.2",
+    "prettier": "^2.4.1",
+    "ts-node": "^10.2.1",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.0-beta",
+    "webdriverio": "^7.0.0"
+  },
+  "peerDependencies": {
+    "webdriverio": ">=5.0.0"
+  }
+}

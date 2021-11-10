@@ -1,4 +1,5 @@
 {
+  "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
@@ -9,15 +10,17 @@
 
     "module": "commonjs",
     "target": "es2017",
-    "noImplicitAny": true,
-    "preserveConstEnums": true,
-    "downlevelIteration": true,
     "esModuleInterop": true,
+    "noImplicitAny": true,
+    "downlevelIteration": true,
     "stripInternal": false,
     "removeComments": false,
+    "plugins": [{
+      "transform": "@applitools/api-extractor",
+      "afterDeclarations": true,
+      "rootFile": "./index.ts",
+      "allowModules": ["@applitools/types", "playwright"],
+    }]
   },
-  "ts-node": {
-    "transpileOnly": true
-  },
-  "exclude" : ["dist", "types", "test"],
+  "ts-node": {"transpileOnly": true},
 }

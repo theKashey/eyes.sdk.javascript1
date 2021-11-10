@@ -15,7 +15,7 @@ describe('Coverage Tests', () => {
       port: 7373,
       staticPath,
       allowCors: false,
-      middlewareFile: path.resolve(__dirname, '../util/handlebars-middleware.js'),
+      middlewares: ['handlebars'],
       hbData: {
         src: adjustUrlToDocker('http://localhost:7374/cors_frames/frame.html'),
       },

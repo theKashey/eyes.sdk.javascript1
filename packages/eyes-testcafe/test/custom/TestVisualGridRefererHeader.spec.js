@@ -17,7 +17,7 @@ fixture`TestVisualGridRefererHeader`
       port: 5556,
       allowCors: false,
       showLogs: true,
-      middlewareFile: path.join(cwd, 'node_modules/@applitools/sdk-shared/coverage-tests/util/cors-middleware.js'),
+      middlewares: ['cors'],
     })
     eyes = setupEyes({vg: true})
   })

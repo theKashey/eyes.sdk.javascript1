@@ -29,7 +29,7 @@ interface EyesServiceOptions extends ConfigurationPlain {
   eyes?: EyesServiceOptions
 }
 
-export = class EyesService {
+class EyesService {
   private _eyes: Eyes
   private _appName: string
   private _testResults: TestResults
@@ -113,15 +113,15 @@ export = class EyesService {
     }
     this._eyes.setConfiguration(configuration)
   }
-  afterTest() {
+  async afterTest() {
     // the next line is required because if we set an element in one test, then the following test
     // will say that the element is not attached to the page (because different browsers are used)
     this._eyes.getConfiguration().setScrollRootElement(null)
-    browser.call(() => this._eyesClose())
+    await this._eyesClose()
   }
-  after() {
-    browser.call(() => this._eyes.runner.getAllTestResults(false))
-    browser.call(() => this._eyes.abort())
+  async after() {
+    await this._eyes.runner.getAllTestResults(false)
+    await this._eyes.abort()
   }
 
   async _eyesOpen() {
@@ -137,3 +137,5 @@ export = class EyesService {
     }
   }
 }
+
+export = EyesService

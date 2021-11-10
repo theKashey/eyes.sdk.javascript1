@@ -13,15 +13,11 @@ const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/tes
 describe('layout breakpoints', () => {
   let closeServer;
   before(async () => {
-    const middlewareFile = path.resolve(
-      __dirname,
-      '../../../sdk-shared/coverage-tests/util/slow-middleware.js',
-    );
     const staticPath = path.resolve(__dirname, '../fixtures');
     const server = await testServerInProcess({
       port: 5555,
       staticPath,
-      middlewareFile,
+      middlewares: ['slow'],
     });
     closeServer = server.close;
     if (fs.existsSync(targetTestAppPath)) {

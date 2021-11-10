@@ -14,11 +14,9 @@ node_modules
 *.swp
 *~
 .tmp-changelogs.html
-*.log
 tmp
 .env
 .vscode
-typings
 
 # sdk-release-kit
 .bongo
@@ -46,4 +44,4 @@ dist
 docs
 doc
 bin
-types/index.d.ts
+**/types/**/*

@@ -1,7 +1,7 @@
-import type {Driver, Element, Selector} from './spec-driver'
+import type {Driver, Element, Selector} from '@applitools/spec-driver-puppeteer'
 import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as api from '@applitools/eyes-api'
-import * as spec from './spec-driver'
+import * as spec from '@applitools/spec-driver-puppeteer'
 
 const sdk = makeSDK({
   name: 'eyes.puppeteer',

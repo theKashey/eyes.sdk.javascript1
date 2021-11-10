@@ -15,9 +15,9 @@ describe('TestDisableBrowserFetching', () => {
   before(async () => {
     const staticPath = path.join(__dirname, '../fixtures')
     server = await testServer({
-      port: 5557,
+      port: 5559,
       staticPath,
-      middlewareFile: path.resolve(__dirname, '../util/ua-middleware'),
+      middlewares: ['ua'],
     })
   })
 
@@ -34,7 +34,7 @@ describe('TestDisableBrowserFetching', () => {
   })
 
   it('sends dontFetchResources to dom snapshot', async () => {
-    const url = adjustUrlToDocker('http://localhost:5557/ua.html')
+    const url = adjustUrlToDocker('http://localhost:5559/ua.html')
     await spec.visit(driver, url)
     const eyes = setupEyes({vg: true, disableBrowserFetching: true})
     await eyes.open(driver, 'VgFetch', 'TestDisableBrowserFetching', {width: 800, height: 600})

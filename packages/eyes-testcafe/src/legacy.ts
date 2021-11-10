@@ -1,10 +1,135 @@
+import type {Driver, Element, Selector} from './spec-driver'
 import * as utils from '@applitools/utils'
 import * as api from '@applitools/eyes-api'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as spec from './spec-driver'
 import {ConfigUtils, TestResultsFormatter} from '@applitools/eyes-sdk-core'
-import type {Driver, Element, Selector} from './spec-driver'
+
+export interface LegacyTestCafeEyes<TDriver, TSelector> {
+  open(options: {t: TDriver} & TestCafeConfiguration): Promise<TDriver>
+  checkWindow(settings: TestCafeCheckSettings<TSelector>): Promise<api.MatchResult>
+  waitForResults(throwErr: boolean): Promise<api.TestResultsSummary>
+}
+
+export interface LegacyTestCafeEyesConstructor<TDriver, TElement, TSelector>
+  extends Pick<typeof api.Eyes, keyof typeof api.Eyes> {
+  new (runner?: api.EyesRunner, config?: api.ConfigurationPlain<TElement, TSelector>): api.Eyes<
+    TDriver,
+    TElement,
+    TSelector
+  > &
+    LegacyTestCafeEyes<TDriver, TSelector>
+  new (config?: api.ConfigurationPlain<TElement, TSelector>, runner?: api.EyesRunner): api.Eyes<
+    TDriver,
+    TElement,
+    TSelector
+  > &
+    LegacyTestCafeEyes<TDriver, TSelector>
+  new (options: {configPath: string; runner?: api.EyesRunner}): api.Eyes<TDriver, TElement, TSelector> &
+    LegacyTestCafeEyes<TDriver, TSelector>
+}
+
+export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends Element, TSelector extends Selector>(
+  Eyes: typeof api.Eyes,
+): LegacyTestCafeEyesConstructor<TDriver, TElement, TSelector> {
+  return class TestCafeEyes
+    extends Eyes<TDriver, TElement, TSelector>
+    implements LegacyTestCafeEyes<TDriver, TSelector> {
+    private _testcafeConfig: TestCafeConfiguration
+
+    constructor(runner?: api.EyesRunner, config?: api.ConfigurationPlain<TElement, TSelector>)
+    constructor(config?: api.ConfigurationPlain<TElement, TSelector>, runner?: api.EyesRunner)
+    constructor(options?: {configPath: string; runner?: api.EyesRunner})
+    constructor(
+      runnerOrConfigOrOptions?:
+        | api.EyesRunner
+        | api.ConfigurationPlain<TElement, TSelector>
+        | {configPath: string; runner?: api.EyesRunner},
+      configOrRunner?: api.ConfigurationPlain<TElement, TSelector> | api.EyesRunner,
+    ) {
+      if (utils.types.isNull(runnerOrConfigOrOptions) || utils.types.has(runnerOrConfigOrOptions, 'configPath')) {
+        const testcafeConfig = ConfigUtils.getConfig({configPath: runnerOrConfigOrOptions?.configPath})
+        const runner =
+          runnerOrConfigOrOptions?.runner ??
+          new api.VisualGridRunner({testConcurrency: testcafeConfig.concurrency ?? testcafeConfig.testConcurrency ?? 1})
+        super(runner, transformConfig(testcafeConfig))
+        this._testcafeConfig = testcafeConfig
+      } else {
+        super(runnerOrConfigOrOptions as api.EyesRunner, configOrRunner as api.ConfigurationPlain<TElement, TSelector>)
+      }
+    }
+
+    async open(driver: TDriver, config?: api.ConfigurationPlain<Element, Selector>): Promise<TDriver>
+    async open(
+      driver: TDriver,
+      appName?: string,
+      testName?: string,
+      viewportSize?: api.RectangleSizePlain,
+      sessionType?: api.SessionType,
+    ): Promise<TDriver>
+    async open(options: {t: TDriver} & TestCafeConfiguration): Promise<TDriver>
+    async open(
+      driverOrOptions: TDriver | ({t: TDriver} & TestCafeConfiguration),
+      configOrAppName?: api.ConfigurationPlain<Element, Selector> | string,
+      testName?: string,
+      viewportSize?: api.RectangleSizePlain,
+      sessionType?: api.SessionType,
+    ): Promise<TDriver> {
+      let driver, config
+      if (utils.types.has(driverOrOptions, 't')) {
+        const {t, ...testcafeConfig} = driverOrOptions
+        this._testcafeConfig = {...this._testcafeConfig, ...testcafeConfig}
+        driver = t
+        config = transformConfig(this._testcafeConfig)
+      } else {
+        driver = driverOrOptions
+        config = configOrAppName
+      }
+      // driver health check, re: https://trello.com/c/xNCZNfPi
+      await spec
+        .executeScript(driver, () => true)
+        .catch(() => {
+          throw new Error(
+            `The browser is in an invalid state due to JS errors on the page that TestCafe is unable to handle. Try running the test with TestCafe's --skip-js-errors option enabled: https://devexpress.github.io/testcafe/documentation/reference/configuration-file.html#skipjserrors`,
+          )
+        })
+
+      return super.open(driver, config as string, testName, viewportSize, sessionType)
+    }
+
+    async checkWindow(name?: string, timeout?: number, fully?: boolean): Promise<api.MatchResult>
+    async checkWindow(settings: TestCafeCheckSettings<TSelector>): Promise<api.MatchResult>
+    async checkWindow(
+      nameOrSetting?: string | TestCafeCheckSettings<TSelector>,
+      timeout?: number,
+      fully = true,
+    ): Promise<api.MatchResult> {
+      if (utils.types.isObject(nameOrSetting)) {
+        return super.check(transformCheckSettings<TElement, TSelector>(nameOrSetting))
+      }
+      return super.checkWindow(nameOrSetting, timeout, fully)
+    }
+
+    async close(throwErr = true): Promise<api.TestResults> {
+      return super.close(throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff))
+    }
+
+    async waitForResults(throwErr = true) {
+      const resultsSummary = await this.runner.getAllTestResults(
+        throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff),
+      )
+      if (this._testcafeConfig?.tapDirPath) {
+        const results = resultsSummary.getAllResults().map(r => r.getTestResults())
+        const includeSubTests = false
+        const markNewAsPassed = true
+        const formatted = new TestResultsFormatter(results).asHierarchicTAPString(includeSubTests, markNewAsPassed)
+        fs.writeFileSync(path.resolve(this._testcafeConfig.tapDirPath, 'eyes.tap'), formatted)
+      }
+      return resultsSummary
+    }
+  }
+}
 
 type RegionReference<TSelector> = api.RegionPlain | TSelector | {selector: TSelector}
 
@@ -19,7 +144,6 @@ type AccessibilityRegionReference<TSelector> = RegionReference<TSelector> & {
   accessibilityType: api.AccessibilityRegionType
 }
 
-/** @undocumented */
 export type TestCafeCheckSettings<TSelector> = {
   tag?: string
   target?: 'window' | 'region'
@@ -37,7 +161,6 @@ export type TestCafeCheckSettings<TSelector> = {
   ignoreDisplacements?: boolean
 }
 
-/** @undocumented */
 export type TestCafeConfiguration = {
   appName?: string
   testName?: string
@@ -75,111 +198,6 @@ export type TestCafeConfiguration = {
   concurrency?: number
   failTestcafeOnDiff?: boolean
   tapDirPath?: string
-}
-
-export function TestCafeEyes(Eyes: typeof api.Eyes) {
-  return class TestCafeEyes<TDriver extends Driver, TElement extends Element, TSelector extends Selector> extends Eyes<
-    TDriver,
-    TElement,
-    TSelector
-  > {
-    private _testcafeConfig: TestCafeConfiguration
-
-    constructor(runner?: api.EyesRunner, config?: api.ConfigurationPlain<TElement, TSelector>)
-    constructor(config?: api.ConfigurationPlain<TElement, TSelector>, runner?: api.EyesRunner)
-    /** @undocumented */
-    constructor(options?: {configPath: string; runner?: api.EyesRunner})
-    constructor(
-      runnerOrConfigOrOptions?:
-        | api.EyesRunner
-        | api.ConfigurationPlain<TElement, TSelector>
-        | {configPath: string; runner?: api.EyesRunner},
-      configOrRunner?: api.ConfigurationPlain<TElement, TSelector> | api.EyesRunner,
-    ) {
-      if (utils.types.isNull(runnerOrConfigOrOptions) || utils.types.has(runnerOrConfigOrOptions, 'configPath')) {
-        const testcafeConfig = ConfigUtils.getConfig({configPath: runnerOrConfigOrOptions?.configPath})
-        const runner =
-          runnerOrConfigOrOptions?.runner ??
-          new api.VisualGridRunner({testConcurrency: testcafeConfig.concurrency ?? testcafeConfig.testConcurrency ?? 1})
-        super(runner, transformConfig(testcafeConfig))
-        this._testcafeConfig = testcafeConfig
-      } else {
-        super(runnerOrConfigOrOptions as api.EyesRunner, configOrRunner as api.ConfigurationPlain<TElement, TSelector>)
-      }
-    }
-
-    async open(driver: TDriver, config?: api.ConfigurationPlain<Element, Selector>): Promise<TDriver>
-    async open(
-      driver: TDriver,
-      appName?: string,
-      testName?: string,
-      viewportSize?: api.RectangleSizePlain,
-      sessionType?: api.SessionType,
-    ): Promise<TDriver>
-    /** @undocumented */
-    async open(options: {t: TDriver} & TestCafeConfiguration): Promise<TDriver>
-    async open(
-      driverOrOptions: TDriver | ({t: TDriver} & TestCafeConfiguration),
-      configOrAppName?: api.ConfigurationPlain<Element, Selector> | string,
-      testName?: string,
-      viewportSize?: api.RectangleSizePlain,
-      sessionType?: api.SessionType,
-    ): Promise<TDriver> {
-      let driver, config
-      if (utils.types.has(driverOrOptions, 't')) {
-        const {t, ...testcafeConfig} = driverOrOptions
-        this._testcafeConfig = {...this._testcafeConfig, ...testcafeConfig}
-        driver = t
-        config = transformConfig(this._testcafeConfig)
-      } else {
-        driver = driverOrOptions
-        config = configOrAppName
-      }
-      // driver health check, re: https://trello.com/c/xNCZNfPi
-      await spec
-        .executeScript(driver, () => true)
-        .catch(() => {
-          throw new Error(
-            `The browser is in an invalid state due to JS errors on the page that TestCafe is unable to handle. Try running the test with TestCafe's --skip-js-errors option enabled: https://devexpress.github.io/testcafe/documentation/reference/configuration-file.html#skipjserrors`,
-          )
-        })
-
-      return super.open(driver, config as string, testName, viewportSize, sessionType)
-    }
-
-    async checkWindow(name?: string, timeout?: number, fully?: boolean): Promise<api.MatchResult>
-    /** @undocumented */
-    async checkWindow(settings: TestCafeCheckSettings<TSelector>): Promise<api.MatchResult>
-    async checkWindow(
-      nameOrSetting?: string | TestCafeCheckSettings<TSelector>,
-      timeout?: number,
-      fully = true,
-    ): Promise<api.MatchResult> {
-      if (utils.types.isObject(nameOrSetting)) {
-        return super.check(transformCheckSettings<TElement, TSelector>(nameOrSetting))
-      }
-      return super.checkWindow(nameOrSetting, timeout, fully)
-    }
-
-    async close(throwErr = true): Promise<api.TestResults> {
-      return super.close(throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff))
-    }
-
-    /** @undocumented */
-    async waitForResults(throwErr = true) {
-      const resultsSummary = await this.runner.getAllTestResults(
-        throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff),
-      )
-      if (this._testcafeConfig?.tapDirPath) {
-        const results = resultsSummary.getAllResults().map(r => r.getTestResults())
-        const includeSubTests = false
-        const markNewAsPassed = true
-        const formatted = new TestResultsFormatter(results).asHierarchicTAPString(includeSubTests, markNewAsPassed)
-        fs.writeFileSync(path.resolve(this._testcafeConfig.tapDirPath, 'eyes.tap'), formatted)
-      }
-      return resultsSummary
-    }
-  }
 }
 
 export function transformConfig<TElement, TSelector>(

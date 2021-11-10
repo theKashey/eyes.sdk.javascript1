@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+## 5.34.0 - 2021/11/10
+
+- support cookies
+- updated to @applitools/eyes-api@1.1.6 (from 1.1.4)
+- updated to @applitools/eyes-sdk-core@12.24.0 (from 12.23.16)
+- updated to @applitools/visual-grid-client@15.8.44 (from 15.8.35)
+
 ## 5.33.0 - 2021/11/5
 
 - updated to @applitools/eyes-api@1.1.5 (from 1.1.4)
@@ -76,7 +83,6 @@
 - updated to @applitools/eyes-api@1.0.12 (from 1.0.11)
 - updated to @applitools/eyes-sdk-core@12.22.6 (from 12.22.4)
 - updated to @applitools/visual-grid-client@15.8.20 (from 15.8.18)
-
 ## 5.32.1 - 2021/8/9
 
 - updated to @applitools/eyes-sdk-core@12.22.4 (from 12.22.2)
@@ -95,7 +101,6 @@
 - updated to @applitools/eyes-api@1.0.7 (from 1.0.5)
 - updated to @applitools/eyes-sdk-core@12.21.3 (from 12.21.1)
 - updated to @applitools/visual-grid-client@15.8.12 (from 15.8.11)
-
 ## 5.31.8 - 2021/6/15
 
 - added full typescript support

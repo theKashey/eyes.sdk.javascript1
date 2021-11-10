@@ -1,3 +1,4 @@
+import type {Size, Cookie, DriverInfo} from '@applitools/types'
 import type * as Protractor from 'protractor'
 import * as utils from '@applitools/utils'
 
@@ -20,7 +21,7 @@ function extractElementId(element: Element): Promise<string> {
 // #region UTILITY
 
 export function isDriver(driver: any): driver is Driver {
-  return utils.types.instanceOf<Driver>(driver, 'ProtractorBrowser')
+  return utils.types.instanceOf(driver, 'ProtractorBrowser')
 }
 export function isElement(element: any): element is Element {
   return (
@@ -35,11 +36,6 @@ export function isSelector(selector: any): selector is Selector {
     Object.keys(selector).some(key => byHash.includes(key)) ||
     utils.types.isFunction(selector.findElementsOverride)
   )
-}
-export function transformDriver(driver: Driver): Driver {
-  driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
-  driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
-  return driver
 }
 export function transformElement(element: Element): Element {
   if (!utils.types.instanceOf<Protractor.ElementFinder>(element, 'ElementFinder')) return element
@@ -80,8 +76,7 @@ export async function mainContext(driver: Driver): Promise<Driver> {
   return driver
 }
 export async function parentContext(driver: Driver): Promise<Driver> {
-  const {Command} = require('protractor')
-  await driver.schedule(new Command('switchToParentFrame'), '')
+  await driver.driver.switchToParentFrame()
   return driver
 }
 export async function childContext(driver: Driver, element: Element): Promise<Driver> {
@@ -103,16 +98,16 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
   if (parent) return ElementFinder.fromWebElement_(driver, parent).all(selector).getWebElements()
   else return driver.element.all(selector).getWebElements()
 }
-export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
+export async function getWindowSize(driver: Driver): Promise<Size> {
   const size = await driver.manage().window().getSize()
   return {width: size.width, height: size.height}
 }
-export async function setWindowSize(driver: Driver, size: {width: number; height: number}) {
+export async function setWindowSize(driver: Driver, size: Size) {
   const window = driver.manage().window()
   await window.setPosition(0, 0)
   await window.setSize(size.width, size.height)
 }
-export async function getDriverInfo(driver: Driver): Promise<any> {
+export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
   const desiredCapabilities = capabilities.get('desired') ?? {}
@@ -168,13 +163,29 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   await driver.wait(until.elementIsVisible(element), timeout)
 }
 
+export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
+  if (context) return driver.manage().getCookies()
+  const {cookies} = (await driver.driver.sendChromiumCommandAndGetResult('Network.getAllCookies', {})) as any
+
+  return cookies.map((cookie: any) => {
+    const copy = {...cookie, expiry: cookie.expires}
+    delete copy.expires
+    delete copy.size
+    delete copy.priority
+    delete copy.session
+    delete copy.sameParty
+    delete copy.sourceScheme
+    delete copy.sourcePort
+    return copy
+  })
+}
+
 // #endregion
 
 // #region MOBILE COMMANDS
 
 export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
-  const {Command} = require('protractor')
-  const orientation: string = await driver.schedule(new Command('getOrientation'), '')
+  const orientation = await driver.driver.getScreenOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'
 }
 

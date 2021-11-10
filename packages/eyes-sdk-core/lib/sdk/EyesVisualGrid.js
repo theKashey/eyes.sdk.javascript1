@@ -11,7 +11,7 @@ const CorsIframeHandles = require('../capture/CorsIframeHandles')
 const VisualGridRunner = require('../runner/VisualGridRunner')
 const takeDomSnapshots = require('../utils/takeDomSnapshots')
 const EyesCore = require('./EyesCore')
-const CheckSettingsUtils = require('./CheckSettingsUtils')
+const CheckSettingsUtils = require('../sdk/CheckSettingsUtils')
 
 class EyesVisualGrid extends EyesCore {
   static specialize({agentId, spec, cwd, VisualGridClient}) {
@@ -156,7 +156,7 @@ class EyesVisualGrid extends EyesCore {
           this._configuration.getWaitBeforeCapture(),
         )
         const showLogs = this._configuration.getShowLogs()
-        const snapshots = await takeDomSnapshots({
+        const {snapshots, cookies} = await takeDomSnapshots({
           browsers,
           breakpoints,
           disableBrowserFetching,
@@ -169,6 +169,7 @@ class EyesVisualGrid extends EyesCore {
           showLogs,
           waitBeforeCapture: () => utils.general.sleep(waitBeforeCapture),
         })
+
         const [{url}] = snapshots
         if (this.getCorsIframeHandle() === CorsIframeHandles.BLANK) {
           snapshots.forEach(CorsIframeHandler.blankCorsIframeSrcOfCdt)
@@ -185,6 +186,7 @@ class EyesVisualGrid extends EyesCore {
           throwEx,
           snapshot: snapshots,
           url,
+          cookies,
         })
       } finally {
         await cleanupPersistance()

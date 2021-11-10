@@ -4,39 +4,39 @@
 const assert = require('assert')
 const {By, Target} = require('../../dist')
 
-describe('EyesServiceTest', () => {
-  beforeEach(() => {
-    browser.url('http://applitools.github.io/demo/TestPages/FramesTestPage/')
-    browser.eyesClearProperties()
+describe.only('EyesServiceTest', () => {
+  beforeEach(async () => {
+    await browser.url('http://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await browser.eyesClearProperties()
   })
 
-  it('an empty test without check', () => {
-    assert.strictEqual(browser.eyesGetIsOpen(), false)
+  it('an empty test without check', async () => {
+    assert.strictEqual(await browser.eyesGetIsOpen(), false)
   })
 
-  it('checkWindow', () => {
-    assert.strictEqual(browser.eyesGetIsOpen(), false)
-    browser.eyesCheckWindow('main')
-    assert.strictEqual(browser.eyesGetIsOpen(), true)
+  it('checkWindow', async () => {
+    assert.strictEqual(await browser.eyesGetIsOpen(), false)
+    await browser.eyesCheckWindow('main')
+    assert.strictEqual(await browser.eyesGetIsOpen(), true)
   })
 
-  it('checkWindow - no title', () => {
-    assert.strictEqual(browser.eyesGetConfiguration().getProperties().length, 0)
-    browser.eyesAddProperty('testProp', 'foobar')
-    assert.strictEqual(browser.eyesGetConfiguration().getProperties().length, 1)
+  it('checkWindow - no title', async () => {
+    assert.strictEqual((await browser.eyesGetConfiguration()).getProperties().length, 0)
+    await browser.eyesAddProperty('testProp', 'foobar')
+    assert.strictEqual((await browser.eyesGetConfiguration()).getProperties().length, 1)
 
-    browser.eyesCheckWindow()
+    await browser.eyesCheckWindow()
   })
 
-  it('checkRegion and checkFrame', () => {
-    browser.eyesCheck('region', Target.region(By.id('overflowing-div')))
+  it('checkRegion and checkFrame', async () => {
+    await browser.eyesCheck('region', Target.region(By.id('overflowing-div')))
 
-    browser.eyesCheck('frame', Target.frame('frame1'))
+    await browser.eyesCheck('frame', Target.frame('frame1'))
   })
 
-  afterEach(() => {
+  afterEach(async () => {
     /** @type {TestResults} */
-    const testResults = browser.eyesGetTestResults()
+    const testResults = await browser.eyesGetTestResults()
     if (testResults) {
       if (testResults.isPassed()) {
         console.log(`${testResults.getName()} is passed.`)

@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes.webdriverio",
-  "version": "2.33.0",
+  "version": "2.34.0",
   "description": "Applitools Eyes SDK for WebdriverIO",
   "repository": {
     "type": "git",
@@ -16,13 +16,11 @@
     "types"
   ],
   "scripts": {
-    "lint": "eslint '**/*.ts' '**/*.js'",
-    "build": "yarn build:dist && yarn build:types",
-    "build:dist": "tsc",
-    "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-globals WebdriverIO",
+    "lint": "eslint '**/*.ts'",
+    "build": "ttsc",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes.webdriverio.javascript4'",
-    "test": "yarn build:dist && yarn test:it && yarn test:coverage",
-    "test:it": "mocha --no-timeouts \"test/it/**/*.js\"",
+    "test": "yarn test:it && yarn test:coverage",
+    "test:it": "mocha ./test/it/*.spec.ts --exit --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-4' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes.webdriverio.javascript4'",
     "setup": "yarn docker:setup",
@@ -41,23 +39,23 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.1.5",
-    "@applitools/eyes-sdk-core": "12.23.24",
+    "@applitools/eyes-api": "1.1.6",
+    "@applitools/eyes-sdk-core": "12.24.0",
+    "@applitools/types": "1.0.19",
     "@applitools/utils": "1.2.4",
-    "@applitools/visual-grid-client": "15.8.43"
+    "@applitools/visual-grid-client": "15.8.44"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.1.3",
+    "@applitools/api-extractor": "1.2.2",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-coverage-tests": "2.3.15",
+    "@applitools/sdk-coverage-tests": "2.3.16",
     "@applitools/sdk-release-kit": "^0.13.4",
-    "@applitools/sdk-shared": "0.9.7",
+    "@applitools/sdk-shared": "0.9.8",
     "@applitools/test-utils": "1.0.9",
+    "@types/mocha": "^9.0.0",
     "@types/webdriverio": "4.13.3",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
     "chromedriver": "^85.0.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^7.2.0",
@@ -68,9 +66,10 @@
     "husky": "^4.3.7",
     "mocha": "^8.0.1",
     "prettier": "^2.1.2",
-    "shared-examples-for": "^0.1.3",
     "spec-xunit-file": "0.0.1-3",
-    "typescript": "^4.2.4",
+    "ts-node": "^10.4.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.1-rc",
     "webdriverio": "~4.14.4"
   },
   "peerDependencies": {

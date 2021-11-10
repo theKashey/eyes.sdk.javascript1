@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 1.1.6 - 2021/11/10
+
+- updated to @applitools/types@1.0.19 (from 1.0.18)
+
 ## 1.1.5 - 2021/10/30
 
 - updated to @applitools/logger@1.0.5 (from 1.0.4)

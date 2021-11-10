@@ -22,10 +22,7 @@ describe('eyes-storybook', () => {
           port: 7777,
           staticPath,
           allowCors: false,
-          middlewareFile: path.resolve(
-            process.cwd(),
-            'node_modules/@applitools/sdk-shared/coverage-tests/util/handlebars-middleware.js',
-          ),
+          middleware: ['handlebars'],
           hbData: {
             src: 'http://localhost:7778/cors_frames/frame.html',
           },

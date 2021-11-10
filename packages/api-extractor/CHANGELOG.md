@@ -3,6 +3,18 @@
 ## Unreleased
 
 
+## 1.2.2 - 2021/11/10
+
+- publish version without a tag
+
+## 1.2.1 - 2021/11/9
+
+- fix default export declaration
+
+## 1.2.0 - 2021/11/9
+
+- completely rewritten to use as a plugin and support newest ts features without typedoc dependency
+
 ## 1.1.3 - 2021/7/14
 
 - mark argument as optional if it has default value

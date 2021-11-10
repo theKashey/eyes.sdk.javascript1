@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 1.0.19 - 2021/11/10
+
+- add `Cookie` type
+- add `allCookies` feature flag to `DriverInfo` type
+
 ## 1.0.18 - 2021/10/30
 
 - add new iPad 9th gen to `IOSDevice` type

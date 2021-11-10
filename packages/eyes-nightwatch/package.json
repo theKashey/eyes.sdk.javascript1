@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-nightwatch",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "Applitools Eyes SDK for Nightwatch.js",
   "keywords": [
     "eyes-nightwatch",
@@ -43,22 +43,14 @@
     "types"
   ],
   "scripts": {
-    "nightwatch": "nightwatch --config test/nightwatch.conf.js",
-    "nw": "yarn nightwatch",
     "lint": "eslint '**/*.ts' '**/*.js'",
-    "build": "yarn build:dist && yarn build:types",
-    "build:dist": "tsc",
-    "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules nightwatch",
+    "build": "ttsc",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-nightwatch'",
-    "test": "yarn build:dist && yarn test:it && yarn test:e2e && yarn test:coverage",
-    "test:it": "yarn test:it:headless:jwp && yarn test:it:headless:w3c && yarn test:it:headed && yarn test:it:mobile",
-    "test:it:headless:jwp": "yarn nightwatch test/it/spec-driver-headless-desktop.spec.js",
-    "test:it:headless:w3c": "yarn nightwatch test/it/spec-driver-headless-desktop.spec.js --env firefox",
-    "test:it:headed": "yarn nightwatch --env firefox test/it/spec-driver-onscreen-desktop.spec.js",
-    "test:it:mobile": "yarn nightwatch test/it/spec-driver-mobile.spec.js",
+    "test": "yarn test:it && yarn test:e2e && yarn test:coverage",
+    "test:it": "mocha ./test/it/spec-driver.spec.js --exit --no-timeouts -r @applitools/test-utils/mocha-hooks/docker",
     "test:e2e": "yarn test:e2e:nightwatch && yarn test:e2e:cucumber",
     "test:e2e:cucumber": "cucumber-js test/e2e/cucumber/features/*.feature --require test/e2e/cucumber/cucumber.config.js --require test/e2e/cucumber/step_definitions",
-    "test:e2e:nightwatch": "yarn nightwatch --eyes-config applitools.config.js test/e2e/*.spec.js",
+    "test:e2e:nightwatch": "nightwatch --config test/e2e/nightwatch.conf.js --eyes-config applitools.config.js test/e2e/*.spec.js",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-nightwatch' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-nightwatch'",
     "setup": "yarn docker:setup",
@@ -77,17 +69,18 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.1.5",
-    "@applitools/eyes-sdk-core": "12.23.24",
+    "@applitools/eyes-api": "1.1.6",
+    "@applitools/eyes-sdk-core": "12.24.0",
+    "@applitools/types": "1.0.19",
     "@applitools/utils": "1.2.4",
-    "@applitools/visual-grid-client": "15.8.43"
+    "@applitools/visual-grid-client": "15.8.44"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.1.3",
+    "@applitools/api-extractor": "1.2.2",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-coverage-tests": "2.3.15",
+    "@applitools/sdk-coverage-tests": "2.3.16",
     "@applitools/sdk-release-kit": "0.13.4",
-    "@applitools/sdk-shared": "0.9.7",
+    "@applitools/sdk-shared": "0.9.9",
     "@applitools/test-utils": "1.0.9",
     "@types/nightwatch": "^1.3.3",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -101,12 +94,14 @@
     "eslint-plugin-prettier": "^3.3.1",
     "geckodriver": "^1.20.0",
     "husky": "^4.3.8",
-    "mocha": "^8.0.1",
+    "mocha": "^9.1.3",
     "nightwatch": "1.3.4",
     "nightwatch-api": "^3.0.2",
-    "nock": "^12.0.3",
     "prettier": "^2.1.2",
-    "spec-xunit-file": "0.0.1-3"
+    "spec-xunit-file": "0.0.1-3",
+    "ts-node": "^10.4.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.1-rc"
   },
   "peerDependencies": {
     "nightwatch": ">=1.3.4"

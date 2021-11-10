@@ -1,12 +1,14 @@
-import * as utils from '@applitools/utils'
+import type {Size, Cookie, DriverInfo} from '@applitools/types'
 import type * as Nightwatch from 'nightwatch'
+import * as utils from '@applitools/utils'
 
-export type Driver = Nightwatch.NightwatchAPI
-export type Element =
+export type Driver = Nightwatch.NightwatchAPI & {__applitoolsBrand?: never}
+export type Element = (
   | {ELEMENT: string}
   | {'element-6066-11e4-a52e-4f735466cecf': string}
   | Nightwatch.NightwatchTypedCallbackResult<{ELEMENT: string} | {'element-6066-11e4-a52e-4f735466cecf': string}>
-export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string}
+) & {__applitoolsBrand?: never}
+export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string} & {__applitoolsBrand?: never}
 
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
@@ -57,7 +59,7 @@ export function isSelector(selector: any): selector is Selector {
   return utils.types.has(selector, ['locateStrategy', 'selector'])
 }
 export function transformElement(element: Element): Element {
-  const elementId = extractElementId(element)
+  const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
 export function transformSelector(selector: Selector | CommonSelector): Selector {
@@ -117,7 +119,7 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
     ? await call(driver, 'elementIdElements', extractElementId(parent), selector.locateStrategy, selector.selector)
     : await call(driver, 'elements', selector.locateStrategy, selector.selector)
 }
-export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
+export async function getWindowSize(driver: Driver): Promise<Size> {
   // NOTE:
   // https://github.com/nightwatchjs/nightwatch/blob/fd4aff1e2cc3e691a82e61c7e550fb088ee47d5a/lib/transport/jsonwire/actions.js#L165-L167
   // getWindowRect is implemented on JWP drivers even though it won't work
@@ -129,7 +131,7 @@ export async function getWindowSize(driver: Driver): Promise<{width: number; hei
     return call(driver, 'getWindowSize' as 'windowSize')
   }
 }
-export async function setWindowSize(driver: Driver, size: {width: number; height: number}): Promise<void> {
+export async function setWindowSize(driver: Driver, size: Size): Promise<void> {
   // NOTE:
   // Same deal as with getWindowSize. If running on JWP, need to catch and retry
   // with a different command.
@@ -140,29 +142,46 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
     await call(driver, 'setWindowSize' as 'windowSize', size.width, size.height)
   }
 }
+export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
+  if (context) return call(driver, 'getCookies')
+  return []
+}
 export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
   const capabilities = driver.options.desiredCapabilities as Record<string, any>
   const orientation = capabilities.orientation || capabilities.deviceOrientation
   return orientation ? orientation.toLowerCase() : 'portrait'
 }
-export async function getDriverInfo(driver: Driver): Promise<any> {
+export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   const capabilities = driver.options.desiredCapabilities as Record<string, any>
-  const sessionId = driver.sessionId
+  const platformName = capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName
   const browserName = capabilities.browserName ?? capabilities.browser_name
-  const deviceName = capabilities.device ? capabilities.device : capabilities.deviceName
-  const platformName = capabilities.platformName ?? capabilities.platform
-  const platformVersion = capabilities.osVersion ? capabilities.osVersion : capabilities.platformVersion
+
   const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
   const isNative = isMobile && !browserName
-  return {
-    browserName,
-    deviceName,
+  const info: any = {
+    features: {allCookies: false},
+    sessionId: driver.sessionId,
     isMobile,
     isNative,
+    deviceName: capabilities.device ?? capabilities.deviceName,
     platformName,
-    platformVersion,
-    sessionId,
+    platformVersion: capabilities.osVersion ?? capabilities.platformVersion,
+    browserName,
+    browserVersion: capabilities.browserVersion ?? capabilities.version,
+    pixelRatio: capabilities.pixelRatio,
   }
+
+  if (info.isNative) {
+    const desiredCapabilities = utils.types.has(capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
+      ? capabilities
+      : await call(driver, 'session')
+
+    info.pixelRatio = desiredCapabilities.pixelRatio
+    info.statusBarHeight = desiredCapabilities.statBarHeight ?? desiredCapabilities.viewportRect?.top ?? 0
+    info.navigationBarHeight = 0
+  }
+
+  return info
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return call(driver, 'title')
@@ -220,7 +239,6 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     const browserOptionsName = browserOptionsNames[browser || desiredCapabilities.browserName]
     if (browserOptionsName) {
       const browserOptions = desiredCapabilities[browserOptionsName] || {}
-      browserOptions.w3c = browser === 'chrome' ? false : undefined
       browserOptions.args = [...(browserOptions.args || []), ...args]
       if (headless) browserOptions.args.push('headless')
       if (browser === 'firefox') {
@@ -228,6 +246,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       } else {
         desiredCapabilities[browserOptionsName] = browserOptions
       }
+      if (browser !== 'firefox' && !browserOptions.mobileEmulation) browserOptions.w3c = false
     }
   }
 

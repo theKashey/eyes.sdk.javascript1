@@ -1,0 +1,28 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "types",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+
+    "module": "commonjs",
+    "target": "es2017",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "downlevelIteration": true,
+    "removeComments": true,
+    "plugins": [{
+      "transform": "@applitools/api-extractor",
+      "afterDeclarations": true,
+      "rootFile": "./index.ts",
+      "allowGlobalNamespaces": ["Applitools"],
+      "stripPrivate": true,
+      "stripProtected": true,
+      "stripInternal": true
+    }]
+  },
+  "ts-node": {"transpileOnly": true},
+}

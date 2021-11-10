@@ -1,6 +1,6 @@
 {
   "name": "@applitools/spec-driver-playwright",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "keywords": [
     "playwright",
     "chrome devtools protocol",
@@ -33,11 +33,12 @@
   ],
   "scripts": {
     "lint": "eslint '**/*.ts'",
-    "build": "yarn build:dist",
-    "build:dist": "tsc",
+    "build": "ttsc",
     "test": "mocha ./test/**/*.spec.ts --no-timeouts -r ts-node/register",
+    "setup": "yarn playwright:setup",
+    "playwright:setup": "sudo npx playwright install-deps",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-playwright' -f links='test-utils utils'",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-playwright' -f links='types utils test-utils'",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-playwright'",
     "preversion": "bongo preversion",
     "version": "bongo version",
@@ -49,11 +50,13 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.3"
+    "@applitools/types": "1.0.19",
+    "@applitools/utils": "1.2.4"
   },
   "devDependencies": {
+    "@applitools/api-extractor": "^1.2.2",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-release-kit": "0.13.3",
+    "@applitools/sdk-release-kit": "0.13.4",
     "@applitools/test-utils": "1.0.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.2",
@@ -69,7 +72,8 @@
     "playwright": "^1.15.2",
     "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.0-beta"
   },
   "peerDependencies": {
     "playwright": ">=1.0.0"
