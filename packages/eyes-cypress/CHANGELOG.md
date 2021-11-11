@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - support waitBeforeCapture
 
 ## 3.22.8 - 2021/11/9
 

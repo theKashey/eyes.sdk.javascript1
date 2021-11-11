@@ -44,6 +44,7 @@ describe('pluginExport', () => {
       eyesIsGlobalHooksSupported: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
 
     __module = {
@@ -67,6 +68,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       version: '6.5.0',
       experimentalRunEvents: true,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
@@ -91,6 +93,7 @@ describe('pluginExport', () => {
       eyesIsGlobalHooksSupported: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
@@ -113,6 +116,7 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
@@ -135,6 +139,7 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: false,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
@@ -157,6 +162,7 @@ describe('pluginExport', () => {
       eyesFailCypressOnDiff: true,
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 });

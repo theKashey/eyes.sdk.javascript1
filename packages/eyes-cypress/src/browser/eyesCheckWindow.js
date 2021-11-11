@@ -21,11 +21,17 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
     function takeDomSnapshots(options) {
       const browser = args.browser;
       const breakpoints = args.layoutBreakpoints;
+      const waitBeforeCapture = args.waitBeforeCapture ? args.waitBeforeCapture : 100;
       const browsers = Array.isArray(browser) ? browser : [browser];
 
       if (!breakpoints) {
         //console.log('no breakpoints, taking single dom snapshot');
-        return takeDomSnapshot(options);
+        return cypress
+          .wrap({}, {log: false})
+          .wait(waitBeforeCapture)
+          .then(() => {
+            return takeDomSnapshot(options);
+          });
       }
 
       return browsers
@@ -52,7 +58,7 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
             // console.log(`taking dom snapshot for width ${requiredWidth}`);
             cypress
               .viewport(Number(requiredWidth), height, {log: false})
-              .wait(300, {log: false})
+              .wait(waitBeforeCapture, {log: false})
               .then({log: false, timeout: 900000}, () => {
                 return takeDomSnapshot(options).then(snapshot => {
                   browsersInfo.forEach(({index}) => (snapshots[index] = snapshot));

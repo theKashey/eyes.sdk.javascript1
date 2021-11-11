@@ -100,6 +100,7 @@ Cypress.Commands.add('eyesCheckWindow', args => {
   const globalArgs = {
     browser: getGlobalConfigProperty('eyesBrowser'),
     layoutBreakpoints: getGlobalConfigProperty('eyesLayoutBreakpoints'),
+    waitBeforeCapture: getGlobalConfigProperty('eyesWaitBeforeCapture'),
   };
 
   const browser = eyesOpenArgs.browser || globalArgs.browser || defaultBrowser;
@@ -108,7 +109,12 @@ Cypress.Commands.add('eyesCheckWindow', args => {
     (eyesOpenArgs && eyesOpenArgs.layoutBreakpoints) ||
     globalArgs.layoutBreakpoints;
 
-  const checkArgs = {layoutBreakpoints, browser};
+  const waitBeforeCapture =
+    (args && args.waitBeforeCapture) ||
+    (eyesOpenArgs && eyesOpenArgs.waitBeforeCapture) ||
+    globalArgs.waitBeforeCapture;
+
+  const checkArgs = {layoutBreakpoints, browser, waitBeforeCapture};
   if (typeof args === 'object') {
     Object.assign(checkArgs, args);
   } else {

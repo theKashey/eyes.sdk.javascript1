@@ -15,6 +15,7 @@ describe('config', () => {
       eyesFailCypressOnDiff: true,
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
@@ -29,6 +30,7 @@ describe('config', () => {
       eyesFailCypressOnDiff: true,
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
     });
   });
 
