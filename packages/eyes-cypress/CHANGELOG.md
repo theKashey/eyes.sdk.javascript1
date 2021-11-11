@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+ ## 3.23.0 - 2021/11/11
+
  - support waitBeforeCapture
 - updated to @applitools/visual-grid-client@15.8.44 (from 15.8.43)
 
