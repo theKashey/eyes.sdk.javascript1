@@ -3,6 +3,7 @@
 ## Unreleased
 
 - implement `getCapabilities` and `getBarsHeight` instead of `getDriverInfo`
+- updated to @applitools/types@1.0.20 (from 1.0.19)
 
 ## 1.1.0 - 2021/11/10
 
