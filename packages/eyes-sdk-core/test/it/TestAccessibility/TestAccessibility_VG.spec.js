@@ -1,5 +1,5 @@
 'use strict'
-const {MockDriver} = require('@applitools/driver')
+const {MockDriver} = require('@applitools/driver/fake')
 const {generateDomSnapshot} = require('../../utils/FakeDomSnapshot')
 const {runTest} = require('./TestAccessibility_utils')
 

@@ -1,4 +1,4 @@
-const {MockDriver} = require('@applitools/driver')
+const {MockDriver} = require('@applitools/driver/fake')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {generateScreenshot} = require('../utils/FakeScreenshot')
 const {EyesClassic} = require('../utils/FakeSDK')

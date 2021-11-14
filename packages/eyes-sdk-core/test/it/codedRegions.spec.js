@@ -1,6 +1,6 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
-const {MockDriver} = require('@applitools/driver')
+const {MockDriver} = require('@applitools/driver/fake')
 const {EyesClassic} = require('../utils/FakeSDK')
 const TestResults = require('../../lib/TestResults')
 const {generateScreenshot} = require('../utils/FakeScreenshot')

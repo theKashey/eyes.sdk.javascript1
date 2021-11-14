@@ -6,7 +6,7 @@ const {Writable} = require('stream')
 const chalk = require('chalk')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {EyesVisualGrid} = require('../../utils/FakeSDK')
-const {MockDriver} = require('@applitools/driver')
+const {MockDriver} = require('@applitools/driver/fake')
 const {generateDomSnapshot} = require('../../utils/FakeDomSnapshot')
 const {Configuration} = require('../../../index')
 

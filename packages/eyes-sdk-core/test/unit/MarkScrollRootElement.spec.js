@@ -1,6 +1,6 @@
 const assert = require('assert')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
-const {MockDriver} = require('@applitools/driver')
+const {MockDriver} = require('@applitools/driver/fake')
 const {EyesClassic} = require('../utils/FakeSDK')
 const {generateScreenshot} = require('../utils/FakeScreenshot')
 

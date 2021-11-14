@@ -36,6 +36,11 @@
       "types": "./types/fake/index.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      "fake": ["./types/fake/index.d.ts"]
+    }
+  },
   "files": [
     "dist",
     "types"

@@ -1,4 +1,5 @@
-const {Driver, MockDriver, fake} = require('@applitools/driver')
+const {Driver} = require('@applitools/driver')
+const {MockDriver, spec} = require('@applitools/driver/fake')
 const {makeLogger} = require('@applitools/logger')
 const takeDomSnapshot = require('../../lib/utils/takeDomSnapshot')
 const {expect} = require('chai')
@@ -11,7 +12,7 @@ describe('takeDomSnapshot', () => {
 
   beforeEach(async () => {
     mock = new MockDriver()
-    driver = new Driver({logger, spec: fake.spec, driver: mock})
+    driver = new Driver({logger, spec, driver: mock})
     await driver.init()
   })
 

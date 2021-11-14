@@ -34,6 +34,9 @@
     "constructor-super": "warn",
     "valid-typeof": "warn",
     "mocha-no-only/mocha-no-only": "error",
-    "node/no-unpublished-require": ["off"]
+    "node/no-unpublished-require": ["off"],
+    "node/no-missing-require": ["error", {
+      "allowModules": ["@applitools/driver"]
+    }]
   }
 }
