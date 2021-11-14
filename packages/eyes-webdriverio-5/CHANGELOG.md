@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 5.34.1 - 2021/11/14
+
+- updated to @applitools/eyes-sdk-core@12.24.1 (from 12.24.0)
+- updated to @applitools/spec-driver-webdriverio@1.2.0 (from 1.1.0)
+- updated to @applitools/visual-grid-client@15.8.45 (from 15.8.44)
+
 ## 5.34.0 - 2021/11/10
 
 - support cookies
