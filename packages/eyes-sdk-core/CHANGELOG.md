@@ -6,6 +6,7 @@
 - updated to @applitools/driver@1.3.2 (from 1.3.0)
 - updated to @applitools/screenshoter@3.2.9 (from 3.2.8)
 - updated to @applitools/types@1.0.20 (from 1.0.19)
+- updated to @applitools/driver@1.3.3 (from 1.3.2)
 
 ## 12.24.0 - 2021/11/10
 
