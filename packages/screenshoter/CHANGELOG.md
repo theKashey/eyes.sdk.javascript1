@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 3.2.9 - 2021/11/14
+
 - add support of scrollable elements that change its size during scrolling
 
 ## 3.2.8 - 2021/10/30
