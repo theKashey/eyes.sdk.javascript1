@@ -324,11 +324,21 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         let remainingOffset
         if (offset.x === 0 && offset.y === 0) {
           requiredOffset = offset
-          remainingOffset = {x: -maxOffset.x, y: -maxOffset.y}
+          // if it has to be scrolled to the very beginning, then scroll maximum amount of pixels and a bit extra to be sure
+          remainingOffset = {x: -(maxOffset.x + 0), y: -(maxOffset.y + 0)}
         } else {
           requiredOffset = {x: Math.min(offset.x, maxOffset.x), y: Math.min(offset.y, maxOffset.y)}
           remainingOffset = utils.geometry.offsetNegative(requiredOffset, currentScrollOffset)
+
+          // if it has to be scrolled to the very end, then do a bit of extra scrolling to be sure
+          // if (requiredOffset.x === maxOffset.x) remainingOffset.x += 100
+          // if (requiredOffset.y === maxOffset.y) remainingOffset.y += 100
         }
+
+        // if (requiredOffset.x === 0) remainingOffset.x -= 100
+        // if (requiredOffset.y === 0) remainingOffset.y -= 100
+        // if (requiredOffset.x === maxOffset.x) remainingOffset.x += 100
+        // if (requiredOffset.y === maxOffset.y) remainingOffset.y += 100
 
         if (this.driver.isAndroid) {
           remainingOffset = utils.geometry.scale(remainingOffset, this.driver.pixelRatio)
@@ -353,7 +363,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           xRemaining -= xRight - xLeft
         }
 
-        const yPadding = Math.floor(scrollableRegion.height * 0.1)
+        const yPadding = Math.floor(scrollableRegion.height * 0.08)
         const xCenter = Math.floor(scrollableRegion.x + scrollableRegion.width / 2) // 0
         const yTop = scrollableRegion.y + yPadding
         const yDirection = remainingOffset.y > 0 ? 'down' : 'up'

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const {inspect} = require('util')
 const utils = require('@applitools/utils')
 const snippets = require('@applitools/snippets')
@@ -24,8 +26,9 @@ const DEFAULT_PROPS = {
   overflow: null,
 }
 
-class MockDriver {
-  constructor({viewport = {width: 1000, height: 1000}, device, platform, browser, ua} = {}) {
+export class MockDriver {
+  constructor(options = {}) {
+    const {viewport = {width: 1000, height: 1000}, device, platform, browser, ua} = options
     this._device = device
     this._platform = platform
     this._browser = browser
@@ -351,5 +354,3 @@ class MockDriver {
     return '<MockDriver>'
   }
 }
-
-module.exports = {MockDriver}

@@ -27,6 +27,7 @@ async function screenshoter({
   framed = framed && fully && window
   // screenshots with status bar could be taken only when screenshot of app or framed app fully was requested
   withStatusBar = withStatusBar && driver.isNative && window && (!fully || framed)
+  scrollingMode = driver.isNative ? 'scroll' : scrollingMode
 
   const activeContext = driver.currentContext
   const context =

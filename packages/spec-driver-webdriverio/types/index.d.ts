@@ -17,6 +17,7 @@ export function findElements(browser: Driver, selector: Selector, parent: Elemen
 export function getWindowSize(browser: Driver): Promise<import('@applitools/types').Size>;
 export function setWindowSize(browser: Driver, size: import('@applitools/types').Size): Promise<void>;
 export function getCookies(browser: Driver, context: boolean): Promise<Array<import('@applitools/types').Cookie>>;
+export function getCapabilities(browser: Driver): Promise<Record<string, any>>;
 export function getDriverInfo(browser: Driver): Promise<import('@applitools/types').DriverInfo>;
 export function getTitle(browser: Driver): Promise<string>;
 export function getUrl(browser: Driver): Promise<string>;
@@ -27,6 +28,7 @@ export function type(browser: Driver, element: Element | Selector, keys: string)
 export function hover(browser: Driver, element: Element | Selector): Promise<any>;
 export function scrollIntoView(browser: Driver, element: Element | Selector, align: boolean): Promise<void>;
 export function waitUntilDisplayed(browser: Driver, selector: Selector, timeout: number): Promise<void>;
+export function getBarsHeight(browser: Driver): Promise<{ statusBarHeight: number; navigationBarHeight: number; }>;
 export function getOrientation(browser: Driver): Promise<"portrait" | "landscape">;
 export function getElementRegion(browser: Driver, element: Element): Promise<import('@applitools/types').Region>;
 export function getElementAttribute(browser: Driver, element: Element, attr: string): Promise<string>;

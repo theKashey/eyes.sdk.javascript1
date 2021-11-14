@@ -1,9 +1,24 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
-const spec = require('../util/spec-driver')
+const spec = require('@applitools/spec-driver-webdriverio')
 const makeImage = require('../../src/image')
 const screenshoter = require('../../index')
+
+const env = {
+  url: 'https://ondemand.saucelabs.com/wd/hub',
+  capabilities: {
+    name: 'iOS Screenshoter Test',
+    deviceName: 'iPhone 11 Pro Simulator',
+    platformName: 'iOS',
+    platformVersion: '13.4',
+    appiumVersion: '1.19.2',
+    automationName: 'XCUITest',
+    app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.5/app/IOSTestApp-1.5.zip',
+    username: process.env.SAUCE_USERNAME,
+    accessKey: process.env.SAUCE_ACCESS_KEY,
+  },
+}
 
 describe('screenshoter ios', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -25,7 +40,7 @@ describe('screenshoter ios', () => {
   }
 
   before(async () => {
-    ;[browser, destroyBrowser] = await spec.build({type: 'ios'})
+    ;[browser, destroyBrowser] = await spec.build(env)
   })
 
   after(async () => {

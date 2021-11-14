@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add in-house capability parsing and system bars size handling mechanisms
+- adjust scrolling algorithm on native devices
 - support cookies
 
 ## 1.3.0 - 2021/11/10

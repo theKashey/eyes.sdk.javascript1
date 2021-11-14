@@ -1,9 +1,16 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
-const spec = require('../util/spec-driver')
+const spec = require('@applitools/spec-driver-webdriverio')
 const screenshoter = require('../../index')
 const makeImage = require('../../src/image')
+
+const env = {
+  url: 'http://localhost:4444/wd/hub',
+  capabilities: {
+    browserName: 'chrome',
+  },
+}
 
 // TODO add overflowed regions tests
 
@@ -12,7 +19,7 @@ describe('screenshoter web', () => {
   let driver, browser, destroyBrowser
 
   before(async () => {
-    ;[browser, destroyBrowser] = await spec.build({type: 'web'})
+    ;[browser, destroyBrowser] = await spec.build(env)
   })
 
   after(async () => {

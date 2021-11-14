@@ -5,6 +5,7 @@ import {Context, ContextReference} from './context'
 import {Element} from './element'
 import {makeSpecUtils} from './utils'
 import {parseUserAgent} from './user-agent'
+import {parseCapabilities} from './capabilities'
 
 const snippets = require('@applitools/snippets')
 
@@ -113,35 +114,49 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async init(): Promise<this> {
-    this._driverInfo = await this._spec.getDriverInfo?.(this.target)
+    const capabilities = await this._spec.getCapabilities?.(this.target)
+
+    this._logger.log('Driver capabilities', capabilities)
+
+    const capabilitiesInfo = capabilities ? parseCapabilities(capabilities) : undefined
+    const driverInfo = await this._spec.getDriverInfo?.(this.target)
+
+    this._driverInfo = {...capabilitiesInfo, ...driverInfo}
 
     if (this.isWeb) {
-      const userAgent = this._driverInfo?.userAgent ?? (await this.execute(snippets.getUserAgent))
-      const userAgentInfo = userAgent ? parseUserAgent(userAgent) : ({} as any)
-      this._driverInfo = {
-        ...this._driverInfo,
-        isMobile: this._driverInfo?.isMobile ?? ['iOS', 'Android'].includes(userAgentInfo.platformName),
-        platformName: this._driverInfo?.isMobile
-          ? this._driverInfo?.platformName ?? userAgentInfo.platformName
-          : userAgentInfo.platformName ?? this._driverInfo?.platformName,
-        platformVersion: this._driverInfo?.isMobile
-          ? this._driverInfo?.platformVersion ?? userAgentInfo.platformVersion
-          : userAgentInfo.platformVersion ?? this._driverInfo?.platformVersion,
-        browserName: userAgentInfo.browserName ?? this._driverInfo?.browserName,
-        browserVersion: userAgentInfo.browserVersion ?? this._driverInfo?.browserVersion,
-        pixelRatio: this._driverInfo?.pixelRatio ?? (await this.execute(snippets.getPixelRatio)),
-        userAgent,
+      this._driverInfo.pixelRatio ??= await this.execute(snippets.getPixelRatio)
+      this._driverInfo.userAgent ??= await this.execute(snippets.getUserAgent)
+      if (this._driverInfo.userAgent) {
+        const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)
+        this._driverInfo.browserName = userAgentInfo.browserName ?? this._driverInfo.browserName
+        this._driverInfo.browserVersion = userAgentInfo.browserVersion ?? this._driverInfo.browserVersion
+        if (!this._driverInfo.isMobile) {
+          this._driverInfo.platformName ??= userAgentInfo.platformName
+          this._driverInfo.platformVersion ??= userAgentInfo.platformVersion
+        } else {
+          this._driverInfo.platformName = userAgentInfo.platformName ?? this._driverInfo.platformName
+          this._driverInfo.platformVersion = userAgentInfo.platformVersion ?? this._driverInfo.platformVersion
+        }
       }
-      this._driverInfo.features = {
-        ...this._driverInfo.features,
-        allCookies:
-          this._driverInfo.features?.allCookies ??
-          (/chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile),
-      }
+
+      this._driverInfo.features ??= {}
+      this._driverInfo.features.allCookies ??=
+        /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
     } else {
-      if (this.isAndroid) {
-        this._driverInfo.statusBarHeight = this._driverInfo.statusBarHeight / this.pixelRatio
-        this._driverInfo.navigationBarHeight = this._driverInfo.navigationBarHeight / this.pixelRatio
+      if (this.isNative) {
+        const barsHeight = await this._spec.getBarsHeight?.(this.target).catch(() => undefined as never)
+
+        if (barsHeight) {
+          this._driverInfo.statusBarHeight = Math.max(barsHeight.statusBarHeight, driverInfo.statusBarHeight)
+          this._driverInfo.navigationBarHeight = Math.max(
+            barsHeight.navigationBarHeight,
+            driverInfo.navigationBarHeight,
+          )
+        }
+        if (this.isAndroid) {
+          this._driverInfo.statusBarHeight /= this.pixelRatio
+          this._driverInfo.navigationBarHeight /= this.pixelRatio
+        }
       }
 
       if (!this._driverInfo.viewportSize) {
@@ -153,7 +168,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       }
     }
 
-    this._logger.log('Driver initialized', this._driverInfo)
+    this._logger.log('Combined driver info', this._driverInfo)
 
     return this
   }
@@ -444,7 +459,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async getCookies(): Promise<types.Cookie[]> {
     if (this.isNative || !this.features.allCookies) return []
-    return this._spec.getCookies(this.target)
+    return this._spec?.getCookies(this.target) ?? []
   }
 
   async getTitle(): Promise<string> {

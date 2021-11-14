@@ -6,15 +6,181 @@ const SAUCE_CREDENTIALS = {
 }
 
 const DEVICES = {
-  'Android Emulator': {
+  // ios
+  'iPhone 13': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
     capabilities: {
-      deviceName: 'Android Emulator',
+      w3c: {
+        platformName: 'iOS',
+        'appium:platformVersion': '15.0',
+        'appium:deviceName': 'iPhone 13 Simulator',
+      },
+      legacy: {
+        platformName: 'iOS',
+        platformVersion: '15.0',
+        deviceName: 'iPhone 13 Simulator',
+      },
+    },
+    options: {
+      appiumVersion: '1.22.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 12': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        platformName: 'iOS',
+        'appium:platformVersion': '14.5',
+        'appium:deviceName': 'iPhone 12 Simulator',
+      },
+      legacy: {
+        platformName: 'iOS',
+        platformVersion: '14.5',
+        deviceName: 'iPhone 12 Simulator',
+      },
+    },
+    options: {
+      appiumVersion: '1.20.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 11': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        platformName: 'iOS',
+        'appium:platformVersion': '13.0',
+        'appium:deviceName': 'iPhone 11 Simulator',
+      },
+      legacy: {
+        platformName: 'iOS',
+        platformVersion: '13.0',
+        deviceName: 'iPhone 11 Simulator',
+      },
+    },
+    options: {
+      appiumVersion: '1.15.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 11 Pro Max': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      appiumVersion: '1.18.3',
+      deviceName: 'iPhone 11 Pro Max Simulator',
+      deviceOrientation: 'portrait',
+      platformVersion: '14.0',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 11 Pro': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPhone 11 Pro Simulator',
+      platformVersion: '13.4',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone X': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        platformName: 'iOS',
+        'appium:platformVersion': '12.0',
+        'appium:deviceName': 'iPhone X Simulator',
+      },
+      legacy: {
+        platformName: 'iOS',
+        platformVersion: '12.0',
+        deviceName: 'iPhone X Simulator',
+      },
+    },
+    options: {
+      appiumVersion: '1.9.1',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone XS': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      platformName: 'iOS',
+      platformVersion: '13.0',
+      appiumVersion: '1.19.2',
+      deviceName: 'iPhone XS Simulator',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 8': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        platformName: 'iOS',
+        'appium:platformVersion': '11.0',
+        'appium:deviceName': 'iPhone 8 Simulator',
+      },
+      legacy: {
+        platformName: 'iOS',
+        platformVersion: '11.0',
+        deviceName: 'iPhone 8 Simulator',
+      },
+    },
+    options: {
+      appiumVersion: '1.8.0',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPhone 5S': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPhone 5s Simulator',
+      platformVersion: '12.4',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPad (7th generation)': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      browserName: 'Safari',
+      deviceName: 'iPad (7th generation) Simulator',
+      deviceOrientation: 'portrait',
+      platformVersion: '13.2',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'iPad Air': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPad Air Simulator',
+      platformVersion: '12.4',
+      platformName: 'iOS',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+
+  'Pixel 3 XL': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'Google Pixel 3 XL GoogleAPI Emulator',
       platformName: 'Android',
-      platformVersion: '6.0',
-      clearSystemFiles: true,
-      noReset: true,
+      platformVersion: '10.0',
+      deviceOrientation: 'portrait',
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -38,17 +204,6 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
-  'Pixel 3 XL': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      deviceName: 'Google Pixel 3 XL GoogleAPI Emulator',
-      platformName: 'Android',
-      platformVersion: '10.0',
-      deviceOrientation: 'portrait',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
   'Samsung Galaxy S8': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -64,71 +219,19 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
-  'iPhone 5S': {
+  'Android Emulator': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
     capabilities: {
-      deviceName: 'iPhone 5s Simulator',
-      platformVersion: '12.4',
-      platformName: 'iOS',
+      deviceName: 'Android Emulator',
+      platformName: 'Android',
+      platformVersion: '6.0',
+      clearSystemFiles: true,
+      noReset: true,
       ...SAUCE_CREDENTIALS,
     },
   },
-  'iPhone 11 Pro': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      deviceName: 'iPhone 11 Pro Simulator',
-      platformVersion: '13.4',
-      platformName: 'iOS',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
-  'iPhone 11 Pro Max': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      appiumVersion: '1.18.3',
-      deviceName: 'iPhone 11 Pro Max Simulator',
-      deviceOrientation: 'portrait',
-      platformVersion: '14.0',
-      platformName: 'iOS',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
-  'iPhone XS': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      platformName: 'iOS',
-      platformVersion: '13.0',
-      appiumVersion: '1.19.2',
-      deviceName: 'iPhone XS Simulator',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
-  'iPad Air': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      deviceName: 'iPad Air Simulator',
-      platformVersion: '12.4',
-      platformName: 'iOS',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
-  'iPad (7th generation)': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
-      browserName: 'Safari',
-      deviceName: 'iPad (7th generation) Simulator',
-      deviceOrientation: 'portrait',
-      platformVersion: '13.2',
-      platformName: 'iOS',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
+
   'Android 8.0 Chrome Emulator': {
     type: 'local',
     capabilities: {
@@ -146,6 +249,144 @@ const DEVICES = {
 }
 
 const BROWSERS = {
+  // local
+  firefox: {
+    type: 'local',
+    url: 'http://localhost:4445/wd/hub',
+    capabilities: {
+      browserName: 'firefox',
+    },
+  },
+  chrome: {
+    type: 'local',
+    capabilities: {
+      browserName: 'chrome',
+    },
+  },
+
+  // sauce
+  safari: {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'safari',
+        browserVersion: '14',
+        platformName: 'macOS 11.00',
+      },
+      legacy: {
+        browserName: 'safari',
+        version: '14',
+        platform: 'macOS 11.00',
+      },
+    },
+    options: {
+      name: 'Safari 14',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'chrome-mac': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'chrome',
+        browserVersion: '95',
+        platformName: 'macOS 11.00',
+      },
+      legacy: {
+        browserName: 'chrome',
+        version: '95',
+        platform: 'macOS 11.00',
+      },
+    },
+    options: {
+      name: 'Chrome Mac',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'firefox-mac': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'firefox',
+        browserVersion: '94',
+        platformName: 'macOS 11.00',
+      },
+      legacy: {
+        browserName: 'firefox',
+        version: '94',
+        platform: 'macOS 11.00',
+      },
+    },
+    options: {
+      name: 'Firefox Mac',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'chrome-win': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'chrome',
+        browserVersion: '95',
+        platformName: 'Windows 10',
+      },
+      legacy: {
+        browserName: 'chrome',
+        version: '95',
+        platform: 'Windows 10',
+      },
+    },
+    options: {
+      name: 'Chrome Windows',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'firefox-win': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'firefox',
+        browserVersion: '94',
+        platformName: 'Windows 10',
+      },
+      legacy: {
+        browserName: 'firefox',
+        version: '94',
+        platform: 'Windows 10',
+      },
+    },
+    options: {
+      name: 'Firefox Windows',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+  'edge-win': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        browserName: 'MicrosoftEdge',
+        browserVersion: '95',
+        platformName: 'Windows 10',
+      },
+      legacy: {
+        browserName: 'MicrosoftEdge',
+        version: '95',
+        platform: 'Windows 10',
+      },
+    },
+    options: {
+      name: 'Edge Windows',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
+
+  // legacy
   'edge-18': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -172,8 +413,8 @@ const BROWSERS = {
       },
       legacy: {
         browserName: 'internet explorer',
-        platform: 'Windows 10',
         version: '11.285',
+        platform: 'Windows 10',
       },
     },
     options: {
@@ -237,19 +478,6 @@ const BROWSERS = {
     options: {
       name: 'Firefox 48',
       ...SAUCE_CREDENTIALS,
-    },
-  },
-  firefox: {
-    type: 'local',
-    url: 'http://localhost:4445/wd/hub',
-    capabilities: {
-      browserName: 'firefox',
-    },
-  },
-  chrome: {
-    type: 'local',
-    capabilities: {
-      browserName: 'chrome',
     },
   },
 }

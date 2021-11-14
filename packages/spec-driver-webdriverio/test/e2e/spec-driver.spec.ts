@@ -1,4 +1,4 @@
-import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import type {Size, Cookie} from '@applitools/types'
 import assert from 'assert'
 import * as spec from '../../src'
 
@@ -138,15 +138,6 @@ describe('spec driver', async () => {
     })
     it('getCookies()', async () => {
       await getCookies()
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'Chrome Headless',
-          isMobile: false,
-          isNative: false,
-        },
-      })
     })
     it('getTitle()', async () => {
       await getTitle()
@@ -299,16 +290,6 @@ describe('spec driver', async () => {
     it('getCookies(context)', async () => {
       await getCookies({input: {context: true}})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          isMobile: false,
-          isNative: false,
-          platformName: 'linux',
-        },
-      })
-    })
     it('getTitle()', async () => {
       await getTitle()
     })
@@ -340,17 +321,6 @@ describe('spec driver', async () => {
     it('setWindowSize({width, height})', async () => {
       await setWindowSize({legacy: true, input: {width: 551, height: 552}})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'internet explorer',
-          browserVersion: '11',
-          isMobile: false,
-          isNative: false,
-          platformName: 'WINDOWS',
-        },
-      })
-    })
   })
 
   describe('mobile browser (@mobile)', async () => {
@@ -373,18 +343,6 @@ describe('spec driver', async () => {
     })
     it('getCookies(context)', async () => {
       await getCookies({input: {context: true}})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: false,
-          platformName: 'Android',
-          platformVersion: '10',
-        },
-      })
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'portrait'})
@@ -414,20 +372,6 @@ describe('spec driver', async () => {
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: true,
-          platformName: 'Android',
-          platformVersion: '10',
-          pixelRatio: 2.5,
-          statusBarHeight: 60,
-          navigationBarHeight: 1080,
-        },
-      })
     })
   })
 
@@ -594,13 +538,6 @@ describe('spec driver', async () => {
     }
     const result = await spec.getCookies(browser, input?.context)
     assert.deepStrictEqual(result, [cookie])
-  }
-  async function getDriverInfo({expected}: {expected: Partial<DriverInfo>}) {
-    const info = await spec.getDriverInfo(browser)
-    assert.deepStrictEqual(
-      Object.keys(expected).reduce((obj, key: keyof DriverInfo) => ({...obj, [key]: info[key]}), {}),
-      expected,
-    )
   }
   async function getOrientation({expected}: {expected: string}) {
     const result = await spec.getOrientation(browser)

@@ -202,6 +202,9 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
     return copy
   })
 }
+export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
+  return browser.getSession?.() ?? browser.capabilities
+}
 export async function getDriverInfo(browser: Driver): Promise<DriverInfo> {
   const capabilities = browser.capabilities as any
   const info: DriverInfo = {
@@ -295,8 +298,17 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
   }
 }
 
+// #endregion
+
 // #region MOBILE COMMANDS
 
+export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+  const {statusBar, navigationBar}: any = await browser.getSystemBars()
+  return {
+    statusBarHeight: statusBar.visible ? statusBar.height : 0,
+    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+  }
+}
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = await browser.getOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'

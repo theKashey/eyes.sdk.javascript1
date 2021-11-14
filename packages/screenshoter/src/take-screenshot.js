@@ -150,7 +150,7 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
       const viewportSize = await driver.getViewportSize()
       const cropRegion = withStatusBar
         ? {x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight}
-        : {x: 0, y: driver.statusBarHeight, width: viewportSize.width, height: viewportSize.height}
+        : {top: driver.statusBarHeight, bottom: driver.navigationBarHeight, left: 0, right: 0}
       image.crop(cropRegion)
       await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
     }

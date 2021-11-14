@@ -1,9 +1,42 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
-const spec = require('../util/spec-driver')
+const spec = require('@applitools/spec-driver-webdriverio')
 const makeImage = require('../../src/image')
 const screenshoter = require('../../index')
+
+const env = {
+  android: {
+    url: 'https://ondemand.saucelabs.com/wd/hub',
+    capabilities: {
+      name: 'Android Screenshoter Test',
+      browserName: '',
+      platformName: 'Android',
+      platformVersion: '7.0',
+      appiumVersion: '1.20.2',
+      deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
+      automationName: 'uiautomator2',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
+    },
+  },
+  androidx: {
+    url: 'https://ondemand.saucelabs.com/wd/hub',
+    capabilities: {
+      name: 'AndroidX Screenshoter Test',
+      browserName: '',
+      platformName: 'Android',
+      platformVersion: '10.0',
+      appiumVersion: '1.20.2',
+      deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+      automationName: 'uiautomator2',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.2.0/app_androidx.apk',
+      username: process.env.SAUCE_USERNAME,
+      accessKey: process.env.SAUCE_ACCESS_KEY,
+    },
+  },
+}
 
 describe('screenshoter', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -20,7 +53,7 @@ describe('screenshoter', () => {
 
   describe('android app', () => {
     before(async () => {
-      ;[browser, destroyBrowser] = await spec.build({type: 'android'})
+      ;[browser, destroyBrowser] = await spec.build(env.android)
     })
 
     after(async () => {
@@ -72,7 +105,7 @@ describe('screenshoter', () => {
 
   describe('androidx app', () => {
     before(async () => {
-      ;[browser, destroyBrowser] = await spec.build({type: 'androidx'})
+      ;[browser, destroyBrowser] = await spec.build(env.androidx)
     })
 
     after(async () => {

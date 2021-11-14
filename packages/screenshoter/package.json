@@ -56,6 +56,7 @@
   "devDependencies": {
     "@applitools/driver": "1.2.7",
     "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/spec-driver-webdriverio": "^1.1.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
@@ -64,7 +65,7 @@
     "mocha": "^8.2.1",
     "pixelmatch": "^5.2.1",
     "prettier": "1.19.0",
-    "webdriverio": "^6.10.5"
+    "webdriverio": "^7.16.7"
   },
   "engines": {
     "node": ">= 8.9.0"

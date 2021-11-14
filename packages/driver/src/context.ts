@@ -507,7 +507,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   async getCookies(): Promise<types.Cookie[]> {
     if (this.driver.isNative) return []
     await this.focus()
-    return this._spec.getCookies(this.target, true)
+    return this._spec?.getCookies(this.target, true) ?? []
   }
 
   private async preserveInnerOffset() {

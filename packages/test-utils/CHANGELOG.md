@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add more device and browser presets
 
 ## 1.0.9 - 2021/10/12
 

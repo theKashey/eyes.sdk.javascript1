@@ -1,9 +1,24 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
-const spec = require('../util/spec-driver')
+const spec = require('@applitools/spec-driver-webdriverio')
 const screenshoter = require('../../index')
 const makeImage = require('../../src/image')
+
+const env = {
+  url: 'https://ondemand.saucelabs.com/wd/hub',
+  capabilities: {
+    name: 'iOS Web Screenshoter Test',
+    deviceName: 'iPhone 11 Pro Simulator',
+    browserName: 'safari',
+    platformName: 'iOS',
+    platformVersion: '14.5',
+    appiumVersion: '1.20.1',
+    automationName: 'XCUITest',
+    username: process.env.SAUCE_USERNAME,
+    accessKey: process.env.SAUCE_ACCESS_KEY,
+  },
+}
 
 // TODO add tests for page without viewport meta tag
 
@@ -12,7 +27,7 @@ describe('screenshoter web ios', () => {
   let driver, browser, destroyBrowser
 
   before(async () => {
-    ;[browser, destroyBrowser] = await spec.build({type: 'web-ios'})
+    ;[browser, destroyBrowser] = await spec.build(env)
   })
 
   after(async () => {

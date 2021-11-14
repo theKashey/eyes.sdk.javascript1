@@ -289,7 +289,10 @@ async function copy(dstImage, srcImage, offset) {
 }
 
 async function combine(firstImage, lastImage, srcImage, region) {
-  region = utils.geometry.intersect({x: 0, y: 0, width: firstImage.width, height: firstImage.height}, region)
+  region = utils.geometry.intersect(
+    {x: 0, y: 0, width: firstImage.width, height: firstImage.height},
+    utils.geometry.round(region),
+  )
 
   if (region.x === 0 && region.y === 0 && region.width >= firstImage.width && region.height >= firstImage.height) {
     return srcImage

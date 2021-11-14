@@ -26,9 +26,15 @@
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
-  "directories": {
-    "lib": "./src",
-    "test": "./test"
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./fake": {
+      "default": "./dist/fake/index.js",
+      "types": "./types/fake/index.d.ts"
+    }
   },
   "files": [
     "dist",
