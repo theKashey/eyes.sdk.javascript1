@@ -347,7 +347,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         const actions = []
 
         const xPadding = Math.floor(scrollableRegion.width * 0.1)
-        const yCenter = Math.floor(scrollableRegion.y + scrollableRegion.height / 2)
+        const yTrack = Math.floor(scrollableRegion.y + scrollableRegion.height / 2) // center
         const xLeft = scrollableRegion.y + xPadding
         const xDirection = remainingOffset.y > 0 ? 'right' : 'left'
         let xRemaining = Math.abs(remainingOffset.x)
@@ -355,16 +355,16 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           const xRight = scrollableRegion.x + Math.min(xRemaining + xPadding, scrollableRegion.width - xPadding)
           const [xStart, xEnd] = xDirection === 'right' ? [xRight, xLeft] : [xLeft, xRight]
           actions.push(
-            {action: 'press', x: xStart, y: yCenter},
+            {action: 'press', x: xStart, y: yTrack},
             {action: 'wait', ms: 1500},
-            {action: 'moveTo', x: xEnd, y: yCenter},
+            {action: 'moveTo', x: xEnd, y: yTrack},
             {action: 'release'},
           )
           xRemaining -= xRight - xLeft
         }
 
-        const yPadding = Math.floor(scrollableRegion.height * 0.08)
-        const xCenter = Math.floor(scrollableRegion.x + scrollableRegion.width / 2) // 0
+        const yPadding = Math.floor(scrollableRegion.height * 0.1)
+        const xTrack = Math.floor(scrollableRegion.x + 5) // a little bit off left border
         const yTop = scrollableRegion.y + yPadding
         const yDirection = remainingOffset.y > 0 ? 'down' : 'up'
         let yRemaining = Math.abs(remainingOffset.y) + (await this.getTouchPadding()) * 2
@@ -372,9 +372,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           const yBottom = scrollableRegion.y + Math.min(yRemaining + yPadding, scrollableRegion.height - yPadding)
           const [yStart, yEnd] = yDirection === 'down' ? [yBottom, yTop] : [yTop, yBottom]
           actions.push(
-            {action: 'press', x: xCenter, y: yStart},
+            {action: 'press', x: xTrack, y: yStart},
             {action: 'wait', ms: 1500},
-            {action: 'moveTo', x: xCenter, y: yEnd},
+            {action: 'moveTo', x: xTrack, y: yEnd},
             {action: 'wait', ms: 1500},
             {action: 'release'},
           )
