@@ -45,10 +45,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.19.tgz#7e1e73b9bed8f74d6322bf412b84bea001891781"
-  integrity sha512-i9ZnHOV6Dau8nDpxt5lORwNrZecdbAqNh+xofXgYVO6busITAZ2HM6gnCV02c3iAXviXJ4WfIA1VUB6a7Jh77g==
+"@applitools/types@1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.20.tgz#4364a69c51301f87ddb19d37c02b1f4b3764fba3"
+  integrity sha512-l1cH3YUNhdQQmyI3abOhJjLqgv3SFEuA2QkP4UxpkwhA9G2C2PIeQNxlUn4/zGagbqI5oFjpwcSyIfB4zltOkA==
 
 "@applitools/utils@1.2.4":
   version "1.2.4"
