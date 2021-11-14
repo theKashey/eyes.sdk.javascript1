@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.24.1 - 2021/11/14
+
 - support cookies
 - updated to @applitools/driver@1.3.2 (from 1.3.0)
 - updated to @applitools/screenshoter@3.2.9 (from 3.2.8)
