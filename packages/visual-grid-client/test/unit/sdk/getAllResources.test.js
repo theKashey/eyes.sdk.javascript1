@@ -805,8 +805,8 @@ describe('getAllResources', () => {
 
   it('handles cookies', async () => {
     const results = []
-    const fetchResource = async (url, options) => {
-      const result = {url, cookie: options.headers.Cookie}
+    const fetchResource = async (resource, options) => {
+      const result = {url: resource.getUrl(), cookie: options.headers.Cookie}
       results.push(result)
       return result
     }
