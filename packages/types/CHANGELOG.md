@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.20 - 2021/11/14
+
 - add `getCapabilities` and `getBarsHeight` methods to `SpecDriver` type. These methods could be used instead of `getDriverInfo` to provide raw information about the driver
 
 ## 1.0.19 - 2021/11/10
