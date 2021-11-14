@@ -38,7 +38,9 @@
   },
   "typesVersions": {
     "*": {
-      "fake": ["./types/fake/index.d.ts"]
+      "fake": [
+        "./types/fake/index.d.ts"
+      ]
     }
   },
   "files": [
