@@ -44,10 +44,10 @@ describe('screenshoter web', () => {
   })
 
   it('take frame screenshot with "scroll" scrolling', () => {
-    frame({scrollingMode: 'scroll'})
+    return frame({scrollingMode: 'scroll'})
   })
   it('take frame screenshot with "css" scrolling', () => {
-    frame({scrollingMode: 'css'})
+    return frame({scrollingMode: 'css'})
   })
 
   it('take full frame screenshot with "scroll" scrolling', () => {
@@ -58,10 +58,10 @@ describe('screenshoter web', () => {
   })
 
   it('take region screenshot with "scroll" scrolling', () => {
-    region({scrollingMode: 'scroll'})
+    return region({scrollingMode: 'scroll'})
   })
   it('take region screenshot with "css" scrolling', () => {
-    region({scrollingMode: 'css'})
+    return region({scrollingMode: 'css'})
   })
 
   it('take full region screenshot with "scroll" scrolling', () => {
