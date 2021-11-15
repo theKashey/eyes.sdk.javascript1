@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+ ## 3.23.1 - 2021/11/15
+
  - fix types for region inside shadow
 - updated to @applitools/visual-grid-client@15.8.45 (from 15.8.44)
 
