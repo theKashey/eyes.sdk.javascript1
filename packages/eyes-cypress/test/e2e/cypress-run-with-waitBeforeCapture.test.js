@@ -44,7 +44,7 @@ describe('works with waitBeforeCapture', () => {
   });
 
   it('waitBeforeCapture works from applitools.config file', async () => {
-    const config = {...applitoolsConfig, waitBeforeCapture: 1500};
+    const config = {...applitoolsConfig, waitBeforeCapture: 2000};
     fs.writeFileSync(
       `${targetTestAppPath}/applitools.config.js`,
       'module.exports =' + JSON.stringify(config, 2, null),

@@ -8,7 +8,7 @@ describe('works with waitBeforeCapture', () => {
         testName: 'test waitBeforeCapture, eyesOpen',
         browser: {width: 1200, height: 800}, 
         layoutBreakPoints: true, 
-        waitBeforeCapture: 1500,
+        waitBeforeCapture: 2000,
       });
       
       cy.eyesCheckWindow({
@@ -30,7 +30,7 @@ describe('works with waitBeforeCapture', () => {
         cy.eyesCheckWindow({
           target: 'window',
           layoutBreakPoints: true, 
-          waitBeforeCapture: 1500,
+          waitBeforeCapture: 2000,
          });
          
         cy.eyesClose();
