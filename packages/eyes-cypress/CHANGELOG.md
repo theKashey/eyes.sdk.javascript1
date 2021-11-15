@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - fix types for region inside shadow
 
  ## 3.23.0 - 2021/11/11
 

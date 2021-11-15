@@ -260,7 +260,7 @@ declare namespace Eyes {
        * In case target is region, this should be the actual css or xpath selector to an element,
        * and the screenshot would be the content of that element.
        */
-      selector?: string | Selector
+      selector?: string | Selector | Selector[]
 
       /**
        * In case target is region, this should be an object describing the region's coordinates for capturing the image.
@@ -324,11 +324,22 @@ declare namespace Eyes {
        * Default value: false
        */
       ignoreDisplacements?: boolean
+
+      /**
+       * A flag that specify whether layout algorithm should consider the DOM in match window
+       */
+      useDom?: boolean
+
+      /**
+       * A flag that specify whether layout algorithm should not flag repeating patters as differences
+       */
+      enablePatterns?: boolean
     }
 
     interface Selector {
       type?: 'css' | 'xpath'
       selector: string
+      nodeType?: 'element' | 'shadow-root'
     }
 
     interface Region {
