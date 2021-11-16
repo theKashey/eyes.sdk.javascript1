@@ -107,23 +107,34 @@ export async function setWindowSize(driver: Driver, size: Size) {
   await window.setPosition(0, 0)
   await window.setSize(size.width, size.height)
 }
+export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
+  if (context) return driver.manage().getCookies()
+  const {cookies} = (await driver.driver.sendChromiumCommandAndGetResult('Network.getAllCookies', {})) as any
+
+  return cookies.map((cookie: any) => {
+    const copy = {...cookie, expiry: cookie.expires}
+    delete copy.expires
+    delete copy.size
+    delete copy.priority
+    delete copy.session
+    delete copy.sameParty
+    delete copy.sourceScheme
+    delete copy.sourcePort
+    return copy
+  })
+}
 export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   const session = await driver.getSession()
-  const capabilities = await driver.getCapabilities()
-  const desiredCapabilities = capabilities.get('desired') ?? {}
-  const platformName =
-    capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
-  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
-
-  return {
-    sessionId: session.getId(),
-    isMobile,
-    isNative: isMobile && !capabilities.get('browserName'),
-    deviceName: desiredCapabilities.deviceName ?? capabilities.get('deviceName'),
-    platformName,
-    platformVersion: capabilities.get('platformVersion'),
-    browserName: capabilities.get('browserName') ?? desiredCapabilities?.browserName,
-    browserVersion: capabilities.get('browserVersion') ?? capabilities.get('version'),
+  return {sessionId: session.getId()}
+}
+export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
+  try {
+    const {Command} = require('protractor')
+    const getSessionDetailsCommand = new Command('getSessionDetails')
+    return await driver.schedule(getSessionDetailsCommand, '')
+  } catch {
+    const capabilities = await driver.getCapabilities()
+    return capabilities.toJSON()
   }
 }
 export async function getTitle(driver: Driver): Promise<string> {
@@ -161,23 +172,6 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
   const {until} = require('protractor')
   const element = await findElement(driver, selector)
   await driver.wait(until.elementIsVisible(element), timeout)
-}
-
-export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
-  if (context) return driver.manage().getCookies()
-  const {cookies} = (await driver.driver.sendChromiumCommandAndGetResult('Network.getAllCookies', {})) as any
-
-  return cookies.map((cookie: any) => {
-    const copy = {...cookie, expiry: cookie.expires}
-    delete copy.expires
-    delete copy.size
-    delete copy.priority
-    delete copy.session
-    delete copy.sameParty
-    delete copy.sourceScheme
-    delete copy.sourcePort
-    return copy
-  })
 }
 
 // #endregion

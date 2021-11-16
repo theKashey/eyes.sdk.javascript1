@@ -13,6 +13,7 @@
     "tabs",
     "activeTab",
     "webNavigation",
+    "cookies",
     "<all_urls>"
   ],
   "background": {

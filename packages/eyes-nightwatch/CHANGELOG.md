@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- implement `getCapabilities` instead of `getDriverInfo`
 
 ## 1.10.0 - 2021/11/10
 

@@ -12,7 +12,7 @@ export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: str
 
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
-//// #region HELPERS
+// #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
@@ -45,7 +45,7 @@ function call<
 
 // #endregion
 
-//// #region UTILITY
+// #region UTILITY
 
 export function isDriver(driver: any): driver is Driver {
   return utils.types.instanceOf(driver, 'NightwatchAPI')
@@ -86,9 +86,9 @@ export async function isEqualElements(_driver: Driver, element1: Element, elemen
   return elementId1 === elementId2
 }
 
-//// #endregion
+// #endregion
 
-//// #region COMMANDS
+// #region COMMANDS
 
 export async function executeScript(driver: Driver, script: ((arg: any) => any) | string, arg: any): Promise<any> {
   return call(driver, 'execute', script, [arg])
@@ -146,42 +146,15 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
   if (context) return call(driver, 'getCookies')
   return []
 }
-export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
-  const capabilities = driver.options.desiredCapabilities as Record<string, any>
-  const orientation = capabilities.orientation || capabilities.deviceOrientation
-  return orientation ? orientation.toLowerCase() : 'portrait'
+export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
+  try {
+    return await call(driver, 'session')
+  } catch {
+    return driver.options.desiredCapabilities
+  }
 }
 export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
-  const capabilities = driver.options.desiredCapabilities as Record<string, any>
-  const platformName = capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName
-  const browserName = capabilities.browserName ?? capabilities.browser_name
-
-  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
-  const isNative = isMobile && !browserName
-  const info: any = {
-    features: {allCookies: false},
-    sessionId: driver.sessionId,
-    isMobile,
-    isNative,
-    deviceName: capabilities.device ?? capabilities.deviceName,
-    platformName,
-    platformVersion: capabilities.osVersion ?? capabilities.platformVersion,
-    browserName,
-    browserVersion: capabilities.browserVersion ?? capabilities.version,
-    pixelRatio: capabilities.pixelRatio,
-  }
-
-  if (info.isNative) {
-    const desiredCapabilities = utils.types.has(capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
-      ? capabilities
-      : await call(driver, 'session')
-
-    info.pixelRatio = desiredCapabilities.pixelRatio
-    info.statusBarHeight = desiredCapabilities.statBarHeight ?? desiredCapabilities.viewportRect?.top ?? 0
-    info.navigationBarHeight = 0
-  }
-
-  return info
+  return {sessionId: driver.sessionId, features: {allCookies: false}}
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return call(driver, 'title')
@@ -277,4 +250,4 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   return [client.api, () => client.session.close()]
 }
 
-//// #endregion
+// #endregion

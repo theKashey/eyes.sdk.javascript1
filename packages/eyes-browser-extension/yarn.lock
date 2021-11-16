@@ -185,6 +185,14 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.7.tgz#bcd89152b83ce49dc51f4a44dec6d0dba7338317"
   integrity sha512-Tr4Gj7Qov/oPy+8WI4oVmmubxqpOzr8P3Wjzpl6rA57xKLg6/TiIg5oZNb4+jEmO2ShjNYLaEwRWHl7kPgb4fw==
 
+"@applitools/spec-driver-playwright@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-playwright/-/spec-driver-playwright-1.2.0.tgz#2c5902750b0093afe7b9ea76fee166c5feaf93b3"
+  integrity sha512-7T+5kU6n82fXfB7WTJ4x6B8sNDKj4TNntxam7OZ/Qrg5KcYLilb3O92SIrRY0qwWjJOyqqvkc01RBGwh89GDaQ==
+  dependencies:
+    "@applitools/types" "1.0.19"
+    "@applitools/utils" "1.2.4"
+
 "@applitools/test-utils@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.3.tgz#5ab233a087e5e6a4e356a22c9adcab23e959e03f"
@@ -206,10 +214,20 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.14.tgz#d6a7a138fba8b59b2ff6a27e43a78c0f2c1b5cc2"
   integrity sha512-Exfi8EOGGBwpRpaLizXmsUXInXGXNU26qup7AjLJSJLYETwn3Q3W+0aLHBUbdFA87w9fPCQjXJuZxJgqsNpVig==
 
+"@applitools/types@1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.19.tgz#7e1e73b9bed8f74d6322bf412b84bea001891781"
+  integrity sha512-i9ZnHOV6Dau8nDpxt5lORwNrZecdbAqNh+xofXgYVO6busITAZ2HM6gnCV02c3iAXviXJ4WfIA1VUB6a7Jh77g==
+
 "@applitools/utils@1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.3.tgz#fdb25d3b7fc453563bacb94a281b843b21316f73"
   integrity sha512-MZXsrzeHTvjFLzpfyKRDUmZWzNxH3gWd3reqYf+1kYimALKB3CO82VDNmkaGJykrRbxEP03Yqha7fHJj9eKslQ==
+
+"@applitools/utils@1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
+  integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
 "@applitools/visual-grid-client@15.8.31":
   version "15.8.31"

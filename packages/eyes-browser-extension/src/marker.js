@@ -11,12 +11,7 @@ export function makeMark() {
         const newElementId = oldElementId ? `${oldElementId} ${elementId}` : elementId
         element.setAttribute(MARKER, newElementId)
       }
-
-      const f = {[MARKER]: `[${MARKER}~="${elementId}"]`}
-
-      console.log(f)
-
-      return f
+      return {[MARKER]: `[${MARKER}~="${elementId}"]`}
     } else if (utils.types.isArray(value)) {
       return value.map(mark)
     } else if (utils.types.isObject(value)) {

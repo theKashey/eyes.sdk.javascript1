@@ -3,7 +3,7 @@ import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-selenium'
 
-const sdk = makeSDK({
+const sdk: any = makeSDK({
   name: 'eyes.selenium',
   version: `${require('../package.json').version}--${process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION}`,
   spec,

@@ -137,15 +137,6 @@ describe('spec driver', async () => {
     it('getCookies(context)', async () => {
       await getCookies({input: {context: true}})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          isMobile: false,
-          isNative: false,
-        },
-      })
-    })
     it('getTitle()', async () => {
       await getTitle()
     })
@@ -172,17 +163,6 @@ describe('spec driver', async () => {
     it('setWindowSize({width, height})', async () => {
       await setWindowSize({input: {width: 551, height: 552}})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'internet explorer',
-          browserVersion: '11.285',
-          isMobile: false,
-          isNative: false,
-          platformName: 'Windows 10',
-        },
-      })
-    })
   })
 
   describe('mobile browser (@mobile)', async () => {
@@ -200,18 +180,6 @@ describe('spec driver', async () => {
     })
     it('getCookies(context)', async () => {
       await getCookies({input: {context: true}})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: false,
-          platformName: 'Android',
-          platformVersion: '10.0',
-        },
-      })
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'portrait'})
@@ -236,20 +204,6 @@ describe('spec driver', async () => {
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: true,
-          platformName: 'Android',
-          platformVersion: '10.0',
-          pixelRatio: 2.5,
-          statusBarHeight: 60,
-          navigationBarHeight: 1080,
-        },
-      })
     })
   })
 
@@ -414,13 +368,6 @@ describe('spec driver', async () => {
     }
     const result = await spec.getCookies(browser, input?.context)
     assert.deepStrictEqual(result, [cookie])
-  }
-  async function getDriverInfo({expected}: {expected: Record<string, any>}) {
-    const info = await spec.getDriverInfo(browser)
-    assert.deepStrictEqual(
-      Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
-      expected,
-    )
   }
   async function getOrientation({expected}: {expected: string}) {
     const result = await spec.getOrientation(browser)

@@ -158,58 +158,21 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
 }
 export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   const session = await driver.getSession()
-  const capabilities = await driver.getCapabilities()
-  const desiredCapabilities = capabilities.get('desired') ?? {}
-  const platformName =
-    capabilities.get('platformName') ?? capabilities.get('platform') ?? desiredCapabilities.platformName
-  const isMobile = ['android', 'ios'].includes(platformName?.toLowerCase())
-
-  const info: DriverInfo = {
-    sessionId: session.getId(),
-    isMobile,
-    isNative: isMobile && !capabilities.get('browserName'),
-    deviceName: desiredCapabilities.deviceName ?? capabilities.get('deviceName'),
-    platformName,
-    platformVersion: capabilities.get('platformVersion'),
-    browserName: capabilities.get('browserName') ?? desiredCapabilities?.browserName,
-    browserVersion: capabilities.get('browserVersion') ?? capabilities.get('version'),
-  }
-
-  if (info.isNative) {
+  return {sessionId: session.getId()}
+}
+export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
+  try {
     const {Command} = require('selenium-webdriver/lib/command')
-
-    let details
-    if (capabilities.has('viewportRect') && capabilities.has('pixelRatio') && capabilities.has('statBarHeight')) {
-      details = {
-        viewportRect: capabilities.get('viewportRect'),
-        pixelRatio: capabilities.get('pixelRatio'),
-        statBarHeight: capabilities.get('statBarHeight'),
-      }
-    } else {
-      const getSessionDetailsCommand = new Command('getSessionDetails')
-      details =
-        process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-          ? await (driver as any).schedule(getSessionDetailsCommand)
-          : await driver.execute(getSessionDetailsCommand)
-    }
-
-    info.pixelRatio = details.pixelRatio
-
-    try {
-      const getSystemBarsCommand = new Command('getSystemBars')
-      const {statusBar, navigationBar} =
-        process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-          ? await (driver as any).schedule(getSystemBarsCommand)
-          : await driver.execute(getSystemBarsCommand)
-
-      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
-      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
-    } catch (err) {
-      info.statusBarHeight = details.statBarHeight ?? details.viewportRect?.top ?? 0
-      info.navigationBarHeight = 0
-    }
+    const getSessionDetailsCommand = new Command('getSessionDetails')
+    return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+      ? await (driver as any).schedule(getSessionDetailsCommand)
+      : await driver.execute(getSessionDetailsCommand)
+  } catch {
+    const capabilities = await driver.getCapabilities()
+    return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+      ? (capabilities as any).toJSON()
+      : Object.fromEntries(Array.from(capabilities.keys(), key => [key, capabilities.get(key)]))
   }
-  return info
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return driver.getTitle()
@@ -254,7 +217,18 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 // #endregion
 
 // #region MOBILE COMMANDS
-
+export async function getBarsHeight(driver: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+  const {Command} = require('selenium-webdriver/lib/command')
+  const getSystemBarsCommand = new Command('getSystemBars')
+  const {statusBar, navigationBar} =
+    process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+      ? await (driver as any).schedule(getSystemBarsCommand)
+      : await driver.execute(getSystemBarsCommand)
+  return {
+    statusBarHeight: statusBar.visible ? statusBar.height : 0,
+    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+  }
+}
 export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
   const {Command} = require('selenium-webdriver/lib/command')
   const getOrientationCommand = new Command('getOrientation')

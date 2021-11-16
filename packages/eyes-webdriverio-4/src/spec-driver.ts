@@ -141,47 +141,10 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
   })
 }
 export async function getDriverInfo(browser: Driver): Promise<DriverInfo> {
-  const desiredCapabilities = browser.desiredCapabilities as any
-
-  const info: any = {
-    sessionId: (browser as any).requestHandler.sessionID || browser.sessionId,
-    isMobile: browser.isMobile,
-    isNative: browser.isMobile && !desiredCapabilities.browserName,
-    deviceName: desiredCapabilities.deviceName,
-    platformName:
-      ((browser.isIOS && 'iOS') || (browser.isAndroid && 'Android') || desiredCapabilities.platformName) ??
-      desiredCapabilities.platform ??
-      desiredCapabilities.desired?.platformName,
-    platformVersion: desiredCapabilities.platformVersion,
-    browserName:
-      desiredCapabilities.browserName ?? desiredCapabilities.name ?? desiredCapabilities.desired?.browserName,
-    browserVersion: desiredCapabilities.browserVersion ?? desiredCapabilities.version,
-    pixelRatio: desiredCapabilities.pixelRatio,
-  }
-
-  if (info.isNative) {
-    const capabilities = utils.types.has(desiredCapabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
-      ? desiredCapabilities
-      : await browser.session().then(({value}) => value)
-
-    info.pixelRatio = capabilities.pixelRatio
-
-    try {
-      const {statusBar, navigationBar} = await (browser as any).requestHandler
-        .create({
-          method: 'GET',
-          path: '/session/:sessionId/appium/device/system_bars',
-        })
-        .then(({value}: any) => value)
-      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
-      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
-    } catch (err) {
-      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
-      info.navigationBarHeight = 0
-    }
-  }
-
-  return info
+  return {sessionId: (browser as any).requestHandler.sessionID || browser.sessionId}
+}
+export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
+  return browser.session?.().then(({value}) => value) ?? browser.desiredCapabilities
 }
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()
@@ -223,6 +186,15 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
 
 // #region MOBILE COMMANDS
 
+export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+  const {statusBar, navigationBar} = await (browser as any).requestHandler
+    .create({method: 'GET', path: '/session/:sessionId/appium/device/system_bars'})
+    .then(({value}: any) => value)
+  return {
+    statusBarHeight: statusBar.visible ? statusBar.height : 0,
+    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+  }
+}
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = (await browser.getOrientation()) as unknown as string
   return orientation.toLowerCase() as 'portrait' | 'landscape'

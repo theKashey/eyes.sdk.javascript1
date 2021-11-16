@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- implement `getCapabilities` and `getBarsHeight` instead of `getDriverInfo`
 
 ## 1.2.0 - 2021/11/10
 

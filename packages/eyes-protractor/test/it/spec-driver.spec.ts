@@ -1,4 +1,4 @@
-import type {Size, DriverInfo} from '@applitools/types'
+import type {Size} from '@applitools/types'
 import type {ProtractorBy} from 'protractor'
 import assert from 'assert'
 import * as spec from '../../src/spec-driver'
@@ -112,16 +112,6 @@ describe('spec driver', async () => {
     it('visit()', async () => {
       await visit()
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          isMobile: false,
-          isNative: false,
-          platformName: 'LINUX',
-        },
-      })
-    })
   })
 
   describe('headless desktop (@angular)', async () => {
@@ -158,17 +148,6 @@ describe('spec driver', async () => {
     it('setWindowSize({width, height})', async () => {
       await setWindowSize({input: {width: 551, height: 552}})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'internet explorer',
-          browserVersion: '11',
-          isMobile: false,
-          isNative: false,
-          platformName: 'WINDOWS',
-        },
-      })
-    })
   })
 
   describe('mobile driver (@mobile @android)', async () => {
@@ -189,18 +168,6 @@ describe('spec driver', async () => {
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'portrait'})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: false,
-          platformName: 'Android',
-          platformVersion: '10',
-        },
-      })
     })
   })
 
@@ -364,12 +331,5 @@ describe('spec driver', async () => {
     const actual = await driver.getCurrentUrl()
     assert.deepStrictEqual(actual, blank)
     await driver.get(url)
-  }
-  async function getDriverInfo({expected}: {expected: Partial<DriverInfo>}) {
-    const info = await spec.getDriverInfo(driver)
-    assert.deepStrictEqual(
-      Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
-      expected,
-    )
   }
 })

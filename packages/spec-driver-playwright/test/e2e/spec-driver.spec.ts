@@ -35,6 +35,9 @@ describe('spec driver', async () => {
     it('isSelector(string)', async () => {
       await isSelector({input: 'div', expected: true})
     })
+    it('isSelector(locator)', async () => {
+      await isSelector({input: page.locator('div'), expected: true})
+    })
     it('isSelector(wrong)', async () => {
       await isSelector({input: {} as spec.Selector, expected: false})
     })
@@ -122,6 +125,9 @@ describe('spec driver', async () => {
     it('isSelector(string)', async () => {
       await isSelector({input: 'div', expected: true})
     })
+    it('isSelector(locator)', async () => {
+      await isSelector({input: page.locator('div'), expected: true})
+    })
     it('isSelector(wrong)', async () => {
       await isSelector({input: {} as spec.Selector, expected: false})
     })
@@ -184,14 +190,15 @@ describe('spec driver', async () => {
     })
   })
 
-  describe('headless desktop (@webkit)', async () => {
+  // TODO unskip once playwright 1.17 released https://github.com/microsoft/playwright/issues/9811
+  describe.skip('headless desktop (@webkit)', async () => {
     before(async () => {
       ;[page, destroyPage] = await spec.build({browser: 'webkit', headless: true})
       await page.goto(url)
     })
 
     after(async () => {
-      await destroyPage()
+      // await destroyPage()
     })
 
     it('isDriver(driver)', async () => {
@@ -208,6 +215,9 @@ describe('spec driver', async () => {
     })
     it('isSelector(string)', async () => {
       await isSelector({input: 'div', expected: true})
+    })
+    it('isSelector(locator)', async () => {
+      await isSelector({input: page.locator('div'), expected: true})
     })
     it('isSelector(wrong)', async () => {
       await isSelector({input: {} as spec.Selector, expected: false})
@@ -354,7 +364,7 @@ describe('spec driver', async () => {
     expected?: spec.Element
   }) {
     const root = input.parent ?? page
-    expected = expected === undefined ? await root.$(input.selector) : expected
+    expected = expected === undefined ? await root.$(input.selector as string) : expected
     const element = await spec.findElement(page.mainFrame(), input.selector, input.parent)
     if (element !== expected) {
       assert.ok(await isEqualElements(page, element, expected))
@@ -368,7 +378,7 @@ describe('spec driver', async () => {
     expected?: spec.Element[]
   }) {
     const root = input.parent ?? page
-    expected = expected === undefined ? await root.$$(input.selector) : expected
+    expected = expected === undefined ? await root.$$(input.selector as string) : expected
     const elements = await spec.findElements(page.mainFrame(), input.selector, input.parent)
     assert.strictEqual(elements.length, expected.length)
     for (const [index, element] of elements.entries()) {

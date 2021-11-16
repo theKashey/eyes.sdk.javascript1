@@ -55,7 +55,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
         const name = symbol.getName()
 
         // if alias is exported original symbol should be found, bc only original symbol could reference to the type
-        if (symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol)
+        symbol = getAliasedSymbol(symbol)
 
         let type = checker.getTypeOfSymbolAtLocation(symbol, sourceFile)
         // some symbols (e.g. TypeAlias) cannot resolve type at location, so declared type should be taken
@@ -77,7 +77,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
           if (extendingClause) {
             const expression = extendingClause.types[0].expression
             let symbol = checker.getSymbolAtLocation(ts.isCallExpression(expression) ? expression.arguments[0] : expression)
-            if (symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol)
+            symbol = getAliasedSymbol(symbol)
             if (!exports.symbols.has(symbol) && !program.isSourceFileDefaultLibrary(symbol.declarations[0].getSourceFile()))
               aliases.set(symbol, exported)
           }
@@ -85,7 +85,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
           const declaration = symbol.declarations[0] as ts.TypeAliasDeclaration
           if (ts.isTypeReferenceNode(declaration.type)) {
             let symbol = checker.getSymbolAtLocation(declaration.type.typeName)
-            if (symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol)
+            symbol = getAliasedSymbol(symbol)
             if (!exports.symbols.has(symbol) && !program.isSourceFileDefaultLibrary(symbol.declarations[0].getSourceFile()))
               aliases.set(symbol, exported)
           }
@@ -149,8 +149,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     } else if (symbol.flags & ts.SymbolFlags.ValueModule) {
       const namespaceName = symbol.getName()
       if (config.allowGlobalNamespaces?.includes(namespaceName)) return true
-      const moduleFile = symbol.valueDeclaration.getSourceFile()
-      const moduleName = getModuleName(moduleFile)
+      const moduleName = getModuleNameOfType(type)
       return config.allowModules?.includes(moduleName)
     } else if (symbol.flags & ts.SymbolFlags.NamespaceModule) {
       const namespaceName = symbol.getName()
@@ -206,13 +205,23 @@ export default function transformer(program: ts.Program, config: TransformerConf
 
   // #region GETTERS
 
-  function getModuleName(sourceFile: ts.SourceFile): string {
+  function getAliasedSymbol(symbol: ts.Symbol): ts.Symbol {
+    return symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol
+  }
+
+  function getModuleNameOfType(type: ts.Type): string {
+    const symbol = type.aliasSymbol ?? type.symbol
+    const sourceFile = symbol.declarations[0].getSourceFile()
     const fileName = sourceFile.fileName
     const dirName = fileName.includes('/node_modules/') ? sourceFile.fileName.replace(/\/node_modules\/.*$/, '') : program.getCurrentDirectory()
     const moduleName = config.allowModules?.find(moduleName => {
       const cache = modules.getOrCreateCacheForModuleName(moduleName, undefined)
       const module = cache.get(dirName) ?? cache.get(`${dirName}/node_modules`)
-      return fileName.startsWith(module?.resolvedModule?.resolvedFileName.replace(module?.resolvedModule?.packageId.subModuleName, ''))
+      if (!module?.resolvedModule) return false
+      const moduleSourceFile = program.getSourceFile(module.resolvedModule.resolvedFileName)
+      const moduleSymbol = checker.getSymbolAtLocation(moduleSourceFile)
+      const moduleExports = checker.getExportsOfModule(moduleSymbol)
+      return moduleExports.some(exportedSymbol => getAliasedSymbol(exportedSymbol) === symbol)
     })
     return moduleName ?? path.relative(process.cwd(), fileName)
   }
@@ -236,10 +245,8 @@ export default function transformer(program: ts.Program, config: TransformerConf
         // if global type's name already taken then add `globalThis`, otherwise nothing
         name = exports.names.has(chunks[0]) ? 'globalThis' : ''
       } else if (symbol.flags & ts.SymbolFlags.ValueModule) {
-        if (ts.isSourceFile(symbol.valueDeclaration)) {
-          // if type was imported from a module use import function to access the type
-          name = `import('${getModuleName(symbol.valueDeclaration as ts.SourceFile)}')`
-        }
+        // if type was imported from a module use import function to access the type
+        name = `import('${getModuleNameOfType(type)}')`
       }
       if (name) chunks.unshift(name)
 
@@ -344,7 +351,16 @@ export default function transformer(program: ts.Program, config: TransformerConf
 
   function createTypeReferenceNode(options: {type: ts.TypeReference; node?: ts.Node}): ts.TypeNode {
     const {type, node} = options
-    const typeArguments = type.aliasSymbol ? type.aliasTypeArguments : checker.getTypeArguments(type)
+    let typeArguments = type.aliasSymbol ? type.aliasTypeArguments : checker.getTypeArguments(type)
+
+    // exclude default type arguments
+    if (typeArguments?.length > 0 && type?.target?.localTypeParameters?.length > 0) {
+      const index = [...type.target.localTypeParameters].reverse().findIndex((typeParameter, index) => {
+        return checker.getDefaultFromTypeParameter(typeParameter) !== typeArguments[index]
+      })
+      typeArguments = index >= 0 ? typeArguments.slice(0, typeArguments.length - index) : []
+    }
+
     return ts.factory.createTypeReferenceNode(
       getTypeName(type),
       typeArguments?.map(type => createTypeNode({type, node})),

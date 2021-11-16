@@ -1,4 +1,4 @@
-import type {Size, DriverInfo} from '@applitools/types'
+import type {Size} from '@applitools/types'
 import assert from 'assert'
 import {By} from 'selenium-webdriver'
 import * as spec from '../../src'
@@ -110,16 +110,6 @@ describe('spec driver', async () => {
     it('visit()', async () => {
       await visit()
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          isMobile: false,
-          isNative: false,
-          platformName: 'linux',
-        },
-      })
-    })
   })
 
   describe('legacy driver', async () => {
@@ -137,17 +127,6 @@ describe('spec driver', async () => {
     })
     it('setWindowSize({width, height})', async () => {
       await setWindowSize({input: {width: 551, height: 552}})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'internet explorer',
-          browserVersion: '11',
-          isMobile: false,
-          isNative: false,
-          platformName: 'WINDOWS',
-        },
-      })
     })
   })
 
@@ -171,18 +150,6 @@ describe('spec driver', async () => {
     it('getOrientation()', async () => {
       await getOrientation({expected: 'portrait'})
     })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          browserName: 'chrome',
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: false,
-          platformName: 'Android',
-          platformVersion: '10',
-        },
-      })
-    })
   })
 
   describe('mobile driver (@mobile @native @android)', async () => {
@@ -204,20 +171,6 @@ describe('spec driver', async () => {
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
-    })
-    it('getDriverInfo()', async () => {
-      await getDriverInfo({
-        expected: {
-          deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
-          isMobile: true,
-          isNative: true,
-          platformName: 'Android',
-          platformVersion: '10',
-          pixelRatio: 2.5,
-          statusBarHeight: 60,
-          navigationBarHeight: 1080,
-        },
-      })
     })
   })
 
@@ -395,12 +348,5 @@ describe('spec driver', async () => {
     const actual = await driver.getCurrentUrl()
     assert.deepStrictEqual(actual, blank)
     await driver.get(url)
-  }
-  async function getDriverInfo({expected}: {expected: Partial<DriverInfo>}) {
-    const info = await spec.getDriverInfo(driver)
-    assert.deepStrictEqual(
-      Object.keys(expected).reduce((obj, key) => ({...obj, [key]: info[key]}), {}),
-      expected,
-    )
   }
 })

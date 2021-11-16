@@ -206,37 +206,7 @@ export async function getCapabilities(browser: Driver): Promise<Record<string, a
   return browser.getSession?.() ?? browser.capabilities
 }
 export async function getDriverInfo(browser: Driver): Promise<DriverInfo> {
-  const capabilities = browser.capabilities as any
-  const info: DriverInfo = {
-    sessionId: browser.sessionId,
-    isMobile: browser.isMobile,
-    isNative: browser.isMobile && !capabilities.browserName,
-    deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
-    platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
-    platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName ?? capabilities.desired?.browserName,
-    browserVersion: capabilities.browserVersion ?? capabilities.version,
-    pixelRatio: capabilities.pixelRatio,
-  }
-
-  if (info.isNative) {
-    const capabilities = utils.types.has(browser.capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
-      ? browser.capabilities
-      : await browser.getSession()
-
-    info.pixelRatio = capabilities.pixelRatio
-
-    try {
-      const {statusBar, navigationBar} = (await browser.getSystemBars()) as any
-      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
-      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
-    } catch (err) {
-      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
-      info.navigationBarHeight = 0
-    }
-  }
-
-  return info
+  return {sessionId: browser.sessionId}
 }
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()

@@ -1,43 +1,44 @@
-/* global browser, spec */
+/* global browser */
 
 const assert = require('assert')
-const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const playwright = require('playwright')
+const spec = require('../utils/spec-driver')
 
 describe('spec driver', async () => {
-  let driver, backgroundPage, contentPage, destroyBrowser
+  let driver, backgroundPage, contentPage, destroyPage
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
   describe('onscreen desktop (@chrome)', async () => {
     before(async () => {
-      const userDataPath = fs.mkdtempSync(path.join(os.tmpdir(), 'chrome-user-data-dir'))
-      const extensionPath = path.resolve(process.cwd(), './dist')
-      const context = await playwright.chromium.launchPersistentContext(userDataPath, {
-        headless: false,
-        args: [`--load-extension=${extensionPath}`, `--disable-extensions-except=${extensionPath}`],
-        ignoreDefaultArgs: [`--hide-scrollbars`],
-      })
-      destroyBrowser = () => context.close()
+      ;[contentPage, destroyPage] = await spec.build({browser: 'chromium'})
 
-      backgroundPage = context.backgroundPages()[0] || (await context.waitForEvent('backgroundpage'))
-      contentPage = await context.newPage()
+      backgroundPage =
+        contentPage.context().backgroundPages()[0] || (await contentPage.context().waitForEvent('backgroundpage'))
+
       await contentPage.goto(url)
+
+      contentPage.on('console', async msg => {
+        for (let i = 0; i < msg.args().length; ++i)
+          console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`)
+      })
+
+      backgroundPage.on('console', async msg => {
+        for (let i = 0; i < msg.args().length; ++i)
+          console.log(`${i}: ${JSON.stringify(await msg.args()[i].jsonValue())}`)
+      })
 
       const [activeTab] = await backgroundPage.evaluate(() => browser.tabs.query({active: true}))
       driver = {windowId: activeTab.windowId, tabId: activeTab.id}
     })
 
     after(async () => {
-      await destroyBrowser()
+      await destroyPage()
     })
 
     it('isDriver(driver)', async () => {
-      await isDriver({expected: true})
+      await isDriver({input: driver, expected: true})
     })
     it('isDriver(wrong)', async () => {
-      isDriver({input: {notDriver: true}, expected: false})
+      await isDriver({input: {}, expected: false})
     })
     it('isElement(element)', async () => {
       await isElement({input: {'applitools-ref-id': 'element-id'}, expected: true})
@@ -51,8 +52,20 @@ describe('spec driver', async () => {
     it('isSelector(wrong)', async () => {
       await isSelector({input: {}, expected: false})
     })
-    it('executeScript(script, args)', async () => {
-      await executeScript()
+    it('transformSelector({type, selector})', async () => {
+      await transformSelector({
+        input: {type: 'xpath', selector: '//element'},
+        expected: {type: 'xpath', selector: '//element'},
+      })
+    })
+    it('transformSelector(string)', async () => {
+      await transformSelector({input: 'div', expected: {type: 'css', selector: 'div'}})
+    })
+    it('transformSelector(common-selector)', async () => {
+      await transformSelector({
+        input: {selector: {type: 'xpath', selector: '//element'}},
+        expected: {type: 'xpath', selector: '//element'},
+      })
     })
     it('mainContext()', async () => {
       await mainContext()
@@ -63,23 +76,26 @@ describe('spec driver', async () => {
     it('childContext(element)', async () => {
       await childContext()
     })
-    it('findElement(string)', async () => {
-      findElement({input: {type: 'css', selector: 'h1'}})
+    it('executeScript(script, args)', async () => {
+      await executeScript()
+    })
+    it('findElement(selector)', async () => {
+      await findElement({input: {selector: {type: 'css', selector: 'h1'}}})
+    })
+    it('findElement(selector, parent-element)', async () => {
+      await findElement({input: {selector: {type: 'css', selector: 'div'}, parent: await contentPage.$('#stretched')}})
     })
     it('findElement(non-existent)', async () => {
-      findElement({input: {type: 'css', selector: 'non-existent'}, expected: null})
+      await findElement({input: {selector: {type: 'css', selector: 'non-existent'}}, expected: null})
     })
-    it('findElements(string)', async () => {
-      await findElements({input: {type: 'css', selector: 'div'}})
+    it('findElements(selector)', async () => {
+      await findElements({input: {selector: {type: 'css', selector: 'div'}}})
+    })
+    it('findElements(string, parent-element)', async () => {
+      await findElements({input: {selector: {type: 'css', selector: 'div'}, parent: await contentPage.$('#stretched')}})
     })
     it('findElements(non-existent)', async () => {
-      await findElements({input: {type: 'css', selector: 'non-existent'}, expected: []})
-    })
-    it('getTitle()', async () => {
-      await getTitle()
-    })
-    it('getUrl()', async () => {
-      await getUrl()
+      await findElements({input: {selector: {type: 'css', selector: 'non-existent'}}, expected: []})
     })
     it('getWindowSize()', async () => {
       await getWindowSize()
@@ -87,33 +103,32 @@ describe('spec driver', async () => {
     it('setWindowSize({width, height})', async () => {
       await setWindowSize({input: {width: 501, height: 502}, expected: {width: 501, height: 502}})
     })
+    it('getCookies()', async () => {
+      await getCookies()
+    })
+    it('getTitle()', async () => {
+      await getTitle()
+    })
+    it('getUrl()', async () => {
+      await getUrl()
+    })
   })
 
   async function isDriver({input, expected}) {
-    const isDriver = await backgroundPage.evaluate(driver => spec.isDriver(driver), input || driver)
-    assert.strictEqual(isDriver, expected)
+    const result = await backgroundPage.evaluate(driver => spec.isDriver(driver), input)
+    assert.strictEqual(result, expected)
   }
   async function isElement({input, expected}) {
-    const isElement = await backgroundPage.evaluate(element => spec.isElement(element), input)
-    assert.strictEqual(isElement, expected)
+    const result = await backgroundPage.evaluate(element => spec.isElement(element), input)
+    assert.strictEqual(result, expected)
   }
   async function isSelector({input, expected}) {
-    const isSelector = await backgroundPage.evaluate(element => spec.isSelector(element), input)
-    assert.strictEqual(isSelector, expected)
+    const result = await backgroundPage.evaluate(selector => spec.isSelector(selector), input)
+    assert.strictEqual(result, expected)
   }
-  async function executeScript() {
-    const arg = {
-      num: 0,
-      str: 'string',
-      obj: {key: 'value', obj: {key: 0}},
-      arr: [0, 1, 2, {key: 3}],
-    }
-    const result = await backgroundPage.evaluate(
-      ([driver, arg]) => spec.executeScript(driver, arg => arg, arg),
-      [driver, arg],
-    )
-
-    assert.deepStrictEqual(result, arg)
+  async function transformSelector({input, expected}) {
+    const result = await backgroundPage.evaluate(selector => spec.transformSelector(selector), input)
+    assert.deepStrictEqual(result, expected || input)
   }
   async function mainContext() {
     const mainContext = await backgroundPage.evaluate(([driver]) => spec.mainContext(driver), [driver])
@@ -155,35 +170,66 @@ describe('spec driver', async () => {
     )
     assert.deepStrictEqual(childContext.frameId, childFrame.frameId)
   }
-  async function findElement({input, expected} = {}) {
-    const element = await backgroundPage.evaluate(
-      ([driver, selector]) => spec.findElement(driver, selector),
-      [driver, input],
+  async function executeScript() {
+    const arg = {
+      num: 0,
+      str: 'string',
+      obj: {key: 'value', obj: {key: 0}},
+      arr: [0, 1, 2, {key: 3}],
+    }
+    const result = await backgroundPage.evaluate(
+      ([driver, arg]) => spec.executeScript(driver, arg => arg, arg),
+      [driver, arg],
     )
-    if (element === expected) return
-    const elementKey = await contentPage.$eval(input.selector, element => (element.dataset.key = 'element-key'))
-    const isCorrectElement = await backgroundPage.evaluate(
-      async ([context, element, elementKey]) => {
-        const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
-          code: `refer.deref(${JSON.stringify(element)}).dataset.key === '${elementKey}'`,
-          frameId: context.frameId,
-        })
-        return isCorrectElement
-      },
-      [{...driver, frameId: 0}, element, elementKey],
-    )
-    assert.ok(isCorrectElement)
+
+    assert.deepStrictEqual(result, arg)
   }
-  async function findElements({input} = {}) {
-    const elements = await backgroundPage.evaluate(
-      ([driver, selector]) => spec.findElements(driver, selector),
+  async function findElement({input, expected}) {
+    const root = input.parent || contentPage
+    expected = expected === undefined ? await root.$(input.selector.selector) : expected
+    if (input.parent) {
+      const parentElementKey = await input.parent.evaluate(element => (element.dataset.key = 'parent-element-key'))
+      input.parent = await backgroundPage.evaluate(
+        ([driver, selector]) => spec.findElement(driver, selector),
+        [driver, {type: 'css', selector: `[data-key="${parentElementKey}"]`}],
+      )
+    }
+    const element = await backgroundPage.evaluate(
+      ([driver, input]) => spec.findElement(driver, input.selector, input.parent),
       [driver, input],
     )
-    const elementKeys = await contentPage.$$eval(input.selector, elements =>
-      elements.map((element, index) => (element.dataset.key = `element-key-${index}`)),
+    if (element !== expected) {
+      const elementKey = await expected.evaluate(element => (element.dataset.key = 'element-key'))
+      const isCorrectElement = await backgroundPage.evaluate(
+        async ([context, element, elementKey]) => {
+          const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
+            code: `refer.deref(${JSON.stringify(element)}).dataset.key === '${elementKey}'`,
+            frameId: context.frameId,
+          })
+          return isCorrectElement
+        },
+        [{...driver, frameId: 0}, element, elementKey],
+      )
+      assert.ok(isCorrectElement)
+    }
+  }
+  async function findElements({input, expected}) {
+    const root = input.parent ?? contentPage
+    expected = expected === undefined ? await root.$$(input.selector.selector) : expected
+    if (input.parent) {
+      const parentElementKey = await input.parent.evaluate(element => (element.dataset.key = 'parent-element-key'))
+      input.parent = await backgroundPage.evaluate(
+        ([driver, selector]) => spec.findElement(driver, selector),
+        [driver, {type: 'css', selector: `[data-key="${parentElementKey}"]`}],
+      )
+    }
+    const elements = await backgroundPage.evaluate(
+      ([driver, input]) => spec.findElements(driver, input.selector, input.parent),
+      [driver, input],
     )
-    assert.strictEqual(elements.length, elementKeys.length)
-    for (const [index, elementKey] of elementKeys.entries()) {
+    assert.strictEqual(elements.length, expected.length)
+    for (const [index, expectedElement] of expected.entries()) {
+      const elementKey = await expectedElement.evaluate(element => (element.dataset.key = 'element-key'))
       const isCorrectElement = await backgroundPage.evaluate(
         async ([context, element, elementKey]) => {
           const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
@@ -206,6 +252,21 @@ describe('spec driver', async () => {
     await backgroundPage.evaluate(([driver, size]) => spec.setWindowSize(driver, size), [driver, input])
     const actual = await contentPage.evaluate(() => ({width: window.outerWidth, height: window.outerHeight}))
     assert.deepStrictEqual(actual, expected)
+  }
+  async function getCookies() {
+    const cookie = {
+      name: 'hello',
+      value: 'world',
+      domain: 'google.com',
+      path: '/',
+      expiry: 4025208067,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Lax',
+    }
+    await contentPage.context().addCookies([{...cookie, expires: cookie.expiry}])
+    const cookies = await backgroundPage.evaluate(driver => spec.getCookies(driver), driver)
+    assert.deepStrictEqual(cookies, [cookie])
   }
   async function getTitle() {
     const expected = await contentPage.title()

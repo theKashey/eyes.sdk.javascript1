@@ -1,11 +1,14 @@
 import type * as Playwright from 'playwright'
 import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import * as fs from 'fs'
+import * as os from 'os'
+import * as path from 'path'
 import * as utils from '@applitools/utils'
 
 export type Driver = Playwright.Page & {__applitoolsBrand?: never}
 export type Context = Playwright.Frame & {__applitoolsBrand?: never}
 export type Element = Playwright.ElementHandle & {__applitoolsBrand?: never}
-export type Selector = string & {__applitoolsBrand?: never}
+export type Selector = (string | Playwright.Locator) & {__applitoolsBrand?: never}
 
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
@@ -34,18 +37,19 @@ async function handleToObject(handle: Playwright.JSHandle): Promise<any> {
 
 export function isDriver(page: any): page is Driver {
   if (!page) return false
-  return utils.types.instanceOf(page, 'Page')
+  return utils.types.instanceOf<Playwright.Page>(page, 'Page')
 }
 export function isContext(frame: any): frame is Context {
   if (!frame) return false
-  return utils.types.instanceOf(frame, 'Frame')
+  return utils.types.instanceOf<Playwright.Frame>(frame, 'Frame')
 }
 export function isElement(element: any): element is Element {
   if (!element) return false
-  return utils.types.instanceOf(element, 'ElementHandle')
+  return utils.types.instanceOf<Playwright.ElementHandle>(element, 'ElementHandle')
 }
 export function isSelector(selector: any): selector is Selector {
-  return utils.types.isString(selector)
+  if (!selector) return false
+  return utils.types.isString(selector) || utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')
 }
 export function transformSelector(selector: Selector | CommonSelector): Selector {
   if (utils.types.has(selector, 'selector')) {
@@ -59,9 +63,10 @@ export function extractContext(page: Driver | Context): Context {
 }
 export function isStaleElementError(err: any): boolean {
   return (
-    err?.message?.includes('Protocol error (DOM.describeNode)') || // chrome
-    err?.message?.includes('Protocol error (Page.adoptNode)') || // firefox
-    err?.message?.includes('Unable to adopt element handle from a different document') // webkit
+    err?.message?.includes('Element is not attached to the DOM') || // universal message
+    err?.message?.includes('Protocol error (DOM.describeNode)') || // chrome message
+    err?.message?.includes('Protocol error (Page.adoptNode)') || // firefox message
+    err?.message?.includes('Unable to adopt element handle from a different document') // webkit message
   )
 }
 
@@ -90,10 +95,12 @@ export async function childContext(_frame: Context, element: Element): Promise<C
   return element.contentFrame()
 }
 export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
+  if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) return selector.elementHandle()
   const root = parent ?? frame
   return root.$(selector)
 }
 export async function findElements(frame: Context, selector: Selector, parent?: Element): Promise<Element[]> {
+  if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) return selector.elementHandles()
   const root = parent ?? frame
   return root.$$(selector)
 }
@@ -144,6 +151,7 @@ export async function scrollIntoView(frame: Context, element: Element | Selector
   await frame.evaluate(([element, align]) => element.scrollIntoView(align), [element, align])
 }
 export async function waitUntilDisplayed(frame: Context, selector: Selector): Promise<void> {
+  if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) return selector.waitFor()
   await frame.waitForSelector(selector)
 }
 
@@ -159,14 +167,17 @@ const browserNames: Record<string, string> = {
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   const playwright = require('playwright')
   const parseEnv = require('@applitools/test-utils/src/parse-env')
-  const {browser, device, url, attach, proxy, args = [], headless} = parseEnv(env, 'cdp')
+  const {browser, device, url, attach, proxy, args = [], headless, extension} = parseEnv(env, 'cdp')
   const launcher = playwright[browserNames[browser] || browser]
   if (!launcher) throw new Error(`Browser "${browser}" is not supported.`)
   if (attach) throw new Error(`Attaching to the existed browser doesn't supported by playwright`)
   const options: any = {
     args,
-    headless,
+    headless: headless && !extension,
     ignoreDefaultArgs: ['--hide-scrollbars'],
+  }
+  if (extension) {
+    options.args.push(`--load-extension=${extension}`, `--disable-extensions-except=${extension}`)
   }
   if (proxy) {
     options.proxy = {
@@ -174,20 +185,28 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       bypass: proxy.bypass.join(','),
     }
   }
-  let driver: any
-  if (url) {
-    if (utils.types.isArray(options.ignoreDefaultArgs)) {
-      url.searchParams.set('ignoreDefaultArgs', options.ignoreDefaultArgs.join(','))
-    }
-    url.searchParams.set('headless', options.headless)
-    options.args.forEach((arg: string) => url.searchParams.set(...arg.split('=')))
-    driver = await launcher.connect({wsEndpoint: url.href})
+  let driver: Playwright.Browser, context: Playwright.BrowserContext
+  if (extension) {
+    context = await launcher.launchPersistentContext(fs.mkdtempSync(path.join(os.tmpdir(), 'chrome-user-data-dir')), {
+      ...options,
+      viewport: null,
+      ...(device ? playwright.devices[device] : {}),
+    })
   } else {
-    driver = await launcher.launch(options)
+    if (url) {
+      if (utils.types.isArray(options.ignoreDefaultArgs)) {
+        url.searchParams.set('ignoreDefaultArgs', options.ignoreDefaultArgs.join(','))
+      }
+      url.searchParams.set('headless', options.headless)
+      options.args.forEach((arg: string) => url.searchParams.set(...arg.split('=')))
+      driver = await launcher.connect({wsEndpoint: url.href})
+    } else {
+      driver = await launcher.launch(options)
+    }
+    context = await driver.newContext(device ? playwright.devices[device] : {})
   }
-  const context = await driver.newContext(device ? playwright.devices[device] : {})
   const page = await context.newPage()
-  return [page, () => driver.close()]
+  return [page, () => (driver ? driver.close() : context.close())]
 }
 
 // #endregion

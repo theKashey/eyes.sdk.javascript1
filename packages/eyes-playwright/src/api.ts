@@ -3,7 +3,7 @@ import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-playwright'
 
-const sdk = makeSDK({
+const sdk: any = makeSDK({
   name: 'eyes.playwright',
   version: require('../package.json').version,
   spec,

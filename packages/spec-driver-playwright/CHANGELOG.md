@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for use playwright `Locator` as a `Selector`
 
 ## 1.2.0 - 2021/11/10
 
