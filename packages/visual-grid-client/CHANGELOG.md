@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 15.8.46 - 2021/11/17
+
 - update types to include useDom enablePatters and supprot shadow DOM on eyesCheck
 
 ## 15.8.45 - 2021/11/14
