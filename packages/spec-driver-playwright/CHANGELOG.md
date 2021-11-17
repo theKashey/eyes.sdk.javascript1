@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.3.0 - 2021/11/17
+
 - add support for use playwright `Locator` as a `Selector`
 - updated to @applitools/types@1.0.20 (from 1.0.19)
 
