@@ -229,10 +229,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
   integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
-"@applitools/visual-grid-client@15.8.45":
-  version "15.8.45"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.45.tgz#3900ac6300140c1268b510c05fe3802597371d81"
-  integrity sha512-8yvypBd7Kjzko3On9DS6Bd5fxUavFG17q3Efpu+/nB3TR5QLKVz4Sa1eo9G7qvzXZJTs+G367gZA6sn0gTorYQ==
+"@applitools/visual-grid-client@15.8.46":
+  version "15.8.46"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.8.46.tgz#5c7f7c5f0ee9ab7e1bf3b5d10b4c3489da70ebb4"
+  integrity sha512-UVCnPptYjT5uwFgQlDoJcKhAyXdcReJEX1pD5h3+TSntdUpAypByckprSfTkDyzbftY7hs+NUoYmXZJx422Wyw==
   dependencies:
     "@applitools/eyes-sdk-core" "12.24.1"
     "@applitools/functional-commons" "1.6.0"
