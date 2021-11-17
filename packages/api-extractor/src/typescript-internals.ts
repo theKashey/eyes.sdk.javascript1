@@ -3,6 +3,7 @@ import * as ts from 'typescript'
 // declare some typescript internal methods/properties
 declare module 'typescript' {
   export function getObjectFlags(type: ts.Type): ts.ObjectFlags
+  export function getCheckFlags(symbol: ts.Symbol): ts.CheckFlags
 
   export interface Program {
     getModuleResolutionCache(): ts.ModuleResolutionCache
@@ -20,6 +21,10 @@ declare module 'typescript' {
     createStringLiteral(text: string, isSingleQuote?: boolean, hasExtendedUnicodeEscape?: boolean): ts.StringLiteral
   }
 
+  export interface Type {
+    default?: ts.Type
+  }
+
   export interface Node {
     symbol?: ts.Symbol
   }
@@ -28,6 +33,7 @@ declare module 'typescript' {
     parent?: ts.Symbol
     checkFlags?: ts.CheckFlags
     nameType?: ts.UniqueESSymbolType
+    target?: ts.Symbol
   }
 
   export enum SymbolFlags {

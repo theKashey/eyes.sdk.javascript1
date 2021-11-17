@@ -12,4 +12,5 @@
     "stripInternal": false,
     "removeComments": false,
   },
+  "ts-node": {"transpileOnly": true},
 }
