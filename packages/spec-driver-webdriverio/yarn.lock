@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/api-extractor@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.2.2.tgz#ca7296bb4202016d823d943e23faafe0251d0d6f"
-  integrity sha512-aU0cpQ5r9kp7Zo9nhJJ3RhepPSGuAFP2FJxw904owIpcb4WPe0NvSEwj4VikycGRyR0MJQ2k0/LaiuJTngyWeg==
+"@applitools/api-extractor@1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.2.3.tgz#d2bf3076a43d51a1a76d971b53dcf9a8608c14f9"
+  integrity sha512-g6dYHrQK3YS7ge0PdL+8S6rxujSIesV+PnyICt2A1IFEJJINNSGEG3XT7iz6tRRpOPKuwoiBu2CztH5cYqm/Ow==
 
 "@applitools/scripts@1.0.1":
   version "1.0.1"

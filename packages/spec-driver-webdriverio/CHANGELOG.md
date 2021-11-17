@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.1 - 2021/11/17
+
 - remove most of logic from `getDriverInfo`
 
 ## 1.2.0 - 2021/11/14
