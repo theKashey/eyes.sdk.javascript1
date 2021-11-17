@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.3 - 2021/11/18
+
 - fix bug with property types
 - add integration testing
 
