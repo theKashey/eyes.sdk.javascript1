@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/dom-capture@11.0.2 (from 11.0.1)
 
 
 ## 12.24.2 - 2021/11/18
