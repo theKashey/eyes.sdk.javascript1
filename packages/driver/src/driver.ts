@@ -147,10 +147,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         const barsHeight = await this._spec.getBarsHeight?.(this.target).catch(() => undefined as never)
 
         if (barsHeight) {
-          this._driverInfo.statusBarHeight = Math.max(barsHeight.statusBarHeight, driverInfo.statusBarHeight)
+          this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight, barsHeight.statusBarHeight)
           this._driverInfo.navigationBarHeight = Math.max(
+            this._driverInfo.navigationBarHeight,
             barsHeight.navigationBarHeight,
-            driverInfo.navigationBarHeight,
           )
         }
         if (this.isAndroid) {

@@ -1,7 +1,7 @@
 import assert from 'assert'
 import {parseCapabilities} from '../../src/capabilities'
 
-describe.only('user agent', () => {
+describe('user agent', () => {
   it('should work with Chrome on Docker Container using W3C', () => {
     const driverInfo = parseCapabilities({
       acceptInsecureCerts: false,
@@ -1351,6 +1351,70 @@ describe.only('user agent', () => {
       deviceName: 'iPhone 11 Pro',
       pixelRatio: undefined,
       statusBarHeight: undefined,
+      navigationBarHeight: 0,
+      isW3C: true,
+      isMobile: true,
+      isNative: true,
+      isIOS: true,
+      isAndroid: false,
+    })
+  })
+
+  it('should work with Native App on iPhone XS using Appium 1.19 in Sauce', () => {
+    const driverInfo = parseCapabilities({
+      deviceName: 'iPhone XS',
+      orientation: 'PORTRAIT',
+      viewportRect: {width: 1125, top: 132, height: 2304, left: 0},
+      app: '/var/folders/qv/8dr6ylkn3c98dm4r414wh_0h0000kr/T/tmpnewfb6/eyes-ios-hello-world.zip',
+      noReset: true,
+      CFBundleIdentifier: 'Org.HelloWorldiOS',
+      platformVersion: '13.0',
+      bootstrapPath: '/Volumes/Sauce/wda/wda-v1.19.1-xcode12.2/WebDriverAgent',
+      newCommandTimeout: 0,
+      preventWDAAttachments: true,
+      'webdriver.remote.quietExceptions': false,
+      derivedDataPath: '/Volumes/Sauce/wda/wda-v1.19.1-xcode12.2/WebDriverAgent/DerivedData/WebdriverAgent',
+      'webdriver.remote.sessionid': '1f6187567b8a4241b742c58314cc30de',
+      maxTypingFrequency: 8,
+      platformName: 'iOS',
+      events: {
+        xcodeDetailsRetrieved: [1637221290223],
+        orientationSet: [1637221327085],
+        commands: [[Object], [Object]],
+        wdaStarted: [1637221326530],
+        resetComplete: [1637221291250],
+        appConfigured: [1637221291245],
+        logCaptureStarted: [1637221310412],
+        wdaSessionStarted: [1637221326530],
+        wdaSessionAttempted: [1637221324946],
+        appInstalled: [1637221314563],
+        simStarted: [1637221309573],
+        wdaStartAttempted: [1637221314650],
+        resetStarted: [1637221291249],
+      },
+      pixelRatio: 3,
+      showIOSLog: false,
+      usePrebuiltWDA: true,
+      browserName: 'HelloWorldiOS',
+      hasMetadata: true,
+      device: 'iphone',
+      eventTimings: true,
+      keepKeyChains: true,
+      sdkVersion: '13.0',
+      launchTimeout: 180000,
+      udid: '025C7C8B-220D-4BD8-B88E-1018F83EEADE',
+      statBarHeight: 44,
+      backendRetries: 4,
+    })
+
+    assert.deepStrictEqual(driverInfo, {
+      browserName: undefined,
+      browserVersion: undefined,
+      platformName: 'iOS',
+      platformVersion: '13.0',
+      deviceName: 'iPhone XS',
+      pixelRatio: 3,
+      statusBarHeight: 44,
       navigationBarHeight: 0,
       isW3C: true,
       isMobile: true,

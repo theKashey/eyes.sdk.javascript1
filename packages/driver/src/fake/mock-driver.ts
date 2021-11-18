@@ -264,7 +264,7 @@ export class MockDriver {
     const {state} = this._contexts.get(this._contextId)
     return utils.types.isFunction(result) ? result.call(state, ...args) : result
   }
-  async findElement(selector, rootElement) {
+  async findElement(selector, rootElement?: any) {
     const elements = this._elements.get(selector)
     return elements
       ? elements.find(

@@ -1,10 +1,11 @@
 import assert from 'assert'
-import {Driver, Context, MockDriver, fake} from '../../src/index'
+import {Driver, Context} from '../../src/index'
+import {MockDriver, spec} from '../../src/fake/index'
 
 describe('context', () => {
   let mock: MockDriver,
-    driver: Driver<fake.Driver, fake.Context, fake.Element, fake.Selector>,
-    context: Context<fake.Driver, fake.Context, fake.Element, fake.Selector>
+    driver: Driver<spec.Driver, spec.Driver, spec.Element, spec.Selector>,
+    context: Context<spec.Driver, spec.Driver, spec.Element, spec.Selector>
   const logger = {log: () => null as any, warn: () => null as any, error: () => null as any}
 
   beforeEach(() => {
@@ -46,7 +47,7 @@ describe('context', () => {
         ],
       },
     ])
-    driver = new Driver({logger, spec: fake.spec, driver: mock})
+    driver = new Driver({logger, spec, driver: mock})
     context = driver.currentContext
   })
 
