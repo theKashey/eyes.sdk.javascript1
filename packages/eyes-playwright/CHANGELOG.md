@@ -1,10 +1,16 @@
 # Change Log
 
 ## Unreleased
+
+
+
+## 1.11.1 - 2021/11/18
+
 - updated to @applitools/eyes-sdk-core@12.24.1 (from 12.24.0)
 - updated to @applitools/visual-grid-client@15.8.45 (from 15.8.44)
-
-
+- updated to @applitools/eyes-sdk-core@12.24.2 (from 12.24.1)
+- updated to @applitools/spec-driver-playwright@1.3.0 (from 1.2.0)
+- updated to @applitools/visual-grid-client@15.8.47 (from 15.8.45)
 
 ## 1.11.0 - 2021/11/10
 
