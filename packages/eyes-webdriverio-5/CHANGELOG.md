@@ -1,10 +1,13 @@
 # Change Log
 
 ## Unreleased
+
+
+## 5.34.2 - 2021/11/18
+
 - updated to @applitools/eyes-sdk-core@12.24.2 (from 12.24.1)
 - updated to @applitools/spec-driver-webdriverio@1.2.1 (from 1.2.0)
 - updated to @applitools/visual-grid-client@15.8.47 (from 15.8.45)
-
 
 ## 5.34.1 - 2021/11/14
 
