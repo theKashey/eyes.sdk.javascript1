@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 12.24.2 - 2021/11/18
+
+- updated to @applitools/dom-snapshot@4.5.11 (from 4.5.10)
+- updated to @applitools/driver@1.3.4 (from 1.3.3)
+
 ## 12.24.1 - 2021/11/14
 
 - support cookies
