@@ -50,19 +50,19 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.23.12",
-    "@applitools/logger": "1.0.4",
-    "@applitools/utils": "1.2.3",
-    "@applitools/visual-grid-client": "15.8.31",
+    "@applitools/eyes-sdk-core": "12.24.3",
+    "@applitools/logger": "1.0.5",
+    "@applitools/utils": "1.2.4",
+    "@applitools/visual-grid-client": "15.8.47",
     "webdriver": "7.7.3",
     "ws": "7.4.6",
     "yargs": "16.1.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^2.3.15",
-    "@applitools/sdk-release-kit": "^0.13.3",
-    "@applitools/test-utils": "^1.0.7",
-    "@applitools/types": "1.0.14",
+    "@applitools/sdk-coverage-tests": "^2.3.16",
+    "@applitools/sdk-release-kit": "^0.13.4",
+    "@applitools/test-utils": "^1.0.9",
+    "@applitools/types": "1.0.20",
     "@types/ws": "^7.4.4",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -76,7 +76,7 @@
     "pkg": "^5.3.2",
     "prettier": "^2.1.2",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.5.2"
   },
   "engines": {
     "node": ">=14.15.0"
