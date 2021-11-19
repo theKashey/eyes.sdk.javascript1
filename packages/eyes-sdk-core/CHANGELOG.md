@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 12.24.3 - 2021/11/18
+
+- updated to @applitools/dom-capture@11.0.2 (from 11.0.1)
+
 ## 12.24.2 - 2021/11/18
 
 - updated to @applitools/dom-snapshot@4.5.11 (from 4.5.10)
