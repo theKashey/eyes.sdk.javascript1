@@ -64,11 +64,11 @@ export function makeSpec(options: {
     async executeScript(context: Context, script: (arg?: any) => any | string, arg?: any): Promise<any> {
       return socket.request('Driver.executeScript', {context, script: script.toString(), arg})
     },
-    async findElement(context: Context, selector: Selector): Promise<Element | null> {
-      return socket.request('Driver.findElement', {context, selector})
+    async findElement(context: Context, selector: Selector, parent?: Element): Promise<Element | null> {
+      return socket.request('Driver.findElement', {context, selector, parent})
     },
-    async findElements(context: Context, selector: Selector): Promise<Element[]> {
-      return socket.request('Driver.findElements', {context, selector})
+    async findElements(context: Context, selector: Selector, parent?: Element): Promise<Element[]> {
+      return socket.request('Driver.findElements', {context, selector, parent})
     },
     async click(context: Context, element: Element | Selector): Promise<void> {
       return socket.request('Driver.click', {context, element})
@@ -85,7 +85,13 @@ export function makeSpec(options: {
     async setViewportSize(driver: Driver, size: types.Size): Promise<void> {
       return socket.request('Driver.setViewportSize', {driver, size})
     },
-    async getDriverInfo(driver: Driver): Promise<any> {
+    async getCookies(driver: Driver, context?: boolean): Promise<types.Cookie[]> {
+      return socket.request('Driver.getCookies', {driver, context})
+    },
+    async getCapabilities(driver: Driver): Promise<Record<string, any>> {
+      return socket.request('Driver.getCapabilities', {driver})
+    },
+    async getDriverInfo(driver: Driver): Promise<types.DriverInfo> {
       return socket.request('Driver.getDriverInfo', {driver})
     },
     async getTitle(driver: Driver): Promise<string> {
@@ -103,6 +109,9 @@ export function makeSpec(options: {
     // #endregion
 
     // #region NATIVE COMMANDS
+    async getBarsHeight(driver: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+      return socket.request('Driver.getBarsHeight', {driver})
+    },
     async getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
       return socket.request('Driver.getOrientation', {driver})
     },

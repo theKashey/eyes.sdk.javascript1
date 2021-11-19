@@ -52,13 +52,11 @@ function makeLogger({
     throw new Error('Handler have to implement `log` method or use one of the built-in handler names under `type` prop')
   }
 
+  const consoleHandler = console ? (utils.types.isObject(console) ? console : makeConsoleHandler()) : handler
+
   return {
     ...makeAPI({handler, format, label, tags, timestamp, level, colors}),
-    console: makeAPI({
-      handler: console ? (utils.types.isObject(console) ? console : makeConsoleHandler()) : handler,
-      format,
-      prelude: false,
-    }),
+    console: makeAPI({handler: consoleHandler, format, prelude: false}),
     extend(options = {}) {
       return makeLogger({
         format,
@@ -66,6 +64,7 @@ function makeLogger({
         tags,
         timestamp,
         level,
+        console: consoleHandler,
         ...options,
         colors: {...colors, ...options.colors},
         handler,

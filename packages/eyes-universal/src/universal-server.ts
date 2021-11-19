@@ -15,28 +15,27 @@ const IDLE_TIMEOUT = 900000 // 15min
 const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-${new Date().toISOString()}`)
 
 export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
+  let idle = setTimeout(() => server.close(), idleTimeout)
+
   const {server, port} = await makeHandler(serverConfig)
   console.log(port) // NOTE: this is a part of the protocol
   if (!server) {
-    console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
-    return null
+    return console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
   }
+
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},
     label: 'eyes',
     level: 'info',
     colors: false,
   })
-  let idle = setTimeout(() => server.close(), idleTimeout)
 
   server.on('connection', client => {
     const refer = makeRefer()
     const socket = withTracker({
       debug,
-      socket: makeSocket(client) as Socket & types.ServerSocket<Driver, Context, Element, Selector>,
+      socket: makeSocket(client) as types.ServerSocket<Driver, Context, Element, Selector> & Socket,
     })
-
-    const logger = baseLogger.extend()
 
     clearTimeout(idle)
     socket.on('close', () => {
@@ -44,7 +43,19 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       idle = setTimeout(() => server.close(), idleTimeout)
     })
 
-    const sdkPromise = socket.create('Core.makeSDK', ({name, version, cwd, commands, protocol}) => {
+    const logger = baseLogger.extend({
+      console: {
+        log: (message: string) => socket.emit('Server.log', {level: 'info', message}),
+        warn: (message: string) => socket.emit('Server.log', {level: 'warn', message}),
+        error: (message: string) => socket.emit('Server.log', {level: 'error', message}),
+        fatal: (message: string) => socket.emit('Server.log', {level: 'fatal', message}),
+      },
+    })
+    socket.command('Server.getInfo', async () => {
+      return {logsDir: LOG_DIRNAME}
+    })
+
+    const sdk = socket.create('Core.makeSDK', ({name, version, cwd, commands, protocol}) => {
       return makeSDK<Driver, Context, Element, Selector>({
         name: `eyes-universal/${name}`,
         version: `${require('../package.json').version}/${version}`,
@@ -55,24 +66,19 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     })
 
     socket.command('Core.makeManager', async config => {
-      const sdk = await sdkPromise
       const managerRef = refer.ref(await sdk.makeManager(config))
       return managerRef
     })
     socket.command('Core.getViewportSize', async ({driver}) => {
-      const sdk = await sdkPromise
       return sdk.getViewportSize({logger, driver})
     })
     socket.command('Core.setViewportSize', async ({driver, size}) => {
-      const sdk = await sdkPromise
       return sdk.setViewportSize({logger, driver, size})
     })
-    socket.command('Core.closeBatches', async settings => {
-      const sdk = await sdkPromise
+    socket.command('Core.closeBatches', async ({settings}) => {
       return sdk.closeBatches({logger, settings})
     })
-    socket.command('Core.deleteTest', async settings => {
-      const sdk = await sdkPromise
+    socket.command('Core.deleteTest', async ({settings}) => {
       return sdk.deleteTest({logger, settings})
     })
 
@@ -111,13 +117,8 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     socket.command('Debug.checkSpecDriver', async ({driver, commands}) => {
       return checkSpecDriver({spec: makeSpec({socket, commands}), driver})
     })
-
     socket.command('Debug.getHistory', async () => {
       return socket.getHistory()
-    })
-
-    socket.command('Server.getInfo', async () => {
-      console.log('SERVER.GET_INFO')
     })
   })
 

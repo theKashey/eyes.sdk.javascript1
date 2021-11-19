@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update internal types
 
 ## 12.24.3 - 2021/11/18
 

@@ -4,7 +4,7 @@ export interface Logger extends Printer<Omit<FormatOptions, 'timestamp' | 'level
   isLogger: true
   console: Printer<{color: Style | Style[]}>
   // format(strings: TemplateStringsArray, ...data: any[]): string
-  extend(label?: string, color?: Style | Style[]): Logger
+  extend(options?: Omit<LoggerOptions, 'handler'>): Logger
   open(): void
   close(): void
 }

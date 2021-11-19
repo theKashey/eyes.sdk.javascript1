@@ -109,13 +109,11 @@ export function isStaleElementError(error: any): boolean {
 
 // #region COMMANDS
 
-export async function isEqualElements(driver: Driver, element1: Element, element2: Element): Promise<boolean> {
+export async function isEqualElements(_driver: Driver, element1: Element, element2: Element): Promise<boolean> {
   if (!element1 || !element2) return false
-  try {
-    return await driver.executeScript('return arguments[0] === arguments[1]', [element1, element2])
-  } catch (err) {
-    return false
-  }
+  const elementId1 = extractElementId(element1)
+  const elementId2 = extractElementId(element2)
+  return elementId1 === elementId2
 }
 export async function executeScript(driver: Driver, script: ((arg: any) => any) | string, arg: any): Promise<any> {
   script = utils.types.isFunction(script) ? `return (${script}).apply(null, arguments)` : script
@@ -133,12 +131,16 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   await driver.switchToFrame(element)
   return driver
 }
-export async function findElement(driver: Driver, selector: Selector): Promise<Element | null> {
-  const element = await driver.findElement(selector.using, selector.value)
+export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element | null> {
+  const element = parent
+    ? await driver.findElementFromElement(extractElementId(parent), selector.using, selector.value)
+    : await driver.findElement(selector.using, selector.value)
   return isElement(element) ? element : null
 }
-export async function findElements(driver: Driver, selector: Selector): Promise<Element[]> {
-  return driver.findElements(selector.using, selector.value)
+export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
+  return parent
+    ? await driver.findElementsFromElement(extractElementId(parent), selector.using, selector.value)
+    : await driver.findElements(selector.using, selector.value)
 }
 export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
   if (utils.types.isFunction(driver.getWindowRect)) {
@@ -155,6 +157,27 @@ export async function setWindowSize(driver: Driver, size: {width: number; height
     await driver.setWindowPosition(0, 0)
     await driver._setWindowSize(size.width, size.height)
   }
+}
+export async function getCookies(driver: Driver, context?: boolean): Promise<types.Cookie[]> {
+  if (context) return driver.getAllCookies()
+
+  const response = await driver.sendCommandAndGetResult('Network.getAllCookies', {})
+  const cookies = response.cookies
+
+  return cookies.map((cookie: any) => {
+    const copy = {...cookie, expiry: cookie.expires}
+    delete copy.expires
+    delete copy.size
+    delete copy.priority
+    delete copy.session
+    delete copy.sameParty
+    delete copy.sourceScheme
+    delete copy.sourcePort
+    return copy
+  })
+}
+export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
+  return browser.getSession?.() ?? browser.capabilities
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
   const capabilities = driver.capabilities as any
@@ -210,6 +233,13 @@ export async function click(driver: Driver, element: Element | Selector): Promis
 
 // #region NATIVE COMMANDS
 
+export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+  const {statusBar, navigationBar}: any = await browser.getSystemBars()
+  return {
+    statusBarHeight: statusBar.visible ? statusBar.height : 0,
+    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+  }
+}
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = await browser.getOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'
