@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.24.4 - 2021/11/23
+
 - update internal types
 - updated to @applitools/driver@1.3.5 (from 1.3.4)
 - updated to @applitools/types@1.0.21 (from 1.0.20)
