@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.6 - 2021/11/23
+
 - update universal types
 
 ## 1.0.5 - 2021/10/27
