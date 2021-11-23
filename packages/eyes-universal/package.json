@@ -44,7 +44,7 @@
     "build:bin": "pkg ./dist/cli.js --out-path ./bin --compress GZip --targets node14-linux-x64,node14-macos-x64,node14-win-x64 && mv ./bin/cli-macos ./bin/eyes-universal-macos && mv ./bin/cli-linux ./bin/eyes-universal-linux && mv ./bin/cli-win.exe ./bin/eyes-universal-win.exe",
     "build:zip": "zip -j ./bin/eyes-universal.zip ./bin/eyes-universal-linux ./bin/eyes-universal-macos ./bin/eyes-universal-win.exe",
     "build:tgz": "tar -czf ./bin/eyes-universal.tar.gz -C ./bin ./eyes-universal-linux ./eyes-universal-macos ./eyes-universal-win.exe",
-    "test": "ech 'mocha ./test/**/*.spec.js --no-timeouts'",
+    "test": "echo 'mocha ./test/**/*.spec.js --no-timeouts'",
     "deps": "bongo deps",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
