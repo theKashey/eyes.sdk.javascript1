@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add `ignoreGitMergeBase` to `EyesOpenConfig` type
+- create smarter types for universal sdk
 
 ## 1.0.20 - 2021/11/14
 
