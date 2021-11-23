@@ -658,7 +658,7 @@ jobs:
 
   # UNIVERSAL SDKS
   playwright-universal:
-    needs: [setup, types, utils, test-utils, api, universal]
+    needs: [setup, spec-playwright, api, universal, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright-universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:

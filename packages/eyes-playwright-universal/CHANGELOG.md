@@ -3,6 +3,9 @@
 ## Unreleased
 
 - deprecate `saveDebugData`
+- updated to @applitools/eyes-api@1.1.6 (from 1.0.11)
+- updated to @applitools/eyes-universal@0.1.5 (from 0.1.0)
+- updated to @applitools/utils@1.2.4 (from 1.2.0)
 
 ## 1.2.2 - 2020/10/15
 

@@ -7,11 +7,8 @@ type UnionToIntersection<TUnion> = (TUnion extends any ? (arg: TUnion) => any : 
 
 type InputType<TFunc> = TFunc extends (arg: infer TArg) => any ? TArg : never
 type OutputType<TFunc> = TFunc extends (...args: any) => infer TRes | Promise<infer TRes>
-  ? Promise<TRes extends {(...args: any): any} ? (TRes extends void ? TRes : Ref<TRes>) : TRes>
+  ? Promise<Refify<TRes>>
   : never
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type Ref<TValue = never> = {'applitools-ref-id': string}
 
 type Request<
   TTarget extends {[key in keyof TTarget]: (...args: any) => any},
@@ -45,14 +42,40 @@ type Command<
     : never
 >
 
+interface Debug<TDriver, TContext, TElement, TSelector> {
+  getHistory(): any
+  checkSpecDriver(options: {
+    driver: TDriver
+    commands: (keyof UniversalSpecDriver<TDriver, TContext, TElement, TSelector>)[]
+  }): any
+}
+
+interface Server {
+  getInfo(): Record<string, any>
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type Ref<TValue = never> = {'applitools-ref-id': string}
+
+/* eslint-disable prettier/prettier */
+export type Refify<TValue> = TValue extends string | number | boolean | null | undefined ? TValue
+  : TValue extends Array<infer TItem> ? Refify<TItem>[]
+  : Extract<TValue[keyof TValue], (...args: any) => any> extends never ? TValue
+  : Ref<TValue>
+/* eslint-enable prettier/prettier */
+
 export type ClientSocket<TDriver, TContext, TElement, TSelector> = unknown &
   Request<Omit<Core<TDriver, TElement, TSelector>, 'isDriver' | 'isElement' | 'isSelector'>, 'Core'> &
   Request<EyesManager<TDriver, TElement, TSelector>, 'EyesManager', 'manager'> &
   Request<Eyes<TElement, TSelector>, 'Eyes', 'eyes'> &
+  Request<Server, 'Server'> &
+  Request<Debug<TDriver, TContext, TElement, TSelector>, 'Debug'> &
   Command<UniversalSpecDriver<TDriver, TContext, TElement, TSelector>, 'Driver'>
 
 export type ServerSocket<TDriver, TContext, TElement, TSelector> = unknown &
   Command<Omit<Core<TDriver, TElement, TSelector>, 'isDriver' | 'isElement' | 'isSelector'>, 'Core'> &
   Command<EyesManager<TDriver, TElement, TSelector>, 'EyesManager', 'manager'> &
   Command<Eyes<TElement, TSelector>, 'Eyes', 'eyes'> &
+  Command<Server, 'Server'> &
+  Command<Debug<TDriver, TContext, TElement, TSelector>, 'Debug'> &
   Request<UniversalSpecDriver<TDriver, TContext, TElement, TSelector>, 'Driver'>

@@ -96,7 +96,7 @@ export interface UniversalSpecDriver<TDriver, TContext, TElement, TSelector> {
   mainContext(options: {context: TContext}): Promise<TContext>
   parentContext?(options: {context: TContext}): Promise<TContext>
   childContext(options: {context: TContext; element: TElement}): Promise<TContext>
-  executeScript(options: {context: TContext; script: ((arg?: any) => any) | string; arg?: any}): Promise<any>
+  executeScript(options: {context: TContext; script: string; arg?: any}): Promise<any>
   findElement(options: {context: TContext; selector: TSelector; parent?: TElement}): Promise<TElement | null>
   findElements(options: {context: TContext; selector: TSelector; parent?: TElement}): Promise<TElement[]>
   setWindowSize?(options: {driver: TDriver; size: Size}): Promise<void>

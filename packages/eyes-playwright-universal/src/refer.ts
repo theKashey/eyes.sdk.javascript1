@@ -4,7 +4,8 @@ import * as utils from '@applitools/utils'
 const REF_ID = 'applitools-ref-id'
 
 /* eslint-disable prettier/prettier */
-export type DeepRef<TValue, TTarget> = TValue extends TTarget ? types.Ref<TValue>
+export type DeepRef<TValue, TTarget> = TValue extends string | number | boolean | null | undefined ? TValue
+  : TValue extends TTarget ? types.Ref<TValue>
   : TValue extends ((...args: any[]) => any) | {[key: string]: (...args: any[]) => any} ? TValue
   : TValue extends Record<PropertyKey, any> ? {[key in keyof TValue]: DeepRef<TValue[key], TTarget>}
   : TValue
@@ -16,7 +17,7 @@ export class Refer<TTarget> {
 
   constructor(private readonly _check: (value: any) => value is TTarget) {}
 
-  private isRef(ref: any): ref is types.Ref<TTarget> {
+  private isRef(ref: any): ref is {[key in typeof REF_ID]: string} {
     return Boolean(ref && ref[REF_ID])
   }
 

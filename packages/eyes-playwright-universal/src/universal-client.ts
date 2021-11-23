@@ -2,12 +2,18 @@ import type * as types from '@applitools/types'
 import type {ChildProcess} from 'child_process'
 import type {Driver, Context, Element, Selector} from './spec-driver'
 import * as utils from '@applitools/utils'
-import * as spec from './spec-driver'
+import * as spec from '@applitools/spec-driver-playwright'
 import {spawn} from 'child_process'
 import {Refer} from './refer'
 import {Socket} from './socket'
 
-type ClientSocket = Socket & types.ClientSocket<types.Ref<Driver>, types.Ref<Context>, types.Ref<Element>, Selector>
+type ClientSocket = types.ClientSocket<
+  types.Ref<Driver>,
+  types.Ref<Context>,
+  types.Ref<Element>,
+  types.Selector<types.Refify<Selector>>
+> &
+  Omit<Socket, 'command' | 'request'>
 
 export class UniversalClient implements types.Core<Driver, Element, Selector> {
   private _socket: ClientSocket
@@ -29,20 +35,18 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
       this._server.stdout.destroy()
       const [port] = String(data).split('\n', 1)
       this._socket.connect(`http://localhost:${port}/eyes`)
-      this._socket.emit('Session.init', {commands: Object.keys(spec)})
+      this._socket.emit('Core.makeSDK', {
+        name: 'eyes.playwright',
+        version: require('../package.json').version,
+        commands: Object.keys(spec),
+        cwd: process.cwd(),
+      })
     })
 
     // important: this allows the client process to exit without hanging, while the server process still runs
     this._server.unref()
     this._socket.unref()
 
-    this._socket.command('Driver.isEqualElements', async ({context, element1, element2}) => {
-      return spec.isEqualElements(this._refer.deref(context), this._refer.deref(element1), this._refer.deref(element2))
-    })
-    this._socket.command('Driver.executeScript', async ({context, script, arg}) => {
-      const result = await spec.executeScript(this._refer.deref(context), script, this._refer.deref(arg))
-      return this._refer.ref(result, context)
-    })
     this._socket.command('Driver.mainContext', async ({context}) => {
       const mainContext = await spec.mainContext(this._refer.deref(context))
       return this._refer.ref(mainContext, context)
@@ -55,22 +59,38 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
       const childContext = await spec.childContext(this._refer.deref(context), this._refer.deref(element))
       return this._refer.ref(childContext, context)
     })
-    this._socket.command('Driver.findElement', async ({context, selector}) => {
-      const element = await spec.findElement(this._refer.deref(context), selector)
+    this._socket.command('Driver.executeScript', async ({context, script, arg}) => {
+      script = script.startsWith('function') ? `return (${script}).apply(null, arguments)` : script
+      const result = await spec.executeScript(this._refer.deref(context), script, this._refer.deref(arg))
+      return this._refer.ref(result, context)
+    })
+    this._socket.command('Driver.findElement', async ({context, selector, parent}) => {
+      const element = await spec.findElement(
+        this._refer.deref(context),
+        spec.transformSelector(spec.transformSelector(this._refer.deref(selector))),
+        this._refer.deref(parent),
+      )
       return !utils.types.isNull(element) ? this._refer.ref(element, context) : element
     })
-    this._socket.command('Driver.findElements', async ({context, selector}) => {
-      const elements = await spec.findElements(this._refer.deref(context), selector)
+    this._socket.command('Driver.findElements', async ({context, selector, parent}) => {
+      const elements = await spec.findElements(
+        this._refer.deref(context),
+        spec.transformSelector(spec.transformSelector(this._refer.deref(selector))),
+        this._refer.deref(parent),
+      )
       return elements.map(element => this._refer.ref(element, context))
-    })
-    this._socket.command('Driver.takeScreenshot', async ({driver}) => {
-      return spec.takeScreenshot(this._refer.deref(driver))
     })
     this._socket.command('Driver.getViewportSize', async ({driver}) => {
       return spec.getViewportSize(this._refer.deref(driver))
     })
     this._socket.command('Driver.setViewportSize', async ({driver, size}) => {
       return spec.setViewportSize(this._refer.deref(driver), size)
+    })
+    this._socket.command('Driver.getCookies', async ({driver}) => {
+      return spec.getCookies(this._refer.deref(driver))
+    })
+    this._socket.command('Driver.getDriverInfo', async ({driver}) => {
+      return await spec.getDriverInfo(this._refer.deref(driver))
     })
     this._socket.command('Driver.getTitle', async ({driver}) => {
       return spec.getTitle(this._refer.deref(driver))
@@ -80,6 +100,10 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
     })
     this._socket.command('Driver.visit', async ({driver, url}) => {
       return spec.visit(this._refer.deref(driver), url)
+    })
+    this._socket.command('Driver.takeScreenshot', async ({driver}) => {
+      const buffer = await spec.takeScreenshot(this._refer.deref(driver))
+      return buffer.toString('base64')
     })
   }
 
@@ -103,20 +127,20 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
   async getViewportSize({driver}: {driver: Driver}): Promise<types.Size> {
     const driverRef = this._refer.ref(driver)
     return this._socket.request('Core.getViewportSize', {
-      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)},
+      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)} as types.Ref<Driver>,
     })
   }
 
   async setViewportSize({driver, size}: {driver: Driver; size: types.Size}): Promise<void> {
     const driverRef = this._refer.ref(driver)
     return this._socket.request('Core.setViewportSize', {
-      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)},
+      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)} as types.Ref<Driver>,
       size,
     })
   }
 
   async closeBatches(options: any): Promise<void> {
-    return this._socket.request('Core.closeBatch', options)
+    return this._socket.request('Core.closeBatches', options)
   }
 
   async deleteTest(options: any): Promise<void> {
@@ -124,7 +148,22 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
   }
 
   async checkSpecDriver({driver}: {driver: Driver}): Promise<any[]> {
-    return this._socket.request('Debug.checkSpecDriver', {commands: Object.keys(spec), driver: this._refer.ref(driver)})
+    return this._socket.request('Debug.checkSpecDriver', {
+      commands: Object.keys(spec) as Exclude<
+        keyof types.SpecDriver<Driver, Context, Element, Selector>,
+        | 'isDriver'
+        | 'isElement'
+        | 'isSelector'
+        | 'isContext'
+        | 'extractContext'
+        | 'extractSelector'
+        | 'isStaleElementError'
+        | 'transformDriver'
+        | 'transformElement'
+        | 'transformSelector'
+      >[],
+      driver: this._refer.ref(driver),
+    })
   }
 
   // for testing purposes
@@ -134,9 +173,9 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
 }
 
 export class EyesManager implements types.EyesManager<Driver, Element, Selector> {
-  private _manager: types.Ref
+  private _manager: types.Ref<any>
   private _socket: ClientSocket
-  private _refer: Refer<Driver | Context | Element>
+  private _refer: Refer<Driver | Context | Element | Selector>
 
   constructor({manager, refer, socket}: any) {
     this._manager = manager
@@ -146,24 +185,25 @@ export class EyesManager implements types.EyesManager<Driver, Element, Selector>
 
   async openEyes({driver, config}: {driver: Driver; config?: types.EyesConfig<Element, Selector>}): Promise<Eyes> {
     const driverRef = this._refer.ref(driver)
+    this._refer.ref(config).scrollRootElement
     const eyes = await this._socket.request('EyesManager.openEyes', {
       manager: this._manager,
-      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)},
+      driver: {...driverRef, context: this._refer.ref(spec.extractContext(driver), driverRef)} as types.Ref<Driver>,
       config: this._refer.ref(config),
     })
     return new Eyes({eyes, socket: this._socket, refer: this._refer})
   }
 
-  async closeAllEyes(): Promise<types.TestResult[]> {
-    return this._socket.request('EyesManager.closeAllEyes', {manager: this._manager})
+  async closeAllEyes({throwErr}: {throwErr?: boolean} = {}): Promise<types.TestResult[]> {
+    return this._socket.request('EyesManager.closeAllEyes', {manager: this._manager, throwErr})
   }
 }
 
 // not to be confused with the user-facing Eyes class
 export class Eyes implements types.Eyes<Element, Selector> {
-  private _eyes: types.Ref
+  private _eyes: types.Ref<any>
   private _socket: ClientSocket
-  private _refer: Refer<Driver | Context | Element>
+  private _refer: Refer<Driver | Context | Element | Selector>
 
   constructor({eyes, socket, refer}: any) {
     this._eyes = eyes
@@ -227,8 +267,8 @@ export class Eyes implements types.Eyes<Element, Selector> {
     })
   }
 
-  close() {
-    return this._socket.request('Eyes.close', {eyes: this._eyes})
+  close({throwErr}: {throwErr?: boolean} = {}) {
+    return this._socket.request('Eyes.close', {eyes: this._eyes, throwErr})
   }
 
   abort() {

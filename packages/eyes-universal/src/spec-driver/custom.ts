@@ -4,7 +4,7 @@ import * as utils from '@applitools/utils'
 export type Driver = types.Ref
 export type Context = types.Ref
 export type Element = types.Ref
-export type Selector = types.Selector
+export type Selector = types.Selector<types.Ref>
 
 type SpecDriver = Omit<
   types.SpecDriver<Driver, Context, Element, Selector>,

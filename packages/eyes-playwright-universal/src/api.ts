@@ -4,9 +4,9 @@ import {UniversalClient} from './universal-client'
 
 const spec = new UniversalClient()
 
-export {Driver, Context, Element, Selector}
-
 export * from '@applitools/eyes-api'
+
+export {Driver, Context, Element, Selector}
 
 export class Eyes extends api.Eyes<Driver, Element, Selector> {
   protected static readonly _spec = spec
