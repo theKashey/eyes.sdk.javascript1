@@ -64,6 +64,7 @@ export type OpenConfiguration = {
   baselineBranchName?: string
   compareWithParentBranch?: boolean
   ignoreBaseline?: boolean
+  ignoreGitMergeBase?: boolean
   saveFailedTests?: boolean
   saveNewTests?: boolean
   saveDiffs?: boolean
@@ -567,6 +568,21 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
   setCompareWithParentBranch(compareWithParentBranch: boolean): this {
     this.compareWithParentBranch = compareWithParentBranch
+    return this
+  }
+
+  get ignoreGitMergeBase(): boolean {
+    return this._config.ignoreGitMergeBase
+  }
+  set ignoreGitMergeBase(ignoreGitMergeBase: boolean) {
+    utils.guard.isBoolean(ignoreGitMergeBase, {name: 'ignoreGitMergeBase'})
+    this._config.ignoreGitMergeBase = ignoreGitMergeBase
+  }
+  getIgnoreGitMergeBase(): boolean {
+    return this.ignoreGitMergeBase
+  }
+  setIgnoreGitMergeBase(ignoreGitMergeBase: boolean): this {
+    this.ignoreGitMergeBase = ignoreGitMergeBase
     return this
   }
 

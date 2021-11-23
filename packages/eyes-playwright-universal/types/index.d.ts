@@ -167,6 +167,7 @@ export type ConfigurationPlain = {
     baselineBranchName?: string;
     compareWithParentBranch?: boolean;
     ignoreBaseline?: boolean;
+    ignoreGitMergeBase?: boolean;
     saveFailedTests?: boolean;
     saveNewTests?: boolean;
     saveDiffs?: boolean;
@@ -299,6 +300,10 @@ export class Configuration implements Required<ConfigurationPlain> {
     set compareWithParentBranch(compareWithParentBranch: boolean);
     getCompareWithParentBranch(): boolean;
     setCompareWithParentBranch(compareWithParentBranch: boolean): Configuration;
+    get ignoreGitMergeBase(): boolean;
+    set ignoreGitMergeBase(ignoreGitMergeBase: boolean);
+    getIgnoreGitMergeBase(): boolean;
+    setIgnoreGitMergeBase(ignoreGitMergeBase: boolean): Configuration;
     get ignoreBaseline(): boolean;
     set ignoreBaseline(ignoreBaseline: boolean);
     getIgnoreBaseline(): boolean;

@@ -63,6 +63,7 @@ export type EyesOpenConfig = {
   baselineBranchName?: string
   compareWithParentBranch?: boolean
   ignoreBaseline?: boolean
+  ignoreGitMergeBase?: boolean
   saveFailedTests?: boolean
   saveNewTests?: boolean
   saveDiffs?: boolean
