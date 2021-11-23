@@ -14,3 +14,4 @@ cdt.json
 .history
 test/cypress
 **/.debug
+example.json

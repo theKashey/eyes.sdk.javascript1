@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 const fetch = require('node-fetch');
+const path = require('path');
 
 async function getUrls() {
   const sitemapUrl = 'http://a142332.hostedsitemap.com/4049686/urllist.txt';
@@ -12,9 +13,12 @@ async function getUrls() {
 
 const startServer = require('./start-test-server');
 
-module.exports = async (on, _config) => {
+module.exports = async (on, config) => {
   on('task', {getUrls});
-  return startServer();
+  config.eyesTestPort = 5555;
+  config.staticPath = path.join(__dirname, '../../..'); // fixtures folder
+  // config.middlewares = ['slow'];
+  await startServer(on, config);
 };
 
 // eslint-disable-next-line
