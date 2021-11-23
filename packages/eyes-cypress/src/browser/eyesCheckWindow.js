@@ -29,7 +29,7 @@ function makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions, cypr
         return cypress
           .wrap({}, {log: false})
           .wait(waitBeforeCapture)
-          .then(() => {
+          .then({log: false, timeout: 900000}, () => {
             return takeDomSnapshot(options);
           });
       }

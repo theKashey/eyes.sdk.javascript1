@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - add timeout before capturing dom snapshot
 
 ## 3.23.2 - 2021/11/17
 
