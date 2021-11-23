@@ -51,10 +51,10 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.24.3",
-    "@applitools/logger": "1.0.5",
+    "@applitools/eyes-sdk-core": "12.24.4",
+    "@applitools/logger": "1.0.6",
     "@applitools/utils": "1.2.4",
-    "@applitools/visual-grid-client": "15.8.47",
+    "@applitools/visual-grid-client": "15.8.48",
     "webdriver": "7.7.3",
     "ws": "7.4.6",
     "yargs": "16.1.0"
@@ -63,7 +63,7 @@
     "@applitools/sdk-coverage-tests": "^2.3.16",
     "@applitools/sdk-release-kit": "^0.13.4",
     "@applitools/test-utils": "^1.0.9",
-    "@applitools/types": "1.0.20",
+    "@applitools/types": "1.0.21",
     "@types/ws": "^7.4.4",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
