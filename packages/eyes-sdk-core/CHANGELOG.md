@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/logger@1.0.6 (from 1.0.5)
 
+
+## 12.24.5 - 2021/11/23
+
+- updated to @applitools/logger@1.0.6 (from 1.0.5)
 
 ## 12.24.4 - 2021/11/23
 
