@@ -3,6 +3,9 @@
 ## Unreleased
 
  - add timeout before capturing dom snapshot
+- updated to @applitools/dom-snapshot@4.5.11 (from 4.5.10)
+- updated to @applitools/logger@1.0.6 (from 1.0.5)
+- updated to @applitools/visual-grid-client@15.8.49 (from 15.8.46)
 
 ## 3.23.2 - 2021/11/17
 

@@ -39,10 +39,10 @@
     "directory": "packages/eyes-cypress"
   },
   "dependencies": {
-    "@applitools/dom-snapshot": "4.5.10",
+    "@applitools/dom-snapshot": "4.5.11",
     "@applitools/functional-commons": "1.6.0",
-    "@applitools/logger": "1.0.5",
-    "@applitools/visual-grid-client": "15.8.46",
+    "@applitools/logger": "1.0.6",
+    "@applitools/visual-grid-client": "15.8.49",
     "body-parser": "1.19.0",
     "chalk": "3.0.0",
     "cors": "2.8.5",
