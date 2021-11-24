@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+ ## 3.23.3 - 2021/11/24
+
  - add timeout before capturing dom snapshot
 - updated to @applitools/dom-snapshot@4.5.11 (from 4.5.10)
 - updated to @applitools/logger@1.0.6 (from 1.0.5)
