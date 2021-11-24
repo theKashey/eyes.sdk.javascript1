@@ -8,7 +8,13 @@ const makeEyesCheckWindow = require('../../../src/browser/eyesCheckWindow');
 describe('eyesCheckWindow', () => {
   const fakeCypressFunction = () => {
     return {
-      wait: async () => Promise.resolve(),
+      wait: () => {
+        return {
+          then: async (_options, callBack) => {
+            return callBack();
+          },
+        };
+      },
       viewport: async () => Promise.resolve(),
     };
   };
