@@ -6,6 +6,7 @@ import type {Driver, Element, Selector} from './spec-driver'
 const sdk = makeSDK({
   name: 'eyes-protractor',
   version: require('../package.json').version,
+  cwd: process.cwd(),
   spec,
   VisualGridClient: require('@applitools/visual-grid-client'),
 })
