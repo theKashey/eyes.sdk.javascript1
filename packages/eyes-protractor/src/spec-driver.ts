@@ -37,6 +37,10 @@ export function isSelector(selector: any): selector is Selector {
     utils.types.isFunction(selector.findElementsOverride)
   )
 }
+export function transformDriver(driver: Driver): Driver {
+  driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
+  return driver
+}
 export function transformElement(element: Element): Element {
   if (!utils.types.instanceOf<Protractor.ElementFinder>(element, 'ElementFinder')) return element
   return element.getWebElement()
@@ -133,8 +137,8 @@ export async function getCapabilities(driver: Driver): Promise<Record<string, an
     const getSessionDetailsCommand = new Command('getSessionDetails')
     return await driver.schedule(getSessionDetailsCommand, '')
   } catch {
-    const capabilities = await driver.getCapabilities()
-    return capabilities.toJSON()
+    const capabilities = ((await driver.getCapabilities()) as any) as Map<string, any>
+    return Array.from(capabilities.keys()).reduce((obj, key) => Object.assign(obj, {key: capabilities.get(key)}), {})
   }
 }
 export async function getTitle(driver: Driver): Promise<string> {
