@@ -1,10 +1,11 @@
 'use strict';
 
 function getStoryTitle({name, kind, parameters}) {
-  const variationUrlParam = parameters && parameters.eyes && parameters.eyes.variationUrlParam;
-  const urlSuffix = variationUrlParam ? ` [${variationUrlParam}]` : '';
+  const queryParam = parameters && parameters.eyes && parameters.eyes.queryParam;
+  const variation =
+    queryParam && queryParam.name === 'eyes-variation' ? queryParam.value : undefined;
 
-  return `${kind}: ${name}${urlSuffix}`;
+  return `${kind}: ${name}${variation ? ` [${variation}]` : ''}`;
 }
 
 module.exports = getStoryTitle;

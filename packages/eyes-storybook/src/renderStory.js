@@ -1,10 +1,12 @@
 'use strict';
 const getStoryTitle = require('./getStoryTitle');
+const getStoryBaselineName = require('./getStoryBaselineName');
 const {deprecationWarning} = require('@applitools/eyes-sdk-core').GeneralUtils;
 
 function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
   return function renderStory({config, story, snapshot, url}) {
     const {name, kind, parameters} = story;
+    const baselineName = getStoryBaselineName({name, kind, parameters});
     const title = getStoryTitle({name, kind, parameters});
     const eyesOptions = Object.assign({}, config, (parameters && parameters.eyes) || {});
     const {
@@ -41,10 +43,11 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       ignoreRegionsBackCompat = ignore;
     }
 
-    logger.log('running story', title);
+    logger.log(`running story ${title} with baseline ${baselineName}`);
 
     const openParams = {
-      testName: title,
+      testName: baselineName,
+      displayName: title,
       browser: config.browser,
       properties: [
         {name: 'Component name', value: kind},
@@ -77,12 +80,12 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       ignoreDisplacements,
     };
 
-    return timeItAsync(title, async () => {
+    return timeItAsync(baselineName, async () => {
       return testWindow({openParams, checkParams, throwEx: false});
     }).then(onDoneStory);
 
     function onDoneStory(results) {
-      logger.log('finished story', title, 'in', performance[title]);
+      logger.log('finished story', baselineName, 'in', performance[baselineName]);
       return results;
     }
   };

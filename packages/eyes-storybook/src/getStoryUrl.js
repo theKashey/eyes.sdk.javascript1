@@ -2,12 +2,12 @@
 const getIframeUrl = require('./getIframeUrl');
 
 function getStoryUrl({name, kind, parameters}, baseUrl) {
-  const variationUrlParam = parameters && parameters.eyes && parameters.eyes.variationUrlParam;
-  const variation = variationUrlParam ? `&eyes-variation=${variationUrlParam}` : '';
+  const queryParam = parameters && parameters.eyes && parameters.eyes.queryParam;
+  const queryParamString = queryParam ? `&${queryParam.name}=${queryParam.value}` : '';
 
   return `${getIframeUrl(baseUrl)}&selectedKind=${encodeURIComponent(
     kind,
-  )}&selectedStory=${encodeURIComponent(name)}${variation}`;
+  )}&selectedStory=${encodeURIComponent(name)}${queryParamString}`;
 }
 
 module.exports = getStoryUrl;

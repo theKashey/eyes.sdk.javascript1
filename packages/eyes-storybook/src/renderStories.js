@@ -1,6 +1,6 @@
 'use strict';
 const getStoryUrl = require('./getStoryUrl');
-const getStoryTitle = require('./getStoryTitle');
+const getStoryBaselineName = require('./getStoryBaselineName');
 const ora = require('ora');
 const {presult} = require('@applitools/functional-commons');
 const {shouldRenderIE} = require('./shouldRenderIE');
@@ -61,7 +61,7 @@ function makeRenderStories({
       async function processStory() {
         const story = stories[currIndex++];
         const storyUrl = getStoryUrl(story, storybookUrl);
-        const title = getStoryTitle(story);
+        const title = getStoryBaselineName(story);
         const {waitBeforeCapture} = (story.parameters && story.parameters.eyes) || {};
 
         try {
@@ -139,7 +139,7 @@ function makeRenderStories({
 
     function onDoneStory(resultsOrErr, story) {
       spinner.text = updateSpinnerText(++doneStories, stories.length);
-      const title = getStoryTitle(story);
+      const title = getStoryBaselineName(story);
       allTestResults.push({title, resultsOrErr});
       return {title, resultsOrErr};
     }

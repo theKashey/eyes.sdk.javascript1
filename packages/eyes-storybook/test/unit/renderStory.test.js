@@ -6,9 +6,10 @@ const {presult} = require('@applitools/functional-commons');
 const {makeTiming} = require('@applitools/monitoring-commons');
 const psetTimeout = require('util').promisify(setTimeout);
 const getStoryTitle = require('../../src/getStoryTitle');
+const getStoryBaselineName = require('../../src/getStoryBaselineName');
 const logger = require('../util/testLogger');
 
-describe('renderStory', () => {
+describe.only('renderStory', () => {
   let performance, timeItAsync;
 
   beforeEach(() => {
@@ -23,6 +24,7 @@ describe('renderStory', () => {
     const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
     const story = {name: 'name', kind: 'kind'};
     const title = getStoryTitle(story);
+    const baselineName = getStoryBaselineName(story);
     const results = await renderStory({
       story,
       config: {
@@ -45,7 +47,8 @@ describe('renderStory', () => {
           {name: 'State', value: 'name'},
         ],
         browser: [{name: 'chrome', width: 800, height: 600}],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       throwEx: false,
     });
@@ -80,6 +83,7 @@ describe('renderStory', () => {
 
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
     const title = getStoryTitle(story);
+    const baselineName = getStoryBaselineName(story);
 
     const results = await renderStory({story, config: {}});
     deleteUndefinedPropsRecursive(results);
@@ -99,7 +103,8 @@ describe('renderStory', () => {
           },
           ...properties,
         ],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       checkParams: {
         ignore: 'ignore',
@@ -155,6 +160,7 @@ describe('renderStory', () => {
     });
 
     const story = {name: 'name', kind: 'kind'};
+    const baselineName = getStoryBaselineName(story);
     const title = getStoryTitle(story);
 
     const results = await renderStory({story, config: globalConfig});
@@ -174,7 +180,8 @@ describe('renderStory', () => {
             value: 'name',
           },
         ],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       checkParams: {
         ignore: 'ignore',
@@ -253,6 +260,7 @@ describe('renderStory', () => {
     };
 
     const story = {name: 'name', kind: 'kind', parameters: {eyes: eyesOptions}};
+    const baselineName = getStoryBaselineName(story);
     const title = getStoryTitle(story);
 
     const results = await renderStory({story, config: globalConfig});
@@ -274,7 +282,8 @@ describe('renderStory', () => {
           },
           ...properties,
         ],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       checkParams: {
         ignore: 'ignore',
@@ -305,9 +314,9 @@ describe('renderStory', () => {
     const renderStory = makeRenderStory({logger, testWindow, performance, timeItAsync});
 
     const story = {name: 'name', kind: 'kind'};
-    const title = getStoryTitle(story);
+    const baselineName = getStoryBaselineName(story);
     await renderStory({story, config: {}});
-    expect(performance[title]).not.to.equal(undefined);
+    expect(performance[baselineName]).not.to.equal(undefined);
   });
 
   it('throws error during testWindow', async () => {
@@ -334,6 +343,7 @@ describe('renderStory', () => {
         },
       },
     };
+    const baselineName = getStoryBaselineName(story);
     const title = getStoryTitle(story);
     const results = await renderStory({story, config: {}});
 
@@ -348,7 +358,8 @@ describe('renderStory', () => {
           {name: 'Component name', value: 'kind'},
           {name: 'State', value: 'name'},
         ],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       throwEx: false,
     });
@@ -368,6 +379,7 @@ describe('renderStory', () => {
         },
       },
     };
+    const baselineName = getStoryBaselineName(story);
     const title = getStoryTitle(story);
     const results = await renderStory({story, config: {}});
 
@@ -382,7 +394,8 @@ describe('renderStory', () => {
           {name: 'Component name', value: 'kind'},
           {name: 'State', value: 'name'},
         ],
-        testName: title,
+        testName: baselineName,
+        displayName: title,
       },
       throwEx: false,
     });

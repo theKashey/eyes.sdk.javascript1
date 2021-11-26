@@ -3,14 +3,14 @@ const {presult} = require('@applitools/functional-commons');
 const {ArgumentGuard} = require('@applitools/eyes-sdk-core');
 const renderStoryWithClientAPI = require('../dist/renderStoryWithClientAPI');
 const runRunBeforeScript = require('../dist/runRunBeforeScript');
-const getStoryTitle = require('./getStoryTitle');
+const getStoryBaselineName = require('./getStoryBaselineName');
 const {URL} = require('url');
 const runRunAfterScript = require('../dist/runRunAfterScript');
 const waitFor = require('./waitFor');
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
-    const title = getStoryTitle(story);
+    const title = getStoryBaselineName(story);
     logger.log(`getting data from story`, title);
 
     const eyesParameters = story.parameters && story.parameters.eyes;

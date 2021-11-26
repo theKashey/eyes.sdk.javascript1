@@ -56,7 +56,12 @@ describe('filterStories', () => {
 
   it('filter by story title when using a function', () => {
     const stories = [
-      {name: 'aaa', kind: 'bbb', bla: 'kuku', parameters: {eyes: {variationUrlParam: 'var1'}}},
+      {
+        name: 'aaa',
+        kind: 'bbb',
+        bla: 'kuku',
+        parameters: {eyes: {queryParam: {name: 'eyes-variation', value: 'var1'}}},
+      },
     ];
     const config = {
       include: story => {
