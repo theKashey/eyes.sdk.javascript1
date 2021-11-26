@@ -635,7 +635,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   storybook:
-    needs: [setup, utils, puppeteer, core, vgc, test-utils]
+    needs: [setup, spec-puppeteer, logger, core, vgc, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).storybook && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:

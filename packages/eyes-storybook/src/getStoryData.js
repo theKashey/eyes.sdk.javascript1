@@ -15,13 +15,18 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
 
     const eyesParameters = story.parameters && story.parameters.eyes;
     if (story.isApi && !reloadPagePerStory) {
-      const actualVariationParam = await getEyesVariationParam(page);
-      const expectedVariationUrlParam = eyesParameters
-        ? eyesParameters.variationUrlParam
-        : undefined;
+      const expectedQueryParam = eyesParameters ? eyesParameters.queryParam : undefined;
+      const actualQueryParam = await getQueryParam(
+        eyesParameters && eyesParameters.queryParams
+          ? eyesParameters.queryParams.map(queryParam => queryParam.name)
+          : undefined,
+      );
       if (
-        (!actualVariationParam && !expectedVariationUrlParam) ||
-        actualVariationParam === expectedVariationUrlParam
+        (!actualQueryParam && !expectedQueryParam) ||
+        (actualQueryParam &&
+          expectedQueryParam &&
+          actualQueryParam.value === expectedQueryParam.name &&
+          actualQueryParam.value === expectedQueryParam.value)
       ) {
         const err = await page.evaluate(renderStoryWithClientAPI, story.index);
         err && handleRenderStoryError(err);
@@ -78,9 +83,16 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
       }
     }
 
-    async function getEyesVariationParam() {
+    async function getQueryParam(queryParamNames = []) {
       try {
-        return new URL(await page.url()).searchParams.get('eyes-variation');
+        const url = new URL(await page.url());
+        queryParamNames = [...queryParamNames, 'eyes-variation'];
+        const queryParamName = queryParamNames.find(queryParamName =>
+          url.searchParams.has(queryParamName),
+        );
+        if (queryParamName) {
+          return {name: queryParamName, value: url.searchParams.get(queryParamName)};
+        }
       } catch (ex) {
         logger.log('failed to get url from page (in need of eyes-variation param)');
       }

@@ -22,7 +22,7 @@ describe('eyes-storybook', () => {
           port: 7777,
           staticPath,
           allowCors: false,
-          middleware: ['handlebars'],
+          middlewares: ['handlebars'],
           hbData: {
             src: 'http://localhost:7778/cors_frames/frame.html',
           },

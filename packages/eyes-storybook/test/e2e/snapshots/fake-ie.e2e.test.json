@@ -23,5 +23,10 @@
     "\u001b[33m\u001b[39m",
     "",
     ""
+  ],
+  "fake-ie": [
+    "Using @applitools/eyes-storybook version <version>.",
+    "",
+    ""
   ]
 }

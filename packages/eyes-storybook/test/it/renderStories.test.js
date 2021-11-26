@@ -118,7 +118,10 @@ describe('renderStories', () => {
     await Promise.resolve();
     const getStoryData = async ({story, storyUrl, page}) => {
       await delay(10);
-      return `snapshot_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`;
+      return {
+        snapshots: `snapshot_${story.name}_${story.kind}_${storyUrl}_${await page.evaluate()}`,
+        cookies: [],
+      };
     };
 
     const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
@@ -155,6 +158,7 @@ describe('renderStories', () => {
         return {
           config: {bla: true},
           snapshot: `snapshot_${story.name}_${story.kind}_${storyUrl}_${page}`,
+          cookies: [],
           story,
           url: storyUrl,
         };
@@ -302,7 +306,10 @@ describe('renderStories', () => {
         const getStoryData = async ({story, storyUrl, page}) => {
           await delay(10);
           const location = await page.evaluate(() => window.location.href); // eslint-disable-line no-undef
-          return `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`;
+          return {
+            snapshots: `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`,
+            cookies: [],
+          };
         };
 
         const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
@@ -333,6 +340,7 @@ describe('renderStories', () => {
             url: storyUrl,
             snapshot:
               'snapshot_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
+            cookies: [],
           },
         ]);
 
@@ -374,7 +382,10 @@ describe('renderStories', () => {
           } else {
             await delay(100);
             const location = await page.evaluate(() => window.location.href); // eslint-disable-line no-undef
-            return `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`;
+            return {
+              snapshots: `snapshot_${story.name}_${story.kind}_${storyUrl}_${location}`,
+              cookies: [],
+            };
           }
         };
 
@@ -405,6 +416,7 @@ describe('renderStories', () => {
           url: storyUrl,
           snapshot:
             'snapshot_s1_k1_http://something/iframe.html?eyes-storybook=true&selectedKind=k1&selectedStory=s1_about:blank',
+          cookies: [],
         };
 
         const resultsOrErr0 = results[0].resultsOrErr;

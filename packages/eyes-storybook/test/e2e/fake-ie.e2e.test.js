@@ -14,7 +14,7 @@ describe('fake ie', () => {
       utils.process.sh(
         `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
           __dirname,
-          '../fixtures/fakeIE/applitools.config.js',
+          'happy-config/fake-ie.config.js',
         )}`,
         {spawnOptions},
       ),

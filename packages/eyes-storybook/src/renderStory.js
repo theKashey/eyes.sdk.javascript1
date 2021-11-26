@@ -59,7 +59,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
 
     const checkParams = {
       url,
-      snapshot,
+      snapshot: snapshot.slice(0, (config.browser && config.browser.length) || 1),
       ignore: ignoreRegionsBackCompat,
       floating: floatingRegions,
       layout: layoutRegions,
