@@ -82,6 +82,25 @@ describe('getStories', () => {
             parameters: {...parameters, eyes: {variations: ['rtl']}},
           },
           {
+            name: 'local theme config',
+            kind: 'Theme',
+            parameters: {
+              ...parameters,
+              eyes: {
+                queryParams: [
+                  {
+                    name: 'theme',
+                    value: 'dark',
+                  },
+                  {
+                    name: 'theme',
+                    value: 'light',
+                  },
+                ],
+              },
+            },
+          },
+          {
             name:
               'this story should not be checked visually by eyes-storybook because of local parameter',
             kind: 'skipped tests',

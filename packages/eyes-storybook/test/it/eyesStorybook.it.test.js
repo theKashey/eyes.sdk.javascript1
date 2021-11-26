@@ -130,6 +130,9 @@ describe('eyesStorybook', () => {
       'RTL: local RTL config [rtl]',
       'Text: appears after a delay',
       'Interaction: Popover',
+      'Theme: local theme config',
+      'Theme: local theme config [theme=dark]',
+      'Theme: local theme config [theme=light]',
     ];
 
     expect(results.map(e => e.title).sort()).to.eql(expectedTitles.sort());

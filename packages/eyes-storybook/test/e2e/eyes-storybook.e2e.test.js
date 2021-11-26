@@ -53,6 +53,30 @@ describe('eyes-storybook', () => {
     await snap(stderr, 'stderr');
   });
 
+  it('renders stories with global query params', async () => {
+    const [err, result] = await presult(
+      utils.process.sh(
+        `node ${path.resolve(__dirname, '../../bin/eyes-storybook')} -f ${path.resolve(
+          __dirname,
+          'happy-config/global-query-params.config.js',
+        )}`,
+        {spawnOptions},
+      ),
+    );
+
+    const stdout = err ? err.stdout : result.stdout;
+    const normalizedStdout = stdout
+      .replace(/\[Chrome \d+.\d+\]/g, '[Chrome]')
+      .replace(version, '<version>')
+      .replace(
+        /See details at https\:\/\/.+.applitools.com\/app\/test-results\/.+/g,
+        'See details at <some_url>',
+      )
+      .replace(/Total time\: \d+ seconds/, 'Total time: <some_time> seconds');
+
+    await snap(normalizedStdout, 'global query params');
+  });
+
   it('fails with proper message when failing to get stories because of undetermined version', async () => {
     const promise = presult(
       utils.process.sh(

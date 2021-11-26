@@ -6,10 +6,12 @@ import smurfs from '../smurfs.jpg';
 import {wait, within, fireEvent} from '@testing-library/dom';
 
 const isRTL = new URL(window.location).searchParams.get('eyes-variation') === 'rtl';
+const theme = new URL(window.location).searchParams.get('theme');
 
 if (isRTL) {
   document.documentElement.setAttribute('dir', 'rtl')
 }
+document.documentElement.setAttribute('theme', theme || 'light')
 
 const circular = {param: true}
 circular.inner = circular
@@ -88,6 +90,12 @@ storiesOf('RTL', module)
     const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
     return (<div>{isRTL ? 'rtl' : 'ltr'}</div>)
   }, { eyes: {variations: ['rtl']}});
+
+storiesOf('Theme', module)
+  .add('local theme config', () => {
+    const theme = document.documentElement.getAttribute('theme');
+    return (<div>{theme}</div>)
+  }, { eyes: {queryParams: [{name: 'theme', value: 'dark'}, {name: 'theme', value:'light'}]}});
 
 storiesOf('skipped tests', module)
   .add(
