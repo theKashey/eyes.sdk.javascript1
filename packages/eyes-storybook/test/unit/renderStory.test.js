@@ -9,7 +9,7 @@ const getStoryTitle = require('../../src/getStoryTitle');
 const getStoryBaselineName = require('../../src/getStoryBaselineName');
 const logger = require('../util/testLogger');
 
-describe.only('renderStory', () => {
+describe('renderStory', () => {
   let performance, timeItAsync;
 
   beforeEach(() => {
