@@ -49,7 +49,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
 
     logger.log(`running takeDomSnapshot(s) for story ${title}`);
 
-    const snapshots = await takeDomSnapshots({
+    const result = await takeDomSnapshots({
       page,
       layoutBreakpoints: eyesParameters ? eyesParameters.layoutBreakpoints : undefined,
       waitBeforeCapture: wait
@@ -67,7 +67,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
     }
 
     logger.log(`done getting data from story`, title);
-    return snapshots;
+    return result;
 
     async function renderStoryLegacy() {
       logger.log(`getting data from story ${storyUrl}`);

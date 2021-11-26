@@ -107,7 +107,8 @@ function makeRenderStories({
           }
 
           const testResults = await renderStory({
-            snapshot: storyData,
+            snapshot: storyData.snapshots,
+            cookies: storyData.cookies,
             url: storyUrl,
             story,
             config,
