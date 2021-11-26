@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.26.0 - 2021/11/26
+
 - add support for `queryParams` config property
 - updated to @applitools/driver@1.3.5 (from 1.2.7)
 - updated to @applitools/eyes-puppeteer@1.9.0 (from 1.8.5)
