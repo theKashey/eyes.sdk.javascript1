@@ -3,6 +3,12 @@
 ## Unreleased
 
 - add support for `queryParams` config property
+- updated to @applitools/driver@1.3.5 (from 1.2.7)
+- updated to @applitools/eyes-puppeteer@1.9.0 (from 1.8.5)
+- updated to @applitools/eyes-sdk-core@12.24.5 (from 12.23.24)
+- updated to @applitools/logger@1.0.6 (from 1.0.5)
+- updated to @applitools/test-server@1.0.7 (from 1.0.6)
+- updated to @applitools/visual-grid-client@15.8.49 (from 15.8.43)
 
  ## 3.25.3 - 2021/11/1
 
