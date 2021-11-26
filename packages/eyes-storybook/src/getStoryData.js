@@ -9,7 +9,7 @@ const runRunAfterScript = require('../dist/runRunAfterScript');
 const waitFor = require('./waitFor');
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPagePerStory}) {
-  return async function getStoryData({story, storyUrl, page, waitBeforeStory}) {
+  return async function getStoryData({story, storyUrl, page, browser, waitBeforeStory}) {
     const title = getStoryBaselineName(story);
     logger.log(`getting data from story`, title);
 
@@ -56,6 +56,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
 
     const result = await takeDomSnapshots({
       page,
+      browser,
       layoutBreakpoints: eyesParameters ? eyesParameters.layoutBreakpoints : undefined,
       waitBeforeCapture: wait
         ? async () => {
