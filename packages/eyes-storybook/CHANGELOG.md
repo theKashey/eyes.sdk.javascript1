@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add custom test properties to stories with query params
 
 ## 3.26.0 - 2021/11/26
 
