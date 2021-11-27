@@ -31,6 +31,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       visualGridOptions,
       useDom,
       enablePatterns,
+      queryParam,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -45,15 +46,21 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
 
     logger.log(`running story ${title} with baseline ${baselineName}`);
 
+    const storyProperties = [
+      {name: 'Component name', value: kind},
+      {name: 'State', value: name},
+      ...(properties || []),
+    ];
+
+    if (queryParam) {
+      storyProperties.push(queryParam);
+    }
+
     const openParams = {
       testName: baselineName,
       displayName: title,
       browser: config.browser,
-      properties: [
-        {name: 'Component name', value: kind},
-        {name: 'State', value: name},
-        ...(properties || []),
-      ],
+      properties: storyProperties,
       accessibilitySettings: accessibilityValidation,
     };
 

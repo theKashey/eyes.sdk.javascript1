@@ -85,6 +85,9 @@ describe('eyesStorybook', () => {
       {name: 'SOME section|Nested/Component: story 1.1', isPassed: true},
       {name: 'SOME section|Nested/Component: story 1.2', isPassed: true},
       {name: 'Text: appears after a delay', isPassed: true},
+      {name: 'Theme: local theme config', isPassed: true},
+      {name: 'Theme: local theme config [theme=dark]', isPassed: true},
+      {name: 'Theme: local theme config [theme=light]', isPassed: true},
       {
         name: 'Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a: c yes-a b',
         isPassed: true,
@@ -152,11 +155,17 @@ describe('eyesStorybook', () => {
 
       expect(session.startInfo.defaultMatchSettings.ignoreDisplacements).to.be.true;
 
-      expect(session.startInfo.properties).to.eql([
+      const expectedProperties = [
         {name: 'Component name', value: componentName},
         {name: 'State', value: state.replace(/ \[.+\]$/, '')}, // strip off variation
         {name: 'some prop', value: 'some value'},
-      ]);
+      ];
+      const queryParamMatch = state.match(/\[(.+)\]$/);
+      if (queryParamMatch) {
+        const [name, value] = queryParamMatch[1].split('=');
+        expectedProperties.push({name: value ? name : 'eyes-variation', value: value || name}); // if there is no '=', then the name is `eyes-variation` and the value is the name
+      }
+      expect(session.startInfo.properties).to.eql(expectedProperties);
 
       const {imageMatchSettings} = session.steps[0].options;
       expect(imageMatchSettings.strict).to.eql([
