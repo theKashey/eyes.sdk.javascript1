@@ -22,13 +22,13 @@ const IDLE_TIMEOUT = 900000 // 15min
 const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-${new Date().toISOString()}`)
 
 export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
-  let idle = setTimeout(() => server.close(), idleTimeout)
-
   const {server, port} = await makeHandler(serverConfig)
   console.log(port) // NOTE: this is a part of the protocol
   if (!server) {
     return console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
   }
+
+  let idle = setTimeout(() => server.close(), idleTimeout)
 
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},
