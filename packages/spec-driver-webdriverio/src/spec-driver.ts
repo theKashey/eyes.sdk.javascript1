@@ -9,6 +9,7 @@ export type Element = (
 ) & {__applitoolsBrand?: never}
 export type Selector = (Applitools.WebdriverIO.Selector | {using: string; value: string}) & {__applitoolsBrand?: never}
 
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
@@ -20,6 +21,9 @@ function extractElementId(element: Element): string {
   if (utils.types.has(element, 'elementId')) return element.elementId as string
   else if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID] as string
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID] as string
+}
+function transformShadowRoot(shadowRoot: ShadowRoot | Element): Element {
+  return isElement(shadowRoot) ? shadowRoot : {[ELEMENT_ID]: shadowRoot['shadow-6066-11e4-a52e-4f735466cecf']}
 }
 function transformArgument(arg: any): [any?, ...Element[]] {
   if (!arg) return []
@@ -146,7 +150,7 @@ export async function findElement(
   parent?: Element,
 ): Promise<Applitools.WebdriverIO.Element> {
   selector = utils.types.has(selector, ['using', 'value']) ? `${selector.using}:${selector.value}` : selector
-  const root = parent ? await browser.$(parent as any) : browser
+  const root = parent ? await browser.$(transformShadowRoot(parent) as any) : browser
   const element = await root.$(selector)
   return !utils.types.has(element, 'error') ? element : null
 }
@@ -156,7 +160,7 @@ export async function findElements(
   parent?: Element,
 ): Promise<Applitools.WebdriverIO.Element[]> {
   selector = utils.types.has(selector, ['using', 'value']) ? `${selector.using}:${selector.value}` : selector
-  const root = parent ? await browser.$(parent as any) : browser
+  const root = parent ? await browser.$(transformShadowRoot(parent) as any) : browser
   const elements = await root.$$(selector)
   return Array.from(elements)
 }

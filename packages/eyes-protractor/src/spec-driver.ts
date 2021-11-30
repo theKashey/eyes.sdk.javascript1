@@ -1,19 +1,25 @@
 import type {Size, Cookie, DriverInfo} from '@applitools/types'
-import type * as Protractor from 'protractor'
+import * as Protractor from 'protractor'
 import * as utils from '@applitools/utils'
 
 export type Driver = Protractor.ProtractorBrowser
 export type Element = Protractor.WebElement | Protractor.ElementFinder
 export type Selector = Protractor.Locator | {using: string; value: string}
 
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
 const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
 
-function extractElementId(element: Element): Promise<string> {
-  return element.getId() as Promise<string>
+function extractElementId(element: Element | ShadowRoot): Promise<string> | string {
+  return isElement(element) ? (element.getId() as Promise<string>) : element['shadow-6066-11e4-a52e-4f735466cecf']
+}
+function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): Element {
+  return isElement(shadowRoot)
+    ? shadowRoot
+    : new Protractor.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
 }
 
 // #endregion
@@ -89,18 +95,18 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
 }
 export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
   try {
-    const {ElementFinder} = require('protractor')
-    if (parent) return await ElementFinder.fromWebElement_(driver, parent).element(selector).getWebElement()
-    else return await driver.element(selector).getWebElement()
+    const root = parent ? Protractor.ElementFinder.fromWebElement_(driver, transformShadowRoot(driver, parent)) : driver
+    return await root.element(selector).getWebElement()
   } catch (err) {
     if (err.name === 'NoSuchElementError') return null
     else throw err
   }
 }
 export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
-  const {ElementFinder} = require('protractor')
-  if (parent) return ElementFinder.fromWebElement_(driver, parent).all(selector).getWebElements()
-  else return driver.element.all(selector).getWebElements()
+  const root = parent
+    ? Protractor.ElementFinder.fromWebElement_(driver, transformShadowRoot(driver, parent))
+    : driver.element
+  return root.all(selector).getWebElements()
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
   const size = await driver.manage().window().getSize()
@@ -133,8 +139,7 @@ export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
 }
 export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
   try {
-    const {Command} = require('protractor')
-    const getSessionDetailsCommand = new Command('getSessionDetails')
+    const getSessionDetailsCommand = new Protractor.Command('getSessionDetails')
     return await driver.schedule(getSessionDetailsCommand, '')
   } catch {
     const capabilities = ((await driver.getCapabilities()) as any) as Map<string, any>
@@ -173,9 +178,8 @@ export async function scrollIntoView(driver: Driver, element: Element | Selector
   await driver.executeScript('arguments[0].scrollIntoView(arguments[1])', element, align)
 }
 export async function waitUntilDisplayed(driver: Driver, selector: Selector, timeout: number): Promise<void> {
-  const {until} = require('protractor')
   const element = await findElement(driver, selector)
-  await driver.wait(until.elementIsVisible(element), timeout)
+  await driver.wait(Protractor.until.elementIsVisible(element), timeout)
 }
 
 // #endregion
@@ -196,7 +200,6 @@ const browserOptionsNames: Record<string, string> = {
   firefox: 'moz:firefoxOptions',
 }
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
-  const {Builder, Runner} = require('protractor')
   const parseEnv = require('@applitools/test-utils/src/parse-env')
 
   const {
@@ -229,7 +232,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   if (appium && browser === 'chrome') {
     desiredCapabilities['appium:chromeOptions'] = {w3c: false}
   }
-  const builder = new Builder().withCapabilities(desiredCapabilities)
+  const builder = new Protractor.Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)
   if (proxy) {
     builder.setProxy({
@@ -240,13 +243,13 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       noProxy: proxy.bypass,
     })
   }
-  const runner = new Runner({
+  const runner = new Protractor.Runner({
     seleniumWebDriver: builder.build(),
     logLevel: logLevel.toUpperCase(),
     allScriptsTimeout: 60000,
     getPageTimeout: 10000,
   })
-  const driver = await runner.createBrowser().ready
+  const driver = await runner.createBrowser(undefined).ready
   driver.by = driver.constructor.By
   driver.waitForAngularEnabled(false)
   return [driver, () => driver.quit()]

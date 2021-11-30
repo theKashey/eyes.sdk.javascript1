@@ -10,16 +10,19 @@ export type Element = (
 ) & {__applitoolsBrand?: never}
 export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string} & {__applitoolsBrand?: never}
 
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
+const SHADOW_ROOT_ID = 'shadow-6066-11e4-a52e-4f735466cecf'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
 
-function extractElementId(element: Element): string {
+function extractElementId(element: Element | ShadowRoot): string {
   if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID]
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID]
+  else if (utils.types.has(element, SHADOW_ROOT_ID)) return element[SHADOW_ROOT_ID]
 }
 function call<
   TCommand extends keyof {

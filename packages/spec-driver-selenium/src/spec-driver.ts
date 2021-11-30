@@ -1,19 +1,25 @@
-import type * as Selenium from 'selenium-webdriver'
 import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
+import * as Selenium from 'selenium-webdriver'
 import * as utils from '@applitools/utils'
 
 export type Driver = Selenium.WebDriver & {__applitoolsBrand?: never}
 export type Element = Selenium.WebElement & {__applitoolsBrand?: never}
 export type Selector = (Selenium.Locator | {using: string; value: string}) & {__applitoolsBrand?: never}
 
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
 const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
 
-function extractElementId(element: Element): Promise<string> {
-  return element.getId()
+function extractElementId(element: Element | ShadowRoot): Promise<string> | string {
+  return isElement(element) ? (element.getId() as Promise<string>) : element['shadow-6066-11e4-a52e-4f735466cecf']
+}
+function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): Element {
+  return isElement(shadowRoot)
+    ? shadowRoot
+    : new Selenium.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
 }
 
 // #endregion
@@ -92,7 +98,7 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
 
 export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
   try {
-    const root = parent ?? driver
+    const root = parent ? transformShadowRoot(driver, parent) : driver
     return await root.findElement(selector)
   } catch (err) {
     if (err.name === 'NoSuchElementError') return null
@@ -100,7 +106,7 @@ export async function findElement(driver: Driver, selector: Selector, parent?: E
   }
 }
 export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
-  const root = parent ?? driver
+  const root = parent ? transformShadowRoot(driver, parent) : driver
   return root.findElements(selector)
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
@@ -209,9 +215,8 @@ export async function scrollIntoView(driver: Driver, element: Element | Selector
   await driver.executeScript('arguments[0].scrollIntoView(arguments[1])', element, align)
 }
 export async function waitUntilDisplayed(driver: Driver, selector: Selector, timeout: number): Promise<void> {
-  const {until} = require('selenium-webdriver')
   const element = await findElement(driver, selector)
-  await driver.wait(until.elementIsVisible(element), timeout)
+  await driver.wait(Selenium.until.elementIsVisible(element), timeout)
 }
 
 // #endregion
@@ -274,7 +279,6 @@ const browserOptionsNames: Record<string, string> = {
   firefox: 'moz:firefoxOptions',
 }
 export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
-  const {Builder} = require('selenium-webdriver')
   const parseEnv = require('@applitools/test-utils/src/parse-env')
 
   const {
@@ -305,7 +309,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   if (appium && browser === 'chrome') {
     desiredCapabilities['appium:chromeOptions'] = {w3c: false}
   }
-  const builder = new Builder().withCapabilities(desiredCapabilities)
+  const builder = new Selenium.Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)
   if (proxy) {
     builder.setProxy({
