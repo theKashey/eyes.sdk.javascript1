@@ -61,6 +61,14 @@ export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
   return utils.types.has(selector, ['locateStrategy', 'selector'])
 }
+export function transformDriver(driver: Driver): Driver {
+  return new Proxy(driver, {
+    get(target, key) {
+      if (key === 'then') return undefined
+      return Reflect.get(target, key)
+    },
+  })
+}
 export function transformElement(element: Element): Element {
   const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
