@@ -28,11 +28,11 @@
     "types"
   ],
   "scripts": {
-    "lint": "eslint '**/*.ts' '**/*.js'",
+    "lint": "eslint '**/*.ts'",
     "build": "ttsc",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright-universal'",
     "test": "yarn test:e2e && yarn test:coverage",
-    "test:e2e": "mocha --no-timeouts --delay ./test/e2e/*.spec.js",
+    "test:e2e": "mocha ./test/e2e/*.spec.ts --no-timeouts --delay -r ts-node/register",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright-universal'",
     "deps": "bongo deps",
@@ -59,8 +59,8 @@
     "@applitools/sdk-shared": "0.9.9",
     "@applitools/test-utils": "1.0.9",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
@@ -71,6 +71,7 @@
     "playwright": "1.16.3",
     "prettier": "^2.1.2",
     "spec-xunit-file": "0.0.1-3",
+    "ts-node": "^10.4.0",
     "ttypescript": "^1.5.12",
     "typescript": "^4.5.2"
   },

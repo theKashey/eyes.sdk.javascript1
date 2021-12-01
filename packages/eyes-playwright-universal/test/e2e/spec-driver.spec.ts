@@ -1,5 +1,5 @@
-const {UniversalClient} = require('../../dist/universal-client')
-const spec = require('../../dist/spec-driver')
+import {UniversalClient} from '../../src/universal-client'
+import * as spec from '../../src/spec-driver'
 
 describe('spec-driver', async () => {
   const [page, destroyPage] = await spec.build({browser: 'chrome', headless: true})

@@ -1,8 +1,8 @@
 'use strict'
 /* eslint-disable max-len */
 
+exports.checkSpecDriver = require('@applitools/driver/debug').checkSpecDriver
 exports.makeSDK = require('./lib/new/sdk')
-exports.checkSpecDriver = require('./lib/new/debug/check-spec-driver')
 
 // config
 exports.AccessibilityLevel = require('./lib/config/AccessibilityLevel')

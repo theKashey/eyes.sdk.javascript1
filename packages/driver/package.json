@@ -34,12 +34,19 @@
     "./fake": {
       "default": "./dist/fake/index.js",
       "types": "./types/fake/index.d.ts"
+    },
+    "./debug": {
+      "default": "./dist/debug/index.js",
+      "types": "./types/debug/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {
       "fake": [
         "./types/fake/index.d.ts"
+      ],
+      "debug": [
+        "./types/debug/index.d.ts"
       ]
     }
   },
