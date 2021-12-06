@@ -15,19 +15,9 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
 
     const eyesParameters = story.parameters && story.parameters.eyes;
     if (story.isApi && !reloadPagePerStory) {
-      const expectedQueryParam = eyesParameters ? eyesParameters.queryParam : undefined;
-      const actualQueryParam = await getQueryParam(
-        eyesParameters && eyesParameters.queryParams
-          ? eyesParameters.queryParams.map(queryParam => queryParam.name)
-          : undefined,
-      );
-      if (
-        (!actualQueryParam && !expectedQueryParam) ||
-        (actualQueryParam &&
-          expectedQueryParam &&
-          actualQueryParam.value === expectedQueryParam.name &&
-          actualQueryParam.value === expectedQueryParam.value)
-      ) {
+      const currentUrl = page.url();
+      const expectedQueryParams = eyesParameters ? eyesParameters.queryParams : undefined;
+      if (urlQueryParamsEquals(currentUrl, expectedQueryParams)) {
         const err = await page.evaluate(renderStoryWithClientAPI, story.index);
         err && handleRenderStoryError(err);
       } else {
@@ -84,19 +74,28 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
       }
     }
 
-    async function getQueryParam(queryParamNames = []) {
+    function urlQueryParamsEquals(url, expectedQueryParams) {
       try {
-        const url = new URL(await page.url());
-        queryParamNames = [...queryParamNames, 'eyes-variation'];
-        const queryParamName = queryParamNames.find(queryParamName =>
-          url.searchParams.has(queryParamName),
-        );
-        if (queryParamName) {
-          return {name: queryParamName, value: url.searchParams.get(queryParamName)};
-        }
-      } catch (ex) {
-        logger.log('failed to get url from page (in need of eyes-variation param)');
+        url = new URL(url);
+      } catch (err) {
+        logger.error('Error during parsing page url', err);
+        return false;
       }
+
+      expectedQueryParams = expectedQueryParams || {};
+      const expectedQueryParamNames = Object.keys(expectedQueryParams);
+      const actualQueryParamNames = [];
+      for (const [name, value] of url.searchParams) {
+        if (['eyes-storybook', 'selectedKind', 'selectedStory'].includes(name)) continue;
+        if (!expectedQueryParams.hasOwnProperty(name) || !expectedQueryParams[name] === value) {
+          return false;
+        }
+        actualQueryParamNames.push(name);
+      }
+
+      if (actualQueryParamNames.length !== expectedQueryParamNames.length) return false;
+
+      return true;
     }
 
     // TODO (amit): handle this error in the caller (probably renderStories)

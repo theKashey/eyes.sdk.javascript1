@@ -8,7 +8,7 @@ const {version} = require('../../package.json');
 const envWithColor = {...process.env, FORCE_COLOR: true};
 const spawnOptions = {stdio: 'pipe', env: envWithColor};
 
-describe('fake ie', () => {
+describe.only('fake ie', () => {
   it('fake ie in storybook', async () => {
     const [err, result] = await presult(
       utils.process.sh(

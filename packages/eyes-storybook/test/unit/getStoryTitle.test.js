@@ -14,7 +14,7 @@ describe('getStoryTitle', () => {
   it('adds RTL when needed', () => {
     const name = 'name';
     const kind = 'kind';
-    const parameters = {eyes: {queryParam: {name: 'eyes-variation', value: 'bla'}}};
+    const parameters = {eyes: {queryParams: {'eyes-variation': 'bla'}}};
     const expected = 'kind: name [bla]';
     expect(getStoryTitle({name, kind, parameters})).to.equal(expected);
   });

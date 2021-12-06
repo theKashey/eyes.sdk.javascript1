@@ -31,7 +31,7 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       visualGridOptions,
       useDom,
       enablePatterns,
-      queryParam,
+      queryParams,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -52,8 +52,8 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       ...(properties || []),
     ];
 
-    if (queryParam) {
-      storyProperties.push(queryParam);
+    if (queryParams) {
+      storyProperties.push(...Object.entries(queryParams).map(([name, value]) => ({name, value})));
     }
 
     const openParams = {

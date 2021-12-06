@@ -189,6 +189,7 @@ describe('getStoryData', () => {
 
   it('throws when fails to render a story with api', async () => {
     const page = {
+      url: () => 'https://applitools.com',
       evaluate: async func => {
         if (func === renderStoryWithClientAPI) {
           return {message: 'some render story error', version: 'some api version'};
@@ -208,6 +209,8 @@ describe('getStoryData', () => {
         page,
       }),
     );
+
+    console.log(err);
 
     expect(err.message).to.eql(
       'Eyes could not render stories properly. The detected version of storybook is some api version. Contact support@applitools.com for troubleshooting.',

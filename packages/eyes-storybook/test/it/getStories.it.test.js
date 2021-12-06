@@ -87,16 +87,7 @@ describe('getStories', () => {
             parameters: {
               ...parameters,
               eyes: {
-                queryParams: [
-                  {
-                    name: 'theme',
-                    value: 'dark',
-                  },
-                  {
-                    name: 'theme',
-                    value: 'light',
-                  },
-                ],
+                variations: [{queryParams: {theme: 'dark'}}, {queryParams: {theme: 'light'}}],
               },
             },
           },

@@ -60,7 +60,7 @@ describe('filterStories', () => {
         name: 'aaa',
         kind: 'bbb',
         bla: 'kuku',
-        parameters: {eyes: {queryParam: {name: 'eyes-variation', value: 'var1'}}},
+        parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}},
       },
     ];
     const config = {

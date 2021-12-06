@@ -85,7 +85,6 @@ describe('eyesStorybook', () => {
       {name: 'SOME section|Nested/Component: story 1.1', isPassed: true},
       {name: 'SOME section|Nested/Component: story 1.2', isPassed: true},
       {name: 'Text: appears after a delay', isPassed: true},
-      {name: 'Theme: local theme config', isPassed: true},
       {name: 'Theme: local theme config [theme=dark]', isPassed: true},
       {name: 'Theme: local theme config [theme=light]', isPassed: true},
       {
@@ -133,7 +132,6 @@ describe('eyesStorybook', () => {
       'RTL: local RTL config [rtl]',
       'Text: appears after a delay',
       'Interaction: Popover',
-      'Theme: local theme config',
       'Theme: local theme config [theme=dark]',
       'Theme: local theme config [theme=light]',
     ];

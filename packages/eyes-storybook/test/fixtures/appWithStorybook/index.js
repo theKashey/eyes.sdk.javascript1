@@ -95,7 +95,7 @@ storiesOf('Theme', module)
   .add('local theme config', () => {
     const theme = document.documentElement.getAttribute('theme');
     return (<div>{theme}</div>)
-  }, { eyes: {queryParams: [{name: 'theme', value: 'dark'}, {name: 'theme', value:'light'}]}});
+  }, { eyes: {variations: [{queryParams: {theme: 'dark'}}, {queryParams: {theme: 'light'}}]}});
 
 storiesOf('skipped tests', module)
   .add(
