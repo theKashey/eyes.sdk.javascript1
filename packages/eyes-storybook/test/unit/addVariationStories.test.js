@@ -13,9 +13,22 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
       },
-      {name: 'bbb', parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}}},
+      {
+        name: 'bbb',
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
+      },
     ]);
   });
 
@@ -31,12 +44,21 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
       },
       {
         name: 'bbb',
         parameters: {
-          eyes: {variations: ['var2'], queryParams: {'eyes-variation': 'var2'}},
+          eyes: {
+            variations: ['var2'],
+            queryParams: {'eyes-variation': 'var2'},
+            properties: [{name: 'eyes-variation', value: 'var2'}],
+          },
         },
       },
     ]);
@@ -51,12 +73,22 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
       },
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var2'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var2'},
+            properties: [{name: 'eyes-variation', value: 'var2'}],
+          },
+        },
       },
     ]);
   });
@@ -70,12 +102,22 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var1'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
       },
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {queryParams: {'eyes-variation': 'var2'}}},
+        parameters: {
+          eyes: {
+            queryParams: {'eyes-variation': 'var2'},
+            properties: [{name: 'eyes-variation', value: 'var2'}],
+          },
+        },
       },
     ]);
   });
@@ -89,12 +131,24 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {bla: 'bla', queryParams: {'eyes-variation': 'var1'}}},
+        parameters: {
+          eyes: {
+            bla: 'bla',
+            queryParams: {'eyes-variation': 'var1'},
+            properties: [{name: 'eyes-variation', value: 'var1'}],
+          },
+        },
       },
       {
         name: 'aaa',
         kind: 'kuku',
-        parameters: {eyes: {bla: 'bla', queryParams: {'eyes-variation': 'var2'}}},
+        parameters: {
+          eyes: {
+            bla: 'bla',
+            queryParams: {'eyes-variation': 'var2'},
+            properties: [{name: 'eyes-variation', value: 'var2'}],
+          },
+        },
       },
     ]);
   });
@@ -120,7 +174,11 @@ describe('addRTLStories', () => {
         name: 'bbb',
         kind: 'kuku',
         parameters: {
-          eyes: {variations: ['rtl'], queryParams: {'eyes-variation': 'rtl'}},
+          eyes: {
+            variations: ['rtl'],
+            queryParams: {'eyes-variation': 'rtl'},
+            properties: [{name: 'eyes-variation', value: 'rtl'}],
+          },
         },
       },
     ]);
@@ -139,25 +197,41 @@ describe('addRTLStories', () => {
       {
         name: 'aaa',
         parameters: {
-          eyes: {variations: ['v1', 'v2'], queryParams: {'eyes-variation': 'v1'}},
+          eyes: {
+            variations: ['v1', 'v2'],
+            queryParams: {'eyes-variation': 'v1'},
+            properties: [{name: 'eyes-variation', value: 'v1'}],
+          },
         },
       },
       {
         name: 'bbb',
         parameters: {
-          eyes: {variations: ['v1', 'v2'], queryParams: {'eyes-variation': 'v1'}},
+          eyes: {
+            variations: ['v1', 'v2'],
+            queryParams: {'eyes-variation': 'v1'},
+            properties: [{name: 'eyes-variation', value: 'v1'}],
+          },
         },
       },
       {
         name: 'aaa',
         parameters: {
-          eyes: {variations: ['v1', 'v2'], queryParams: {'eyes-variation': 'v2'}},
+          eyes: {
+            variations: ['v1', 'v2'],
+            queryParams: {'eyes-variation': 'v2'},
+            properties: [{name: 'eyes-variation', value: 'v2'}],
+          },
         },
       },
       {
         name: 'bbb',
         parameters: {
-          eyes: {variations: ['v1', 'v2'], queryParams: {'eyes-variation': 'v2'}},
+          eyes: {
+            variations: ['v1', 'v2'],
+            queryParams: {'eyes-variation': 'v2'},
+            properties: [{name: 'eyes-variation', value: 'v2'}],
+          },
         },
       },
     ]);

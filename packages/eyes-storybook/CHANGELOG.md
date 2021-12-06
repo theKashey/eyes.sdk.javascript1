@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- support custom properties and query params
+- remove `queryParams` api from story and global config
 
 ## 3.26.1 - 2021/11/28
 

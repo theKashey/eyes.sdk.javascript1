@@ -8,7 +8,12 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
     const {name, kind, parameters} = story;
     const baselineName = getStoryBaselineName({name, kind, parameters});
     const title = getStoryTitle({name, kind, parameters});
-    const eyesOptions = Object.assign({}, config, (parameters && parameters.eyes) || {});
+    const eyesParameters = (parameters && parameters.eyes) || {};
+    const eyesOptions = {
+      ...config,
+      ...eyesParameters,
+      properties: [...(config.properties || []), ...(eyesParameters.properties || [])],
+    };
     const {
       ignoreDisplacements,
       ignoreRegions,
@@ -31,7 +36,6 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       visualGridOptions,
       useDom,
       enablePatterns,
-      queryParams,
     } = eyesOptions;
 
     if (sizeMode) {
@@ -51,10 +55,6 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       {name: 'State', value: name},
       ...(properties || []),
     ];
-
-    if (queryParams) {
-      storyProperties.push(...Object.entries(queryParams).map(([name, value]) => ({name, value})));
-    }
 
     const openParams = {
       testName: baselineName,

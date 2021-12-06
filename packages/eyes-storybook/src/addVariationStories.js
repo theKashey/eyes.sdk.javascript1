@@ -56,7 +56,16 @@ function normalizeVariations(variations) {
   const normalizedVariations = variations.map(variation => {
     if (typeof variation === 'string') {
       shouldHasDefault = true;
-      return {queryParams: {'eyes-variation': variation}};
+      return {
+        queryParams: {'eyes-variation': variation},
+        properties: [{name: 'eyes-variation', value: variation}],
+      };
+    }
+    if (variation.queryParams && (!variation.properties || variation.properties.length === 0)) {
+      return {
+        ...variation,
+        properties: Object.entries(variation.queryParams).map(([name, value]) => ({name, value})),
+      };
     }
     return variation;
   });

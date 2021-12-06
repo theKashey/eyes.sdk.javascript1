@@ -28,7 +28,6 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
       - [global](#global)
       - [component](#component)
     - [`variations`](#variations)
-    - [`queryParams`](#queryparams)
     - [`waitBeforeCapture`](#waitbeforecapture)
     - [`properties`](#properties)
     - [`ignoreRegions`](#ignoreregions)
@@ -181,7 +180,6 @@ In addition to command-line arguments, it's possible to define the following con
 | `waitBeforeCapture`    | undefined                   | Selector, function or timeout.<br/>If ```number``` then the argument is treated as time in milliseconds to wait before all screenshots.<br/>If ```string``` then the argument is treated as a selector for elements to wait for before all screenshots.<br/>If ```function```, then the argument is treated as a predicate to wait for before all screenshots.<br/><hr/>For per component configuration see [waitBeforeCapture.](#waitBeforeCapture)<br/>Note that we use Puppeteer's [page.waitForTimeout()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitfortimeoutmilliseconds), [page.waitForSelector()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforselectorselector-options), [page.waitForXPath()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforxpathxpath-options) and [page.waitForFunction()](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pagewaitforfunctionpagefunction-options-args), checkout it's API for more details. |
 | `include`                 | true                        | A predicate function, a string or a regular expression specifying which stories should be visually tested.<br/>Visual baselines will be created only for the components specified.<br/>The function receives an object with ```name```, ```kind```, ```storyTitle```  and ```parameters``` properties.<br/>For example (exclude all stories with a name that start with [SKIP]):<br/>```({name,  kind, storyTitle, parameters}) => !/^\[SKIP\]/.test(name)```<br/>For more information, see [per component configuration - include](#include). |
 | `variations`              | undefined                   | Specifies additional variations for all or some of the stories. For example, RTL. For more information, see [per component  configuration - variations](#variations).|
-| `queryParam`              | undefined                   | Specifies additional query parameters for all or some of the stories. For more information, see [per component  configuration - queryParams](#queryParams).|
 | `notifyOnCompletion`      | false                       | If `true` batch completion notifications are sent. |
 | `dontCloseBatches`        | false                       | If true, batches are not closed for notifyOnCompletion.|
 | `testConcurrency`             | 5                          | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
@@ -425,10 +423,9 @@ storiesOf('Some kind', module)
 
 ### `variations`
 
-An array of string values, which specifies which variations to add for this story. For each value, an additional visual test will be executed for the component. It will have the same name only with a `[<variation name>]` suffix, and when the component is loaded, the URL will have an additional param: `eyes-variation=<variation name>`.
+An array of object values, which specifies which variations to add for this story. For each value, an additional visual test will be executed for the component. Each variation could contain `queryParams` and `properties` fields to specifies custom query parameters and eyes properties respectfully. Variation tests will have the same name.
 
-This can accommodate many use cases, for example RTL (right to left).
-It's now possible for the component to render its variation version when the relevant URL param is present. For Example, here's a storybook that handles an RTL variation:
+This can accommodate many use cases, for example `@storybook/addon-contexts`. With addons like this it is possible to render components in a different way depends on query parameters in URL. For Example, here's a storybook that handles an RTL variation:
 
 ```js
 const isRTL = new URL(window.location).searchParams.get('eyes-variation') === 'RTL';
@@ -445,16 +442,9 @@ storiesOf('Components that support RTL', module)
         <span>I am visually perfect!</span>
         <span>{isRTL ? ' and rendered right to left as well :)' : ''}</span>
       </div>,
-    {eyes: {variations: ['RTL']}}
+    {eyes: {variations: [{queryParams: {'eyes-variation': 'RTL'}, properties: {name: 'isRTL', value: 'true'}, {properties: {name: 'isRTL', value: 'false'}}]}}
   )
 ```
-
-### `queryParams`
-
-An array of object values, which specifies `name` and `value` of query parameter which will be added to the story. For each value, an additional visual test will be executed for the component. It will have the same name display name, but still generate a different baseline.
-
-This can accommodate many use cases, for example `@storybook/addon-contexts`.
-With addons like this it is possible to render components in a different way depends on query parameters in URL.
 
 ### `waitBeforeCapture`
 
