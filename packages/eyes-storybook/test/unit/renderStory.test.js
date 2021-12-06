@@ -267,7 +267,6 @@ describe('renderStory', () => {
 
     deleteUndefinedPropsRecursive(results);
 
-    const {properties} = eyesOptions; // and NOT globalConfig
     expect(results).to.eql({
       throwEx: false,
       openParams: {
@@ -280,7 +279,8 @@ describe('renderStory', () => {
             name: 'State',
             value: 'name',
           },
-          ...properties,
+          ...globalConfig.properties,
+          ...eyesOptions.properties,
         ],
         testName: baselineName,
         displayName: title,
