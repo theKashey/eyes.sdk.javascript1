@@ -7,6 +7,7 @@ const sdk = makeSDK({
   name: 'eyes.nightwatch',
   version: require('../package.json').version,
   spec,
+  cwd: process.cwd(),
   VisualGridClient: require('@applitools/visual-grid-client'),
 })
 

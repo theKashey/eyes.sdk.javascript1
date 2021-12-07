@@ -7,6 +7,7 @@ const sdk: any = makeSDK({
   name: 'eyes-webdriverio',
   version: require('../package.json').version,
   spec,
+  cwd: process.cwd(),
   VisualGridClient: require('@applitools/visual-grid-client'),
 })
 
