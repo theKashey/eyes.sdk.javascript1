@@ -176,9 +176,6 @@ describe('spec driver', async () => {
     it('getCookies(context)', async () => {
       await getCookies({input: {context: true}})
     })
-    it('getOrientation()', async () => {
-      await getOrientation({expected: 'portrait'})
-    })
   })
 
   describe('native app (@mobile @native)', async () => {
@@ -196,9 +193,6 @@ describe('spec driver', async () => {
 
     it('getWindowSize()', async () => {
       await getWindowSize()
-    })
-    it('getOrientation()', async () => {
-      await getOrientation({expected: 'landscape'})
     })
   })
 
@@ -357,10 +351,6 @@ describe('spec driver', async () => {
     }
     const result = await spec.getCookies(driver, input?.context)
     assert.deepStrictEqual(result, [cookie])
-  }
-  async function getOrientation({expected}) {
-    const result = await spec.getOrientation(driver)
-    assert.strictEqual(result, expected)
   }
   async function getTitle() {
     const expected = await driver.title().then(({value}) => value)
