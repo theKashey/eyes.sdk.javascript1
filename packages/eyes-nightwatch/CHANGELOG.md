@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.10.1 - 2021/12/7
+
 - implement `getCapabilities` instead of `getDriverInfo`
 - updated to @applitools/eyes-sdk-core@12.24.5 (from 12.24.0)
 - updated to @applitools/types@1.0.21 (from 1.0.19)
