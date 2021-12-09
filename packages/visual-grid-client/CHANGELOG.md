@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+ - add more logs for resources fetching
 
 ## 15.8.49 - 2021/11/23
 

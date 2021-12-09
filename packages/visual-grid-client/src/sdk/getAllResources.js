@@ -87,6 +87,12 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
             resources,
             mapKeys(mapValues(cacheEntry, fromCacheToRGridResource), value => value.getUrl()),
           )
+          const cacheEntryKeys = Object.keys(cacheEntry)
+          logger.log(
+            `resource retrieved from cache, with dependencies (${
+              cacheEntryKeys.length
+            }): ${rGridResource.getUrl()} with dependencies --> ${cacheEntryKeys}`,
+          )
         } else if (rGridResource.isHttp()) {
           missingResources.push(rGridResource)
         }
@@ -145,9 +151,13 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
         logger.log(`could not parse ${rType} ${url}`, e)
       }
 
-      if (dependentResources) {
+      if (dependentResources && dependentResources.length > 0) {
         dependentResources = dependentResources.map(u => absolutizeUrl(u, url))
+        logger.log(`dependentResources for ${rGridResource.getUrl()} --> ${dependentResources}`)
         fetchedResources = await getOrFetchResources(dependentResources)
+        logger.log(
+          `fetchedResources for ${rGridResource.getUrl()} --> ${Object.keys(fetchedResources)}`,
+        )
       }
       return {dependentResources, fetchedResources}
     }
