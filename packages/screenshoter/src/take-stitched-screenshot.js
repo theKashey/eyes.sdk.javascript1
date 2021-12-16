@@ -1,6 +1,6 @@
 const utils = require('@applitools/utils')
 const makeImage = require('./image')
-const makeTakeScreenshot = require('./take-screenshot')
+const makeTakeViewportScreenshot = require('./take-viewport-screenshot')
 
 async function takeStitchedScreenshot({
   logger,
@@ -8,7 +8,7 @@ async function takeStitchedScreenshot({
   scroller,
   region,
   withStatusBar,
-  overlap = 50,
+  overlap = {top: 10, bottom: 50},
   framed,
   wait,
   stabilization,
@@ -17,7 +17,7 @@ async function takeStitchedScreenshot({
   logger.verbose('Taking full image of...')
 
   const driver = context.driver
-  const takeScreenshot = makeTakeScreenshot({logger, driver, stabilization, debug})
+  const takeViewportScreenshot = makeTakeViewportScreenshot({logger, driver, stabilization, debug})
   const scrollerState = await scroller.preserveState()
 
   const initialOffset = region ? utils.geometry.location(region) : {x: 0, y: 0}
@@ -29,15 +29,13 @@ async function takeStitchedScreenshot({
   const contentSize = await scroller.getContentSize()
 
   logger.verbose('Getting initial image...')
-  let image = await takeScreenshot({name: 'initial', withStatusBar})
+  let image = await takeViewportScreenshot({name: 'initial', withStatusBar})
   const firstImage = framed ? makeImage(image) : null
 
+  const scrollerRegion = await scroller.getClientRegion()
   const targetRegion = region
-    ? utils.geometry.intersect(
-        utils.geometry.region(await scroller.getInnerOffset(), await scroller.getClientRegion()),
-        region,
-      )
-    : await scroller.getClientRegion()
+    ? utils.geometry.intersect(utils.geometry.region(await scroller.getInnerOffset(), scrollerRegion), region)
+    : scrollerRegion
 
   // TODO the solution should not check driver specifics,
   // in this case target region coordinate should be already related to the scrolling element of the context
@@ -55,52 +53,47 @@ async function takeStitchedScreenshot({
 
   region = utils.geometry.round(region)
 
-  // TODO padding should be provided from args instead of overlap
-  const padding = {top: overlap, bottom: overlap}
-  const [initialRegion, ...partRegions] = utils.geometry.divide(region, utils.geometry.round(image.size), padding)
+  const [initialRegion, ...partRegions] = utils.geometry.divide(region, image.size, overlap)
   logger.verbose('Part regions', partRegions)
 
   logger.verbose('Creating stitched image composition container')
-  const stitchedImage = makeImage({width: region.width, height: region.height})
+  const stitchedImage = makeImage({auto: true})
 
   logger.verbose('Adding initial image...')
-  await stitchedImage.copy(image, {x: 0, y: 0})
+  stitchedImage.copy(image, {x: 0, y: 0})
 
   logger.verbose('Getting the rest of the image parts...')
 
-  let stitchedSize = {width: image.width, height: image.height}
   let lastImage
   for (const partRegion of partRegions) {
     const partName = `${partRegion.x}_${partRegion.y}_${partRegion.width}x${partRegion.height}`
     logger.verbose(`Processing part ${partName}`)
 
-    const compensateOffset = {x: 0, y: initialRegion.y !== partRegion.y ? padding.top : 0}
+    const compensateOffset = {x: 0, y: initialRegion.y !== partRegion.y ? overlap.top : 0}
     const requiredOffset = utils.geometry.offsetNegative(utils.geometry.location(partRegion), compensateOffset)
 
     logger.verbose(`Move to ${requiredOffset}`)
-    const actualOffset = await scroller.moveTo(requiredOffset)
-    const remainingOffset = utils.geometry.offset(
-      utils.geometry.offsetNegative(
-        utils.geometry.offsetNegative(requiredOffset, actualOffset),
-        expectedRemainingOffset,
-      ),
-      compensateOffset,
-    )
+    let actualOffset = await scroller.moveTo(requiredOffset)
+    // actual scroll position after scrolling might be not equal to required position due to
+    // scrollable region shift during scrolling so actual scroll position should be corrected
+    if (!utils.geometry.equals(actualOffset, requiredOffset) && driver.isNative) {
+      const actualScrollerRegion = await scroller.getClientRegion()
+      actualOffset = utils.geometry.offset(actualOffset, {
+        x: scrollerRegion.x - actualScrollerRegion.x,
+        y: scrollerRegion.y - actualScrollerRegion.y,
+      })
+    }
 
-    // TODO come up with generic solution
-    // The problem is that web default scrolling element treated differently than normal scrollable elements on the web and native
-    const cropRegionOffset = driver.isNative
-      ? utils.geometry.offsetNegative(
-          utils.geometry.location(await scroller.getClientRegion()),
-          utils.geometry.location(cropRegion),
-        )
-      : {x: 0, y: 0}
+    const remainingOffset = {
+      x: requiredOffset.x - actualOffset.x - expectedRemainingOffset.x + compensateOffset.x,
+      y: requiredOffset.y - actualOffset.y - expectedRemainingOffset.y + compensateOffset.y,
+    }
 
     const cropPartRegion = {
-      x: cropRegion.x + remainingOffset.x + cropRegionOffset.x,
-      y: cropRegion.y + remainingOffset.y + cropRegionOffset.y,
-      width: partRegion.width - cropRegionOffset.x,
-      height: partRegion.height - cropRegionOffset.y,
+      x: cropRegion.x + remainingOffset.x,
+      y: cropRegion.y + remainingOffset.y,
+      width: partRegion.width,
+      height: partRegion.height,
     }
     logger.verbose(`Actual offset is ${actualOffset}, remaining offset is ${remainingOffset}`)
 
@@ -109,7 +102,7 @@ async function takeStitchedScreenshot({
     if (utils.geometry.isEmpty(cropPartRegion) || !utils.geometry.isIntersected(cropRegion, cropPartRegion)) continue
 
     logger.verbose('Getting image...')
-    image = await takeScreenshot({name: partName})
+    image = await takeViewportScreenshot({name: partName})
     lastImage = framed ? makeImage(image) : null
 
     logger.verbose('cropping...')
@@ -117,27 +110,15 @@ async function takeStitchedScreenshot({
     await image.debug({...debug, name: partName, suffix: 'region'})
 
     const pasteOffset = utils.geometry.offsetNegative(utils.geometry.location(partRegion), initialOffset)
-    pasteOffset.y += cropRegionOffset.y
-    pasteOffset.x += cropRegionOffset.x
-    await stitchedImage.copy(image, pasteOffset)
-
-    stitchedSize = {width: pasteOffset.x + image.width, height: pasteOffset.y + image.height}
+    stitchedImage.copy(image, pasteOffset)
   }
 
   await scroller.restoreState(scrollerState)
 
-  logger.verbose(`Extracted entire size: ${region}`)
-  logger.verbose(`Actual stitched size: ${stitchedSize}`)
-
-  if (stitchedSize.width < stitchedImage.width || stitchedSize.height < stitchedImage.height) {
-    logger.verbose('Trimming unnecessary margins...')
-    stitchedImage.crop(utils.geometry.region({x: 0, y: 0}, stitchedSize))
-  }
-
   await stitchedImage.debug({...debug, name: 'stitched'})
 
   if (framed) {
-    await stitchedImage.combine(
+    stitchedImage.frame(
       firstImage,
       lastImage,
       withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion,

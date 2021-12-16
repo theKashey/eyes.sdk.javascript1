@@ -51,7 +51,8 @@
   "dependencies": {
     "@applitools/snippets": "2.1.7",
     "@applitools/utils": "1.2.4",
-    "png-async": "0.9.4"
+    "png-async": "0.9.4",
+    "sharp": "^0.29.3"
   },
   "devDependencies": {
     "@applitools/driver": "1.3.2",

@@ -1,5 +1,5 @@
 const utils = require('@applitools/utils')
-const screenshoter = require('@applitools/screenshoter')
+const takeScreenshot = require('@applitools/screenshoter')
 const {Driver} = require('@applitools/driver')
 const TypeUtils = require('../utils/TypeUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
@@ -76,6 +76,7 @@ class EyesClassic extends EyesCore {
 
   // set waitBeofreCpature from checkSettings in configuration.
   async _check(checkSettings = {}, closeAfterMatch = false, throwEx = true) {
+    await this._driver.init()
     this._context = await this._driver.refreshContexts()
     await this._context.main.setScrollingElement(this._scrollRootElement)
     await this._context.setScrollingElement(checkSettings.scrollRootElement)
@@ -109,7 +110,7 @@ class EyesClassic extends EyesCore {
       hideScrollbars: this._configuration.getHideScrollbars(),
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
-      overlap: this._configuration.getStitchOverlap(),
+      overlap: {top: 10, bottom: this._configuration.getStitchOverlap()},
       wait: this._configuration.getWaitBeforeScreenshots(),
       stabilization: {
         crop: this.getCut(),
@@ -119,7 +120,7 @@ class EyesClassic extends EyesCore {
     }
 
     let dom
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       ...screenshotSettings,
       driver: this._driver,
       hooks: {

@@ -1,7 +1,7 @@
 'use strict'
 const {Driver} = require('@applitools/driver')
 const {makeLogger} = require('@applitools/logger')
-const screenshoter = require('@applitools/screenshoter')
+const takeScreenshot = require('@applitools/screenshoter')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const Region = require('../geometry/Region')
 const Location = require('../geometry/Location')
@@ -37,13 +37,14 @@ class EyesCore extends EyesBase {
   async locate(visualLocatorSettings) {
     ArgumentGuard.notNull(visualLocatorSettings, 'visualLocatorSettings')
     this._logger.log('Get locators with given names: ', visualLocatorSettings.locatorNames)
-    const screenshot = await screenshoter({
+    await this._driver.init()
+    const screenshot = await takeScreenshot({
       logger: this._logger,
       driver: this._driver,
       hideScrollbars: this._configuration.getHideScrollbars(),
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
-      overlap: this._configuration.getStitchOverlap(),
+      overlap: {top: 10, bottom: this._configuration.getStitchOverlap()},
       wait: this._configuration.getWaitBeforeScreenshots(),
       stabilization: {
         crop: this.getCut(),
@@ -66,6 +67,7 @@ class EyesCore extends EyesBase {
   async extractText(regions) {
     if (!TypeUtils.isArray(regions)) regions = [regions]
 
+    await this._driver.init()
     await this._driver.refreshContexts()
 
     const extractTextInputs = []
@@ -74,7 +76,7 @@ class EyesCore extends EyesBase {
       const region = {...userRegion}
 
       let dom
-      const screenshot = await screenshoter({
+      const screenshot = await takeScreenshot({
         logger: this._logger,
         driver: this._driver,
         region: Region.isRegionCompatible(region.target)
@@ -89,7 +91,7 @@ class EyesCore extends EyesBase {
         hideScrollbars: this._configuration.getHideScrollbars(),
         hideCaret: this._configuration.getHideCaret(),
         scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
-        overlap: this._configuration.getStitchOverlap(),
+        overlap: {top: 10, bottom: this._configuration.getStitchOverlap()},
         wait: this._configuration.getWaitBeforeScreenshots(),
         stabilization: {
           crop: this.getCut(),
@@ -149,16 +151,17 @@ class EyesCore extends EyesBase {
   async extractTextRegions(config) {
     ArgumentGuard.notNull(config.patterns, 'patterns')
 
+    await this._driver.init()
     await this._driver.refreshContexts()
 
     let dom
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger: this._logger,
       driver: this._driver,
       hideScrollbars: this._configuration.getHideScrollbars(),
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
-      overlap: this._configuration.getStitchOverlap(),
+      overlap: {top: 10, bottom: this._configuration.getStitchOverlap()},
       wait: this._configuration.getWaitBeforeScreenshots(),
       stabilization: {
         crop: this.getCut(),

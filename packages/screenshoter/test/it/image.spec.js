@@ -78,42 +78,69 @@ describe('image', () => {
     assert.strictEqual(actual.height, 50000)
   })
 
-  it('should replace region in image with a higher and wider image', async () => {
+  it('should frame image in a higher and wider region', async () => {
     const image = makeImage('./test/fixtures/image/house.png')
     const srcImage = makeImage({
       width: 200,
       height: 200,
       data: Buffer.alloc(200 * 200 * 4, Buffer.from([0xff, 0, 0, 0xff])),
     })
-    const combinedImage = await srcImage.combine(image, image, {x: 200, y: 200, width: 100, height: 100})
+    const combinedImage = await srcImage.frame(image, image, {x: 200, y: 200, width: 100, height: 100})
     const actual = await combinedImage.toObject()
-    const expected = await makeImage('./test/fixtures/image/house.combined-higher-wider.png').toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-higher-wider.png').toObject()
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
   })
 
-  it('should replace region in image with a higher image', async () => {
+  it('should frame image in a higher region', async () => {
     const image = await makeImage('./test/fixtures/image/house.png')
     const srcImage = makeImage({
       width: 200,
       height: 200,
       data: Buffer.alloc(200 * 200 * 4, Buffer.from([0, 0xff, 0, 0xff])),
     })
-    const combinedImage = await srcImage.combine(image, image, {x: 200, y: 200, width: 200, height: 100})
+    const combinedImage = await srcImage.frame(image, image, {x: 200, y: 200, width: 200, height: 100})
     const actual = await combinedImage.toObject()
-    const expected = await makeImage('./test/fixtures/image/house.combined-higher.png').toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-higher.png').toObject()
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
   })
 
-  it('should replace region in image with a higher image', async () => {
+  it('should frame image in a wider region', async () => {
     const image = await makeImage('./test/fixtures/image/house.png')
-    const srcImage = makeImage({
-      width: 200,
-      height: 200,
-      data: Buffer.alloc(200 * 200 * 4, Buffer.from([0, 0, 0xff, 0xff])),
-    })
-    const combinedImage = await srcImage.combine(image, image, {x: 200, y: 200, width: 100, height: 200})
-    const actual = await combinedImage.toObject()
-    const expected = await makeImage('./test/fixtures/image/house.combined-wider.png').toObject()
+    const data = Buffer.alloc(200 * 200 * 4, Buffer.from([0, 0, 0xff, 0xff]))
+    const actual = await makeImage({width: 200, height: 200, data})
+      .frame(image, image, {x: 200, y: 200, width: 100, height: 200})
+      .toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-wider.png').toObject()
+    assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
+  })
+
+  it('should frame image in a shorter and thinner region', async () => {
+    const image = await makeImage('./test/fixtures/image/house.png')
+    const data = Buffer.alloc(200 * 200 * 4, Buffer.from([0xff, 0, 0xff, 0xff]))
+    const actual = await makeImage({width: 200, height: 200, data})
+      .frame(image, image, {x: 100, y: 100, width: 250, height: 250})
+      .toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-shorter-thinner.png').toObject()
+    assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
+  })
+
+  it('should frame image in a shorter region', async () => {
+    const image = await makeImage('./test/fixtures/image/house.png')
+    const data = Buffer.alloc(200 * 200 * 4, Buffer.from([0xff, 0, 0xff, 0xff]))
+    const actual = await makeImage({width: 200, height: 200, data})
+      .frame(image, image, {x: 100, y: 100, width: 200, height: 250})
+      .toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-shorter-thinner.png').toObject()
+    assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
+  })
+
+  it('should frame image in a thinner region', async () => {
+    const image = await makeImage('./test/fixtures/image/house.png')
+    const data = Buffer.alloc(200 * 200 * 4, Buffer.from([0xff, 0, 0xff, 0xff]))
+    const actual = await makeImage({width: 200, height: 200, data})
+      .frame(image, image, {x: 100, y: 100, width: 250, height: 200})
+      .toObject()
+    const expected = await makeImage('./test/fixtures/image/house.framed-shorter-thinner.png').toObject()
     assert.ok(pixelmatch(actual.data, expected.data, null, expected.width, expected.height) === 0)
   })
 })

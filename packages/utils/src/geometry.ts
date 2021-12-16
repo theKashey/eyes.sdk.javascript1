@@ -21,7 +21,7 @@ export function region(location: Location, size: RectangleSize) {
 export function isEmpty(size: RectangleSize): boolean
 export function isEmpty(region: Region): boolean
 export function isEmpty(sizeOrRegion: RectangleSize | Region): boolean {
-  return sizeOrRegion.width === 0 && sizeOrRegion.height === 0
+  return sizeOrRegion.width === 0 || sizeOrRegion.height === 0
 }
 
 export function round(region: Region): Region

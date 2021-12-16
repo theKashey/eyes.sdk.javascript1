@@ -3,6 +3,8 @@ import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
 import {Context, ContextReference} from './context'
 import {Element} from './element'
+import {HelperIOS} from './helper-ios'
+import {HelperAndroid} from './helper-android'
 import {makeSpecUtils} from './utils'
 import {parseUserAgent} from './user-agent'
 import {parseCapabilities} from './capabilities'
@@ -18,6 +20,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _driverInfo: types.DriverInfo
   private _logger: any
   private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
+  private _helper?:
+    | HelperAndroid<TDriver, TContext, TElement, TSelector>
+    | HelperIOS<TDriver, TContext, TElement, TSelector>
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -56,6 +61,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
   get mainContext(): Context<TDriver, TContext, TElement, TSelector> {
     return this._mainContext
+  }
+  get helper() {
+    return this._helper
   }
   get features() {
     return this._driverInfo?.features
@@ -130,7 +138,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)
         this._driverInfo.browserName = userAgentInfo.browserName ?? this._driverInfo.browserName
         this._driverInfo.browserVersion = userAgentInfo.browserVersion ?? this._driverInfo.browserVersion
-        if (!this._driverInfo.isMobile) {
+        if (this._driverInfo.isMobile) {
           this._driverInfo.platformName ??= userAgentInfo.platformName
           this._driverInfo.platformVersion ??= userAgentInfo.platformVersion
         } else {
@@ -143,29 +151,55 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._driverInfo.features.allCookies ??=
         /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
     } else {
-      if (this.isNative) {
-        const barsHeight = await this._spec.getBarsHeight?.(this.target).catch(() => undefined as never)
+      const barsHeight = await this._spec.getBarsHeight?.(this.target).catch(() => undefined as never)
+      const displaySize = await this.getDisplaySize()
 
-        if (barsHeight) {
+      // calculate status and navigation bars sizes
+      if (barsHeight) {
+        // when status bar is overlapping content on android it returns status bar height equal to viewport height
+        if (this.isAndroid && barsHeight.statusBarHeight / this.pixelRatio < displaySize.height) {
           this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight, barsHeight.statusBarHeight)
-          this._driverInfo.navigationBarHeight = Math.max(
-            this._driverInfo.navigationBarHeight,
-            barsHeight.navigationBarHeight,
-          )
         }
-        if (this.isAndroid) {
-          this._driverInfo.statusBarHeight /= this.pixelRatio
-          this._driverInfo.navigationBarHeight /= this.pixelRatio
-        }
+        this._driverInfo.navigationBarHeight = Math.max(
+          this._driverInfo.navigationBarHeight,
+          barsHeight.navigationBarHeight,
+        )
+      }
+      if (this.isAndroid) {
+        this._driverInfo.statusBarHeight /= this.pixelRatio
+        this._driverInfo.navigationBarHeight /= this.pixelRatio
       }
 
+      // calculate viewport size
       if (!this._driverInfo.viewportSize) {
-        const displaySize = await this.getDisplaySize()
         this._driverInfo.viewportSize = {
           width: displaySize.width,
           height: displaySize.height - this._driverInfo.statusBarHeight,
         }
       }
+
+      // calculate safe area
+      if (this.isIOS && !this._driverInfo.safeArea) {
+        this._driverInfo.safeArea = {x: 0, y: 0, ...displaySize}
+        const topElement = await this.element({type: 'class name', selector: 'XCUIElementTypeNavigationBar'})
+        if (topElement) {
+          const topRegion = await this._spec.getElementRegion(this.target, topElement.target)
+          const topOffset = topRegion.y + topRegion.height
+          this._driverInfo.safeArea.y = topOffset
+          this._driverInfo.safeArea.height -= topOffset
+        }
+        const bottomElement = await this.element({type: 'class name', selector: 'XCUIElementTypeTabBar'})
+        if (bottomElement) {
+          const bottomRegion = await this._spec.getElementRegion(this.target, bottomElement.target)
+          const bottomOffset = bottomRegion.height
+          this._driverInfo.safeArea.height -= bottomOffset
+        }
+      }
+
+      // init helper lib
+      this._helper = this.isIOS
+        ? await HelperIOS.make({spec: this._spec, driver: this, logger: this._logger})
+        : await HelperAndroid.make({spec: this._spec, driver: this, logger: this._logger})
     }
 
     this._logger.log('Combined driver info', this._driverInfo)
@@ -352,7 +386,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   async normalizeRegion(region: types.Region): Promise<types.Region> {
     if (this.isWeb || !utils.types.has(this._driverInfo, ['viewportSize', 'statusBarHeight'])) return region
     const scaledRegion = this.isAndroid ? utils.geometry.scale(region, 1 / this.pixelRatio) : region
-    return utils.geometry.offsetNegative(scaledRegion, {x: 0, y: this.statusBarHeight})
+    const safeRegion = this.isIOS ? utils.geometry.intersect(scaledRegion, this._driverInfo.safeArea) : scaledRegion
+    const offsetRegion = utils.geometry.offsetNegative(safeRegion, {x: 0, y: this.statusBarHeight})
+    if (offsetRegion.y < 0) {
+      offsetRegion.height += offsetRegion.y
+      offsetRegion.y = 0
+    }
+    return offsetRegion
   }
 
   async getRegionInViewport(

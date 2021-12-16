@@ -18,7 +18,11 @@ describe('addPageMarker', () => {
       await page.goto(url)
       await page.evaluate('window.scrollTo(1000, 1000)')
       const marker = await page.evaluate(addPageMarker)
-      assert.deepStrictEqual(marker, {offset: 1, size: 3, mask: [0, 1, 0]})
+      assert.deepStrictEqual(marker, {
+        offset: 1,
+        size: 1,
+        mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+      })
       const element = await page.$('[data-applitools-marker]')
       assert.ok(element)
       const {x, y} = await element.boundingBox()
@@ -32,7 +36,11 @@ describe('addPageMarker', () => {
         document.documentElement.style.webkitTransform = 'translate(-1000px, -1000px)'
       })
       const marker = await page.evaluate(addPageMarker)
-      assert.deepStrictEqual(marker, {offset: 1, size: 3, mask: [0, 1, 0]})
+      assert.deepStrictEqual(marker, {
+        offset: 1,
+        size: 1,
+        mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+      })
       const element = await page.$('[data-applitools-marker]')
       assert.ok(element)
       const {x, y} = await element.boundingBox()
@@ -54,7 +62,11 @@ describe('addPageMarker', () => {
       await driver.url(url)
       await driver.execute('window.scrollTo(1000, 1000)')
       const marker = await driver.execute(addPageMarker)
-      assert.deepStrictEqual(marker, {offset: 3, size: 9, mask: [0, 1, 0]})
+      assert.deepStrictEqual(marker, {
+        offset: 1,
+        size: 3,
+        mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+      })
       const element = await driver.$('[data-applitools-marker]')
       assert.ok(element.elementId)
       const {x, y} = await driver.execute(function(element) {
@@ -70,7 +82,11 @@ describe('addPageMarker', () => {
         document.documentElement.style.webkitTransform = 'translate(-1000px, -1000px)'
       })
       const marker = await driver.execute(addPageMarker)
-      assert.deepStrictEqual(marker, {offset: 3, size: 9, mask: [0, 1, 0]})
+      assert.deepStrictEqual(marker, {
+        offset: 1,
+        size: 3,
+        mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+      })
       const element = await driver.$('[data-applitools-marker]')
       assert.ok(element.elementId)
       const {x, y} = await driver.execute(function(element) {

@@ -2,7 +2,7 @@ const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
 const spec = require('@applitools/spec-driver-webdriverio')
-const screenshoter = require('../../index')
+const takeScreenshot = require('../../index')
 const makeImage = require('../../src/image')
 
 const env = {
@@ -128,7 +128,7 @@ describe('screenshoter web', () => {
   })
 
   async function viewport(options) {
-    const screenshot = await screenshoter({logger, driver, ...options})
+    const screenshot = await takeScreenshot({logger, driver, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/page.png').toObject()
@@ -139,7 +139,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullPage(options) {
-    const screenshot = await screenshoter({logger, driver, fully: true, ...options})
+    const screenshot = await takeScreenshot({logger, driver, fully: true, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/page-fully.png').toObject()
@@ -150,7 +150,12 @@ describe('screenshoter web', () => {
     }
   }
   async function frame(options) {
-    const screenshot = await screenshoter({logger, driver, frames: [{reference: 'iframe[name="frame1"]'}], ...options})
+    const screenshot = await takeScreenshot({
+      logger,
+      driver,
+      frames: [{reference: 'iframe[name="frame1"]'}],
+      ...options,
+    })
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/frame.png').toObject()
@@ -161,7 +166,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}],
@@ -179,7 +184,7 @@ describe('screenshoter web', () => {
   }
   async function region(options) {
     const region = {x: 30, y: 500, height: 100, width: 200}
-    const screenshot = await screenshoter({logger, driver, region, ...options})
+    const screenshot = await takeScreenshot({logger, driver, region, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/region.png').toObject()
@@ -191,7 +196,7 @@ describe('screenshoter web', () => {
   }
   async function fullRegion(options) {
     const region = {x: 30, y: 500, height: 700, width: 200}
-    const screenshot = await screenshoter({logger, driver, region, fully: true, ...options})
+    const screenshot = await takeScreenshot({logger, driver, region, fully: true, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/region-fully.png').toObject()
@@ -202,7 +207,7 @@ describe('screenshoter web', () => {
     }
   }
   async function element(options) {
-    const screenshot = await screenshoter({logger, driver, region: '#overflowing-div-image', ...options})
+    const screenshot = await takeScreenshot({logger, driver, region: '#overflowing-div-image', ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/element.png').toObject()
@@ -213,7 +218,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullElement(options) {
-    const screenshot = await screenshoter({logger, driver, region: '#overflowing-div-image', fully: true, ...options})
+    const screenshot = await takeScreenshot({logger, driver, region: '#overflowing-div-image', fully: true, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web/element-fully.png').toObject()
@@ -224,7 +229,7 @@ describe('screenshoter web', () => {
     }
   }
   async function regionInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}],
@@ -241,7 +246,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullRegionInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}],
@@ -259,7 +264,7 @@ describe('screenshoter web', () => {
     }
   }
   async function elementInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}],
@@ -276,7 +281,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullElementInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}],
@@ -294,7 +299,7 @@ describe('screenshoter web', () => {
     }
   }
   async function frameInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}, {reference: 'iframe[name="frame1-1"]'}],
@@ -310,7 +315,7 @@ describe('screenshoter web', () => {
     }
   }
   async function fullFrameInFrame(options) {
-    const screenshot = await screenshoter({
+    const screenshot = await takeScreenshot({
       logger,
       driver,
       frames: [{reference: 'iframe[name="frame1"]'}, {reference: 'iframe[name="frame1-1"]'}],

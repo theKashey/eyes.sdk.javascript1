@@ -1,9 +1,9 @@
-const adjustUrlToDocker = require('../../../sdk-shared/coverage-tests/util/adjust-url-to-docker')
-
-module.exports = (req, res, next) => {
-  if (req.headers.referer === adjustUrlToDocker('http://localhost:5555/cors.html')) {
-    next()
-  } else {
-    res.status(404).send('Not found')
+exports.create = function ({allowedUrls = []}) {
+  return (req, res, next) => {
+    if (allowedUrls.includes(req.headers.referer)) {
+      next()
+    } else {
+      res.status(404).send('Not found')
+    }
   }
 }

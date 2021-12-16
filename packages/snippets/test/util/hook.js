@@ -27,6 +27,7 @@ exports.mochaHooks = {
               platformName: 'Windows 10',
               'sauce:options': {
                 name: 'Snippets tests',
+                idleTimeout: 1000,
                 username: process.env.SAUCE_USERNAME,
                 accessKey: process.env.SAUCE_ACCESS_KEY,
               },

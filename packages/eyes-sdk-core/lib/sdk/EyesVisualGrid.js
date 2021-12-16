@@ -134,6 +134,8 @@ class EyesVisualGrid extends EyesCore {
   async _check(checkSettings, closeAfterMatch = false, throwEx = true) {
     this._logger.log(`check started with tag "${checkSettings.name}" for test "${this._configuration.getTestName()}"`)
 
+    await this._driver.init()
+
     return this._checkPrepare(checkSettings, async () => {
       const {persistedCheckSettings, cleanupPersistance} = await CheckSettingsUtils.toPersistedCheckSettings({
         checkSettings,

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- remove related path require from root directory
 
 ## 1.0.7 - 2021/11/10
 

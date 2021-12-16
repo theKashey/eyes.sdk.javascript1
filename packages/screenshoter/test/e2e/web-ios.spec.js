@@ -2,7 +2,7 @@ const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
 const spec = require('@applitools/spec-driver-webdriverio')
-const screenshoter = require('../../index')
+const takeScreenshot = require('../../index')
 const makeImage = require('../../src/image')
 
 const env = {
@@ -19,8 +19,6 @@ const env = {
     accessKey: process.env.SAUCE_ACCESS_KEY,
   },
 }
-
-// TODO add tests for page without viewport meta tag
 
 describe('screenshoter web ios', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -49,7 +47,7 @@ describe('screenshoter web ios', () => {
   })
 
   async function viewport(options) {
-    const screenshot = await screenshoter({logger, driver, ...options})
+    const screenshot = await takeScreenshot({logger, driver, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web-ios/page.png').toObject()
@@ -61,7 +59,7 @@ describe('screenshoter web ios', () => {
   }
 
   async function fullPage(options) {
-    const screenshot = await screenshoter({logger, driver, fully: true, ...options})
+    const screenshot = await takeScreenshot({logger, driver, fully: true, ...options})
     try {
       const actual = await screenshot.image.toObject()
       const expected = await makeImage('./test/fixtures/web-ios/page-fully.png').toObject()

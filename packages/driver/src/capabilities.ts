@@ -4,9 +4,10 @@ type Capabilities = Record<string, any>
 
 export function parseCapabilities(capabilities: Capabilities): types.DriverInfo {
   const info: types.DriverInfo = {
-    browserName: !capabilities.app
-      ? (capabilities.browserName ?? capabilities.desired?.browserName) || undefined
-      : undefined,
+    browserName:
+      !capabilities.app && !capabilities.bundleId
+        ? (capabilities.browserName ?? capabilities.desired?.browserName) || undefined
+        : undefined,
     browserVersion: (capabilities.browserVersion ?? capabilities.version) || undefined,
     platformName:
       (capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName) || undefined,

@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+- fix ios web screenshots on pages without viewport meta tag
+- improve native apps support
 
 ## 3.2.9 - 2021/11/14
 

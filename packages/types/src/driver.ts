@@ -10,6 +10,7 @@ export type DriverInfo = {
   userAgent?: string
   viewportSize?: Size
   pixelRatio?: number
+  safeArea?: Region
   statusBarHeight?: number
   navigationBarHeight?: number
   isW3C?: boolean
@@ -72,6 +73,7 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   getUrl(driver: TDriver): Promise<string>
   takeScreenshot(driver: TDriver): Promise<Buffer | string>
   click?(context: TContext, element: TElement | TSelector): Promise<void>
+  type?(context: TContext, element: TElement, value: string): Promise<void>
   visit?(driver: TDriver, url: string): Promise<void>
   // #endregion
 
@@ -110,6 +112,7 @@ export interface UniversalSpecDriver<TDriver, TContext, TElement, TSelector> {
   getUrl(options: {driver: TDriver}): Promise<string>
   takeScreenshot(options: {driver: TDriver}): Promise<string>
   click?(options: {context: TContext; element: TElement | TSelector}): Promise<void>
+  type?(options: {context: TContext; element: TElement; value: string}): Promise<void>
   visit?(options: {driver: TDriver; url: string}): Promise<void>
   // #endregion
 

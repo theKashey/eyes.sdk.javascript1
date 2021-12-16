@@ -6,7 +6,7 @@ const utils = require('@applitools/utils')
 
 function makeImage(data) {
   let image, size
-  let transforms = {rotate: 0, scale: 1, crop: null}
+  let transforms = {rotate: 0, scale: 1, crop: null, modifiers: []}
 
   if (utils.types.isBase64(data)) {
     const buffer = Buffer.from(data, 'base64')
@@ -20,19 +20,17 @@ function makeImage(data) {
     image = fromBuffer(data)
     size = extractPngSize(data)
   } else if (data.isImage) {
-    image = data.toRaw()
-    size = data.size
     transforms = data.transforms
+    image = data.toRaw()
+    size = utils.geometry.scale(data.size, 1 / transforms.scale)
   } else if (utils.types.has(data, ['width', 'height'])) {
     image = fromSize(data)
     if (data.data) image.data = data.data
     size = {width: data.width, height: data.height}
+  } else if (data.auto) {
+    size = {width: -1, height: -1}
   } else {
     throw new Error('Unable to create an image abstraction from unknown data')
-  }
-
-  if (!transforms.crop) {
-    transforms.crop = utils.geometry.region({x: 0, y: 0}, size)
   }
 
   return {
@@ -46,10 +44,10 @@ function makeImage(data) {
       return {...transforms}
     },
     get width() {
-      return size.width
+      return this.size.width
     },
     get height() {
-      return size.height
+      return this.size.height
     },
     scale(ratio) {
       transforms.scale *= ratio
@@ -67,7 +65,9 @@ function makeImage(data) {
         region = utils.geometry.scale(region, 1 / transforms.scale)
       }
       region = utils.geometry.rotate(region, transforms.rotate)
-      transforms.crop = utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
+      transforms.crop = transforms.crop
+        ? utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
+        : utils.geometry.intersect({x: 0, y: 0, ...size}, region)
 
       size = utils.geometry.round(utils.geometry.size(transforms.crop))
 
@@ -77,17 +77,42 @@ function makeImage(data) {
       transforms.rotate = (transforms.rotate + degree) % 360
       return this
     },
-    async copy(srcImage, offset) {
-      const [dst, src] = await Promise.all([this.toObject(), srcImage.toObject()])
-      image = await copy(dst, src, offset)
+    copy(srcImage, offset) {
+      const scale = srcImage.transforms.scale
+      if (!image) {
+        size = {
+          width: Math.max(Math.floor((offset.x + srcImage.width) / scale), size.width),
+          height: Math.max(Math.floor((offset.y + srcImage.height) / scale), size.height),
+        }
+        transforms.scale = Math.min(scale, transforms.scale)
+      }
+      transforms.modifiers.push({
+        type: 'copy',
+        image: srcImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
+        offset: utils.geometry.scale(offset, 1 / transforms.scale),
+      })
+
       return this
     },
-    async combine(firstImage, lastImage, region) {
-      const [first, last, src] = await Promise.all([firstImage.toObject(), lastImage.toObject(), this.toObject()])
-      image = await combine(first, last, src, region)
-      size = {width: image.width, height: image.height}
-      transforms.crop = utils.geometry.region({x: 0, y: 0}, size)
+    frame(topImage, bottomImage, region) {
+      const scale = topImage.transforms.scale
+      const prevSize = size
+      region = utils.geometry.scale(region, 1 / scale)
+      size = {
+        width: Math.floor(topImage.width / scale + Math.max(size.width - region.width, 0)),
+        height: Math.floor(topImage.height / scale + Math.max(size.height - region.height, 0)),
+      }
+      transforms.modifiers.push({
+        type: 'frame',
+        top: topImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
+        bottom: bottomImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
+        region,
+      })
+      transforms.added = {width: size.width - prevSize.width, height: size.height - prevSize.height}
       return this
+    },
+    async toRaw() {
+      return image
     },
     async toBuffer() {
       const image = await this.toObject()
@@ -99,19 +124,17 @@ function makeImage(data) {
     async toFile(path) {
       return toFile(await image, path)
     },
-    async toRaw() {
-      return image
-    },
     async toObject() {
-      image = await transform(await image, transforms)
-      transforms = {rotate: 0, scale: 1, crop: utils.geometry.region({x: 0, y: 0}, size)}
+      image = await transform(image ? await image : size, transforms)
+      transforms = {crop: null, scale: 1, rotate: 0, modifiers: []}
       return image
     },
     async debug(debug) {
       if (!debug || !debug.path) return
       const timestamp = new Date().toISOString().replace(/[-T:.]/g, '_')
       const filename = ['screenshot', timestamp, debug.name, debug.suffix].filter(part => part).join('_') + '.png'
-      return toFile(await transform(await image, transforms), path.join(debug.path, filename)).catch(() => null)
+      const transformedImage = await transform(image ? await image : size, transforms)
+      return toFile(transformedImage, path.join(debug.path, filename)).catch(() => null)
     },
   }
 }
@@ -164,10 +187,27 @@ async function toFile(image, path) {
 }
 
 async function transform(image, transforms) {
-  const croppedImage = transforms.crop ? await extract(image, transforms.crop) : image
-  const scaledImage = transforms.scale !== 1 ? await scale(croppedImage, transforms.scale) : croppedImage
-  const rotatedImage = transforms.rotate > 0 ? await rotate(scaledImage, transforms.rotate) : scaledImage
-  return rotatedImage
+  if (!image.data) {
+    const size = transforms.added
+      ? {width: image.width - transforms.added.width, height: image.height - transforms.added.height}
+      : image
+    image = new png.Image(size)
+  }
+
+  image = await transforms.modifiers.reduce(async (image, modifier) => {
+    if (modifier.type === 'copy') {
+      return copy(await image, await modifier.image, modifier.offset)
+    } else if (modifier.type === 'frame') {
+      return frame(await modifier.top, await modifier.bottom, await image, modifier.region)
+    } else {
+      return image
+    }
+  }, image)
+
+  image = transforms.rotate > 0 ? await rotate(image, transforms.rotate) : image
+  image = transforms.crop ? await extract(image, transforms.crop) : image
+  image = transforms.scale !== 1 ? await scale(image, transforms.scale) : image
+  return image
 }
 
 async function scale(image, scaleRatio) {
@@ -288,98 +328,98 @@ async function copy(dstImage, srcImage, offset) {
   return dstImage
 }
 
-async function combine(firstImage, lastImage, srcImage, region) {
+async function frame(topImage, bottomImage, srcImage, region) {
   region = utils.geometry.intersect(
-    {x: 0, y: 0, width: firstImage.width, height: firstImage.height},
+    {x: 0, y: 0, width: topImage.width, height: topImage.height},
     utils.geometry.round(region),
   )
 
-  if (region.x === 0 && region.y === 0 && region.width >= firstImage.width && region.height >= firstImage.height) {
+  if (region.x === 0 && region.y === 0 && region.width >= topImage.width && region.height >= topImage.height) {
     return srcImage
   }
 
-  if (region.width === srcImage.width && region.height === srcImage.height) {
-    await copy(firstImage, srcImage, {x: region.x, y: region.y})
-    return firstImage
+  if (region.width >= srcImage.width && region.height >= srcImage.height) {
+    await copy(topImage, srcImage, {x: region.x, y: region.y})
+    return topImage
   }
 
   const dstImage = new png.Image({
-    width: firstImage.width - region.width + srcImage.width,
-    height: firstImage.height - region.height + srcImage.height,
+    width: topImage.width + Math.max(srcImage.width - region.width, 0),
+    height: topImage.height + Math.max(srcImage.height - region.height, 0),
   })
 
   if (region.width === srcImage.width) {
-    const topImage = await extract(firstImage, {
+    const topExtImage = await extract(topImage, {
       x: 0,
       y: 0,
-      width: firstImage.width,
+      width: topImage.width,
       height: region.y + region.height,
     })
-    await copy(dstImage, topImage, {x: 0, y: 0})
+    await copy(dstImage, topExtImage, {x: 0, y: 0})
   } else if (region.height === srcImage.height) {
-    const leftImage = await extract(firstImage, {
+    const leftExtImage = await extract(topImage, {
       x: 0,
       y: 0,
       width: region.x + region.width,
-      height: firstImage.height,
+      height: topImage.height,
     })
-    await copy(dstImage, leftImage, {x: 0, y: 0})
+    await copy(dstImage, leftExtImage, {x: 0, y: 0})
   } else {
-    const topLeftImage = await extract(firstImage, {
+    const topLeftExtImage = await extract(topImage, {
       x: 0,
       y: 0,
       width: region.x + region.width,
       height: region.y + region.height,
     })
-    await copy(dstImage, topLeftImage, {x: 0, y: 0})
+    await copy(dstImage, topLeftExtImage, {x: 0, y: 0})
 
-    const rightExtImage = await extract(firstImage, {
+    const rightExtImage = await extract(topImage, {
       x: region.x + region.width,
       y: 0,
-      width: firstImage.width - (region.x + region.width),
+      width: topImage.width - (region.x + region.width),
       height: region.y,
     })
     await copy(dstImage, rightExtImage, {x: region.x + region.width, y: 0})
 
-    const bottomExtImage = await extract(firstImage, {
+    const bottomExtImage = await extract(topImage, {
       x: 0,
       y: region.y + region.height,
       width: region.x,
-      height: firstImage.height - (region.y + region.height),
+      height: topImage.height - (region.y + region.height),
     })
     await copy(dstImage, bottomExtImage, {x: 0, y: region.y + region.height})
   }
 
-  if (lastImage.height > region.y + region.height || lastImage.width > region.x + region.width) {
+  if (bottomImage.height > region.y + region.height || bottomImage.width > region.x + region.width) {
     // first image might be higher
-    const yDiff = firstImage.height - lastImage.height
+    const yDiff = topImage.height - bottomImage.height
     if (region.width === srcImage.width) {
-      const bottomImage = await extract(lastImage, {
+      const bottomExtImage = await extract(bottomImage, {
         x: 0,
         y: region.y - yDiff + region.height,
-        width: lastImage.width,
-        height: lastImage.height - (region.y - yDiff + region.height),
+        width: bottomImage.width,
+        height: bottomImage.height - (region.y - yDiff + region.height),
       })
-      await copy(dstImage, bottomImage, {x: 0, y: region.y + srcImage.height})
+      await copy(dstImage, bottomExtImage, {x: 0, y: region.y + Math.max(srcImage.height, region.height)})
     } else if (region.height === srcImage.height) {
-      const rightImage = await extract(lastImage, {
+      const rightExtImage = await extract(bottomImage, {
         x: region.x + region.width,
         y: 0,
-        width: lastImage.width - (region.x + region.width),
-        height: lastImage.height,
+        width: bottomImage.width - (region.x + region.width),
+        height: bottomImage.height,
       })
-      await copy(dstImage, rightImage, {x: region.x + srcImage.width, y: 0})
+      await copy(dstImage, rightExtImage, {x: region.x + Math.max(srcImage.width, region.width), y: 0})
     } else {
-      const bottomRightImage = await extract(lastImage, {
+      const bottomRightExtImage = await extract(bottomImage, {
         x: region.x,
         y: region.y - yDiff,
-        width: lastImage.width - region.x,
-        height: lastImage.height - (region.y - yDiff),
+        width: bottomImage.width - region.x,
+        height: bottomImage.height - (region.y - yDiff),
       })
 
-      await copy(dstImage, bottomRightImage, {
-        x: region.x + srcImage.width - region.width,
-        y: region.y + srcImage.height - region.height,
+      await copy(dstImage, bottomRightExtImage, {
+        x: region.x + Math.max(srcImage.width - region.width, 0),
+        y: region.y + Math.max(srcImage.height - region.height, 0),
       })
     }
   }

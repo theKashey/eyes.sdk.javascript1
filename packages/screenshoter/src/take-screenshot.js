@@ -1,183 +1,159 @@
 const utils = require('@applitools/utils')
-const snippets = require('@applitools/snippets')
-const findImagePattern = require('./find-image-pattern')
-const makeImage = require('./image')
+const makeScroller = require('./scroller')
+const scrollIntoViewport = require('./scroll-into-viewport')
+const takeStitchedScreenshot = require('./take-stitched-screenshot')
+const takeSimpleScreenshot = require('./take-simple-screenshot')
 
-function makeTakeScreenshot(options) {
-  const {driver} = options
-  if (driver.isNative) {
-    return makeTakeNativeScreenshot(options)
-  } else if (driver.browserName === 'Firefox') {
-    try {
-      const browserVersion = Number.parseInt(driver.browserVersion, 10)
-      if (browserVersion >= 48 && browserVersion <= 72) {
-        return makeTakeMainContextScreenshot(options)
+async function takeScreenshot({
+  driver,
+  frames = [],
+  region,
+  fully,
+  scrollingMode,
+  hideScrollbars,
+  hideCaret,
+  withStatusBar,
+  overlap,
+  framed,
+  wait,
+  stabilization,
+  hooks,
+  debug,
+  logger,
+}) {
+  // screenshot of a window/app was requested (fully or viewport)
+  const window = !region && (!frames || frames.length === 0)
+  // framed screenshots could be taken only when screenshot of window/app fully was requested
+  framed = framed && fully && window
+  // screenshots with status bar could be taken only when screenshot of app or framed app fully was requested
+  withStatusBar = withStatusBar && driver.isNative && window && (!fully || framed)
+  scrollingMode = driver.isNative ? 'scroll' : scrollingMode
+
+  const activeContext = driver.currentContext
+  const context =
+    frames.length > 0
+      ? await activeContext.context(frames.reduce((parent, frame) => ({...frame, parent}), null))
+      : activeContext
+
+  // traverse from main context to target context to hide scrollbars and preserve context state (scroll/translate position)
+  for (const nextContext of context.path) {
+    const scrollingElement = await nextContext.getScrollingElement()
+    // unlike web apps, native apps do not always have scrolling element
+    if (scrollingElement) {
+      if (driver.isWeb && hideScrollbars) await scrollingElement.hideScrollbars()
+      await scrollingElement.preserveState()
+    }
+  }
+
+  // blur active element in target context
+  const activeElement = driver.isWeb && hideCaret ? await context.blurElement() : null
+
+  const target = await getTarget({window, context, region, fully, scrollingMode, logger})
+
+  if (driver.isWeb && hideScrollbars) await target.scroller.hideScrollbars()
+
+  try {
+    if (!window) await scrollIntoViewport({...target, logger})
+
+    const screenshot =
+      fully && target.scroller
+        ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
+        : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
+
+    if (hooks && hooks.afterScreenshot) {
+      // imitate image-like state for the hook
+      if (window && fully && target.scroller) {
+        await target.scroller.moveTo({x: 0, y: 0}, await driver.mainContext.getScrollingElement())
       }
-    } catch (ignored) {}
-  } else if (driver.browserName === 'Safari') {
-    if (driver.isIOS) {
-      return makeTakeMarkedScreenshot(options)
-    } else if (driver.browserVersion === '11') {
-      return makeTakeSafari11Screenshot(options)
-    }
-  }
-
-  return makeTakeDefaultScreenshot(options)
-}
-
-function makeTakeDefaultScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
-  return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking screenshot...')
-    const image = makeImage(await driver.takeScreenshot())
-    await image.debug({...debug, name, suffix: 'original'})
-
-    if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
-
-    if (stabilization.rotate) image.crop(stabilization.rotate)
-
-    if (stabilization.crop) image.crop(stabilization.crop)
-
-    return image
-  }
-}
-
-function makeTakeMainContextScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
-  return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking screenshot...')
-    const originalContext = driver.currentContext
-    await driver.mainContext.focus()
-    const image = makeImage(await driver.takeScreenshot())
-    await originalContext.focus()
-    await image.debug({...debug, name, suffix: 'original'})
-
-    if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
-
-    if (stabilization.rotate) image.rotate(stabilization.rotate)
-
-    if (stabilization.crop) image.crop(stabilization.crop)
-
-    return image
-  }
-}
-
-function makeTakeSafari11Screenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
-  let viewportSize
-
-  return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking safari 11 driver screenshot...')
-    const image = makeImage(await driver.takeScreenshot())
-    await image.debug({...debug, name, suffix: 'original'})
-
-    if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
-
-    if (stabilization.rotate) image.rotate(stabilization.rotate)
-
-    if (stabilization.crop) image.crop(stabilization.crop)
-    else {
-      if (!viewportSize) viewportSize = await driver.getViewportSize()
-      const viewportLocation = await driver.mainContext.execute(snippets.getElementScrollOffset, [])
-      image.crop(utils.geometry.region(viewportLocation, viewportSize))
+      await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
     }
 
-    return image
+    return screenshot
+  } finally {
+    if (target.scroller) {
+      await target.scroller.restoreScrollbars()
+    }
+
+    // if there was active element and we have blurred it, then restore focus
+    if (activeElement) await context.focusElement(activeElement)
+
+    // traverse from target context to the main context to restore scrollbars and context states
+    for (const prevContext of context.path.reverse()) {
+      const scrollingElement = await prevContext.getScrollingElement()
+      if (scrollingElement) {
+        if (driver.isWeb && hideScrollbars) await scrollingElement.restoreScrollbars()
+        await scrollingElement.restoreState()
+      }
+    }
+
+    // restore focus on original active context
+    await activeContext.focus()
   }
 }
 
-function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
-  let viewportRegion
-
-  return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking viewport screenshot (using markers)...')
-    const image = makeImage(await driver.takeScreenshot())
-    await image.debug({...debug, name, suffix: 'original'})
-
-    if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
-
-    if (stabilization.rotate) image.rotate(stabilization.rotate)
-
-    if (stabilization.crop) image.crop(stabilization.crop)
-    else {
-      if (!viewportRegion) viewportRegion = await getViewportRegion()
-      image.crop(viewportRegion)
-      await image.debug({...debug, name, suffix: 'viewport'})
+async function getTarget({window, context, region, fully, scrollingMode, logger}) {
+  if (window) {
+    // window/app
+    const scrollingElement = await context.main.getScrollingElement()
+    return {
+      context: context.main,
+      scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
     }
+  } else if (region) {
+    if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
+      // region by coordinates
+      const scrollingElement = await context.getScrollingElement()
+      return {
+        context,
+        region,
+        scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
+      }
+    } else {
+      // region by element or selector
+      const element = await context.element(region)
+      if (!element) throw new Error('Element not found!')
 
-    return image
-  }
+      const elementContext = element.context
 
-  async function getViewportRegion() {
-    const marker = await driver.mainContext.execute(snippets.addPageMarker)
-    try {
-      const image = makeImage(await driver.takeScreenshot())
-
-      if (stabilization.rotate) await image.rotate(stabilization.rotate)
-
-      await image.debug({...debug, name: 'marker'})
-
-      const markerLocation = findImagePattern(await image.toObject(), marker)
-      if (!markerLocation) return null
-
-      const viewportSize = await driver.getViewportSize()
-
-      return utils.geometry.region(utils.geometry.scale(markerLocation, 1 / driver.pixelRatio), viewportSize)
-    } finally {
-      await driver.mainContext.execute(snippets.cleanupPageMarker)
+      if (fully) {
+        const isScrollable = await element.isScrollable()
+        // if element is scrollable, then take screenshot of the full element content, otherwise take screenshot of full element
+        const region = isScrollable ? null : await element.getRegion()
+        const scrollingElement = isScrollable ? element : await elementContext.getScrollingElement()
+        // css stitching could be applied only to root element of its context
+        scrollingMode = scrollingMode === 'css' && !(await scrollingElement.isRoot()) ? 'mixed' : scrollingMode
+        return {
+          context: elementContext,
+          region,
+          scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
+        }
+      } else {
+        const scrollingElement = await context.getScrollingElement()
+        return {
+          context: elementContext,
+          region: await element.getRegion(),
+          scroller: scrollingElement ? makeScroller({element: scrollingElement, scrollingMode, logger}) : null,
+        }
+      }
+    }
+  } else if (!context.isMain) {
+    // context
+    if (fully) {
+      const scrollingElement = await context.getScrollingElement()
+      return {
+        context,
+        scroller: scrollingElement ? makeScroller({logger, element: scrollingElement, scrollingMode}) : null,
+      }
+    } else {
+      const scrollingElement = await context.parent.getScrollingElement()
+      const element = await context.getContextElement()
+      return {
+        context: context.parent,
+        region: await element.getRegion(), // IMHO we should use CLIENT (without borders) region here
+        scroller: scrollingElement ? makeScroller({logger, element: scrollingElement, scrollingMode}) : null,
+      }
     }
   }
 }
 
-function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
-  return async function takeScreenshot({name, withStatusBar} = {}) {
-    logger.verbose('Taking native driver screenshot...')
-    const image = makeImage(await driver.takeScreenshot())
-    await image.debug({...debug, name, suffix: 'original'})
-
-    if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(1 / driver.pixelRatio)
-
-    if (stabilization.rotate) image.rotate(stabilization.rotate)
-
-    if (stabilization.crop) image.crop(stabilization.crop)
-    else {
-      const viewportSize = await driver.getViewportSize()
-      const cropRegion = withStatusBar
-        ? {x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight}
-        : {top: driver.statusBarHeight, bottom: driver.navigationBarHeight, left: 0, right: 0}
-      image.crop(cropRegion)
-      await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
-    }
-
-    return image
-  }
-}
-
-function makeCalculateScaleRatio({driver}) {
-  let viewportWidth, contentWidth
-  const VIEWPORT_THRESHOLD = 1
-  const CONTENT_THRESHOLD = 10
-  return async function calculateScaleRatio(imageWidth) {
-    if (!viewportWidth) viewportWidth = await driver.getViewportSize().then(size => size.width)
-    if (!contentWidth) contentWidth = await driver.mainContext.getContentSize().then(size => size.width)
-    // If the image's width is the same as the viewport's width or the
-    // top level context's width, no scaling is necessary.
-    if (
-      (imageWidth >= viewportWidth - VIEWPORT_THRESHOLD && imageWidth <= viewportWidth + VIEWPORT_THRESHOLD) ||
-      (imageWidth >= contentWidth - CONTENT_THRESHOLD && imageWidth <= contentWidth + CONTENT_THRESHOLD)
-    ) {
-      return 1
-    }
-
-    const scaledImageWidth = Math.round(imageWidth / driver.pixelRatio)
-    return viewportWidth / scaledImageWidth / driver.pixelRatio
-  }
-}
-
-module.exports = makeTakeScreenshot
+module.exports = takeScreenshot
