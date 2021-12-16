@@ -1,7 +1,7 @@
 'use strict'
 /* eslint-disable max-len */
 
-exports.checkSpecDriver = require('@applitools/driver/debug').checkSpecDriver
+exports.checkSpecDriver = require('@applitools/driver/dist/debug').checkSpecDriver
 exports.makeSDK = require('./lib/new/sdk')
 
 // config
