@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update @applitools/jsdom to 1.0.4 (based on jsdom@19.0.0) in order to avoid deprecated dependencies
 
  ## 15.8.50 - 2021/12/9
 
