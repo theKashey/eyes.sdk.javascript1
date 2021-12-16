@@ -36,7 +36,7 @@
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.5",
     "@applitools/isomorphic-fetch": "3.0.0",
-    "@applitools/jsdom": "1.0.3",
+    "@applitools/jsdom": "1.0.4",
     "@applitools/logger": "1.0.6",
     "abort-controller": "3.0.0",
     "chalk": "3.0.0",
