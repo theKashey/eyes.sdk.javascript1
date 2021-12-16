@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.22 - 2021/12/16
+
 - add `type` method to `SpecDriver` type to automate typing a value in a text field
 - add `safeArea` property to `DriverInfo` type
 
