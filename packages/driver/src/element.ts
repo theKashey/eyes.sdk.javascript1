@@ -183,7 +183,6 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
           return this._state.contentSize
         } catch (err) {
-          console.log(err)
           this._logger.warn('Failed to extract content size, extracting client size instead')
           this._logger.error(err)
           return utils.geometry.size(await this.getClientRegion())

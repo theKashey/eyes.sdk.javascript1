@@ -64,7 +64,8 @@ async function takeStitchedScreenshot({
 
   logger.verbose('Getting the rest of the image parts...')
 
-  let lastImage
+  let lastImage = firstImage
+  let scrollerRegionShift = {x: 0, y: 0}
   for (const partRegion of partRegions) {
     const partName = `${partRegion.x}_${partRegion.y}_${partRegion.width}x${partRegion.height}`
     logger.verbose(`Processing part ${partName}`)
@@ -78,11 +79,9 @@ async function takeStitchedScreenshot({
     // scrollable region shift during scrolling so actual scroll position should be corrected
     if (!utils.geometry.equals(actualOffset, requiredOffset) && driver.isNative) {
       const actualScrollerRegion = await scroller.getClientRegion()
-      actualOffset = utils.geometry.offset(actualOffset, {
-        x: scrollerRegion.x - actualScrollerRegion.x,
-        y: scrollerRegion.y - actualScrollerRegion.y,
-      })
+      scrollerRegionShift = {x: scrollerRegion.x - actualScrollerRegion.x, y: scrollerRegion.y - actualScrollerRegion.y}
     }
+    actualOffset = utils.geometry.offset(actualOffset, scrollerRegionShift)
 
     const remainingOffset = {
       x: requiredOffset.x - actualOffset.x - expectedRemainingOffset.x + compensateOffset.x,
