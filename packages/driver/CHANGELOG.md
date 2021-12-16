@@ -2,10 +2,14 @@
 
 ## Unreleased
 
+
+## 1.4.0 - 2021/12/16
+
 - improve native apps scrolling automation
 - fix ios safe area related issues
 - add helper library abstraction to cover appium edge cases
 - made `setViewportSize` more reliable in worst case scenario and faster in best case scenario
+- updated to @applitools/types@1.0.22 (from 1.0.21)
 
 ## 1.3.5 - 2021/11/23
 
