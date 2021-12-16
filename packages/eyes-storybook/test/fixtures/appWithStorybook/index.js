@@ -22,8 +22,8 @@ storiesOf('Button', module)
   ), {
   eyes: {
     runBefore({rootEl, story}) {
-     window.originalBackgoundColor = document.querySelector("html").style.backgroundColor;
-     document.querySelector("html").style.backgroundColor = 'fuchsia';
+     window.originalBackgoundColor = document.querySelector(".main").style.backgroundColor;
+     document.querySelector(".main").style.backgroundColor = 'fuchsia';
     },
     runAfter({rootEl, story}){
      document.querySelector("html").style.backgroundColor = window.originalBackgoundColor;

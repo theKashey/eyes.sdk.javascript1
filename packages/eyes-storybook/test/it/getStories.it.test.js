@@ -29,22 +29,31 @@ describe('getStories', () => {
       await page.goto('http://localhost:9001');
       const stories = await page.evaluate(getStories);
       const parameters = {
-        fileName: './test/fixtures/appWithStorybook/index.js',
         framework: 'react',
+        __isArgsStory: false,
+        argTypes: {},
+        args: {},
       };
       expect(stories).to.eql(
         [
           {
             name: 'background color',
             kind: 'Button',
-            parameters: {...parameters, eyes: {runBefore: '__func', runAfter: '__func'}},
+            parameters: {
+              ...parameters,
+              __id: 'button--background-color',
+              fileName: './test/fixtures/appWithStorybook/index.js',
+              eyes: {runBefore: '__func', runAfter: '__func'},
+            },
           },
           {
             name: 'with text',
             kind: 'Button',
             parameters: {
               ...parameters,
+              __id: 'button--with-text',
               someParam: 'i was here, goodbye',
+              fileName: './test/fixtures/appWithStorybook/index.js',
               eyes: {ignoreRegions: [{selector: '.ignore-this'}]},
             },
           },
@@ -53,39 +62,124 @@ describe('getStories', () => {
             kind: 'Button',
             error: `Ignoring parameters for story: "with some emoji Button" since they are not serilizable. Error: "Converting circular structure to JSON\n    --> starting at object with constructor 'Object'\n    --- property 'inner' closes the circle"`,
           },
-          {name: 'image', kind: 'Image', parameters},
-          {name: 'story 1', kind: 'Nested', parameters},
-          {name: 'story 1.1', kind: 'Nested/Component', parameters},
-          {name: 'story 1.2', kind: 'Nested/Component', parameters},
-          {name: 'a yes-a b', kind: 'Button with-space yes-indeed', parameters},
+          {
+            name: 'image',
+            kind: 'Image',
+            parameters: {
+              ...parameters,
+              __id: 'image--image',
+              fileName: './test/fixtures/appWithStorybook/index.js-2',
+            },
+          },
+          {
+            name: 'story 1',
+            kind: 'Nested',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-3',
+              __id: 'nested--story-1',
+            },
+          },
+          {
+            name: 'story 1.1',
+            kind: 'Nested/Component',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-4',
+              __id: 'nested-component--story-1-1',
+            },
+          },
+          {
+            name: 'story 1.2',
+            kind: 'Nested/Component',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-4',
+              __id: 'nested-component--story-1-2',
+            },
+          },
+          {
+            name: 'a yes-a b',
+            kind: 'Button with-space yes-indeed',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-5',
+              __id: 'button-with-space-yes-indeed--a-yes-a-b',
+            },
+          },
           {
             name: 'b yes-a b',
             kind: 'Button with-space yes-indeed/nested with-space yes',
-            parameters,
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-6',
+              __id: 'button-with-space-yes-indeed-nested-with-space-yes--b-yes-a-b',
+            },
           },
           {
             name: 'c yes-a b',
             kind: 'Button with-space yes-indeed/nested with-space yes/nested again-yes a',
-            parameters,
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-7',
+              __id:
+                'button-with-space-yes-indeed-nested-with-space-yes-nested-again-yes-a--c-yes-a-b',
+            },
           },
-          {name: 'story 1.1', kind: 'SOME section|Nested/Component', parameters},
-          {name: 'story 1.2', kind: 'SOME section|Nested/Component', parameters},
+          {
+            name: 'story 1.1',
+            kind: 'SOME section|Nested/Component',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-8',
+              __id: 'some-section-nested-component--story-1-1',
+            },
+          },
+          {
+            name: 'story 1.2',
+            kind: 'SOME section|Nested/Component',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-8',
+              __id: 'some-section-nested-component--story-1-2',
+            },
+          },
           {
             name: 'c yes-a b',
             kind: 'Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a',
-            parameters,
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-9',
+              __id:
+                'wow-one-with-space-yes-indeed-nested-with-space-yes-nested-again-yes-a--c-yes-a-b',
+            },
           },
-          {name: 'should also do RTL', kind: 'RTL', parameters},
+          {
+            name: 'should also do RTL',
+            kind: 'RTL',
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-10',
+              __id: 'rtl--should-also-do-rtl',
+            },
+          },
           {
             name: 'local RTL config',
             kind: 'RTL',
-            parameters: {...parameters, eyes: {variations: ['rtl']}},
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-10',
+              __id: 'rtl--local-rtl-config',
+              eyes: {variations: ['rtl']},
+            },
           },
           {
             name: 'local theme config',
             kind: 'Theme',
             parameters: {
               ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-11',
+              __id: 'theme--local-theme-config',
               eyes: {
                 variations: [{queryParams: {theme: 'dark'}}, {queryParams: {theme: 'light'}}],
               },
@@ -95,13 +189,24 @@ describe('getStories', () => {
             name:
               'this story should not be checked visually by eyes-storybook because of local parameter',
             kind: 'skipped tests',
-            parameters: {...parameters, eyes: {include: false}},
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-12',
+              __id:
+                'skipped-tests--this-story-should-not-be-checked-visually-by-eyes-storybook-because-of-local-parameter',
+              eyes: {include: false},
+            },
           },
           {
             name:
               '[SKIP] this story should not be checked visually by eyes-storybook because of global config',
             kind: 'skipped tests',
-            parameters,
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-12',
+              __id:
+                'skipped-tests--skip-this-story-should-not-be-checked-visually-by-eyes-storybook-because-of-global-config',
+            },
           },
           {
             name: 'testing circular parameters',
@@ -113,6 +218,8 @@ describe('getStories', () => {
             name: 'appears after a delay',
             parameters: {
               ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-13',
+              __id: 'text--appears-after-a-delay',
               eyes: {
                 waitBeforeCapture: '.ready',
               },
@@ -121,12 +228,22 @@ describe('getStories', () => {
           {
             name: 'Popover',
             kind: 'Interaction',
-            parameters: {...parameters, bgColor: 'lime', eyes: {runBefore: '__func'}},
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-14',
+              __id: 'interaction--popover',
+              bgColor: 'lime',
+              eyes: {runBefore: '__func'},
+            },
           },
           {
             kind: 'Responsive UI',
             name: 'Red/green',
-            parameters,
+            parameters: {
+              ...parameters,
+              fileName: './test/fixtures/appWithStorybook/index.js-15',
+              __id: 'responsive-ui--red-green',
+            },
           },
         ].map((story, index) => {
           return {

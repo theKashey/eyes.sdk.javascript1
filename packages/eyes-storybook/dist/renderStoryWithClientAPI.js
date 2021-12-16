@@ -7,6 +7,7 @@ function __renderStoryWithClientAPI(...args) {
     v4: 'v4',
     v5: 'v5',
     v5_2: 'v5_2',
+    v6_4: 'v6_4',
   };
 
   function getClientAPI() {
@@ -19,7 +20,9 @@ function __renderStoryWithClientAPI(...args) {
     function getStorybookVersion() {
       const addons = frameWindow.__STORYBOOK_ADDONS;
 
-      if (frameWindow.__STORYBOOK_STORY_STORE__) {
+      if (frameWindow.__STORYBOOK_PREVIEW__) {
+        return API_VERSIONS.v6_4;
+      } else if (frameWindow.__STORYBOOK_STORY_STORE__) {
         return API_VERSIONS.v5_2;
       } else if (frameWindow.__STORYBOOK_CLIENT_API__ && frameWindow.__STORYBOOK_CLIENT_API__.raw) {
         return API_VERSIONS.v5;
@@ -81,6 +84,21 @@ function __renderStoryWithClientAPI(...args) {
             };
             break;
           }
+
+          case API_VERSIONS.v6_4: {
+            api = {
+              getStories: () => {
+                return clientAPI.raw();
+              },
+              selectStory: async i => {
+                frameWindow.__STORYBOOK_PREVIEW__.urlStore.setSelection({
+                  storyId: clientAPI.raw()[i].id,
+                });
+                await frameWindow.__STORYBOOK_PREVIEW__.renderSelection();
+              },
+            };
+            break;
+          }
         }
 
         return {version, ...api};
@@ -112,11 +130,11 @@ function __renderStoryWithClientAPI(...args) {
 
   var getClientAPI_1 = getClientAPI;
 
-  function renderStoryWithClientAPI(index) {
+  async function renderStoryWithClientAPI(index) {
     let api;
     try {
       api = getClientAPI_1();
-      api.selectStory(index);
+      await api.selectStory(index);
     } catch (ex) {
       return {message: ex.message, version: api ? api.version : undefined};
     }

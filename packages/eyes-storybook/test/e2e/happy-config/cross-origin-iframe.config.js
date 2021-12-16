@@ -5,6 +5,6 @@ module.exports = {
   batchName: 'Cross-origin iframe storybook',
   storybookConfigDir: path.resolve(__dirname, '../../fixtures/crossOriginIframeStorybook'),
   storybookStaticDir: path.resolve(__dirname, '../../fixtures'),
-  browser: [{width: 640, height: 480, name: 'chrome'}],
+  browser: [{width: 810, height: 480, name: 'chrome'}],
   waitBeforeCapture: 1000,
 };

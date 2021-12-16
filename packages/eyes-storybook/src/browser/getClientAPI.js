@@ -4,6 +4,7 @@ const API_VERSIONS = {
   v4: 'v4',
   v5: 'v5',
   v5_2: 'v5_2',
+  v6_4: 'v6_4',
 };
 
 function getClientAPI() {
@@ -16,7 +17,9 @@ function getClientAPI() {
   function getStorybookVersion() {
     const addons = frameWindow.__STORYBOOK_ADDONS;
 
-    if (frameWindow.__STORYBOOK_STORY_STORE__) {
+    if (frameWindow.__STORYBOOK_PREVIEW__) {
+      return API_VERSIONS.v6_4;
+    } else if (frameWindow.__STORYBOOK_STORY_STORE__) {
       return API_VERSIONS.v5_2;
     } else if (frameWindow.__STORYBOOK_CLIENT_API__ && frameWindow.__STORYBOOK_CLIENT_API__.raw) {
       return API_VERSIONS.v5;
@@ -74,6 +77,21 @@ function getClientAPI() {
             },
             selectStory: i => {
               frameWindow.__STORYBOOK_STORY_STORE__.setSelection({storyId: clientAPI.raw()[i].id});
+            },
+          };
+          break;
+        }
+
+        case API_VERSIONS.v6_4: {
+          api = {
+            getStories: () => {
+              return clientAPI.raw();
+            },
+            selectStory: async i => {
+              frameWindow.__STORYBOOK_PREVIEW__.urlStore.setSelection({
+                storyId: clientAPI.raw()[i].id,
+              });
+              await frameWindow.__STORYBOOK_PREVIEW__.renderSelection();
             },
           };
           break;

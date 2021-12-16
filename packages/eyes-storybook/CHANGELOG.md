@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for storybook api 6.4
 
 ## 3.27.0 - 2021/12/6
 

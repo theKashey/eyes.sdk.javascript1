@@ -72,7 +72,7 @@ describe('eyes-storybook accessibility', () => {
         version: globalConfig.accessibilityValidation.guidelinesVersion,
       });
       expect(actualAppOutput.imageMatchSettings.accessibility).to.eql([
-        {type: 'LargeText', isDisabled: false, left: 8, top: 8, width: 50, height: 50},
+        {type: 'LargeText', isDisabled: false, left: 16, top: 16, width: 50, height: 50},
       ]);
     }
 

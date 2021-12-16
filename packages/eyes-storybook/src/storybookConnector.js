@@ -72,7 +72,7 @@ class StorybookConnector extends EventEmitter {
 
       const successMessageListener = str => {
         const isReady = stripAnsi(str).match(
-          /Storybook \d{1,2}\.\d{1,2}\.\d{1,2}(-.+)? started|Storybook started on =>/,
+          /Storybook \d{1,2}\.\d{1,2}\.\d{1,2}(.+)? started|Storybook started on =>/,
         );
 
         if (isReady) {
