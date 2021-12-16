@@ -4,6 +4,10 @@
 ## Unreleased
 
 
+## 3.3.1 - 2021/12/17
+
+- no changes
+
 ## 3.3.0 - 2021/12/16
 
 - fix ios web screenshots on pages without viewport meta tag
