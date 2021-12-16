@@ -38,7 +38,11 @@
     "./debug": {
       "default": "./dist/debug/index.js",
       "types": "./types/debug/index.d.ts"
-    }
+    },
+    "./dist/*": "./dist/*.js",
+    "./dist/fake": "./dist/fake/index.js",
+    "./dist/debug": "./dist/debug/index.js",
+    "./package.json": "./package.json"
   },
   "typesVersions": {
     "*": {
