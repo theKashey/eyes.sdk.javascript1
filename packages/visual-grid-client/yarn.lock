@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/dom-capture@11.0.2":
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.0.2.tgz#3410630a5050e99f505f61847fdd164744d10e44"
-  integrity sha512-GCxsdsFzDSoichlgMe//LMBIyYf+nweLQI5YnN8go5sKs4tvLgQCUwciybbgdwY8Rkj3w37QhvBueSPRIWgjsA==
+"@applitools/dom-capture@11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.1.0.tgz#b20758f358a1170ff4905b49ee7cf0ea9a661f05"
+  integrity sha512-99NdLnHuoTT0EBDMixp19QLAZV704ztQjJfcvJZNmi5FnFzsnVpgTwRhgH5SA1JobQ09yMS9wvy0ekrpdX8lIw==
   dependencies:
     "@applitools/dom-shared" "1.0.5"
     "@applitools/functional-commons" "1.6.0"
@@ -30,34 +30,34 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.3.5.tgz#4a7c213132647b4b89974a1cc1bacdbc10447c6c"
-  integrity sha512-Rf0J3xdmYJga1Inl0o7ayhYl/xYn9zDHMuk4vGPYAzKWdO0ssDrYUfxf84+KtXhMYsTyECRzgcIIFDT8M68FBw==
+"@applitools/driver@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.2.tgz#2b526219dc7045794336a5a1db9b33901981bc8f"
+  integrity sha512-Vxvz5YqwVBFjW9hUasSdF4cUErLdbctCVKJW0ije7sM0rQYMUJKTziQa1JvPz3bTx+pYRo33DIKmLNcAPX0ZFQ==
   dependencies:
-    "@applitools/snippets" "2.1.7"
-    "@applitools/types" "1.0.21"
+    "@applitools/snippets" "2.1.8"
+    "@applitools/types" "1.0.22"
     "@applitools/utils" "1.2.4"
 
-"@applitools/eyes-sdk-core@12.24.5":
-  version "12.24.5"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.5.tgz#8c72483199df3e8d908ee3f9acda443f470573bc"
-  integrity sha512-dke6EaraXJMFQn8feGsYBj7Tsn8BzRyVjLplY8DpEwOClgDqitz8Nr5hdS4Jy4+G6owQkr/69md31+3SkqiwHg==
+"@applitools/eyes-sdk-core@12.24.6":
+  version "12.24.6"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.6.tgz#4b818ff9299219d245d37b4b028aa9e5f8753c82"
+  integrity sha512-xDRAAoXm64x0ziKfe/3iwbK1jnEs1SPdunbrTQ4I1yDhrJlsChHgyMNXCjLUkGmC4e7gYSModAX0Z9/ZCtsKUg==
   dependencies:
-    "@applitools/dom-capture" "11.0.2"
+    "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.11"
-    "@applitools/driver" "1.3.5"
+    "@applitools/driver" "1.4.2"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/logger" "1.0.6"
-    "@applitools/screenshoter" "3.2.9"
-    "@applitools/snippets" "2.1.7"
-    "@applitools/types" "1.0.21"
+    "@applitools/logger" "1.0.7"
+    "@applitools/screenshoter" "3.3.1"
+    "@applitools/snippets" "2.1.8"
+    "@applitools/types" "1.0.22"
     "@applitools/utils" "1.2.4"
     axios "0.21.4"
     chalk "3.0.0"
     cosmiconfig "6.0.0"
     dateformat "3.0.3"
-    debug "4.2.0"
+    debug "4.3.3"
     deepmerge "4.2.2"
     stack-trace "0.0.10"
     tunnel "0.0.6"
@@ -120,10 +120,10 @@
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
 
-"@applitools/logger@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.6.tgz#f37bbc4e611c1433bb2cc15898dc46a35b4742c5"
-  integrity sha512-BdRJ4GMbgmF+S7Nlwo4jnExM/8M5lQuW7tsvUJ5Bw9+1j2j2FHBH5MlTw0VyywSnWQFgrfP+3LU5AqJlzFiang==
+"@applitools/logger@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.7.tgz#922a8777f42eb74c8ffecdbff689aafd1304bfbc"
+  integrity sha512-gWqc4Hn+8sNFEyj4EfHTJyQFZifX4rSnoKC78hx79ppWPLhStBqJWG9phqWrrXuRNrPl5V6S6h0SuW9jKMmlrA==
   dependencies:
     "@applitools/utils" "1.2.4"
     chalk "3.0.0"
@@ -135,12 +135,12 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/screenshoter@3.2.9":
-  version "3.2.9"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.2.9.tgz#96339b0e1b68f2295b766863cde7280bebee22ff"
-  integrity sha512-9xZXhfQQi9vbflqXrpefiWlvyeSkNQr7Lz+6SyqZmVqiBasg3yMB4EbfkDGegmfGsr3Z8l84tdWFDwfKT3Up/Q==
+"@applitools/screenshoter@3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.3.1.tgz#8b95c9dff6251c5be7bdb35a6b5ca07aa3bfe416"
+  integrity sha512-iISM0fBIILQ3c1KC8IuJyVmajwz6pTGERt4zX/K4iWkDcsOfmwIRTISKjoVplw4P/WWnIAXrOC5cG/Z7IobdqQ==
   dependencies:
-    "@applitools/snippets" "2.1.7"
+    "@applitools/snippets" "2.1.8"
     "@applitools/utils" "1.2.4"
     png-async "0.9.4"
 
@@ -156,15 +156,15 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/snippets@2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.7.tgz#bcd89152b83ce49dc51f4a44dec6d0dba7338317"
-  integrity sha512-Tr4Gj7Qov/oPy+8WI4oVmmubxqpOzr8P3Wjzpl6rA57xKLg6/TiIg5oZNb4+jEmO2ShjNYLaEwRWHl7kPgb4fw==
+"@applitools/snippets@2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.8.tgz#5222f112f1c553df0d1e9be44cc5683ff1194978"
+  integrity sha512-7CGFsbL9vAd6MBiGLVKHpKYywPXN499/fJMzEAVCLuGCY81CIc/PchqPFWrZZKZOY/IV21RJmE3MvqZAeXTIXA==
 
-"@applitools/test-server@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.7.tgz#836df811c55ca704591a1e9be19bea26ac982d51"
-  integrity sha512-6rywEAfjACK5oitv9xLBvzW8C/vpph0OudaR/nwjWAO9OO/GXn2N/U9HrcvH8EoHbwDXNiqwiG53fYcKZK9PiA==
+"@applitools/test-server@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.8.tgz#b87f4bb64cecc1dd9bd7be9fbc4fc9ff0ad0bbd6"
+  integrity sha512-KP1A8aySLoU532zCG6mwk2Mair56gQ5xp75ZnV4/CvefCzeD2f/nqUBYmoiTN940QOrQVWAXeXvuwMj1BUJD0Q==
   dependencies:
     "@applitools/utils" "1.2.4"
     chalk "3.0.0"
@@ -175,18 +175,18 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.9.tgz#413b5f28728ad3bd4ed423cf81e2eceecc3e68a2"
-  integrity sha512-ct1b/2t6XNccNv9P59IVn/MXjxTKUJOq4doDlcncxQ34l5H/Hv8zRwB7Gvkv+xwFVVUXuUw90DEH3ceBniIh/Q==
+"@applitools/test-utils@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.10.tgz#ef692726457c4df58493ec5e4e13906dafa6a5e1"
+  integrity sha512-3ZSeu8/9KUMtXHd+osP7k9qRNL5YzYHRhBuw+uIz4DdPCby73j7X2rqkLiUbWlR6G9heSkvqdputKHJ6oBAKhA==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.0.21":
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.21.tgz#0568b74dccbc591e23962aee273ce8e329a6db60"
-  integrity sha512-fSepAdpGBPoOHwWSloceEbHrDcYB0K6RxjY2lMTRwRS4hJvqwwhWzsCUNXMLwpbA2/Vdmm8uO+CCkRcn920+WA==
+"@applitools/types@1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.22.tgz#6ed634bb813fe104e8367e459eba605ab092bb66"
+  integrity sha512-IvWjCb1iPBB17h10qQFnbSQdEGZHVmGnm7XmmC6P8cn3uVl07NuZJwbEA/HI4HiUtOa6M1AGslSqAzKLpSLS5A==
 
 "@applitools/utils@1.2.4", "@applitools/utils@^1.2.3":
   version "1.2.4"
@@ -809,17 +809,10 @@ debug@2.6.9, debug@^2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@4:
+debug@4, debug@4.3.3, debug@^4.3.3:
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.3.tgz#04266e0b70a98d4462e6e288e38259213332b664"
   integrity sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==
-  dependencies:
-    ms "2.1.2"
-
-debug@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.2.0.tgz#7f150f93920e94c58f5574c2fd01a3110effe7f1"
-  integrity sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==
   dependencies:
     ms "2.1.2"
 

@@ -32,12 +32,12 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.24.5",
+    "@applitools/eyes-sdk-core": "12.24.6",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.5",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/jsdom": "1.0.4",
-    "@applitools/logger": "1.0.6",
+    "@applitools/logger": "1.0.7",
     "abort-controller": "3.0.0",
     "chalk": "3.0.0",
     "he": "1.2.0",
@@ -54,8 +54,8 @@
   "devDependencies": {
     "@applitools/dom-snapshot": "4.5.11",
     "@applitools/sdk-release-kit": "0.13.4",
-    "@applitools/test-server": "1.0.7",
-    "@applitools/test-utils": "1.0.9",
+    "@applitools/test-server": "1.0.8",
+    "@applitools/test-utils": "1.0.10",
     "@applitools/utils": "^1.2.3",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
