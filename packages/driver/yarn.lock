@@ -14,10 +14,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/snippets@2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.7.tgz#bcd89152b83ce49dc51f4a44dec6d0dba7338317"
-  integrity sha512-Tr4Gj7Qov/oPy+8WI4oVmmubxqpOzr8P3Wjzpl6rA57xKLg6/TiIg5oZNb4+jEmO2ShjNYLaEwRWHl7kPgb4fw==
+"@applitools/snippets@2.1.8":
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.8.tgz#5222f112f1c553df0d1e9be44cc5683ff1194978"
+  integrity sha512-7CGFsbL9vAd6MBiGLVKHpKYywPXN499/fJMzEAVCLuGCY81CIc/PchqPFWrZZKZOY/IV21RJmE3MvqZAeXTIXA==
 
 "@applitools/types@1.0.22":
   version "1.0.22"
