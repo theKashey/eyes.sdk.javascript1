@@ -5,6 +5,7 @@
 
 - fix ios web screenshots on pages without viewport meta tag
 - improve native apps support
+- updated to @applitools/snippets@2.1.8 (from 2.1.7)
 
 ## 3.2.9 - 2021/11/14
 
