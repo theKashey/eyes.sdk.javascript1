@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 0.9.10 - 2021/12/16
+
+- fix cors middleware usage
+
 ## 0.9.9 - 2021/11/10
 
 - fix port collision
