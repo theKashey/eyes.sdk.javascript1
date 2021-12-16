@@ -61,7 +61,7 @@
     "chai-spies": "^1.0.0",
     "chai-uuid": "^1.0.6",
     "cookie-parser": "^1.4.4",
-    "debug": "^4.1.1",
+    "debug": "^4.3.3",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
