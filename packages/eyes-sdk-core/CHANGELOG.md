@@ -3,6 +3,12 @@
 ## Unreleased
 
 - update `debug` dependency to 4.3.3
+- updated to @applitools/dom-capture@11.1.0 (from 11.0.2)
+- updated to @applitools/driver@1.4.2 (from 1.3.5)
+- updated to @applitools/logger@1.0.7 (from 1.0.6)
+- updated to @applitools/screenshoter@3.3.1 (from 3.2.9)
+- updated to @applitools/snippets@2.1.8 (from 2.1.7)
+- updated to @applitools/types@1.0.22 (from 1.0.21)
 
 ## 12.24.5 - 2021/11/23
 
