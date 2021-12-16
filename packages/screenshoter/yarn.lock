@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/driver@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.1.tgz#6e20395d8fa1a39b22cecc1aaf4f7975ceb7ed85"
-  integrity sha512-lmE0IopRlQ03EkRzVbyGGzT67s+iUmLJZF8pID+ZZU8Y5uFUsSgQyn/qL7T//yyHv7pSCulifKaIBbFYGIEXAA==
+"@applitools/driver@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.2.tgz#2b526219dc7045794336a5a1db9b33901981bc8f"
+  integrity sha512-Vxvz5YqwVBFjW9hUasSdF4cUErLdbctCVKJW0ije7sM0rQYMUJKTziQa1JvPz3bTx+pYRo33DIKmLNcAPX0ZFQ==
   dependencies:
     "@applitools/snippets" "2.1.8"
     "@applitools/types" "1.0.22"
