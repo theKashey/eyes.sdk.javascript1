@@ -1,19 +1,28 @@
 {
+  "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "sourceMap": true,
+    "declarationDir": "types",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
 
-    "target": "ES2017",
     "module": "commonjs",
+    "target": "es2017",
+    "esModuleInterop": true,
     "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
     "downlevelIteration": true,
-    "stripInternal": true,
-    "experimentalDecorators": false,
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    "removeComments": true,
+    "plugins": [{
+      "transform": "@applitools/api-extractor",
+      "afterDeclarations": true,
+      "rootFile": "./index.ts",
+      "allowModules": ["selenium-webdriver"],
+      "stripPrivate": true,
+      "stripProtected": true,
+      "stripInternal": true
+    }]
   },
-  "include": ["./src/**/*"]
+  "ts-node": {"transpileOnly": true},
 }

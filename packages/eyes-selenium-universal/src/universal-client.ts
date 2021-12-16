@@ -18,16 +18,21 @@ export class UniversalClient implements types.Core<Driver, Element, Selector> {
   constructor() {
     this._socket = new Socket()
     // TODO change to ./node_modules/.bin/eyes-universal
-    this._server = spawn(`node`, ['./node_modules/@applitools/eyes-universal/dist/cli.js', '--port=2107'], {
+    this._server = spawn(`node`, ['./node_modules/@applitools/eyes-universal/dist/cli.js'], {
       detached: true,
       stdio: ['ignore', 'pipe', 'ignore'],
     })
     // specific to JS: we are able to listen to stdout for the first line, then we know the server is up, and we even can get its port in case it wasn't passed
     this._server.stdout.once('data', data => {
-      this._server.stdout.destroy()
+      ;(this._server.stdout as any).unref()
       const [port] = String(data).split('\n', 1)
       this._socket.connect(`http://localhost:${port}/eyes`)
-      this._socket.emit('Core.makeSDK', {protocol: 'webdriver'})
+      this._socket.emit('Core.makeSDK', {
+        name: 'eyes.selenium',
+        version: require('../package.json').version,
+        protocol: 'webdriver',
+        cwd: process.cwd(),
+      })
     })
     // important: this allows the client process to exit without hanging, while the server process still runs
     this._server.unref()

@@ -434,9 +434,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       }
       this._logger.log(`Attempt #${attempt} to set viewport size by setting window size to`, requiredWindowSize)
       await this._spec.setWindowSize(this.target, requiredWindowSize)
-      await utils.general.sleep(3000)
-      currentWindowSize = requiredWindowSize
+
+      const prevViewportSize = currentViewportSize
       currentViewportSize = await this.getViewportSize()
+      if (utils.geometry.equals(currentViewportSize, prevViewportSize)) {
+        currentViewportSize = await this.getViewportSize()
+      }
+      currentWindowSize = requiredWindowSize
       if (utils.geometry.equals(currentViewportSize, requiredViewportSize)) return
       this._logger.log(`Attempt #${attempt} to set viewport size failed. Current viewport:`, currentViewportSize)
     }

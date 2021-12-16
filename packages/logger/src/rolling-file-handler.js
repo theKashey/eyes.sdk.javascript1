@@ -15,7 +15,7 @@ function makeRollingFileLogger({
   return {log, open, close}
 
   function open() {
-    const filepath = path.resolve(dirname, `${name}-${new Date().toISOString()}.log`)
+    const filepath = path.resolve(dirname, `${name}-${new Date().toISOString().replace(/[-T:.]/g, '_')}.log`)
     ensureDirectoryExistence(filepath)
     writer = fs.createWriteStream(filepath, {flags: 'a', encoding: 'utf8'})
     fileLength = 0

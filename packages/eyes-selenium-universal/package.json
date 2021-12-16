@@ -29,9 +29,7 @@
   ],
   "scripts": {
     "lint": "eslint '**/*.ts' '**/*.js'",
-    "build": "yarn build:dist && yarn build:types",
-    "build:dist": "tsc",
-    "build:types": "api-extractor ./src/index.ts --out ./types/index.d.ts --external-modules selenium-webdriver",
+    "build": "ttsc",
     "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-selenium-universal'",
     "test": "yarn build:dist && yarn test:coverage",
     "test:test": "yarn generate:tests && mocha --no-timeouts ./test/generic/CheckWindowWithCssStitching.spec.js",
@@ -48,20 +46,20 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.1.2",
-    "@applitools/eyes-universal": "0.1.4",
-    "@applitools/types": "1.0.14",
-    "@applitools/utils": "1.2.3",
+    "@applitools/eyes-api": "1.1.6",
+    "@applitools/eyes-universal": "0.2.0",
+    "@applitools/types": "1.0.21",
+    "@applitools/utils": "1.2.4",
     "chalk": "4.1.0",
     "ws": "7.4.0"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.1.3",
+    "@applitools/api-extractor": "1.2.3",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-coverage-tests": "2.3.15",
-    "@applitools/sdk-release-kit": "0.13.3",
-    "@applitools/sdk-shared": "0.9.6",
-    "@applitools/test-utils": "1.0.7",
+    "@applitools/sdk-coverage-tests": "2.3.16",
+    "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/sdk-shared": "0.9.9",
+    "@applitools/test-utils": "1.0.9",
     "@types/selenium-webdriver": "^4.0.11",
     "@types/ws": "^7.4.4",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
@@ -76,7 +74,8 @@
     "prettier": "^2.1.2",
     "selenium-webdriver": "^4.0.0-alpha.7",
     "spec-xunit-file": "0.0.1-3",
-    "typescript": "^4.1.5"
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.5.4"
   },
   "peerDependencies": {
     "selenium-webdriver": ">=3.6.0"

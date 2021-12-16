@@ -3,8 +3,26 @@ import WebSocket from 'ws'
 
 export class Socket {
   private _socket: WebSocket = null
+  private _waiter: Waiter = null
   private _listeners = new Map<string, Set<(...args: any[]) => any>>()
   private _queue = new Set<() => any>()
+  private _refed = true
+
+  private _ref() {
+    //@ts-ignore
+    const command = () => this._socket._socket.ref()
+    if (this._socket?.readyState === WebSocket.OPEN) command()
+    else this._queue.add(command)
+    return () => this._queue.delete(command)
+  }
+
+  private _unref() {
+    //@ts-ignore
+    const command = () => this._socket._socket.unref()
+    if (this._socket?.readyState === WebSocket.OPEN) command()
+    else this._queue.add(command)
+    return () => this._queue.delete(command)
+  }
 
   connect(url: string): void {
     this._socket = new WebSocket(url)
@@ -69,13 +87,10 @@ export class Socket {
   }
 
   request(name: string, payload?: any): Promise<any> {
-    this.ref()
-    return new Promise((resolve, reject) => {
+    const request = new Promise((resolve, reject) => {
       const key = utils.general.guid()
-      // console.log(`${'[REQUEST]'} ${name}, ${key}, ${JSON.stringify(payload, null, 2)}`)
       this.emit(name, payload, key)
       this.once({name, key}, response => {
-        this.unref()
         if (response.error) {
           const error = new Error(response.error.message)
           error.stack = response.error.stack
@@ -84,6 +99,14 @@ export class Socket {
         return resolve(response.result)
       })
     })
+
+    if (!this._refed) {
+      this._ref()
+      this._waiter ??= new Waiter(() => this._unref())
+      this._waiter.wait(request)
+    }
+
+    return request
   }
 
   command(name: string, fn: (payload?: any) => any): () => void {
@@ -101,18 +124,28 @@ export class Socket {
   }
 
   ref(): () => void {
-    //@ts-ignore
-    const command = () => this._socket._socket.ref()
-    if (this._socket?.readyState === WebSocket.OPEN) command()
-    else this._queue.add(command)
-    return () => this._queue.delete(command)
+    this._refed = true
+    return this._ref()
   }
 
   unref(): () => void {
-    //@ts-ignore
-    const command = () => this._socket._socket.unref()
-    if (this._socket?.readyState === WebSocket.OPEN) command()
-    else this._queue.add(command)
-    return () => this._queue.delete(command)
+    this._refed = false
+    return this._unref()
+  }
+}
+
+class Waiter {
+  private _count = 0
+
+  constructor(private _callback: () => void) {}
+
+  wait(promise: Promise<any>): () => void {
+    let canceled = false
+    ++this._count
+    promise.finally(() => !canceled && --this._count === 0 && this._callback())
+    return () => {
+      canceled = true
+      --this._count
+    }
   }
 }

@@ -29,7 +29,8 @@ export async function transformDriver(driver: Driver): Promise<TransformedDriver
   const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
   return {
-    serverUrl: 'https://ondemand.saucelabs.com/wd/hub',
+    serverUrl: 'http://localhost:4444/wd/hub',
+    // serverUrl: 'https://ondemand.saucelabs.com/wd/hub',
     sessionId: session.getId(),
     capabilities: Array.from(capabilities.keys()).reduce((caps, key) => {
       caps[key] = capabilities.get(key)
