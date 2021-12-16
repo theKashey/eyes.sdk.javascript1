@@ -84,7 +84,7 @@ describe('addPageMarker', () => {
       const marker = await driver.execute(addPageMarker)
       assert.deepStrictEqual(marker, {
         offset: 1,
-        size: 3,
+        size: 1,
         mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
       })
       const element = await driver.$('[data-applitools-marker]')
