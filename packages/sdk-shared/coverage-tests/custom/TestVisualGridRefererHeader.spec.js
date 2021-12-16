@@ -20,7 +20,7 @@ describe('TestVisualGridRefererHeader', () => {
       port: 5556,
       allowCors: false,
       middlewares: ['cors'],
-      allowedUrls: [adjustUrlToDocker('http://localhost:5555/cors.html')]
+      allowedUrls: [adjustUrlToDocker('http://localhost:5555/cors.html')],
     })
   })
 
