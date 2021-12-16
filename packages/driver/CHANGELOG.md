@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.4.0 - 2021/12/16
+
 - improve native apps scrolling automation
 - fix ios safe area related issues
 - add helper library abstraction to cover appium edge cases
