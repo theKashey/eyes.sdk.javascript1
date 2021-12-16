@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.4.2 - 2021/12/16
+
 - fix exports subpathes
 
 ## 1.4.1 - 2021/12/16
