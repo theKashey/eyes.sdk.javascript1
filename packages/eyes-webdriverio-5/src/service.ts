@@ -17,7 +17,6 @@ const sdk = makeSDK({
   name: 'eyes-webdriverio-service',
   version: require('../package.json').version,
   spec,
-  cwd: process.cwd(),
   VisualGridClient: require('@applitools/visual-grid-client'),
 })
 class EyesOverride extends Eyes {
