@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.1.8 - 2021/12/16
+
 - fix `addPageMarker` to handle different pixel densities
 - change shape and size of marker added by `addPageMarker`
 
