@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.7 - 2021/12/16
+
 - change log file name in rolling file handler to not contain windows forbidden characters.
 
 ## 1.0.6 - 2021/11/23
