@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update `debug` dependency to 4.3.3
 
 ## 12.24.5 - 2021/11/23
 

@@ -2,14 +2,14 @@
 
 ## Unreleased
 
-
+- update `debug` dependency to 4.3.3
 ## 15.8.51 - 2021/12/16
 
 - update @applitools/jsdom to 1.0.4 (based on jsdom@19.0.0) in order to avoid deprecated dependencies
 
  ## 15.8.50 - 2021/12/9
 
- - add more logs for resources fetching
+- add more logs for resources fetching
 
 ## 15.8.49 - 2021/11/23
 
