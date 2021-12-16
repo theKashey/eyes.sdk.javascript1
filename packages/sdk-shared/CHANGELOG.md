@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 0.9.11 - 2021/12/16
+
+- updated to @applitools/test-server@1.0.8 (from 1.0.7)
+- updated to @applitools/test-utils@1.0.10 (from 1.0.9)
+
 ## 0.9.10 - 2021/12/16
 
 - fix cors middleware usage
