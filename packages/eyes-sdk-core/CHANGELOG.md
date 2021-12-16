@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.24.6 - 2021/12/16
+
 - update `debug` dependency to 4.3.3
 - updated to @applitools/dom-capture@11.1.0 (from 11.0.2)
 - updated to @applitools/driver@1.4.2 (from 1.3.5)
