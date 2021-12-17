@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.4.3 - 2021/12/17
+
 - convert base64 result of `spec.takeScreenshot` to `Buffer` before return it from `Driver`'s `takeScreenshot` method
 - updated to @applitools/snippets@2.1.9 (from 2.1.8)
 
