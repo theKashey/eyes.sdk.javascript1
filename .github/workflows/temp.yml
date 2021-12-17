@@ -1,0 +1,116 @@
+name: Temp
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: package names (aliases)
+        required: true
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{steps.setup.outputs.packages}}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/parser
+        id: setup
+        with:
+          packages: ${{github.event.inputs.packages}}
+          release-version: ${{github.event.inputs.version}}
+
+  types:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'types'
+  utils:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'utils'
+  snippets:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).snippets}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'snippets'
+  test-utils:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'test-utils'
+
+  logger:
+    needs: [setup, utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'logger'
+  screenshoter:
+    needs: [setup, utils, driver, snippets, spec-webdriverio]
+    if: ${{(fromJSON(needs.setup.outputs.packages).screenshoter || ) && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'screenshoter'
+  driver:
+    needs: [setup, types, utils, snippets]
+    if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'driver'
+  test-server:
+    needs: [setup, utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'test-server'
+  scripts:
+    needs: [setup, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).scripts && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'scripts'
+
+  # CORE
+  api:
+    needs: [setup, types, utils, logger]
+    if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'api'
+  core:
+    needs: [setup, types, utils, test-utils, logger, driver, screenshoter, snippets]
+    if: ${{fromJSON(needs.setup.outputs.packages).core && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'core'
+  universal:
+    needs: [setup, types, utils, logger, core, vgc]
+    if: ${{fromJSON(needs.setup.outputs.packages).universal && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'universal'
+  vgc:
+    needs: [setup, core]
+    if: ${{fromJSON(needs.setup.outputs.packages).vgc && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'vgc'
