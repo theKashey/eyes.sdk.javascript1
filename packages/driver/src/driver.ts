@@ -415,9 +415,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this.currentContext.execute(script, arg)
   }
 
-  async takeScreenshot(): Promise<Buffer | string> {
-    const data = await this._spec.takeScreenshot(this.target)
-    return utils.types.isString(data) ? data.replace(/[\r\n]+/g, '') : data
+  async takeScreenshot(): Promise<Buffer> {
+    const image = await this._spec.takeScreenshot(this.target)
+    if (utils.types.isString(image)) {
+      return Buffer.from(image.replace(/[\r\n]+/g, ''))
+    }
+    return image
   }
 
   async getViewportSize(): Promise<types.Size> {

@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- convert base64 result of `spec.takeScreenshot` to `Buffer` before return it from `Driver`'s `takeScreenshot` method
 
 ## 3.3.1 - 2021/12/17
 
