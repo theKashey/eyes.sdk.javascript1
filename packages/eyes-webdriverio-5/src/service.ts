@@ -1,4 +1,5 @@
 import {makeSDK} from '@applitools/eyes-sdk-core'
+import {Services, Frameworks} from '@wdio/types'
 import * as spec from './spec-driver'
 import {Driver, Element, Eyes, VisualGridRunner, ClassicRunner, ConfigurationPlain, TestResults} from './api'
 
@@ -29,7 +30,7 @@ interface EyesServiceOptions extends ConfigurationPlain {
   eyes?: EyesServiceOptions
 }
 
-class EyesService {
+class EyesService implements Services.ServiceInstance {
   private _eyes: Eyes
   private _appName: string
   private _testResults: TestResults
@@ -45,6 +46,20 @@ class EyesService {
       config,
     )
   }
+
+  private async _eyesOpen() {
+    if (!this._eyes.isOpen) {
+      this._testResults = null
+      await this._eyes.open(browser as Driver)
+    }
+  }
+
+  private async _eyesClose() {
+    if (this._eyes.isOpen) {
+      this._testResults = await this._eyes.close(false)
+    }
+  }
+
   beforeSession(config: Record<string, unknown>) {
     this._appName = this._eyes.configuration.appName
     if (config.enableEyesLogs) {
@@ -100,12 +115,12 @@ class EyesService {
       return this._eyes.runner.getAllTestResults(throwErr)
     })
   }
-  beforeTest(test: Record<string, string>) {
+  beforeTest(test: Frameworks.Test) {
     const configuration = this._eyes.getConfiguration()
     configuration.setTestName(test.title ?? test.description) // test.title is for mocha, and test.description is for jasmine
 
     if (!this._appName) {
-      configuration.setAppName(test.parent ?? (test.fullName?.replace(` ${test.description}`, '') || test.id)) // test.parent is for mocha, and test.id is for jasmine
+      configuration.setAppName(test.parent ?? test.fullName?.replace(` ${test.description}`, '')) // test.parent is for mocha, and test.id is for jasmine
     }
 
     if (!configuration.getViewportSize()) {
@@ -122,19 +137,6 @@ class EyesService {
   async after() {
     await this._eyes.runner.getAllTestResults(false)
     await this._eyes.abort()
-  }
-
-  async _eyesOpen() {
-    if (!this._eyes.isOpen) {
-      this._testResults = null
-      await this._eyes.open(browser as Driver)
-    }
-  }
-
-  async _eyesClose() {
-    if (this._eyes.isOpen) {
-      this._testResults = await this._eyes.close(false)
-    }
   }
 }
 
