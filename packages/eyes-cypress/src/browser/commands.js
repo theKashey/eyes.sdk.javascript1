@@ -53,7 +53,7 @@ Cypress.Commands.add('eyesOpen', function(args = {}) {
   Cypress.config('eyesOpenArgs', args);
   Cypress.log({name: 'Eyes: open'});
   const userAgent = navigator.userAgent;
-  const {title: testName} = this.currentTest || this.test;
+  const {title: testName} = this.currentTest || this.test || Cypress.currentTest;
   const {browser: eyesOpenBrowser, isDisabled} = args;
   const globalBrowser = getGlobalConfigProperty('eyesBrowser');
   const defaultBrowser = {
