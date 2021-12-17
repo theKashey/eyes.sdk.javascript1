@@ -180,37 +180,7 @@ export async function getCapabilities(browser: Driver): Promise<Record<string, a
   return browser.getSession?.() ?? browser.capabilities
 }
 export async function getDriverInfo(driver: Driver): Promise<any> {
-  const capabilities = driver.capabilities as any
-  const info: any = {
-    sessionId: driver.sessionId,
-    isMobile: driver.isMobile,
-    isNative: driver.isMobile && !capabilities.browserName,
-    deviceName: capabilities.desired?.deviceName ?? capabilities.deviceName,
-    platformName: capabilities.platformName ?? capabilities.platform ?? capabilities.desired?.platformName,
-    platformVersion: capabilities.platformVersion,
-    browserName: capabilities.browserName ?? capabilities.desired?.browserName,
-    browserVersion: capabilities.browserVersion ?? capabilities.version,
-    pixelRatio: capabilities.pixelRatio,
-  }
-
-  if (info.isNative) {
-    const capabilities = utils.types.has(driver.capabilities, ['pixelRatio', 'viewportRect', 'statBarHeight'])
-      ? driver.capabilities
-      : await driver.getSession()
-
-    info.pixelRatio = capabilities.pixelRatio
-
-    try {
-      const {statusBar, navigationBar} = (await driver.getSystemBars()) as any
-      info.statusBarHeight = statusBar.visible ? statusBar.height : 0
-      info.navigationBarHeight = navigationBar.visible ? navigationBar.height : 0
-    } catch (err) {
-      info.statusBarHeight = capabilities.statBarHeight ?? capabilities.viewportRect?.top ?? 0
-      info.navigationBarHeight = 0
-    }
-  }
-
-  return info
+  return {sessionId: driver.sessionId}
 }
 export async function getTitle(driver: Driver): Promise<string> {
   return driver.getTitle()
@@ -227,6 +197,9 @@ export async function takeScreenshot(driver: Driver): Promise<string> {
 export async function click(driver: Driver, element: Element | Selector): Promise<void> {
   if (isSelector(element)) element = await findElement(driver, element)
   await driver.elementClick(extractElementId(element))
+}
+export async function type(driver: Driver, element: Element, value: string): Promise<void> {
+  await driver.elementSendKeys(extractElementId(element), value)
 }
 
 // #endregion

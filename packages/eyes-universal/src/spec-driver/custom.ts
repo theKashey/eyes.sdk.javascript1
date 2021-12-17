@@ -70,9 +70,6 @@ export function makeSpec(options: {
     async findElements(context: Context, selector: Selector, parent?: Element): Promise<Element[]> {
       return socket.request('Driver.findElements', {context, selector, parent})
     },
-    async click(context: Context, element: Element | Selector): Promise<void> {
-      return socket.request('Driver.click', {context, element})
-    },
     async getWindowSize(driver: Driver): Promise<types.Size> {
       return socket.request('Driver.getWindowSize', {driver})
     },
@@ -102,6 +99,12 @@ export function makeSpec(options: {
     },
     async takeScreenshot(driver: Driver): Promise<string> {
       return socket.request('Driver.takeScreenshot', {driver})
+    },
+    async click(context: Context, element: Element | Selector): Promise<void> {
+      return socket.request('Driver.click', {context, element})
+    },
+    async type(context: Context, element: Element, value: string): Promise<void> {
+      return socket.request('Driver.type', {context, element, value})
     },
     async visit(driver: Driver, url: string): Promise<void> {
       return socket.request('Driver.visit', {driver, url})
