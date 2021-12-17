@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.1.9 - 2021/12/17
+
 - fix `scrollTo` which was returning the wrong actual scroll position due to `scroll-behavior: smooth` style on the scrollable element
 
 ## 2.1.8 - 2021/12/16
