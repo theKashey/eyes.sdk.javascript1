@@ -1,0 +1,98 @@
+name: Temp R
+
+on:
+  workflow_call:
+    inputs:
+      schema:
+        required: true
+jobs:
+  types:
+    if: ${{fromJSON(inputs.schema).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'types'
+  utils:
+    if: ${{fromJSON(inputs.schema).utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'utils'
+  snippets:
+    if: ${{fromJSON(inputs.schema).snippets}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'snippets'
+  test-utils:
+    if: ${{fromJSON(inputs.schema).test-utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'test-utils'
+
+  logger:
+    needs: [utils]
+    if: ${{fromJSON(inputs.schema).logger && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'logger'
+  screenshoter:
+    needs: ${{fromJSON(inputs.schema).screenshoter.needs}}
+    if: ${{fromJSON(inputs.schema).screenshoter && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'screenshoter'
+  driver:
+    needs: [types, utils, snippets]
+    if: ${{fromJSON(inputs.schema).driver && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'driver'
+  test-server:
+    needs: [utils]
+    if: ${{fromJSON(inputs.schema).test-server && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'test-server'
+  scripts:
+    needs: [test-utils]
+    if: ${{fromJSON(inputs.schema).scripts && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'scripts'
+
+  # CORE
+  api:
+    needs: [types, utils, logger]
+    if: ${{fromJSON(inputs.schema).api && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'api'
+  core:
+    needs: [types, utils, test-utils, logger, driver, screenshoter, snippets]
+    if: ${{fromJSON(inputs.schema).core && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'core'
+  universal:
+    needs: [types, utils, logger, core, vgc]
+    if: ${{fromJSON(inputs.schema).universal && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'universal'
+  vgc:
+    needs: [core]
+    if: ${{fromJSON(inputs.schema).vgc && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do the thing
+        run: echo 'vgc'
