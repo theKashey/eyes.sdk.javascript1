@@ -4,6 +4,7 @@
 ## Unreleased
 
 - add basic support of webview screenshots on ios
+- updated to @applitools/snippets@2.1.10 (from 2.1.8)
 
 ## 3.3.1 - 2021/12/17
 
