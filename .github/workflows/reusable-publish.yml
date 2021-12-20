@@ -38,26 +38,6 @@ env:
   FORCE_COLOR: 3
 jobs:
   # TOOLING
-  scripts:
-    needs: [utils, test-utils]
-    if: ${{fromJSON(inputs.schema).scripts && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(inputs.schema).scripts.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(inputs.schema).scripts.dirname}}
-          version: ${{fromJSON(inputs.schema).scripts.releaseVersion}}
   bongo:
     needs: [utils]
     if: ${{fromJSON(inputs.schema).bongo && !failure() && !cancelled()}}
@@ -78,11 +58,31 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).bongo.dirname}}
           version: ${{fromJSON(inputs.schema).bongo.releaseVersion}}
+  scripts:
+    needs: [bongo, utils, test-utils]
+    if: ${{fromJSON(inputs.schema).scripts && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).scripts.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).scripts.dirname}}
+          version: ${{fromJSON(inputs.schema).scripts.releaseVersion}}
 
   # BASE
   types:
     needs: [bongo]
-    if: ${{fromJSON(inputs.schema).types}}
+    if: ${{fromJSON(inputs.schema).types && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -120,7 +120,7 @@ jobs:
   # TESTING BASE
   test-utils:
     needs: [bongo]
-    if: ${{fromJSON(inputs.schema).test-utils}}
+    if: ${{fromJSON(inputs.schema).test-utils && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -182,7 +182,7 @@ jobs:
           version: ${{fromJSON(inputs.schema).logger.releaseVersion}}
   snippets:
     needs: [bongo]
-    if: ${{fromJSON(inputs.schema).snippets}}
+    if: ${{fromJSON(inputs.schema).snippets && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -283,7 +283,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).vgc.dirname}}
           version: ${{fromJSON(inputs.schema).vgc.releaseVersion}}
   api:
-    needs: [types, utils, logger]
+    needs: [bongo, types, utils, logger]
     if: ${{fromJSON(inputs.schema).api && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:

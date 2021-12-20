@@ -76,6 +76,7 @@ if (allowCascading) {
   })
 }
 
+core.notice(`Packages to process: "${Object.values(packages).map(package => package.displayName).join(', ')}"`)
 
 core.setOutput('packages', allowVariations ? Object.values(packages) : packages)
 
