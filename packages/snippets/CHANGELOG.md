@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.1.10 - 2021/12/20
+
 - overwrite `transform` style property with `!important` in `translateTo`
 
 ## 2.1.9 - 2021/12/17
