@@ -12,8 +12,8 @@ const env = {
     name: 'iOS Screenshoter Test',
     deviceName: 'iPhone 11 Pro Simulator',
     platformName: 'iOS',
-    platformVersion: '13.4',
-    appiumVersion: '1.19.2',
+    platformVersion: '14.5',
+    appiumVersion: '1.21.0',
     automationName: 'XCUITest',
     app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
     username: process.env.SAUCE_USERNAME,
@@ -129,6 +129,10 @@ describe('screenshoter ios', () => {
 
   async function app(options = {}) {
     const expectedPath = `./test/fixtures/ios/app${options.withStatusBar ? '-statusbar' : ''}.png`
+    const buttonSelector = {type: 'accessibility id', selector: 'Empty table view'}
+
+    const button = await driver.element(buttonSelector)
+    await button.click()
 
     const screenshot = await takeScreenshot({logger, driver, ...options})
     try {
@@ -211,6 +215,8 @@ describe('screenshoter ios', () => {
     } catch (err) {
       await screenshot.image.debug({path: './logs', name: 'webview_failed', suffix: Date.now()})
       throw err
+    } finally {
+      await driver.target.switchContext('NATIVE_APP')
     }
   }
   async function fullWebview(options) {
@@ -240,9 +246,18 @@ describe('screenshoter ios', () => {
     } catch (err) {
       await screenshot.image.debug({path: './logs', name: 'full_webview_failed', suffix: Date.now()})
       throw err
+    } finally {
+      await driver.target.switchContext('NATIVE_APP')
     }
   }
   async function region(options) {
+    const expectedPath = `./test/fixtures/ios/region.png`
+    const buttonSelector = {type: 'accessibility id', selector: 'Empty table view'}
+
+    const button = await driver.element(buttonSelector)
+    await button.click()
+
+    await driver.init()
     const screenshot = await takeScreenshot({
       logger,
       driver,
@@ -253,7 +268,7 @@ describe('screenshoter ios', () => {
     })
     try {
       const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/ios/region.png').toObject()
+      const expected = await makeImage(expectedPath).toObject()
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
       await screenshot.image.debug({path: './logs', name: 'region_failed'})
