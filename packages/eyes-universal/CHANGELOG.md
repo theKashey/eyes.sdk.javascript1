@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- update nodejs version in binaries to 16 lts
+
 ## 0.2.1 - 2021/12/17
 
 - updated to @applitools/eyes-sdk-core@12.24.6 (from 12.24.4)

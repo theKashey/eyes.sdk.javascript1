@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- improve native android app scrolling performance
+- fix bug with `Buffer.from` and base64
 
 ## 1.4.3 - 2021/12/17
 

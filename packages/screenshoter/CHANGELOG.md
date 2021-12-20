@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- add basic support of webview screenshots on ios
 
 ## 3.3.1 - 2021/12/17
 
