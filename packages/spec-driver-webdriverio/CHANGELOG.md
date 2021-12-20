@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix `getDriverInfo`
 
 ## 1.2.4 - 2021/12/20
 
