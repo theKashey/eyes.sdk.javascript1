@@ -13,7 +13,7 @@ describe('pattern', () => {
     {name: 'iPad_5th_portrait', position: {x: 0, y: 140}, offset: 0, pixelRatio: 2},
     {name: 'iPad_5th_landscape', position: {x: 0, y: 140}, offset: 0, pixelRatio: 2},
     {name: 'iPad_9th_portrait', position: {x: 0, y: 136}, offset: 0, pixelRatio: 2},
-    {name: 'iPad_9th_landscape', position: {x: 641, y: 137}, offset: 1, pixelRatio: 2},
+    {name: 'iPad_9th_landscape', position: {x: 640, y: 136}, offset: 1, pixelRatio: 2},
     {name: 'iPhone_XS_portrait_noviewport', position: {x: 0, y: 282}, offset: 0, pixelRatio: 3},
     {name: 'iPhone_XS_portrait_nomarker', position: null, pixelRatio: 3},
   ]
