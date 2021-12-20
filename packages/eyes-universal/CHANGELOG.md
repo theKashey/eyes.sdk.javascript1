@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.2.2 - 2021/12/20
+
 - update nodejs version in binaries to 16 lts
 - updated to @applitools/eyes-sdk-core@12.24.7 (from 12.24.6)
 - updated to @applitools/visual-grid-client@15.8.53 (from 15.8.52)
