@@ -110,7 +110,7 @@
   "dependencies": {
     "@applitools/eyes-api": "1.1.6",
     "@applitools/eyes-sdk-core": "12.24.7",
-    "@applitools/spec-driver-webdriverio": "1.2.3",
+    "@applitools/spec-driver-webdriverio": "1.2.5",
     "@applitools/visual-grid-client": "15.8.53"
   },
   "devDependencies": {
