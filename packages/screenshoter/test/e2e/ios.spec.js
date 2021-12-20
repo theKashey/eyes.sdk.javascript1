@@ -20,14 +20,14 @@ const env = {
     accessKey: process.env.SAUCE_ACCESS_KEY,
   },
 
-  url: 'http://0.0.0.0:4723/wd/hub',
-  capabilities: {
-    deviceName: 'iPhone 11 Pro',
-    platformName: 'iOS',
-    platformVersion: '14.5',
-    automationName: 'XCUITest',
-    app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
-  },
+  // url: 'http://0.0.0.0:4723/wd/hub',
+  // capabilities: {
+  //   deviceName: 'iPhone 11 Pro',
+  //   platformName: 'iOS',
+  //   platformVersion: '14.5',
+  //   automationName: 'XCUITest',
+  //   app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
+  // },
 }
 
 describe('screenshoter ios', () => {
@@ -107,7 +107,7 @@ describe('screenshoter ios', () => {
     return webview()
   })
 
-  it.only('take full webview screenshot', () => {
+  it('take full webview screenshot', () => {
     return fullWebview()
   })
 
