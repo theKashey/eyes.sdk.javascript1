@@ -24,8 +24,10 @@ jobs:
     outputs:
       packages: ${{steps.setup.outputs.packages}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/parser
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup
+        uses: ./.github/actions/parser
         id: setup
         with:
           packages: ${{github.event.inputs.packages}}

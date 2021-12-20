@@ -5,12 +5,16 @@ on:
     inputs:
       packages:
         description: package names (aliases and variations)
+        type: string
         required: true
       type:
         description: testing type (unit, it, e2e, coverage)
+        type: string
         required: false
       remote:
-        description: remote type (local, eg)
+        description: remote type
+        type: choice
+        options: [local, eg]
         default: local
         required: false
       links:
