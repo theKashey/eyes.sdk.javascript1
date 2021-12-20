@@ -13,6 +13,7 @@ const PACKAGES = [
 
   // #region TOOLING
   {name: 'scripts', dirname: 'scripts', aliases: ['@applitools/scripts'], dependencies: ['utils', 'test-utils']},
+  {name: 'bongo', dirname: 'sdk-release-kit', aliases: ['@applitools/sdk-release-kit'], dependencies: ['utils']},
   // #endregion
 
   // #region MODULES
@@ -44,13 +45,13 @@ const PACKAGES = [
   {name: 'webdriverio', dirname: 'eyes-webdriverio-5', framework: 'webdriverio', sdk: true, aliases: ['wdio', 'eyes-webdriverio', '@applitools/eyes-webdriverio'], dependencies: ['spec-webdriverio', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'webdriverio-service', dirname: 'eyes-webdriverio-5-service', framework: 'webdriverio', sdk: true, aliases: ['wdio-service', 'eyes-webdriverio-service', '@applitools/eyes-webdriverio-service'], dependencies: ['webdriverio']},
   {name: 'webdriverio-legacy', dirname: 'eyes-webdriverio-4', framework: 'webdriverio', sdk: true, aliases: ['wdio-legacy', 'eyes.webdriverio', '@applitools/eyes.webdriverio'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
-  {name: 'selenium', dirname: 'eyes-selenium', framework: 'selenium-webdriver', sdk: true, aliases: ['@applitools/eyes-selenium'], dependencies: ['spec-selenium', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'selenium', dirname: 'eyes-selenium', framework: 'selenium-webdriver', sdk: true, aliases: ['@applitools/eyes-selenium'], dependencies: ['api', 'core', 'vgc', 'spec-selenium', 'test-utils']},
   {name: 'protractor', dirname: 'eyes-protractor', framework: 'protractor', sdk: true, aliases: ['@applitools/eyes-protractor'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'nightwatch', dirname: 'eyes-nightwatch', framework: 'nightwatch', sdk: true, aliases: ['nw', '@applitools/eyes-nightwatch'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'testcafe', dirname: 'eyes-testcafe', framework: 'testcafe', sdk: true, aliases: ['@applitools/eyes-testcafe'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, aliases: ['extension', '@applitools/eyes-browser-extension'], dependencies: ['utils', 'core', 'vgc', 'spec-playwright', 'test-utils']},
-  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: []},
-  {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook'], dependencies: ['spec-puppeteer', 'logger', 'core', 'vgc', 'test-utils']},
+  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: ['logger', 'vgc', 'test-server']},
+  {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook'], dependencies: ['logger', 'core', 'vgc', 'spec-puppeteer', 'test-utils']},
   // #endregion
 ]
 

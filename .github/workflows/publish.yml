@@ -37,83 +37,6 @@ env:
   STDOUT_LEVEL: 1
   FORCE_COLOR: 3
 jobs:
-  # BASE
-  types:
-    if: ${{fromJSON(inputs.schema).types}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(inputs.schema).types.dirname}}
-          version: ${{fromJSON(inputs.schema).types.releaseVersion}}
-  utils:
-    if: ${{fromJSON(inputs.schema).utils}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(inputs.schema).utils.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(inputs.schema).utils.dirname}}
-          version: ${{fromJSON(inputs.schema).utils.releaseVersion}}
-
-  # TESTING BASE
-  test-utils:
-    if: ${{fromJSON(inputs.schema).test-utils}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(inputs.schema).test-utils.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(inputs.schema).test-utils.dirname}}
-          version: ${{fromJSON(inputs.schema).test-utils.releaseVersion}}
-  test-server:
-    needs: [utils]
-    if: ${{fromJSON(inputs.schema).test-server && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(inputs.schema).utils.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(inputs.schema).test-server.dirname}}
-          version: ${{fromJSON(inputs.schema).test-server.releaseVersion}}
-
   # TOOLING
   scripts:
     needs: [utils, test-utils]
@@ -135,10 +58,110 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).scripts.dirname}}
           version: ${{fromJSON(inputs.schema).scripts.releaseVersion}}
+  bongo:
+    needs: [utils]
+    if: ${{fromJSON(inputs.schema).bongo && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).bongo.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).bongo.dirname}}
+          version: ${{fromJSON(inputs.schema).bongo.releaseVersion}}
+
+  # BASE
+  types:
+    needs: [bongo]
+    if: ${{fromJSON(inputs.schema).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).types.dirname}}
+          version: ${{fromJSON(inputs.schema).types.releaseVersion}}
+  utils:
+    # needs: [bongo] it cannot depend on bongo because it will create cyclic dependency
+    if: ${{fromJSON(inputs.schema).utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).utils.dirname}}
+          version: ${{fromJSON(inputs.schema).utils.releaseVersion}}
+
+  # TESTING BASE
+  test-utils:
+    needs: [bongo]
+    if: ${{fromJSON(inputs.schema).test-utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).test-utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).test-utils.dirname}}
+          version: ${{fromJSON(inputs.schema).test-utils.releaseVersion}}
+  test-server:
+    needs: [bongo, utils]
+    if: ${{fromJSON(inputs.schema).test-server && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).test-server.dirname}}
+          version: ${{fromJSON(inputs.schema).test-server.releaseVersion}}
 
   # MODULES
   logger:
-    needs: [utils]
+    needs: [bongo, utils]
     if: ${{fromJSON(inputs.schema).logger && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -158,6 +181,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).logger.dirname}}
           version: ${{fromJSON(inputs.schema).logger.releaseVersion}}
   snippets:
+    needs: [bongo]
     if: ${{fromJSON(inputs.schema).snippets}}
     runs-on: ubuntu-latest
     steps:
@@ -177,7 +201,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).snippets.dirname}}
           version: ${{fromJSON(inputs.schema).snippets.releaseVersion}}
   screenshoter:
-    needs: [utils, driver, snippets, spec-webdriverio]
+    needs: [bongo, utils, driver, snippets, spec-webdriverio]
     if: ${{fromJSON(inputs.schema).screenshoter && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -197,7 +221,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).screenshoter.dirname}}
           version: ${{fromJSON(inputs.schema).screenshoter.releaseVersion}}
   driver:
-    needs: [types, utils, snippets]
+    needs: [bongo, types, utils, snippets]
     if: ${{fromJSON(inputs.schema).driver && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -219,7 +243,7 @@ jobs:
 
   # CORE
   core:
-    needs: [types, utils, test-utils, logger, driver, screenshoter, snippets]
+    needs: [bongo, types, utils, logger, driver, screenshoter, snippets, test-utils]
     if: ${{fromJSON(inputs.schema).core && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -239,7 +263,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).core.dirname}}
           version: ${{fromJSON(inputs.schema).core.releaseVersion}}
   vgc:
-    needs: [core]
+    needs: [bongo, core]
     if: ${{fromJSON(inputs.schema).vgc && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -281,7 +305,7 @@ jobs:
 
   # SPEC DRIVERS
   spec-playwright:
-    needs: [types, utils, test-utils]
+    needs: [bongo, types, utils, test-utils]
     if: ${{fromJSON(inputs.schema).spec-playwright && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -301,7 +325,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).spec-playwright.dirname}}
           version: ${{fromJSON(inputs.schema).spec-playwright.releaseVersion}}
   spec-puppeteer:
-    needs: [types, utils, test-utils]
+    needs: [bongo, types, utils, test-utils]
     if: ${{fromJSON(inputs.schema).spec-puppeteer && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -321,7 +345,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).spec-puppeteer.dirname}}
           version: ${{fromJSON(inputs.schema).spec-puppeteer.releaseVersion}}
   spec-selenium:
-    needs: [types, utils, test-utils]
+    needs: [bongo, types, utils, test-utils]
     if: ${{fromJSON(inputs.schema).spec-selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -341,7 +365,7 @@ jobs:
           package: ${{fromJSON(inputs.schema).spec-selenium.dirname}}
           version: ${{fromJSON(inputs.schema).spec-selenium.releaseVersion}}
   spec-webdriverio:
-    needs: [types, utils, test-utils]
+    needs: [bongo, types, utils, test-utils]
     if: ${{fromJSON(inputs.schema).spec-webdriverio && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -363,7 +387,7 @@ jobs:
 
   # SDKS
   universal:
-    needs: [types, utils, logger, core, vgc]
+    needs: [bongo, types, utils, logger, core, vgc]
     if: ${{fromJSON(inputs.schema).universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -397,7 +421,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   playwright:
-    needs: [spec-playwright, api, core, vgc, test-utils]
+    needs: [bongo, api, core, vgc, spec-playwright, test-utils]
     if: ${{fromJSON(inputs.schema).playwright && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -427,7 +451,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).playwright.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).playwright.dirname}}/coverage-test-report.xml
   puppeteer:
-    needs: [spec-puppeteer, api, core, vgc, test-utils]
+    needs: [bongo, api, core, vgc, spec-puppeteer, test-utils]
     if: ${{fromJSON(inputs.schema).puppeteer && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -457,7 +481,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).puppeteer.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).puppeteer.dirname}}/coverage-test-report.xml
   webdriverio:
-    needs: [spec-webdriverio, api, core, vgc, test-utils]
+    needs: [bongo, api, core, vgc, spec-webdriverio, test-utils]
     if: ${{fromJSON(inputs.schema).webdriverio && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -487,7 +511,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).webdriverio.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).webdriverio.dirname}}/coverage-test-report.xml
   selenium:
-    needs: [spec-selenium, api, core, vgc, test-utils]
+    needs: [bongo, api, core, vgc, spec-selenium, test-utils]
     if: ${{fromJSON(inputs.schema).selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -517,7 +541,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).selenium.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).selenium.dirname}}/coverage-test-report.xml
   protractor:
-    needs: [types, utils, api, core, vgc, test-utils]
+    needs: [bongo, types, utils, api, core, vgc, test-utils]
     if: ${{fromJSON(inputs.schema).protractor && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -547,7 +571,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).protractor.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).protractor.dirname}}/coverage-test-report.xml
   nightwatch:
-    needs: [types, utils, api, core, vgc, test-utils]
+    needs: [bongo, types, utils, api, core, vgc, test-utils]
     if: ${{fromJSON(inputs.schema).nightwatch && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -577,7 +601,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).nightwatch.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).nightwatch.dirname}}/coverage-test-report.xml
   testcafe:
-    needs: [types, utils, api, core, vgc, test-utils]
+    needs: [bongo, types, utils, api, core, vgc, test-utils]
     if: ${{fromJSON(inputs.schema).testcafe && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -607,7 +631,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).testcafe.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).testcafe.dirname}}/coverage-test-report.xml
   browser-extension:
-    needs: [utils, core, vgc, spec-playwright, test-utils]
+    needs: [bongo, utils, core, vgc, spec-playwright, test-utils]
     if: ${{fromJSON(inputs.schema).browser-extension && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -638,7 +662,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   storybook:
-    needs: [spec-puppeteer, logger, core, vgc, test-utils]
+    needs: [bongo, logger, core, vgc, spec-puppeteer, test-utils]
     if: ${{fromJSON(inputs.schema).storybook && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -658,10 +682,32 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).storybook.dirname}}
           version: ${{fromJSON(inputs.schema).storybook.releaseVersion}}
+  cypress:
+    needs: [bongo, logger, vgc, test-server]
+    if: ${{fromJSON(inputs.schema).cypress && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(inputs.schema).cypress.dirname}}
+        env: ${{fromJSON(inputs.schema).cypress.env}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(inputs.schema).cypress.dirname}}
+          version: ${{fromJSON(inputs.schema).cypress.releaseVersion}}
+
 
   # UNIVERSAL SDKS
   playwright-universal:
-    needs: [spec-playwright, api, universal, test-utils]
+    needs: [bongo, api, universal, spec-playwright, test-utils]
     if: ${{fromJSON(inputs.schema).playwright-universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -691,7 +737,7 @@ jobs:
             packages/${{fromJSON(inputs.schema).playwright-universal.dirname}}/coverage-tests-metadata.json
             packages/${{fromJSON(inputs.schema).playwright-universal.dirname}}/coverage-test-report.xml
   selenium-universal:
-    needs: [types, utils, test-utils, api, universal]
+    needs: [bongo, api, universal, spec-selenium, test-utils]
     if: ${{fromJSON(inputs.schema).selenium-universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -723,7 +769,7 @@ jobs:
 
   # LEGACY SDKS
   webdriverio-legacy:
-    needs: [types, utils, api, core, vgc, test-utils]
+    needs: [bongo, types, utils, api, core, vgc, test-utils]
     if: ${{fromJSON(inputs.schema).webdriverio-legacy && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -755,7 +801,7 @@ jobs:
 
   # SDK WRAPPERS
   webdriverio-service:
-    needs: [webdriverio]
+    needs: [bongo, webdriverio]
     if: ${{fromJSON(inputs.schema).webdriverio-service && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
