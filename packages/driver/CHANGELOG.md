@@ -4,6 +4,7 @@
 
 - improve native android app scrolling performance
 - fix bug with `Buffer.from` and base64
+- updated to @applitools/snippets@2.1.10 (from 2.1.9)
 
 ## 1.4.3 - 2021/12/17
 
