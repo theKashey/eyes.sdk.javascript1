@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/types@1.0.22 (from 1.0.21)
 
+
+## 1.2.3 - 2021/12/20
+
+- updated to @applitools/types@1.0.22 (from 1.0.21)
 
 ## 1.2.2 - 2021/12/7
 
