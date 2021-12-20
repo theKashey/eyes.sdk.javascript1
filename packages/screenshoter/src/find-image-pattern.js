@@ -1,7 +1,8 @@
 function findImagePattern(image, pattern) {
   for (let pixel = 0; pixel < image.width * image.height; ++pixel) {
     if (isPattern(image, pixel, pattern)) {
-      return {x: (pixel % image.width) - pattern.offset, y: Math.floor(pixel / image.width) - pattern.offset}
+      const patterOffset = pattern.offset * pattern.pixelRatio
+      return {x: (pixel % image.width) - patterOffset, y: Math.floor(pixel / image.width) - patterOffset}
     }
   }
   return null

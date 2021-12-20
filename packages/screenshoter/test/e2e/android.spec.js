@@ -20,6 +20,17 @@ const env = {
       username: process.env.SAUCE_USERNAME,
       accessKey: process.env.SAUCE_ACCESS_KEY,
     },
+
+    // url: 'http://0.0.0.0:4723/wd/hub',
+    // capabilities: {
+    //   deviceName: 'Google Pixel 3a XL',
+    //   platformName: 'Android',
+    //   platformVersion: '10.0',
+    //   automationName: 'uiautomator2',
+    //   nativeWebScreenshot: true,
+    //   avd: 'Pixel_3a_XL',
+    //   app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
+    // },
   },
   androidx: {
     url: 'https://ondemand.saucelabs.com/wd/hub',
@@ -100,6 +111,10 @@ describe('screenshoter', () => {
       return fullApp({type: 'non-scrollable'})
     })
 
+    it.skip('take webview screenshot', () => {
+      return webview()
+    })
+
     it('take region screenshot', () => {
       return region()
     })
@@ -136,6 +151,10 @@ describe('screenshoter', () => {
       return fullApp({type: 'collapsing', x: true})
     })
 
+    it.skip('take full app screenshot (pager)', () => {
+      return fullApp({type: 'pager', x: true})
+    })
+
     it.skip('take full app screenshot (overlapped status bar)', () => {
       return fullApp({type: 'overlapped', x: true})
     })
@@ -161,7 +180,10 @@ describe('screenshoter', () => {
   }
   async function fullApp({type, x, ...options} = {}) {
     let buttonSelector, expectedPath, scrollingElementSelector
-    if (type === 'overlapped') {
+    if (type === 'pager') {
+      buttonSelector = {type: 'id', selector: 'btn_view_pager_2_activity'}
+      expectedPath = `./test/fixtures/android/x-app-fully-pager${options.withStatusBar ? '-statusbar' : ''}.png`
+    } else if (type === 'overlapped') {
       buttonSelector = {type: 'id', selector: 'btn_recycler_view_under_status_bar_activity'}
       expectedPath = `./test/fixtures/android/x-app-fully-overlapped${options.withStatusBar ? '-statusbar' : ''}.png`
     } else if (type === 'collapsing') {
@@ -209,6 +231,27 @@ describe('screenshoter', () => {
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
       await screenshot.image.debug({path: './logs', name: 'full_app_failed', suffix: Date.now()})
+      throw err
+    }
+  }
+  async function webview(options) {
+    const expectedPath = `./test/fixtures/android/webview.png`
+    const buttonSelector = {type: 'id', selector: 'btn_web_view'}
+
+    const button = await driver.element(buttonSelector)
+    await button.click()
+    console.log(await driver.target.getContexts())
+    await driver.target.switchContext('WEBVIEW')
+
+    await driver.init()
+
+    const screenshot = await takeScreenshot({logger, driver, wait: 1500, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage(expectedPath).toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'webview_failed', suffix: Date.now()})
       throw err
     }
   }

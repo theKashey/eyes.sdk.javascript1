@@ -1,5 +1,6 @@
 const assert = require('assert')
 const pixelmatch = require('pixelmatch')
+const utils = require('@applitools/utils')
 const {Driver} = require('@applitools/driver')
 const spec = require('@applitools/spec-driver-webdriverio')
 const makeImage = require('../../src/image')
@@ -14,18 +15,19 @@ const env = {
     platformVersion: '13.4',
     appiumVersion: '1.19.2',
     automationName: 'XCUITest',
-    app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.8/app/IOSTestApp.zip',
+    app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
     username: process.env.SAUCE_USERNAME,
     accessKey: process.env.SAUCE_ACCESS_KEY,
   },
 
-  // url: 'http://0.0.0.0:4723/wd/hub',
-  // capabilities: {
-  //   deviceName: 'iPhone 11 Pro',
-  //   platformName: 'iOS',
-  //   platformVersion: '14.5',
-  //   app: '/Users/kyrylo/Downloads/IOSTestApp.zip',
-  // },
+  url: 'http://0.0.0.0:4723/wd/hub',
+  capabilities: {
+    deviceName: 'iPhone 11 Pro',
+    platformName: 'iOS',
+    platformVersion: '14.5',
+    automationName: 'XCUITest',
+    app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
+  },
 }
 
 describe('screenshoter ios', () => {
@@ -99,6 +101,14 @@ describe('screenshoter ios', () => {
 
   it('take full app screenshot (collection view with superview)', () => {
     return fullApp({type: 'superview'})
+  })
+
+  it('take webview screenshot', () => {
+    return webview()
+  })
+
+  it.only('take full webview screenshot', () => {
+    return fullWebview()
   })
 
   it('take region screenshot', () => {
@@ -177,6 +187,58 @@ describe('screenshoter ios', () => {
       assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
     } catch (err) {
       await screenshot.image.debug({path: './logs', name: 'full_app_failed', suffix: Date.now()})
+      throw err
+    }
+  }
+  async function webview(options) {
+    const expectedPath = `./test/fixtures/ios/webview.png`
+    const buttonSelector = {type: 'accessibility id', selector: 'Web view'}
+
+    const button = await driver.element(buttonSelector)
+    await button.click()
+    await driver.target.getContexts()
+    await utils.general.sleep(500)
+    const [, webview] = await driver.target.getContexts()
+    await driver.target.switchContext(webview)
+
+    await driver.init()
+
+    const screenshot = await takeScreenshot({logger, driver, wait: 1500, ...options})
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage(expectedPath).toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'webview_failed', suffix: Date.now()})
+      throw err
+    }
+  }
+  async function fullWebview(options) {
+    const expectedPath = `./test/fixtures/ios/webview-fully.png`
+    const buttonSelector = {type: 'accessibility id', selector: 'Web view'}
+
+    const button = await driver.element(buttonSelector)
+    await button.click()
+    await driver.target.getContexts()
+    await utils.general.sleep(500)
+    const [, webview] = await driver.target.getContexts()
+    await driver.target.switchContext(webview)
+
+    await driver.init()
+    const screenshot = await takeScreenshot({
+      logger,
+      driver,
+      wait: 1500,
+      fully: true,
+      scrollingMode: 'scroll',
+      ...options,
+    })
+    try {
+      const actual = await screenshot.image.toObject()
+      const expected = await makeImage(expectedPath).toObject()
+      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    } catch (err) {
+      await screenshot.image.debug({path: './logs', name: 'full_webview_failed', suffix: Date.now()})
       throw err
     }
   }

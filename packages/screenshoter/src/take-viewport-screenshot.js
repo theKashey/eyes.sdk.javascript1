@@ -7,6 +7,9 @@ function makeTakeViewportScreenshot(options) {
   const {driver} = options
   if (driver.isNative) {
     return makeTakeNativeScreenshot(options)
+  } else if (driver.isIOS) {
+    // safari on ios takes screenshot with browser and os interfaces
+    return makeTakeMarkedScreenshot(options)
   } else if (driver.browserName === 'Firefox') {
     try {
       const browserVersion = Number.parseInt(driver.browserVersion, 10)
@@ -15,14 +18,9 @@ function makeTakeViewportScreenshot(options) {
         return makeTakeMainContextScreenshot(options)
       }
     } catch (ignored) {}
-  } else if (driver.browserName === 'Safari') {
-    if (driver.isIOS) {
-      // safari on ios takes screenshot with browser and os interfaces
-      return makeTakeMarkedScreenshot(options)
-    } else if (driver.browserVersion === '11') {
-      // safari 11 on macs takes full page screenshot
-      return makeTakeSafari11Screenshot(options)
-    }
+  } else if (driver.browserName === 'Safari' && driver.browserVersion === '11') {
+    // safari 11 on macs takes full page screenshot
+    return makeTakeSafari11Screenshot(options)
   }
 
   return makeTakeDefaultScreenshot(options)
@@ -119,6 +117,8 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
 
   async function getViewportRegion() {
     const marker = await driver.mainContext.execute(snippets.addPageMarker)
+    await utils.general.sleep(100)
+
     try {
       const image = makeImage(await driver.takeScreenshot())
 

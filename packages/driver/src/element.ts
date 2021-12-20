@@ -296,6 +296,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           remainingOffset = utils.geometry.scale(remainingOffset, this.driver.pixelRatio)
         }
 
+        const actions = []
+
         const touchPadding = await this.getTouchPadding()
 
         const xPadding = Math.max(Math.floor(effectiveRegion.width * 0.1), touchPadding)
@@ -307,7 +309,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         while (xRemaining > 0) {
           const xRight = effectiveRegion.x + Math.min(xRemaining + xPadding, effectiveRegion.width - xPadding)
           const [xStart, xEnd] = xDirection === 'right' ? [xRight, xLeft] : [xLeft, xRight]
-          await this._spec.performAction(this.driver.target, [
+          actions.push([
             {action: 'press', y: yTrack, x: xStart},
             {action: 'wait', ms: 100},
             {action: 'moveTo', y: yTrack, x: xStart + xGap},
@@ -329,7 +331,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         while (yRemaining > 0) {
           const yTop = Math.max(yBottom - yRemaining, effectiveRegion.y + yPadding)
           const [yStart, yEnd] = yDirection === 'down' ? [yBottom, yTop] : [yTop, yBottom]
-          await this._spec.performAction(this.driver.target, [
+          actions.push([
             {action: 'press', x: xTrack, y: yStart},
             {action: 'wait', ms: 100},
             {action: 'moveTo', x: xTrack, y: yStart + yGap},
@@ -340,6 +342,15 @@ export class Element<TDriver, TContext, TElement, TSelector> {
             {action: 'release'},
           ])
           yRemaining -= yBottom - yTop
+        }
+
+        // ios actions should be executed one-by-one sequentially, otherwise the result isn't stable
+        if (this.driver.isIOS) {
+          for (const action of actions) {
+            await this._spec.performAction(this.driver.target, action)
+          }
+        } else {
+          await this._spec.performAction(this.driver.target, [].concat(...actions))
         }
 
         const actualScrollableRegion = await this.getClientRegion()

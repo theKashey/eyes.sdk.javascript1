@@ -418,7 +418,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   async takeScreenshot(): Promise<Buffer> {
     const image = await this._spec.takeScreenshot(this.target)
     if (utils.types.isString(image)) {
-      return Buffer.from(image.replace(/[\r\n]+/g, ''))
+      return Buffer.from(image.replace(/[\r\n]+/g, ''), 'base64')
     }
     return image
   }
