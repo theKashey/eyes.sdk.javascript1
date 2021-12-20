@@ -1,92 +1,149 @@
 const core = require('@actions/core')
 
 const PACKAGES = [
-  {name: 'types', dirname: 'types', aliases: ['@applitools/types']},
-  {name: 'utils', dirname: 'utils', aliases: ['@applitools/utils']},
-  {name: 'test-utils', dirname: 'test-utils', aliases: ['@applitools/test-utils']},
-  {name: 'snippets', dirname: 'snippets', aliases: ['@applitools/snippets']},
-  {name: 'logger', dirname: 'logger', aliases: ['@applitools/logger']},
-  {name: 'screenshoter', dirname: 'screenshoter', aliases: ['@applitools/screenshoter']},
-  {name: 'driver', dirname: 'driver', aliases: ['@applitools/driver']},
-  {name: 'scripts', dirname: 'scripts', aliases: ['@applitools/scripts']},
-  {name: 'test-server', dirname: 'test-server', aliases: ['@applitools/test-server']},
-  {name: 'api', dirname: 'eyes-api', aliases: ['@applitools/eyes-api']},
-  {name: 'core', dirname: 'eyes-sdk-core', aliases: ['@applitools/eyes-sdk-core']},
-  {name: 'vgc', dirname: 'visual-grid-client', aliases: ['@applitools/visual-grid-client']},
+  // #region BASE
+  {name: 'types', dirname: 'types', aliases: ['@applitools/types'], dependencies: []},
+  {name: 'utils', dirname: 'utils', aliases: ['@applitools/utils'], dependencies: []},
+  // #endregion
 
-  {name: 'spec-playwright', dirname: 'spec-driver-playwright', framework: 'playwright', aliases: ['@applitools/spec-driver-playwright']},
-  {name: 'spec-puppeteer', dirname: 'spec-driver-puppeteer', framework: 'puppeteer', aliases: ['spec-pptr', '@applitools/spec-driver-puppeteer']},
-  {name: 'spec-webdriverio', dirname: 'spec-driver-webdriverio', framework: 'webdriverio', aliases: ['spec-wdio', '@applitools/spec-driver-webdriverio']},
-  {name: 'spec-selenium', dirname: 'spec-driver-selenium', framework: 'selenium-webdriver', aliases: ['@applitools/spec-driver-selenium']},
+  // #region TEST BASE
+  {name: 'test-utils', dirname: 'test-utils', aliases: ['@applitools/test-utils'], dependencies: []},
+  {name: 'test-server', dirname: 'test-server', aliases: ['@applitools/test-server'], dependencies: ['utils']},
+  // #endregion
 
-  {name: 'universal', dirname: 'eyes-universal', sdk: true, aliases: ['usdk', '@applitools/eyes-universal']},
-  {name: 'playwright-universal', dirname: 'eyes-playwright-universal', framework: 'playwright', sdk: true, aliases: ['playwright/u', '@applitools/eyes-playwright']},
-  {name: 'playwright', dirname: 'eyes-playwright', framework: 'playwright', sdk: true, aliases: ['@applitools/eyes-playwright']},
-  {name: 'puppeteer', dirname: 'eyes-puppeteer', framework: 'puppeteer', sdk: true, aliases: ['pptr', '@applitools/eyes-puppeteer']},
-  {name: 'webdriverio', dirname: 'eyes-webdriverio-5', framework: 'webdriverio', sdk: true, aliases: ['wdio', 'eyes-webdriverio', '@applitools/eyes-webdriverio']},
-  {name: 'webdriverio-service', dirname: 'eyes-webdriverio-5-service', framework: 'webdriverio', sdk: true, aliases: ['wdio-service', 'eyes-webdriverio-service', '@applitools/eyes-webdriverio-service']},
-  {name: 'webdriverio-legacy', dirname: 'eyes-webdriverio-4', framework: 'webdriverio', sdk: true, aliases: ['wdio-legacy', 'eyes.webdriverio', '@applitools/eyes.webdriverio']},
-  {name: 'selenium', dirname: 'eyes-selenium', framework: 'selenium-webdriver', sdk: true, aliases: ['@applitools/eyes-selenium']},
-  {name: 'selenium-universal', dirname: 'eyes-selenium-universal', framework: 'selenium-webdriver', sdk: true, aliases: ['selenium/u', '@applitools/eyes-selenium']},
-  {name: 'protractor', dirname: 'eyes-protractor', framework: 'protractor', sdk: true, aliases: ['@applitools/eyes-protractor']},
-  {name: 'nightwatch', dirname: 'eyes-nightwatch', framework: 'nightwatch', sdk: true, aliases: ['nw', '@applitools/eyes-nightwatch']},
-  {name: 'testcafe', dirname: 'eyes-testcafe', framework: 'testcafe', sdk: true, aliases: ['@applitools/eyes-testcafe']},
-  {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, aliases: ['extension', '@applitools/eyes-browser-extension']},
-  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress']},
-  {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook']},
+  // #region TOOLING
+  {name: 'scripts', dirname: 'scripts', aliases: ['@applitools/scripts'], dependencies: ['utils', 'test-utils']},
+  // #endregion
+
+  // #region MODULES
+  {name: 'snippets', dirname: 'snippets', aliases: ['@applitools/snippets'], dependencies: []},
+  {name: 'logger', dirname: 'logger', aliases: ['@applitools/logger'], dependencies: ['utils']},
+  {name: 'screenshoter', dirname: 'screenshoter', aliases: ['@applitools/screenshoter'], dependencies: ['utils', 'driver', 'snippets', 'spec-webdriver']},
+  {name: 'driver', dirname: 'driver', aliases: ['@applitools/driver'], dependencies: ['types', 'utils', 'snippets']},
+  // #endregion
+  
+  // #region CORE
+  {name: 'core', dirname: 'eyes-sdk-core', aliases: ['@applitools/eyes-sdk-core'], dependencies: ['types', 'utils', 'test-utils', 'logger', 'driver', 'screenshoter', 'snippets']},
+  {name: 'vgc', dirname: 'visual-grid-client', aliases: ['@applitools/visual-grid-client'], dependencies: ['types', 'core']},
+  {name: 'api', dirname: 'eyes-api', aliases: ['@applitools/eyes-api'], dependencies: ['types', 'utils', 'logger']},
+  // #endregion
+
+  // #region SPEC DRIVER
+  {name: 'spec-playwright', dirname: 'spec-driver-playwright', framework: 'playwright', aliases: ['@applitools/spec-driver-playwright'], dependencies: ['types', 'utils', 'test-utils']},
+  {name: 'spec-puppeteer', dirname: 'spec-driver-puppeteer', framework: 'puppeteer', aliases: ['spec-pptr', '@applitools/spec-driver-puppeteer'], dependencies: ['types', 'utils', 'test-utils']},
+  {name: 'spec-webdriverio', dirname: 'spec-driver-webdriverio', framework: 'webdriverio', aliases: ['spec-wdio', '@applitools/spec-driver-webdriverio'], dependencies: ['types', 'utils', 'test-utils']},
+  {name: 'spec-selenium', dirname: 'spec-driver-selenium', framework: 'selenium-webdriver', aliases: ['@applitools/spec-driver-selenium'], dependencies: ['types', 'utils', 'test-utils']},
+  // #endregion
+
+  // #region SDKS
+  {name: 'universal', dirname: 'eyes-universal', sdk: true, aliases: ['usdk', '@applitools/eyes-universal'], dependencies: ['types', 'utils', 'logger', 'core', 'vgc']},
+  {name: 'playwright-universal', dirname: 'eyes-playwright-universal', framework: 'playwright', sdk: true, aliases: ['playwright/u', '@applitools/eyes-playwright'], dependencies: ['spec-playwright', 'api', 'universal', 'test-utils']},
+  {name: 'selenium-universal', dirname: 'eyes-selenium-universal', framework: 'selenium-webdriver', sdk: true, aliases: ['selenium/u', '@applitools/eyes-selenium'], dependencies: ['types', 'utils', 'test-utils', 'api', 'universal']},
+  {name: 'playwright', dirname: 'eyes-playwright', framework: 'playwright', sdk: true, aliases: ['@applitools/eyes-playwright'], dependencies: ['spec-playwright', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'puppeteer', dirname: 'eyes-puppeteer', framework: 'puppeteer', sdk: true, aliases: ['pptr', '@applitools/eyes-puppeteer'], dependencies: ['spec-puppeteer', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'webdriverio', dirname: 'eyes-webdriverio-5', framework: 'webdriverio', sdk: true, aliases: ['wdio', 'eyes-webdriverio', '@applitools/eyes-webdriverio'], dependencies: ['spec-webdriverio', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'webdriverio-service', dirname: 'eyes-webdriverio-5-service', framework: 'webdriverio', sdk: true, aliases: ['wdio-service', 'eyes-webdriverio-service', '@applitools/eyes-webdriverio-service'], dependencies: ['webdriverio']},
+  {name: 'webdriverio-legacy', dirname: 'eyes-webdriverio-4', framework: 'webdriverio', sdk: true, aliases: ['wdio-legacy', 'eyes.webdriverio', '@applitools/eyes.webdriverio'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'selenium', dirname: 'eyes-selenium', framework: 'selenium-webdriver', sdk: true, aliases: ['@applitools/eyes-selenium'], dependencies: ['spec-selenium', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'protractor', dirname: 'eyes-protractor', framework: 'protractor', sdk: true, aliases: ['@applitools/eyes-protractor'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'nightwatch', dirname: 'eyes-nightwatch', framework: 'nightwatch', sdk: true, aliases: ['nw', '@applitools/eyes-nightwatch'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'testcafe', dirname: 'eyes-testcafe', framework: 'testcafe', sdk: true, aliases: ['@applitools/eyes-testcafe'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
+  {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, aliases: ['extension', '@applitools/eyes-browser-extension'], dependencies: ['utils', 'core', 'vgc', 'spec-playwright', 'test-utils']},
+  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: []},
+  {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook'], dependencies: ['spec-puppeteer', 'logger', 'core', 'vgc', 'test-utils']},
+  // #endregion
 ]
 
 const packageSettings = core.getInput('packages', {required: true})
-const allowVariations = core.getInput('allow-variations')
+const allowVariations = core.getBooleanInput('allow-variations')
+const allowCascading = core.getBooleanInput('allow-cascading')
 const defaultReleaseVersion = core.getInput('release-version')
 
-const packages = packageSettings.split(/[\s,]+/).reduce((packages, packageSetting) => {
-  const [_, packageKey, releaseVersion = defaultReleaseVersion, frameworkVersion, frameworkProtocol]
-    = packageSetting.match(/^(.*?)(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+core.notice(`Input provided: "${packageSettings}"`)
 
-  const packageInfo = PACKAGES.find(({name, dirname, aliases}) => {
-    return name === packageKey || dirname === packageKey || aliases.includes(packageKey)
+const packages = requestedPackages(packageSettings)
+
+if (allowCascading) {
+  const additionalPackages = dependentPackages(Object.values(packages).map(package => package.name))
+  additionalPackages.forEach(package => {
+    packages[package.name] = {
+      displayName: package.name,
+      name: package.name,
+      dirname: package.dirname,
+      sdk: package.sdk,
+    }
   })
+}
 
-  if (!packageInfo) {
-    console.warn(`Package name is unknown! Package configured as "${packageSetting}" will be ignored!`)
-    return packages
-  }
-  if (allowVariations) {
-    if (!packageInfo.framework && (frameworkVersion || frameworkProtocol)) {
-      console.warn(`Framework modifiers are not allowed for package "${packageInfo.name}"! Package configured as "${packageSetting}" will be ignored!`)
+
+core.setOutput('packages', allowVariations ? Object.values(packages) : packages)
+
+function requestedPackages(packageSettings) {
+  return packageSettings.split(/[\s,]+/).reduce((packages, packageSetting) => {
+    const [_, packageKey, releaseVersion = defaultReleaseVersion, frameworkVersion, frameworkProtocol]
+      = packageSetting.match(/^(.*?)(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+  
+    const packageInfo = PACKAGES.find(({name, dirname, aliases}) => {
+      return name === packageKey || dirname === packageKey || aliases.includes(packageKey)
+    })
+  
+    if (!packageInfo) {
+      core.warning(`::Package name is unknown! Package configured as "${packageSetting}" will be ignored!`)
       return packages
     }
-  } else {
+  
     if (frameworkVersion || frameworkProtocol) {
-      console.warn(`Modifiers are not allowed! Package configured as "${packageSetting}" will be ignored!`)
-      return packages
+      if (!allowVariations) {
+        core.warning(`Modifiers are not allowed! Package configured as "${packageSetting}" will be ignored!`)
+        return packages
+      } else if (!packageInfo.framework) {
+        core.warning(`Framework modifiers are not allowed for package "${packageInfo.name}"! Package configured as "${packageSetting}" will be ignored!`)
+        return packages
+      }
+    }
+  
+    const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol})
+      .reduce((parts, [key, value]) => value ? [...parts, `${key}: ${value}`] : parts, [])
+      .join('; ')
+  
+    const package = {
+      displayName: `${packageInfo.name} ${appendix ? `(${appendix})` : ''}`,
+      name: packageInfo.name,
+      dirname: packageInfo.dirname,
+      sdk: packageInfo.sdk,
+      install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
+      releaseVersion,
+      env: {
+        [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
+        [`APPLITOOLS_${packageInfo.name.toUpperCase()}_PROTOCOL`]: frameworkProtocol
+      }
+    }
+  
+    packages[allowVariations ? package.displayName : package.name] = package
+  
+    return packages
+  }, {})
+}
+
+function dependentPackages(packageNames) {
+  packageNames = [...packageNames]
+  const dependentPackages = []
+
+  let more = true
+  while (more) {
+    more = false
+    for(packageInfo of PACKAGES) {
+      if (
+        !packageInfo.sdk &&
+        !packageNames.includes(packageInfo.name) &&
+        packageNames.some(packageName => packageInfo.dependencies.includes(packageName))
+      ) {
+        more = true
+        packageNames.push(packageInfo.name)
+        dependentPackages.push(packageInfo)
+      }
     }
   }
 
-
-  const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol})
-    .reduce((parts, [key, value]) => value ? [...parts, `${key}: ${value}`] : parts, [])
-    .join('; ')
-  const package = {
-    displayName: `${packageInfo.name} ${appendix ? `(${appendix})` : ''}`,
-    name: packageInfo.name,
-    package: packageInfo.dirname,
-    sdk: packageInfo.sdk,
-    install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
-    releaseVersion,
-    env: {
-      [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
-      [`APPLITOOLS_${packageInfo.name.toUpperCase()}_PROTOCOL`]: frameworkProtocol
-    }
-  }
-
-  if (allowVariations) packages.push(package)
-  else packages[package.name] = package
-
-  console.log(JSON.stringify(packages, null, 2))
-
-  return packages
-}, allowVariations ? [] : {})
-
-core.setOutput('packages', packages)
+  return dependentPackages
+}

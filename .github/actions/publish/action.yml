@@ -39,12 +39,14 @@ runs:
         BRANCH="${{inputs.package}}_$(date +%F_%H-%M)"
         git checkout -b $BRANCH
         git push -u origin $BRANCH
-
+        echo "::notice::Publish branch - $BRANCH"
         echo "::set-output name=branch::$BRANCH"
 
         echo "::endgroup::"
     - name: Publish ${{inputs.package}}
       id: publish
+      env:
+        STDOUT_LEVEL: '1'
       shell: bash
       run: |
         echo "::group::Publish ${{inputs.package}}"
@@ -53,11 +55,11 @@ runs:
         yarn install
         npm run deps --if-present
         if [ "${{inputs.skip-npm}}" = "false" ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
-        echo "::set-output name=tag::$(git describe --tags --abbrev=0)"
+        TAG="$(git describe --tags --abbrev=0)"
+        echo "::notice::Publish tag - $TAG"
+        echo "::set-output name=tag::$TAG"
 
         echo "::endgroup::"
-      env:
-        STDOUT_LEVEL: '1'
     - name: Merge publish branch into ${{github.ref}}
       shell: bash
       run: |

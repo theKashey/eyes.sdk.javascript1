@@ -15,7 +15,7 @@ on:
       allow-cascading:
         description: allow cascading
         type: boolean
-        default: false
+        default: true
         required: false
 jobs:
   setup:
@@ -36,8 +36,16 @@ jobs:
 
   publish:
     needs: [setup]
-    name: Temp
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/temp_r.yml@cascade-publishing-gh-action
+    name: Publish
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish.yml@cascade-publishing-gh-action
     with:
       schema: ${{needs.setup.outputs.packages}}
-    secrets: ${{secrets}
+    secrets:
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}

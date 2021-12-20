@@ -2,26 +2,35 @@ name: Tests
 description: Run tests for a package
 inputs:
   package:
-    description: name of the package
+    description: name of the package directory in repository
+    type: string
     required: true
   type:
     description: type of the testing (unit, it, e2e, coverage)
+    type: string
   remote:
     description: remote type (local, eg)
+    type: string
     default: local
   install:
     description: names of packages to install before testing
+    type: string
   links:
-    description: names of packages to link before testing
+    description: names of package directories to link before testing
+    type: string
   linking-depth:
     description: linking depth
+    type: string
     default: 0
   grep:
     description: grep pattern to filter tests
+    type: string
   jobs:
     description: number of jobs to run tests in parallel
+    type: string
   report:
     description: report level
+    type: string
     default: sandbox
 runs:
   using: composite
@@ -62,7 +71,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Running tests"
-        if [ ! -z "${{inputs.type}}" ]; then npm run test:${{inputs.type}}; else npm run test; fi
+        if [ ! -z "${{inputs.type}}" ]; then npm run test:${{inputs.type}}; else npm run test --if-present; fi
         echo "::endgroup::"
 
         echo "::group::Sending reports"
