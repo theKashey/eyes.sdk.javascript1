@@ -1,4 +1,4 @@
-name: Publish packages
+name: .reusable-publish
 
 on:
   workflow_call:
