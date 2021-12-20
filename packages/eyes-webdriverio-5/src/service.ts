@@ -1,5 +1,5 @@
+import type {Services, Frameworks} from '@wdio/types'
 import {makeSDK} from '@applitools/eyes-sdk-core'
-import {Services, Frameworks} from '@wdio/types'
 import * as spec from './spec-driver'
 import {Driver, Element, Eyes, VisualGridRunner, ClassicRunner, ConfigurationPlain, TestResults} from './api'
 
