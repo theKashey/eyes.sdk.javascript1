@@ -37,7 +37,7 @@ jobs:
   publish:
     needs: [setup]
     name: Publish
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish.yml@cascade-publishing-gh-action
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish.yml@master
     with:
       schema: ${{needs.setup.outputs.packages}}
     secrets:
