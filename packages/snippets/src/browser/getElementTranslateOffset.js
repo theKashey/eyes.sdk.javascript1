@@ -1,8 +1,6 @@
 const getElementStyleProperties = require('./getElementStyleProperties')
 
-function getTranslateOffset([
-  element = document.scrollingElement || document.documentElement,
-] = []) {
+function getTranslateOffset([element = document.documentElement] = []) {
   const transforms = getElementStyleProperties([element, ['transform', '-webkit-transform']])
   const translates = Object.keys(transforms).reduce((translates, key) => {
     const transform = transforms[key].value
