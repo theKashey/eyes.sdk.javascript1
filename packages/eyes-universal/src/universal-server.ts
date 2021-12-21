@@ -19,7 +19,7 @@ import {makeSpec} from './spec-driver/custom'
 import * as webdriverSpec from './spec-driver/webdriver'
 
 const IDLE_TIMEOUT = 900000 // 15min
-const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-${new Date().toISOString()}`)
+const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-logs`)
 
 export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
   const {server, port} = await makeHandler(serverConfig)

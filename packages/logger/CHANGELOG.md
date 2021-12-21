@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix log file regexp in rolling file handler
 
 ## 1.0.7 - 2021/12/16
 

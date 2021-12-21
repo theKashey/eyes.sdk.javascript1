@@ -40,7 +40,7 @@ function makeRollingFileLogger({
 function findLogFiles({dirname, name}) {
   if (!fs.existsSync(dirname)) return []
   const filenames = fs.readdirSync(dirname)
-  const filenamePattern = new RegExp(`^${name}-\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z\\.log$`)
+  const filenamePattern = new RegExp(`^${name}-\\d{4}_\\d{2}_\\d{2}_\\d{2}_\\d{2}_\\d{2}\\_\\d{3}Z\\.log$`)
   return filenames
     .filter(filename => filenamePattern.test(filename), 0)
     .sort()
