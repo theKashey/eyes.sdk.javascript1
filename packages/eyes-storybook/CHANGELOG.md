@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.27.1 - 2021/12/21
+
 - add support for storybook api 6.4
 - updated to @applitools/driver@1.4.5 (from 1.3.5)
 - updated to @applitools/eyes-sdk-core@12.24.7 (from 12.24.5)
