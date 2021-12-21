@@ -2,6 +2,10 @@ const findFixedAncestor = require('./getElementFixedAncestor')
 const getElementInnerOffset = require('./getElementInnerOffset')
 
 module.exports = function getElementRect([element, isClient = false] = []) {
+  if (element === document.scrollingElement) {
+    return {x: 0, y: 0, width: element.clientWidth, height: element.clientHeight}
+  }
+
   const elementBoundingClientRect = element.getBoundingClientRect()
   const rect = {
     x: elementBoundingClientRect.left,

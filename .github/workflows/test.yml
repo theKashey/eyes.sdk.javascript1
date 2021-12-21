@@ -72,7 +72,7 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{matrix.package}}
+          package: ${{matrix.dirname}}
           type: ${{github.event.inputs.type}}
           remote: ${{github.event.inputs.remote}}
           install: ${{matrix.install}}
