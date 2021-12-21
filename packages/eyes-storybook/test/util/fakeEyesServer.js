@@ -8,7 +8,13 @@ const path = require('path');
 const filenamify = require('filenamify');
 const {TestResultsStatus} = require('@applitools/eyes-sdk-core');
 
-function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp, renderDelay=0} = {}) {
+function fakeEyesServer({
+  expectedFolder,
+  updateFixtures,
+  port,
+  hangUp: _hangUp,
+  renderDelay = 0,
+} = {}) {
   const runningSessions = {};
   let serverUrl;
   let renderCounter = 0;
@@ -45,8 +51,8 @@ function fakeEyesServer({expectedFolder, updateFixtures, port, hangUp: _hangUp, 
             needMoreDom: false,
           };
         }),
-      )
-    }, renderDelay)
+      );
+    }, renderDelay);
   });
 
   // render status

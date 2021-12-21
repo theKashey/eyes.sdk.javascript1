@@ -29,8 +29,7 @@ describe('eyesStorybook', () => {
   });
 
   let serverUrl, closeEyesServer;
-  beforeEach(async function() {
-  });
+  beforeEach(async function() {});
   afterEach(async () => {
     await closeEyesServer();
   });
