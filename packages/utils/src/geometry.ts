@@ -99,10 +99,8 @@ export function intersect(region1: Region, region2: Region): Region {
 
 export function isIntersected(region1: Region, region2: Region): boolean {
   return (
-    ((region1.x <= region2.x && region2.x <= region1.x + region1.width) ||
-      (region2.x <= region1.x && region1.x <= region2.y + region2.width)) &&
-    ((region1.y <= region2.y && region2.y <= region1.y + region1.height) ||
-      (region2.y <= region1.y && region1.y <= region2.y + region2.height))
+    (region1.x <= region2.x ? region2.x < region1.x + region1.width : region1.x < region2.y + region2.width) &&
+    (region1.y <= region2.y ? region2.y < region1.y + region1.height : region1.y < region2.y + region2.height)
   )
 }
 

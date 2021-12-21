@@ -1,6 +1,7 @@
 # Changelog
 
 - fix `geometry.isEmpty`
+- fix `geometry.isIntersected`
 
 ## Unreleased
 
