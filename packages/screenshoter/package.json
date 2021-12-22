@@ -49,12 +49,12 @@
     }
   },
   "dependencies": {
-    "@applitools/snippets": "2.1.11",
+    "@applitools/snippets": "2.1.12",
     "@applitools/utils": "1.2.5",
     "png-async": "0.9.4"
   },
   "devDependencies": {
-    "@applitools/driver": "1.4.6",
+    "@applitools/driver": "1.4.7",
     "@applitools/sdk-release-kit": "0.13.4",
     "@applitools/spec-driver-webdriverio": "1.2.5",
     "@applitools/test-utils": "1.0.10",
