@@ -6,6 +6,9 @@
 
 ## Unreleased
 
+
+## 1.2.5 - 2021/12/22
+
 - remove `guard.isGoogleFont` method form utils and transfer it to rGridResource
 
 ## 1.2.4 - 2021/10/27
