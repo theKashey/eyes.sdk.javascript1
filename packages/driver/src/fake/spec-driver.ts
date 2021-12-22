@@ -54,6 +54,9 @@ export async function getWindowSize(driver: Driver): Promise<Size> {
 export async function setWindowSize(driver: Driver, size: Size): Promise<void> {
   await driver.setWindowRect(size)
 }
+export async function getOrientation(_driver: Driver): Promise<'portrait' | 'landscape'> {
+  return 'portrait'
+}
 export async function getUrl(driver: Driver): Promise<string> {
   if (this._isNative) return null
   return driver.getUrl()

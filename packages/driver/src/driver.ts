@@ -206,7 +206,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     }
 
     if (this.isMobile) {
-      this._driverInfo.orientation ??= await this.getOrientation()
+      this._driverInfo.orientation ??= await this.getOrientation().catch(() => undefined)
     }
 
     this._logger.log('Combined driver info', this._driverInfo)
