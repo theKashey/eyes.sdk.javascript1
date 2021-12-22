@@ -2,8 +2,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/snippets@2.1.12 (from 2.1.11)
 
+
+## 3.3.4 - 2021/12/23
+
+- updated to @applitools/snippets@2.1.12 (from 2.1.11)
 
 ## 3.3.3 - 2021/12/22
 
