@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.4",
+    "@applitools/utils": "1.2.5",
     "chalk": "3.0.0"
   },
   "devDependencies": {

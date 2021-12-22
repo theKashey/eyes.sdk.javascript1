@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fix log file regexp in rolling file handler
+- updated to @applitools/utils@1.2.5 (from 1.2.4)
 
 ## 1.0.7 - 2021/12/16
 
