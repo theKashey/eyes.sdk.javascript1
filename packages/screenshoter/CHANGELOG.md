@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 3.3.3 - 2021/12/22
+
 - improve default rotation and scaling logic
 - improve scroll into viewport algorithm
 - fix lazy handling of image rotation
