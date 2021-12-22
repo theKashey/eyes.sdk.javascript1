@@ -38,7 +38,9 @@ function makeImage(data) {
       return true
     },
     get size() {
-      return utils.geometry.round(utils.geometry.scale(size, transforms.scale))
+      return utils.geometry.round(
+        utils.geometry.rotate(utils.geometry.scale(size, transforms.scale), transforms.rotate),
+      )
     },
     get transforms() {
       return {...transforms}
@@ -51,6 +53,12 @@ function makeImage(data) {
     },
     scale(ratio) {
       transforms.scale *= ratio
+      // size = utils.geometry.scale(size, ratio)
+      return this
+    },
+    rotate(degrees) {
+      transforms.rotate = (transforms.rotate + degrees) % 360
+      // size = utils.geometry.rotate(size, degrees)
       return this
     },
     crop(region) {
@@ -64,17 +72,12 @@ function makeImage(data) {
       } else {
         region = utils.geometry.scale(region, 1 / transforms.scale)
       }
-      region = utils.geometry.rotate(region, transforms.rotate)
-      transforms.crop = transforms.crop
+      region = utils.geometry.rotate(region, -transforms.rotate, utils.geometry.rotate(size, transforms.rotate))
+      region = transforms.crop
         ? utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
         : utils.geometry.intersect({x: 0, y: 0, ...size}, region)
-
-      size = utils.geometry.round(utils.geometry.size(transforms.crop))
-
-      return this
-    },
-    rotate(degree) {
-      transforms.rotate = (transforms.rotate + degree) % 360
+      transforms.crop = region
+      size = utils.geometry.size(transforms.crop)
       return this
     },
     copy(srcImage, offset) {
@@ -204,9 +207,9 @@ async function transform(image, transforms) {
     }
   }, image)
 
-  image = transforms.rotate > 0 ? await rotate(image, transforms.rotate) : image
   image = transforms.crop ? await extract(image, transforms.crop) : image
   image = transforms.scale !== 1 ? await scale(image, transforms.scale) : image
+  image = transforms.rotate !== 0 ? await rotate(image, transforms.rotate) : image
   return image
 }
 
@@ -296,7 +299,7 @@ async function rotate(image, degrees) {
     for (let srcY = 0, dstX = 0; srcY < image.height; ++srcY, ++dstX) {
       for (let srcX = 0, dstY = image.width - 1; srcX < image.width; ++srcX, --dstY) {
         const pixel = image.data.readUInt32BE((srcY * image.width + srcX) * 4)
-        dstImage.data.writeUInt32BE(pixel, (srcX * dstImage.width + dstY) * 4)
+        dstImage.data.writeUInt32BE(pixel, (dstY * dstImage.width + dstX) * 4)
       }
     }
   } else {

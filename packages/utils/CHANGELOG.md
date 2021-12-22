@@ -1,5 +1,6 @@
 # Changelog
 
+- improve `geometry.rotate` to also rotate coordinates
 - fix `geometry.isEmpty`
 - fix `geometry.isIntersected`
 

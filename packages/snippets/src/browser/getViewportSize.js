@@ -15,6 +15,12 @@ function getViewportSize() {
   } else if (document.body && document.body.clientWidth) {
     width = document.body.clientWidth
   }
+
+  if (visualViewport) {
+    width *= visualViewport.scale
+    height *= visualViewport.scale
+  }
+
   return {width, height}
 }
 

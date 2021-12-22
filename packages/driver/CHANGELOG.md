@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- extract device orientation in `Driver`'s `init` and provide readonly access through the `orientation` getter of the `Driver`
 
 ## 1.4.5 - 2021/12/20
 

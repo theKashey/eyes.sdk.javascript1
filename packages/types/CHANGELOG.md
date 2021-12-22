@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `orientation` property to `DriverInfo` type
 
 ## 1.0.22 - 2021/12/16
 

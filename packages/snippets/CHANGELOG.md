@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+- add neutral color border around marker in `addPageMarker`
+- improve handling of pages without viewport tag in `addPageMarker` and `getViewportSize`
 
 ## 2.1.10 - 2021/12/20
 

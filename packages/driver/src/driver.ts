@@ -86,6 +86,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get userAgent(): string {
     return this._driverInfo?.userAgent
   }
+  get orientation(): 'portrait' | 'landscape' {
+    return this._driverInfo.orientation
+  }
   get pixelRatio(): number {
     return this._driverInfo.pixelRatio ?? 1
   }
@@ -200,6 +203,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._helper = this.isIOS
         ? await HelperIOS.make({spec: this._spec, driver: this, logger: this._logger})
         : await HelperAndroid.make({spec: this._spec, driver: this, logger: this._logger})
+    }
+
+    if (this.isMobile) {
+      this._driverInfo.orientation ??= await this.getOrientation()
     }
 
     this._logger.log('Combined driver info', this._driverInfo)
@@ -492,13 +499,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async getDisplaySize(): Promise<types.Size> {
-    if (this.isWeb) return
+    if (this.isWeb && !this.isMobile) return
     const size = await this._spec.getWindowSize(this.target)
     return this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
   }
 
   async getOrientation(): Promise<'portrait' | 'landscape'> {
-    if (this.isWeb) return
+    if (this.isWeb && !this.isMobile) return
     const orientation = this._spec.getOrientation(this.target)
     this._logger.log('Extracted device orientation:', orientation)
     return orientation

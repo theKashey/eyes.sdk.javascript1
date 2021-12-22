@@ -240,7 +240,6 @@ describe('screenshoter', () => {
 
     const button = await driver.element(buttonSelector)
     await button.click()
-    console.log(await driver.target.getContexts())
     await driver.target.switchContext('WEBVIEW')
 
     await driver.init()

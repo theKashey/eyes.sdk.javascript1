@@ -27,14 +27,13 @@ function makeTakeViewportScreenshot(options) {
 }
 
 function makeTakeDefaultScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
   return async function takeScreenshot({name} = {}) {
     logger.verbose('Taking screenshot...')
     const image = makeImage(await driver.takeScreenshot())
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
+    else image.scale(1 / driver.pixelRatio)
 
     if (stabilization.rotate) image.crop(stabilization.rotate)
 
@@ -45,7 +44,6 @@ function makeTakeDefaultScreenshot({driver, stabilization = {}, debug, logger}) 
 }
 
 function makeTakeMainContextScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
   return async function takeScreenshot({name} = {}) {
     logger.verbose('Taking screenshot...')
     const originalContext = driver.currentContext
@@ -55,7 +53,7 @@ function makeTakeMainContextScreenshot({driver, stabilization = {}, debug, logge
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
+    else image.scale(1 / driver.pixelRatio)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
 
@@ -66,7 +64,6 @@ function makeTakeMainContextScreenshot({driver, stabilization = {}, debug, logge
 }
 
 function makeTakeSafari11Screenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
   let viewportSize
 
   return async function takeScreenshot({name} = {}) {
@@ -75,7 +72,7 @@ function makeTakeSafari11Screenshot({driver, stabilization = {}, debug, logger})
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
+    else image.scale(1 / driver.pixelRatio)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
 
@@ -91,7 +88,6 @@ function makeTakeSafari11Screenshot({driver, stabilization = {}, debug, logger})
 }
 
 function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
-  const calculateScaleRatio = makeCalculateScaleRatio({driver})
   let viewportRegion
 
   return async function takeScreenshot({name} = {}) {
@@ -100,9 +96,10 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     await image.debug({...debug, name, suffix: 'original'})
 
     if (stabilization.scale) image.scale(stabilization.scale)
-    else image.scale(await calculateScaleRatio(image.width))
+    else image.scale(1 / driver.pixelRatio)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
+    else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
@@ -122,7 +119,8 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     try {
       const image = makeImage(await driver.takeScreenshot())
 
-      if (stabilization.rotate) await image.rotate(stabilization.rotate)
+      if (stabilization.rotate) image.rotate(stabilization.rotate)
+      else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
 
       await image.debug({...debug, name: 'marker'})
 
@@ -148,6 +146,7 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
     else image.scale(1 / driver.pixelRatio)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
+    else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
@@ -161,27 +160,6 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
     await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
 
     return image
-  }
-}
-
-function makeCalculateScaleRatio({driver}) {
-  let viewportWidth, contentWidth
-  const VIEWPORT_THRESHOLD = 1
-  const CONTENT_THRESHOLD = 10
-  return async function calculateScaleRatio(imageWidth) {
-    if (!viewportWidth) viewportWidth = await driver.getViewportSize().then(size => size.width)
-    if (!contentWidth) contentWidth = await driver.mainContext.getContentSize().then(size => size.width)
-    // If the image's width is the same as the viewport's width or the
-    // top level context's width, no scaling is necessary.
-    if (
-      (imageWidth >= viewportWidth - VIEWPORT_THRESHOLD && imageWidth <= viewportWidth + VIEWPORT_THRESHOLD) ||
-      (imageWidth >= contentWidth - CONTENT_THRESHOLD && imageWidth <= contentWidth + CONTENT_THRESHOLD)
-    ) {
-      return 1
-    }
-
-    const scaledImageWidth = Math.round(imageWidth / driver.pixelRatio)
-    return viewportWidth / scaledImageWidth / driver.pixelRatio
   }
 }
 
