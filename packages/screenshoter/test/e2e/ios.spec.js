@@ -103,8 +103,8 @@ describe('screenshoter ios', () => {
     return fullApp({type: 'superview'})
   })
 
-  it.only('take webview screenshot', () => {
-    return webview({debug: {path: './'}})
+  it('take webview screenshot', () => {
+    return webview()
   })
 
   it('take full webview screenshot', () => {
