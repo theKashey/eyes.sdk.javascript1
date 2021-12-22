@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- round fractional values in `getViewportSize`
 
 ## 2.1.11 - 2021/12/22
 

@@ -17,8 +17,8 @@ function getViewportSize() {
   }
 
   if (window.visualViewport) {
-    width *= window.visualViewport.scale
-    height *= window.visualViewport.scale
+    width = Math.round(width * window.visualViewport.scale)
+    height = Math.round(height * window.visualViewport.scale)
   }
 
   return {width, height}
