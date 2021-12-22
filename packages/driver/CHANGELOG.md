@@ -3,6 +3,9 @@
 ## Unreleased
 
 - extract device orientation in `Driver`'s `init` and provide readonly access through the `orientation` getter of the `Driver`
+- updated to @applitools/snippets@2.1.11 (from 2.1.10)
+- updated to @applitools/types@1.0.23 (from 1.0.22)
+- updated to @applitools/utils@1.2.5 (from 1.2.4)
 
 ## 1.4.5 - 2021/12/20
 

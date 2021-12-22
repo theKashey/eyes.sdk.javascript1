@@ -73,9 +73,9 @@
     }
   },
   "dependencies": {
-    "@applitools/snippets": "2.1.10",
-    "@applitools/types": "1.0.22",
-    "@applitools/utils": "1.2.4"
+    "@applitools/snippets": "2.1.11",
+    "@applitools/types": "1.0.23",
+    "@applitools/utils": "1.2.5"
   },
   "devDependencies": {
     "@applitools/sdk-release-kit": "0.13.4",
