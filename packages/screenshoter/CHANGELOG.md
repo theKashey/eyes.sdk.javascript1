@@ -6,6 +6,8 @@
 - improve default rotation and scaling logic
 - improve scroll into viewport algorithm
 - fix lazy handling of image rotation
+- updated to @applitools/snippets@2.1.11 (from 2.1.10)
+- updated to @applitools/utils@1.2.5 (from 1.2.4)
 
 ## 3.3.2 - 2021/12/20
 
