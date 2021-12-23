@@ -1,11 +1,14 @@
 # Changelog
 
 ## Unreleased
+
+
+## 3.27.2 - 2021/12/23
+
 - updated to @applitools/driver@1.4.7 (from 1.4.5)
 - updated to @applitools/eyes-sdk-core@12.24.9 (from 12.24.7)
 - updated to @applitools/logger@1.0.8 (from 1.0.7)
 - updated to @applitools/visual-grid-client@15.8.55 (from 15.8.53)
-
 
 ## 3.27.1 - 2021/12/21
 
