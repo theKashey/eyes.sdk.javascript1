@@ -47,7 +47,7 @@
     "test": "echo 'mocha ./test/**/*.spec.js --no-timeouts'",
     "deps": "bongo deps",
     "preversion": "bongo preversion && yarn build",
-    "version": "bongo version",
+    "version": "yarn build && bongo version",
     "postversion": "bongo postversion"
   },
   "dependencies": {
