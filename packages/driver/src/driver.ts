@@ -161,10 +161,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       if (barsHeight) {
         // when status bar is overlapping content on android it returns status bar height equal to viewport height
         if (this.isAndroid && barsHeight.statusBarHeight / this.pixelRatio < displaySize.height) {
-          this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight, barsHeight.statusBarHeight)
+          this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsHeight.statusBarHeight)
         }
         this._driverInfo.navigationBarHeight = Math.max(
-          this._driverInfo.navigationBarHeight,
+          this._driverInfo.navigationBarHeight ?? 0,
           barsHeight.navigationBarHeight,
         )
       }

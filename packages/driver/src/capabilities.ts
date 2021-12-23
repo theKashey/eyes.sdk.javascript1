@@ -3,6 +3,8 @@ import type * as types from '@applitools/types'
 type Capabilities = Record<string, any>
 
 export function parseCapabilities(capabilities: Capabilities): types.DriverInfo {
+  if (capabilities.capabilities) capabilities = capabilities.capabilities
+
   const info: types.DriverInfo = {
     browserName:
       !capabilities.app && !capabilities.bundleId
@@ -21,12 +23,12 @@ export function parseCapabilities(capabilities: Capabilities): types.DriverInfo 
     info.isNative = info.isMobile && !info.browserName
     info.isIOS = isIOS(capabilities)
     info.isAndroid = isAndroid(capabilities)
+    info.orientation = (capabilities.deviceOrientation ?? capabilities.orientation)?.toLowerCase()
   }
 
   if (info.isNative) {
     info.pixelRatio = capabilities.pixelRatio
     info.statusBarHeight = capabilities.statBarHeight
-    info.navigationBarHeight = 0
   }
 
   return info
