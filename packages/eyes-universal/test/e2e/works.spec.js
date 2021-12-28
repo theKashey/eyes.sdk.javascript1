@@ -11,8 +11,14 @@ describe('works', () => {
       await new Promise((resolve, reject) => {
         const timeout = setTimeout(() => reject(new Error('Timeout error')), 5000)
 
+        server.on('error', reject)
+        server.on('spawn', () => {
+          console.log('spawned')
+        })
+
         server.stdout.once('data', data => {
           try {
+            console.log(String(data))
             const [port] = String(data).split('\n', 1)
             assert.ok(
               Number.isInteger(Number(port)),
