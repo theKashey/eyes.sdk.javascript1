@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- use `shell` option
 
 ## 1.2.6 - 2021/12/28
 
