@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- use default shell on windows
 
 ## 1.2.8 - 2021/12/28
 

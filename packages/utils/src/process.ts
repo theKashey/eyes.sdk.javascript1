@@ -77,7 +77,7 @@ export async function sh(command: string, options?: {spawnOptions?: SpawnOptions
     ...options,
     spawnOptions: {
       stdio: 'inherit',
-      shell: process.platform === 'win32' ? undefined : '/bin/bash', //win32 'C:\\Program Files\\Git\\bin\\bash.exe'
+      shell: process.platform === 'win32' ? true : '/bin/bash', //win32 'C:\\Program Files\\Git\\bin\\bash.exe'
       ...options?.spawnOptions,
     },
   })
