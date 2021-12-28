@@ -95,7 +95,6 @@
     "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
-    "whoami": "whoami",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio wdio+cdp wdio@6 wdio@5' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-webdriverio utils driver snippets screenshoter' -f linking-depth=3",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio'",
