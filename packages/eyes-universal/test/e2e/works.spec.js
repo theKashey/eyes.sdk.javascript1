@@ -9,7 +9,7 @@ describe('works', () => {
     })
     try {
       await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => reject(new Error('Timeout error')), 5000)
+        const timeout = setTimeout(() => reject(new Error('Timeout error')), 10000)
 
         server.on('error', reject)
         server.on('spawn', () => {
