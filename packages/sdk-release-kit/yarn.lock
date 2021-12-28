@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/utils@1.2.9":
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.9.tgz#b7d7c5248ad41d8551fa7f5c9f1698a50ca00862"
-  integrity sha512-bYRXfekwD0rUQgFO3syZ6W4ucEs7BR4TkqXFP62L1iYuqIjOzpVcK5G/ctgMp0eA4ti5u1xnZXVrtL33rg1prg==
+"@applitools/utils@1.2.10":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.10.tgz#32c2159eef002a82570a34398828784f1e8539ca"
+  integrity sha512-xxkSHwfoEFl7VZra8Q2/r1PrIiNyvCsTnibDOZ4krqZfKxSgx0ct/7nEUqw36/BwAHE63+bua4oEgfsB2nEbGg==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"
