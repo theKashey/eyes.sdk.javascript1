@@ -5,7 +5,7 @@ describe('works', () => {
   const suffixes = {darwin: 'macos', linux: 'linux', win32: 'win'}
   it('works', async () => {
     const server = spawn(`./bin/eyes-universal-${suffixes[process.platform]}`, {
-      stdio: ['ignore', 'inherit', 'ignore'],
+      stdio: 'inherit',
     })
     try {
       await new Promise((resolve, reject) => {
