@@ -40,15 +40,14 @@ jobs:
     outputs:
       packages: ${{steps.setup.outputs.packages}}
     steps:
-      - uses: actions/checkout@v2
+      - name: Check-out repository
+        uses: actions/checkout@v2
       - name: Setup
         uses: ./.github/actions/parser
         id: setup
         with:
           packages: ${{github.event.inputs.packages}}
           allow-variations: true
-      - name: Debug log
-        run: echo "${{toJSON(github.event.inputs)}}"
   test:
     needs: setup
     strategy:
