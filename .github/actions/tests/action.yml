@@ -48,17 +48,13 @@ runs:
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
-          npm config set shell "C:\\Program Files\\Git\\bin\\bash.exe"
-          yarn config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
-          yarn config set shell "C:\\Program Files\\Git\\bin\\bash.exe"
         fi
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        echo "$COMSPEC"
-        npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
+        npm run deps --if-present $([ "${{runner.os}}" = "Windows" ] && echo --script-shell $COMSPEC) -- --skip-commit
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
         echo "::endgroup::"
 

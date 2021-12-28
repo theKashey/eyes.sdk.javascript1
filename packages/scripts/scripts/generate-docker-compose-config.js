@@ -10,12 +10,14 @@ function generateDockerComposeConfig({saveToDisk, platform = process.platform} =
     services: {
       chrome: {
         image: 'selenium/standalone-chrome',
+        platform: 'linux',
         environment,
         volumes,
         ...generateNetworkConfigForPlatform(platform),
       },
       firefox: {
         image: 'selenium/standalone-firefox',
+        platform: 'linux',
         environment,
         volumes,
         ports: ['4445:4444'],
