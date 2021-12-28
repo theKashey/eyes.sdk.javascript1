@@ -57,8 +57,8 @@ runs:
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        sleep 20
-        npm run deps --if-present -- --skip-commit
+        echo "$COMSPEC"
+        npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
         echo "::endgroup::"
 
