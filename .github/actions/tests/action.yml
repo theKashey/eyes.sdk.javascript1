@@ -54,7 +54,7 @@ runs:
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        node -e 'child_process.spawn("yarn deps", [], {shell: "C:\\Program Files\\Git\\bin\\bash.exe", stdio: "inherit"})' 
+        node -e 'child_process.spawn("C:\\Program Files\\Git\\bin\\bash.exe -c \'yarn deps\'", [], {stdio: "inherit"})' 
         npm run deps --if-present -- --skip-commit
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
         echo "::endgroup::"
