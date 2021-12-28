@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/utils@1.2.11 (from 1.2.5)
 
 
 ## 0.2.3 - 2021/12/23
