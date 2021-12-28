@@ -83,7 +83,7 @@ core.setOutput('packages', allowVariations ? Object.values(packages) : packages)
 function requestedPackages(packageSettings) {
   return packageSettings.split(/[\s,]+/).reduce((packages, packageSetting) => {
     let [_, packageKey,  releaseVersion, frameworkVersion, frameworkProtocol, nodeVersion, jobOS, shortReleaseVersion, shortFrameworkVersion, shortFrameworkProtocol]
-      = packageSetting.match(/^(.*?)(?:\((?:version:?(patch|minor|major))?(?:;framework:([\d.]+))?(?:;protocol:(.+?))?(?:;node:([\d.]+))?(?:;os:(ubuntu|macos|windows))?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+      = packageSetting.match(/^(.*?)(?:\((?:version:(patch|minor|major);?)?(?:framework:([\d.]+);?)?(?:protocol:(.+?);?)?(?:node:([\d.]+);?)?(?:os:(ubuntu|macos|windows);?)?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
   
     releaseVersion ??= shortReleaseVersion ?? defaultReleaseVersion
     frameworkVersion ??= shortFrameworkVersion
