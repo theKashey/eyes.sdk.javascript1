@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- use git bush shell on windows
 
 ## 1.2.10 - 2021/12/28
 
