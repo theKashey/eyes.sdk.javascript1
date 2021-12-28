@@ -55,6 +55,15 @@ const PACKAGES = [
   // #endregion
 ]
 
+const OS = {
+  linux: 'ubuntu-latest',
+  ubuntu: 'ubuntu-latest',
+  mac: 'macos-latest',
+  macos: 'macos-latest',
+  win: 'windows-2022',
+  windows: 'windows-2022',
+}
+
 const packageSettings = core.getInput('packages', {required: true})
 const allowVariations = core.getBooleanInput('allow-variations')
 const allowCascading = core.getBooleanInput('allow-cascading')
@@ -83,7 +92,7 @@ core.setOutput('packages', allowVariations ? Object.values(packages) : packages)
 function requestedPackages(packageSettings) {
   return packageSettings.split(/[\s,]+/).reduce((packages, packageSetting) => {
     let [_, packageKey,  releaseVersion, frameworkVersion, frameworkProtocol, nodeVersion, jobOS, shortReleaseVersion, shortFrameworkVersion, shortFrameworkProtocol]
-      = packageSetting.match(/^(.*?)(?:\((?:version:(patch|minor|major);?)?(?:framework:([\d.]+);?)?(?:protocol:(.+?);?)?(?:node:([\d.]+);?)?(?:os:(ubuntu|macos|windows);?)?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+      = packageSetting.match(/^(.*?)(?:\((?:version:(patch|minor|major);?)?(?:framework:([\d.]+);?)?(?:protocol:(.+?);?)?(?:node:([\d.]+);?)?(?:os:(linux|ubuntu|mac|macos|win|windows);?)?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
   
     releaseVersion ??= shortReleaseVersion ?? defaultReleaseVersion
     frameworkVersion ??= shortFrameworkVersion
@@ -119,7 +128,7 @@ function requestedPackages(packageSettings) {
       sdk: packageInfo.sdk,
       xvfb: packageInfo.xvfb,
       install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
-      os: `${jobOS}-latest`,
+      os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
       releaseVersion,
       env: {
