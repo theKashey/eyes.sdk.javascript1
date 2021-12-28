@@ -59,6 +59,7 @@ runs:
         yarn install
         whoami
         ls -la D:\\a\\eyes.sdk.javascript1\\eyes.sdk.javascript1\\packages\\eyes-webdriverio-5\\node_modules\\.bin\\bongo
+        unlink D:\\a\\eyes.sdk.javascript1\\eyes.sdk.javascript1\\packages\\eyes-webdriverio-5\\node_modules\\.bin\\bongo
         npm run deps --if-present -- --skip-commit
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
         echo "::endgroup::"
