@@ -48,6 +48,9 @@ runs:
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+          npm config set shell "C:\\Program Files\\Git\\bin\\bash.exe"
+          yarn config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+          yarn config set shell "C:\\Program Files\\Git\\bin\\bash.exe"
         fi
         echo "::endgroup::"
 
