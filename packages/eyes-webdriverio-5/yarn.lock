@@ -191,12 +191,12 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-release-kit@^0.13.8":
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.8.tgz#34c72d2a0cbd75cea461e0beaaf0fef4f7944f75"
-  integrity sha512-OU5fEBWWf7x/kGkHmcHm0NPal/6XPmzdGmJfGQi7Hxal+JKBRjhAXRB9tQaTRnI+ztT6vEAc9ix6N6mk9YZjBQ==
+"@applitools/sdk-release-kit@^0.13.9":
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.9.tgz#9588296c93727c0d617fb813793af78bd663c0ff"
+  integrity sha512-erZqmvO7U44L/PFHtRmhsHvSJrT33NAA+bdOio/IiTto0HGjGOVJktlrSoB/q1kFFrpVVBUtjXHpDgl6im8yGQ==
   dependencies:
-    "@applitools/utils" "1.2.9"
+    "@applitools/utils" "1.2.10"
     chalk "3.0.0"
     lodash.pickby "4.6.0"
     micromatch "4.0.2"
@@ -275,6 +275,11 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.23.tgz#52b103d7537b3281c9c01c2ffcfa2fad99a6c650"
   integrity sha512-Pa/PRHSI3eJ40E6rFlpaj+mjNR6VEpklrSv1ARymZUtSZjGgqW7Khhxaj85UgarPEpC3V/cgiFjmuhzVwGmJhw==
 
+"@applitools/utils@1.2.10":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.10.tgz#32c2159eef002a82570a34398828784f1e8539ca"
+  integrity sha512-xxkSHwfoEFl7VZra8Q2/r1PrIiNyvCsTnibDOZ4krqZfKxSgx0ct/7nEUqw36/BwAHE63+bua4oEgfsB2nEbGg==
+
 "@applitools/utils@1.2.4":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
@@ -284,11 +289,6 @@
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.5.tgz#e22f1b21bb94e5a48b950348ab85dc58988e4c81"
   integrity sha512-nETSgqGeCk5yqjFaQ7x1KURf+t5IxsY2RoeFB5w1+6lHprmHdEithMcN0tiJWeqi14QBJdUkXCzCJrMW5RcDFg==
-
-"@applitools/utils@1.2.9":
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.9.tgz#b7d7c5248ad41d8551fa7f5c9f1698a50ca00862"
-  integrity sha512-bYRXfekwD0rUQgFO3syZ6W4ucEs7BR4TkqXFP62L1iYuqIjOzpVcK5G/ctgMp0eA4ti5u1xnZXVrtL33rg1prg==
 
 "@applitools/visual-grid-client@15.8.55":
   version "15.8.55"
