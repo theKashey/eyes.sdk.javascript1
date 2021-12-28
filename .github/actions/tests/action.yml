@@ -47,8 +47,8 @@ runs:
         echo "always-auth=true" >> .npmrc
         if [ "${{runner.os}}" = "Windows" ]
         then
-          npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
-          yarn config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+          npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe --noprofile --norc"
+          yarn config set script-shell "C:\\Program Files\\git\\bin\\bash.exe --noprofile --norc"
         fi
         echo "::endgroup::"
 
