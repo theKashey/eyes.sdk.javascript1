@@ -51,7 +51,7 @@ runs:
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        if [ "${runner.os}" = "Windows" ]
+        if [ "${{runner.os}}" = "Windows" ]
         then
           npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
         else
@@ -73,7 +73,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Setting up test environment"
-        if [ "${runner.os}" = "Windows" ]; then C:\Program\ Files\docker\DockerCLI.exe -SwitchLinuxEngine; fi
+        if [ "${{runner.os}}" = "Windows" ]; then C:\Program\ Files\docker\DockerCLI.exe -SwitchLinuxEngine; fi
         npm run setup --if-present
         echo "::endgroup::"
 
