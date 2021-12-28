@@ -60,7 +60,7 @@ runs:
         whoami
         ls -la D:\\a\\eyes.sdk.javascript1\\eyes.sdk.javascript1\\packages\\eyes-webdriverio-5\\node_modules\\.bin\\bongo
 
-        npx bongo deps --skip-commit
+        npm exec -c whoami
         npm run deps --if-present -- --skip-commit
         if [ ! -z "${{inputs.install}}" ]; then yarn add --dev ${{inputs.install}}; fi
         echo "::endgroup::"
