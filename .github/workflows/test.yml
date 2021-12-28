@@ -65,6 +65,7 @@ jobs:
         with:
           node-version: ${{matrix.node}}
       - name: Setup xvfb
+        if: ${{matrix.xvfb}}
         run: |
           sudo apt-get install -y xvfb
           Xvfb -ac $DISPLAY -screen 0 1280x1024x16 &

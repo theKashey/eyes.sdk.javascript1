@@ -49,7 +49,7 @@ const PACKAGES = [
   {name: 'protractor', dirname: 'eyes-protractor', framework: 'protractor', sdk: true, aliases: ['@applitools/eyes-protractor'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'nightwatch', dirname: 'eyes-nightwatch', framework: 'nightwatch', sdk: true, aliases: ['nw', '@applitools/eyes-nightwatch'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'testcafe', dirname: 'eyes-testcafe', framework: 'testcafe', sdk: true, aliases: ['@applitools/eyes-testcafe'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
-  {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, aliases: ['extension', '@applitools/eyes-browser-extension'], dependencies: ['utils', 'core', 'vgc', 'spec-playwright', 'test-utils']},
+  {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, xvfb: true, aliases: ['extension', '@applitools/eyes-browser-extension'], dependencies: ['utils', 'core', 'vgc', 'spec-playwright', 'test-utils']},
   {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: ['logger', 'vgc', 'test-server']},
   {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook'], dependencies: ['logger', 'core', 'vgc', 'spec-puppeteer', 'test-utils']},
   // #endregion
@@ -88,7 +88,6 @@ function requestedPackages(packageSettings) {
     releaseVersion ??= shortReleaseVersion ?? defaultReleaseVersion
     frameworkVersion ??= shortFrameworkVersion
     frameworkProtocol ??= shortFrameworkProtocol
-    nodeVersion ??= 'lts/*'
 
     const packageInfo = PACKAGES.find(({name, dirname, aliases}) => {
       return name === packageKey || dirname === packageKey || aliases.includes(packageKey)
@@ -118,9 +117,10 @@ function requestedPackages(packageSettings) {
       name: packageInfo.name,
       dirname: packageInfo.dirname,
       sdk: packageInfo.sdk,
+      xvfb: packageInfo.xvfb,
       install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
       os: `${jobOS}-latest`,
-      node: nodeVersion,
+      node: nodeVersion ?? 'lts/*',
       releaseVersion,
       env: {
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
