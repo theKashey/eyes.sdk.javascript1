@@ -1,5 +1,6 @@
 # Changelog
 
+- add support for windows bash command execution
 - improve `geometry.rotate` to also rotate coordinates
 - fix `geometry.isEmpty`
 - fix `geometry.isIntersected`
