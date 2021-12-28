@@ -55,16 +55,16 @@ jobs:
       matrix: 
         include: ${{fromJSON(needs.setup.outputs.packages)}}
       fail-fast: false
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.os}}
     name: ${{matrix.displayName}}
     env: ${{matrix.env}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v2 
+        uses: actions/setup-node@v2
         with:
-          node-version: lts/*
+          node-version: ${{matrix.node}}
       - name: Setup xvfb
         run: |
           sudo apt-get install -y xvfb

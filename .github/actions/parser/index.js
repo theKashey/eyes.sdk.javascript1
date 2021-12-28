@@ -82,9 +82,14 @@ core.setOutput('packages', allowVariations ? Object.values(packages) : packages)
 
 function requestedPackages(packageSettings) {
   return packageSettings.split(/[\s,]+/).reduce((packages, packageSetting) => {
-    const [_, packageKey, releaseVersion = defaultReleaseVersion, frameworkVersion, frameworkProtocol]
-      = packageSetting.match(/^(.*?)(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+    let [_, packageKey,  releaseVersion, frameworkVersion, frameworkProtocol, nodeVersion, jobOS, shortReleaseVersion, shortFrameworkVersion, shortFrameworkProtocol]
+      = packageSetting.match(/^(.*?)(?:\((?:[\s,]+version:\s?(patch|minor|major))?(?:[\s,]+framework:\s?([\d.]+))?(?:[\s,]+protocol:\s?(.+?))?(?:[\s,]+node:\s?([\d.]+))?(?:os:\s?(ubuntu|macos|windows))?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
   
+    releaseVersion ??= shortReleaseVersion ?? defaultReleaseVersion
+    frameworkVersion ??= shortFrameworkVersion
+    frameworkProtocol ??= shortFrameworkProtocol
+    nodeVersion ??= 'lts/*'
+
     const packageInfo = PACKAGES.find(({name, dirname, aliases}) => {
       return name === packageKey || dirname === packageKey || aliases.includes(packageKey)
     })
@@ -104,7 +109,7 @@ function requestedPackages(packageSettings) {
       }
     }
   
-    const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol})
+    const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol, os: jobOS, node: nodeVersion})
       .reduce((parts, [key, value]) => value ? [...parts, `${key}: ${value}`] : parts, [])
       .join('; ')
   
@@ -114,6 +119,8 @@ function requestedPackages(packageSettings) {
       dirname: packageInfo.dirname,
       sdk: packageInfo.sdk,
       install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
+      os: `${jobOS}-latest`,
+      node: nodeVersion,
       releaseVersion,
       env: {
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
