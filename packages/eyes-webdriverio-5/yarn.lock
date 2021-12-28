@@ -191,12 +191,12 @@
     xml-js "1.6.11"
     yargs "16.0.3"
 
-"@applitools/sdk-release-kit@^0.13.5":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.5.tgz#92f89ad904b81aa289c3a90ded8a129cedc61b23"
-  integrity sha512-vQJQAy9znVV08gcLnKfDVFuiiRNFdJjWrKBth2Y7x/IcJLCmhFND2/hWMmA6BgcMrj9urff8tk/QVLYOZxFX6A==
+"@applitools/sdk-release-kit@^0.13.6":
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.6.tgz#f5e21d150a7aa21b240f3210824151f05daaba91"
+  integrity sha512-2bzBVFvAbXDivG8J1UljrjRjjqwoe0+wZCDT/ZcBQC0Fet1KzRBexEdqwwq+gBpLj2XPOPX4iEc39lnE3wTKHQ==
   dependencies:
-    "@applitools/utils" "1.2.6"
+    "@applitools/utils" "1.2.7"
     chalk "3.0.0"
     lodash.pickby "4.6.0"
     micromatch "4.0.2"
@@ -285,10 +285,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.5.tgz#e22f1b21bb94e5a48b950348ab85dc58988e4c81"
   integrity sha512-nETSgqGeCk5yqjFaQ7x1KURf+t5IxsY2RoeFB5w1+6lHprmHdEithMcN0tiJWeqi14QBJdUkXCzCJrMW5RcDFg==
 
-"@applitools/utils@1.2.6":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.6.tgz#709f7dfb105c9b5f93d38faaa735ced70b076dd3"
-  integrity sha512-Ua/XsCXuwam19iTNTCkryJsaPI2yCRLydHOy6k/zeqM3khabnwAvbW8gGfMSyqi9+3iaNP9xYGj6jpFHvV/0XQ==
+"@applitools/utils@1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.7.tgz#b2875d528be0d00a121b73fc72c2c8121f6ebcf0"
+  integrity sha512-SB5hcR+CLCskckn6Qve4UT05leajxcloPzFeU3WGJxXdz2td0zcnWuuNawVxG3EFK9d70fAT5mKFnmd/yk8jAQ==
 
 "@applitools/visual-grid-client@15.8.55":
   version "15.8.55"
