@@ -73,7 +73,6 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Setting up test environment"
-        if [ "${{runner.os}}" = "Windows" ]; then C:\\Program\ Files\\docker\\DockerCLI.exe -SwitchLinuxEngine; fi
         npm run setup --if-present
         echo "::endgroup::"
 

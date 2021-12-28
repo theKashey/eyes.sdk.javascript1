@@ -1,0 +1,33 @@
+const assert = require('assert')
+const {spawn} = require('child_process')
+
+describe('works', () => {
+  const suffixes = {darwin: 'macos', linux: 'linux', win32: 'win'}
+  it('works', async () => {
+    const server = spawn(`./bin/eyes-universal-${suffixes[process.platform]}`, {
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+    try {
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Timeout error')), 5000)
+
+        server.stdout.once('data', data => {
+          try {
+            const [port] = String(data).split('\n', 1)
+            assert.ok(
+              Number.isInteger(Number(port)),
+              `Server first line output expecting to be a port, but got "${port}"`,
+            )
+            resolve()
+          } catch (err) {
+            reject(err)
+          } finally {
+            clearTimeout(timeout)
+          }
+        })
+      })
+    } finally {
+      server.kill()
+    }
+  })
+})
