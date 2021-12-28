@@ -45,7 +45,11 @@ runs:
         echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
         echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "always-auth=true" >> .npmrc
-        if [ "${{runner.os}}" = "Windows" ]; then npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"; fi
+        if [ "${{runner.os}}" = "Windows" ]
+        then
+          npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+          yarn config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"
+        fi
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
