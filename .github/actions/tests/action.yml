@@ -45,6 +45,7 @@ runs:
         echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
         echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "always-auth=true" >> .npmrc
+        if [ "${{runner.os}}" = "Windows" ]; then npm config set script-shell "C:\\Program Files\\git\\bin\\bash.exe"; fi
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
@@ -61,10 +62,6 @@ runs:
           node ./node_modules/.bin/link --include ${{inputs.links}} --build --install --max-depth ${{inputs.linking-depth}}
           echo "::endgroup::"
         fi
-
-        echo "${APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION}-version"
-        echo ./tsconfig\"$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo .v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION)\".json
-        echo "%APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION%-version"
 
         echo "::group::Building package"
         npm run build --if-present
