@@ -76,7 +76,7 @@ jobs:
           type: ${{github.event.inputs.type}}
           remote: ${{github.event.inputs.remote}}
           framework: ${{matrix.framework}}
-          framework: ${{matrix.framework-version}}
+          framework-version: ${{matrix.framework-version}}
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs.linking-depth}}
           grep: ${{github.event.inputs.grep}}
