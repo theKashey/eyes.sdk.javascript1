@@ -4,7 +4,7 @@ const {spawn} = require('child_process')
 describe('works', () => {
   const suffixes = {darwin: 'macos', linux: 'linux', win32: 'win'}
   it('works', async () => {
-    const server = spawn(`net stop winnat && net start winnat && ./bin/eyes-universal-${suffixes[process.platform]}`, {
+    const server = spawn(`./bin/eyes-universal-${suffixes[process.platform]} --port=8080`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/bash',
       stdio: 'inherit',
