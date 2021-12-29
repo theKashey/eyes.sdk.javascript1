@@ -420,6 +420,13 @@ jobs:
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal.tar.gz
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Send slack notification
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Universal SDK has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{steps.publish.outputs.tag}}|${{steps.publish.outputs.tag}}> 🎉 🎊 🥳\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{steps.publish.outputs.tag}}/eyes-universal.zip\"}}]}"
+        env:
+          SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   playwright:
     needs: [bongo, api, core, vgc, spec-playwright, test-utils]
     if: ${{fromJSON(inputs.schema).playwright && !failure() && !cancelled()}}
