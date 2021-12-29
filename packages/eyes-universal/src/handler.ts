@@ -5,7 +5,7 @@ const {name, version} = require('../package.json')
 const TOKEN_HEADER = 'x-eyes-universal-token'
 const TOKEN = `${name}@${version}`
 
-export async function makeHandler({port = 2107, singleton = true, lazy = false} = {}): Promise<{
+export async function makeHandler({port = 21077, singleton = true, lazy = false} = {}): Promise<{
   server?: WSServer
   port: number
 }> {

@@ -5,7 +5,7 @@ import {makeServer} from './universal-server'
 
 yargs
   .example([
-    ['$ eyes-universal', 'Run Eyes Universal server on default port (2107)'],
+    ['$ eyes-universal', 'Run Eyes Universal server on default port (21077)'],
     ['$ eyes-universal --port 8080', 'Run Eyes Universal server on port 8080'],
     ['$ eyes-universal --no-singleton', 'Run Eyes Universal server on a non-singleton mode'],
     ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
@@ -18,7 +18,7 @@ yargs
           description: 'run server on a specific port.',
           alias: 'p',
           type: 'number',
-          default: 2107,
+          default: 21077,
         },
         singleton: {
           description:
