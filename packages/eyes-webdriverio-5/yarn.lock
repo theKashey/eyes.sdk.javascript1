@@ -166,20 +166,20 @@
     "@applitools/utils" "1.2.5"
     png-async "0.9.4"
 
-"@applitools/scripts@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/scripts/-/scripts-1.0.1.tgz#2f9ae9ee2cecb9fc78ceeb4357167f1b47611b61"
-  integrity sha512-qLstlfOwW0kOrE26/oe40owpdw2wUsDOP+7eMM+s2eJw88g7p1kh6eYI4KbIpKL6keUBYNH2+I1TSOxKazBing==
+"@applitools/scripts@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/scripts/-/scripts-1.1.0.tgz#cd0c87760f101bb27dfc42c7d07705f0557bca37"
+  integrity sha512-wwd53Y6WKVlnsgil8YmOETi95hFP0YX+Fz7yvRk3AKY0NAFFKddFCySFMnkH/lkwTbTzAhy2B/v2jqaY3xsIJg==
   dependencies:
-    "@applitools/test-utils" "1.0.3"
+    "@applitools/test-utils" "1.0.10"
     chalk "3.0.0"
     cli-table3 "0.6.0"
     yargs "15.3.1"
 
-"@applitools/sdk-coverage-tests@^2.3.16":
-  version "2.3.16"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.16.tgz#5ced1a9cd0d0dacca240ff5014cc17cd0bb0196c"
-  integrity sha512-RyFL5Tv8qqQtJuGuT3WvMnubMhXJ9NGXXL5AXw7ohnAzegK4PXcmFtt/nrhogLg9wKgOoC4FQtGTDIX8P1ysvA==
+"@applitools/sdk-coverage-tests@^2.3.17":
+  version "2.3.17"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.3.17.tgz#5d961c85d05ee3a02227f8e4a6f2dac7fe77b278"
+  integrity sha512-/xhTiozSmP8DrnGoKrD+rntTOGJXX0ESOWckOJZbDSdGCcjlvphMWi/+2Gyr09axxBJWrvCEgqhj1BxIHbc1Xg==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"
@@ -248,14 +248,6 @@
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.10.tgz#ef692726457c4df58493ec5e4e13906dafa6a5e1"
   integrity sha512-3ZSeu8/9KUMtXHd+osP7k9qRNL5YzYHRhBuw+uIz4DdPCby73j7X2rqkLiUbWlR6G9heSkvqdputKHJ6oBAKhA==
-  dependencies:
-    chalk "4.1.1"
-    node-fetch "2.6.1"
-
-"@applitools/test-utils@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.0.3.tgz#5ab233a087e5e6a4e356a22c9adcab23e959e03f"
-  integrity sha512-70V6g/jDqGGCxL5Eip2aydJbjZ3ULHQxNWhUSVDAuzyCZav5pR0hE03Cx/R2rvMoapXltScG4SOkXp+JmR7Haw==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
