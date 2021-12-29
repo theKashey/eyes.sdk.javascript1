@@ -1,16 +1,5 @@
 {
-  "env": {
-    "commonjs": true,
-    "es6": true,
-    "node": true,
-    "mocha": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
-  },
-  "extends": ["plugin:node/recommended"],
-  "plugins": ["prettier", "mocha-no-only", "node"],
+  "root": true,
   "ignorePatterns": [
     "node_modules/",
     "dist/",
@@ -20,15 +9,30 @@
     "tmp/",
     "**/test/coverage/generic/"
   ],
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["prettier", "mocha-no-only", "node"],
+  "extends": ["prettier"],
   "rules": {
-    "prettier/prettier": ["error", {"arrowParens": "avoid"}],
+    "prettier/prettier": ["error", {
+      "arrowParens": "avoid",
+      "printWidth": 120
+    }],
     "no-process-exit": "off",
     "no-const-assign": "error",
     "no-this-before-super": "error",
     "no-undef": "warn",
     "no-unreachable": "warn",
     "no-unused-vars": [
-      1,
+      "error",
       {"varsIgnorePattern": "^_", "args": "all", "argsIgnorePattern": "^_"}
     ],
     "constructor-super": "warn",

@@ -12,9 +12,7 @@ const skipList = [
 
 ;(async () => {
   const items = await fs.readdir(path.join(__dirname, '../../'))
-  const packages = items.filter(
-    packageName => !skipList.includes(packageName) && !packageName.startsWith('.'),
-  )
+  const packages = items.filter(packageName => !skipList.includes(packageName) && !packageName.startsWith('.'))
   const packagesStr = packages
     .filter(packageName => !skipList.includes(packageName) && !packageName.startsWith('.'))
     .map(

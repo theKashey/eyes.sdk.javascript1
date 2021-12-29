@@ -75,9 +75,10 @@ jobs:
           package: ${{matrix.dirname}}
           type: ${{github.event.inputs.type}}
           remote: ${{github.event.inputs.remote}}
-          install: ${{matrix.install}}
+          framework: ${{matrix.framework}}
+          framework: ${{matrix.framework-version}}
           links: ${{github.event.inputs.links}}
-          linking-depth: ${{github.event.inputs['linking-depth']}}
+          linking-depth: ${{github.event.inputs.linking-depth}}
           grep: ${{github.event.inputs.grep}}
         env:
           CVG_TESTS_REMOTE: http://localhost:4444/wd/hub

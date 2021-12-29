@@ -96,9 +96,7 @@ async function link({
     }
     console.log(
       chalk.greenBright(
-        `${chalk.bold.cyan(result.dependency.name)} was successfully linked to ${chalk.bold.cyan(
-          result.target.name,
-        )}`,
+        `${chalk.bold.cyan(result.dependency.name)} was successfully linked to ${chalk.bold.cyan(result.target.name)}`,
       ),
     )
     console.error('STDOUT:', result.stdout)
@@ -114,8 +112,7 @@ async function link({
     return dependencies.reduce(async (promise, dependency) => {
       const results = await promise
       let [result, ...nestedResults] = await new Promise(async resolve => {
-        const nestedResults =
-          depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
+        const nestedResults = depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
         const commands = ['yarn link']
         if (runInstall) commands.push('yarn install')
         if (runBuild && dependency.hasBuild) commands.push('yarn build')

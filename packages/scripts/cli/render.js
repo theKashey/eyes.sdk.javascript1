@@ -213,7 +213,8 @@ const eyesConfig = {
     describe: 'comma-separated list of browser to render in vg mode (e.g. chrome(800x600))',
     type: 'string',
     coerce(str) {
-      const regexp = /^(chrome|chrome-one-version-back|chrome-two-versions-back|chrome-canary|firefox|firefox-one-version-back|firefox-two-versions-back|ie11|ie10|edge|safari|safari-one-version-back|safari-two-versions-back|ie-vmware|edgechromium|edgechromium-one-version-back|edgechromium-two-versions-back)(\( *(\d+) *(x|,) *(\d+) *\))?$/
+      const regexp =
+        /^(chrome|chrome-one-version-back|chrome-two-versions-back|chrome-canary|firefox|firefox-one-version-back|firefox-two-versions-back|ie11|ie10|edge|safari|safari-one-version-back|safari-two-versions-back|ie-vmware|edgechromium|edgechromium-one-version-back|edgechromium-two-versions-back)(\( *(\d+) *(x|,) *(\d+) *\))?$/
       return utils.parseList(str).map(browser => {
         const match = browser.match(regexp)
         if (!match) {
@@ -299,8 +300,7 @@ yargs
   )
   .command({
     command: '* [url]',
-    builder: yargs =>
-      yargs.options({...buildConfig, ...eyesConfig, ...checkConfig, ...testConfig, ...saveConfig}),
+    builder: yargs => yargs.options({...buildConfig, ...eyesConfig, ...checkConfig, ...testConfig, ...saveConfig}),
     handler: async args => {
       console.log(`render options\n${formatArgs(args)}`)
       try {
@@ -355,9 +355,7 @@ async function runner(args) {
     args.url = args.attach ? await spec.getUrl(driver) : args.url
     if (!args.attach) await spec.visit(driver, args.url)
     console.log(
-      `running ${args.vg ? 'ultrafast mode' : 'classic mode'} render ${
-        args.compare ? 'compare ' : ''
-      }script for`,
+      `running ${args.vg ? 'ultrafast mode' : 'classic mode'} render ${args.compare ? 'compare ' : ''}script for`,
       args.url,
     )
 

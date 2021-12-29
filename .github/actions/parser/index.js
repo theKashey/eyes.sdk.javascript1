@@ -117,7 +117,7 @@ function requestedPackages(packageSettings) {
       }
     }
   
-    const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol, os: jobOS, node: nodeVersion})
+    const appendix = Object.entries({release: releaseVersion, version: frameworkVersion, protocol: frameworkProtocol, node: nodeVersion, os: jobOS})
       .reduce((parts, [key, value]) => value ? [...parts, `${key}: ${value}`] : parts, [])
       .join('; ')
   
@@ -127,10 +127,11 @@ function requestedPackages(packageSettings) {
       dirname: packageInfo.dirname,
       sdk: packageInfo.sdk,
       xvfb: packageInfo.xvfb,
-      install: frameworkVersion ? `${packageInfo.framework}@${frameworkVersion}` : '',
+      framework: packageInfo.framework,
+      frameworkVersion,
+      releaseVersion,
       os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
-      releaseVersion,
       env: {
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_PROTOCOL`]: frameworkProtocol

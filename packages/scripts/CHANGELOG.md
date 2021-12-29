@@ -3,6 +3,7 @@
 ## Unreleased
 
 - improve logging in `link` script
+- updated to @applitools/test-utils@1.0.10 (from 1.0.3)
 
 ## 1.0.1 - 2021/6/8
 
