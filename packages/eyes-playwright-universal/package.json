@@ -30,7 +30,7 @@
   "scripts": {
     "lint": "eslint '**/*.ts'",
     "build": "ttsc",
-    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright-universal'",
+    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes-playwright-universal'",
     "test": "yarn test:e2e && yarn test:coverage",
     "test:e2e": "mocha ./test/e2e/*.spec.ts --no-timeouts --delay -r ts-node/register",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",

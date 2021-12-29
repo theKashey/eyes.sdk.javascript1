@@ -1,14 +1,14 @@
 const path = require('path')
 
 module.exports = {
-  extends: 'https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js',
+  extends: 'https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js',
   env: {
     NO_SDK: true,
     SPEC_DRIVER: path.resolve('./test/utils/spec-driver.js'),
     SETUP_EYES: path.resolve('./test/utils/setup-eyes.js'),
   },
   overrides: [
-    'https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/overrides.js',
+    'https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/overrides.js',
     test => {
       if (!test.vg) return {config: {branchName: 'onscreen'}}
     },

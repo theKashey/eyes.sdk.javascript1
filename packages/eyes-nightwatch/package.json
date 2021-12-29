@@ -45,7 +45,7 @@
   "scripts": {
     "lint": "eslint '**/*.ts' '**/*.js'",
     "build": "ttsc",
-    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-nightwatch'",
+    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes-nightwatch'",
     "test": "yarn test:it && yarn test:e2e && yarn test:coverage",
     "test:it": "mocha ./test/it/spec-driver.spec.js --exit --no-timeouts -r @applitools/test-utils/mocha-hooks/docker",
     "test:e2e": "yarn test:e2e:nightwatch && yarn test:e2e:cucumber",

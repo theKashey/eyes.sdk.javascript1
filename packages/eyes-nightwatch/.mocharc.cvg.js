@@ -2,6 +2,7 @@ const {mochaGrep} = require('@applitools/test-utils')
 
 const tags = [
   'headfull',
+  'jsonwire',
   'webdriver',
   'mobile',
   'chrome',

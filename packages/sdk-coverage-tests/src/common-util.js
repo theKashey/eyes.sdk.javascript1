@@ -38,8 +38,8 @@ function isEmptyObject(value) {
 function mergeObjects(base, ...other) {
   return other.reduce((merged, other = {}) => {
     return Object.entries(other).reduce((merged, [key, value]) => {
-      if (key in merged) {
-        merged[key] = isObject(value) ? mergeObjects(merged[key], value) : value
+      if (key in merged && isObject(value)) {
+        merged[key] = mergeObjects(merged[key], value)
       } else {
         merged[key] = value
       }

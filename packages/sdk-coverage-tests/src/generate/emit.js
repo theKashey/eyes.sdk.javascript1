@@ -44,7 +44,7 @@ function emitTest(test, {makeSpecEmitter, makeFile}) {
   const sdk = makeSpecEmitter(emitter, test)
   test.output = output
   if (test.page) sdk.driver.visit(test.page)
-  test.test.call(utils, sdk)
+  test.test.call(utils, {...sdk, config: test.config, env: test.env, meta: test.meta})
   test.code = makeFile(test)
   return test
 }
