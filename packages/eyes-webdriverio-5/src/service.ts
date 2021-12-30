@@ -1,4 +1,3 @@
-import type {Services, Frameworks} from '@wdio/types'
 import {makeSDK} from '@applitools/eyes-sdk-core'
 import * as spec from './spec-driver'
 import {Driver, Element, Eyes, VisualGridRunner, ClassicRunner, ConfigurationPlain, TestResults} from './api'
@@ -30,7 +29,7 @@ interface EyesServiceOptions extends ConfigurationPlain {
   eyes?: EyesServiceOptions
 }
 
-class EyesService implements Services.ServiceInstance {
+class EyesService {
   private _eyes: Eyes
   private _appName: string
   private _testResults: TestResults
@@ -115,7 +114,7 @@ class EyesService implements Services.ServiceInstance {
       return this._eyes.runner.getAllTestResults(throwErr)
     })
   }
-  beforeTest(test: Frameworks.Test) {
+  beforeTest(test: any) {
     const configuration = this._eyes.getConfiguration()
     configuration.setTestName(test.title ?? test.description) // test.title is for mocha, and test.description is for jasmine
 
