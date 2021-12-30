@@ -12,12 +12,6 @@ inputs:
     description: remote type (local, eg)
     type: string
     default: local
-  framework:
-    description: name of the related framework
-    type: string
-  framework-version:
-    description: version of the related framework
-    type: string
   links:
     description: names of package directories to link before testing
     type: string
@@ -67,13 +61,6 @@ runs:
           echo "::group::Linking dependencies"
           npx link --include scripts --install
           node ./node_modules/.bin/link --include ${{inputs.links}} --build --install --max-depth ${{inputs.linking-depth}}
-          echo "::endgroup::"
-        fi
-
-        if [ ! -z "${{inputs.framework-version}}" ]
-        then
-          echo "::group::Upgrading ${{inputs.framework}} to version ${{inputs.framework-version}}"
-          npx up ${{inputs.frameworks}} --package-version ${{inputs.framework-version}}
           echo "::endgroup::"
         fi
 

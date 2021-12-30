@@ -127,12 +127,11 @@ function requestedPackages(packageSettings) {
       dirname: packageInfo.dirname,
       sdk: packageInfo.sdk,
       xvfb: packageInfo.xvfb,
-      framework: packageInfo.framework,
-      frameworkVersion,
       releaseVersion,
       os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
       env: {
+        [`APPLITOOLS_INSTALL_FRAMEWORK`]: Boolean(frameworkVersion),
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
         [`APPLITOOLS_${packageInfo.name.toUpperCase()}_PROTOCOL`]: frameworkProtocol
       }
