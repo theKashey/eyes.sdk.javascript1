@@ -187,10 +187,10 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
     const puppeteer = await browser.getPuppeteer()
     const [page] = await puppeteer.pages()
     const cdpSession = await page.target().createCDPSession()
-    const response = await cdpSession.send('Network.getAllCookies')
+    const response: any = await cdpSession.send('Network.getAllCookies')
     cookies = response.cookies
   } else {
-    const response = await browser.sendCommandAndGetResult('Network.getAllCookies', {})
+    const response: any = await browser.sendCommandAndGetResult('Network.getAllCookies', {})
     cookies = response.cookies
   }
 
