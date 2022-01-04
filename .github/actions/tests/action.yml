@@ -57,6 +57,9 @@ runs:
         else
           npm run deps --if-present -- --skip-commit
         fi
+        set +e
+        npm ls webdriverio
+        set -e
         echo "::endgroup::"
 
         if [ ! -z "${{inputs.links}}" ]
