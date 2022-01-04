@@ -14,8 +14,10 @@ declare namespace Applitools {
       getElementAttribute(elementId: string, attr: string): string
       getWindowRect(): {x: number; y: number; width: number; height: number}
       getWindowPosition(): {x: number; y: number}
+      _getWindowSize(): {width: number; height: number}
       setWindowRect(x: number, y: number, width: number, height: number): void
       setWindowPosition(x: number, y: number): void
+      _setWindowSize(width: number, height: number): void
       switchToFrame(frameId?: any): void
       switchToParentFrame(): void
       takeScreenshot(): string

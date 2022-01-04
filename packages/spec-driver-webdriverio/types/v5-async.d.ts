@@ -14,8 +14,10 @@ declare namespace Applitools {
       getElementAttribute(elementId: string, attr: string): Promise<string>
       getWindowRect(): Promise<{x: number; y: number; width: number; height: number}>
       getWindowPosition(): Promise<{x: number; y: number}>
+      _getWindowSize(): Promise<{width: number; height: number}>
       setWindowRect(x: number, y: number, width: number, height: number): Promise<void>
       setWindowPosition(x: number, y: number): Promise<void>
+      _setWindowSize(width: number, height: number): Promise<void>
       switchToFrame(frameId?: any): Promise<void>
       switchToParentFrame(): Promise<void>
       takeScreenshot(): Promise<string>
