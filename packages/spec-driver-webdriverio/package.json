@@ -84,7 +84,6 @@
     "docker:teardown": "docker-compose down",
     "upgrade:framework": "if [ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile webdriverio@$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
     "deps": "bongo deps",
-    "postdeps": "yarn upgrade:framework",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio' -f links='types utils test-utils'",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio'",
     "preversion": "bongo preversion",

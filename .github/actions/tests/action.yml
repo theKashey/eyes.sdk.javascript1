@@ -48,18 +48,13 @@ runs:
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        set +e
-        npm ls webdriverio
-        set -e
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
         else
           npm run deps --if-present -- --skip-commit
         fi
-        set +e
-        npm ls webdriverio
-        set -e
+        npm run upgrade:framework --if-present
         echo "::endgroup::"
 
         if [ ! -z "${{inputs.links}}" ]
@@ -71,10 +66,6 @@ runs:
         fi
 
         echo "::group::Building package"
-        echo "APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION=$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION"
-        set +e
-        npm ls webdriverio
-        set -e
         npm run build --if-present
         echo "::endgroup::"
 
