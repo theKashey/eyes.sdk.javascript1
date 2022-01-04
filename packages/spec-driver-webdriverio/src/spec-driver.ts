@@ -94,33 +94,28 @@ export function isSelector(selector: any): selector is Selector {
   )
 }
 export function transformDriver(driver: Driver): Driver {
-  if (!driver._getWindowSize) {
-    const command = require('webdriver/build/command').default
-    driver.addCommand(
-      '_getWindowSize',
-      command('GET', '/session/:sessionId/window/current/size', {
-        parameters: [],
-      }),
-    )
-    driver.addCommand(
-      '_setWindowSize',
-      command('POST', '/session/:sessionId/window/current/size', {
-        parameters: [
-          {name: 'width', type: 'number', required: true},
-          {name: 'height', type: 'number', required: true},
-        ],
-      }),
-    )
-    driver.addCommand(
-      'setWindowPosition',
-      command('POST', '/session/:sessionId/window/current/position', {
-        parameters: [
-          {name: 'x', type: 'number', required: true},
-          {name: 'y', type: 'number', required: true},
-        ],
-      }),
-    )
+  const command = require('webdriver/build/command').default
+  const additionalCommands = {
+    _getWindowSize: command('GET', '/session/:sessionId/window/current/size', {
+      command: '_getWindowSize',
+      parameters: [],
+    }),
+    _setWindowSize: command('POST', '/session/:sessionId/window/current/size', {
+      command: '_setWindowSize',
+      parameters: [
+        {name: 'width', type: 'number', required: true},
+        {name: 'height', type: 'number', required: true},
+      ],
+    }),
+    setWindowPosition: command('POST', '/session/:sessionId/window/current/position', {
+      command: 'setWindowPosition',
+      parameters: [
+        {name: 'x', type: 'number', required: true},
+        {name: 'y', type: 'number', required: true},
+      ],
+    }),
   }
+  Object.entries(additionalCommands).forEach(([name, command]) => driver.addCommand(name, command))
   return driver
 }
 export function transformElement(element: Element): Element {
@@ -196,21 +191,19 @@ export async function findElements(
 }
 export async function getWindowSize(browser: Driver): Promise<Size> {
   try {
-    if (utils.types.isFunction(browser.getWindowRect)) {
-      const rect = await browser.getWindowRect()
-      return {width: rect.width, height: rect.height}
-    }
-  } catch {}
-  return browser._getWindowSize()
+    const rect = await browser.getWindowRect()
+    return {width: rect.width, height: rect.height}
+  } catch {
+    return browser._getWindowSize() as Promise<Size>
+  }
 }
 export async function setWindowSize(browser: Driver, size: Size): Promise<void> {
   try {
-    if (utils.types.isFunction(browser.setWindowRect)) {
-      await browser.setWindowRect(0, 0, size.width, size.height)
-    }
-  } catch {}
-  await browser.setWindowPosition(0, 0)
-  await browser._setWindowSize(size.width, size.height)
+    await browser.setWindowRect(0, 0, size.width, size.height)
+  } catch {
+    await browser.setWindowPosition(0, 0)
+    await browser._setWindowSize(size.width, size.height)
+  }
 }
 export async function getCookies(browser: Driver, context?: boolean): Promise<Cookie[]> {
   if (context) return browser.getCookies()

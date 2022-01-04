@@ -172,21 +172,19 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
   try {
-    if (utils.types.isFunction(driver.getWindowRect)) {
-      const rect = await driver.getWindowRect()
-      return {width: rect.width, height: rect.height}
-    }
-  } catch {}
-  return driver._getWindowSize() as Promise<Size>
+    const rect = await driver.getWindowRect()
+    return {width: rect.width, height: rect.height}
+  } catch {
+    return driver._getWindowSize() as Promise<Size>
+  }
 }
 export async function setWindowSize(driver: Driver, size: Size) {
   try {
-    if (utils.types.isFunction(driver.setWindowRect)) {
-      await driver.setWindowRect(0, 0, size.width, size.height)
-    }
-  } catch {}
-  await driver.setWindowPosition(0, 0)
-  await driver._setWindowSize(size.width, size.height)
+    await driver.setWindowRect(0, 0, size.width, size.height)
+  } catch {
+    await driver.setWindowPosition(0, 0)
+    await driver._setWindowSize(size.width, size.height)
+  }
 }
 export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
   if (context) return driver.getAllCookies()
