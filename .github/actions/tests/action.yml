@@ -48,7 +48,9 @@ runs:
         echo "::group::Installing and updating dependencies"
         cd "packages/${{inputs.package}}"
         yarn install
-        npm ls webdriverio || 1
+        set +e
+        npm ls webdriverio
+        set -e
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
@@ -67,7 +69,9 @@ runs:
 
         echo "::group::Building package"
         echo "APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION=$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION"
-        npm ls webdriverio || 1
+        set +e
+        npm ls webdriverio
+        set -e
         npm run build --if-present
         echo "::endgroup::"
 
