@@ -96,11 +96,10 @@
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
-    "postdeps": "echo hello world",
+    "postdeps": "if [ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile webdriverio@$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio wdio(node:14) wdio(node:12) wdio(protocol:cdp) wdio(framework:6) wdio(framework:5)'",
     "gh:test:links": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio wdio+cdp wdio@6 wdio@5' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-webdriverio utils driver snippets screenshoter' -f linking-depth=3",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio'",
-    "postinstall": "if [ \"$APPLITOOLS_INSTALL_FRAMEWORK\" = true ] && [ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --ignore-scripts --no-lockfile webdriverio@$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion"

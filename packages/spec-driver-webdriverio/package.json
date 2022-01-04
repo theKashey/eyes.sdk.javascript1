@@ -83,9 +83,9 @@
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
+    "postdeps": "if [ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile webdriverio@$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio' -f links='types utils test-utils'",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-webdriverio'",
-    "postinstall": "if [ \"$APPLITOOLS_INSTALL_FRAMEWORK\" = true ] && [ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --ignore-scripts --no-lockfile webdriverio@$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
     "preversion": "bongo preversion",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
