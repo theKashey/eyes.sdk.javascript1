@@ -1,7 +1,7 @@
-import type * as types from '@applitools/types'
+import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
 import type * as WD from 'webdriver'
 import * as utils from '@applitools/utils'
-import WebDriver from 'webdriver'
+import WebDriver, {command} from 'webdriver'
 
 export type Driver = WD.Client
 export type Element = {'element-6066-11e4-a52e-4f735466cecf': string} | {ELEMENT: string}
@@ -81,7 +81,35 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     if (options.protocol === 'http') options.port = 80
     if (options.protocol === 'https') options.port = 443
   }
-  return WebDriver.attachToSession(options)
+
+  const additionalCommands = {
+    _getWindowSize: command('GET', '/session/:sessionId/window/current/size', {
+      command: '_getWindowSize',
+      description: '',
+      ref: '',
+      parameters: [],
+    }),
+    _setWindowSize: command('POST', '/session/:sessionId/window/current/size', {
+      command: '_setWindowSize',
+      parameters: [
+        {name: 'width', type: 'number', required: true, description: ''},
+        {name: 'height', type: 'number', required: true, description: ''},
+      ],
+      description: '',
+      ref: '',
+    }),
+    setWindowPosition: command('POST', '/session/:sessionId/window/current/position', {
+      command: 'setWindowPosition',
+      parameters: [
+        {name: 'x', type: 'number', required: true, description: ''},
+        {name: 'y', type: 'number', required: true, description: ''},
+      ],
+      description: '',
+      ref: '',
+    }),
+  }
+
+  return WebDriver.attachToSession(options, undefined, additionalCommands)
 }
 export function transformElement(element: Element | StaticElement): Element {
   if (!utils.types.has(element, 'elementId')) return element
@@ -142,23 +170,25 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
     ? await driver.findElementsFromElement(extractElementId(parent), selector.using, selector.value)
     : await driver.findElements(selector.using, selector.value)
 }
-export async function getWindowSize(driver: Driver): Promise<{width: number; height: number}> {
-  if (utils.types.isFunction(driver.getWindowRect)) {
-    const rect = await driver.getWindowRect()
-    return {width: rect.width, height: rect.height}
-  } else if (utils.types.isFunction(driver._getWindowSize)) {
-    return (await driver._getWindowSize()) as {width: number; height: number}
-  }
+export async function getWindowSize(driver: Driver): Promise<Size> {
+  try {
+    if (utils.types.isFunction(driver.getWindowRect)) {
+      const rect = await driver.getWindowRect()
+      return {width: rect.width, height: rect.height}
+    }
+  } catch {}
+  return driver._getWindowSize() as Promise<Size>
 }
-export async function setWindowSize(driver: Driver, size: {width: number; height: number}) {
-  if (utils.types.isFunction(driver.setWindowRect)) {
-    await driver.setWindowRect(0, 0, size.width, size.height)
-  } else {
-    await driver.setWindowPosition(0, 0)
-    await driver._setWindowSize(size.width, size.height)
-  }
+export async function setWindowSize(driver: Driver, size: Size) {
+  try {
+    if (utils.types.isFunction(driver.setWindowRect)) {
+      await driver.setWindowRect(0, 0, size.width, size.height)
+    }
+  } catch {}
+  await driver.setWindowPosition(0, 0)
+  await driver._setWindowSize(size.width, size.height)
 }
-export async function getCookies(driver: Driver, context?: boolean): Promise<types.Cookie[]> {
+export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
   if (context) return driver.getAllCookies()
 
   const response = await driver.sendCommandAndGetResult('Network.getAllCookies', {})
@@ -179,7 +209,7 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<typ
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
   return browser.getSession?.() ?? browser.capabilities
 }
-export async function getDriverInfo(driver: Driver): Promise<any> {
+export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   return {sessionId: driver.sessionId}
 }
 export async function getTitle(driver: Driver): Promise<string> {
@@ -217,7 +247,7 @@ export async function getOrientation(browser: Driver): Promise<'portrait' | 'lan
   const orientation = await browser.getOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'
 }
-export async function getElementRegion(driver: Driver, element: Element): Promise<types.Region> {
+export async function getElementRegion(driver: Driver, element: Element): Promise<Region> {
   return driver.getElementRect(extractElementId(element))
 }
 export async function getElementAttribute(driver: Driver, element: Element, attr: string): Promise<string> {
