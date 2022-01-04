@@ -65,6 +65,8 @@ runs:
         fi
 
         echo "::group::Building package"
+        echo "APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION=$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION"
+        npm ls webdriverio
         npm run build --if-present
         echo "::endgroup::"
 

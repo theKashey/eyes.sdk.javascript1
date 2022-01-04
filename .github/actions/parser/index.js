@@ -103,7 +103,7 @@ function requestedPackages(packageSettings) {
     })
   
     if (!packageInfo) {
-      core.warning(`::Package name is unknown! Package configured as "${packageSetting}" will be ignored!`)
+      core.warning(`Package name is unknown! Package configured as "${packageSetting}" will be ignored!`)
       return packages
     }
   
