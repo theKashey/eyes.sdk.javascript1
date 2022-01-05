@@ -17,6 +17,7 @@ const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
 
 const W3C_CAPABILITIES = ['platformName', 'platformVersion']
+const W3C_SECONDARY_CAPABILITIES = ['pageLoadStrategy']
 const W3C_SAFARI_CAPABILITIES = ['browserVersion', 'setWindowRect']
 const APPIUM_CAPABILITIES = ['appiumVersion', 'deviceType', 'deviceOrientation', 'deviceName', 'automationName']
 const LEGACY_APPIUM_CAPABILITIES = ['appium-version', 'device-type', 'device-orientation']
@@ -32,6 +33,7 @@ function extractEnvironment(capabilities: Record<string, any>) {
   const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
   const isW3C =
     isAppium ||
+    W3C_SECONDARY_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_SAFARI_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability))
   const isMobile =

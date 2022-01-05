@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix W3C detection for browserstack capabilities
 
 ## 1.0.1 - 2022/1/5
 
