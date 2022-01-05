@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.1 - 2022/1/5
+
 - fix webdriver additional commands format
 
 ## 1.0.0 - 2022/1/5
