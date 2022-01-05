@@ -1,6 +1,6 @@
 {
   "name": "@applitools/spec-driver-webdriverio",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "keywords": [
     "webdriverio",
     "wdio",
