@@ -414,14 +414,14 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{steps.publish.outputs.tag}}
+          name: ${{steps.publish.outputs.tag}}
+          generate_release_notes: true
           files: |
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-linux
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-macos
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-win.exe
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal.zip
             packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal.tar.gz
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
@@ -668,8 +668,6 @@ jobs:
           tag_name: ${{steps.version.outputs.tag}}
           files: |
             packages/${{fromJSON(inputs.schema).browser-extension.dirname}}/eyes-browser-extension.zip
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   storybook:
     needs: [bongo, logger, core, vgc, spec-puppeteer, test-utils]
     if: ${{fromJSON(inputs.schema).storybook && !failure() && !cancelled()}}

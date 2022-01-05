@@ -28,6 +28,8 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
     return console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
   }
 
+  console.log(`Logs saved in: ${LOG_DIRNAME}`)
+
   let idle = setTimeout(() => server.close(), idleTimeout)
 
   const baseLogger = makeLogger({

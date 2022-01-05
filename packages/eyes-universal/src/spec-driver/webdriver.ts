@@ -83,30 +83,36 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
   }
 
   const additionalCommands = {
-    _getWindowSize: command('GET', '/session/:sessionId/window/current/size', {
-      command: '_getWindowSize',
-      description: '',
-      ref: '',
-      parameters: [],
-    }),
-    _setWindowSize: command('POST', '/session/:sessionId/window/current/size', {
-      command: '_setWindowSize',
-      parameters: [
-        {name: 'width', type: 'number', required: true, description: ''},
-        {name: 'height', type: 'number', required: true, description: ''},
-      ],
-      description: '',
-      ref: '',
-    }),
-    setWindowPosition: command('POST', '/session/:sessionId/window/current/position', {
-      command: 'setWindowPosition',
-      parameters: [
-        {name: 'x', type: 'number', required: true, description: ''},
-        {name: 'y', type: 'number', required: true, description: ''},
-      ],
-      description: '',
-      ref: '',
-    }),
+    _getWindowSize: {
+      value: command('GET', '/session/:sessionId/window/current/size', {
+        command: '_getWindowSize',
+        description: '',
+        ref: '',
+        parameters: [],
+      }),
+    },
+    _setWindowSize: {
+      value: command('POST', '/session/:sessionId/window/current/size', {
+        command: '_setWindowSize',
+        parameters: [
+          {name: 'width', type: 'number', required: true, description: ''},
+          {name: 'height', type: 'number', required: true, description: ''},
+        ],
+        description: '',
+        ref: '',
+      }),
+    },
+    setWindowPosition: {
+      value: command('POST', '/session/:sessionId/window/current/position', {
+        command: 'setWindowPosition',
+        parameters: [
+          {name: 'x', type: 'number', required: true, description: ''},
+          {name: 'y', type: 'number', required: true, description: ''},
+        ],
+        description: '',
+        ref: '',
+      }),
+    },
   }
 
   return WebDriver.attachToSession(options, undefined, additionalCommands)
