@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-universal",
-  "version": "0.2.3",
+  "version": "1.0.0",
   "description": "Applitools Eyes Universal SDK",
   "keywords": [
     "applitools",
@@ -53,16 +53,16 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.24.9",
+    "@applitools/eyes-sdk-core": "12.24.10",
     "@applitools/logger": "1.0.8",
     "@applitools/utils": "1.2.11",
-    "@applitools/visual-grid-client": "15.8.55",
+    "@applitools/visual-grid-client": "15.8.56",
     "webdriver": "7.7.3",
     "ws": "7.4.6",
     "yargs": "16.1.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^2.3.16",
+    "@applitools/sdk-coverage-tests": "^2.3.17",
     "@applitools/sdk-release-kit": "^0.13.10",
     "@applitools/test-utils": "^1.0.10",
     "@applitools/types": "1.0.23",
