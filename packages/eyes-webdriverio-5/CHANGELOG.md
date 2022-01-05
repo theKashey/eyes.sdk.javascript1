@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/spec-driver-webdriverio@1.2.6 (from 1.2.5)
 
+
+## 5.34.7 - 2022/1/5
+
+- updated to @applitools/spec-driver-webdriverio@1.2.6 (from 1.2.5)
 
 ## 5.34.6 - 2021/12/23
 
