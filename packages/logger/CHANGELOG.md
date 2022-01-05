@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix colors in extended logger
 
 ## 1.0.8 - 2021/12/22
 

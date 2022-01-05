@@ -66,7 +66,7 @@ function makeLogger({
         level,
         console: consoleHandler,
         ...options,
-        colors: {...colors, ...options.colors},
+        colors: colors || options.colors ? {...colors, ...options.colors} : undefined,
         handler,
         extended: true,
       })
