@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- handle legacy appium capabilities
 
 ## 1.4.7 - 2021/12/22
 
