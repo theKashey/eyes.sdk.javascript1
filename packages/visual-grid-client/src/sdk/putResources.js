@@ -57,7 +57,12 @@ function makePutResources({
       logger.verbose('setting resource to cache: ', cacheKey)
       fetchCache.remove(cacheKey)
       const doesRequireProcessing = Boolean(resourceType(resource.getContentType()))
+      // resolve the dummy promise as we now set the real value of the resource to the cacheResouce
+      const resourceValue = resourceCache.getValue(cacheKey)
       resourceCache.setValue(cacheKey, toCacheEntry(resource, doesRequireProcessing))
+      if (resourceValue && resourceValue.resolve) {
+        resourceValue.resolve(resourceCache.getValue(cacheKey))
+      }
     }
     return result
   }

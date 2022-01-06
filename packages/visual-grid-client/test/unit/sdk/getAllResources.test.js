@@ -22,28 +22,47 @@ require('@applitools/isomorphic-fetch')
 
 describe('getAllResources', () => {
   let closeServer
-  let getAllResources, resourceCache
+  let getAllResources,
+    resourceCache,
+    putResources,
+    removeContentFromResources,
+    getAllResourcesWithSha
 
   beforeEach(() => {
+    const fetchCache = createResourceCache()
     const fetchResource = makeFetchResource({
       logger: testLogger,
-      fetchCache: createResourceCache(),
+      fetchCache,
       fetch,
     })
     resourceCache = createResourceCache()
-    const getAllResourcesOrig = makeGetAllResources({
+    getAllResourcesWithSha = makeGetAllResources({
       resourceCache,
       extractCssResources,
       fetchResource,
       logger: testLogger,
     })
 
+    putResources = makePutResources({
+      logger: testLogger,
+      doPutResource: async () => {},
+      doCheckResources: async resources => resources,
+      resourceCache,
+      fetchCache,
+    })
+
     getAllResources = async args => {
-      const r = await getAllResourcesOrig(args)
+      const r = await getAllResourcesWithSha(args)
       for (const resource of Object.values(r)) {
         resource._sha256hash = undefined // make sure all resources dont calculate the hash for simplicity.
       }
       return r
+    }
+
+    removeContentFromResources = resouces => {
+      for (const resouce of resouces) {
+        resouce._content = ''
+      }
     }
   })
 
@@ -934,5 +953,29 @@ describe('getAllResources', () => {
     expect(resourcesWithIE_2[standardResource].getSha256Hash()).to.equal(
       getSha256Hash(mainUserAgent),
     )
+  })
+
+  it('get all css resources from resourceCache', async () => {
+    const server = await testServerInProcess({middlewares: ['slow']})
+    const baseUrl = `http://localhost:${server.port}`
+    closeServer = server.close
+
+    try {
+      const resourcesOne = await getAllResourcesWithSha({
+        resourceUrls: [`${baseUrl}/mediumCss.css`],
+      })
+
+      putResources(Object.values(resourcesOne))
+      const resourcesTwo = await getAllResourcesWithSha({
+        resourceUrls: [`${baseUrl}/mediumCss.css`],
+      })
+
+      removeContentFromResources(Object.values(resourcesOne))
+      removeContentFromResources(Object.values(resourcesTwo))
+
+      expect(resourcesOne).to.eql(resourcesTwo)
+    } finally {
+      closeServer()
+    }
   })
 })

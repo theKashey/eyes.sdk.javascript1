@@ -83,15 +83,16 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
         handledResourceUrls.add(rGridResource.getUrl())
         const cacheEntry = resourceCache.getWithDependencies(rGridResource.getCacheKey())
         if (cacheEntry) {
+          const cacheEntries = await Promise.all(Object.values(cacheEntry))
           assignContentfulResources(
             resources,
-            mapKeys(mapValues(cacheEntry, fromCacheToRGridResource), value => value.getUrl()),
+            mapKeys(mapValues(cacheEntries, fromCacheToRGridResource), value => value.getUrl()),
           )
-          const cacheEntryKeys = Object.keys(cacheEntry)
+          const cacheEntryKeys = Object.keys(cacheEntries)
           logger.log(
             `resource retrieved from cache, with dependencies (${
               cacheEntryKeys.length
-            }): ${rGridResource.getUrl()} with dependencies --> ${cacheEntryKeys}`,
+            }): ${rGridResource.getUrl()} --> ${cacheEntryKeys}`,
           )
         } else if (rGridResource.isHttp()) {
           missingResources.push(rGridResource)
@@ -130,6 +131,15 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
       const doesRequireProcessing = !!resourceType(rGridResource.getContentType())
       if (doesRequireProcessing) {
         resourceCache.setValue(rGridResource.getCacheKey(), toCacheEntry(rGridResource))
+      } else {
+        // Create a dummy promise so when we call getWithDependencies we will wait for ALL the resource dependencies
+        // to be added to the resourceCache. This promise is resolved in putResources
+
+        let resolve
+        const promise = new Promise(thisResolve => (resolve = thisResolve))
+        promise.resolve = resolve
+
+        resourceCache.setValue(rGridResource.getCacheKey(), promise)
       }
       resourceCache.setDependencies(rGridResource.getCacheKey(), dependentResources)
       return Object.assign({[rGridResource.getUrl()]: rGridResource}, fetchedResources)
