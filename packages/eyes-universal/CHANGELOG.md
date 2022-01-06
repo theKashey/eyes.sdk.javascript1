@@ -4,6 +4,7 @@
 
 - fix W3C detection for browserstack capabilities
 - handle shadow root element key
+- updated to @applitools/logger@1.0.9 (from 1.0.8)
 
 ## 1.0.1 - 2022/1/5
 

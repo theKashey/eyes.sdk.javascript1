@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@applitools/eyes-sdk-core": "12.24.10",
-    "@applitools/logger": "1.0.8",
+    "@applitools/logger": "1.0.9",
     "@applitools/utils": "1.2.11",
     "@applitools/visual-grid-client": "15.8.56",
     "webdriver": "7.16.11",

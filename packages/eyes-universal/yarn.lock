@@ -128,6 +128,14 @@
     "@applitools/utils" "1.2.5"
     chalk "3.0.0"
 
+"@applitools/logger@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.9.tgz#85947ec5cea1c3c2566aae9d18de118ff205b570"
+  integrity sha512-zquJDUK/UOJp6DLMJg56plWQOaSNCsibnAQAkfINVpG9TFdopG1UoMMJWP9vJK91IvIXH9tdHuP3CROrb0SRNQ==
+  dependencies:
+    "@applitools/utils" "1.2.11"
+    chalk "3.0.0"
+
 "@applitools/monitoring-commons@^1.0.19":
   version "1.0.19"
   resolved "https://registry.yarnpkg.com/@applitools/monitoring-commons/-/monitoring-commons-1.0.19.tgz#9b6b1062b26b54e4d333bd2854ddb22e698c8f5a"
