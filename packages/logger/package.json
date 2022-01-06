@@ -51,11 +51,11 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.5",
+    "@applitools/utils": "1.2.11",
     "chalk": "3.0.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/sdk-release-kit": "0.13.10",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
