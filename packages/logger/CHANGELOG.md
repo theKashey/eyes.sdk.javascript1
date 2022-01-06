@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.9 - 2022/1/6
+
 - fix colors in extended logger
 - updated to @applitools/utils@1.2.11 (from 1.2.5)
 
