@@ -30,6 +30,16 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
+"@applitools/dom-snapshot@4.5.12":
+  version "4.5.12"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.12.tgz#910f3fe24876f156c4322fe12631349913eb9b17"
+  integrity sha512-YeuAOQ0+AB7HCMPAHqpnOq5xCOXfIyC/2/h3XurOuzE+qFekK9SPMBRaJn4jDYyAFK/Eeu4v7CGW+LPAUGiZfA==
+  dependencies:
+    "@applitools/dom-shared" "1.0.8"
+    "@applitools/functional-commons" "1.6.0"
+    css-tree "1.0.0-alpha.39"
+    pako "1.0.11"
+
 "@applitools/driver@1.4.8":
   version "1.4.8"
   resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.8.tgz#cb50099b9a26eb6c9b39d3619022e7e25ca73657"
@@ -126,6 +136,14 @@
   integrity sha512-tfpiq17j3upxjIHiWlWC+0ctmaN4fwIAJ24eGpS9AHN2/ofbc2iHRWSC1REex5nGJ1GWGEG1IXlp7IlEkSHYbw==
   dependencies:
     "@applitools/utils" "1.2.5"
+    chalk "3.0.0"
+
+"@applitools/logger@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.9.tgz#85947ec5cea1c3c2566aae9d18de118ff205b570"
+  integrity sha512-zquJDUK/UOJp6DLMJg56plWQOaSNCsibnAQAkfINVpG9TFdopG1UoMMJWP9vJK91IvIXH9tdHuP3CROrb0SRNQ==
+  dependencies:
+    "@applitools/utils" "1.2.11"
     chalk "3.0.0"
 
 "@applitools/monitoring-commons@^1.0.19":

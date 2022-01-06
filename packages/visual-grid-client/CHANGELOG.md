@@ -3,6 +3,7 @@
 ## Unreleased
 
  - fix caching machanism 
+- updated to @applitools/logger@1.0.9 (from 1.0.8)
 
 ## 15.8.56 - 2022/1/5
 

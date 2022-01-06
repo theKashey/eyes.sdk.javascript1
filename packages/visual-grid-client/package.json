@@ -37,7 +37,7 @@
     "@applitools/http-commons": "2.4.5",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/jsdom": "1.0.4",
-    "@applitools/logger": "1.0.8",
+    "@applitools/logger": "1.0.9",
     "abort-controller": "3.0.0",
     "chalk": "3.0.0",
     "he": "1.2.0",
@@ -52,7 +52,7 @@
     "@applitools/jsdom": false
   },
   "devDependencies": {
-    "@applitools/dom-snapshot": "4.5.11",
+    "@applitools/dom-snapshot": "4.5.12",
     "@applitools/sdk-release-kit": "0.13.10",
     "@applitools/test-server": "1.0.8",
     "@applitools/test-utils": "1.0.10",
