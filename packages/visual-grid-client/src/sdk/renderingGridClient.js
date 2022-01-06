@@ -3,7 +3,7 @@
 
 const {
   BatchInfo,
-  GeneralUtils: {backwardCompatible, deprecationWarning},
+  GeneralUtils: {backwardCompatible, deprecationWarning, getEnvValue},
   RunnerStartedEvent,
 } = require('@applitools/eyes-sdk-core/shared')
 const {makeLogger} = require('@applitools/logger')
@@ -87,7 +87,7 @@ function makeRenderingGridClient({
   globalState: _globalState,
   dontCloseBatches,
   visualGridOptions,
-  concurrentRendersPerTest = 1,
+  concurrentRendersPerTest,
   ignoreGitMergeBase,
 }) {
   if (saveDebugData) {
@@ -99,6 +99,8 @@ function makeRenderingGridClient({
   if (!finalConcurrency) {
     finalConcurrency = defaultConcurrency = 5
   }
+
+  concurrentRendersPerTest = Number(getEnvValue('CONCURRENT_RENDERS_PER_TEST')) || 1
 
   logger = logger || makeLogger({label: 'visual-grid-client', level: showLogs ? 'info' : 'silent'})
   logger.verbose('vgc concurrency is', finalConcurrency)
@@ -260,7 +262,12 @@ function makeRenderingGridClient({
       renderWrapper.setApiKey(apiKey)
     }
 
-    const runnerStaredEvent = RunnerStartedEvent({concurrency, testConcurrency, defaultConcurrency})
+    const runnerStaredEvent = RunnerStartedEvent({
+      concurrency,
+      testConcurrency,
+      defaultConcurrency,
+      concurrentRendersPerTest,
+    })
     logger.verbose('runnerStartedEvent', runnerStaredEvent)
     const [[err, renderInfo]] = await Promise.all([
       presult(doGetRenderInfo()),

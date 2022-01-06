@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- more info in RunnerStartedEvent
 
 ## 12.24.10 - 2022/1/5
 

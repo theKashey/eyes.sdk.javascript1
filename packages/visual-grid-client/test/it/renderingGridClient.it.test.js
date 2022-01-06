@@ -4,6 +4,7 @@ const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const createFakeWrapper = require('../util/createFakeWrapper')
 const {apiKeyFailMsg} = require('../../src/sdk/wrapperUtils')
+const {delay} = require('@applitools/functional-commons')
 
 const apiKey = 'api key'
 const appName = 'app name'
@@ -104,5 +105,29 @@ describe('renderingGridClient', () => {
     })
     await openEyes({wrappers: [wrapper]})
     expect(wrapper.getIgnoreGitMergeBase()).to.be.true
+  })
+
+  it('passes concurrentRendersPerTest from env var APPLITOOLS_CONCURRENT_RENDERS_PER_TEST', async () => {
+    process.env.APPLITOOLS_CONCURRENT_RENDERS_PER_TEST = 2
+    const wrapper = createFakeWrapper('http://some_url')
+    let renderCallCount = 0
+    const origRenderBatch = wrapper.renderBatch
+    wrapper.renderBatch = async renderRequests => {
+      renderCallCount += renderRequests.length
+      return origRenderBatch.call(wrapper, renderRequests)
+    }
+    const {openEyes} = makeRenderingGridClient({
+      apiKey,
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+      appName,
+      renderWrapper: wrapper,
+    })
+    const {checkWindow, close} = await openEyes({wrappers: [wrapper]})
+    await checkWindow({snapshot: {cdt: []}})
+    await checkWindow({snapshot: {cdt: []}})
+    await delay(1000) // need to provide enough time for the throttle timeouts to execute in both putResources.js and render.js
+    const renderCallCountBeforeClose = renderCallCount
+    await close()
+    expect(renderCallCountBeforeClose).to.equal(2)
   })
 })

@@ -311,9 +311,10 @@ function makeCheckWindow({
       globalState.setQueuedRendersCount(globalState.getQueuedRendersCount() + 1)
       const holder = new Promise(resolve => {
         renderThroat(async () => {
-          logger.log(`starting to render test ${testName}`)
+          logger.log(`starting to render test ${testName} stepCount #${currStepCount}`)
           renderJobs.set(renderRequest, resolve)
           const [renderIdErr, renderId] = await presult(render(renderRequest))
+          logger.log(`done render test ${testName} stepCount #${currStepCount}`)
           if (renderIdErr) {
             renderRequestTask.reject(renderIdErr)
           } else {
