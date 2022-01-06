@@ -9,12 +9,14 @@ export type Selector = {using: string; value: string}
 
 type StaticDriver = {sessionId: string; serverUrl: string; capabilities: Record<string, any>}
 type StaticElement = {elementId: string}
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
+const SHADOW_ROOT_ID = 'shadow-6066-11e4-a52e-4f735466cecf'
 
 const W3C_CAPABILITIES = ['platformName', 'platformVersion']
 const W3C_SECONDARY_CAPABILITIES = ['pageLoadStrategy']
@@ -27,7 +29,9 @@ const MOBILE_BROWSER_NAMES = ['ipad', 'iphone', 'android']
 function extractElementId(element: Element): string {
   return (element as any).elementId ?? (element as any)[ELEMENT_ID] ?? (element as any)[LEGACY_ELEMENT_ID]
 }
-
+function transformShadowRoot(shadowRoot: ShadowRoot | Element): Element {
+  return isElement(shadowRoot) ? shadowRoot : {[ELEMENT_ID]: shadowRoot[SHADOW_ROOT_ID]}
+}
 function extractEnvironment(capabilities: Record<string, any>) {
   const isAppium = APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
   const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
@@ -121,7 +125,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
 }
 export function transformElement(element: Element | StaticElement): Element {
   if (!utils.types.has(element, 'elementId')) return element
-  return {'element-6066-11e4-a52e-4f735466cecf': element.elementId}
+  return {[ELEMENT_ID]: element.elementId, [LEGACY_ELEMENT_ID]: element.elementId}
 }
 export function transformSelector(selector: Selector | CommonSelector): Selector {
   if (utils.types.isString(selector)) {
@@ -168,14 +172,16 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   return driver
 }
 export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element | null> {
-  const element = parent
-    ? await driver.findElementFromElement(extractElementId(parent), selector.using, selector.value)
+  const parentElement = parent ? transformShadowRoot(parent) : null
+  const element = parentElement
+    ? await driver.findElementFromElement(extractElementId(parentElement), selector.using, selector.value)
     : await driver.findElement(selector.using, selector.value)
   return isElement(element) ? element : null
 }
 export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
-  return parent
-    ? await driver.findElementsFromElement(extractElementId(parent), selector.using, selector.value)
+  const parentElement = parent ? transformShadowRoot(parent) : null
+  return parentElement
+    ? await driver.findElementsFromElement(extractElementId(parentElement), selector.using, selector.value)
     : await driver.findElements(selector.using, selector.value)
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {

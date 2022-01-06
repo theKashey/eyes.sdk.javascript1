@@ -3,6 +3,7 @@
 ## Unreleased
 
 - fix W3C detection for browserstack capabilities
+- handle shadow root element key
 
 ## 1.0.1 - 2022/1/5
 
