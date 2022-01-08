@@ -849,7 +849,7 @@ describe('getAllResources', () => {
           path: '/pictures',
           name: 'hello',
           value: 'world',
-          expiry: Date.now() / 1000,
+          expiry: Date.now() / 1000 - 1,
         },
         {
           domain: '.theweb.com',
@@ -864,7 +864,7 @@ describe('getAllResources', () => {
     })
     expect(results).to.deep.equal([
       {url: 'http://some-url.com/images/image.png', cookie: 'hello=world;'},
-      {url: 'http://some-other-url.com/pictures/picture.jpeg', cookie: 'hello=world;'}, // expired
+      {url: 'http://some-other-url.com/pictures/picture.jpeg', cookie: undefined}, // expired
       {url: 'http://my-domain.com/static/style.css', cookie: undefined}, // non secure (http)
       {url: 'http://web.theweb.com/resources/resource.css', cookie: 'resource=alright;'},
       {url: 'http://theinternet.com/assets/public/img.png', cookie: 'assets=okay;'},
