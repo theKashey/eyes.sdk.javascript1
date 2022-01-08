@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 12.24.11 - 2022/1/8
+
 - more info in RunnerStartedEvent
 - updated to @applitools/dom-snapshot@4.5.12 (from 4.5.11)
 - updated to @applitools/logger@1.0.9 (from 1.0.8)
