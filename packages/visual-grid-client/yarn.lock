@@ -20,16 +20,6 @@
   resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.8.tgz#6e9ad9071aeb4d248b1314b7c8c1d43af34b5809"
   integrity sha512-HQtYfFvtlPuE9ZShBamtW1LGW2Qq4HxjQx5nF7KiNvrRTlf5/e+AWpZhXCTVEhVkAcSNs/7xR2WvumOUd+usxg==
 
-"@applitools/dom-snapshot@4.5.11":
-  version "4.5.11"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.11.tgz#818fff30b434ab4abf3c93909de44e1da35f6ebe"
-  integrity sha512-DsVv7Kd42eR9KNusHqX9FHWU/nFcqqVIXZqk/IRozkei4roDCgjqmY0eCAsT/knMXc2aux7+TTI5lkt6q8UEHg==
-  dependencies:
-    "@applitools/dom-shared" "1.0.8"
-    "@applitools/functional-commons" "1.6.0"
-    css-tree "1.0.0-alpha.39"
-    pako "1.0.11"
-
 "@applitools/dom-snapshot@4.5.12":
   version "4.5.12"
   resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.12.tgz#910f3fe24876f156c4322fe12631349913eb9b17"
@@ -49,16 +39,16 @@
     "@applitools/types" "1.0.23"
     "@applitools/utils" "1.2.11"
 
-"@applitools/eyes-sdk-core@12.24.10":
-  version "12.24.10"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.10.tgz#aa1eeddfed832141ca5df8c2316fdc0abfa0fb84"
-  integrity sha512-+I8e+VdpA8NlPlVfzqkgGITancomYJVgcBtWhyYVPR2nh7Q/7ttqTJttASEcHI0vnd9ini6tac6DosD5e3ni5g==
+"@applitools/eyes-sdk-core@12.24.11":
+  version "12.24.11"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.11.tgz#c469bcf668582205bd8fd9669973e3537959ab37"
+  integrity sha512-pK23xzWWXc2Y9cpCo7X1MAORMWVkmYk8orafXNkjAiD/agn8ghaiavy6xkOaBEkTr6moG5Ro0pMpbVN8tAZMtg==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
-    "@applitools/dom-snapshot" "4.5.11"
+    "@applitools/dom-snapshot" "4.5.12"
     "@applitools/driver" "1.4.8"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/logger" "1.0.8"
+    "@applitools/logger" "1.0.9"
     "@applitools/screenshoter" "3.3.4"
     "@applitools/snippets" "2.1.12"
     "@applitools/types" "1.0.23"
@@ -129,14 +119,6 @@
     whatwg-url "^10.0.0"
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
-
-"@applitools/logger@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.8.tgz#b2aef9831234a6c348fd37357b9d998ccc583737"
-  integrity sha512-tfpiq17j3upxjIHiWlWC+0ctmaN4fwIAJ24eGpS9AHN2/ofbc2iHRWSC1REex5nGJ1GWGEG1IXlp7IlEkSHYbw==
-  dependencies:
-    "@applitools/utils" "1.2.5"
-    chalk "3.0.0"
 
 "@applitools/logger@1.0.9":
   version "1.0.9"
