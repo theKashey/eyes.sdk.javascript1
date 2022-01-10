@@ -17,11 +17,12 @@ async function takeDomSnapshots({
   waitBeforeCapture,
 }) {
   const cookieJar = driver.features.allCookies ? await driver.getCookies() : []
+  const currentContext = driver.currentContext
 
   if (!breakpoints) {
     logger.log(`taking single dom snapshot`)
     if (waitBeforeCapture) await waitBeforeCapture()
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, currentContext, {
       onSnapshotContext: !driver.features.allCookies ? collectCookies : undefined,
       disableBrowserFetching,
       showLogs,
@@ -52,7 +53,7 @@ async function takeDomSnapshots({
   if (requiredWidths.has(viewportSize.width)) {
     logger.log(`taking dom snapshot for existing width ${viewportSize.width}`)
     if (waitBeforeCapture) await waitBeforeCapture()
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, currentContext, {
       disableBrowserFetching,
       showLogs,
       skipResources,
@@ -81,7 +82,7 @@ async function takeDomSnapshots({
       }
     }
 
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, currentContext, {
       onSnapshotContext: !driver.features.allCookies ? collectCookies : undefined,
       disableBrowserFetching,
       showLogs,

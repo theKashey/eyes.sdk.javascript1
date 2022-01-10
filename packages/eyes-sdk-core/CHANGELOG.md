@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- change api of `takeDomSnapshot` to accept `context` as an argument instead of `driver`
 
 ## 12.24.11 - 2022/1/8
 

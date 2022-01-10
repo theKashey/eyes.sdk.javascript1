@@ -20,7 +20,7 @@ describe('takeDomSnapshot', () => {
     mock.mockScript('dom-snapshot', function() {
       return JSON.stringify({status: 'ERROR', error: 'some error'})
     })
-    const [error] = await presult(takeDomSnapshot(logger, driver))
+    const [error] = await presult(takeDomSnapshot(logger, driver.currentContext))
     expect(error).not.to.be.undefined
     expect(error.message).to.equal("Error during execute poll script: 'some error'")
   })
@@ -29,7 +29,7 @@ describe('takeDomSnapshot', () => {
     mock.mockScript('dom-snapshot', function() {
       return JSON.stringify({status: 'WIP'})
     })
-    const [error] = await presult(takeDomSnapshot(logger, driver, {executionTimeout: 0}))
+    const [error] = await presult(takeDomSnapshot(logger, driver.currentContext, {executionTimeout: 0}))
     expect(error).not.to.be.undefined
     expect(error.message).to.equal('Poll script execution is timed out')
   })
@@ -43,7 +43,7 @@ describe('takeDomSnapshot', () => {
         frames: [],
       })
     })
-    const actualSnapshot = await takeDomSnapshot(logger, driver)
+    const actualSnapshot = await takeDomSnapshot(logger, driver.currentContext)
     expect(actualSnapshot).to.eql({
       cdt: 'cdt',
       frames: [],
@@ -70,7 +70,7 @@ describe('takeDomSnapshot', () => {
             crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
           })
     })
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(snapshot).to.eql({
@@ -139,7 +139,7 @@ describe('takeDomSnapshot', () => {
     })
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
     expect(snapshot).to.eql({
@@ -229,7 +229,7 @@ describe('takeDomSnapshot', () => {
 
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
 
@@ -324,7 +324,7 @@ describe('takeDomSnapshot', () => {
 
     let counter = 0
 
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}--COUNTER:${counter++}`,
     })
 
@@ -382,7 +382,7 @@ describe('takeDomSnapshot', () => {
       })
     })
 
-    const snapshot = await takeDomSnapshot(logger, driver)
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext)
     expect(snapshot.frames).to.deep.equal([])
   })
 
@@ -416,7 +416,7 @@ describe('takeDomSnapshot', () => {
       }
     })
 
-    const snapshot = await takeDomSnapshot(logger, driver, {
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(snapshot.frames).to.eql([
@@ -455,7 +455,7 @@ describe('takeDomSnapshot', () => {
           })
       }
     })
-    const {cdt} = await takeDomSnapshot(logger, driver, {
+    const {cdt} = await takeDomSnapshot(logger, driver.currentContext, {
       uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
     })
     expect(cdt).to.deep.equal([

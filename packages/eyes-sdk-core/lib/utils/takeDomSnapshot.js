@@ -16,9 +16,9 @@ const EXECUTION_TIMEOUT = 5 * 60 * 1000
 const POLL_TIMEOUT = 200
 const DEFAULT_CHUNK_BYTE_LENGTH = 262144000 // 250MB (could be 256MB but decide to leave a 6MB buffer)
 
-async function takeDomSnapshot(logger, driver, options = {}) {
+async function takeDomSnapshot(logger, context, options = {}) {
   ArgumentGuard.notNull(logger, 'logger')
-  ArgumentGuard.notNull(driver, 'driver')
+  ArgumentGuard.notNull(context, 'context')
   const {
     disableBrowserFetching: dontFetchResources,
     chunkByteLength = Number(process.env.APPLITOOLS_SCRIPT_RESULT_MAX_BYTE_LENGTH) || DEFAULT_CHUNK_BYTE_LENGTH,
@@ -30,7 +30,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     uniqueUrl = generateUniqueUrl,
     onSnapshotContext,
   } = options
-  const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
+  const isLegacyBrowser = context.driver.isIE || context.driver.isEdgeLegacy
   const arg = {
     chunkByteLength,
     dontFetchResources,
@@ -55,7 +55,7 @@ async function takeDomSnapshot(logger, driver, options = {}) {
     },
   }
 
-  const snapshot = await takeContextDomSnapshot(driver.currentContext)
+  const snapshot = await takeContextDomSnapshot(context)
   return deserializeDomSnapshotResult(snapshot)
 
   async function takeContextDomSnapshot(context) {
