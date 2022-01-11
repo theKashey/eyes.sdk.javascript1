@@ -49,8 +49,14 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: ['12', '14', '16']
-        framework-version: ['5', '6', '7']
+        framework-version: [5, 6, 7]
+        node-version: [16]
+        include:
+          - framework-version: 7
+            node-version: 14
+          - framework-version: 7
+            node-version: 12
+      fail-fast: false
     name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
