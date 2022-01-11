@@ -33,6 +33,11 @@ jobs:
           packages: ${{github.event.inputs.packages}}
           allow-cascading: ${{github.event.inputs.allow-cascading}}
           release-version: ${{github.event.inputs.version}}
+  debug:
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{needs.setup.outputs.packages}}
 
   publish:
     needs: [setup]
