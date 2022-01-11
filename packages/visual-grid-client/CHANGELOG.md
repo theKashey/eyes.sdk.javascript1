@@ -7,9 +7,9 @@
 
 - updated to @applitools/eyes-sdk-core@12.24.11 (from 12.24.10)
 
-  ## 15.8.57 - 2022/1/6
+## 15.8.57 - 2022/1/6
 
- - fix caching machanism 
+- fix caching machanism 
 - updated to @applitools/logger@1.0.9 (from 1.0.8)
 
 ## 15.8.56 - 2022/1/5
