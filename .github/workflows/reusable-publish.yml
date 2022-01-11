@@ -42,7 +42,7 @@ jobs:
   # TOOLING
   bongo:
     needs: [utils]
-    if: ${{fromJSON(inputs.schema).bongo && !failure()}}
+    if: ${{fromJSON(inputs.schema).bongo && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -118,12 +118,6 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).utils.dirname}}
           version: ${{fromJSON(inputs.schema).utils.releaseVersion}}
-
-  debug:
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo '${{github.action_status}} ${{job.status}}'
 
   # TESTING BASE
   test-utils:
@@ -716,6 +710,7 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).cypress.dirname}}
           version: ${{fromJSON(inputs.schema).cypress.releaseVersion}}
+
 
   # UNIVERSAL SDKS
   playwright-universal:
