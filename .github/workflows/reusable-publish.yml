@@ -40,8 +40,9 @@ env:
   FORCE_COLOR: 3
 jobs:
   debug:
-    run: |
-      echo ${{inputs.schema}}
+    steps:
+      - run: |
+        echo ${{inputs.schema}}
 
   # TOOLING
   bongo:
