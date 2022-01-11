@@ -40,6 +40,11 @@ env:
   FORCE_COLOR: 3
 jobs:
   # TOOLING
+  debug:
+    needs: [utils]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{failure()}} ${{cancelled()}} ${{success()}} ${{always()}}'
   bongo:
     needs: [utils]
     if: ${{fromJSON(inputs.schema).bongo && !failure()}}
