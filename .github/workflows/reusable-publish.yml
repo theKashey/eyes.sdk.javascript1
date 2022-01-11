@@ -44,7 +44,7 @@ jobs:
     needs: [utils]
     runs-on: ubuntu-latest
     steps:
-      - run: echo '${{failure()}} ${{cancelled()}} ${{success()}} ${{always()}}'
+      - run: echo '${{github.action_status}} ${{job.status}}'
   bongo:
     needs: [utils]
     if: ${{fromJSON(inputs.schema).bongo && !failure()}}
