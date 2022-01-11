@@ -40,9 +40,9 @@ env:
   FORCE_COLOR: 3
 jobs:
   debug:
+    runs-on: ubuntu-latest
     steps:
-      - run: |
-        echo ${{inputs.schema}}
+      - run: echo ${{inputs.schema}}
 
   # TOOLING
   bongo:
