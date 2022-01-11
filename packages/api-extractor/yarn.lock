@@ -2,22 +2,22 @@
 # yarn lockfile v1
 
 
-"@applitools/sdk-release-kit@0.13.4":
-  version "0.13.4"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.4.tgz#4a12be6daac2c3ca318fcb1a8cdea4436a607654"
-  integrity sha512-sedTHDA/nXeSve9UbKuHGZIYnGPYiWIBxz9Hmj+ZDlJCXH2rZPOnnpSkLVJI/f7WkG8/Y6fEW8L/3Nb6dpiPGQ==
+"@applitools/sdk-release-kit@0.13.10":
+  version "0.13.10"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.10.tgz#58859d8ac67d8f196cc99776f587de875ce4d5d3"
+  integrity sha512-KNN0m0f7bK0WNvD3KctY1PKC3mzl4vRGCY/XZTCNH4QeOjIVK+BtzD2cmqFYk5biE9sE6RQBzoHFbAglpiScDA==
   dependencies:
-    "@applitools/utils" "1.2.4"
+    "@applitools/utils" "1.2.11"
     chalk "3.0.0"
     lodash.pickby "4.6.0"
     micromatch "4.0.2"
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/utils@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
-  integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
+"@applitools/utils@1.2.11":
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.11.tgz#e4981090149ee7cf327a04fb939f3a4c8a2fa0c1"
+  integrity sha512-khBpPL+wtoF6wlGq6YNK0dWSz0lAfsnKZ3/7dubIQ9d7EZvsvbRqAfw1iJ+vHlBFMeUx3UhQ+5MbEgXaf+WC5w==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
