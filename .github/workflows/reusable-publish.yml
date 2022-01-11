@@ -42,7 +42,7 @@ jobs:
   # TOOLING
   bongo:
     needs: [utils]
-    if: ${{fromJSON(inputs.schema).bongo && !failure() && !cancelled()}}
+    if: ${{fromJSON(inputs.schema).bongo && !failure()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
