@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.2.4 - 2022/1/11
+
+- build for node 12
+
 ## 1.2.3 - 2021/11/18
 
 - fix bug with property types

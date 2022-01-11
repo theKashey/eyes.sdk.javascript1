@@ -6,7 +6,7 @@
 
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es2020",
+    "target": "es2017",
     "noImplicitAny": true,
     "downlevelIteration": true,
     "stripInternal": false,
