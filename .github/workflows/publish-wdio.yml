@@ -73,7 +73,7 @@ jobs:
         with:
           package: eyes-webdriverio-5
       - name: Upload testing artifacts
-        if: ${{matrix.node-version == '16' && matrix.framework-version == '7'}}
+        if: ${{matrix.node-version == 16 && matrix.framework-version == 7}}
         uses: actions/upload-artifact@v2
         with:
           name: wdio-test-report
