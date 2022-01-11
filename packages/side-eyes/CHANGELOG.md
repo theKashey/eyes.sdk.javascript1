@@ -2,8 +2,9 @@
 
 ## Unreleased
 
+- Fix bug in `eyes check element` command that prevented it from running when executing tests on the Visual Grid
 
- ## 1.13.5 - 2021/11/7
+## 1.13.5 - 2021/11/7
 
  - Add support for CORS frames
 

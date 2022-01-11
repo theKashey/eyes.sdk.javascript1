@@ -41,43 +41,24 @@ export async function checkWindow(runId, testId, commandId, tabId, windowId, fra
       ))
 }
 
-export async function checkRegion(runId, testId, commandId, tabId, _windowId, region, stepName, viewport) {
-  if (!region || !region.x || !region.y || !region.width || !region.height)
-    throw new Error('Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]')
-  const eyes = await getEyes(`${runId}${testId}`)
-
-  return await (eyes.isVisualGrid
-    ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, tabId), {
-        sizeMode: 'region',
-        region: {
-          top: region.y,
-          left: region.x,
-          width: region.width,
-          height: region.height,
-        },
-      })
-    : check(
-        eyes,
-        commandId,
-        tabId,
-        stepName,
-        viewport,
-        buildCheckRegionFunction(eyes, tabId, await getDevicePixelRatio(tabId), region)
-      ))
-}
-
 export async function checkElement(
   runId,
   testId,
   commandId,
   frameId,
   tabId,
-  _windowId,
+  windowId,
   elementXPath,
   stepName,
   viewport
 ) {
   const eyes = await getEyes(`${runId}${testId}`)
+  const logger = makeLogger({ level: 'info', label: 'eyes' })
+  const driver = new Driver({
+    spec,
+    driver: { windowId, tabId, frameId },
+    logger,
+  })
   if (eyes.isVisualGrid) {
     return await checkWithVisualGrid(
       eyes,
@@ -85,7 +66,7 @@ export async function checkElement(
       tabId,
       stepName,
       viewport,
-      buildCheckUsingVisualGrid(eyes, tabId),
+      buildCheckUsingVisualGrid(eyes, driver, logger),
       {
         sizeMode: 'selector',
         selector: {
