@@ -5,7 +5,8 @@ const prettier = require('prettier')
 async function createTestFiles(tests, {outDir, ext, format}) {
   const targetDirectory = path.join(process.cwd(), outDir)
 
-  fs.rmSync(targetDirectory, {force: true, recursive: true})
+  if (process.version.startsWith('v12')) fs.rmdirSync(targetDirectory, {recursive: true})
+  else fs.rmSync(targetDirectory, {force: true, recursive: true})
   fs.mkdirSync(targetDirectory, {recursive: true})
 
   tests.forEach(test => {
