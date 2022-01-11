@@ -1,0 +1,84 @@
+name: Publish wdio
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version type
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+        required: false
+  workflow_call:
+    inputs:
+      version:
+        description: version type
+        type: string
+        default: patch
+        required: false
+    secrets:
+      CVG_TESTS_EG_REMOTE:
+        required: true
+      APPLITOOLS_API_KEY:
+        required: true
+      APPLITOOLS_API_KEY_SDK:
+        required: true
+      APPLITOOLS_API_KEY_READ:
+        required: true
+      SAUCE_USERNAME:
+        required: true
+      SAUCE_ACCESS_KEY:
+        required: true
+      NPM_TOKEN:
+        required: true
+      AZURE_STORAGE_CONNECTION_STRING:
+        required: true
+env:
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  STDOUT_LEVEL: 1
+  FORCE_COLOR: 3
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version: ['12', '14', '16']
+        framework-version: ['5', '6', '7']
+    name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
+    runs-on: ubuntu-latest
+    env:
+      APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION: ${{matrix.framework-version}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: eyes-webdriverio-5
+  publish:
+    needs: [test]
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: eyes-webdriverio-5
+          version: ${{inputs.version || github.event.inputs.version}}
