@@ -40,12 +40,6 @@ env:
   FORCE_COLOR: 3
 jobs:
   # TOOLING
-  debug:
-    needs: [utils]
-    if: ${{always()}}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo '${{github.action_status}} ${{job.status}}'
   bongo:
     needs: [utils]
     if: ${{fromJSON(inputs.schema).bongo && !failure()}}
@@ -124,6 +118,13 @@ jobs:
         with:
           package: ${{fromJSON(inputs.schema).utils.dirname}}
           version: ${{fromJSON(inputs.schema).utils.releaseVersion}}
+
+  debug:
+    needs: [utils]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '${{github.action_status}} ${{job.status}}'
 
   # TESTING BASE
   test-utils:
