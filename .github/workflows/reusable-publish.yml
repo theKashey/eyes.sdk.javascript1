@@ -39,6 +39,10 @@ env:
   STDOUT_LEVEL: 1
   FORCE_COLOR: 3
 jobs:
+  debug:
+    run: |
+      echo ${{inputs.schema}}
+
   # TOOLING
   bongo:
     needs: [utils]
