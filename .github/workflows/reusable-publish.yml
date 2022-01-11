@@ -120,7 +120,6 @@ jobs:
           version: ${{fromJSON(inputs.schema).utils.releaseVersion}}
 
   debug:
-    needs: [utils]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
