@@ -37,14 +37,14 @@ jobs:
     needs: [setup]
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{needs.setup.outputs.packages}}
+      - run: echo "${{needs.setup.outputs.packages}}"
 
   publish:
     needs: [setup]
     name: Publish
     uses: applitools/eyes.sdk.javascript1/.github/workflows/reusable-publish.yml@master
     with:
-      schema: ${{needs.setup.outputs.packages}}
+      schema: "${{needs.setup.outputs.packages}}"
     secrets:
       CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
       APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}

@@ -711,7 +711,6 @@ jobs:
           package: ${{fromJSON(inputs.schema).cypress.dirname}}
           version: ${{fromJSON(inputs.schema).cypress.releaseVersion}}
 
-
   # UNIVERSAL SDKS
   playwright-universal:
     needs: [bongo, api, universal, spec-playwright, test-utils]
