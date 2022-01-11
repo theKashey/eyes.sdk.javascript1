@@ -42,6 +42,7 @@ jobs:
   # TOOLING
   debug:
     needs: [utils]
+    if: ${{always()}}
     runs-on: ubuntu-latest
     steps:
       - run: echo '${{github.action_status}} ${{job.status}}'
