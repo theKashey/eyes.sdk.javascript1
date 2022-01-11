@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.2.5 - 2022/1/11
+
+- stop using `at` method of array to be compatible with previous node versions
+
 ## 1.2.4 - 2022/1/11
 
 - build for node 12

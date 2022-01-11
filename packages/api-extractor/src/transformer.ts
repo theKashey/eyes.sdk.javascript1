@@ -485,7 +485,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     }
 
     for (const symbol of type.getProperties()) {
-      if (isStripedBrandProperty(symbol.getName()) || isStripedDeclaration(symbol.declarations.at(-1))) {
+      if (isStripedBrandProperty(symbol.getName()) || isStripedDeclaration(symbol.declarations[symbol.declarations.length - 1])) {
         continue
       }
 
@@ -510,7 +510,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
         (isExtended && symbol.parent !== type.symbol) || // avoid re-declaration of properties from extended type
         symbol.getName() === 'prototype' ||
         isStripedBrandProperty(symbol.getName()) ||
-        isStripedDeclaration(symbol.declarations.at(-1))
+        isStripedDeclaration(symbol.declarations[symbol.declarations.length - 1])
       ) {
         continue
       }
@@ -661,7 +661,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
   }): ts.PropertyDeclaration[] | ts.MethodDeclaration[]
   function createPropertyDeclaration(options: {symbol: ts.Symbol; node?: ts.Node; isSignature?: boolean; isStatic?: boolean}) {
     const {symbol, node, isSignature, isStatic} = options
-    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations.at(-1)) | (isStatic ? ts.ModifierFlags.Static : 0)
+    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1]) | (isStatic ? ts.ModifierFlags.Static : 0)
     const modifiers = ts.factory.createModifiersFromModifierFlags(modifierFlags)
     const propertyName = getPropertyName(symbol)
     const optionalToken = isOptional(symbol) ? ts.factory.createToken(ts.SyntaxKind.QuestionToken) : undefined
@@ -705,7 +705,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
 
   function createGetAccessorDeclaration(options: {symbol: ts.Symbol; node?: ts.Node; isStatic?: boolean}): ts.GetAccessorDeclaration {
     const {symbol, node, isStatic} = options
-    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations.at(-1)) | (isStatic ? ts.ModifierFlags.Static : 0)
+    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1]) | (isStatic ? ts.ModifierFlags.Static : 0)
     const modifiers = ts.factory.createModifiersFromModifierFlags(modifierFlags)
     const accessorName = getPropertyName(symbol)
     const type = createTypeNode({type: checker.getTypeOfSymbolAtLocation(symbol, node), node})
@@ -721,7 +721,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
 
   function createSetAccessorDeclaration(options: {symbol: ts.Symbol; node?: ts.Node; isStatic?: boolean}): ts.SetAccessorDeclaration {
     const {symbol, node, isStatic} = options
-    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations.at(-1)) | (isStatic ? ts.ModifierFlags.Static : 0)
+    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1]) | (isStatic ? ts.ModifierFlags.Static : 0)
     const modifiers = ts.factory.createModifiersFromModifierFlags(modifierFlags)
     const accessorName = getPropertyName(symbol)
 
@@ -739,7 +739,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
   function createMethodDeclaration(options: {symbol: ts.Symbol; node?: ts.Node; isSignature?: boolean; isStatic?: boolean}) {
     const {symbol, node, isSignature, isStatic} = options
     const signatures = checker.getTypeOfSymbolAtLocation(symbol, node).getCallSignatures()
-    let modifierFlags = ts.getCombinedModifierFlags(symbol.declarations.at(-1))
+    let modifierFlags = ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1])
     modifierFlags |= isStatic ? ts.ModifierFlags.Static : 0 // add `static` modifier
     modifierFlags &= ~ts.ModifierFlags.Async // remove `async` modifier
     const modifiers = ts.factory.createModifiersFromModifierFlags(modifierFlags)
