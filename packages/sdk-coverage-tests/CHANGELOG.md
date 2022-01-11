@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 2.3.18 - 2022/1/11
+
 - use `fs.rmdirSync` instead of `fs.rmSync` in node 12
 
 ## 2.3.17 - 2021/12/29
