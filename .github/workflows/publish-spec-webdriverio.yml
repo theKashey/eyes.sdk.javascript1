@@ -1,4 +1,4 @@
-name: Publish spec-selenium
+name: Publish spec-webdriverio
 
 on:
   workflow_dispatch:
@@ -17,14 +17,14 @@ on:
         default: patch
         required: false
     secrets:
+      NPM_TOKEN:
+        required: true
       SAUCE_USERNAME:
         required: true
       SAUCE_ACCESS_KEY:
         required: true
-      NPM_TOKEN:
-        required: true
 env:
-  PACKAGE_DIR: spec-driver-selenium
+  PACKAGE_DIR: spec-driver-webdriverio
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
@@ -52,12 +52,12 @@ jobs:
     needs: [verify]
     strategy:
       matrix:
-        framework-version: [3, 4]
+        framework-version: [5, 6, 7]
         node-version: [12, 14, 16]
-    name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
+    name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
-      APPLITOOLS_SELENIUM_MAJOR_VERSION: ${{matrix.framework-version}}
+      APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION: ${{matrix.framework-version}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2

@@ -1,4 +1,4 @@
-name: Publish spec-selenium
+name: Publish puppeteer
 
 on:
   workflow_dispatch:
@@ -8,32 +8,45 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
+      multienv:
+        description: test on multiple environments
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
+      multienv:
+        description: test on multiple environments
+        type: boolean
+        default: false
     secrets:
-      SAUCE_USERNAME:
-        required: true
-      SAUCE_ACCESS_KEY:
-        required: true
       NPM_TOKEN:
         required: true
+      APPLITOOLS_API_KEY:
+        required: true
+      APPLITOOLS_API_KEY_SDK:
+        required: true
+      APPLITOOLS_API_KEY_READ:
+        required: true
+      AZURE_STORAGE_CONNECTION_STRING:
+        required: true
 env:
-  PACKAGE_DIR: spec-driver-selenium
+  PACKAGE_DIR: eyes-puppeteer
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
   verify:
     name: Verification
     runs-on: ubuntu-latest
+    outputs:
+      environments: ${{steps.prepare.outputs.environments}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
@@ -48,16 +61,24 @@ jobs:
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+      - name: Prepare environments
+        id: prepare
+        shell: bash
+        run: |
+          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
+          then
+            echo "::set-output name=environments::[{\"node-version\":16}, {\"node-version\":14}, {\"node-version\":12}]"
+          else
+            echo "::set-output name=environments::[{\"node-version\":16}]"
+          fi
   test:
     needs: [verify]
     strategy:
+      max-parallel: 3
       matrix:
-        framework-version: [3, 4]
-        node-version: [12, 14, 16]
-    name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
+        include: ${{fromJSON(needs.verify.outputs.environments)}}
+    name: 'Test (node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
-    env:
-      APPLITOOLS_SELENIUM_MAJOR_VERSION: ${{matrix.framework-version}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
@@ -70,6 +91,14 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{env.PACKAGE_DIR}}
+      - name: Upload testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: puppeteer-test-results-node-${{matrix.node-version}}
+          retention-days: 2
+          path: |
+            packages/${{env.PACKAGE_DIR}}/coverage-tests-metadata.json
+            packages/${{env.PACKAGE_DIR}}/coverage-test-report.xml
   publish:
     needs: [test]
     name: Publish
@@ -82,6 +111,11 @@ jobs:
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
+      - name: Download testing artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: puppeteer-test-results-node-16
+          path: packages/${{env.PACKAGE_DIR}}
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:

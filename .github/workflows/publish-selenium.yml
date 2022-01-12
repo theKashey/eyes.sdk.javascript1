@@ -23,6 +23,8 @@ on:
         type: boolean
         default: false
     secrets:
+      NPM_TOKEN:
+        required: true
       CVG_TESTS_EG_REMOTE:
         required: true
       APPLITOOLS_API_KEY:
@@ -34,8 +36,6 @@ on:
       SAUCE_USERNAME:
         required: true
       SAUCE_ACCESS_KEY:
-        required: true
-      NPM_TOKEN:
         required: true
       AZURE_STORAGE_CONNECTION_STRING:
         required: true

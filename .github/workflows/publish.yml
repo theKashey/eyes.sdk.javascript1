@@ -114,47 +114,169 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).test-server.releaseVersion}}
 
+  # MODULES
+  logger:
+    needs: [bongo, utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
+  snippets:
+    needs: [bongo]
+    if: ${{fromJSON(needs.setup.outputs.packages).snippets && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).snippets.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).snippets.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
+  screenshoter:
+    needs: [bongo, utils, driver, snippets, spec-webdriverio]
+    if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
+  driver:
+    needs: [bongo, types, utils, snippets]
+    if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).driver.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).driver.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).driver.releaseVersion}}
+
+  # CORE
+  core:
+    needs: [bongo, types, utils, logger, driver, screenshoter, snippets, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).core && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).core.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).core.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).core.releaseVersion}}
+  vgc:
+    needs: [bongo, core]
+    if: ${{fromJSON(needs.setup.outputs.packages).vgc && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).vgc.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).vgc.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
+  api:
+    needs: [bongo, types, utils, logger]
+    if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).api.releaseVersion}}
+
   # SPEC DRIVERS
   spec-playwright:
     needs: [setup, types, utils, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-playwright && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.releaseVersion}}
+    name: spec-playwright
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-playwright.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
   spec-puppeteer:
     needs: [setup, types, utils, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.releaseVersion}}
+    name: spec-puppeteer
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-puppeteer.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
   spec-selenium:
     needs: [setup, types, utils, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium && !failure() && !cancelled()}}
@@ -169,6 +291,122 @@ jobs:
   spec-webdriverio:
     needs: [setup, types, utils, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio && !failure() && !cancelled()}}
+    name: spec-webdriverio
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-webdriverio.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+
+  # SDKS
+  playwright:
+    needs: [setup, api, core, vgc, spec-playwright, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
+    name: playwright
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-playwright.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  puppeteer:
+    needs: [setup, api, core, vgc, spec-puppeteer, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).puppeteer && !failure() && !cancelled()}}
+    name: puppeteer
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-puppeteer.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  webdriverio:
+    needs: [setup, api, core, vgc, spec-webdriverio, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio && !failure() && !cancelled()}}
+    name: webdriverio
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-webdriverio.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  selenium:
+    needs: [setup, api, core, vgc, spec-selenium, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).selenium && !failure() && !cancelled()}}
+    name: selenium
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-selenium.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).selenium.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  protractor:
+    needs: [setup, types, utils, api, core, vgc, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).protractor && !failure() && !cancelled()}}
+    name: protractor
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-protractor.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).protractor.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  nightwatch:
+    needs: [setup, types, utils, api, core, vgc, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).nightwatch && !failure() && !cancelled()}}
+    name: nightwatch
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-nightwatch.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  testcafe:
+    needs: [setup, types, utils, api, core, vgc, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).testcafe && !failure() && !cancelled()}}
+    name: testcafe
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-testcafe.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).testcafe.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  browser-extension:
+    needs: [setup, utils, core, vgc, spec-playwright, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).browser-extension && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -177,12 +415,21 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.dirname}}
-      - name: Publish to NPM
+      # - name: Run tests
+      #   uses: ./.github/actions/tests
+      #   with:
+      #     package: ${{fromJSON(needs.setup.outputs.packages).browser-extension.dirname}}
+      #   env: ${{fromJSON(needs.setup.outputs.packages).browser-extension.env}}
+      - name: Update version
+        id: version
         uses: ./.github/actions/publish
         with:
-          package: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.releaseVersion}}
+          package: ${{fromJSON(needs.setup.outputs.packages).browser-extension.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).browser-extension.releaseVersion}}
+          skip-npm: true
+      - name: Publish to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{steps.version.outputs.tag}}
+          files: |
+            packages/${{fromJSON(needs.setup.outputs.packages).browser-extension.dirname}}/eyes-browser-extension.zip
