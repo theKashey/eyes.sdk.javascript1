@@ -19,6 +19,7 @@ runs:
   using: composite
   steps:
     - shell: bash
+      working-directory: ./packages/${{inputs.package}}
       env:
         STDOUT_LEVEL: '1'
       run: |
@@ -36,8 +37,6 @@ runs:
         git push -u origin $TEMP_BRANCH
         echo "::notice::Publish branch - $TEMP_BRANCH"
         echo "::endgroup::"
-
-        cd "packages/${{inputs.package}}"
 
         echo "::group::Installing and updating dependencies"
         yarn install

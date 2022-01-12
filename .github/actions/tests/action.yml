@@ -33,6 +33,7 @@ runs:
   using: composite
   steps:
     - shell: bash
+      working-directory: ./packages/${{inputs.package}}
       env:
         APPLITOOLS_TEST_REMOTE: ${{inputs.remote}}
         MOCHA_GREP: ${{inputs.grep}}
@@ -46,7 +47,6 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
-        cd "packages/${{inputs.package}}"
         yarn install
         if [ "${{runner.os}}" = "Windows" ]
         then

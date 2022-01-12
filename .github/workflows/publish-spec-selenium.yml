@@ -43,6 +43,7 @@ jobs:
           node-version: lts/*
       - name: Run pre-publish verifications
         shell: bash
+        working-directory: ./packages/${{env.PACKAGE_DIR}}
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
