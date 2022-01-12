@@ -116,7 +116,7 @@ jobs:
 
   # MODULES
   logger:
-    needs: [bongo, utils]
+    needs: [setup, utils]
     if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -136,7 +136,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
   snippets:
-    needs: [bongo]
+    needs: [setup]
     if: ${{fromJSON(needs.setup.outputs.packages).snippets && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -156,7 +156,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).snippets.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
   screenshoter:
-    needs: [bongo, utils, driver, snippets, spec-webdriverio]
+    needs: [setup, utils, driver, snippets, spec-webdriverio]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -176,7 +176,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
   driver:
-    needs: [bongo, types, utils, snippets]
+    needs: [setup, types, utils, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -198,7 +198,7 @@ jobs:
 
   # CORE
   core:
-    needs: [bongo, types, utils, logger, driver, screenshoter, snippets, test-utils]
+    needs: [setup, types, utils, logger, driver, screenshoter, snippets, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).core && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -218,7 +218,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).core.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).core.releaseVersion}}
   vgc:
-    needs: [bongo, core]
+    needs: [setup, core]
     if: ${{fromJSON(needs.setup.outputs.packages).vgc && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -238,7 +238,7 @@ jobs:
           package: ${{fromJSON(needs.setup.outputs.packages).vgc.dirname}}
           version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
   api:
-    needs: [bongo, types, utils, logger]
+    needs: [setup, types, utils, logger]
     if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
