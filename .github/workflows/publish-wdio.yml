@@ -56,14 +56,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        framework-version: [5, 6, 7]
-        node-version: [16]
-        include:
-          - framework-version: 7
-            node-version: 14
-          - framework-version: 7
-            node-version: 12
-        exclude: ${{github.event.inputs.multienv == false && fromJSON('[{"node-version":14}, {"node-version":12}, {"framework-version":5}, {"framework-version":6}]') || fromJSON('[]')}}
+        include: ${{github.event.inputs.multienv == true && fromJSON('[{"framework-version":7,"node-version":16}, {"framework-version":6,"node-version":16}, {"framework-version":5,"node-version":16}, {"framework-version":7,"node-version":14}, {"framework-version":7,"node-version":12}]') || fromJSON('[{"framework-version":7,"node-version":16}]')}}
     name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
