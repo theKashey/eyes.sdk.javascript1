@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.3.1 - 2022/1/12
+
 - use chromedriver instead of selenium docker container for testing
 - fix tests for selenium 3
 - fix `getCapabilities` for selenium 3
