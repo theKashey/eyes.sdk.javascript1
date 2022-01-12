@@ -41,7 +41,8 @@
     "lint": "eslint '**/*.ts'",
     "build": "ttsc",
     "test": "mocha ./test/**/*.spec.ts --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
-    "setup": "yarn docker:setup",
+    "setup": "yarn chromedriver:setup",
+    "chromedriver:setup": "chromedriver --port=4444 --url-base=/wd/hub &",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "upgrade:framework": "if [ ! -z $APPLITOOLS_SELENIUM_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile selenium-webdriver@$APPLITOOLS_SELENIUM_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
@@ -71,6 +72,7 @@
     "@types/selenium-webdriver": "^4.0.15",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
+    "chromedriver": "^97.0.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
@@ -79,10 +81,10 @@
     "husky": "^4.3.7",
     "mocha": "^9.1.2",
     "prettier": "^2.4.1",
-    "selenium-webdriver": "^4.0.0",
+    "selenium-webdriver": "^4.1.1",
     "ts-node": "^10.2.1",
     "ttypescript": "^1.5.12",
-    "typescript": "^4.5.1-rc"
+    "typescript": "^4.5.4"
   },
   "peerDependencies": {
     "selenium-webdriver": ">=3.6.0"

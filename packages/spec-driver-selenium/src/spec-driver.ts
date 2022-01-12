@@ -40,6 +40,9 @@ export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
   driver.getExecutor().defineCommand('getOrientation', 'GET', '/session/:sessionId/orientation')
   driver.getExecutor().defineCommand('getSystemBars', 'GET', '/session/:sessionId/appium/device/system_bars')
+  driver.getExecutor().defineCommand('getWindowSize', 'GET', '/session/:sessionId/window/current/size')
+  driver.getExecutor().defineCommand('setWindowSize', 'POST', '/session/:sessionId/window/current/size')
+  driver.getExecutor().defineCommand('setWindowPosition', 'POST', '/session/:sessionId/window/current/position')
   driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
   driver.getExecutor().defineCommand('executeCdp', 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
 
@@ -111,26 +114,28 @@ export async function findElements(driver: Driver, selector: Selector, parent?: 
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
   try {
-    const window = driver.manage().window()
-    if (utils.types.isFunction(window.getSize)) {
-      return await window.getSize()
-    } else {
-      const rect = await window.getRect()
-      return {width: rect.width, height: rect.height}
-    }
-  } catch (err) {
-    // workaround for Appium
-    const cmd = require('selenium-webdriver/lib/command')
-    return driver.execute(new cmd.Command(cmd.Name.GET_WINDOW_SIZE).setParameter('windowHandle', 'current'))
+    const rect = await driver.manage().window().getRect()
+    return {width: rect.width, height: rect.height}
+  } catch {
+    const {Command} = require('selenium-webdriver/lib/command')
+    const getWindowSizeCommand = new Command('getWindowSize')
+    const size: any = driver.manage().window().getSize
+      ? await driver.manage().window().getSize()
+      : await driver.execute(getWindowSizeCommand)
+    return {width: size.width, height: size.height}
   }
 }
 export async function setWindowSize(driver: Driver, size: Size) {
-  const window = driver.manage().window()
-  if (utils.types.isFunction(window.setRect)) {
-    await window.setRect({x: 0, y: 0, width: size.width, height: size.height})
-  } else {
-    await window.setPosition(0, 0)
-    await window.setSize(size.width, size.height)
+  try {
+    await driver.manage().window().setRect({x: 0, y: 0, width: size.width, height: size.height})
+  } catch {
+    const {Command} = require('selenium-webdriver/lib/command')
+    const setWindowPositionCommand = new Command('setWindowPosition').setParameters({x: 0, y: 0})
+    if (driver.manage().window().setPosition) await driver.manage().window().setPosition(0, 0)
+    else await driver.execute(setWindowPositionCommand)
+    const setWindowSizeCommand = new Command('setWindowSize').setParameters({...size})
+    if (driver.manage().window().setSize) await driver.manage().window().setSize(size.width, size.height)
+    else await driver.execute(setWindowSizeCommand)
   }
 }
 export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
@@ -142,7 +147,9 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
     cookies = response.cookies
   } else {
     const {Command} = require('selenium-webdriver/lib/command')
-    const executeCdpCommand = new Command('executeCdp').setParameters({cmd: 'Network.getAllCookies', params: {}})
+    const executeCdpCommand = new Command('executeCdp')
+      .setParameter('cmd', 'Network.getAllCookies')
+      .setParameter('params', {})
     const response =
       process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
         ? await (driver as any).schedule(executeCdpCommand)

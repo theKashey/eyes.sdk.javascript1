@@ -287,11 +287,13 @@ describe('spec driver', async () => {
   }
   async function getWindowSize() {
     let expected
-    const window = driver.manage().window()
-    if (window.getSize) {
-      expected = await window.getSize()
-    } else {
-      const {width, height} = await window.getRect()
+    try {
+      const {width, height} = await driver.manage().window().getRect()
+      expected = {width, height}
+    } catch {
+      const {Command} = require('selenium-webdriver/lib/command')
+      const {width, height} =
+        (await driver.manage().window().getSize?.()) ?? (await driver.execute(new Command('getWindowSize')))
       expected = {width, height}
     }
     const result = await spec.getWindowSize(driver)
@@ -300,15 +302,16 @@ describe('spec driver', async () => {
   async function setWindowSize({input}: {input: Size}) {
     await spec.setWindowSize(driver, input)
     let result
-    const window = driver.manage().window()
-    if (window.getSize) {
-      const {x, y} = await window.getPosition()
-      const {width, height} = await window.getSize()
-      result = {x, y, width, height}
-    } else {
-      result = await window.getRect()
+    try {
+      const {width, height} = await driver.manage().window().getRect()
+      result = {width, height}
+    } catch {
+      const {Command} = require('selenium-webdriver/lib/command')
+      const {width, height} =
+        (await driver.manage().window().getSize?.()) ?? (await driver.execute(new Command('getWindowSize')))
+      result = {width, height}
     }
-    assert.deepStrictEqual(result, {x: 0, y: 0, ...input})
+    assert.deepStrictEqual(result, input)
   }
   async function getCookies({input}: {input?: {context: boolean}} = {}) {
     const cookie = {
@@ -323,8 +326,16 @@ describe('spec driver', async () => {
     if (input?.context) {
       await driver.manage().addCookie(cookie)
     } else {
-      // TODO remove type cast once selenium types include newest method
-      await (driver as any).sendAndGetDevToolsCommand('Network.setCookie', {...cookie, expires: cookie.expiry})
+      if ((driver as any).sendAndGetDevToolsCommand) {
+        // TODO remove type cast once selenium types include newest method
+        await (driver as any).sendAndGetDevToolsCommand('Network.setCookie', {...cookie, expires: cookie.expiry})
+      } else {
+        const {Command} = require('selenium-webdriver/lib/command')
+        const executeCdpCommand = new Command('executeCdp')
+          .setParameter('cmd', 'Network.setCookie')
+          .setParameter('params', {...cookie, expires: cookie.expiry})
+        await (driver as any).schedule(executeCdpCommand)
+      }
     }
     const result = await spec.getCookies(driver, input?.context)
     assert.deepStrictEqual(result, [cookie])

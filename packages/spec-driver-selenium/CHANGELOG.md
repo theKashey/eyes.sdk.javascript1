@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- use chromedriver instead of selenium docker container for testing
+- fix tests for selenium 3
 - fix `getCapabilities` for selenium 3
 - updated to @applitools/types@1.0.23 (from 1.0.20)
 - updated to @applitools/utils@1.2.11 (from 1.2.4)
