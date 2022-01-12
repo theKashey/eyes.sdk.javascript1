@@ -14,68 +14,51 @@ outputs:
   tag:
     description: name of the tag pushed after publishing
     value: ${{steps.publish.outputs.tag}}
+
 runs:
   using: composite
   steps:
-    - name: Configure NPM
-      shell: bash
+    - shell: bash
+      env:
+        STDOUT_LEVEL: '1'
       run: |
         echo "::group::Configure NPM"
-
         echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
         echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "always-auth=true" >> .npmrc
-
         echo "::endgroup::"
-    - name: Configure Git
-      id: git
-      shell: bash
-      run: |
-        echo "::group::Configure Git"
 
+        echo "::group::Configure Git"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
-        BRANCH="${{inputs.package}}_$(date +%F_%H-%M)"
-        git checkout -b $BRANCH
-        git push -u origin $BRANCH
-        echo "::notice::Publish branch - $BRANCH"
-        echo "::set-output name=branch::$BRANCH"
-
+        TEMP_BRANCH="${{inputs.package}}_$(date +%F_%H-%M)"
+        git checkout -b $TEMP_BRANCH
+        git push -u origin $TEMP_BRANCH
+        echo "::notice::Publish branch - $TEMP_BRANCH"
         echo "::endgroup::"
-    - name: Building package
-      shell: bash
-      run: npm run build --if-present
-
-    - name: Publish ${{inputs.package}}
-      id: publish
-      env:
-        STDOUT_LEVEL: '1'
-      shell: bash
-      run: |
-        echo "::group::Publish ${{inputs.package}}"
 
         cd "packages/${{inputs.package}}"
+
+        echo "::group::Building package
+        npm run build --if-present
+        echo "::endgroup::"
+
+        echo "::group::Publish ${{inputs.package}}"
         yarn install
         npm run deps --if-present
         if [ "${{inputs.skip-npm}}" = "false" ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
         TAG="$(git describe --tags --abbrev=0)"
         echo "::notice::Publish tag - $TAG"
         echo "::set-output name=tag::$TAG"
-
         echo "::endgroup::"
-    - name: Merge publish branch into ${{github.ref}}
-      shell: bash
-      run: |
-        echo "::group::Merge publish branch into ${{github.ref}}"
 
+        echo "::group::Merge publish branch into ${{github.ref}}"
         GH_REF=${{github.ref}}
         CURRENT_BRANCH=${GH_REF#refs/heads/}
-
         git checkout $CURRENT_BRANCH
         git status
         git pull origin $CURRENT_BRANCH --rebase
-        git merge ${{steps.git.outputs.branch}}
+        git merge $TEMP_BRANCH
         git push origin $CURRENT_BRANCH
-
         echo "::endgroup::"
