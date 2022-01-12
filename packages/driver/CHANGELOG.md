@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.4.9 - 2022/1/12
+
 - handle case with `spec.getCookies` throws an error when trying to get cookies of the browser
 
 ## 1.4.8 - 2022/1/5
