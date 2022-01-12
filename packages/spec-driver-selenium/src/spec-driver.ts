@@ -175,9 +175,7 @@ export async function getCapabilities(driver: Driver): Promise<Record<string, an
       : await driver.execute(getSessionDetailsCommand)
   } catch {
     const capabilities = await driver.getCapabilities()
-    return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-      ? (capabilities as any).toJSON()
-      : Object.fromEntries(Array.from(capabilities.keys(), key => [key, capabilities.get(key)]))
+    return Array.from(capabilities.keys()).reduce((obj, key) => Object.assign(obj, {key: capabilities.get(key)}), {})
   }
 }
 export async function getTitle(driver: Driver): Promise<string> {

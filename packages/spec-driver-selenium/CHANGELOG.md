@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix `getCapabilities` for selenium 3
 
 ## 1.3.0 - 2021/11/17
 

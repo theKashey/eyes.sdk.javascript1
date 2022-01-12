@@ -1,0 +1,69 @@
+name: Publish spec selenium
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version type
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+        required: false
+  workflow_call:
+    inputs:
+      version:
+        description: version type
+        type: string
+        default: patch
+        required: false
+    secrets:
+      SAUCE_USERNAME:
+        required: true
+      SAUCE_ACCESS_KEY:
+        required: true
+      NPM_TOKEN:
+        required: true
+env:
+  PACKAGE_DIR: spec-driver-selenium
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  FORCE_COLOR: 3
+jobs:
+  test:
+    strategy:
+      matrix:
+        framework-version: [3, 4]
+        node-version: [12, 14, 16]
+    name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
+    runs-on: ubuntu-latest
+    env:
+      APPLITOOLS_SELENIUM_MAJOR_VERSION: ${{matrix.framework-version}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+  publish:
+    needs: [test]
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          version: ${{inputs.version || github.event.inputs.version}}
