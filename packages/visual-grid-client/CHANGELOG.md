@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/eyes-sdk-core@12.24.13 (from 12.24.12)
 
+
+## 15.8.60 - 2022/1/12
+
+- updated to @applitools/eyes-sdk-core@12.24.13 (from 12.24.12)
 
 ## 15.8.59 - 2022/1/11
 
