@@ -25,11 +25,11 @@ on:
         required: true
 env:
   PACKAGE_DIR: spec-driver-selenium
+  FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  FORCE_COLOR: 3
 jobs:
   verify:
     name: Verification

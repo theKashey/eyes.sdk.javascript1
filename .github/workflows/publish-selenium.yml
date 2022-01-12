@@ -42,6 +42,7 @@ on:
 env:
   PACKAGE_DIR: eyes-selenium
   FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
@@ -49,29 +50,41 @@ env:
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
-  prepare:
-    name: Prepare
+  verify:
+    name: Verification
     runs-on: ubuntu-latest
     outputs:
       environments: ${{steps.prepare.outputs.environments}}
     steps:
-      - id: prepare
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run pre-publish verifications
+        shell: bash
+        working-directory: ./packages/${{env.PACKAGE_DIR}}
         run: |
-          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
-          then
-            echo "::set-output name=environments::[{\"framework-version\":4,\"node-version\":16}, {\"framework-version\":3,\"node-version\":16}, {\"framework-version\":4,\"node-version\":14}, {\"framework-version\":4,\"node-version\":12}]"
-          else
-            echo "::set-output name=environments::[{\"framework-version\":4,\"node-version\":16}]"
-          fi
+          yarn install
+          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+      - name: Prepare environments
+        id: prepare
+        shell: node
+        run: |
+          const envs = ${{inputs.multienv || github.event.inputs.multienv || false}}
+            ? [{'framework-version':4,'node-version':16}, {'framework-version':3,'node-version':16}, {'framework-version':4,'node-version':14}, {'framework-version':4,'node-version':12}]
+            : [{'framework-version':4,'node-version':16}]
+          console.log(`::set-output name=environments::${JSON.stringify(envs)}`)
   test:
-    needs: [prepare]
+    needs: [verify]
     strategy:
       max-parallel: 3
       matrix:
-        include: ${{fromJSON(needs.prepare.outputs.environments)}}
+        include: ${{fromJSON(needs.verify.outputs.environments)}}
     name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
@@ -83,6 +96,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{matrix.node-version}}
+          registry-url: https://registry.npmjs.org
       - name: Run tests
         uses: ./.github/actions/tests
         with:
@@ -106,6 +120,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org
       - name: Download testing artifacts
         uses: actions/download-artifact@v2
         with:
