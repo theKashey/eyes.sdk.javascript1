@@ -34,19 +34,155 @@ jobs:
           allow-cascading: ${{github.event.inputs.allow-cascading}}
           release-version: ${{github.event.inputs.version}}
 
-  publish:
+  # BASE
+  types:
     needs: [setup]
-    name: Publish
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/reusable-publish.yml@master
+    if: ${{fromJSON(needs.setup.outputs.packages).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).types.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).types.releaseVersion}}
+  utils:
+    needs: [setup]
+    if: ${{fromJSON(needs.setup.outputs.packages).utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).utils.releaseVersion}}
+
+  # TESTING BASE
+  test-utils:
+    needs: [setup]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-utils.releaseVersion}}
+  test-server:
+    needs: [setup, utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-server.releaseVersion}}
+
+  # SPEC DRIVERS
+  spec-playwright:
+    needs: [setup, types, utils, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-playwright && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.releaseVersion}}
+  spec-puppeteer:
+    needs: [setup, types, utils, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.releaseVersion}}
+  spec-selenium:
+    needs: [setup, types, utils, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium && !failure() && !cancelled()}}
+    name: spec-selenium
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-selenium.yml@master
     with:
-      schema: ${{needs.setup.outputs.packages}}
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-selenium.releaseVersion}}
     secrets:
-      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
       SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
-      UNIVERSAL_SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
+  spec-webdriverio:
+    needs: [setup, types, utils, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio && !failure() && !cancelled()}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.releaseVersion}}
