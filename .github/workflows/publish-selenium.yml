@@ -75,12 +75,12 @@ jobs:
         id: prepare
         shell: bash
         run: |
-          node -e "
-          const envs = ${{inputs.multienv || github.event.inputs.multienv || false}}
-            ? [{'framework-version':4,'node-version':16}, {'framework-version':3,'node-version':16}, {'framework-version':4,'node-version':14}, {'framework-version':4,'node-version':12}]
-            : [{'framework-version':4,'node-version':16}];
-          console.log(`::set-output name=environments::${JSON.stringify(envs)}`);
-          "
+          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
+          then
+            echo "::set-output name=environments::[{\"framework-version\":4,\"node-version\":16}, {\"framework-version\":3,\"node-version\":16}, {\"framework-version\":4,\"node-version\":14}, {\"framework-version\":4,\"node-version\":12}]"
+          else
+            echo "::set-output name=environments::[{\"framework-version\":4,\"node-version\":16}]"
+          fi
   test:
     needs: [verify]
     strategy:
