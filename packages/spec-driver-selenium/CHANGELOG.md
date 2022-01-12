@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support of selenium 4 `ShadowRoot` objects
 
 ## 1.3.2 - 2022/1/12
 

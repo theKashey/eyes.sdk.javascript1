@@ -17,9 +17,9 @@ function extractElementId(element: Element | ShadowRoot): Promise<string> | stri
   return isElement(element) ? (element.getId() as Promise<string>) : element['shadow-6066-11e4-a52e-4f735466cecf']
 }
 function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): Element {
-  return isElement(shadowRoot)
-    ? shadowRoot
-    : new Selenium.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
+  return utils.types.has(shadowRoot, 'shadow-6066-11e4-a52e-4f735466cecf')
+    ? new Selenium.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
+    : shadowRoot
 }
 
 // #endregion
