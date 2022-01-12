@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- handle `Driver.getCookies` error
 
 ## 12.24.12 - 2022/1/11
 

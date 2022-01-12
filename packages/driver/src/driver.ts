@@ -513,7 +513,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async getCookies(): Promise<types.Cookie[]> {
     if (this.isNative || !this.features.allCookies) return []
-    return this._spec.getCookies?.(this.target) ?? []
+    try {
+      return (await this._spec.getCookies?.(this.target)) ?? []
+    } catch (error) {
+      this._driverInfo.features.allCookies = false
+      throw error
+    }
   }
 
   async getTitle(): Promise<string> {

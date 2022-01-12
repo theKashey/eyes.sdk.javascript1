@@ -16,7 +16,7 @@ async function takeDomSnapshots({
   getIosDevicesSizes,
   waitBeforeCapture,
 }) {
-  const cookieJar = driver.features.allCookies ? await driver.getCookies() : []
+  const cookieJar = driver.features.allCookies ? await driver.getCookies().catch(() => []) : []
   const currentContext = driver.currentContext
 
   if (!breakpoints) {

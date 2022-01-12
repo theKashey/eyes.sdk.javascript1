@@ -6,6 +6,7 @@
 - updated to @applitools/eyes-sdk-core@12.24.12 (from 12.24.3)
 - updated to @applitools/spec-driver-selenium@1.3.1 (from 1.3.0)
 - updated to @applitools/visual-grid-client@15.8.59 (from 15.8.47)
+- updated to @applitools/spec-driver-selenium@1.3.2 (from 1.3.1)
 
 ## 4.58.2 - 2021/11/18
 
