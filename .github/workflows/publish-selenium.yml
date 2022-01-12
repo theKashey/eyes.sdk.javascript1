@@ -73,12 +73,14 @@ jobs:
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
       - name: Prepare environments
         id: prepare
-        shell: node
+        shell: bash
         run: |
+          node -e "
           const envs = ${{inputs.multienv || github.event.inputs.multienv || false}}
             ? [{'framework-version':4,'node-version':16}, {'framework-version':3,'node-version':16}, {'framework-version':4,'node-version':14}, {'framework-version':4,'node-version':12}]
-            : [{'framework-version':4,'node-version':16}]
-          console.log(`::set-output name=environments::${JSON.stringify(envs)}`)
+            : [{'framework-version':4,'node-version':16}];
+          console.log(`::set-output name=environments::${JSON.stringify(envs)}`);
+          "
   test:
     needs: [verify]
     strategy:
