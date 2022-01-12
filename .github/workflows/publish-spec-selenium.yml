@@ -37,8 +37,8 @@ jobs:
     steps:
       - shell: bash
         run: |
-          npx bongo lint
-          npx bongo verify-changelog
+          yarn install
+          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
   test:
     needs: [verify]
     strategy:
