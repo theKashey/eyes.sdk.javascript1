@@ -3,6 +3,7 @@
 ## Unreleased
 
 - handle `Driver.getCookies` error
+- updated to @applitools/driver@1.4.9 (from 1.4.8)
 
 ## 12.24.12 - 2022/1/11
 
