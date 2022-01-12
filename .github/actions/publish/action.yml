@@ -31,7 +31,6 @@ runs:
         echo "::group::Configure Git"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-
         TEMP_BRANCH="${{inputs.package}}_$(date +%F_%H-%M)"
         git checkout -b $TEMP_BRANCH
         git push -u origin $TEMP_BRANCH
@@ -40,7 +39,7 @@ runs:
 
         cd "packages/${{inputs.package}}"
 
-        echo "::group::Building package
+        echo "::group::Building package"
         npm run build --if-present
         echo "::endgroup::"
 
