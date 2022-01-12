@@ -31,7 +31,16 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   FORCE_COLOR: 3
 jobs:
+  verify:
+    name: Verification
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          npx bongo lint
+          npx bongo verify-changelog
   test:
+    needs: [verify]
     strategy:
       matrix:
         framework-version: [3, 4]
