@@ -43,6 +43,7 @@ import {
   emitInEachEnd,
   emitVariable,
 } from './utils/code-export'
+import { makeLogger } from '@applitools/logger'
 
 startPolling(pluginManifest, err => {
   if (err) {
@@ -433,7 +434,10 @@ browser.runtime.onMessageExternal.addListener((message, _sender, sendResponse) =
                   sendResponse(results)
                 })
                 .catch(error => {
-                  sendResponse(error instanceof Error ? { error: error.message } : { error })
+                  const logger = makeLogger({ level: 'error', label: 'eyes' })
+                  const response = error instanceof Error ? { error: error.message } : { error }
+                  logger.error(`checkWindow: ${JSON.stringify(response)}`)
+                  sendResponse(response)
                 })
             })
           })
@@ -488,7 +492,10 @@ browser.runtime.onMessageExternal.addListener((message, _sender, sendResponse) =
                       sendResponse(results)
                     })
                     .catch(error => {
-                      sendResponse(error instanceof Error ? { error: error.message } : { error })
+                      const logger = makeLogger({ level: 'error', label: 'eyes' })
+                      const response = error instanceof Error ? { error: error.message } : { error }
+                      logger.error(`checkElement: ${JSON.stringify(response)}`)
+                      sendResponse(response)
                     })
                 })
               })

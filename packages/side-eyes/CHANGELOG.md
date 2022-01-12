@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Fix bug in `eyes check element` command that prevented it from running when executing tests on the Visual Grid
+- Improve logging for `eyes check element` and `eyes check window` commands
 
 ## 1.13.5 - 2021/11/7
 
