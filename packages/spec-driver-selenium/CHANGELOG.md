@@ -3,6 +3,8 @@
 ## Unreleased
 
 - fix `getCapabilities` for selenium 3
+- updated to @applitools/types@1.0.23 (from 1.0.20)
+- updated to @applitools/utils@1.2.11 (from 1.2.4)
 
 ## 1.3.0 - 2021/11/17
 
