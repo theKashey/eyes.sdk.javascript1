@@ -35,7 +35,14 @@ jobs:
     name: Verification
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+      - name: Run pre-publish verifications
+        shell: bash
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
