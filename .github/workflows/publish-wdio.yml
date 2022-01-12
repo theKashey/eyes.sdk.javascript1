@@ -63,7 +63,7 @@ jobs:
             node-version: 14
           - framework-version: 7
             node-version: 12
-        exclude: ${{(inputs.multienv == false || github.event.inputs.multienv == false) && fromJSON('[{"node-version":14}, {"node-version":12}, {"framework-version":5}, , {"framework-version":6}]') || fromJSON('[]')}}
+        exclude: ${{github.event.inputs.multienv == false && fromJSON("[{\"node-version\":14}, {\"node-version\":12}, {\"framework-version\":5}, {\"framework-version\":6}]") || fromJSON("[]")}}
     name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
