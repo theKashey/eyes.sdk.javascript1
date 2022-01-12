@@ -8,14 +8,20 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
+      multienv:
+        description: test on multiple environments
+        type: boolean
+        default: true
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
+      multienv:
+        description: test on multiple environments
+        type: boolean
+        default: false
     secrets:
       CVG_TESTS_EG_REMOTE:
         required: true
@@ -34,6 +40,8 @@ on:
       AZURE_STORAGE_CONNECTION_STRING:
         required: true
 env:
+  PACKAGE_DIR: eyes-webdriverio-5
+  FORCE_COLOR: 3
   CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
@@ -43,21 +51,19 @@ env:
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
-  STDOUT_LEVEL: 1
-  FORCE_COLOR: 3
 jobs:
   test:
     strategy:
+      max-parallel: 3
       matrix:
-        # framework-version: [5, 6, 7]
-        framework-version: [7]
+        framework-version: [5, 6, 7]
         node-version: [16]
-        # include:
-        #   - framework-version: 7
-        #     node-version: 14
-        #   - framework-version: 7
-        #     node-version: 12
-      fail-fast: false
+        include:
+          - framework-version: 7
+            node-version: 14
+          - framework-version: 7
+            node-version: 12
+        exclude: ${{(inputs.multienv == false || github.event.inputs.multienv == false) && fromJSON('[{"node-version":14}, {"node-version":12}, {"framework-version":5}, , {"framework-version":6}]')}}
     name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
@@ -72,16 +78,15 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: eyes-webdriverio-5
+          package: ${{env.PACKAGE_DIR}}
       - name: Upload testing artifacts
-        if: ${{matrix.node-version == 16 && matrix.framework-version == 7}}
         uses: actions/upload-artifact@v2
         with:
-          name: wdio-test-report
+          name: wdio-test-results-framework-${{matrix.framework-version}}-node-${{matrix.node-version}}
           retention-days: 2
           path: |
-            packages/${{matrix.dirname}}/coverage-tests-metadata.json
-            packages/${{matrix.dirname}}/coverage-test-report.xml
+            packages/${{env.PACKAGE_DIR}}/coverage-tests-metadata.json
+            packages/${{env.PACKAGE_DIR}}/coverage-test-report.xml
   publish:
     needs: [test]
     name: Publish
@@ -94,12 +99,12 @@ jobs:
         with:
           node-version: lts/*
       - name: Download testing artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/download-artifact@v2
         with:
-          name: wdio-test-report
-          path: packages/eyes-webdriverio-5
+          name: wdio-test-results-framework-7-node-16
+          path: packages/${{env.PACKAGE_DIR}}
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: eyes-webdriverio-5
+          package: ${{env.PACKAGE_DIR}}
           version: ${{inputs.version || github.event.inputs.version}}
