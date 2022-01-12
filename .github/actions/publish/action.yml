@@ -39,13 +39,16 @@ runs:
 
         cd "packages/${{inputs.package}}"
 
+        echo "::group::Installing and updating dependencies"
+        yarn install
+        npm run deps --if-present
+        echo "::endgroup::"
+
         echo "::group::Building package"
         npm run build --if-present
         echo "::endgroup::"
 
         echo "::group::Publish ${{inputs.package}}"
-        yarn install
-        npm run deps --if-present
         if [ "${{inputs.skip-npm}}" = "false" ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
         TAG="$(git describe --tags --abbrev=0)"
         echo "::notice::Publish tag - $TAG"
