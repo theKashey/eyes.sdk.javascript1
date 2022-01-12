@@ -30,23 +30,23 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.4.8":
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.8.tgz#cb50099b9a26eb6c9b39d3619022e7e25ca73657"
-  integrity sha512-W1MSbIGSDGFK9KLzwyH3j+VUSOMenUA+k013Hn5QU+kv5wH2mQrW3uoV0Mkqe+QC0PLjdnWc56jpwUEVS5FkrQ==
+"@applitools/driver@1.4.9":
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.9.tgz#71161d8a731b309d40f29f5c845f17d91418a5ae"
+  integrity sha512-PhszdMr+cAXFhN/2jsC/eB/V3d6nJ4q26WK4OrBjAO5+2+NjVevDQGnWathW2z2wvXjXyZzxXPBzAZ7rn12csg==
   dependencies:
     "@applitools/snippets" "2.1.12"
     "@applitools/types" "1.0.23"
     "@applitools/utils" "1.2.11"
 
-"@applitools/eyes-sdk-core@12.24.12":
-  version "12.24.12"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.12.tgz#5f8a49cbc95f79cf37df6958d48e0f56ecd30364"
-  integrity sha512-3uTgOoMvv22KFMqar6PZVvgyr75xOvyco7F3H28PlNi+ZAg07wdxdRUNNrs6bWg0Wp4DJmFT7Tu9U/+273Ib8w==
+"@applitools/eyes-sdk-core@12.24.13":
+  version "12.24.13"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-12.24.13.tgz#f02fc1884d1d1a6aedbc4fa9eb91ca57f36574a4"
+  integrity sha512-ZQVpIKx2KFpAsUi13Ay5Q2ZAHbAgYweBT3lY+vYlhsms1SJPZIxRDRRUn34vXe9/N9iR2wRoT7uZywh/oKHB1A==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.4.8"
+    "@applitools/driver" "1.4.9"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.9"
     "@applitools/screenshoter" "3.3.4"
