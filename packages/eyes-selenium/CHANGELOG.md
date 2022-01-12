@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 4.58.3 - 2022/1/12
+
 - fix bugs
 - updated to @applitools/eyes-sdk-core@12.24.12 (from 12.24.3)
 - updated to @applitools/spec-driver-selenium@1.3.1 (from 1.3.0)
