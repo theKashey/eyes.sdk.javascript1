@@ -52,11 +52,26 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{steps.prepare.outputs.environments}}
+    steps:
+      - id: prepare
+        run: |
+          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
+          then
+            echo "::set-output name=environments::[{\"framework-version\":7,\"node-version\":16}, {\"framework-version\":6,\"node-version\":16}, {\"framework-version\":5,\"node-version\":16}, {\"framework-version\":7,\"node-version\":14}, {\"framework-version\":7,\"node-version\":12}]"
+          else
+            echo "::set-output name=environments::[{\"framework-version\":7,\"node-version\":16}]"
+          fi
   test:
+    needs: [prepare]
     strategy:
       max-parallel: 3
       matrix:
-        include: ${{github.event.inputs.multienv == true && fromJSON('[{"framework-version":7,"node-version":16}, {"framework-version":6,"node-version":16}, {"framework-version":5,"node-version":16}, {"framework-version":7,"node-version":14}, {"framework-version":7,"node-version":12}]') || fromJSON('[{"framework-version":7,"node-version":16}]')}}
+        include: ${{fromJSON(needs.prepare.outputs.environments)}}
     name: 'Test (wdio: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
