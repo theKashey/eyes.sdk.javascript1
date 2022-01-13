@@ -1,6 +1,9 @@
 # Change Log
 
 ## Unreleased
+
+## 1.15.1 - 2022/1/13
+
 - set failTestcafeOnDiff default value to true
 - updated to @applitools/eyes-api@1.1.6 (from 1.1.0)
 - updated to @applitools/eyes-sdk-core@12.24.9 (from 12.23.3)
