@@ -2,6 +2,15 @@ const assert = require('assert')
 const {Selector, ClientFunction} = require('testcafe')
 const spec = require('../../dist/spec-driver')
 
+function isEqualElements(t, element1, element2) {
+  if (!element1 || !element2) return false
+  const compareElements = ClientFunction(() => element1() === element2(), {
+    boundTestRun: t,
+    dependencies: {element1, element2},
+  })
+  return compareElements()
+}
+
 fixture`spec-driver`.page`https://applitools.github.io/demo/TestPages/FramesTestPage/`
 
 test('isDriver(driver)', driver => {
@@ -21,27 +30,11 @@ test('isElement(Selector)', async () => {
 test('isElement(wrong)', _driver => {
   assert.strictEqual(spec.isElement({}), false)
 })
-test('isSelector(string)', _driver => {
-  assert.strictEqual(spec.isSelector('div'), true)
-})
-test('isSelector({type, selector})', _driver => {
-  assert.strictEqual(spec.isSelector({type: 'xpath', selector: '//div'}), true)
-})
 test('isSelector(Selector)', _driver => {
   assert.strictEqual(spec.isSelector(Selector('div')), true)
 })
 test('isSelector(wrong)', _driver => {
   assert.strictEqual(spec.isSelector({}), false)
-})
-test('isEqualElements(element, element)', async driver => {
-  const element1 = Selector('h1')
-  const element2 = Selector('h1')
-  assert.deepStrictEqual(await spec.isEqualElements(driver, element1, element2), true)
-})
-test('isEqualElements(element1, element2)', async driver => {
-  const element1 = Selector('div')
-  const element2 = Selector('h1')
-  assert.deepStrictEqual(await spec.isEqualElements(driver, element1, element2), false)
 })
 test('findElement(string)', async driver => {
   const element = await spec.findElement(driver, '#overflowing-div')
@@ -70,22 +63,22 @@ test('findElements(string) - single element returned', async driver => {
 test('findElements(string) - multiple elements returned', async driver => {
   const elements = await spec.findElements(driver, 'div')
   assert.ok(elements.length > 1)
-  assert.ok(!(await spec.isEqualElements(driver, elements[0], elements[1])))
+  assert.ok(!(await isEqualElements(driver, elements[0], elements[1])))
 })
 test('findElements(Selector)', async driver => {
   const elements = await spec.findElements(driver, Selector('div'))
   assert.ok(elements.length > 1)
-  assert.ok(!(await spec.isEqualElements(driver, elements[0], elements[1])))
+  assert.ok(!(await isEqualElements(driver, elements[0], elements[1])))
 })
 test('findElements({type: css, selector})', async driver => {
   const elements = await spec.findElements(driver, {type: 'css', selector: 'div'})
   assert.ok(elements.length > 1)
-  assert(!(await spec.isEqualElements(driver, elements[0], elements[1])))
+  assert(!(await isEqualElements(driver, elements[0], elements[1])))
 })
 test('findElements({type: xpath, selector})', async driver => {
   const elements = await spec.findElements(driver, {type: 'xpath', selector: '//div'})
   assert.ok(elements.length > 1)
-  assert(!(await spec.isEqualElements(driver, elements[0], elements[1])))
+  assert(!(await isEqualElements(driver, elements[0], elements[1])))
 })
 test('findElements(non-existent)', async driver => {
   const elements = await spec.findElements(driver, 'non-existent')
@@ -199,21 +192,6 @@ test('visit()', async driver => {
 test('takeScreenshot', async driver => {
   const screenshot = await spec.takeScreenshot(driver)
   assert.ok(Buffer.isBuffer(screenshot))
-})
-test('getElementRect(Selector)', async driver => {
-  const rect = await spec.getElementRect(driver, Selector('html'))
-  assert.ok(Number.isInteger(Math.floor(rect.x)))
-  assert.ok(Number.isInteger(Math.floor(rect.y)))
-  assert.ok(Number.isInteger(Math.floor(rect.width)))
-  assert.ok(Number.isInteger(Math.floor(rect.height)))
-})
-test('getElementRect(DOM Node snapshot)', async driver => {
-  const elSnapshot = await Selector('html')()
-  const rect = await spec.getElementRect(driver, elSnapshot)
-  assert.ok(Number.isInteger(Math.floor(rect.x)))
-  assert.ok(Number.isInteger(Math.floor(rect.y)))
-  assert.ok(Number.isInteger(Math.floor(rect.width)))
-  assert.ok(Number.isInteger(Math.floor(rect.height)))
 })
 test('setViewportSize(width, height)', async driver => {
   const expectedRect = {width: 500, height: 500}

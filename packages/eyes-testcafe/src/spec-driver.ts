@@ -195,7 +195,7 @@ export async function childContext(t: Driver, element: Element): Promise<Driver>
   return t
 }
 export async function findElement(t: Driver, selector: Selector): Promise<Element> {
-  const element = await selector.with({boundTestRun: t})()
+  const element = await transformSelector(selector).with({boundTestRun: t})()
   return element ? (element as any).selector : null
 }
 export async function findElements(t: Driver, selector: Selector): Promise<Element[]> {
