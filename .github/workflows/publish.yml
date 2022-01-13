@@ -420,10 +420,10 @@ jobs:
   browser-extension:
     needs: [setup, utils, core, vgc, spec-playwright, test-utils]
     if: ${{fromJSON(needs.setup.outputs.packages).browser-extension && !failure() && !cancelled()}}
-    name: playwright
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-playwright.yml@master
+    name: browser-extension
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-browser-extension.yml@master
     with:
-      version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
+      version: ${{fromJSON(needs.setup.outputs.packages).browser-extension.releaseVersion}}
     secrets:
       NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
