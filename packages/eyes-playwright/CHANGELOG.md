@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 1.11.2 - 2022/1/13
+
 - fix taking multiple dom snapshots with `layoutBreakpoints`
+- updated to @applitools/eyes-sdk-core@12.24.13 (from 12.24.2)
+- updated to @applitools/visual-grid-client@15.8.60 (from 15.8.47)
 
 ## 1.11.1 - 2021/11/18
 
