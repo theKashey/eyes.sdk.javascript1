@@ -215,7 +215,7 @@ test('eyes failTestcafeOnDiff true', async t => {
   // force a diff
   await eyes.checkWindow({
     scriptHooks: {
-      beforeCaptureScreenshot: "document.body.style.backgroundColor = 'pink'",
+      beforeCaptureScreenshot: "document.body.style.backgroundColor = 'hotpink'",
     },
   })
   try {
@@ -225,6 +225,7 @@ test('eyes failTestcafeOnDiff true', async t => {
     assert(false) // we should not reach this
   } catch (error) {
     // we should not reach this
+    console.log(error)
     if (error.message.includes('detected differences')) assert(true)
     else assert(false)
   }
@@ -241,7 +242,7 @@ test('eyes failTestcafeOnDiff default value is true', async t => {
   // force a diff
   await eyes.checkWindow({
     scriptHooks: {
-      beforeCaptureScreenshot: "document.body.style.backgroundColor = 'pink'",
+      beforeCaptureScreenshot: "document.body.style.backgroundColor = 'hotpink'",
     },
   })
   try {
