@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fix taking multiple dom snapshots with `layoutBreakpoints`
 
 ## 1.11.1 - 2021/11/18
 
