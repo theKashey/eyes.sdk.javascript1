@@ -58,7 +58,7 @@
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='nightwatch' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client' -f linking-depth=3",
-    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='nightwatch'",
+    "gh:publish": "gh workflow run publish-nightwatch.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion"

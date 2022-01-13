@@ -58,7 +58,7 @@
     "report": "coverage-tests report ./test/coverage/config.js --name 'eyes-testcafe'",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client' -f linking-depth=3",
-    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe'",
+    "gh:publish": "gh workflow run publish-testcafe.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "yarn deps && bongo preversion && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion"

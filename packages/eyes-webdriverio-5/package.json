@@ -99,7 +99,7 @@
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio wdio(node:14) wdio(node:12) wdio(protocol:cdp) wdio(framework:6) wdio(framework:5)'",
     "gh:test:links": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio wdio+cdp wdio@6 wdio@5' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-webdriverio utils driver snippets screenshoter' -f linking-depth=3",
-    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='wdio'",
+    "gh:publish": "gh workflow run publish-webdriverio.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion"

@@ -34,6 +34,7 @@
     "changelog": "git changelog -x -p -f v$npm_package_version > History.md && git add ./History.md && git commit -am 'changelog'",
     "changelog:init": "git config changelog.format \"* %s [[%h]($(echo $npm_package_repository_url|cut -d+ -f2|cut -d. -f1-2)/commit/%H)]\"",
     "changelog:install": "sudo apt-get install git-extras",
+    "gh:publish": "gh workflow run publish-storybook.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "postinstall": "node src/postinstall",
     "preversion": "bongo preversion",
     "version": "bongo version",

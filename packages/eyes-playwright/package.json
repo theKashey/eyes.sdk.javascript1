@@ -47,7 +47,7 @@
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright'",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-playwright utils driver snippets screenshoter' -f linking-depth=3",
-    "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright'",
+    "gh:publish": "gh workflow run publish-playwright.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion"
