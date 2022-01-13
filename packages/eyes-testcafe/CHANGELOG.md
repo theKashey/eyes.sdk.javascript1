@@ -1,6 +1,11 @@
 # Change Log
 
+- set failTestcafeOnDiff default value to true
 ## Unreleased
+- updated to @applitools/eyes-api@1.1.6 (from 1.1.0)
+- updated to @applitools/eyes-sdk-core@12.24.9 (from 12.23.3)
+- updated to @applitools/utils@1.2.11 (from 1.2.2)
+- updated to @applitools/visual-grid-client@15.8.55 (from 15.8.24)
 
 
 ## 1.15.0 - 2021/9/6

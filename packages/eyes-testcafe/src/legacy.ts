@@ -54,6 +54,7 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
           runnerOrConfigOrOptions?.runner ??
           new api.VisualGridRunner({testConcurrency: testcafeConfig.concurrency ?? testcafeConfig.testConcurrency ?? 1})
         super(runner, transformConfig(testcafeConfig))
+        testcafeConfig.failTestcafeOnDiff ??= true
         this._testcafeConfig = testcafeConfig
       } else {
         super(runnerOrConfigOrOptions as api.EyesRunner, configOrRunner as api.ConfigurationPlain<TElement, TSelector>)

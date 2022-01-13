@@ -167,7 +167,7 @@ test.skip('eyes.checkWindow sendDom', async t => {
   console.log(info['actualAppOutput']['0']['image'])
   assert.deepStrictEqual(info['actualAppOutput']['0']['image']['hasDom'], false)
 })
-test.only('eyes.waitForResults', async t => {
+test('eyes.waitForResults', async t => {
   const eyes = new Eyes()
   await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
   await eyes.open({
@@ -224,9 +224,38 @@ test('eyes failTestcafeOnDiff true', async t => {
     await eyes.waitForResults(true)
     assert(false) // we should not reach this
   } catch (error) {
-    assert(true) // we should reach this
+    // we should not reach this
+    if (error.message.includes('detected differences')) assert(true)
+    else assert(false)
   }
 })
+test('eyes failTestcafeOnDiff default value is true', async t => {
+  const eyes = new Eyes()
+  await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+  await eyes.open({
+    t,
+    appName: 'eyes-testcafe',
+    testName: 'legacy api test: failTestcafeOnDiff',
+    saveDiffs: false,
+  })
+  // force a diff
+  await eyes.checkWindow({
+    scriptHooks: {
+      beforeCaptureScreenshot: "document.body.style.backgroundColor = 'pink'",
+    },
+  })
+  try {
+    // when set to throw ex, the test fail
+    await eyes.close(true)
+    await eyes.waitForResults(true)
+    assert(false) // we should not reach this
+  } catch (error) {
+    // we should not reach this
+    if (error.message.includes('detected differences')) assert(true)
+    else assert(false)
+  }
+})
+
 test('should load applitools.config.js', async t => {
   const configPath = path.join(__dirname, 'applitools.config.js')
   const eyes = new Eyes({configPath})
