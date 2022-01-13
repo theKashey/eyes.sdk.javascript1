@@ -1,4 +1,4 @@
-name: Publish nightwatch
+name: Publish - sdk nightwatch
 
 on:
   workflow_dispatch:

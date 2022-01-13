@@ -1,4 +1,4 @@
-name: Publish protractor
+name: Publish - sdk protractor
 
 on:
   workflow_dispatch:

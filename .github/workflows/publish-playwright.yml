@@ -1,4 +1,4 @@
-name: Publish playwright
+name: Publish - sdk playwright
 
 on:
   workflow_dispatch:

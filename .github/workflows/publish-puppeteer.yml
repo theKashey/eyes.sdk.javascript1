@@ -1,4 +1,4 @@
-name: Publish puppeteer
+name: Publish - sdk puppeteer
 
 on:
   workflow_dispatch:

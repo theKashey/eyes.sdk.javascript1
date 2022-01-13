@@ -1,4 +1,4 @@
-name: Publish storybook
+name: Publish - sdk storybook
 
 on:
   workflow_dispatch:

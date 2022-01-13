@@ -1,4 +1,4 @@
-name: Publish spec-webdriverio
+name: Publish - spec webdriverio
 
 on:
   workflow_dispatch:

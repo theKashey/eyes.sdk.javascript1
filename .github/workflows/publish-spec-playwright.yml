@@ -1,4 +1,4 @@
-name: Publish spec-playwright
+name: Publish - spec playwright
 
 on:
   workflow_dispatch:

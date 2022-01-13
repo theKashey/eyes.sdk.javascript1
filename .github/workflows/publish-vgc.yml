@@ -1,4 +1,4 @@
-name: Publish vgc
+name: Publish - vgc
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Publish selenium
+name: Publish - sdk selenium
 
 on:
   workflow_dispatch:

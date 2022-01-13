@@ -1,4 +1,4 @@
-name: Publish spec-puppeteer
+name: Publish - spec puppeteer
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Publish universal
+name: Publish - universal
 
 on:
   workflow_dispatch:

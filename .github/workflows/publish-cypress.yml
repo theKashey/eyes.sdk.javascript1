@@ -1,4 +1,4 @@
-name: Publish cypress
+name: Publish - sdk cypress
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Publish testcafe
+name: Publish - sdk testcafe
 
 on:
   workflow_dispatch:

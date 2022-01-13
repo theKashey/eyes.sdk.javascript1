@@ -1,4 +1,4 @@
-name: Publish browser extension
+name: Publish - sdk browser extension
 
 on:
   workflow_dispatch:
