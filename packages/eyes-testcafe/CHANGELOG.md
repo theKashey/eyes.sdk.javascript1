@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- remove `esModuleInterop` ts compile option
+
 ## 1.15.1 - 2022/1/13
 
 - set failTestcafeOnDiff default value to true
