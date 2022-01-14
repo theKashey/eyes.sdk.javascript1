@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.15.2 - 2022/1/14
+
 - remove `esModuleInterop` ts compile option
 
 ## 1.15.1 - 2022/1/13
