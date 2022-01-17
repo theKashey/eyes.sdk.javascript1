@@ -16,9 +16,7 @@ describe('validate error satuses', () => {
     } catch (e) {
       errMessage = e.message
     } finally {
-      expect(errMessage).to.equal(
-        'Error in request renderInfo: Request failed with status code 401 (Unauthorized)\n',
-      )
+      expect(errMessage).to.equal('Incorrect API Key')
     }
   })
 })
