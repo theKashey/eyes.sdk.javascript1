@@ -53,16 +53,16 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.24.10",
+    "@applitools/eyes-sdk-core": "12.24.14",
     "@applitools/logger": "1.0.9",
     "@applitools/utils": "1.2.11",
-    "@applitools/visual-grid-client": "15.8.56",
+    "@applitools/visual-grid-client": "15.8.61",
     "webdriver": "7.16.11",
     "ws": "7.4.6",
     "yargs": "16.1.0"
   },
   "devDependencies": {
-    "@applitools/sdk-coverage-tests": "^2.3.17",
+    "@applitools/sdk-coverage-tests": "^2.3.18",
     "@applitools/sdk-release-kit": "^0.13.10",
     "@applitools/test-utils": "^1.0.10",
     "@applitools/types": "1.0.23",
