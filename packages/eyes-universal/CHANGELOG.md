@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- no changes
 
 ## 1.0.4 - 2022/1/17
 
