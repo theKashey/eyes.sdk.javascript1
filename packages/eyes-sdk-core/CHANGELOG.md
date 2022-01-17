@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add better errors in case of missing/incorrect `serverUrl` or `apiKey` configurations
 
 ## 12.24.13 - 2022/1/12
 

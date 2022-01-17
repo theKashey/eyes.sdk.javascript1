@@ -11,6 +11,7 @@ const MatchResult = require('../match/MatchResult')
 
 const RunningRender = require('../renderer/RunningRender')
 const RenderStatusResults = require('../renderer/RenderStatusResults')
+const EyesError = require('../errors/EyesError')
 
 // Constants
 const EYES_API_PATH = '/api/sessions'
@@ -85,6 +86,10 @@ class ServerConnector {
   constructor({logger, configuration, getAgentId}) {
     this._logger = logger
     this._configuration = configuration
+
+    if (!this._configuration.getServerUrl()) {
+      throw new EyesError('ServerUrl is missing')
+    }
 
     /** @type {RenderingInfo} */
     this._renderingInfo = undefined

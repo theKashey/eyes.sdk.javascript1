@@ -3,12 +3,14 @@ const getTunnelAgentFromProxy = require('./getTunnelAgentFromProxy')
 const DateTimeUtils = require('../utils/DateTimeUtils')
 const TypeUtils = require('../utils/TypeUtils')
 const GeneralUtils = require('../utils/GeneralUtils')
+const EyesError = require('../errors/EyesError')
 
 const HTTP_STATUS_CODES = {
   CREATED: 201,
   ACCEPTED: 202,
   OK: 200,
   GONE: 410,
+  NOT_AUTHORIZED: 401,
   NOT_FOUND: 404,
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
@@ -50,7 +52,10 @@ function configAxiosProxy({axiosConfig, proxy, logger}) {
 function configureAxios({axiosConfig, configuration, agentId, logger}) {
   axiosConfig.params = axiosConfig.params || {}
   if (axiosConfig.withApiKey && !('apiKey' in axiosConfig.params)) {
-    axiosConfig.params.apiKey = configuration.getApiKey()
+    const apiKey = configuration.getApiKey()
+    if (!apiKey) throw new EyesError('API Key is missing')
+
+    axiosConfig.params.apiKey = apiKey
   }
   if (!('removeSession' in axiosConfig.params)) {
     const removeSession = configuration.getRemoveSession()
@@ -193,6 +198,10 @@ async function handleRequestError({err, axios, logger}) {
 
   if (response && response.data) {
     logger.log(`axios error interceptor - ${config.name} - failure body:\n${response.data}`)
+  }
+
+  if (response && response.status === HTTP_STATUS_CODES.NOT_AUTHORIZED && config.withApiKey) {
+    throw new Error('Incorrect API Key')
   }
 
   if (response && response.status === HTTP_STATUS_CODES.NOT_FOUND && config.dontRetryOn404) {
