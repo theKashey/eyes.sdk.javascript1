@@ -58,7 +58,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-lattes, windows-latest, macos-latest]
-    name: 'Test (os: ${{matrix.os}}})'
+    name: 'Test (os: ${{matrix.os}})'
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -97,11 +97,11 @@ jobs:
           tag_name: ${{steps.publish.outputs.tag}}
           name: ${{steps.publish.outputs.tag}}
           files: |
-            packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-linux
-            packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-macos
-            packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal-win.exe
-            packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal.zip
-            packages/${{fromJSON(inputs.schema).universal.dirname}}/bin/eyes-universal.tar.gz
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-linux
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-macos
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-win.exe
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal.zip
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal.tar.gz
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
