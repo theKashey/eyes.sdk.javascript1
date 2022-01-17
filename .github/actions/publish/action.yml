@@ -18,7 +18,8 @@ outputs:
 runs:
   using: composite
   steps:
-    - shell: bash
+    - id: publish
+      shell: bash
       working-directory: ./packages/${{inputs.package}}
       env:
         STDOUT_LEVEL: '1'
