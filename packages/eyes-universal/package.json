@@ -48,6 +48,7 @@
     "test:it": "echo 'mocha ./test/it/*.spec.js --no-timeouts'",
     "test:e2e": "mocha ./test/e2e/*.spec.ts --exit --no-timeouts -r ts-node/register",
     "deps": "bongo deps",
+    "gh:publish": "gh workflow run publish-universal.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion && yarn build && yarn build:zip && yarn build:tgz",
     "version": "yarn build && bongo version",
     "postversion": "bongo postversion"
