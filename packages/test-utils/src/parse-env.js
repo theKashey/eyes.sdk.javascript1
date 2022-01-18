@@ -470,7 +470,7 @@ const BROWSERS = {
     url: SAUCE_SERVER_URL,
     capabilities: {
       legacy: {
-        browserName: 'firefox',
+        browserName: 'Firefox',
         platform: 'Windows 10',
         version: '48.0',
       },
