@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### ⚠ BREAKING CHANGES
+
+- change default behavior of `eyes.check` to take a full screenshot if screenshot target is a window
 
 ## 12.24.14 - 2022/1/17
 

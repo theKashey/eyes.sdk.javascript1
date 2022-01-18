@@ -264,6 +264,9 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
         : {...checkSettingsOrName}
     }
 
+    // TODO remove when major version of sdk should be released
+    settings.fully ??= false
+
     const result = await this._eyes.check({settings, config: this._config.toJSON()})
 
     return new MatchResultData(result)

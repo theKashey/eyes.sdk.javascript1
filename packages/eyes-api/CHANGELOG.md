@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add patch for new default default behavior of the core
+
 ## 1.1.6 - 2021/11/10
 
 - updated to @applitools/types@1.0.19 (from 1.0.18)
