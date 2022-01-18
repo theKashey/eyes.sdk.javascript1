@@ -21,7 +21,7 @@ Headless Chrome does not support browser extensions, therefore the Eyes SDK brow
 
 ![](https://i.imgur.com/dmsNNRB.gif)
 
-1. Download the `.zip` file under GitHub releases: https://github.com/applitools/eyes.sdk.javascript1/releases/tag/%40applitools%2Feyes-browser-extension%400.1.8
+1. Download the `.zip` file under GitHub releases: https://github.com/applitools/eyes.sdk.javascript1/releases/tag/%40applitools%2Feyes-browser-extension%400.2.0
 2. Navigate to [chrome://extensions]() in your browser
 3. Switch on **Developer mode** on the top right
 4. Drag the zip file into the browser
@@ -66,8 +66,8 @@ const eyes = await __applitools.openEyes({
   config: {
     appName: 'My App',
     testName: 'My test', 
-    apiKey: '<your API key>'
-  },
+    apiKey: '<your API key>',
+ 
   browsersInfo: [
     {name: 'chrome', width: 800, height: 600},
     {name: 'chrome', width: 1600, height: 1200},
@@ -75,7 +75,7 @@ const eyes = await __applitools.openEyes({
     {name: 'firefox', width: 1440, height: 900},
     {name: 'edgechromium', width: 1440, height: 900},
     {name: 'safari', width: 1440, height: 900}
-  ]
+  ]}
 })
 ```
 
