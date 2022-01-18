@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.11 - 2022/1/18
+
 - fix firefox-48 capabilities for wdio
 
 ## 1.0.10 - 2021/12/16
