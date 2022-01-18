@@ -67,15 +67,15 @@ const eyes = await __applitools.openEyes({
     appName: 'My App',
     testName: 'My test', 
     apiKey: '<your API key>',
- 
-  browsersInfo: [
-    {name: 'chrome', width: 800, height: 600},
-    {name: 'chrome', width: 1600, height: 1200},
-    {name: 'ie', width: 1600, height: 1200},
-    {name: 'firefox', width: 1440, height: 900},
-    {name: 'edgechromium', width: 1440, height: 900},
-    {name: 'safari', width: 1440, height: 900}
-  ]}
+    browsersInfo: [
+      {name: 'chrome', width: 800, height: 600},
+      {name: 'chrome', width: 1600, height: 1200},
+      {name: 'ie', width: 1600, height: 1200},
+      {name: 'firefox', width: 1440, height: 900},
+      {name: 'edgechromium', width: 1440, height: 900},
+      {name: 'safari', width: 1440, height: 900}
+    ]
+  }
 })
 ```
 
