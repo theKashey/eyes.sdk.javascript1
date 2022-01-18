@@ -540,9 +540,6 @@ The list above is also the order of precedence, which means that if you pass a p
 | -------------             |:-------------               |:-----------   |
 | `testName`                | The value of Cypress's test title | Test name. If this is not specified, the test name will be the title of the `it` block where the test is running.    |
 | `browser`                 | { width: 800, height: 600, name: 'chrome' } | The size and browser of the generated screenshots. This doesn't need to be the same as the browser that Cypress is running. It could be a different size and also a different browser. For more info and possible values, see the [browser section below](#configuring-the-browser).|
-| `batchId`                 | random                      | Provides ability to group tests into batches. Read more about batches [here](https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html). |
-| `batchName`               | The name of the first test in the batch                   | Provides a name to the batch (for display purpose only). |
-| `batchSequenceName`               | undefined | Name for managing batch statistics. |
 | `baselineEnvName`         | undefined                   | The name of the environment of the baseline. |
 | `envName`                 | undefined                   | A name for the environment in which the application under test is running. |
 | `ignoreCaret`             | false                       | Whether to ignore or the blinking caret or not when comparing images. |
@@ -555,7 +552,6 @@ The list above is also the order of precedence, which means that if you pass a p
 | `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
 | `compareWithParentBranch` | false                       |  |
 | `ignoreBaseline`          | false                       |  |
-| `notifyOnCompletion`  | false | If `true` batch completion notifications are sent. |
 | `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`|
 | `visualGridOptions` | undefined | An object that specifies options to configure renderings on the Ultrafast grid. See more information [here](#visualgridoptions) |
 |`layoutBreakpoints`| undefined | When set to `true`, a snapshot of the DOM will be taken once for each browser/device size in the `browser` configuration. For optimization purposes, an array of numbers can be passed. The DOM snapshot will be taken once for every **width** in the array. For more information, see [layoutBreakpoints](#layoutBreakpoints)|
@@ -565,20 +561,26 @@ The list above is also the order of precedence, which means that if you pass a p
 
 The following configuration properties cannot be defined using the first method of passing them to `cy.eyesOpen`. They should be defined either in the `applitools.config.js` file or as environment variables.
 
-| Property name             | Default value               | Description   |
-| -------------             |:-------------               |:-----------   |
-| `apiKey`                  | undefined                   | The API key used for working with the Applitools Eyes server. See more info in the [Applitools API key](#applitools-api-key) section above |
-| `showLogs`                | false                       | Whether or not you want to see logs of the Eyes-Cypress plugin. Logs are written to the same output of the Cypress process. |
-| `serverUrl`               | Default Eyes server URL     | The URL of Eyes server |
-| `proxy`                   | undefined                   | Sets the proxy settings to be used in network requests to Eyes server. This can be either a string to the proxy URI, or an object containing the URI, username and password.<br/><br/>For example:<br/>`{url: 'https://myproxy.com:443', username: 'my_user', password: 'my_password', isHttpOnly: false}`<br/>or:<br/>`"https://username:password@myproxy.com:443"`|
-| `isDisabled`              | false                       | If true, all calls to Eyes-Cypress commands will be silently ignored. |
-| `failCypressOnDiff`       | true                        | If true, then the Cypress test fails if an eyes visual test fails. If false and an eyes test fails, then the Cypress test does not fail. 
-| `tapDirPath`              | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the tap file name is created with the name [ISO-DATE](https://en.wikipedia.org/wiki/ISO_8601)\-eyes.tap and contains the Eyes test results (Note that because of a current Cypress [limitation](https://github.com/cypress-io/cypress-documentation/issues/818) the results are scoped per spec file, this means that the results file is created once for each spec file).|
-| `testConcurrency`             | 5                          | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
-|`dontCloseBatches`| false | If true, batches are not closed for  [notifyOnCompletion](#advanced-configuration).|
-|`disableBrowserFetching`| false | If true, page resources for rendering on the UFG will be fetched from outside of the browser.|
-|`enablePatterns`| false | |
-|`useDom`| false | |
+| Property name               | Default value               | Description   |
+| -------------               |:-------------               |:-----------   |
+| `apiKey`                    | undefined                   | The API key used for working with the Applitools Eyes server. See more info in the [Applitools API key](#applitools-api-key) section above |
+| `showLogs`                  | false                       | Whether or not you want to see logs of the Eyes-Cypress plugin. Logs are written to the same output of the Cypress process. |
+| `serverUrl`                 | Default Eyes server URL     | The URL of Eyes server |
+| `proxy`                     | undefined                   | Sets the proxy settings to be used in network requests to Eyes server. This can be either a string to the proxy URI, or an object containing the URI, username and password.<br/><br/>For example:<br/>`{url: 'https://myproxy.com:443', username: 'my_user', password: 'my_password', isHttpOnly: false}`<br/>or:<br/>`"https://username:password@myproxy.com:443"`|
+| `isDisabled`                | false                       | If true, all calls to Eyes-Cypress commands will be silently ignored. |
+| `failCypressOnDiff`         | true                        | If true, then the Cypress test fails if an eyes visual test fails. If false and an eyes test fails, then the Cypress test does not fail. 
+| `tapDirPath`                | undefined                   | Directory path of a results file. If set, then a [TAP](https://en.wikipedia.org/wiki/Test_Anything_Protocol#Specification) file is created in this directory, the tap file name is created with the name [ISO-DATE](https://en.wikipedia.org/wiki/ISO_8601)\-eyes.tap and contains the Eyes test results (Note that because of a current Cypress [limitation](https://github.com/cypress-io/cypress-documentation/issues/818) the results are scoped per spec file, this means that the results file is created once for each spec file).|
+| `testConcurrency`           | 5                           | The maximum number of tests that can run concurrently. The default value is the allowed amount for free accounts. For paid accounts, set this number to the quota set for your account. |
+|`dontCloseBatches`           | false                       | If true, batches are not closed for  [notifyOnCompletion](#advanced-configuration).|
+|`disableBrowserFetching`     | false                       | If true, page resources for rendering on the UFG will be fetched from outside of the browser.|
+|`enablePatterns`             | false                       | |
+|`useDom`                     | false                       | |
+| `batch`                     | undefined                   | An object which describes different aspects of the batch. The following lines in this table depict the various ways to configure the batch. |
+| `batch.id`                  | random                      | Provides ability to group tests into batches. Read more about batches [here](https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html). |
+| `batch.name`                | The name of the first test in the batch                   | Provides a name to the batch (for display purpose only). |
+| `batch.sequenceName`        | undefined                   | Name for managing batch statistics. |
+| `batch.notifyOnCompletion`  | false                       | If `true` batch completion notifications are sent. |
+| `batch.properties`          | undefined                   | Custom properties for the entire batch. The format is an array of objects with name/value properties. For example: `[{name: 'My prop', value:'My value'}]`. |
 
 
 ### Method 1: Arguments for `cy.eyesOpen`
