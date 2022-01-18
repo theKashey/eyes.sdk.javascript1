@@ -62,7 +62,6 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
     return getOrFetchResources(resourceUrls, preResources)
 
     async function getOrFetchResources(resourceUrls = [], preResources = {}) {
-      const rGridResources = resourceUrls.map(url => new RGridResource({url, browserName}))
       const resources = {}
       for (const [url, resource] of Object.entries(preResources)) {
         // "preResources" are not fetched and not in "fetchCache" so cache them to "resourceCache".
@@ -75,6 +74,7 @@ function makeGetAllResources({resourceCache, fetchResource, extractCssResources,
         assignContentfulResources(resources, {[url]: rGridResource})
       }
 
+      const rGridResources = resourceUrls.map(url => new RGridResource({url, browserName}))
       const unhandledResources = rGridResources.filter(
         rGridResource => !handledResourceUrls.has(rGridResource.getUrl()),
       )
