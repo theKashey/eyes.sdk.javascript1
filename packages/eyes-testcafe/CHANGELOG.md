@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- updated 'Agent ID' to 'eyes.testcafe' (from 'eyes.webdriverio')
 
 ## 1.15.2 - 2022/1/14
 
