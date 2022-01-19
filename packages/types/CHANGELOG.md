@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.24 - 2022/1/19
+
 - add `'iPad Air (4th generation)'` to `IOSDevice` type
 - add `'Galaxy Tab S7'` to `ChromeEmulationDevice` type
 
