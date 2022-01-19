@@ -8,7 +8,7 @@ function getEntriesForHeading({changelogContents, targetHeading, includeHeading}
   let headingFound = false
   for (let [index, entry] of changelogContents.split('\n').entries()) {
     const _entry = entry.trim()
-    if (headingFound && _entry.includes('##')) break
+    if (headingFound && /$\s*\#\#[^#]/.test(_entry)) break
     if (headingFound && _entry.length) foundEntries.push({entry, index})
     if (_entry === targetHeading) {
       if (includeHeading) foundEntries.push({entry, index})
@@ -28,7 +28,7 @@ function getLatestReleaseHeading(changelogContents) {
   let latestReleaseHeading = {}
   for (let [index, entry] of changelogContents.split('\n').entries()) {
     const _entry = entry.trim()
-    if (_entry.includes('##') && !_entry.includes('Unreleased')) {
+    if (/$\s*\#\#[^#]/.test(_entry) && !_entry.includes('Unreleased')) {
       latestReleaseHeading.heading = _entry
       latestReleaseHeading.index = index
       break
