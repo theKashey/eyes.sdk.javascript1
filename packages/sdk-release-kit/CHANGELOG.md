@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 0.13.11 - 2022/1/19
+
 - allow headings in changelog version descriptions
 
 ## 0.13.10 - 2021/12/28
