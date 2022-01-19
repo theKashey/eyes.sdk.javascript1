@@ -4,7 +4,7 @@ function makeCheck({eyes}) {
   return async function check({settings, config} = {}) {
     if (config) eyes._configuration.mergeConfig(config)
 
-    const isCheckWindow = !settings.region && (!settings.frames || settings.frames.length === 0)
+    const isCheckWindow = !settings || (!settings.region && (!settings.frames || settings.frames.length === 0))
     settings = {fully: isCheckWindow, ...settings}
 
     const result = await eyes.check(settings)
