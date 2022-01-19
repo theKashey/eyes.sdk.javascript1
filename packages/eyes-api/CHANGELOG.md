@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- add `iPad_Air_4` item with value `'iPad Air (4th generation)'` to `IosDeviceName` enum
+- add `Galaxy_Tab_S7` item with value `'Galaxy Tab S7'` to `DeviceName` enum
 - add patch for new default default behavior of the core
 
 ## 1.1.6 - 2021/11/10

@@ -18,6 +18,7 @@ export enum IosDeviceNameEnum {
   iPad_7 = 'iPad (7th generation)',
   iPad_9 = 'iPad (9th generation)',
   iPad_Air_2 = 'iPad Air (2nd generation)',
+  iPad_Air_4 = 'iPad Air (4th generation)',
 }
 
 export type IosDeviceName = `${IosDeviceNameEnum}`

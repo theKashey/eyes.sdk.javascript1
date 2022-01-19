@@ -18,6 +18,7 @@ export enum DeviceNameEnum {
   Galaxy_S10 = 'Galaxy S10',
   Galaxy_S10_Plus = 'Galaxy S10 Plus',
   Galaxy_S20 = 'Galaxy S20',
+  Galaxy_Tab_S7 = 'Galaxy Tab S7',
   iPad = 'iPad',
   iPad_6th_Gen = 'iPad 6th Gen',
   iPad_7th_Gen = 'iPad 7th Gen',

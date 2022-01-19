@@ -112,6 +112,7 @@ export type ChromeEmulationDevice =
   | 'Galaxy S10'
   | 'Galaxy S10 Plus'
   | 'Galaxy S20'
+  | 'Galaxy Tab S7'
   | 'iPad'
   | 'iPad 6th Gen'
   | 'iPad 7th Gen'
@@ -185,6 +186,7 @@ export type IOSDevice =
   | 'iPad (7th generation)'
   | 'iPad (9th generation)'
   | 'iPad Air (2nd generation)'
+  | 'iPad Air (4th generation)'
 
 export type IOSVersion = 'latest' | 'latest-1'
 
