@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.15.3 - 2022/1/19
+
+- updated 'Agent ID' to 'eyes.testcafe' (from 'eyes.webdriverio')
+
 ## 1.15.2 - 2022/1/14
 
 - remove `esModuleInterop` ts compile option
