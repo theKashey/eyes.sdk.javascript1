@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 3.23.6 - 2022/1/20
+
+- fix global hook overrides
+- updated to @applitools/visual-grid-client@15.8.62 (from 15.8.57)
+
 ## 3.23.5 - 2022/1/6
 
 - updated to @applitools/dom-snapshot@4.5.12 (from 4.5.11)
