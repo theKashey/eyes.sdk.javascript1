@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix global hook overrides
 
 ## 3.23.5 - 2022/1/6
 

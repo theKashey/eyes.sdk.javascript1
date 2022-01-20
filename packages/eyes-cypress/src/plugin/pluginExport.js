@@ -10,14 +10,18 @@ function makePluginExport({startServer, eyesConfig, globalHooks}) {
       const {eyesPort, closeServer} = await startServer();
       closeEyesServer = closeServer;
       const [origOn, config] = args;
-      let isGlobalHookCalledFromUserHandler = false;
+      const isGlobalHookCalledFromUserHandlerMap = new Map();
       eyesConfig.eyesIsGlobalHooksSupported = isGlobalHooksSupported(config);
       const moduleExportsResult = await pluginModuleExports(onThatCallsUserDefinedHandler, config);
-      if (eyesConfig.eyesIsGlobalHooksSupported && !isGlobalHookCalledFromUserHandler) {
+
+      if (eyesConfig.eyesIsGlobalHooksSupported) {
         for (const [eventName, eventHandler] of Object.entries(globalHooks)) {
-          origOn.call(this, eventName, eventHandler);
+          if (!isGlobalHookCalledFromUserHandlerMap.get(eventName)) {
+            origOn.call(this, eventName, eventHandler);
+          }
         }
       }
+
       return Object.assign({}, eyesConfig, {eyesPort}, moduleExportsResult);
 
       // This piece of code exists because at the point of writing, Cypress does not support multiple event handlers:
@@ -29,7 +33,7 @@ function makePluginExport({startServer, eyesConfig, globalHooks}) {
         let handlerToCall = handler;
         if (eyesConfig.eyesIsGlobalHooksSupported && isRunEvent) {
           handlerToCall = handlerThatCallsUserDefinedHandler;
-          isGlobalHookCalledFromUserHandler = true;
+          isGlobalHookCalledFromUserHandlerMap.set(eventName, true);
         }
         return origOn.call(this, eventName, handlerToCall);
 

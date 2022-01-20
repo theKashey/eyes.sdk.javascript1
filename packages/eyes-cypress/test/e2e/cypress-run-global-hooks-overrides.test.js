@@ -15,10 +15,10 @@ const targetTestAppPath = path.resolve(
 );
 const cwd = process.cwd();
 
-async function runCypress(pluginsFile) {
+async function runCypress(pluginsFile, testFile = 'global-hooks-overrides.js') {
   return (
     await pexec(
-      `./node_modules/.bin/cypress run --headless --config testFiles=global-hooks-overrides.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/${pluginsFile},supportFile=cypress/support/index-run.js`,
+      `./node_modules/.bin/cypress run --headless --config testFiles=${testFile},integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/${pluginsFile},supportFile=cypress/support/index-run.js`,
       {
         maxBuffer: 10000000,
       },
@@ -74,5 +74,13 @@ describe('global hooks override', () => {
     expect(err).not.to.be.undefined;
     expect(err.stdout).to.contain('@@@ before:run @@@');
     expect(err.stdout).to.contain('@@@ after:run error @@@');
+  });
+
+  it('supports running user defined global hooks when only 1 hook is defined', async () => {
+    const [err, output] = await presult(
+      runCypress('index-global-hooks-overrides-only-after.js', 'helloworld.js'),
+    );
+    expect(err).to.be.undefined;
+    expect(output).to.contain('@@@ after:run @@@');
   });
 });
