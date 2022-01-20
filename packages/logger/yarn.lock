@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/sdk-release-kit@0.13.10":
-  version "0.13.10"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.10.tgz#58859d8ac67d8f196cc99776f587de875ce4d5d3"
-  integrity sha512-KNN0m0f7bK0WNvD3KctY1PKC3mzl4vRGCY/XZTCNH4QeOjIVK+BtzD2cmqFYk5biE9sE6RQBzoHFbAglpiScDA==
+"@applitools/sdk-release-kit@0.13.11":
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.11.tgz#5e996a0bb6627bbfdf7312b78a97b6d840ae2dae"
+  integrity sha512-F9oIaQHgeB88M0vUWywOBsmPga5Xiwl0MXeRRVuOv5FgirrYnA6Rg3/fsHYH4i0ZzjE0YnOf4wfgZ/HO0faxpA==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
