@@ -54,6 +54,7 @@
     + [`browser.eyesGetConfiguration()`](#-browsereyesgetconfiguration---)
     + [`browser.eyesAddProperty(key, value)`](#-browsereyesaddproperty-key--value--)
     + [`browser.eyesClearProperties()`](#-browsereyesclearproperties---)
+- [Visual locators](#visual-locators)
 - [Recipes for common tasks](#recipes-for-common-tasks)
   * [Configure Server URL](#configure-server-url)
   * [Configure Proxy](#configure-proxy)
@@ -704,6 +705,64 @@ Adds a custom key name/value property that will be associated with your tests. Y
 #### `browser.eyesClearProperties()`
 
 Clears any custom key name/value properties.
+
+## Visual locators
+
+Information about what are visual locators and how to use them can be found in the documentation page [here](https://applitools.com/docs/features/visual-locators.html).
+
+The API to locate a visual locator in Eyes-WebdriverIO has the following TypeScript signature:
+
+```ts
+// Note: This is a formal TypeScript definition.
+// The reason we use the generic type TLocator here is that is shows how the return value of eyes.locate is an object
+// with the same keys as the array of locatorNames in the input to eyes.locate.
+// We explain this in more detail in the example below.
+
+interface Eyes {
+  locate<TLocator extends string>(settings: VisualLocatorSettings<TLocator>): Promise<Record<TLocator, Array<Region>>>
+}
+
+interface VisualLocatorSettings<TLocator extends string> {
+  locatorNames: Array<TLocator>;
+  firstOnly: boolean;
+}
+
+interface Region {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+```
+
+Here is an example for using this API and applying a touch action in Appium:
+
+```js
+// first need to call eyes.open
+await eyes.open(browser, 'Test app', 'Test visual locators')
+
+// example for using eyes.locate
+const regionsMap = await eyes.locate({
+  locatorNames: ['locator_a', 'locator_b', 'locator_c'],
+})
+
+// now get the coordinates of one of the locators
+const regionsForLocator_A = regionsMap['locator_a']
+
+// if region is found, perform press at the middle
+if (regionsForLocator_A && regionsForLocator_A.length > 0) {
+  const region = regionsForLocator_A[0]
+  const clickLocation = {
+    x: region.left + region.width / 2,
+    y: region.top + region.height / 2,
+  }
+  await browser.touchAction([
+    {action: 'press', x: clickLocation.x, y: clickLocation.y},
+    {action: 'wait', ms: 500},
+    'release',
+  ])
+}
+```
 
 ## Recipes for common tasks
 
