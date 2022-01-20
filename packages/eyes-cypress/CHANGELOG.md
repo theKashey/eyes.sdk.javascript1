@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.23.6 - 2022/1/20
+
 - fix global hook overrides
 - updated to @applitools/visual-grid-client@15.8.62 (from 15.8.57)
 
