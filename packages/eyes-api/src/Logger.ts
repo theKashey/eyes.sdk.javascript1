@@ -97,8 +97,11 @@ export class Logger implements logger.Logger {
     this._logger.open()
   }
 
-  extend(label?: string, color?: logger.Style | logger.Style[]): Logger {
-    if (this._logger) return new Logger(this._logger.extend(label, color))
-    return new Logger({show: this._show, label, handler: this._handler})
+  extend(options?: Omit<logger.LoggerOptions, 'handler'>): Logger
+  extend(label?: string): Logger
+  extend(optionsOrLabel?: Omit<logger.LoggerOptions, 'handler'> | string): Logger {
+    if (utils.types.isString(optionsOrLabel)) return this.extend({ label: optionsOrLabel })
+    if (this._logger) return new Logger(this._logger.extend(optionsOrLabel))
+    return new Logger({ show: this._show, label: optionsOrLabel?.label ?? this._label, handler: this._handler })
   }
 }

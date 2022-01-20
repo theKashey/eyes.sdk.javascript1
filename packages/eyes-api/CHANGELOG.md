@@ -8,6 +8,8 @@
 - updated to @applitools/logger@1.0.9 (from 1.0.5)
 - updated to @applitools/types@1.0.24 (from 1.0.19)
 - updated to @applitools/utils@1.2.11 (from 1.2.4)
+- updated Logger to support @applitools/logger@1.0.9
+- fix BatchInfo > addProperty failed in case properties are not initialized
 
 ## 1.1.6 - 2021/11/10
 
