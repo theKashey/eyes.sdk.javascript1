@@ -100,8 +100,8 @@ export class Logger implements logger.Logger {
   extend(options?: Omit<logger.LoggerOptions, 'handler'>): Logger
   extend(label?: string): Logger
   extend(optionsOrLabel?: Omit<logger.LoggerOptions, 'handler'> | string): Logger {
-    if (utils.types.isString(optionsOrLabel)) return this.extend({ label: optionsOrLabel })
+    if (utils.types.isString(optionsOrLabel)) return this.extend({label: optionsOrLabel})
     if (this._logger) return new Logger(this._logger.extend(optionsOrLabel))
-    return new Logger({ show: this._show, label: optionsOrLabel?.label ?? this._label, handler: this._handler })
+    return new Logger({show: this._show, label: optionsOrLabel?.label ?? this._label, handler: this._handler})
   }
 }
