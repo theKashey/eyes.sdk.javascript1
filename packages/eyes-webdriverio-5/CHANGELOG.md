@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fixed BatchInfo.addProperty bug
 
 ## 5.34.9 - 2022/1/12
 
