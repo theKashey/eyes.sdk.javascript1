@@ -197,6 +197,14 @@ export default function transformer(program: ts.Program, config: TransformerConf
     )
   }
 
+  function isSymbolType(type: ts.Type): type is ts.UniqueESSymbolType {
+    return Boolean(type.flags & ts.TypeFlags.ESSymbolLike)
+  }
+
+  function isStringLiteral(type: ts.Type): type is ts.StringLiteralType {
+    return Boolean(type.flags & ts.TypeFlags.StringLiteral)
+  }
+
   function isOptional(symbol: ts.Symbol): boolean {
     return Boolean(symbol.flags & ts.SymbolFlags.Optional)
   }
@@ -227,10 +235,10 @@ export default function transformer(program: ts.Program, config: TransformerConf
   }
 
   function getPropertyName(symbol: ts.Symbol): string | ts.PropertyName {
-    if (symbol.nameType) {
+    if (symbol.nameType && isSymbolType(symbol.nameType)) {
       return ts.factory.createComputedPropertyName(ts.factory.createIdentifier(`Symbol.${symbol.nameType.symbol.getName()}`))
     }
-    const name = symbol.getName()
+    const name = symbol.nameType && isStringLiteral(symbol.nameType) ? symbol.nameType.value : symbol.getName()
     return !/^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(name) ? ts.factory.createStringLiteral(name, true /* isSingleQuoted */) : name
   }
 
@@ -485,7 +493,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     }
 
     for (const symbol of type.getProperties()) {
-      if (isStripedBrandProperty(symbol.getName()) || isStripedDeclaration(symbol.declarations[symbol.declarations.length - 1])) {
+      if (isStripedBrandProperty(symbol.getName()) || isStripedDeclaration(symbol.declarations?.[symbol.declarations.length - 1])) {
         continue
       }
 
@@ -510,7 +518,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
         (isExtended && symbol.parent !== type.symbol) || // avoid re-declaration of properties from extended type
         symbol.getName() === 'prototype' ||
         isStripedBrandProperty(symbol.getName()) ||
-        isStripedDeclaration(symbol.declarations[symbol.declarations.length - 1])
+        isStripedDeclaration(symbol.declarations?.[symbol.declarations.length - 1])
       ) {
         continue
       }
@@ -661,7 +669,9 @@ export default function transformer(program: ts.Program, config: TransformerConf
   }): ts.PropertyDeclaration[] | ts.MethodDeclaration[]
   function createPropertyDeclaration(options: {symbol: ts.Symbol; node?: ts.Node; isSignature?: boolean; isStatic?: boolean}) {
     const {symbol, node, isSignature, isStatic} = options
-    const modifierFlags = ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1]) | (isStatic ? ts.ModifierFlags.Static : 0)
+    const modifierFlags =
+      (symbol.declarations ? ts.getCombinedModifierFlags(symbol.declarations[symbol.declarations.length - 1]) : 0) |
+      (isStatic ? ts.ModifierFlags.Static : 0)
     const modifiers = ts.factory.createModifiersFromModifierFlags(modifierFlags)
     const propertyName = getPropertyName(symbol)
     const optionalToken = isOptional(symbol) ? ts.factory.createToken(ts.SyntaxKind.QuestionToken) : undefined
