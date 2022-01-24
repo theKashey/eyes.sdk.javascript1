@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 5.34.10 - 2022/1/24
+
 - Fixed BatchInfo.addProperty bug
 - updated to @applitools/eyes-api@1.1.7 (from 1.1.6)
 - updated to @applitools/eyes-sdk-core@13.0.0 (from 12.24.13)
