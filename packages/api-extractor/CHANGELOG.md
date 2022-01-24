@@ -5,7 +5,7 @@
 
 ## 1.2.7 - 2022/1/24
 
-- x
+- add support for mapped keys from union type
 
 ## 1.2.6 - 2022/1/11
 
