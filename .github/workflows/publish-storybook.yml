@@ -33,6 +33,8 @@ on:
         required: true
 env:
   PACKAGE_DIR: eyes-storybook
+  FORCE_COLOR: 3
+  STDOUT_LEVEL: 1
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
