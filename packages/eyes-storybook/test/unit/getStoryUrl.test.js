@@ -19,7 +19,7 @@ describe('getStoryUrl', () => {
     const baseUrl = 'http://some/url/';
     const parameters = {eyes: {queryParams: {'eyes-variation': 'bla'}}};
     const expected =
-      'http://some/url/iframe.html?eyes-storybook=true&selectedKind=kind&selectedStory=name&eyes-variation=bla';
+      'http://some/url/iframe.html?eyes-storybook=true&selectedKind=kind&selectedStory=name&eyes-query-params=eyes-variation&eyes-variation=bla';
     expect(getStoryUrl({name, kind, parameters}, baseUrl)).to.equal(expected);
   });
 });

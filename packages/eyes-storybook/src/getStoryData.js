@@ -82,19 +82,20 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
         return false;
       }
 
-      expectedQueryParams = expectedQueryParams || {};
+      const currentQueryParams = url.searchParams.get('eyes-query-params');
+      if (!currentQueryParams && !expectedQueryParams) return true;
+      if (!currentQueryParams || !expectedQueryParams) return false;
+
       const expectedQueryParamNames = Object.keys(expectedQueryParams);
-      const actualQueryParamNames = [];
-      for (const [name, value] of url.searchParams) {
-        if (['eyes-storybook', 'selectedKind', 'selectedStory'].includes(name)) continue;
-        if (!expectedQueryParams.hasOwnProperty(name) || !expectedQueryParams[name] === value) {
+      const currentQueryParamNames = currentQueryParams.split(',');
+
+      if (currentQueryParamNames.length !== expectedQueryParamNames.length) return false;
+
+      for (const queryParamName of currentQueryParamNames) {
+        if (url.searchParams.get(queryParamName) !== expectedQueryParams[queryParamName]) {
           return false;
         }
-        actualQueryParamNames.push(name);
       }
-
-      if (actualQueryParamNames.length !== expectedQueryParamNames.length) return false;
-
       return true;
     }
 

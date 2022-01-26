@@ -293,4 +293,58 @@ describe('getStoryData', () => {
 
     expect(cdt).to.equal('fresh content');
   });
+
+  it('reloads page when required query parameters are different than current', async () => {
+    const takeDomSnapshots = async () => [
+      deserializeDomSnapshotResult({
+        resourceUrls: [],
+        blobs: [],
+        cdt: await page.evaluate("document.getElementById('root').textContent"),
+        frames: [],
+      }),
+    ];
+
+    const storyUrl = 'http://localhost:7272/reloadPagePerStory.html';
+
+    await page.goto(`${storyUrl}?eyes-query-params=them,lang&them=dark&lang=en`);
+    const getStoryData = makeGetStoryData({
+      logger,
+      takeDomSnapshots,
+    });
+
+    const [{cdt}] = await getStoryData({
+      story: {isApi: true, index: 0, parameters: {eyes: {queryParams: {theme: 'dark'}}}},
+      storyUrl: `${storyUrl}?eyes-query-params=them&them=dark`,
+      page,
+    });
+
+    expect(cdt).to.equal('fresh content');
+  });
+
+  it('does not reload page when no query parameters required', async () => {
+    const takeDomSnapshots = async () => [
+      deserializeDomSnapshotResult({
+        resourceUrls: [],
+        blobs: [],
+        cdt: await page.evaluate("document.getElementById('root').textContent"),
+        frames: [],
+      }),
+    ];
+
+    const storyUrl = 'http://localhost:7272/reloadPagePerStory.html';
+
+    await page.goto(`${storyUrl}?unknownQueryParam=bla`);
+    const getStoryData = makeGetStoryData({
+      logger,
+      takeDomSnapshots,
+    });
+
+    const [{cdt}] = await getStoryData({
+      story: {isApi: true, index: 0},
+      storyUrl,
+      page,
+    });
+
+    expect(cdt).to.equal('stale content');
+  });
 });

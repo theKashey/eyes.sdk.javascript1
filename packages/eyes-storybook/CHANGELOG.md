@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- avoid unwanted page reloading due to unknown query parameters
 
 ## 3.27.2 - 2021/12/23
 
