@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.27.3 - 2022/1/26
+
 - avoid unwanted page reloading due to unknown query parameters
 - updated to @applitools/driver@1.4.9 (from 1.4.7)
 - updated to @applitools/eyes-sdk-core@13.0.0 (from 12.24.9)
