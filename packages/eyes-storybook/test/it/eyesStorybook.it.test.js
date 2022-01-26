@@ -372,7 +372,7 @@ describe('eyesStorybook', () => {
     }
   });
 
-  it.only('fail immediately, wrong api key', async () => {
+  it('fail immediately, wrong api key', async () => {
     const {port, close} = await fakeEyesServer();
     closeEyesServer = close;
     serverUrl = `http://localhost:${port}`;
