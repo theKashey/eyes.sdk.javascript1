@@ -372,7 +372,7 @@ describe('eyesStorybook', () => {
     }
   });
 
-  it('fail immediately, wrong api key', async () => {
+  it.only('fail immediately, wrong api key', async () => {
     const {port, close} = await fakeEyesServer();
     closeEyesServer = close;
     serverUrl = `http://localhost:${port}`;
@@ -394,9 +394,7 @@ describe('eyesStorybook', () => {
     } catch (e) {
       errorMessage = e.message;
     } finally {
-      expect(errorMessage).to.equal(
-        'Error in request renderInfo: Request failed with status code 401 (Unauthorized)\n',
-      );
+      expect(errorMessage).to.equal('Incorrect API Key');
     }
   });
 });
