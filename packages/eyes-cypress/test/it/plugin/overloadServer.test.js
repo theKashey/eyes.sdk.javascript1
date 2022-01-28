@@ -2,7 +2,6 @@
 const {describe, it} = require('mocha');
 const makePluginExport = require('../../../src/plugin/pluginExport');
 const makeConfig = require('../../../src/plugin/config');
-const axios = require('axios');
 const fetch = require('../../util/fetchWithNoCAVerify');
 const makeStartServer = require('../../../src/plugin/server');
 const {makeVisualGridClient} = require('@applitools/visual-grid-client');
@@ -58,7 +57,10 @@ describe('overload server', () => {
       const openContent = {appName: 'some app name', testName: 'some test', command: 'open'};
       const send = makeSend(ret.eyesPort, fetch);
       const sendRequest = makeSendRequest(send);
-      await axios.post(`https://localhost:${ret.eyesPort}/eyes/open`, openContent);
+      await sendRequest({
+        command: 'open',
+        data: openContent,
+      });
       const resp = await fetch('https://applitools.com/images/icons/arrow-right-green.svg');
       const url = 'https://applitools.com/images/icons/arrow-right-green.svg';
 
