@@ -49,7 +49,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "lodash.flatten": "4.4.0",
-    "throat": "^6.0.1"
+    "throat": "6.0.1"
   },
   "devDependencies": {
     "@applitools/scripts": "^1.1.0",
