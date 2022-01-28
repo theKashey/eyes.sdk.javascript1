@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add concurrency limitation on local server
 
 ## 3.23.6 - 2022/1/20
 
