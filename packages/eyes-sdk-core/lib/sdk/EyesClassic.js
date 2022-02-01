@@ -107,6 +107,7 @@ class EyesClassic extends EyesCore {
         })),
       region: this._checkSettings.region,
       fully: this._checkSettings.fully || this._configuration.getForceFullPageScreenshot(),
+      framed: this._driver.isNative,
       hideScrollbars: this._configuration.getHideScrollbars(),
       hideCaret: this._configuration.getHideCaret(),
       scrollingMode: this._configuration.getStitchMode().toLocaleLowerCase(),
