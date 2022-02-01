@@ -26,10 +26,10 @@
     "email": "team@applitools.com"
   },
   "main": "./index.js",
-  "directories": {
-    "lib": "./lib",
-    "test": "./test"
-  },
+  "files": [
+    "src",
+    "index.js"
+  ],
   "scripts": {
     "lint": "eslint . --ext .js",
     "test": "yarn test:it && yarn test:e2e",

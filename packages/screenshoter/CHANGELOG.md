@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- add "files" field to the package.json to avoid unnecessary files to be published
 
 ## 3.3.4 - 2021/12/23
 
