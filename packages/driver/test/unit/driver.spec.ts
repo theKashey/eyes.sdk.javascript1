@@ -405,79 +405,87 @@ describe('driver native', () => {
 })
 
 describe('driver mobile', () => {
-  let driver: Driver<any, any, any, any>
+  it('from driver info', async () => {
+    const driver: Driver<any, any, any, any> = await new Driver({
+      logger,
+      spec,
+      driver: new MockDriver({
+        ua: null,
+        device: {isMobile: true, name: 'MobilePhone'},
+        platform: {name: 'OS', version: 'V'},
+        browser: {name: 'Browser', version: '3'},
+      }),
+    }).init()
 
-  before(async () => {
-    driver = new Driver({logger, spec, driver: new MockDriver({device: {isNative: true}})})
-    await driver.init()
-  })
+    const driverInfo = {
+      deviceName: driver.deviceName,
+      platformName: driver.platformName,
+      platformVersion: driver.platformVersion,
+      browserName: driver.browserName,
+      browserVersion: driver.browserVersion,
+    }
 
-  describe('from driver info', () => {
-    before(async () => {
-      driver = new Driver({
-        logger,
-        spec,
-        driver: new MockDriver({
-          ua: null,
-          device: {isMobile: true, name: 'MobilePhone'},
-          platform: {name: 'OS', version: 'V'},
-          browser: {name: 'Browser', version: '3'},
-        }),
-      })
-      await driver.init()
-    })
-
-    it('returns device name', () => {
-      assert.strictEqual(driver.deviceName, 'MobilePhone')
-    })
-
-    it('returns platform name', () => {
-      assert.strictEqual(driver.platformName, 'OS')
-    })
-
-    it('returns platform version', () => {
-      assert.strictEqual(driver.platformVersion, 'V')
-    })
-
-    it('returns browser name', () => {
-      assert.strictEqual(driver.browserName, 'Browser')
-    })
-
-    it('returns browser version', () => {
-      assert.strictEqual(driver.browserVersion, '3')
+    assert.deepStrictEqual(driverInfo, {
+      deviceName: 'MobilePhone',
+      platformName: 'OS',
+      platformVersion: 'V',
+      browserName: 'Browser',
+      browserVersion: '3',
     })
   })
 
-  describe('from ua info', () => {
-    before(async () => {
-      driver = new Driver({
-        logger,
-        spec,
-        driver: new MockDriver({
-          ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
-        }),
-      })
-      await driver.init()
-    })
+  it('from ua info', async () => {
+    const driver: Driver<any, any, any, any> = await new Driver({
+      logger,
+      spec,
+      driver: new MockDriver({
+        ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
+      }),
+    }).init()
 
-    it('returns device name', () => {
-      assert.strictEqual(driver.deviceName, null)
-    })
+    const driverInfo = {
+      deviceName: driver.deviceName,
+      platformName: driver.platformName,
+      platformVersion: driver.platformVersion,
+      browserName: driver.browserName,
+      browserVersion: driver.browserVersion,
+    }
 
-    it('returns platform name', () => {
-      assert.strictEqual(driver.platformName, 'iOS')
+    assert.deepStrictEqual(driverInfo, {
+      deviceName: null,
+      platformName: 'iOS',
+      platformVersion: '12',
+      browserName: 'Safari',
+      browserVersion: '12',
     })
+  })
 
-    it('returns platform version', () => {
-      assert.strictEqual(driver.platformVersion, '12')
-    })
+  it('from driver info and ua info', async () => {
+    const driver: Driver<any, any, any, any> = await new Driver({
+      logger,
+      spec,
+      driver: new MockDriver({
+        ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
+        device: {isMobile: true, name: 'MobilePhone'},
+        platform: {name: 'CorrectOS', version: 'X'},
+        browser: {name: 'WrongBrowser', version: '0'},
+      }),
+    }).init()
 
-    it('returns browser name', () => {
-      assert.strictEqual(driver.browserName, 'Safari')
-    })
+    const driverInfo = {
+      deviceName: driver.deviceName,
+      platformName: driver.platformName,
+      platformVersion: driver.platformVersion,
+      browserName: driver.browserName,
+      browserVersion: driver.browserVersion,
+    }
 
-    it('returns browser version', () => {
-      assert.strictEqual(driver.browserVersion, '12')
+    assert.deepStrictEqual(driverInfo, {
+      deviceName: 'MobilePhone',
+      platformName: 'CorrectOS',
+      platformVersion: 'X',
+      browserName: 'Safari',
+      browserVersion: '12',
     })
   })
 })
