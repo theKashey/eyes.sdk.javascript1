@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- increase number of retries and add a delay between them in `fs.rmSync`
+- ignore error thrown by `fs.rmSync` in rolling file handler
 
 ## 1.0.9 - 2022/1/6
 

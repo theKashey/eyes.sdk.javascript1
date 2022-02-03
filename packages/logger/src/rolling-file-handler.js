@@ -20,7 +20,11 @@ function makeRollingFileLogger({
     writer = fs.createWriteStream(filepath, {flags: 'a', encoding: 'utf8'})
     fileLength = 0
     logFiles.push(filepath)
-    if (logFiles.length > maxFileNumber) fs.rmSync(logFiles.shift(), {maxRetries: 2})
+    if (logFiles.length > maxFileNumber) {
+      try {
+        fs.rmSync(logFiles.shift(), {maxRetries: 3, retryDelay: 300})
+      } catch (err) {}
+    }
   }
   function close() {
     if (!writer) return
