@@ -1,8 +1,11 @@
 # Change Log
 
 ## Unreleased
-- updated to @applitools/types@1.0.24 (from 1.0.23)
 
+
+## 1.4.10 - 2022/2/4
+
+- updated to @applitools/types@1.0.24 (from 1.0.23)
 ### 📝 DOCUMENTATION
 - Create a README.md with a description for basic concepts and spec driver methods.
 
