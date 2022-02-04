@@ -2,8 +2,8 @@ const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
 const spec = require('@applitools/spec-driver-webdriverio')
-const takeScreenshot = require('../../index')
-const makeImage = require('../../src/image')
+const takeScreenshot = require('../../../index')
+const makeImage = require('../../../src/image')
 
 const env = {
   url: 'http://localhost:4444/wd/hub',

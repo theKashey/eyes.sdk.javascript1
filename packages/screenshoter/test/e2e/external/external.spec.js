@@ -3,8 +3,8 @@ const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
 const utils = require('@applitools/utils')
 const spec = require('@applitools/spec-driver-webdriverio')
-const makeImage = require('../../src/image')
-const takeScreenshot = require('../../index')
+const makeImage = require('../../../src/image')
+const takeScreenshot = require('../../../index')
 
 describe.skip('external tests', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
