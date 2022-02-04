@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 13.0.1 - 2022/2/4
+
 ### 🐛 BUG FIX
 - fix window fully screenshot on native apps was taking screenshot of scrollable element, instead of a whole window
 - updated to @applitools/driver@1.4.10 (from 1.4.9)
