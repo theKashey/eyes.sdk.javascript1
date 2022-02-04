@@ -170,7 +170,7 @@ jobs:
   screenshoter:
     needs: [setup, utils, driver, snippets, spec-webdriverio]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
