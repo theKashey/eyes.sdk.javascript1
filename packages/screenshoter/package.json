@@ -35,7 +35,7 @@
     "test": "yarn test:it && yarn test:e2e",
     "test:it": "mocha ./test/it/*.spec.js --no-timeouts",
     "test:e2e": "mocha ./test/e2e/**/*.spec.js --no-timeouts --parallel --jobs 1",
-    "setup": "yarn docker:setup && yarn appium:setup",
+    "setup": "yarn appium:setup",
     "appium:setup": "appium --address 127.0.0.1 --port 4723 --base-path /wd/hub &",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
