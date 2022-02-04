@@ -14,10 +14,6 @@ describe('screenshoter web ios', () => {
   })
 
   it('take viewport screenshot', async () => {
-    await driver.target.setOrientation('PORTRAIT')
-    await driver.target.refresh()
-    await driver.init()
-
     await test({type: 'web-ios', tag: 'page', driver, logger})
   })
 })

@@ -5,7 +5,7 @@ const {Driver} = require('@applitools/driver')
 const makeImage = require('../../src/image')
 const takeScreenshot = require('../../src/take-screenshot')
 
-exports.makeDriver = async function makeDriver({type, local, x, orientation, logger}) {
+exports.makeDriver = async function makeDriver({type, x, local = true, orientation, logger}) {
   const envs = {
     'ios-web': {
       url: 'https://ondemand.saucelabs.com/wd/hub',
@@ -30,7 +30,7 @@ exports.makeDriver = async function makeDriver({type, local, x, orientation, log
         platformName: 'iOS',
         platformVersion: '14.5',
         automationName: 'XCUITest',
-        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
     android: {
@@ -58,7 +58,7 @@ exports.makeDriver = async function makeDriver({type, local, x, orientation, log
         platformVersion: '10.0',
         automationName: 'uiautomator2',
         nativeWebScreenshot: true,
-        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
         app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
       },
     },
@@ -86,7 +86,7 @@ exports.makeDriver = async function makeDriver({type, local, x, orientation, log
         platformName: 'Android',
         platformVersion: '10.0',
         automationName: 'uiautomator2',
-        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
         app: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.3/app_androidx.apk',
       },
     },
@@ -112,7 +112,7 @@ exports.makeDriver = async function makeDriver({type, local, x, orientation, log
         platformName: 'iOS',
         platformVersion: '14.5',
         automationName: 'XCUITest',
-        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
         app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
       },
     },
@@ -122,12 +122,18 @@ exports.makeDriver = async function makeDriver({type, local, x, orientation, log
 }
 
 async function sanitizeAndroidStatusBar(image) {
-  const patchImage = makeImage({
-    width: 85,
+  const leftPatchImage = makeImage({
+    width: 120,
     height: 18,
-    data: Buffer.alloc(85 * 18 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
+    data: Buffer.alloc(120 * 18 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
   })
-  await image.copy(patchImage, {x: 270, y: 4})
+  await image.copy(leftPatchImage, {x: 18, y: 3})
+  const rightPatchImage = makeImage({
+    width: 50,
+    height: 18,
+    data: Buffer.alloc(50 * 18 * 4, Buffer.from([0, 0xed, 0xed, 0xff])),
+  })
+  await image.copy(rightPatchImage, {x: 369, y: 3})
 }
 
 async function sanitizeIOSStatusBar(image) {
