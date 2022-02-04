@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/sdk-release-kit@0.13.10":
-  version "0.13.10"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.10.tgz#58859d8ac67d8f196cc99776f587de875ce4d5d3"
-  integrity sha512-KNN0m0f7bK0WNvD3KctY1PKC3mzl4vRGCY/XZTCNH4QeOjIVK+BtzD2cmqFYk5biE9sE6RQBzoHFbAglpiScDA==
+"@applitools/sdk-release-kit@0.13.11":
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-0.13.11.tgz#5e996a0bb6627bbfdf7312b78a97b6d840ae2dae"
+  integrity sha512-F9oIaQHgeB88M0vUWywOBsmPga5Xiwl0MXeRRVuOv5FgirrYnA6Rg3/fsHYH4i0ZzjE0YnOf4wfgZ/HO0faxpA==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
@@ -19,10 +19,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.12.tgz#878d034358243cd1647326570988b5e90a8b9c11"
   integrity sha512-XFj9ZMJ8VNNzAuCdGqgmC+SEZY61jRahAiZ/W1dgyJJrEIWmkEm/8USq/3n1mJbbyDV8VhT6+aSikqoanzPETQ==
 
-"@applitools/types@1.0.23":
-  version "1.0.23"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.23.tgz#52b103d7537b3281c9c01c2ffcfa2fad99a6c650"
-  integrity sha512-Pa/PRHSI3eJ40E6rFlpaj+mjNR6VEpklrSv1ARymZUtSZjGgqW7Khhxaj85UgarPEpC3V/cgiFjmuhzVwGmJhw==
+"@applitools/types@1.0.24":
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.24.tgz#96bfe0a83a88f48cf9e805b1e36d6b73be25c8f7"
+  integrity sha512-aCmajwCqR1ehkOoM9w3OJEyJJygvDJf1i2EWFYIZQQiDViD5b4F6U280qFKOlKVD6WFMsCeQ7qCVeioT2w6ZGw==
 
 "@applitools/utils@1.2.11":
   version "1.2.11"
