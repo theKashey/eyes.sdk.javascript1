@@ -245,13 +245,6 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
   return browser.getSession?.() ?? browser.capabilities
 }
-export async function getDriverInfo(browser: Driver): Promise<DriverInfo> {
-  const info = {sessionId: browser.sessionId} as any
-  if (browser.getContext) {
-    info.isNative = !/^WEBVIEW_/.test(await browser.getContext())
-  }
-  return info
-}
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()
 }
