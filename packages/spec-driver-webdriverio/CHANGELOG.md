@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add error handling to element lookup for non-standard cases (e.g., when running tests on a service provider that has an unconventional driver implementation) ([Trello](https://trello.com/c/DX8UlrTk))
 
 ## 1.2.6 - 2022/1/5
 

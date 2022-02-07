@@ -172,6 +172,18 @@ describe('spec driver', async () => {
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
     })
+
+    describe('unconventional service provider', async () => {
+      before(async () => {
+        ;[driver, destroyDriver] = await spec.build({
+          device: 'Perfecto Android native',
+        })
+        driver = spec.transformDriver(driver)
+      })
+      it('findElement(non-existent)', async () => {
+        await findElement({input: {selector: {xpath: '//non-existent'}}, expected: null})
+      })
+    })
   })
 
   async function isDriver({input, expected}: {input: spec.Driver; expected: boolean}) {

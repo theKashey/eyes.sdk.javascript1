@@ -1,9 +1,10 @@
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
-
 const SAUCE_CREDENTIALS = {
   username: process.env.SAUCE_USERNAME,
   accessKey: process.env.SAUCE_ACCESS_KEY,
 }
+const PERFECTO_SERVER_URL = 'https://partners.perfectomobile.com/nexperience/perfectomobile/wd/hub'
+const PERFECTO_ACCESS_KEY = process.env.PERFECTO_ACCESS_KEY
 
 const DEVICES = {
   // ios
@@ -246,6 +247,31 @@ const DEVICES = {
       },
     },
   },
+  'Perfecto Android native': {
+    url: PERFECTO_SERVER_URL,
+    capabilities: {
+      deviceName: '932AY05WL7',
+      maxInstances: 1,
+      autoLaunch: true,
+      appPackage: 'com.applitools.helloworld.android',
+      appActivity: '.MainActivity',
+      app: 'PRIVATE:eyes-hello-world.apk',
+      securityToken: PERFECTO_ACCESS_KEY,
+    }
+  },
+  'Perfecto Android native (enableAppiumBehavior)': {
+    url: PERFECTO_SERVER_URL,
+    capabilities: {
+      deviceName: '932AY05WL7',
+      maxInstances: 1,
+      autoLaunch: true,
+      appPackage: 'com.applitools.helloworld.android',
+      appActivity: '.MainActivity',
+      app: 'PRIVATE:eyes-hello-world.apk',
+      securityToken: PERFECTO_ACCESS_KEY,
+      enableAppiumBehavior: true,
+    }
+  }
 }
 
 const BROWSERS = {
@@ -489,6 +515,7 @@ function parseEnv(
   const env = {browser, device, headless, protocol, ...options}
   if (protocol === 'wd') {
     env.url = new URL(url || process.env.CVG_TESTS_WD_REMOTE || process.env.CVG_TESTS_REMOTE)
+    if (env.desiredCapabilities) env.desiredCapabilities = {...env.desiredCapabilities}
     env.capabilities = {...env.capabilities}
     env.capabilities.browserName = browser || env.capabilities.browserName || ''
     const preset = DEVICES[device] || BROWSERS[browser]

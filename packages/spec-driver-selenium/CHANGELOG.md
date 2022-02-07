@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add test to check that `findElement` behaves correctly when running mobile native on Android in Perfecto ([Trello](https://trello.com/c/DX8UlrTk))
 
 ## 1.3.3 - 2022/1/12
 

@@ -176,8 +176,19 @@ export async function findElement(
 ): Promise<Applitools.WebdriverIO.Element> {
   selector = utils.types.has(selector, ['using', 'value']) ? `${selector.using}:${selector.value}` : selector
   const root = parent ? await browser.$(transformShadowRoot(parent) as any) : browser
-  const element = await root.$(selector)
-  return !utils.types.has(element, 'error') ? element : null
+  try {
+    const element = await root.$(selector)
+    return !utils.types.has(element, 'error') ? element : null
+  } catch (error) {
+    if (
+      /element could not be located/i.test(error.message) ||
+      /cannot locate an element/i.test(error.message) ||
+      /wasn\'t found/i.test(error.message)
+    ) {
+      return null
+    }
+    throw error
+  }
 }
 export async function findElements(
   browser: Driver,

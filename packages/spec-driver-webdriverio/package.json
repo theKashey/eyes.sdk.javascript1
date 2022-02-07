@@ -79,6 +79,7 @@
     "lint": "eslint '**/*.ts'",
     "build": "ttsc --project tsconfig$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo .v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION).json",
     "test": "mocha ./test/**/*.spec.ts --exit --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
+    "test:watch": "yarn test --watch --extension ts",
     "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
