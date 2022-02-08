@@ -30,5 +30,16 @@ describe('spec driver', async () => {
     it('findElement(valid-error)', async () => {
       assert.rejects(async () => await spec.findElement(browser, 'valid-error'), Error)
     })
+
+    it('getCapabilities(incompatible-command)', async () => {
+      const browser = {
+        getSession: () => {
+          throw new Error('unknown command: Cannot call non W3C standard command while in W3C mode')
+        },
+        capabilities: {},
+      }
+      assert.deepStrictEqual(await spec.getCapabilities(browser), {})
+    })
+
   })
 })
