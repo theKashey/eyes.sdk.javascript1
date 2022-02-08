@@ -243,7 +243,7 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
   })
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
-  return browser.getSession?.() ?? browser.capabilities
+  return browser.capabilities ?? browser.getSession?.()
 }
 export async function getTitle(browser: Driver): Promise<string> {
   return browser.getTitle()
