@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/types@1.0.24 (from 1.0.23)
+- allow setting 'setImageCut' also after eyes.open
 
 
 ## 13.0.1 - 2022/2/4
