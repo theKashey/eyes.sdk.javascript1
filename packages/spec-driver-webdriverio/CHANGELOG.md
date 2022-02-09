@@ -4,6 +4,8 @@
 
 - add error handling to element lookup for non-standard cases (e.g., when running tests on a service provider that has an unconventional driver implementation) ([Trello](https://trello.com/c/DX8UlrTk))
 - fix incorrect classification of mobile web test runs (e.g., they were getting classified as mobile native) ([Trello](https://trello.com/c/xpTOZqWN))
+- updated to @applitools/types@1.0.24 (from 1.0.23)
+- updated to @applitools/utils@1.2.12 (from 1.2.11)
 
 ## 1.2.6 - 2022/1/5
 
