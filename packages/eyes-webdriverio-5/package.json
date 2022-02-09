@@ -85,7 +85,7 @@
   "scripts": {
     "lint": "eslint '**/*.ts'",
     "build": "ttsc --project tsconfig$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo .v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION).json",
-    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes.webdriverio.javascript5' --tests https://raw.githubusercontent.com/applitools/sdk.coverage.tests/default-window-fully-true/coverage-tests.js",
+    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes.webdriverio.javascript5'",
     "test": "yarn test:service && yarn test:coverage",
     "test:service": "mocha ./test/service/unit/*.spec.js && wdio run ./test/service/wdio.conf.js && wdio run ./test/service/no-config/wdio.no-config.conf.js && wdio run ./test/service/vg/wdio.vg.conf.js",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-webdriverio-5' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
