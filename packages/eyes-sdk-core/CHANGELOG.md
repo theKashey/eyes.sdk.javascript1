@@ -1,11 +1,14 @@
 # Change Log
 
 ## Unreleased
+
+
+## 13.0.2 - 2022/2/9
+
 - updated to @applitools/types@1.0.24 (from 1.0.23)
 - allow setting 'setImageCut' also after eyes.open
 - updated to @applitools/driver@1.4.12 (from 1.4.10)
 - updated to @applitools/screenshoter@3.3.5 (from 3.3.4)
-
 
 ## 13.0.1 - 2022/2/4
 
