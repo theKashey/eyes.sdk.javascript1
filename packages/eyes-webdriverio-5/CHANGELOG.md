@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- allow setting ‘setImageCut’ also after eyes.open (change done in eyes-sdk-core)
 
 ## 5.34.10 - 2022/1/24
 
