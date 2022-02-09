@@ -1,4 +1,4 @@
-import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
+import type {Size, Region, Cookie} from '@applitools/types'
 import * as utils from '@applitools/utils'
 
 export type Driver = Applitools.WebdriverIO.Browser & {__applitoolsBrand?: never}
@@ -244,10 +244,9 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
   try {
-    return await browser.getSession?.() ?? browser.capabilities
+    return (await browser.getSession?.()) ?? browser.capabilities
   } catch (error) {
-    if (/cannot call non W3C standard command/i.test(error.message))
-      return browser.capabilities
+    if (/cannot call non W3C standard command/i.test(error.message)) return browser.capabilities
     throw error
   }
 }

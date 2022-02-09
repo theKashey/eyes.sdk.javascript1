@@ -40,6 +40,5 @@ describe('spec driver', async () => {
       }
       assert.deepStrictEqual(await spec.getCapabilities(browser), {})
     })
-
   })
 })
