@@ -97,5 +97,50 @@
     "",
     "Test is finished but no results returned.",
     ""
+  ],
+  "new without saving": [
+    "",
+    "See details at https://eyes.com/results",
+    "",
+    "[EYES: TEST RESULTS]:",
+    "",
+    "My Component | Button1 [Chrome] [10x20] - \u001b[93mNew\u001b[39m",
+    "",
+    "\u001b[31m\u001b[39m",
+    "\u001b[31m'SaveNewTests' was set as false and there is a new test: 'My Component | Button1'. Please approve its baseline in Eyes.\u001b[39m",
+    "\u001b[31m\u001b[39m",
+    "See details at https://eyes.com/results",
+    "Total time: 10 seconds",
+    ""
+  ],
+  "two new without saving": [
+    "",
+    "See details at https://eyes.com/results",
+    "",
+    "[EYES: TEST RESULTS]:",
+    "",
+    "My Component | Button1 [Chrome] [10x20] - \u001b[93mNew\u001b[39m",
+    "My Component | Button2 [Chrome] [10x20] - \u001b[93mNew\u001b[39m",
+    "",
+    "\u001b[31m\u001b[39m",
+    "\u001b[31m'SaveNewTests' was set as false and there are 2 new tests. Please approve their baselines in Eyes.\u001b[39m",
+    "\u001b[31m\u001b[39m",
+    "See details at https://eyes.com/results",
+    "Total time: 10 seconds",
+    ""
+  ],
+  "new with saving": [
+    "",
+    "See details at https://eyes.com/results",
+    "",
+    "[EYES: TEST RESULTS]:",
+    "",
+    "My Component | Button1 [Chrome] [10x20] - \u001b[94mNew\u001b[39m",
+    "",
+    "\u001b[32m\u001b[39m",
+    "\u001b[32mNo differences were found!\u001b[39m",
+    "See details at https://eyes.com/results",
+    "Total time: 10 seconds",
+    ""
   ]
 }

@@ -73,3 +73,13 @@ export function toJSON(object: Record<PropertyKey, any>, props?: string[] | Reco
 export function toString(object: Record<PropertyKey, any>): string {
   return `${this.constructor.name} ${JSON.stringify(object, null, 2)}`
 }
+
+export function pluralize(object: [] | number, config?: [manyCase: string, singleCase: string]): string {
+  const count = types.isArray(object) ? object.length : object
+  const isMany = count > 1
+  let res = isMany ? 's' : ''
+  if (config) {
+    res = isMany ? config[0] : config[1]
+  }
+  return res
+}

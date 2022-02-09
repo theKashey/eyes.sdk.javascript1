@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add string manupulation function 'pluralize' 
 
 ## 1.2.11 - 2021/12/28
 

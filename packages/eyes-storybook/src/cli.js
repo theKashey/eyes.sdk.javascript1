@@ -47,6 +47,7 @@ const {performance, timeItAsync} = makeTiming();
         results,
         totalTime,
         testConcurrency: config.testConcurrency,
+        saveNewTests: config.saveNewTests,
       });
       console.log(outputStr);
       if (config.jsonFilePath) {

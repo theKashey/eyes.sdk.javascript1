@@ -1,7 +1,12 @@
 # Changelog
 
 ## Unreleased
-
+- updated to @applitools/driver@1.4.9 (from 1.4.7)
+- updated to @applitools/eyes-sdk-core@13.0.0 (from 12.24.9)
+- updated to @applitools/logger@1.0.9 (from 1.0.8)
+- updated to @applitools/visual-grid-client@15.8.62 (from 15.8.55)
+- support adding new test(s) and the value of saveNewTest is false will warn
+- README.md update default value of 'exitcode' to 'true' (from 'false')
 
 ## 3.27.3 - 2022/1/26
 

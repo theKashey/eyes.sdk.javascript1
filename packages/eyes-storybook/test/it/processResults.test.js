@@ -274,4 +274,90 @@ describe('processResults', () => {
     expect(storedResults[0].getName()).to.eql('My Component | Button1');
     expect(storedResults[0].error).to.eql(results[0].resultsOrErr);
   });
+
+  it('works with new test while saveNewTests set to false', async () => {
+    const results = [
+      {
+        title: 'My Component | Button1',
+        resultsOrErr: [
+          new TestResults({
+            status: TestResultsStatus.Unresolved,
+            name: 'My Component | Button1',
+            hostApp: 'Chrome',
+            isNew: true,
+            hostDisplaySize: {width: 10, height: 20},
+            appUrls: {batch: 'https://eyes.com/results'},
+          }),
+        ],
+      },
+    ];
+    const {outputStr, exitCode} = processResults({
+      results,
+      totalTime: 10000,
+      concurrency: 1,
+      saveNewTests: false,
+    });
+    await snap(outputStr, 'new without saving');
+    expect(exitCode).to.eql(1);
+  });
+
+  it('works with two new tests while saveNewTests set to false', async () => {
+    const results = [
+      {
+        title: 'My Component | Button1',
+        resultsOrErr: [
+          new TestResults({
+            status: TestResultsStatus.Unresolved,
+            name: 'My Component | Button1',
+            hostApp: 'Chrome',
+            isNew: true,
+            hostDisplaySize: {width: 10, height: 20},
+            appUrls: {batch: 'https://eyes.com/results'},
+          }),
+        ],
+      },
+      {
+        title: 'My Component | Button2',
+        resultsOrErr: [
+          new TestResults({
+            status: TestResultsStatus.Unresolved,
+            name: 'My Component | Button2',
+            hostApp: 'Chrome',
+            isNew: true,
+            hostDisplaySize: {width: 10, height: 20},
+            appUrls: {batch: 'https://eyes.com/results'},
+          }),
+        ],
+      },
+    ];
+    const {outputStr, exitCode} = processResults({
+      results,
+      saveNewTests: false,
+    });
+    await snap(outputStr, 'two new without saving');
+    expect(exitCode).to.eql(1);
+  });
+
+  it('works with new test while saveNewTests unset or set to true', async () => {
+    const results = [
+      {
+        title: 'My Component | Button1',
+        resultsOrErr: [
+          new TestResults({
+            status: TestResultsStatus.Unresolved,
+            name: 'My Component | Button1',
+            hostApp: 'Chrome',
+            isNew: true,
+            hostDisplaySize: {width: 10, height: 20},
+            appUrls: {batch: 'https://eyes.com/results'},
+          }),
+        ],
+      },
+    ];
+    const {outputStr, exitCode} = processResults({
+      results,
+    });
+    await snap(outputStr, 'new with saving');
+    expect(exitCode).to.eql(0);
+  });
 });

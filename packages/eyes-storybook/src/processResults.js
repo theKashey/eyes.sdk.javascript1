@@ -2,17 +2,21 @@
 const flatten = require('lodash.flatten');
 const chalk = require('./chalkify');
 const {TestResultsError, TestResultsFormatter} = require('@applitools/eyes-sdk-core');
+const utils = require('@applitools/utils');
 const uniq = require('./uniq');
 const concurrencyMsg = require('./concurrencyMsg');
 
-function processResults({results = [], totalTime, testConcurrency}) {
+function processResults({results = [], totalTime, testConcurrency, saveNewTests = true}) {
   let outputStr = '\n';
   const formatter = new TestResultsFormatter();
-
+  const pluralize = utils.general.pluralize;
   let testResults = results.map(r => r.resultsOrErr);
   testResults = flatten(testResults).filter(r => r.constructor.name !== 'Error');
   const unresolved = testResults.filter(r => r.getIsDifferent());
   const passedOrNew = testResults.filter(r => !r.getIsDifferent());
+  const newTests = testResults.filter(r => r.getIsNew());
+  const newTestsSize = newTests.length;
+  const warnForUnsavedNewTests = !!(!saveNewTests && newTestsSize);
 
   let errors = results.map(({title, resultsOrErr}) =>
     Array.isArray(resultsOrErr)
@@ -31,10 +35,10 @@ function processResults({results = [], totalTime, testConcurrency}) {
 
   outputStr += '[EYES: TEST RESULTS]:\n\n';
   if (passedOrNew.length > 0) {
-    outputStr += testResultsOutput(passedOrNew);
+    outputStr += testResultsOutput(passedOrNew, warnForUnsavedNewTests);
   }
   if (unresolved.length > 0) {
-    outputStr += testResultsOutput(unresolved);
+    outputStr += testResultsOutput(unresolved, warnForUnsavedNewTests);
   }
   if (errors.length) {
     const sortedErrors = errors.sort((a, b) => a.title.localeCompare(b.title));
@@ -52,23 +56,38 @@ function processResults({results = [], totalTime, testConcurrency}) {
 
   if (errors.length && !unresolved.length) {
     outputStr += chalk.red(
-      `\nA total of ${errors.length} stor${
-        errors.length > 1 ? 'ies' : 'y'
-      } failed for unexpected error${errors.length > 1 ? 's' : ''}.`,
+      `\nA total of ${errors.length} stor${pluralize(errors, [
+        'ies',
+        'y',
+      ])} failed for unexpected error${pluralize(errors)}.`,
     );
   } else if (unresolved.length && !errors.length) {
     outputStr += chalk.keyword('orange')(
-      `\nA total of ${unresolved.length} difference${
-        unresolved.length > 1 ? 's were' : ' was'
-      } found.`,
+      `\nA total of ${unresolved.length} difference${pluralize(unresolved, [
+        's were',
+        ' was',
+      ])} found.`,
     );
   } else if (unresolved.length || errors.length) {
     outputStr += chalk.red(
-      `\nA total of ${unresolved.length} difference${
-        unresolved.length > 1 ? 's were' : ' was'
-      } found and ${errors.length} stor${errors.length > 1 ? 'ies' : 'y'} failed for ${
-        errors.length > 1 ? '' : 'an '
-      }unexpected error${errors.length > 1 ? 's' : ''}.`,
+      `\nA total of ${unresolved.length} difference${pluralize(unresolved, [
+        's were',
+        ' was',
+      ])} found and ${errors.length} stor${pluralize(errors, [
+        'ies',
+        'y',
+      ])} failed for ${pluralize(errors, ['', 'an '])}unexpected error${pluralize(errors)}.`,
+    );
+  } else if (warnForUnsavedNewTests) {
+    const countText =
+      newTestsSize > 1
+        ? `are ${newTestsSize} new tests`
+        : `is a new test: '${newTests[0].getName()}'`;
+    outputStr += chalk.red(
+      `\n'saveNewTests' was set to false and there ${countText}. Please approve ${pluralize(
+        newTestsSize,
+        ['their', 'its'],
+      )} baseline${pluralize(newTestsSize)} in Eyes dashboard.\n`,
     );
   } else if (passedOrNew.length) {
     outputStr += chalk.green(`\nNo differences were found!`);
@@ -93,7 +112,9 @@ function processResults({results = [], totalTime, testConcurrency}) {
       }),
     );
   });
-  const exitCode = passedOrNew.length && !errors.length && !unresolved.length ? 0 : 1;
+  const exitCode =
+    !warnForUnsavedNewTests && passedOrNew.length && !errors.length && !unresolved.length ? 0 : 1;
+
   return {
     outputStr,
     formatter,
@@ -101,7 +122,7 @@ function processResults({results = [], totalTime, testConcurrency}) {
   };
 }
 
-function testResultsOutput(results) {
+function testResultsOutput(results, warnForUnsavedNewTests) {
   let outputStr = '';
   const sortedTestResults = results.sort((a, b) => a.getName().localeCompare(b.getName()));
   sortedTestResults.forEach(result => {
@@ -110,7 +131,8 @@ function testResultsOutput(results) {
       .toString()}] - `;
 
     if (result.getIsNew()) {
-      outputStr += `${storyTitle}${chalk.blue('New')}\n`;
+      const newResColor = warnForUnsavedNewTests ? 'orange' : 'blue';
+      outputStr += `${storyTitle}${chalk.keyword(newResColor)('New')}\n`;
     } else if (result.isPassed()) {
       outputStr += `${storyTitle}${chalk.green('Passed')}\n`;
     } else {

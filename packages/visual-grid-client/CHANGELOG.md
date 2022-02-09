@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- support adding new test(s) and the value of saveNewTest is false will warn
+- README.md update default value of 'exitcode' to 'true' (from 'false')
 
 ## 15.8.63 - 2022/2/4
 

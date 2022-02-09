@@ -153,7 +153,7 @@ In addition to command-line arguments, it's possible to define the following con
 | `storybookStaticDir`      | undefined                   | Path to Storybook's static files folder (also available as command-line argument). |
 | `showStorybookOutput`     | undefined                   | Whether or not you want to see Storybook output (also available as command-line argument). |
 | `viewportSize`            | { width: 1024, height: 600} | The size of the puppeteer browser's window. This is the browser window which renders the stories originally (and opens at the size provided in the `viewportSize` parameter), and then a DOM snapshot is uploaded to the server, which renders this snapshot on all the browsers and sizes provided in the `browser` parameter.|
-| `exitcode`                | false                       | If tests failed close with non-zero exit code (also available as command-line argument). |
+| `exitcode`                | true                       | If tests failed close with non-zero exit code (also available as command-line argument). |
 | `browser`                 | { width: 800, height: 600, name: 'chrome' } | The size and browser of the generated screenshots. For more info and possible values, see the [browser section below](#configuring-the-browser).|
 | `showLogs`                | false                       | Whether or not you want to see logs of the Eyes-Storybook plugin. |
 | `batch`                     | undefined                   | An object which describes different aspects of the batch. The following lines in this table depict the various ways to configure the batch. |
