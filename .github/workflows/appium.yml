@@ -3,17 +3,11 @@ name: appium
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: version type
-        type: choice
-        options: [patch, minor, major]
-        default: patch
-        required: false
 
 jobs:
   appium:
-    runs-on: ubuntu-latest
-    name: changelog
+    runs-on: macos-latest
+    name: appium
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
@@ -22,5 +16,5 @@ jobs:
         with:
           node-version: lts/*
       - run: |
-          yarn global add appium @applium/doctor
+          yarn global add appium @appium/doctor
           appium-doctor

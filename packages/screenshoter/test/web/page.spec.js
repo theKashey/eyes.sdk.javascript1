@@ -1,11 +1,13 @@
 const {makeDriver, test} = require('../e2e')
 
-describe('screenshoter android app', () => {
+describe('screenshoter web', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'android', logger})
+    ;[driver, destroyDriver] = await makeDriver({type: 'chrome', logger})
+    await driver.visit('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await driver.setViewportSize({width: 700, height: 460})
   })
 
   after(async () => {
@@ -14,10 +16,8 @@ describe('screenshoter android app', () => {
 
   it('take viewport screenshot', async () => {
     await test({
-      type: 'android',
-      tag: 'app',
-      withStatusBar: true,
-      wait: 1500,
+      type: 'web',
+      tag: 'page',
       driver,
       logger,
     })

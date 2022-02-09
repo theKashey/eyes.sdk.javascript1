@@ -1,25 +1,27 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
 describe('screenshoter androidx app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'android', x: true, logger})
+    ;[driver, destroyDriver] = await makeDriver({type: 'android', app: 'androidx', logger})
   })
 
   after(async () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot (recycler view)', async () => {
+  it('take full element screenshot', async () => {
     const button = await driver.element({type: 'id', selector: 'btn_recycler_view_in_scroll_view_activity'})
     await button.click()
+    await sleep(3000)
+
     await driver.init()
 
     return test({
       type: 'android',
-      tag: 'x-element-fully',
+      tag: 'element-fully',
       region: {type: 'id', selector: 'recyclerView'},
       fully: true,
       scrollingMode: 'scroll',

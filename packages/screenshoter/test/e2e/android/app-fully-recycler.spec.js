@@ -1,4 +1,4 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
 describe('screenshoter android app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -12,9 +12,11 @@ describe('screenshoter android app', () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot (recycler view)', async () => {
+  it('take full app screenshot on screen with recycler view', async () => {
     const button = await driver.element({type: 'id', selector: 'btn_recycler_view'})
     await button.click()
+    await sleep(3000)
+
     await driver.init()
 
     await test({

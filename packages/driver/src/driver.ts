@@ -184,14 +184,14 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       // calculate safe area
       if (this.isIOS && !this._driverInfo.safeArea) {
         this._driverInfo.safeArea = {x: 0, y: 0, ...displaySize}
-        const topElement = await this.element({type: 'class name', selector: 'XCUIElementTypeNavigationBar'})
+        const topElement = await this.element({type: '-ios class chain', selector: '**/XCUIElementTypeNavigationBar'})
         if (topElement) {
           const topRegion = await this._spec.getElementRegion(this.target, topElement.target)
           const topOffset = topRegion.y + topRegion.height
           this._driverInfo.safeArea.y = topOffset
           this._driverInfo.safeArea.height -= topOffset
         }
-        const bottomElement = await this.element({type: 'class name', selector: 'XCUIElementTypeTabBar'})
+        const bottomElement = await this.element({type: '-ios class chain', selector: '**/XCUIElementTypeTabBar'})
         if (bottomElement) {
           const bottomRegion = await this._spec.getElementRegion(this.target, bottomElement.target)
           const bottomOffset = bottomRegion.height

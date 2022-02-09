@@ -1,0 +1,139 @@
+name: Publish - screenshoter
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version type
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+  workflow_call:
+    inputs:
+      version:
+        description: version type
+        type: string
+        default: patch
+    secrets:
+      NPM_TOKEN:
+        required: true
+      SAUCE_USERNAME:
+        required: true
+      SAUCE_ACCESS_KEY:
+        required: true
+env:
+  PACKAGE_DIR: screenshoter
+  FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+jobs:
+  verify:
+    name: Verification
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{steps.prepare.outputs.environments}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run pre-publish verifications
+        shell: bash
+        working-directory: ./packages/${{env.PACKAGE_DIR}}
+        run: |
+          yarn install
+          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+  test-it:
+    needs: [verify]
+    name: 'Test IT'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          test-type: it
+          setup-type: none
+  test-e2e:
+    needs: [test-it]
+    strategy:
+      max-parallel: 3
+      matrix:
+        include:
+          - name: web
+            os: ubuntu-latest
+            jobs: 15
+          - name: android
+            os: ubuntu-latest
+            jobs: 2
+          - name: ios
+            os: macos-latest
+            jobs: 2
+    name: 'Test E2E (${{matrix.name}})'
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Add Android cli tools to PATH
+        if: ${{matrix.name == 'android'}}
+        run: echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$ANDROID_HOME/emulator" >> "${GITHUB_PATH}"
+      - name: Cache Android dependencies
+        if: ${{matrix.name == 'android'}}
+        uses: actions/cache@v2
+        with:
+          path: ~/.android/avd
+          key: android-api-29-dependencies
+      - name: Cache IOS dependencies
+        if: ${{matrix.name == 'ios'}}
+        uses: actions/cache@v2
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/Appium-*
+          key: xcode-12.5.1-dependencies
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          test-type: e2e:${{matrix.name}}
+          setup-type: ${{matrix.name}}
+          jobs: ${{matrix.jobs}}
+      - name: Upload testing artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshoter-test-results-${{matrix.name}}
+          retention-days: 2
+          path: packages/${{env.PACKAGE_DIR}}/logs
+  publish:
+    needs: [test-e2e]
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          version: ${{inputs.version || github.event.inputs.version}}

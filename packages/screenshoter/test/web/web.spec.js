@@ -2,8 +2,8 @@ const assert = require('assert')
 const pixelmatch = require('pixelmatch')
 const {Driver} = require('@applitools/driver')
 const spec = require('@applitools/spec-driver-webdriverio')
-const takeScreenshot = require('../../../index')
-const makeImage = require('../../../src/image')
+const takeScreenshot = require('../../index')
+const makeImage = require('../../src/image')
 
 const env = {
   url: 'http://localhost:4444/wd/hub',
@@ -30,17 +30,6 @@ describe('screenshoter web', () => {
     driver = await new Driver({driver: browser, spec, logger}).init()
     await driver.visit('https://applitools.github.io/demo/TestPages/FramesTestPage/')
     await driver.setViewportSize({width: 700, height: 460})
-  })
-
-  it('take viewport screenshot', () => {
-    return viewport()
-  })
-
-  it('take full page screenshot with "scroll" scrolling', () => {
-    return fullPage({scrollingMode: 'scroll'})
-  })
-  it('take full page screenshot with "css" scrolling', () => {
-    return fullPage({scrollingMode: 'css'})
   })
 
   it('take frame screenshot with "scroll" scrolling', () => {
@@ -127,28 +116,6 @@ describe('screenshoter web', () => {
     return fullFrameInFrame({scrollingMode: 'css'})
   })
 
-  async function viewport(options) {
-    const screenshot = await takeScreenshot({logger, driver, ...options})
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/web/page.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'viewport_failed'})
-      throw err
-    }
-  }
-  async function fullPage(options) {
-    const screenshot = await takeScreenshot({logger, driver, fully: true, ...options})
-    try {
-      const actual = await screenshot.image.toObject()
-      const expected = await makeImage('./test/fixtures/web/page-fully.png').toObject()
-      assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
-    } catch (err) {
-      await screenshot.image.debug({path: './logs', name: 'full_page_failed'})
-      throw err
-    }
-  }
   async function frame(options) {
     const screenshot = await takeScreenshot({
       logger,

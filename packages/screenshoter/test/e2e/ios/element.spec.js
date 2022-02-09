@@ -1,4 +1,4 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, test} = require('../e2e')
 
 describe('screenshoter ios app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}

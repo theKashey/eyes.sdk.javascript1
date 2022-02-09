@@ -1,4 +1,4 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
 describe('screenshoter ios app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -15,6 +15,8 @@ describe('screenshoter ios app', () => {
   it('take full element screenshot', async () => {
     const button = await driver.element({type: 'accessibility id', selector: 'Scroll view with nested table'})
     await button.click()
+    await sleep(3000)
+
     await driver.init()
 
     await test({

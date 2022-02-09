@@ -5,8 +5,11 @@ inputs:
     description: name of the package directory in repository
     type: string
     required: true
-  type:
+  test-type:
     description: type of the testing (unit, it, e2e, coverage)
+    type: string
+  setup-type:
+    description: type of the setup script
     type: string
   remote:
     description: remote type (local, eg)
@@ -70,11 +73,22 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Setting up test environment"
-        npm run setup --if-present
+        if [ ! -z "${{inputs.setup-type}}" ];
+        then
+          npm run setup:${{inputs.setup-type}}
+        elif [ "${{inputs.setup-type}}" != "none" ]
+          then npm run setup --if-present
+        fi
+        if [ -e .env ]
+        then
+          set -o allexport
+          source .env
+          set +o allexport
+        fi
         echo "::endgroup::"
 
         echo "::group::Running tests"
-        if [ ! -z "${{inputs.type}}" ]; then npm run test:${{inputs.type}}; else npm run test --if-present; fi
+        if [ ! -z "${{inputs.test-type}}" ]; then npm run test:${{inputs.test-type}}; else npm run test --if-present; fi
         echo "::endgroup::"
 
         echo "::group::Sending reports"

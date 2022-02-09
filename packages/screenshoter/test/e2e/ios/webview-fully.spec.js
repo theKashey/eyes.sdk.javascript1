@@ -1,7 +1,6 @@
-const utils = require('@applitools/utils')
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
-describe('screenshoter ios app', () => {
+describe.skip('screenshoter ios app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
@@ -17,7 +16,7 @@ describe('screenshoter ios app', () => {
     const button = await driver.element({type: 'accessibility id', selector: 'Web view'})
     await button.click()
     await driver.target.getContexts()
-    await utils.general.sleep(500)
+    await sleep(500)
     const [, webview] = await driver.target.getContexts()
     await driver.target.switchContext(webview)
     await driver.init()

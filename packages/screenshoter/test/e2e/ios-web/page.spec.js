@@ -1,11 +1,11 @@
 const {makeDriver, sleep, test} = require('../e2e')
 
-describe('screenshoter ios app', () => {
+describe('screenshoter ios web', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'ios', logger})
+    ;[driver, destroyDriver] = await makeDriver({type: 'ios', app: 'safari', logger})
   })
 
   after(async () => {
@@ -13,16 +13,12 @@ describe('screenshoter ios app', () => {
   })
 
   it('take viewport screenshot', async () => {
-    const button = await driver.element({type: 'accessibility id', selector: 'Empty table view'})
-    await button.click()
-    await sleep(3000)
-
-    await driver.init()
+    await driver.visit('https://applitools.github.io/demo/TestPages/PageWithBurgerMenu/')
+    await sleep(5000)
 
     await test({
-      type: 'ios',
-      tag: 'app',
-      wait: 1500,
+      type: 'ios-web',
+      tag: 'page',
       driver,
       logger,
     })

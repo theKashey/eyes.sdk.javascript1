@@ -57,7 +57,7 @@ jobs:
     needs: [verify]
     strategy:
       matrix:
-        os: [ubuntu-lattes, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     name: 'Test (os: ${{matrix.os}})'
     runs-on: ubuntu-latest
     steps:

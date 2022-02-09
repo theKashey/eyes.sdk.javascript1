@@ -3,9 +3,18 @@
 ## Unreleased
 
 
+## 1.4.12 - 2022/2/8
+
+- fix usage of `-ios class chain` selectors
+
+## 1.4.11 - 2022/2/8
+
+- use `-ios class chain` selectors instead of `class name` for iOS specific elements
+
 ## 1.4.10 - 2022/2/4
 
 - updated to @applitools/types@1.0.24 (from 1.0.23)
+
 ### 📝 DOCUMENTATION
 - Create a README.md with a description for basic concepts and spec driver methods.
 

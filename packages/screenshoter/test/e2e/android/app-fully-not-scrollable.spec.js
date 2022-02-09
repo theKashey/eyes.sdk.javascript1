@@ -1,4 +1,4 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
 describe('screenshoter android app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -12,14 +12,16 @@ describe('screenshoter android app', () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot (non-scrollable)', async () => {
+  it('take full app screenshot on screen with no scrollable view', async () => {
     const button = await driver.element({type: 'id', selector: 'btn_activity_as_dialog'})
     await button.click()
+    await sleep(3000)
+
     await driver.init()
 
     await test({
       type: 'android',
-      tag: 'app-fully-non-scrollable',
+      tag: 'app-fully-not-scrollable',
       fully: true,
       framed: true,
       wait: 1500,

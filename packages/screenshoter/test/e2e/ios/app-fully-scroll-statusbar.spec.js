@@ -1,4 +1,4 @@
-const {makeDriver, test} = require('../tests')
+const {makeDriver, sleep, test} = require('../e2e')
 
 describe('screenshoter ios app', () => {
   const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -12,9 +12,11 @@ describe('screenshoter ios app', () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot with status bar (scroll view)', async () => {
+  it('take full app screenshot with status bar on screen with scroll view', async () => {
     const button = await driver.element({type: 'accessibility id', selector: 'Scroll view'})
     await button.click()
+    await sleep(3000)
+
     await driver.init()
 
     await test({
