@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+ ## 1.2.12 - 2022/2/9
+
 - add string manupulation function 'pluralize' 
 
 ## 1.2.11 - 2021/12/28
