@@ -3,6 +3,9 @@
 ## Unreleased
 
 - allow setting ‘setImageCut’ also after eyes.open (change done in eyes-sdk-core)
+- updated to @applitools/eyes-sdk-core@13.0.2 (from 13.0.0)
+- updated to @applitools/spec-driver-webdriverio@1.2.7 (from 1.2.6)
+- updated to @applitools/visual-grid-client@15.8.63 (from 15.8.62)
 
 ## 5.34.10 - 2022/1/24
 
