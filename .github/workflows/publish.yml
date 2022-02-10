@@ -170,47 +170,14 @@ jobs:
   screenshoter:
     needs: [setup, utils, driver, snippets, spec-webdriverio]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
-    runs-on: macos-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-      - name: Add cli tools to PATH
-        run: echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools/bin:$ANDROID_HOME/emulator" >> "${GITHUB_PATH}"
-      - name: Cache Android dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.android/avd
-          key: android-api-29-dependencies
-      - name: Cache IOS dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/Library/Developer/Xcode/DerivedData/Appium-*
-          key: xcode-12.5.1-dependencies
-      # - name: Сopy Cache
-      #   run: |
-      #     cp -R ~/Library/Developer/Xcode/DerivedData/Appium-0 ~/Library/Developer/Xcode/DerivedData/Appium-1
-      #     cp -R ~/Library/Developer/Xcode/DerivedData/Appium-0 ~/Library/Developer/Xcode/DerivedData/Appium-2
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}
-          jobs: 1
-      - name: Upload debug artifacts
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: screenshoter-logs
-          retention-days: 2
-          path: packages/${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}/logs
-      # - name: Publish to NPM
-      #   uses: ./.github/actions/publish
-      #   with:
-      #     package: ${{fromJSON(needs.setup.outputs.packages).screenshoter.dirname}}
-      #     version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
+    name: screenshoter
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-screenshoter.yml@master
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   driver:
     needs: [setup, types, utils, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}

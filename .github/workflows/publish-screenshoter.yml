@@ -25,49 +25,48 @@ env:
   PACKAGE_DIR: screenshoter
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
 jobs:
-  # verify:
-  #   name: Verification
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     environments: ${{steps.prepare.outputs.environments}}
-  #   steps:
-  #     - name: Check-out repository
-  #       uses: actions/checkout@v2
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: lts/*
-  #         registry-url: https://registry.npmjs.org
-  #     - name: Run pre-publish verifications
-  #       shell: bash
-  #       working-directory: ./packages/${{env.PACKAGE_DIR}}
-  #       run: |
-  #         yarn install
-  #         npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
-  # test-it:
-  #   needs: [verify]
-  #   name: 'Test integration'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check-out repository
-  #       uses: actions/checkout@v2
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: lts/*
-  #         registry-url: https://registry.npmjs.org
-  #     - name: Run tests
-  #       uses: ./.github/actions/tests
-  #       with:
-  #         package: ${{env.PACKAGE_DIR}}
-  #         test-type: it
-  #         setup-type: none
+  verify:
+    name: Verification
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{steps.prepare.outputs.environments}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run pre-publish verifications
+        shell: bash
+        working-directory: ./packages/${{env.PACKAGE_DIR}}
+        run: |
+          yarn install
+          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+  test-it:
+    needs: [verify]
+    name: 'Test integration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          test-type: it
+          setup-type: none
   test-e2e:
-    # needs: [test-it]
+    needs: [test-it]
     strategy:
       fail-fast: false
       matrix:
