@@ -4,6 +4,11 @@
 ## Unreleased
 
 
+## 3.3.6 - 2022/2/9
+
+- fix testing
+- updated to @applitools/utils@1.2.12 (from 1.2.11)
+
 ## 3.3.5 - 2022/2/8
 
 - add "files" field to the package.json to avoid unnecessary files to be published

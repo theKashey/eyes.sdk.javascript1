@@ -228,8 +228,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       if (this.driver.isWeb) this._touchPadding = 0
       else if (this.driver.isIOS) this._touchPadding = 10
       else if (this.driver.isAndroid) {
-        const {touchPadding} = JSON.parse(await this.getAttribute('contentSize'))
-        this._touchPadding = touchPadding ?? 0
+        const data = await this.getAttribute('contentSize')
+          .then(JSON.parse)
+          .catch(() => null)
+        this._touchPadding = data?.touchPadding ?? 24
       }
     }
     return this._touchPadding

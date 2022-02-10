@@ -22,7 +22,7 @@ function makeImage(data) {
   } else if (data.isImage) {
     transforms = data.transforms
     image = data.toRaw()
-    size = utils.geometry.scale(data.size, 1 / transforms.scale)
+    size = data.rawSize
   } else if (utils.types.has(data, ['width', 'height'])) {
     image = fromSize(data)
     if (data.data) image.data = data.data
@@ -38,9 +38,18 @@ function makeImage(data) {
       return true
     },
     get size() {
-      return utils.geometry.round(
-        utils.geometry.rotate(utils.geometry.scale(size, transforms.scale), transforms.rotate),
-      )
+      const croppedSize = utils.geometry.size(transforms.crop || size)
+      const scaledSize = utils.geometry.scale(croppedSize, transforms.scale)
+      const rotatedSize = utils.geometry.rotate(scaledSize, transforms.rotate)
+      return utils.geometry.round(rotatedSize)
+    },
+    get unscaledSize() {
+      const croppedSize = utils.geometry.size(transforms.crop || size)
+      const rotatedSize = utils.geometry.rotate(croppedSize, transforms.rotate)
+      return utils.geometry.round(rotatedSize)
+    },
+    get rawSize() {
+      return size
     },
     get transforms() {
       return {...transforms}
@@ -53,12 +62,10 @@ function makeImage(data) {
     },
     scale(ratio) {
       transforms.scale *= ratio
-      // size = utils.geometry.scale(size, ratio)
       return this
     },
     rotate(degrees) {
       transforms.rotate = (transforms.rotate + degrees) % 360
-      // size = utils.geometry.rotate(size, degrees)
       return this
     },
     crop(region) {
@@ -77,39 +84,47 @@ function makeImage(data) {
         ? utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
         : utils.geometry.intersect({x: 0, y: 0, ...size}, region)
       transforms.crop = region
-      size = utils.geometry.size(transforms.crop)
       return this
     },
     copy(srcImage, offset) {
-      const scale = srcImage.transforms.scale
+      // if "auto" image and this is first chunk
+      if (!image && size.width === -1 && size.height === -1) transforms.scale = srcImage.transforms.scale
+
+      const unscaledOffset = utils.geometry.scale(offset, 1 / transforms.scale)
+
       if (!image) {
         size = {
-          width: Math.max(Math.floor((offset.x + srcImage.width) / scale), size.width),
-          height: Math.max(Math.floor((offset.y + srcImage.height) / scale), size.height),
+          width: Math.max(Math.floor(unscaledOffset.x) + srcImage.unscaledSize.width, size.width),
+          height: Math.max(Math.floor(unscaledOffset.y) + srcImage.unscaledSize.height, size.height),
         }
-        transforms.scale = Math.min(scale, transforms.scale)
       }
-      transforms.modifiers.push({
-        type: 'copy',
-        image: srcImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
-        offset: utils.geometry.scale(offset, 1 / transforms.scale),
-      })
+
+      const unscale =
+        srcImage.transforms.scale === transforms.scale
+          ? 1 / srcImage.transforms.scale
+          : srcImage.transforms.scale / transforms.scale
+
+      transforms.modifiers.push({type: 'copy', image: srcImage.scale(unscale).toObject(), offset: unscaledOffset})
 
       return this
     },
     frame(topImage, bottomImage, region) {
-      const scale = topImage.transforms.scale
       const prevSize = size
-      region = utils.geometry.scale(region, 1 / scale)
+      const unscaledRegion = utils.geometry.scale(region, 1 / topImage.transforms.scale)
       size = {
-        width: Math.floor(topImage.width / scale + Math.max(size.width - region.width, 0)),
-        height: Math.floor(topImage.height / scale + Math.max(size.height - region.height, 0)),
+        width: Math.floor(topImage.unscaledSize.width + Math.max(size.width - unscaledRegion.width, 0)),
+        height: Math.floor(topImage.unscaledSize.height + Math.max(size.height - unscaledRegion.height, 0)),
       }
+
+      const unscale =
+        topImage.transforms.scale === transforms.scale
+          ? 1 / topImage.transforms.scale
+          : topImage.transforms.scale / transforms.scale
       transforms.modifiers.push({
         type: 'frame',
-        top: topImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
-        bottom: bottomImage.scale(scale === transforms.scale ? 1 / scale : scale / transforms.scale).toObject(),
-        region,
+        top: topImage.scale(unscale).toObject(),
+        bottom: bottomImage.scale(unscale).toObject(),
+        region: unscaledRegion,
       })
       transforms.added = {width: size.width - prevSize.width, height: size.height - prevSize.height}
       return this

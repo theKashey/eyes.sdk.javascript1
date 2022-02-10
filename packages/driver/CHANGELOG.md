@@ -3,6 +3,11 @@
 ## Unreleased
 
 
+## 1.4.13 - 2022/2/10
+
+- fix android helper
+- updated to @applitools/utils@1.2.12 (from 1.2.11)
+
 ## 1.4.12 - 2022/2/8
 
 - fix usage of `-ios class chain` selectors

@@ -1,6 +1,6 @@
 {
   "name": "@applitools/screenshoter",
-  "version": "3.3.5",
+  "version": "3.3.6",
   "description": "Applitools universal screenshoter for web and native applications",
   "keywords": [
     "applitools",
@@ -35,14 +35,15 @@
     "test": "yarn test:it && yarn test:e2e",
     "test:it": "mocha ./test/it/*.spec.js --no-timeouts",
     "test:e2e": "mocha ./test/e2e/**/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-1}",
-    "test:e2e:web": "mocha ./test/e2e/web/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-1}",
+    "test:e2e:web": "mocha ./test/e2e/web/*.spec.js --no-timeouts -r @applitools/test-utils/mocha-hooks/docker --parallel --jobs ${MOCHA_JOBS:-15}",
     "test:e2e:android": "mocha ./test/e2e/android*/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-1}",
     "test:e2e:ios": "mocha ./test/e2e/ios*/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-1}",
     "setup": "yarn docker:setup && yarn android:setup && yarn ios:setup && yarn appium:setup",
     "setup:web": "yarn docker:setup",
     "setup:android": "yarn android:setup && yarn appium:setup",
-    "setup:io": "yarn ios:setup && yarn appium:setup",
+    "setup:ios": "yarn ios:setup && yarn appium:setup",
     "android:setup": "node ./scripts/android-emulator.js",
+    "android:shutdown": "adb -s emulator-5555 emu kill || true && adb -s emulator-5557 emu kill || true",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "ios:setup": "node ./scripts/ios-simulator.js",
@@ -60,13 +61,13 @@
   },
   "dependencies": {
     "@applitools/snippets": "2.1.12",
-    "@applitools/utils": "1.2.11",
+    "@applitools/utils": "1.2.12",
     "png-async": "0.9.4"
   },
   "devDependencies": {
-    "@applitools/driver": "1.4.11",
+    "@applitools/driver": "1.4.13",
     "@applitools/sdk-release-kit": "0.13.11",
-    "@applitools/spec-driver-webdriverio": "1.2.6",
+    "@applitools/spec-driver-webdriverio": "1.2.7",
     "@applitools/test-utils": "1.0.11",
     "appium": "^1.22.2",
     "chromedriver": "^95.0.0",
@@ -81,6 +82,6 @@
     "webdriverio": "^7.16.7"
   },
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">= 10.0.0"
   }
 }

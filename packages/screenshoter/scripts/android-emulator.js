@@ -16,7 +16,7 @@ async function main({device, apiLevel, port, jobs}) {
 
   console.log('Installing dependencies...')
   await utils.process.sh(
-    `sdkmanager --install 'emulator' 'cmdline-tools;latest' 'platforms;android-${apiLevel}' 'system-images;android-${apiLevel};google_apis;x86_64'`,
+    `sdkmanager --install 'emulator' 'cmdline-tools;latest' 'build-tools;29.0.3' 'platform-tools' 'platforms;android-${apiLevel}' 'system-images;android-${apiLevel};google_apis;x86_64'`,
     {spawnOptions: {stdio: 'pipe'}},
   )
 
@@ -42,7 +42,8 @@ async function runEmulator({device, apiLevel, port, index}) {
 
   console.log(`Running emulator with name "${avdName}"...`)
   await utils.process.sh(
-    `emulator -noaudio -no-window -no-boot-anim -ports ${adbPort},${adbPort + 1} -avd ${avdName} &`,
+    `emulator -noaudio -no-window -no-boot-anim -gpu swiftshader_indirect -ports ${adbPort},${adbPort +
+      1} -avd ${avdName} &`,
     {spawnOptions: {detached: true, stdio: 'ignore'}},
   )
 

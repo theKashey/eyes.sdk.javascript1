@@ -1,4 +1,5 @@
 const assert = require('assert')
+const webdriverio = require('webdriverio')
 const pixelmatch = require('pixelmatch')
 const utils = require('@applitools/utils')
 const spec = require('@applitools/spec-driver-webdriverio')
@@ -49,24 +50,38 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
 
 exports.makeDriver = async function makeDriver({type, app, orientation, logger}) {
   const workerId = process.env.MOCHA_WORKER_ID ? Number(process.env.MOCHA_WORKER_ID) : 0
+  console.log(`makeDriver called for worker #${process.env.MOCHA_WORKER_ID}`, workerId)
   const androidEmulatorIds = process.env.ANDROID_EMULATOR_UDID
     ? process.env.ANDROID_EMULATOR_UDID.split(',')
-    : ['emulator-5554']
+    : ['emulator-5555']
   const iosSimulatorIds = process.env.IOS_SIMULATOR_UDID ? process.env.IOS_SIMULATOR_UDID.split(',') : []
   const apps = {
     android: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
-    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.3/app_androidx.apk',
+    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.4/app_androidx.apk',
     ios: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
   }
 
   const envs = {
+    chrome: {
+      url: 'http://localhost:4444/wd/hub',
+      capabilities: {
+        browserName: 'chrome',
+        'goog:chromeOptions': {args: ['headless']},
+      },
+    },
     android: {
       url: 'http://0.0.0.0:4723/wd/hub',
       capabilities: {
         udid: androidEmulatorIds[workerId],
         systemPort: 8200 + workerId,
+        mjpegServerPort: 9100 + workerId,
         chromedriverPort: 9515 + workerId,
-        adbExecTimeout: 50000,
+        adbExecTimeout: 30000,
+        uiautomator2ServerLaunchTimeout: 240000,
+        newCommandTimeout: 0,
+        nativeWebScreenshot: true,
+        skipUnlock: true,
+        // noReset: true,
         isHeadless: true,
         browserName: app === 'chrome' ? app : '',
         app: apps[app || type],
@@ -75,7 +90,21 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         platformVersion: '10.0',
         automationName: 'uiautomator2',
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
-        nativeWebScreenshot: true,
+      },
+    },
+    'android-sauce': {
+      url: 'https://ondemand.saucelabs.com:443/wd/hub',
+      capabilities: {
+        name: 'Android screenshoter',
+        appiumVersion: '1.20.2',
+        username: process.env.SAUCE_USERNAME,
+        accessKey: process.env.SAUCE_ACCESS_KEY,
+        browserName: app === 'chrome' ? app : '',
+        app: apps[app || type],
+        deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+        platformName: 'Android',
+        platformVersion: '10.0',
+        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
     ios: {
@@ -85,9 +114,11 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         wdaLocalPort: 8100 + workerId,
         mjpegServerPort: 9100 + workerId,
         derivedDataPath: `~/Library/Developer/Xcode/DerivedData/Appium-${workerId}`,
-        webviewConnectRetries: 12,
+        launchTimeout: 90000,
+        newCommandTimeout: 0,
+        webviewConnectRetries: 16,
         usePrebuiltWDA: true,
-        launchTimeout: 180000,
+        // noReset: true,
         isHeadless: true,
         browserName: app === 'safari' ? app : '',
         app: apps[app || type],
@@ -98,7 +129,35 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
+    'ios-sauce': {
+      url: 'https://ondemand.saucelabs.com:443/wd/hub',
+      capabilities: {
+        name: 'IOS screenshoter',
+        appiumVersion: '1.20.0',
+        username: process.env.SAUCE_USERNAME,
+        accessKey: process.env.SAUCE_ACCESS_KEY,
+        browserName: app === 'safari' ? app : '',
+        app: apps[app || type],
+        deviceName: 'iPhone 12 Simulator',
+        platformName: 'iOS',
+        platformVersion: '14.5',
+        deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+      },
+    },
   }
-  const [browser, destroyBrowser] = await spec.build(envs[type])
-  return [await new Driver({driver: browser, spec, logger}).init(), destroyBrowser]
+  const env = envs[process.env.APPLITOOLS_TEST_REMOTE === 'sauce' ? `${type}-sauce` : type]
+  const url = new URL(env.url)
+  const browser = await webdriverio.remote({
+    protocol: url.protocol ? url.protocol.replace(/:$/, '') : undefined,
+    hostname: url.hostname,
+    port: Number(url.port),
+    path: url.pathname,
+    capabilities: env.capabilities,
+    logLevel: 'silent',
+    connectionRetryCount: 0,
+    connectionRetryTimeout: 240000,
+  })
+
+  const driver = await new Driver({driver: browser, spec, logger}).init()
+  return [driver, async () => browser.deleteSession()]
 }

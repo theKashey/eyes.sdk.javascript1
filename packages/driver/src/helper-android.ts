@@ -11,8 +11,8 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     const {spec, driver, logger} = options
     let legacy = false
     let element = await driver.element({
-      type: '-android uiautomator',
-      selector: 'new UiSelector().description("EyesAppiumHelperEDT")',
+      type: 'xpath',
+      selector: '//*[@content-desc="EyesAppiumHelperEDT"]',
     })
     if (!element) {
       legacy = true
@@ -53,7 +53,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
       await this._element.click()
       contentHeight = await this._element.getText()
     } else {
-      const elementId = this._getElementId(element)
+      const elementId = await this._getElementId(element)
       if (!elementId) return null
       await this._element.type(`offset;${elementId};0;0;0`)
       await this._element.click()

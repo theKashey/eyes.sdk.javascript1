@@ -29,59 +29,59 @@ env:
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
 jobs:
-  verify:
-    name: Verification
-    runs-on: ubuntu-latest
-    outputs:
-      environments: ${{steps.prepare.outputs.environments}}
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-          registry-url: https://registry.npmjs.org
-      - name: Run pre-publish verifications
-        shell: bash
-        working-directory: ./packages/${{env.PACKAGE_DIR}}
-        run: |
-          yarn install
-          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
-  test-it:
-    needs: [verify]
-    name: 'Test IT'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: lts/*
-          registry-url: https://registry.npmjs.org
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{env.PACKAGE_DIR}}
-          test-type: it
-          setup-type: none
+  # verify:
+  #   name: Verification
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     environments: ${{steps.prepare.outputs.environments}}
+  #   steps:
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: lts/*
+  #         registry-url: https://registry.npmjs.org
+  #     - name: Run pre-publish verifications
+  #       shell: bash
+  #       working-directory: ./packages/${{env.PACKAGE_DIR}}
+  #       run: |
+  #         yarn install
+  #         npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+  # test-it:
+  #   needs: [verify]
+  #   name: 'Test integration'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: lts/*
+  #         registry-url: https://registry.npmjs.org
+  #     - name: Run tests
+  #       uses: ./.github/actions/tests
+  #       with:
+  #         package: ${{env.PACKAGE_DIR}}
+  #         test-type: it
+  #         setup-type: none
   test-e2e:
-    needs: [test-it]
+    # needs: [test-it]
     strategy:
-      max-parallel: 3
+      fail-fast: false
       matrix:
         include:
           - name: web
             os: ubuntu-latest
             jobs: 15
           - name: android
-            os: ubuntu-latest
+            os: macos-latest
             jobs: 2
           - name: ios
             os: macos-latest
             jobs: 2
-    name: 'Test E2E (${{matrix.name}})'
+    name: 'Test e2e (${{matrix.name}})'
     runs-on: ${{matrix.os}}
     steps:
       - name: Check-out repository
@@ -98,13 +98,13 @@ jobs:
         if: ${{matrix.name == 'android'}}
         uses: actions/cache@v2
         with:
-          path: ~/.android/avd
+          path: ~/.android/avd/*
           key: android-api-29-dependencies
       - name: Cache IOS dependencies
         if: ${{matrix.name == 'ios'}}
         uses: actions/cache@v2
         with:
-          path: ~/Library/Developer/Xcode/DerivedData/Appium-*
+          path: ~/Library/Developer/Xcode/DerivedData/*
           key: xcode-12.5.1-dependencies
       - name: Run tests
         uses: ./.github/actions/tests
@@ -113,6 +113,7 @@ jobs:
           test-type: e2e:${{matrix.name}}
           setup-type: ${{matrix.name}}
           jobs: ${{matrix.jobs}}
+          remote: ${{matrix.remote}}
       - name: Upload testing artifacts
         if: always()
         uses: actions/upload-artifact@v2

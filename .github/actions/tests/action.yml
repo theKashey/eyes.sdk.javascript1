@@ -73,11 +73,11 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Setting up test environment"
-        if [ ! -z "${{inputs.setup-type}}" ];
+        if [ ! -z "${{inputs.setup-type}}" ]
         then
-          npm run setup:${{inputs.setup-type}}
-        elif [ "${{inputs.setup-type}}" != "none" ]
-          then npm run setup --if-present
+          if [ "${{inputs.setup-type}}" != "none" ]; then npm run setup:${{inputs.setup-type}}; fi
+        else
+          npm run setup --if-present
         fi
         if [ -e .env ]
         then
