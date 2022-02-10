@@ -21,7 +21,7 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = 
   }
 
   if (process.env.APPLITOOLS_SHOW_LOGS || showLogs) {
-    configuration.logs = {show: true, handler: {type: 'console'}}
+    configuration.logs = {type: 'console'}
   } else if (process.env.APPLITOOLS_SAVE_LOGS || saveLogs) {
     const logsPath = path.resolve(
       cwd,
