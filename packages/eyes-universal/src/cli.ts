@@ -11,7 +11,7 @@ yargs
     ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
   ])
   .command({
-    command: '*',
+    command: '* [config]',
     builder: yargs =>
       yargs.options({
         port: {
@@ -40,6 +40,11 @@ yargs
           default: 15,
           coerce: value => value * 60 * 1000,
         },
+        config: {
+          description: 'json string to use instead of cli arguments',
+          type: 'string',
+          coerce: JSON.parse,
+        },
       }),
-    handler: args => makeServer(args as any),
+    handler: args => makeServer(args.config ?? (args as any)),
   }).argv
