@@ -1,8 +1,12 @@
 import {fork} from 'child_process'
+import path from 'path'
 
 export function makeServerProcess(config: any) {
   return new Promise((resolve, reject) => {
-    const server = fork('./dist/cli.js', [JSON.stringify(config)], {detached: true, stdio: 'ignore'})
+    const server = fork(path.resolve(__dirname, '../dist/cli.js'), [`--config ${JSON.stringify(config)}`], {
+      detached: true,
+      stdio: 'ignore',
+    })
 
     const timeout = setTimeout(() => {
       reject(new Error(`Server didn't respond for 10s after being started`))

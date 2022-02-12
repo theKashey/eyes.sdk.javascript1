@@ -25,7 +25,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "main": "./index.js",
+  "main": "./dist/index.js",
   "bin": {
     "eyes-universal": "./dist/cli.js"
   },

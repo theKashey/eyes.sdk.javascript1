@@ -4,7 +4,7 @@
 
 - enhance server start up protocol with ipc communication
 - export `makeServerProcess` function to create a detached process
-- add `config` cli argument provide server configuration as a json string instead of separate cli arguments (flags)
+- add `--config` cli argument to provide server configuration as a json string instead of separate cli arguments (flags)
 
 ## 1.0.7 - 2022/2/4
 

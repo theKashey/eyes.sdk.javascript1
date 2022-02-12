@@ -11,7 +11,7 @@ yargs
     ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
   ])
   .command({
-    command: '* [config]',
+    command: '*',
     builder: yargs =>
       yargs.options({
         port: {
