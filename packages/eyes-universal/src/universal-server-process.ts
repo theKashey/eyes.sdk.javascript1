@@ -5,7 +5,7 @@ export function makeServerProcess(config: any) {
   return new Promise((resolve, reject) => {
     const server = fork(path.resolve(__dirname, '../dist/cli.js'), [`--config ${JSON.stringify(config)}`], {
       detached: true,
-      stdio: 'ignore',
+      stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
     })
 
     const timeout = setTimeout(() => {
