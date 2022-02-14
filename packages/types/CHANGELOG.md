@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `viewportScale` property to `DriverInfo` type
 
 ## 1.0.24 - 2022/1/19
 

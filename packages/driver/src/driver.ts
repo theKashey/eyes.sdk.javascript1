@@ -92,6 +92,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get pixelRatio(): number {
     return this._driverInfo.pixelRatio ?? 1
   }
+  get viewportScale(): number {
+    return this._driverInfo.viewportScale ?? 1
+  }
   get statusBarHeight(): number {
     return this._driverInfo.statusBarHeight ?? (this.isNative ? 0 : undefined)
   }
@@ -136,6 +139,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
     if (this.isWeb) {
       this._driverInfo.pixelRatio ??= await this.execute(snippets.getPixelRatio)
+      this._driverInfo.viewportScale ??= await this.execute(snippets.getViewportScale)
       this._driverInfo.userAgent ??= await this.execute(snippets.getUserAgent)
       if (this._driverInfo.userAgent) {
         const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)

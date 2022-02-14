@@ -11,6 +11,7 @@ export type DriverInfo = {
   viewportSize?: Size
   orientation?: 'portrait' | 'landscape'
   pixelRatio?: number
+  viewportScale?: number
   safeArea?: Region
   statusBarHeight?: number
   navigationBarHeight?: number

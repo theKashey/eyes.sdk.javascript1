@@ -1,10 +1,7 @@
 const setElementStyleProperties = require('./setElementStyleProperties')
 
-function addPageMarker() {
-  // bwb bwbb wbw bwbb wbww bbb
-  const mask = [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]
+function addPageMarker([{mask, scale = 1}]) {
   const colors = {1: 'rgb(0, 0, 0)', 0: 'rgb(255, 255, 255)'}
-  const scale = visualViewport ? visualViewport.scale : 1
   const size = scale >= 1 ? 1 : 2
   const offset = size
 

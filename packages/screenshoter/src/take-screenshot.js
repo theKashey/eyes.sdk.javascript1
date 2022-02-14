@@ -60,6 +60,8 @@ async function takeScreenshot({
         ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
         : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 
+    screenshot.image.scale(driver.viewportScale)
+
     if (hooks && hooks.afterScreenshot) {
       // imitate image-like state for the hook
       if (window && fully && target.scroller) {

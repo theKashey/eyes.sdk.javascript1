@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `viewportScale` getter to `Driver` class
 
 ## 1.4.13 - 2022/2/10
 

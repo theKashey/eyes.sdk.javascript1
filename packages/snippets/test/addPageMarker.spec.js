@@ -17,7 +17,9 @@ describe('addPageMarker', () => {
     it('add page marker on scrolled page', async () => {
       await page.goto(url)
       await page.evaluate('window.scrollTo(1000, 1000)')
-      const marker = await page.evaluate(addPageMarker)
+      const marker = await page.evaluate(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1], scale: 1},
+      ])
       assert.deepStrictEqual(marker, {
         offset: 1,
         size: 1,
@@ -35,7 +37,9 @@ describe('addPageMarker', () => {
         document.documentElement.style.transform = 'translate(-1000px, -1000px)'
         document.documentElement.style.webkitTransform = 'translate(-1000px, -1000px)'
       })
-      const marker = await page.evaluate(addPageMarker)
+      const marker = await page.evaluate(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1], scale: 1},
+      ])
       assert.deepStrictEqual(marker, {
         offset: 1,
         size: 1,
@@ -61,7 +65,9 @@ describe('addPageMarker', () => {
     it('add page marker on scrolled page', async () => {
       await driver.url(url)
       await driver.execute('window.scrollTo(1000, 1000)')
-      const marker = await driver.execute(addPageMarker)
+      const marker = await driver.execute(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]},
+      ])
       assert.deepStrictEqual(marker, {
         offset: 1,
         size: 1,
@@ -81,7 +87,9 @@ describe('addPageMarker', () => {
         document.documentElement.style.transform = 'translate(-1000px, -1000px)'
         document.documentElement.style.webkitTransform = 'translate(-1000px, -1000px)'
       })
-      const marker = await driver.execute(addPageMarker)
+      const marker = await driver.execute(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]},
+      ])
       assert.deepStrictEqual(marker, {
         offset: 1,
         size: 1,

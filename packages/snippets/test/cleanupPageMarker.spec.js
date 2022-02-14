@@ -17,7 +17,9 @@ describe('cleanupPageMarker', () => {
     it('cleanup page marker', async () => {
       await page.url(url)
       await page.evaluate("document.body.style.transform = 'translate(-10px, -10px)'")
-      await page.evaluate(addPageMarker)
+      await page.evaluate(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1], scale: 1},
+      ])
       const element1 = await page.$('[data-applitools-marker]')
       assert.ok(element1)
       await page.evaluate(cleanupPageMarker)
@@ -41,7 +43,9 @@ describe('cleanupPageMarker', () => {
     it('cleanup page marker', async () => {
       await driver.url(url)
       await driver.execute("document.body.style.transform = 'translate(-10px, -10px)'")
-      await driver.execute(addPageMarker)
+      await driver.execute(addPageMarker, [
+        {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1], scale: 1},
+      ])
       const element1 = await driver.$('[data-applitools-marker]')
       assert.ok(element1.elementId)
       await driver.execute(cleanupPageMarker)
