@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.1.13 - 2022/2/15
+
 - add `getViewportScale` snippet
 - remove auto scaling from `getViewportSize` and `addPageMarker`
 - marker mask and size have to be passed as arguments in `addPageMarker`
