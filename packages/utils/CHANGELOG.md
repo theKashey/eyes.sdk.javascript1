@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.13 - 2022/2/15
+
 - add method `math.multiplier` method to find a smallest integer multiplier for number to produce an integer result with some allowed error
 
  ## 1.2.12 - 2022/2/9
