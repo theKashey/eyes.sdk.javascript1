@@ -257,7 +257,7 @@ const DEVICES = {
       appActivity: '.MainActivity',
       app: 'PRIVATE:eyes-hello-world.apk',
       securityToken: PERFECTO_ACCESS_KEY,
-    }
+    },
   },
   'Perfecto Android native (enableAppiumBehavior)': {
     url: PERFECTO_SERVER_URL,
@@ -270,8 +270,8 @@ const DEVICES = {
       app: 'PRIVATE:eyes-hello-world.apk',
       securityToken: PERFECTO_ACCESS_KEY,
       enableAppiumBehavior: true,
-    }
-  }
+    },
+  },
 }
 
 const BROWSERS = {
