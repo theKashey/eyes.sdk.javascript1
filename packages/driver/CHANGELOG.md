@@ -3,6 +3,9 @@
 ## Unreleased
 
 - add `viewportScale` getter to `Driver` class
+- updated to @applitools/snippets@2.1.13 (from 2.1.12)
+- updated to @applitools/types@1.0.25 (from 1.0.24)
+- updated to @applitools/utils@1.2.13 (from 1.2.12)
 
 ## 1.4.13 - 2022/2/10
 
