@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/driver@1.4.14":
-  version "1.4.14"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.14.tgz#d1e5e4af82919ac065422b183b59a066563ecb9d"
-  integrity sha512-rLf00fv17XhcqzIx7L5WDzO3RxjSrUVtSpHL68OBjeKrlxKAL8p9H2i0rJXEhgAw7D70vTMuilw500Lzj0Y67w==
+"@applitools/driver@1.4.15":
+  version "1.4.15"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.15.tgz#9ec345940bae1220e93a5d7954359986a0d98067"
+  integrity sha512-hNvHzwAY6XWi6HlvB+AeznKsv5umCdJsRtDC9tsf3M0TF8hW3NAN+I2yblyDO+CARisQHo0LaKwAXthY9ui0HA==
   dependencies:
-    "@applitools/snippets" "2.1.13"
+    "@applitools/snippets" "2.1.14"
     "@applitools/types" "1.0.25"
     "@applitools/utils" "1.2.13"
 
@@ -23,10 +23,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/snippets@2.1.13":
-  version "2.1.13"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.13.tgz#2fad8f8c851c3e077634106174d4f33058726838"
-  integrity sha512-LMBLrg/Y2kXB+AgUak3r0NUAMGkifybQ61dGyEXLXQN9AYE4TXvgvBwgh+GgfbegwR1035+tjVHzOybD4Qxrxg==
+"@applitools/snippets@2.1.14":
+  version "2.1.14"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.14.tgz#1c34de903376d7aa02ebfe22c84e93cccf10a39e"
+  integrity sha512-CvHHHwKY//hq8BQhwANGJP9lCgynUm5ubHhbiDO1vm4mkOh+LB1XsBlqcYYZzAToLw+amMFi+zctGQyF19m66g==
 
 "@applitools/spec-driver-webdriverio@1.2.7":
   version "1.2.7"
