@@ -5,6 +5,8 @@
 
 - fix image scaling on pages without viewport metatag
 - fix safari's viewport detection on iOS devices
+- updated to @applitools/snippets@2.1.13 (from 2.1.12)
+- updated to @applitools/utils@1.2.13 (from 1.2.12)
 
 ## 3.3.6 - 2022/2/9
 
