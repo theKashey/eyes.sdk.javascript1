@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.12 - 2022/2/15
+
 - add support for running Android native on Perfecto
 
 ## 1.0.11 - 2022/1/18
