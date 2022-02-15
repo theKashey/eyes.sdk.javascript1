@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- fix `getElementRect` for `document.scrollingElement`
 
 ## 2.1.13 - 2022/2/15
 
