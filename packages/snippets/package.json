@@ -1,6 +1,6 @@
 {
   "name": "@applitools/snippets",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "license": "SEE LICENSE IN LICENSE",
   "main": "./dist/index.js",
   "files": [
