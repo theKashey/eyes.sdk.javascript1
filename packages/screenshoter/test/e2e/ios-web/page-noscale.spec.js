@@ -21,7 +21,6 @@ describe('screenshoter ios web', () => {
     await test({
       type: 'ios-web',
       tag: 'page-noscale',
-      debug: {path: './'},
       driver,
       logger,
     })

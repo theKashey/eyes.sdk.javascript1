@@ -115,7 +115,10 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
   async function getViewportRegion() {
     // marker is -> bwb bwbb wbw bwbb wbww bbb
     const marker = await driver.mainContext.execute(snippets.addPageMarker, [
-      {mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1], scale: driver.viewportScale},
+      {
+        mask: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+        size: utils.math.multiplier(driver.viewportScale * driver.pixelRatio, 0.05),
+      },
     ])
     await utils.general.sleep(100)
 
@@ -127,7 +130,10 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
 
       await image.debug({...debug, name: 'marker'})
 
-      const markerLocation = findImagePattern(await image.toObject(), {...marker, pixelRatio: driver.pixelRatio})
+      const markerLocation = findImagePattern(await image.toObject(), {
+        ...marker,
+        scale: driver.viewportScale * driver.pixelRatio,
+      })
       if (!markerLocation) return null
 
       return utils.geometry.region(
