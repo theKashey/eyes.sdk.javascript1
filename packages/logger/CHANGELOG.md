@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 1.0.11 - 2022/2/15
+
+- updated to @applitools/utils@1.2.13 (from 1.2.11)
+
 ## 1.0.10 - 2022/2/4
 
 - increase number of retries and add a delay between them in `fs.rmSync`

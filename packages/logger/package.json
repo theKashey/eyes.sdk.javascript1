@@ -1,6 +1,6 @@
 {
   "name": "@applitools/logger",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Applitools logger",
   "keywords": [
     "applitools",
@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "@applitools/utils": "1.2.11",
+    "@applitools/utils": "1.2.13",
     "chalk": "3.0.0"
   },
   "devDependencies": {
