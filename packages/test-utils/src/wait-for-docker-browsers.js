@@ -3,7 +3,7 @@ const fetch = require('node-fetch')
 const delay = promisify(setTimeout)
 
 async function waitForDockerBrowsers(
-  {remoteUrl = process.env.CVG_TESTS_REMOTE, retries = 50} = {
+  {remoteUrl = process.env.CVG_TESTS_REMOTE, retries = 70} = {
     remoteUrl: process.env.CVG_TESTS_REMOTE,
     retries: 50,
   },
@@ -14,7 +14,7 @@ async function waitForDockerBrowsers(
   try {
     await fetch(remoteUrl)
   } catch (_ex) {
-    await delay(100)
+    await delay(300)
     return waitForDockerBrowsers({remoteUrl, retries: retries - 1})
   }
 }

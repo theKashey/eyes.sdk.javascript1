@@ -17,8 +17,6 @@ describe('screenshoter androidx app', () => {
     await button.click()
     await sleep(3000)
 
-    console.log(await driver.target.getPageSource())
-
     await driver.init()
     await driver.currentContext.setScrollingElement({type: 'id', selector: 'recyclerView'})
 
