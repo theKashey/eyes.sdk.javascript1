@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fix image scaling on pages without viewport metatag
+- fix safari's viewport detection on iOS devices
 - enhance server start up protocol with ipc communication
 - export `makeServerProcess` function to create a detached process
 - add `--config` cli argument to provide server configuration as a json string instead of separate cli arguments (flags)
