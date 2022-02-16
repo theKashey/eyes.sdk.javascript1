@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/driver@1.4.15":
-  version "1.4.15"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.15.tgz#9ec345940bae1220e93a5d7954359986a0d98067"
-  integrity sha512-hNvHzwAY6XWi6HlvB+AeznKsv5umCdJsRtDC9tsf3M0TF8hW3NAN+I2yblyDO+CARisQHo0LaKwAXthY9ui0HA==
+"@applitools/driver@1.4.16":
+  version "1.4.16"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.4.16.tgz#fd385a88aea659afe38822a0ea01b014b8a9cfa0"
+  integrity sha512-wQnIfBL+wTCf7GHqijakTROe+1/JcQ3Ta/HWi5A7MK/5AO/UGZbobtIj9enwzxtFAEjTzExDi7+pVorV/fhXzQ==
   dependencies:
-    "@applitools/snippets" "2.1.14"
+    "@applitools/snippets" "2.1.15"
     "@applitools/types" "1.0.25"
     "@applitools/utils" "1.2.13"
 
@@ -23,10 +23,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/snippets@2.1.14":
-  version "2.1.14"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.14.tgz#1c34de903376d7aa02ebfe22c84e93cccf10a39e"
-  integrity sha512-CvHHHwKY//hq8BQhwANGJP9lCgynUm5ubHhbiDO1vm4mkOh+LB1XsBlqcYYZzAToLw+amMFi+zctGQyF19m66g==
+"@applitools/snippets@2.1.15":
+  version "2.1.15"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.1.15.tgz#25df6fff11a373fb23c03bc2d0e7fcabf70da89f"
+  integrity sha512-eJZGgDCF71ACjvQECW9nu6l3GKZN+IYzKu5f7dB3a3VzG+PXiNYCKgMk6rSkfWZpvsx6fM5g/GyHIncyNBXGKQ==
 
 "@applitools/spec-driver-webdriverio@1.2.7":
   version "1.2.7"

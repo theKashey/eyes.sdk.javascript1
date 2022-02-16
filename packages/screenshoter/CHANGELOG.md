@@ -4,6 +4,7 @@
 ## Unreleased
 
 - remove prevention of translation in `mixed` scrolling mode
+- updated to @applitools/snippets@2.1.15 (from 2.1.14)
 
 ## 3.3.8 - 2022/2/16
 
