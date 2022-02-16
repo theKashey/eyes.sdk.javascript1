@@ -3,6 +3,10 @@
 ## Unreleased
 
 
+## 15.8.65 - 2022/2/16
+
+- updated to @applitools/eyes-sdk-core@13.0.4 (from 13.0.3)
+
 ## 15.8.64 - 2022/2/16
 
 - support adding new test(s) and the value of saveNewTest is false will warn
