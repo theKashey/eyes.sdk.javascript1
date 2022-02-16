@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- do not perform initial scrolling in `takeStitchedScreenshot`
 
 ## 3.3.9 - 2022/2/16
 

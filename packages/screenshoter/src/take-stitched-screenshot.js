@@ -21,7 +21,7 @@ async function takeStitchedScreenshot({
   const scrollerState = await scroller.preserveState()
 
   const initialOffset = region ? utils.geometry.location(region) : {x: 0, y: 0}
-  const actualOffset = await scroller.moveTo(initialOffset)
+  const actualOffset = await scroller.getInnerOffset()
   const expectedRemainingOffset = utils.geometry.offsetNegative(initialOffset, actualOffset)
 
   await utils.general.sleep(wait)
@@ -34,7 +34,7 @@ async function takeStitchedScreenshot({
 
   const scrollerRegion = await scroller.getClientRegion()
   const targetRegion = region
-    ? utils.geometry.intersect(utils.geometry.region(await scroller.getInnerOffset(), scrollerRegion), region)
+    ? utils.geometry.intersect(utils.geometry.region(actualOffset, scrollerRegion), region)
     : scrollerRegion
 
   // TODO the solution should not check driver specifics,
