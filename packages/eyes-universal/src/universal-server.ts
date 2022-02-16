@@ -24,7 +24,7 @@ const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-logs`)
 export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
   const {server, port} = await makeHandler(serverConfig)
   console.log(port) // NOTE: this is a part of the generic protocol
-  process.send({name: 'port', payload: {port}}) // NOTE: this is a part of the js specific protocol
+  process.send?.({name: 'port', payload: {port}}) // NOTE: this is a part of the js specific protocol
   if (!server) {
     return console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
   }

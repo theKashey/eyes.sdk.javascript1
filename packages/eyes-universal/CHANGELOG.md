@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- handle issue when `process.send` is missing
 
 ## 1.0.8 - 2022/2/16
 
