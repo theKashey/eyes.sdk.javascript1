@@ -104,7 +104,6 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
   async function shiftTo(offset, element = defaultElement) {
     try {
       const scrollOffset = await element.scrollTo(offset)
-      if (utils.geometry.equals(scrollOffset, offset)) return scrollOffset
 
       // there is a "bug" in iOS that will not move a root element if it already scrolled, so it should be translated all the way
       if (element.driver.isIOS && (await element.isRoot())) {

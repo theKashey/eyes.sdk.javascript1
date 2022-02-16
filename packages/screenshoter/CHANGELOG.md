@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- remove prevention of translation in `mixed` scrolling mode
 
 ## 3.3.8 - 2022/2/16
 
