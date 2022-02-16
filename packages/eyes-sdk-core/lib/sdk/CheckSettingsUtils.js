@@ -206,12 +206,17 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
           const contextLocationInViewport = await elements[0].context.getLocationInViewport()
           for (const element of elements) {
             const region = utils.geometry.offset(await element.getRegion(), contextLocationInViewport)
-            referenceRegions.push({
-              x: Math.max(0, region.x - screenshot.region.x),
-              y: Math.max(0, region.y - screenshot.region.y),
-              width: region.width,
-              height: region.height,
-            })
+            referenceRegions.push(
+              utils.geometry.scale(
+                {
+                  x: Math.max(0, region.x - screenshot.region.x),
+                  y: Math.max(0, region.y - screenshot.region.y),
+                  width: region.width,
+                  height: region.height,
+                },
+                context.driver.viewportScale,
+              ),
+            )
           }
         }
       }

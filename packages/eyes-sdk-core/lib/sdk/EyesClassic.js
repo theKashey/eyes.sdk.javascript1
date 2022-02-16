@@ -58,7 +58,7 @@ class EyesClassic extends EyesCore {
 
     if (!this._configuration.getViewportSize()) {
       const vs = await this._driver.getViewportSize()
-      this._configuration.setViewportSize(vs)
+      this._configuration.setViewportSize(utils.geometry.round(utils.geometry.scale(vs, this._driver.viewportScale)))
     }
 
     if (this._driver.isMobile) {

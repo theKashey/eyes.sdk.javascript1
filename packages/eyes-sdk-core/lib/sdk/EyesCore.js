@@ -1,6 +1,7 @@
 'use strict'
 const {Driver} = require('@applitools/driver')
 const {makeLogger} = require('@applitools/logger')
+const utils = require('@applitools/utils')
 const takeScreenshot = require('@applitools/screenshoter')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const Region = require('../geometry/Region')
@@ -201,7 +202,7 @@ class EyesCore extends EyesBase {
   static async getViewportSize(driver) {
     const wrapper = await new Driver({spec: this.spec, driver, logger: makeLogger()}).init()
     const viewportSize = await wrapper.getViewportSize()
-    return viewportSize
+    return utils.geometry.round(utils.geometry.scale(viewportSize, wrapper.viewportScale))
   }
 
   static async setViewportSize(driver, viewportSize) {
@@ -213,8 +214,8 @@ class EyesCore extends EyesBase {
   }
 
   async getViewportSize() {
-    const viewportSize = this._viewportSizeHandler.get()
-    return viewportSize ? viewportSize : this._driver.getViewportSize()
+    const viewportSize = this._viewportSizeHandler.get() || (await this._driver.getViewportSize())
+    return utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale))
   }
 
   async setViewportSize(viewportSize) {
@@ -231,7 +232,9 @@ class EyesCore extends EyesBase {
         this._effectiveViewport = new Region(Location.ZERO, viewportSize)
       } catch (e) {
         const viewportSize = await this._driver.getViewportSize()
-        this._viewportSizeHandler.set(new RectangleSize(viewportSize))
+        this._viewportSizeHandler.set(
+          new RectangleSize(utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale))),
+        )
         throw new TestFailedError('Failed to set the viewport size', e)
       }
     }
