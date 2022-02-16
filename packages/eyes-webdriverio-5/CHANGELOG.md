@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- fix image scaling on pages without viewport metatag
+- fix safari's viewport detection on iOS devices
 
 ## 5.34.11 - 2022/2/10
 
