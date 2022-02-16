@@ -4,6 +4,9 @@
 
 - fix image scaling on pages without viewport metatag
 - fix safari's viewport detection on iOS devices
+- updated to @applitools/eyes-api@1.1.8 (from 1.1.7)
+- updated to @applitools/eyes-sdk-core@13.0.4 (from 13.0.2)
+- updated to @applitools/visual-grid-client@15.8.65 (from 15.8.63)
 
 ## 5.34.11 - 2022/2/10
 
