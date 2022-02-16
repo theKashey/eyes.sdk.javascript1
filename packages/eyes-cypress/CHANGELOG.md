@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 3.23.8 - 2022/2/16
+
 - upgrade axios version to 0.26.0 (from 0.21.4) fixing axios > 'follow-redirects' vulnerability issue
+- updated to @applitools/logger@1.0.11 (from 1.0.9)
+- updated to @applitools/visual-grid-client@15.8.65 (from 15.8.62)
 
 ## 3.23.7 - 2022/1/28
 
