@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- upgrade axios version to 0.26.0 (from 0.21.4) fixing axios > 'follow-redirects' vulnerability issue
 
 ## 3.23.7 - 2022/1/28
 

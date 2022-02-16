@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fixing: Nightwatch 1.10.2 throwing Module assert/Strict not found
 ## 1.10.2 - 2021/12/21
 
 - updated to @applitools/eyes-sdk-core@12.24.7 (from 12.24.5)

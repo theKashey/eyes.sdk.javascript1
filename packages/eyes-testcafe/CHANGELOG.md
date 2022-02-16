@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- fixing: Screenshotter dependency consuming 40+ MB of space
 ## 1.15.3 - 2022/1/24
 
 - updated 'Agent ID' to 'eyes.testcafe' (from 'eyes.webdriverio')
