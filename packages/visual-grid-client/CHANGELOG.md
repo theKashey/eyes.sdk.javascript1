@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- updated to @applitools/eyes-sdk-core@13.0.4 (from 13.0.3)
 
 
 ## 15.8.64 - 2022/2/16
