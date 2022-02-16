@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 5.34.12 - 2022/2/16
+
 - fix image scaling on pages without viewport metatag
 - fix safari's viewport detection on iOS devices
 - updated to @applitools/eyes-api@1.1.8 (from 1.1.7)
