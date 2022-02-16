@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.0.8 - 2022/2/16
+
 - fix image scaling on pages without viewport metatag
 - fix safari's viewport detection on iOS devices
 - enhance server start up protocol with ipc communication
