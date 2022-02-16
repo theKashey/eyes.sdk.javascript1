@@ -2,11 +2,18 @@
 
 ## Unreleased
 
+
+## 1.0.8 - 2022/2/16
+
 - fix image scaling on pages without viewport metatag
 - fix safari's viewport detection on iOS devices
 - enhance server start up protocol with ipc communication
 - export `makeServerProcess` function to create a detached process
 - add `--config` cli argument to provide server configuration as a json string instead of separate cli arguments (flags)
+- updated to @applitools/eyes-sdk-core@13.0.4 (from 13.0.1)
+- updated to @applitools/logger@1.0.11 (from 1.0.10)
+- updated to @applitools/utils@1.2.13 (from 1.2.11)
+- updated to @applitools/visual-grid-client@15.8.65 (from 15.8.63)
 
 ## 1.0.7 - 2022/2/4
 
