@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-testcafe",
-  "version": "1.15.3",
+  "version": "1.15.4",
   "description": "Applitools Eyes SDK for TestCafe",
   "keywords": [
     "eyes-testcafe",
@@ -69,10 +69,10 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.1.7",
-    "@applitools/eyes-sdk-core": "13.0.0",
-    "@applitools/utils": "1.2.11",
-    "@applitools/visual-grid-client": "15.8.62"
+    "@applitools/eyes-api": "1.1.8",
+    "@applitools/eyes-sdk-core": "13.0.5",
+    "@applitools/utils": "1.2.13",
+    "@applitools/visual-grid-client": "15.8.65"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.7",
@@ -81,7 +81,7 @@
     "@applitools/sdk-release-kit": "^0.13.11",
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/test-server": "1.0.8",
-    "@applitools/test-utils": "1.0.11",
+    "@applitools/test-utils": "1.0.12",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "eslint": "^7.9.0",

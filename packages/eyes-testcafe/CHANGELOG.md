@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+
+## 1.15.4 - 2022/2/16
+
 - fixing: Screenshotter dependency consuming 40+ MB of space
+- updated to @applitools/eyes-api@1.1.8 (from 1.1.7)
+- updated to @applitools/eyes-sdk-core@13.0.5 (from 13.0.0)
+- updated to @applitools/utils@1.2.13 (from 1.2.11)
+- updated to @applitools/visual-grid-client@15.8.65 (from 15.8.62)
+- updated to @applitools/visual-grid-client@15.8.65 (from 15.8.62)
 ## 1.15.3 - 2022/1/24
 
 - updated 'Agent ID' to 'eyes.testcafe' (from 'eyes.webdriverio')
