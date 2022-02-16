@@ -214,8 +214,10 @@ class EyesCore extends EyesBase {
   }
 
   async getViewportSize() {
-    const viewportSize = this._viewportSizeHandler.get() || (await this._driver.getViewportSize())
-    return utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale))
+    const viewportSize = this._viewportSizeHandler.get()
+      ? this._viewportSizeHandler.get().toJSON()
+      : await this._driver.getViewportSize()
+    return new RectangleSize(utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale)))
   }
 
   async setViewportSize(viewportSize) {
