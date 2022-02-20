@@ -145,18 +145,17 @@ class EyesClassic extends EyesCore {
             }
             dom = await takeDomCapture(this._logger, driver.mainContext).catch(() => null)
           }
-          if (this._checkSettings.pageId){
+          if (this._checkSettings.pageId) {
             const scrollingElement = await driver.currentContext.getScrollingElement()
             afterScreenShotScrollingOffeset = await scrollingElement.getScrollOffset()
           }
-            
         },
       },
       debug: this.getDebugScreenshots(),
       logger: this._logger,
     })
     this._imageLocation = new Location(Math.round(screenshot.region.x), Math.round(screenshot.region.y))
-    if (afterScreenShotScrollingOffeset){
+    if (afterScreenShotScrollingOffeset) {
       const imagePositionInPage_x = Math.round(afterScreenShotScrollingOffeset.x + screenshot.region.x)
       const imagePositionInPage_y = Math.round(afterScreenShotScrollingOffeset.y + screenshot.region.y)
       this.pageCoverageInfo.imagePositionInPage = {x: imagePositionInPage_x, y: imagePositionInPage_y}
@@ -255,7 +254,6 @@ class EyesClassic extends EyesCore {
     const rect = await element.getElementRect()
     return rect
   }
-
 }
 
 module.exports = EyesClassic

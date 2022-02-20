@@ -10,7 +10,7 @@ describe('AppOutput', () => {
       pageId: 'my-page',
       width: 800,
       height: 1200,
-      imagePositionInPage: {x:10, y:20},
+      imagePositionInPage: {x: 10, y: 20},
     }
     const ao = new AppOutput({
       title: 'title',
