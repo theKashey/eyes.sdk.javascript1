@@ -3,6 +3,7 @@
 ## Unreleased
 - updated to @applitools/screenshoter@3.3.5 (from 3.3.4)
 - updated to @applitools/driver@1.4.11 (from 1.4.10)
+- updated to @applitools/screenshoter@3.3.10 (from 3.3.9)
 
 
 ## 13.0.5 - 2022/2/16

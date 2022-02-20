@@ -135,6 +135,15 @@
   dependencies:
     debug "^4.1.0"
 
+"@applitools/screenshoter@3.3.10":
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.3.10.tgz#a34a8cd093879bbb0fa9cc62225adf0ea167576a"
+  integrity sha512-fpNZx16e0WJCAIh67oMxPe+vLZyXtem6glfowafFTZeACV2zshDcbadciJzM31BC80xbtTZmLUkyxONgAcDczg==
+  dependencies:
+    "@applitools/snippets" "2.1.15"
+    "@applitools/utils" "1.2.13"
+    png-async "0.9.4"
+
 "@applitools/screenshoter@3.3.9":
   version "3.3.9"
   resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.3.9.tgz#6221a7b1ec6c026cef604b266ce41959631e6ed0"
