@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add support to page coverage by adding `pageId` to `Eyes.check`.
 
 ## 1.0.9 - 2022/2/16
 

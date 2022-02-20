@@ -18,6 +18,7 @@ class RenderRequest {
    * @param {boolean} request.sendDom
    * @param {string} request.renderId
    * @param {Object} request.visualGridOptions
+   * @param {boolean} request.includeFullPageSize
    */
   constructor({
     webhook,
@@ -35,6 +36,7 @@ class RenderRequest {
     agentId,
     visualGridOptions,
     renderer,
+    includeFullPageSize,
   } = {}) {
     this._webhook = webhook
     this._stitchingService = stitchingService
@@ -51,6 +53,7 @@ class RenderRequest {
     this._agentId = agentId
     this._visualGridOptions = visualGridOptions
     this._renderer = renderer
+    this._includeFullPageSize = includeFullPageSize
   }
 
   /**
@@ -206,6 +209,14 @@ class RenderRequest {
     this._renderer = renderer
   }
 
+  getIncludeFullPageSize() {
+    return this._includeFullPageSize
+  }
+
+  setIncludeFullPageSize(includeFullPageSize) {
+    this._includeFullPageSize = includeFullPageSize
+  }
+
   /**
    * @override
    */
@@ -268,6 +279,10 @@ class RenderRequest {
 
     if (this._visualGridOptions) {
       object.options = this._visualGridOptions
+    }
+
+    if (this._includeFullPageSize) {
+      object.includeFullPageSize = this._includeFullPageSize
     }
 
     return object

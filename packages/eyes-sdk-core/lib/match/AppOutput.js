@@ -1,7 +1,6 @@
 'use strict'
 
 const Location = require('../geometry/Location')
-
 /**
  * An application output (title, image, etc).
  *
@@ -17,8 +16,9 @@ class AppOutput {
    * @param {string} [output.domUrl] - URL that points to a dom capture of the provided screenshot
    * @param {Location} [output.imageLocation] - Location of the provided screenshot relative to the logical full-page
    *   screenshot (e.g. in checkRegion)
+   * @param {object} [output.pageCoverageInfo] - pageId + pageCoverage width + pageCoverage height
    */
-  constructor({title, screenshot, screenshotUrl, domUrl, imageLocation} = {}) {
+  constructor({title, screenshot, screenshotUrl, domUrl, imageLocation, pageCoverageInfo} = {}) {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }
@@ -28,6 +28,9 @@ class AppOutput {
     this._screenshotUrl = screenshotUrl
     this._domUrl = domUrl
     this._imageLocation = new Location(imageLocation)
+    if (pageCoverageInfo) {
+      this._pageCoverageInfo = pageCoverageInfo
+    }
   }
 
   /**
@@ -101,6 +104,20 @@ class AppOutput {
   }
 
   /**
+   * @return {object}
+   */
+  getPageCoverageInfo() {
+    return this._pageCoverageInfo
+  }
+
+  /**
+   * @param {object} value
+   */
+  setPageCoverageInfo(value) {
+    this._pageCoverageInfo = value
+  }
+
+  /**
    * @override
    */
   toJSON() {
@@ -124,6 +141,9 @@ class AppOutput {
       object.location = this._imageLocation.toJSON()
     }
 
+    if (this._pageCoverageInfo) {
+      object.pageCoverageInfo = this._pageCoverageInfo
+    }
     return object
   }
 

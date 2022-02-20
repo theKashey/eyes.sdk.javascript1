@@ -1903,6 +1903,7 @@ class EyesBase {
       screenshotUrl,
       domUrl,
       imageLocation,
+      pageCoverageInfo: this.pageCoverageInfo,
     })
     this._logger.log('Done!')
     return {screenshot, appOutput, matchSettings: this.getMatchSettings()}

@@ -3,9 +3,8 @@ const spec = require('@applitools/spec-driver-selenium')
 const {makeSDK} = require('../../index')
 
 // this is an example
-describe.skip('check e2e', () => {
+describe.skip('pageCoverage e2e', () => {
   let driver, destroyDriver
-
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
   })

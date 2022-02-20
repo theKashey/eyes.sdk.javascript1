@@ -80,9 +80,16 @@ class EyesClassic extends EyesCore {
     this._context = await this._driver.refreshContexts()
     await this._context.main.setScrollingElement(this._scrollRootElement)
     await this._context.setScrollingElement(checkSettings.scrollRootElement)
+    if (checkSettings.pageId) {
+      const contentSize = await this._context.getContentSize()
+      this.pageCoverageInfo = {
+        pageId: checkSettings.pageId,
+        width: contentSize.width,
+        height: contentSize.height,
+      }
+    }
 
     this._checkSettings = checkSettings
-
     return await this.checkWindowBase({
       name: checkSettings.name,
       url: await this._driver.getUrl(),
@@ -119,8 +126,8 @@ class EyesClassic extends EyesCore {
         rotation: this.getRotation(),
       },
     }
-
     let dom
+    let afterScreenShotScrollingOffeset = null
     const screenshot = await takeScreenshot({
       ...screenshotSettings,
       driver: this._driver,
@@ -138,14 +145,22 @@ class EyesClassic extends EyesCore {
             }
             dom = await takeDomCapture(this._logger, driver.mainContext).catch(() => null)
           }
+          if (this._checkSettings.pageId){
+            const scrollingElement = await driver.currentContext.getScrollingElement()
+            afterScreenShotScrollingOffeset = await scrollingElement.getScrollOffset()
+          }
+            
         },
       },
       debug: this.getDebugScreenshots(),
       logger: this._logger,
     })
-
     this._imageLocation = new Location(Math.round(screenshot.region.x), Math.round(screenshot.region.y))
-
+    if (afterScreenShotScrollingOffeset){
+      const imagePositionInPage_x = Math.round(afterScreenShotScrollingOffeset.x + screenshot.region.x)
+      const imagePositionInPage_y = Math.round(afterScreenShotScrollingOffeset.y + screenshot.region.y)
+      this.pageCoverageInfo.imagePositionInPage = {x: imagePositionInPage_x, y: imagePositionInPage_y}
+    }
     this._matchSettings = await CheckSettingsUtils.toMatchSettings({
       checkSettings: this._checkSettings,
       configuration: this._configuration,
@@ -240,6 +255,7 @@ class EyesClassic extends EyesCore {
     const rect = await element.getElementRect()
     return rect
   }
+
 }
 
 module.exports = EyesClassic

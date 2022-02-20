@@ -17,6 +17,7 @@ class RenderStatusResults {
    * @param {string} userAgent
    * @param {RectangleSize|object} deviceSize
    * @param {object[][]} selectorRegions
+   * @param {RectangleSize|object} fullPageSize
    */
   constructor({
     status,
@@ -26,11 +27,15 @@ class RenderStatusResults {
     os,
     userAgent,
     deviceSize,
+    fullPageSize,
     selectorRegions,
     imagePositionInActiveFrame,
   } = {}) {
     if (deviceSize && !(deviceSize instanceof RectangleSize)) {
       deviceSize = new RectangleSize(deviceSize)
+    }
+    if (fullPageSize && !(fullPageSize instanceof RectangleSize)) {
+      fullPageSize = new RectangleSize(fullPageSize)
     }
     if (selectorRegions && selectorRegions.length > 0) {
       selectorRegions = selectorRegions.map(regions => {
@@ -53,6 +58,7 @@ class RenderStatusResults {
     this._os = os
     this._userAgent = userAgent
     this._deviceSize = deviceSize
+    this._fullPageSize = fullPageSize
     this._selectorRegions = selectorRegions
     this._imagePositionInActiveFrame = imagePositionInActiveFrame
   }
@@ -69,6 +75,7 @@ class RenderStatusResults {
       this._os === undefined &&
       this._userAgent === undefined &&
       this._deviceSize === undefined &&
+      this._fullPageSize === undefined &&
       this._selectorRegions === undefined
     )
   }
@@ -169,6 +176,20 @@ class RenderStatusResults {
    */
   setDeviceSize(value) {
     this._deviceSize = value
+  }
+
+  /**
+   * @return {RectangleSize}
+   */
+  getFullPageSize() {
+    return this._fullPageSize
+  }
+
+  /**
+   * @param {RectangleSize} value
+   */
+  setFullPageSize(value) {
+    this._fullPageSize = value
   }
 
   /**

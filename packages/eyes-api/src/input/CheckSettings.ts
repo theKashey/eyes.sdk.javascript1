@@ -58,6 +58,7 @@ export type CheckSettings<TElement, TSelector> = {
   visualGridOptions?: {[key: string]: any}
   hooks?: {beforeCaptureScreenshot: string}
   renderId?: string
+  pageId?: string
   variationGroupId?: string
   timeout?: number
   waitBeforeCapture?: number
@@ -175,6 +176,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
       Object.entries(settings.visualGridOptions).forEach(([key, value]) => this.visualGridOption(key, value))
     }
     if (settings.renderId) this.renderId(settings.renderId)
+    if (settings.pageId) this.pageId(settings.pageId)
     if (settings.variationGroupId) this.variationGroupId(settings.variationGroupId)
     if (!utils.types.isNull(settings.timeout)) this.timeout(settings.timeout)
     if (!utils.types.isNull(settings.waitBeforeCapture)) this.waitBeforeCapture(settings.waitBeforeCapture)
@@ -575,6 +577,12 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   renderId(renderId: string): this {
     utils.guard.isString(renderId, {name: 'renderId'})
     this._settings.renderId = renderId
+    return this
+  }
+
+  pageId(pageId: string): this {
+    utils.guard.isString(pageId, {name: 'pageId'})
+    this._settings.pageId = pageId
     return this
   }
 

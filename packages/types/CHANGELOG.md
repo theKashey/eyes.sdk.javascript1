@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-
+- Add support to page coverage by adding `pageId` to `Eyes.check`.
 ## 1.0.25 - 2022/2/15
 
 - add `viewportScale` property to `DriverInfo` type

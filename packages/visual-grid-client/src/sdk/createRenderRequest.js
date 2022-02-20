@@ -16,6 +16,7 @@ function createRenderRequest({
   scriptHooks,
   sendDom,
   visualGridOptions,
+  includeFullPageSize,
 }) {
   const {
     width,
@@ -61,6 +62,7 @@ function createRenderRequest({
     sendDom,
     platform: filledPlatform,
     visualGridOptions,
+    includeFullPageSize,
   })
 }
 

@@ -82,6 +82,10 @@ class EyesWrapper extends EyesBase {
     return this.imageLocation
   }
 
+  async getPageCoverageInfo() {
+    return this.pageCoverageInfo
+  }
+
   /**
    * Get the AUT session id.
    *
@@ -165,7 +169,9 @@ class EyesWrapper extends EyesBase {
     url,
     closeAfterMatch,
     throwEx,
+    pageCoverageInfo,
   }) {
+    this.pageCoverageInfo = pageCoverageInfo
     this.screenshotUrl = screenshotUrl
     this.domUrl = domUrl
     this.imageLocation = imageLocation || Location.ZERO

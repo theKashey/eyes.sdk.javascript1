@@ -55,6 +55,7 @@ export type MatchSettings<TRegion> = {
   contentRegions?: TRegion[]
   floatingRegions?: (TRegion | FloatingRegion<TRegion>)[]
   accessibilityRegions?: (TRegion | AccessibilityRegion<TRegion>)[]
+  pageId: string
 }
 
 export type ScreenshotSettings<TElement, TSelector> = {

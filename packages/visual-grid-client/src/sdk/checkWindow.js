@@ -5,6 +5,7 @@ const createRenderRequest = require('./createRenderRequest')
 const isInvalidAccessibility = require('./isInvalidAccessibility')
 const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 const makeWaitForTestEnd = require('./makeWaitForTestEnd')
+const {Location} = require('@applitools/eyes-sdk-core/shared')
 
 function makeCheckWindow({
   globalState,
@@ -51,6 +52,7 @@ function makeCheckWindow({
     enablePatterns,
     ignoreDisplacements,
     visualGridOptions = _visualGridOptions,
+    pageId,
     closeAfterMatch,
     throwEx = true,
     variationGroupId,
@@ -179,6 +181,7 @@ function makeCheckWindow({
         scriptHooks,
         sendDom,
         visualGridOptions,
+        includeFullPageSize: !!pageId,
       })
 
       if (!wrapper.getAppEnvironment()) {
@@ -240,6 +243,7 @@ function makeCheckWindow({
         imageLocation: screenshotUrl,
         domLocation,
         selectorRegions,
+        fullPageSize,
         imagePositionInActiveFrame: imageLocation,
       } = renderStatusResult
 
@@ -286,7 +290,6 @@ function makeCheckWindow({
       }
 
       logger.verbose(`running wrapper.checkWindow for test ${testName} stepCount #${currStepCount}`)
-
       const checkArgs = {
         screenshotUrl,
         tag,
@@ -296,6 +299,13 @@ function makeCheckWindow({
         url,
         closeAfterMatch,
         throwEx,
+      }
+      if(pageId){
+        checkArgs.pageCoverageInfo = {
+          pageId,
+          ...fullPageSize,
+          imagePositionInPage: {x: imageLocation.x, y: imageLocation.y},
+        }
       }
 
       return wrapper.checkWindow(checkArgs)
