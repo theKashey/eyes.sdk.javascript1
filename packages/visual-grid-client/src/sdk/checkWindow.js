@@ -299,7 +299,7 @@ function makeCheckWindow({
         closeAfterMatch,
         throwEx,
       }
-      if(pageId){
+      if (pageId) {
         checkArgs.pageCoverageInfo = {
           pageId,
           ...fullPageSize,
