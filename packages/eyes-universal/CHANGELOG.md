@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Add support to page coverage by adding `pageId` to `Eyes.check`.
+- updated to @applitools/eyes-sdk-core@13.0.6 (from 13.0.4)
+- updated to @applitools/visual-grid-client@15.9.0 (from 15.8.65)
 
 ## 1.0.9 - 2022/2/16
 
