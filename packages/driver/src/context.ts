@@ -1,8 +1,7 @@
 import type * as types from '@applitools/types'
 import type {Driver} from './driver'
-import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
-import {makeSpecUtils} from './utils'
+import * as specUtils from './spec-utils'
 import {Element} from './element'
 
 const snippets = require('@applitools/snippets')
@@ -40,7 +39,6 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   private _scrollingElement: Element<TDriver, TContext, TElement, TSelector>
   private _state: ContextState = {}
   private _logger: any
-  private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
 
   private _isReference(reference: any): reference is ContextReference<TDriver, TContext, TElement, TSelector> {
     return (
@@ -49,7 +47,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       utils.types.isString(reference) ||
       reference instanceof Element ||
       this._spec.isElement(reference) ||
-      this._utils.isSelector(reference)
+      specUtils.isSelector(this._spec, reference)
     )
   }
 
@@ -68,7 +66,6 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     if (options.context instanceof Context) return options.context
 
     this._spec = options.spec
-    this._utils = makeSpecUtils(options.spec)
 
     if (options.logger) this._logger = options.logger
 
@@ -151,14 +148,14 @@ export class Context<TDriver, TContext, TElement, TSelector> {
         throw new TypeError(`Context element with index ${this._reference} is not found`)
       }
       this._element = elements[this._reference]
-    } else if (utils.types.isString(this._reference) || this._utils.isSelector(this._reference)) {
+    } else if (utils.types.isString(this._reference) || specUtils.isSelector(this._spec, this._reference)) {
       if (utils.types.isString(this._reference)) {
         this._logger.log('Getting context element by name or id', this._reference)
         this._element = await this.parent
           .element(`iframe[name="${this._reference}"], iframe#${this._reference}`)
           .catch(() => null)
       }
-      if (!this._element && this._utils.isSelector(this._reference)) {
+      if (!this._element && specUtils.isSelector(this._spec, this._reference)) {
         this._logger.log('Getting context element by selector', this._reference)
         this._element = await this.parent.element(this._reference)
       }
@@ -244,39 +241,72 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     }
   }
 
+  async root(selector: types.Selector<TSelector>): Promise<{
+    context: Context<TDriver, TContext, TElement, TSelector>
+    shadow?: Element<TDriver, TContext, TElement, TSelector>
+    selector: types.Selector<TSelector>
+  }> {
+    await this.focus()
+
+    const {contextSelectors, elementSelector} = specUtils.splitSelector(this._spec, selector)
+
+    let context = this as Context<TDriver, TContext, TElement, TSelector>
+    for (const contextSelector of contextSelectors) {
+      try {
+        context = await context.context(contextSelector)
+        await context.focus()
+      } catch {
+        return null
+      }
+    }
+
+    if (this.driver.features?.shadowSelector) return {context, selector: elementSelector}
+
+    let root = null as TElement
+    let currentSelector = elementSelector
+    while (
+      specUtils.isCommonSelector(this._spec, currentSelector) &&
+      specUtils.isSelector(this._spec, currentSelector.shadow)
+    ) {
+      const element = await this._spec.findElement(
+        this.target,
+        specUtils.transformSelector(this._spec, currentSelector, this.driver),
+        root,
+      )
+      if (!element) return null
+      root = await this._spec.executeScript(this.target, snippets.getShadowRoot, [element])
+      if (!root) return null
+      currentSelector = currentSelector.shadow
+    }
+
+    return {
+      context,
+      shadow: root ? new Element({spec: this._spec, context, element: root, logger: this._logger}) : null,
+      selector: currentSelector,
+    }
+  }
+
   async element(
     elementOrSelector: TElement | types.Selector<TSelector>,
   ): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     if (this._spec.isElement(elementOrSelector)) {
       return new Element({spec: this._spec, context: this, element: elementOrSelector, logger: this._logger})
-    } else if (this._utils.isSelector(elementOrSelector)) {
+    } else if (specUtils.isSelector(this._spec, elementOrSelector)) {
       if (this.isRef) {
         return new Element({spec: this._spec, context: this, selector: elementOrSelector, logger: this._logger})
       }
-      await this.focus()
+      const root = await this.root(elementOrSelector)
+      if (!root) return null
 
-      const selectors = this._utils.splitSelector(elementOrSelector)
-      const contextSelectors = selectors.slice(0, -1)
-      const elementSelector = selectors[selectors.length - 1]
+      const element = await this._spec.findElement(
+        root.context.target,
+        specUtils.transformSelector(this._spec, root.selector, this.driver),
+        root.shadow?.target,
+      )
 
-      let context = this as Context<TDriver, TContext, TElement, TSelector>
-      for (const contextSelector of contextSelectors) {
-        context = await context
-          .context(contextSelector)
-          .then(context => context.focus())
-          .catch(() => null)
-        if (!context) return null
-      }
-
-      const {root, selector} = this.driver.features?.shadowSelector
-        ? {root: null, selector: elementSelector}
-        : await this._utils.findRootElement(context.target, elementSelector)
-
-      if (!root && selector !== elementSelector) return null
-
-      const element = await this._spec.findElement(context.target, this._utils.transformSelector(selector), root)
+      // TODO root.selector is not a full selector from context root to an element, but selector inside a shadow
       return element
-        ? new Element({spec: this._spec, context, element, selector: elementSelector, logger: this._logger})
+        ? new Element({spec: this._spec, context: root.context, element, selector: root.selector, logger: this._logger})
         : null
     } else {
       throw new TypeError('Cannot find element using argument of unknown type!')
@@ -288,38 +318,25 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   ): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
     if (this._spec.isElement(elementOrSelector)) {
       return [new Element({spec: this._spec, context: this, element: elementOrSelector, logger: this._logger})]
-    } else if (this._utils.isSelector(elementOrSelector)) {
+    } else if (specUtils.isSelector(this._spec, elementOrSelector)) {
       if (this.isRef) {
         return [new Element({spec: this._spec, context: this, selector: elementOrSelector, logger: this._logger})]
       }
-      await this.focus()
+      const root = await this.root(elementOrSelector)
+      if (!root) return []
 
-      const selectors = this._utils.splitSelector(elementOrSelector)
-      const contextSelectors = selectors.slice(0, -1)
-      const elementSelector = selectors[selectors.length - 1]
-
-      let context = this as Context<TDriver, TContext, TElement, TSelector>
-      for (const contextSelector of contextSelectors) {
-        context = await context
-          .context(contextSelector)
-          .then(context => context.focus())
-          .catch(() => null)
-        if (!context) return []
-      }
-
-      const {root, selector} = this.driver.features?.shadowSelector
-        ? {root: null, selector: elementSelector}
-        : await this._utils.findRootElement(context.target, elementSelector)
-
-      if (!root && selector !== elementSelector) return []
-
-      const elements = await this._spec.findElements(context.target, this._utils.transformSelector(selector), root)
+      const elements = await this._spec.findElements(
+        root.context.target,
+        specUtils.transformSelector(this._spec, root.selector, this.driver),
+        root.shadow?.target,
+      )
       return elements.map((element, index) => {
+        // TODO root.selector is not a full selector from context root to an element, but selector inside a shadow
         return new Element({
           spec: this._spec,
-          context,
+          context: root.context,
           element,
-          selector: elementSelector,
+          selector: root.selector,
           index,
           logger: this._logger,
         })
@@ -327,6 +344,51 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     } else {
       throw new TypeError('Cannot find elements using argument of unknown type!')
     }
+  }
+
+  async waitFor(
+    selector: types.Selector<TSelector>,
+    options?: types.WaitOptions,
+  ): Promise<Element<TDriver, TContext, TElement, TSelector>> {
+    const root = await this.root(selector)
+    if (!root) return null
+
+    options = {state: 'exist', timeout: 10_000, interval: 500, ...options}
+
+    if (this._spec.waitForSelector) {
+      const element = await this._spec.waitForSelector(
+        root.context.target,
+        specUtils.transformSelector(this._spec, root.selector, this.driver),
+        root.shadow?.target,
+        options,
+      )
+      return element
+        ? new Element({spec: this._spec, context: root.context, element, selector: root.selector, logger: this._logger})
+        : null
+    }
+
+    let waiting = true
+    const timeout = setTimeout(() => (waiting = false), options.timeout)
+    while (waiting) {
+      const element = await this._spec.findElement(
+        root.context.target,
+        specUtils.transformSelector(this._spec, root.selector, this.driver),
+        root.shadow?.target,
+      )
+      if (element) {
+        clearTimeout(timeout)
+        return new Element({
+          spec: this._spec,
+          context: root.context,
+          element,
+          selector: root.selector,
+          logger: this._logger,
+        })
+      }
+      await utils.general.sleep(options.interval)
+    }
+
+    return null
   }
 
   async execute(script: ((args: any) => any) | string, arg?: any): Promise<any> {

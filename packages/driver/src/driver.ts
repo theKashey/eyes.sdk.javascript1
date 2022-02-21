@@ -1,11 +1,10 @@
 import type * as types from '@applitools/types'
-import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
+import * as specUtils from './spec-utils'
 import {Context, ContextReference} from './context'
 import {Element} from './element'
 import {HelperIOS} from './helper-ios'
 import {HelperAndroid} from './helper-android'
-import {makeSpecUtils} from './utils'
 import {parseUserAgent} from './user-agent'
 import {parseCapabilities} from './capabilities'
 
@@ -19,7 +18,6 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _currentContext: Context<TDriver, TContext, TElement, TSelector>
   private _driverInfo: types.DriverInfo
   private _logger: any
-  private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
   private _helper?:
     | HelperAndroid<TDriver, TContext, TElement, TSelector>
     | HelperIOS<TDriver, TContext, TElement, TSelector>
@@ -34,7 +32,6 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (options.driver instanceof Driver) return options.driver
 
     this._spec = options.spec
-    this._utils = makeSpecUtils(options.spec)
 
     if (options.logger) this._logger = options.logger
 
@@ -222,7 +219,6 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isNative) return this.currentContext
 
     const spec = this._spec
-    const utils = this._utils
 
     let currentContext = this.currentContext.target
     let contextInfo = await getContextInfo(currentContext)
@@ -243,6 +239,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     this._currentContext = this._mainContext
     return this.switchToChildContext(...path)
 
+    function transformSelector(selector: types.Selector<TSelector>) {
+      return specUtils.transformSelector(spec, selector, {isWeb: true})
+    }
+
     async function getContextInfo(context: TContext): Promise<any> {
       const [documentElement, selector, isRoot, isCORS] = await spec.executeScript(context, snippets.getContextInfo)
       return {documentElement, selector, isRoot, isCORS}
@@ -261,7 +261,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       if (contextInfo.selector) {
         const contextElement = await spec.findElement(
           context,
-          utils.transformSelector({type: 'xpath', selector: contextInfo.selector}),
+          transformSelector({type: 'xpath', selector: contextInfo.selector}),
         )
         if (contextElement) return contextElement
       }
@@ -269,7 +269,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       for (const childContextInfo of await getChildContextsInfo(context)) {
         if (childContextInfo.isCORS !== contextInfo.isCORS) continue
         const childContext = await spec.childContext(context, childContextInfo.contextElement)
-        const contentDocument = await spec.findElement(childContext, utils.transformSelector('html'))
+        const contentDocument = await spec.findElement(childContext, transformSelector('html'))
         const isWantedContext = await isEqualElements(childContext, contentDocument, contextInfo.documentElement)
         await spec.parentContext(childContext)
         if (isWantedContext) return childContextInfo.contextElement
@@ -281,7 +281,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       contextInfo: any,
       contextPath: TElement[] = [],
     ): Promise<TElement[]> {
-      const contentDocument = await spec.findElement(context, utils.transformSelector('html'))
+      const contentDocument = await spec.findElement(context, transformSelector('html'))
 
       if (await isEqualElements(context, contentDocument, contextInfo.documentElement)) {
         return contextPath

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add `waitForSelector` method
 
 ## 1.4.16 - 2022/2/16
 

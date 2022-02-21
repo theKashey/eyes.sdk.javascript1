@@ -37,10 +37,20 @@ export type Cookie = {
   sameSite?: 'Strict' | 'Lax' | 'None'
 }
 
-export type Selector<TSelector = never> =
-  | TSelector
-  | string
-  | {selector: TSelector | string; type?: string; shadow?: Selector<TSelector>; frame?: Selector<TSelector>}
+export type WaitOptions = {
+  state?: 'exist' | 'visible'
+  interval?: number
+  timeout?: number
+}
+
+export type CommonSelector<TSelector = never> = {
+  selector: TSelector | string
+  type?: string
+  shadow?: CommonSelector<TSelector> | TSelector | string
+  frame?: CommonSelector<TSelector> | TSelector | string
+}
+
+export type Selector<TSelector = never> = TSelector | string | CommonSelector<TSelector>
 
 export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   // #region UTILITY
@@ -64,6 +74,12 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   executeScript(context: TContext, script: ((arg?: any) => any) | string, arg?: any): Promise<any>
   findElement(context: TContext, selector: TSelector, parent?: TElement): Promise<TElement | null>
   findElements(context: TContext, selector: TSelector, parent?: TElement): Promise<TElement[]>
+  waitForSelector?(
+    context: TContext,
+    selector: TSelector,
+    parent?: TElement,
+    options?: WaitOptions,
+  ): Promise<TElement | null>
   setWindowSize?(driver: TDriver, size: Size): Promise<void>
   getWindowSize?(driver: TDriver): Promise<Size>
   setViewportSize?(driver: TDriver, size: Size): Promise<void>

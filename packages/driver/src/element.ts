@@ -1,8 +1,7 @@
 import type * as types from '@applitools/types'
 import type {Context} from './context'
-import type {SpecUtils} from './utils'
 import * as utils from '@applitools/utils'
-import {makeSpecUtils} from './utils'
+import * as specUtils from './spec-utils'
 
 const snippets = require('@applitools/snippets')
 
@@ -22,7 +21,6 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   private _originalOverflow: any
   private _touchPadding: number
   private _logger: any
-  private _utils: SpecUtils<TDriver, TContext, TElement, TSelector>
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -37,7 +35,6 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     if (options.element instanceof Element) return options.element
 
     this._spec = options.spec
-    this._utils = makeSpecUtils(options.spec)
 
     if (options.context) this._context = options.context
     if (options.logger) this._logger = options.logger
@@ -47,7 +44,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       // Some frameworks contains information about the selector inside an element
       this._selector = options.selector ?? this._spec.extractSelector?.(options.element)
       this._index = options.index
-    } else if (this._utils.isSelector(options.selector)) {
+    } else if (specUtils.isSelector(this._spec, options.selector)) {
       this._selector = options.selector
     } else {
       throw new TypeError('Element constructor called with argument of unknown type!')
