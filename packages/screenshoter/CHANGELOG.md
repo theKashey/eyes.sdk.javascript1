@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- scroll to 0,0 before taking stitched screenshot
 
 ## 3.3.10 - 2022/2/16
 

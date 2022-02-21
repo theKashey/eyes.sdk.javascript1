@@ -50,10 +50,17 @@ async function takeScreenshot({
 
   const target = await getTarget({window, context, region, fully, scrollingMode, logger})
 
-  if (driver.isWeb && hideScrollbars) await target.scroller.hideScrollbars()
+  if (target.scroller) {
+    await target.scroller.preserveState()
+    if (driver.isWeb && hideScrollbars) await target.scroller.hideScrollbars()
+  }
 
   try {
     if (!window) await scrollIntoViewport({...target, logger})
+
+    if (fully && target.scroller) {
+      await target.scroller.moveTo({x: 0, y: 0}, await driver.mainContext.getScrollingElement())
+    }
 
     const screenshot =
       fully && target.scroller
@@ -63,10 +70,6 @@ async function takeScreenshot({
     screenshot.image.scale(driver.viewportScale)
 
     if (hooks && hooks.afterScreenshot) {
-      // imitate image-like state for the hook
-      if (window && fully && target.scroller) {
-        await target.scroller.moveTo({x: 0, y: 0}, await driver.mainContext.getScrollingElement())
-      }
       await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
     }
 
@@ -74,6 +77,7 @@ async function takeScreenshot({
   } finally {
     if (target.scroller) {
       await target.scroller.restoreScrollbars()
+      await target.scroller.restoreState()
     }
 
     // if there was active element and we have blurred it, then restore focus
