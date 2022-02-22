@@ -17,7 +17,7 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier", "node"],
+  "plugins": ["@typescript-eslint", "prettier", "node", "mocha-no-only"],
   "extends": ["plugin:@typescript-eslint/recommended", "prettier", "prettier/@typescript-eslint"],
   "rules": {
     "prettier/prettier": ["error", {
@@ -31,6 +31,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-var-requires": "off"
+    "@typescript-eslint/no-var-requires": "off",
+    "mocha-no-only/mocha-no-only": "error"
   }
 }

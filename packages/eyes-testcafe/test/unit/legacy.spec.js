@@ -177,7 +177,7 @@ describe('util', () => {
       assert.deepStrictEqual(config, {})
     })
   })
-  describe.only('translate applitools.config.js file contents to config', () => {
+  describe('translate applitools.config.js file contents to config', () => {
     it('works', () => {
       const args = {
         apiKey: 'asdf',
