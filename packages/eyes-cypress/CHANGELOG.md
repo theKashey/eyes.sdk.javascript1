@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- support 'tapDirPath' with newer Cypress versions
 
 ## 3.23.8 - 2022/2/16
 

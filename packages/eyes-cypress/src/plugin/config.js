@@ -36,6 +36,7 @@ function makeConfig() {
   }
 
   const eyesConfig = {
+    tapDirPath: config.tapDirPath,
     eyesIsDisabled: !!config.isDisabled,
     eyesBrowser: JSON.stringify(config.browser),
     eyesLayoutBreakpoints: JSON.stringify(config.layoutBreakpoints),
