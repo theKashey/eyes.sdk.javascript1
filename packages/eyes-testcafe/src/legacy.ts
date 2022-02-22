@@ -208,8 +208,17 @@ export function transformConfig<TElement, TSelector>(
   if (options.concurrency) config.concurrentSessions = options.concurrency
   if (options.envName) config.environmentName = options.envName
   if (options.browser) config.browsersInfo = utils.types.isArray(options.browser) ? options.browser : [options.browser]
-  if (options.batchId || options.batchName || options.notifyOnCompletion) {
-    config.batch = {id: options.batchId, name: options.batchName, notifyOnCompletion: options.notifyOnCompletion}
+  if (
+    options.batchId ||
+    options.batchName ||
+    options.notifyOnCompletion ||
+    process.env.APPLITOOLS_NOTIFY_ON_COMPLETION
+  ) {
+    config.batch = {
+      id: options.batchId,
+      name: options.batchName,
+      notifyOnCompletion: options.notifyOnCompletion || !!process.env.APPLITOOLS_NOTIFY_ON_COMPLETION,
+    }
   }
   if (options.matchLevel || options.ignoreCaret || options.ignoreDisplacements || options.accessibilityValidation) {
     config.defaultMatchSettings = {

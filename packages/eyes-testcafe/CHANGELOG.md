@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for configuring notifyOnCompletion through an environment variable ([Trello](https://trello.com/c/WWdwQvpv))
 
 ## 1.15.4 - 2022/2/16
 

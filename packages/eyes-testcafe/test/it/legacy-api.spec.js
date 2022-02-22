@@ -339,3 +339,13 @@ test('should set concurrency correctly', async () => {
   const runner = eyes.getRunner()
   assert.deepStrictEqual(runner.testConcurrency, 10)
 })
+test('should support env vars for configuration', async () => {
+  try {
+    process.env.APPLITOOLS_NOTIFY_ON_COMPLETION = 'blah'
+    const eyes = new Eyes()
+    const config = eyes.getConfiguration()
+    assert.ok(config.batch.notifyOnCompletion)
+  } finally {
+    process.env.APPLITOOLS_NOTIFY_ON_COMPLETION = false
+  }
+})
