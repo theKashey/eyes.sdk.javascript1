@@ -43,7 +43,7 @@
     "@applitools/dom-snapshot": "4.5.12",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/logger": "1.0.11",
-    "@applitools/visual-grid-client": "15.8.65",
+    "@applitools/visual-grid-client": "15.9.0",
     "body-parser": "1.19.0",
     "chalk": "3.0.0",
     "cors": "2.8.5",
