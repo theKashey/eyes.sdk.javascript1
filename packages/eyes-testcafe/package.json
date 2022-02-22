@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-testcafe",
-  "version": "1.15.4",
+  "version": "1.15.5",
   "description": "Applitools Eyes SDK for TestCafe",
   "keywords": [
     "eyes-testcafe",
@@ -70,9 +70,9 @@
   },
   "dependencies": {
     "@applitools/eyes-api": "1.1.8",
-    "@applitools/eyes-sdk-core": "13.0.5",
+    "@applitools/eyes-sdk-core": "13.0.6",
     "@applitools/utils": "1.2.13",
-    "@applitools/visual-grid-client": "15.8.65"
+    "@applitools/visual-grid-client": "15.9.0"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.7",

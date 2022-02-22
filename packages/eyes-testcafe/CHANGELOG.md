@@ -2,7 +2,12 @@
 
 ## Unreleased
 
+
+## 1.15.5 - 2022/2/22
+
 - add support for configuring notifyOnCompletion through an environment variable ([Trello](https://trello.com/c/WWdwQvpv))
+- updated to @applitools/eyes-sdk-core@13.0.6 (from 13.0.5)
+- updated to @applitools/visual-grid-client@15.9.0 (from 15.8.65)
 
 ## 1.15.4 - 2022/2/16
 
