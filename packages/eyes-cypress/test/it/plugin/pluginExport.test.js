@@ -45,6 +45,7 @@ describe('pluginExport', () => {
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
 
     __module = {
@@ -69,6 +70,7 @@ describe('pluginExport', () => {
       version: '6.5.0',
       experimentalRunEvents: true,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
@@ -94,6 +96,7 @@ describe('pluginExport', () => {
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
@@ -117,6 +120,7 @@ describe('pluginExport', () => {
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
@@ -140,6 +144,7 @@ describe('pluginExport', () => {
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
@@ -163,6 +168,7 @@ describe('pluginExport', () => {
       eyesBrowser: undefined,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 });
