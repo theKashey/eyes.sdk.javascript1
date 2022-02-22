@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.23.9 - 2022/2/22
+
 - support 'tapDirPath' with newer Cypress versions
 - updated to @applitools/visual-grid-client@15.9.0 (from 15.8.65)
 
