@@ -16,6 +16,7 @@ describe('config', () => {
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
@@ -31,6 +32,7 @@ describe('config', () => {
       eyesDisableBrowserFetching: false,
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
     });
   });
 
