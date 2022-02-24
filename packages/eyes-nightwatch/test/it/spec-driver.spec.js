@@ -346,10 +346,12 @@ describe('spec driver', async () => {
       httpOnly: true,
       secure: true,
     }
-    if (input?.context) {
+    let inputContext
+    if (input && input.context) {
+      inputContext = input.context
       await driver.setCookie(cookie)
     }
-    const result = await spec.getCookies(driver, input?.context)
+    const result = await spec.getCookies(driver, inputContext)
     assert.deepStrictEqual(result, [cookie])
   }
   async function getTitle() {
