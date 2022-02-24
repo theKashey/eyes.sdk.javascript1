@@ -340,7 +340,7 @@ describe('spec driver', async () => {
     const cookie = {
       name: 'hello',
       value: 'world',
-      domain: input?.context ? '.applitools.github.io' : 'google.com',
+      domain: input && input.context ? '.applitools.github.io' : 'google.com',
       path: '/',
       expiry: 4025208067,
       httpOnly: true,
