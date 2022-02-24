@@ -3,8 +3,8 @@ const spec = require('../../dist/spec-driver')
 
 function extractElementId(element) {
   return element.value
-    ? element.value['ELEMENT'] ?? element.value['element-6066-11e4-a52e-4f735466cecf']
-    : element['ELEMENT'] ?? element['element-6066-11e4-a52e-4f735466cecf']
+    ? element.value['ELEMENT'] || element.value['element-6066-11e4-a52e-4f735466cecf']
+    : element['ELEMENT'] || element['element-6066-11e4-a52e-4f735466cecf']
 }
 
 async function equalElements(driver, element1, element2) {
