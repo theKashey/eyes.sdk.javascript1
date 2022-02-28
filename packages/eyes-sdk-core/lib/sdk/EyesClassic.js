@@ -194,7 +194,15 @@ class EyesClassic extends EyesCore {
   }
 
   async abort() {
-    return [await super.abort()]
+    return this._abortPromise = super.abort().then(results => {
+      if (results) {
+        const resultsJson = results.toJSON()
+        this._runner._allTestResult.push(resultsJson)
+        return [resultsJson]
+      } else {
+        return results
+      }
+    })
   }
 
   async getAppEnvironment() {

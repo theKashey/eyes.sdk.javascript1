@@ -42,22 +42,24 @@ class EyesRunner {
   async getAllTestResults() {
     await this._closeAllBatches()
     await this._awaitAllClosePromises()
-
+    await this._abortAllUnclosedEyes()
     return this._allTestResult
   }
 
+  async _abortAllUnclosedEyes() {
+    await Promise.all(this._eyesInstances.map(eyes => eyes._abortPromise || eyes.abort()))
+  }
+
   async _awaitAllClosePromises() {
-    if (this._eyesInstances.length > 0) {
-      await Promise.all(
-        this._eyesInstances.map(eyes =>
-          eyes._closePromise.catch(err => {
-            this._eyesInstances[0]
-              .getLogger()
-              .log(`Properly handling close error while await all close promises in getAllTestResults: ${err}`)
-          }),
-        ),
-      )
-    }
+    await Promise.all(
+      this._eyesInstances.map(eyes =>
+        eyes._closePromise.catch(err => {
+          this._eyesInstances[0]
+            .getLogger()
+            .log(`Properly handling close error while await all close promises in getAllTestResults: ${err}`)
+        }),
+      ),
+    )
   }
 
   /**

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update `Eyes.abort` so it fails gracefully when an Eyes instance is not found
 
 ## 1.1.0 - 2022/2/20
 

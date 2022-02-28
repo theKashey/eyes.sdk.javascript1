@@ -45,6 +45,7 @@
     "build:zip": "zip -j ./bin/eyes-universal.zip ./bin/eyes-universal-linux ./bin/eyes-universal-macos ./bin/eyes-universal-win.exe",
     "build:tgz": "tar -czf ./bin/eyes-universal.tar.gz -C ./bin ./eyes-universal-linux ./eyes-universal-macos ./eyes-universal-win.exe",
     "test": "yarn test:it && yarn test:e2e",
+    "test:unit": "mocha ./test/unit/*.spec.ts --exit --no-timeouts -r ts-node/register",
     "test:it": "echo 'mocha ./test/it/*.spec.js --no-timeouts'",
     "test:e2e": "mocha ./test/e2e/*.spec.ts --exit --no-timeouts -r ts-node/register",
     "deps": "bongo deps",

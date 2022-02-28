@@ -17,6 +17,7 @@ import {makeRefer} from './refer'
 import {withTracker} from './debug/tracker'
 import {makeSpec} from './spec-driver/custom'
 import * as webdriverSpec from './spec-driver/webdriver'
+import {abort} from './universal-server-eyes-commands'
 
 const IDLE_TIMEOUT = 900000 // 15min
 const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-logs`)
@@ -131,9 +132,7 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       return results
     })
     socket.command('Eyes.abort', async ({eyes}) => {
-      const results = await refer.deref(eyes).abort()
-      refer.destroy(eyes)
-      return results
+      return await abort({eyes, refer})
     })
 
     socket.command('Debug.checkSpecDriver', async ({driver, commands}) => {

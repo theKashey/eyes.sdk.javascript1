@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeAllEyes
 
 ## 13.0.6 - 2022/2/20
 
