@@ -13,8 +13,10 @@ describe('docker', () => {
     process.env.CVG_TESTS_REMOTE = undefined
     process.env.CVG_TESTS_DOCKER_RETRY_COUNT = 1
     const start = Date.now()
-    try {await waitForDockerBrowsers()} catch (error) {}
+    try {
+      await waitForDockerBrowsers()
+    } catch (error) {}
     const end = Date.now()
-    assert.ok((end - start) > 300)
+    assert.ok(end - start > 300)
   })
 })
