@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.1.0 - 2022/3/2
+
 - add support for specifying by environment variable the number of retries when checking if a docker container is ready
 
 ## 1.0.12 - 2022/2/15
