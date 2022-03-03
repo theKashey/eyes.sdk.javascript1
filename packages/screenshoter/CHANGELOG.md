@@ -1,8 +1,6 @@
 
 # Change Log
 
-- increase docker retry count when running web e2e tests
-
 ## Unreleased
 
 - scroll to 0,0 before taking stitched screenshot
