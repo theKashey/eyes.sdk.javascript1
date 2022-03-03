@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeAllEyes
+- support assigning 'scrollingElement' as 'body' or 'html' dom element
 
 ## 13.0.6 - 2022/2/20
 

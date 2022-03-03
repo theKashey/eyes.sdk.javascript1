@@ -3,6 +3,7 @@
 ## Unreleased
 
 - add `waitForSelector` method
+- support assigning 'scrollingElement' as 'body' or 'html' dom element
 
 ## 1.4.16 - 2022/2/16
 

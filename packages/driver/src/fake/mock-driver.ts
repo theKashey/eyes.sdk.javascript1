@@ -25,7 +25,6 @@ const DEFAULT_PROPS = {
   clientHeight: 400,
   overflow: null,
 }
-
 export class MockDriver {
   constructor(options = {}) {
     const {viewport = {width: 1000, height: 1000}, device, platform, browser, ua} = options
@@ -62,6 +61,9 @@ export class MockDriver {
     })
     this.mockScript(snippets.isEqualElements, async ([element1, element2]) => {
       return element1.id === element2.id
+    })
+    this.mockScript(snippets.getDocumentScrollingElement, async () => {
+      return 'html'
     })
     this.mockScript(snippets.getChildFramesInfo, () => {
       return Array.from(this._contexts.values())

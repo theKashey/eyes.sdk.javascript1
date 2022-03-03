@@ -217,6 +217,8 @@ class EyesVisualGrid extends EyesCore {
     try {
       return await operation()
     } finally {
+      await this._context.main.setScrollingElement(null)
+      await this._context.setScrollingElement(null)
       this._context = await originalContext.focus()
     }
   }

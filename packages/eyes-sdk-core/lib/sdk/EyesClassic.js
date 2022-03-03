@@ -90,7 +90,7 @@ class EyesClassic extends EyesCore {
     }
 
     this._checkSettings = checkSettings
-    return await this.checkWindowBase({
+    const result = await this.checkWindowBase({
       name: checkSettings.name,
       url: await this._driver.getUrl(),
       renderId: checkSettings.renderId,
@@ -100,6 +100,11 @@ class EyesClassic extends EyesCore {
       closeAfterMatch,
       throwEx,
     })
+
+    await this._context.main.setScrollingElement(null)
+    await this._context.setScrollingElement(null)
+
+    return result
   }
 
   async getScreenshot() {
