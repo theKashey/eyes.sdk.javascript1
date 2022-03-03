@@ -202,7 +202,7 @@ class EyesClassic extends EyesCore {
     return this._abortPromise = super.abort().then(results => {
       if (results) {
         const resultsJson = results.toJSON()
-        this._runner._allTestResult.push(resultsJson)
+        this._runner._allTestResult.push({testResults: resultsJson})
         return [resultsJson]
       } else {
         return results

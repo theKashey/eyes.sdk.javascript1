@@ -19,7 +19,7 @@ describe('waitBeforeCapture', () => {
   afterEach(async () => {
     if (destroyDriver) await destroyDriver()
     if (eyes) await eyes.abort()
-    manager.closeManager()
+    await manager.closeManager()
   })
 
   it('test waitBeforeCapture with layoutBreakpoints - config', async () => {

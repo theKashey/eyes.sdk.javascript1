@@ -4,7 +4,7 @@ const {makeSDK} = require('../../index')
 const assert = require('assert')
 
 describe('Core e2e - closeManager', () => {
-  let driver, destroyDriver
+  let driver, destroyDriver, sdk
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
   })
@@ -13,13 +13,16 @@ describe('Core e2e - closeManager', () => {
     if (destroyDriver) await destroyDriver()
   })
 
-  it('aborts unclosed tests with test results', async () => {
-    const sdk = makeSDK({
+  before(() => {
+    sdk = makeSDK({
       name: 'some sdk',
       version: '1.2.5.',
       spec,
       VisualGridClient,
     })
+  })
+
+  it('aborts unclosed tests with test results', async () => {
     const manager = await sdk.makeManager()
     const eyes = await manager.openEyes({
       driver,
@@ -30,8 +33,9 @@ describe('Core e2e - closeManager', () => {
         logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined
       },
     })
-    await eyes.check()
-    const results = await manager.closeManager()
-    assert.ok(results && results.length === 1 && results[0].constructor.name === 'TestResults' && results[0].getIsAborted())
+
+    await eyes.check({fully: false})
+    const summary = await manager.closeManager()
+    assert.ok(summary.results && summary.results.length === 1 && summary.results[0].constructor.name === 'TestResultsContainer' && summary.results[0].getIsAborted())
   })
 })

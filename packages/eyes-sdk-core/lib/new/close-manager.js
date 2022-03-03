@@ -30,14 +30,12 @@ function makeCloseManager({runner}) {
         }
       }
 
-      if (container.exception) summary.exceptions += 1
+      if (exception) summary.exceptions += 1
 
       if (testResults) {
-        if (testResults.status) {
-          if (testResults.status === TestResultsStatuses.Failed) summary.failed += 1
-          else if (testResults.status === TestResultsStatuses.Passed) summary.passed += 1
-          else if (testResults.status === TestResultsStatuses.Unresolved) summary.unresolved += 1
-        }
+        if (testResults.status === TestResultsStatuses.Failed) summary.failed += 1
+        else if (testResults.status === TestResultsStatuses.Passed) summary.passed += 1
+        else if (testResults.status === TestResultsStatuses.Unresolved) summary.unresolved += 1
 
         summary.matches += testResults.matches
         summary.missing += testResults.missing
