@@ -27,6 +27,8 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  CVG_TESTS_REMOTE: ${{secrets.CVG_TESTS_REMOTE}}
+  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
 jobs:
   verify:
     name: Verification
