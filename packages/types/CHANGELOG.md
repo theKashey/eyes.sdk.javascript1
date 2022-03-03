@@ -2,13 +2,11 @@
 
 ## Unreleased
 
+- fix `pageId` optional property
 
 ## 1.1.0 - 2022/3/1
 
-<<<<<<< Updated upstream
 - Add support to page coverage by adding `pageId` to `Eyes.check`.
-=======
->>>>>>> Stashed changes
 - add `waitForSelector` to `SpecDriver` type
 - add `WaitOptions` type
 
