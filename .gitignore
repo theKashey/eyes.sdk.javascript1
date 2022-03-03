@@ -45,4 +45,5 @@ docs
 doc
 bin
 **/types/**/*
+!packages/types
 .history/

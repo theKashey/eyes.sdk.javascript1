@@ -44,7 +44,7 @@ export abstract class EyesRunner {
   }
 
   async getAllTestResults(throwErr = true): Promise<TestResultsSummaryData> {
-    if (!this._manager) return new TestResultsSummaryData([])
+    if (!this._manager) return new TestResultsSummaryData()
     const [eyes] = this._eyes
     const deleteTest = (options: any) =>
       this._spec.deleteTest({
@@ -54,8 +54,8 @@ export abstract class EyesRunner {
         proxy: eyes.configuration.proxy,
       })
     try {
-      const results = await this._manager.closeAllEyes({throwErr})
-      return new TestResultsSummaryData(results.map(result => new TestResultsData(result, deleteTest)))
+      const summary = await this._manager.closeManager({throwErr})
+      return new TestResultsSummaryData({summary, deleteTest})
     } catch (err) {
       if (!err.info?.testResult) throw err
       const testResult = new TestResultsData(err.info.testResult, deleteTest)

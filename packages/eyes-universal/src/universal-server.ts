@@ -110,8 +110,8 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
       const eyesRef = refer.ref(eyes, manager)
       return eyesRef
     })
-    socket.command('EyesManager.closeAllEyes', async ({manager, throwErr}) => {
-      return refer.deref(manager).closeAllEyes({throwErr})
+    socket.command('EyesManager.closeManager', async ({manager, throwErr}) => {
+      return refer.deref(manager).closeManager({throwErr})
     })
 
     socket.command('Eyes.check', async ({eyes, settings, config}) => {

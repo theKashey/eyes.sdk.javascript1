@@ -36,7 +36,7 @@ function makeSDK(settings = {}) {
 
     history.push({command: 'makeManager', data: config})
 
-    return {openEyes, closeAllEyes}
+    return {openEyes, closeManager}
 
     function openEyes({driver, config, on}) {
       assert.ok(isDriver(driver), '"driver" is not a driver')
@@ -117,7 +117,7 @@ function makeSDK(settings = {}) {
       }
     }
 
-    function closeAllEyes() {
+    function closeManager() {
       return results
     }
   }

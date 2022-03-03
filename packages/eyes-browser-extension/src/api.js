@@ -41,8 +41,8 @@ class EyesManager {
     const eyes = await messenger.request('EyesManager.openEyes', {manager: this._manager, ...options})
     return new Eyes({eyes})
   }
-  async closeAllEyes(options) {
-    return messenger.request('EyesManager.closeAllEyes', {manager: this._manager, ...options})
+  async closeManager(options) {
+    return messenger.request('EyesManager.closeManager', {manager: this._manager, ...options})
   }
 }
 

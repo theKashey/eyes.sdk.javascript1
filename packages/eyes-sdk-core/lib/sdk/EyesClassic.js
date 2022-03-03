@@ -178,16 +178,21 @@ class EyesClassic extends EyesCore {
       })
       .then(results => {
         if (isErrorCaught) {
-          if (results.info && results.info.testResult) return [results.info.testResult]
-          else throw results
+          if (results.info && results.info.testResult) return {testResults: results.info.testResult}
+          else return {exception: results}
         }
-        return [results.toJSON()]
+        return {testResults: results.toJSON()}
       })
-      .then(results => {
+      .then(container => {
         if (this._runner) {
-          this._runner._allTestResult.push(...results)
+          this._runner._allTestResult.push(container)
         }
-        return results
+        
+        if (container.testResults) {
+          return [container.testResults]
+        } else {
+          throw container.exception
+        }
       })
 
     return this._closePromise

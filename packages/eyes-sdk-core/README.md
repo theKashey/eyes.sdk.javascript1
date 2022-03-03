@@ -85,22 +85,22 @@ const eyes = await manager.openEyes({
 })
 ```
 
-#### manager.closeAllEyes
+#### manager.closeManager
 
-Closes all open tests, and waits for all of them to finish.
+Aborts all open tests, and waits for all of them to finish.
 
 Parameters:
 
-- `throwOnDiff` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests.
+- `throwErr` - boolean indicating whether to throw an exception if a visual difference is detected in one or more tests.
 
-Returns: Array of [TestResults](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205) (i.e. TestResults[]).
+Returns: [TestResultSummary](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205). // TODO fix link
 
 For example:
 
 ```js
-const allTestResults = await manager.closeAllEyes()
+const testResultsSummary = await manager.closeManager()
 
-for (const testResults of allTestResults) {
+for (const {testResults} of testResultsSummary.results) {
     console.log(`Test ${testResults.name}: ${testResults.status}`)
 }
 ```

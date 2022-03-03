@@ -72,8 +72,8 @@ messenger.command('EyesManager.openEyes', async ({manager, config, on}, sender) 
   })
   return refer.ref(eyes)
 })
-messenger.command('EyesManager.closeAllEyes', async ({manager, throwErr}) => {
-  return refer.deref(manager).closeAllEyes({throwErr})
+messenger.command('EyesManager.closeManager', async ({manager, throwErr}) => {
+  return refer.deref(manager).closeManager({throwErr})
 })
 
 messenger.command('Eyes.check', async ({eyes, settings, config}) => {

@@ -20,7 +20,7 @@
     - [Client-initiated commands](#client-initiated-commands)
       - [Core.makeManager](#coremakemanager)
       - [EyesManager.openEyes](#eyesmanageropeneyes)
-      - [EyesManage.closeAllEyes](#eyesmanageclosealleyes)
+      - [EyesManager.closeManager](#eyesmanagerclosemanager)
       - [Eyes.check](#eyescheck)
       - [Eyes.locate](#eyeslocate)
       - [Eyes.extractTextRegions](#eyesextracttextregions)
@@ -141,7 +141,7 @@ In order to perform any action, the *Client* has to send a proper request to the
 #### Core.makeManager
 This request should be sent to create a manager object. It expects input of type [EyesManagerConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L19).
 
-In response client should expect to get a manager reference ([ManagerRef](#Reference-format)), this reference has to be used in order to perform manager related actions ([EyesManager.openEyes](#EyesManager.openEyes), [EyesManager.closeAllEyes](#EyesManager.closeAllEyes))
+In response client should expect to get a manager reference ([ManagerRef](#Reference-format)), this reference has to be used in order to perform manager related actions ([EyesManager.openEyes](#EyesManager.openEyes), [EyesManager.closeManager](#EyesManager.closeManager))
 
 > Do not send this command in a moment when `EyesManager` is constructed but instead send it lazily when the actual eyes object has to be opened. Pay attention that in this architecture eyes could be created only from a manager instance, and creation and opening of the eyes are combined in a single operation.
 
@@ -157,11 +157,12 @@ This command has to be used in order to create an eyes object. It expects input 
 
 In response client should expect to get an eyes reference ([EyesRef](#Reference-format)), this reference has to be used in eyes related requests ([Eyes.check](#Eyes.check), [Eyes.locate](#Eyes.locate), [Eyes.extractTextRegions](#Eyes.extractTextRegions), [Eyes.extractText](#Eyes.extractText), [Eyes.close](#Eyes.close), [Eyes.abort](#Eyes.abort))
 
-#### EyesManage.closeAllEyes
-This command is meant to be used to close all eyes objects created with this runner and return results from each of the eyes objects. It doesn't expect any input except a related [ManagerRef](#Reference-format) (from [Core.makeManager](#Core.makeManager):
+#### EyesManage.closeManager
+This command is meant to be used to close all eyes objects created with this runner, abort unclosed test, and return a summary with results, and exceptions from each of the eyes objects. It expects an input with a related [ManagerRef](#Reference-format) (from [Core.makeManager](#Core.makeManager) and a `throwErr` property:
 ```ts
 {
   manager: ManagerRef
+  throwErr: boolean
 }
 ```
 

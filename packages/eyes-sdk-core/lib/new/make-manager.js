@@ -2,7 +2,7 @@ const VisualGridRunner = require('../runner/VisualGridRunner')
 const ClassicRunner = require('../runner/ClassicRunner')
 
 const makeOpenEyes = require('./open-eyes')
-const makeCloseAllEyes = require('./close-all-eyes')
+const makeCloseManager = require('./close-manager')
 
 function makeMakeManager(sdk) {
   return function makeManager({type, concurrency, legacy} = {}) {
@@ -11,7 +11,7 @@ function makeMakeManager(sdk) {
 
     return {
       openEyes: makeOpenEyes({sdk, runner}),
-      closeAllEyes: makeCloseAllEyes({sdk, runner}),
+      closeManager: makeCloseManager({sdk, runner}),
     }
   }
 }

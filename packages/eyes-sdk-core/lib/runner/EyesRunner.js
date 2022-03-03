@@ -6,7 +6,7 @@ class EyesRunner {
   constructor() {
     /** @type {Eyes[]} */
     this._eyesInstances = []
-    /** @type {TestResults[]} */
+    /** @type {TestResultContainer[]} */
     this._allTestResult = []
     this._getBatchInfo = undefined
   }

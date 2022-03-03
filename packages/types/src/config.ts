@@ -12,9 +12,7 @@ import {
   ImageRotation,
   ImageCropRect,
   ImageCropRegion,
-  DesktopBrowserRenderer,
-  ChromeEmulationDeviceRenderer,
-  IOSDeviceRenderer,
+  BrowserInfoRenderer,
 } from './data'
 
 export type EyesManagerConfig<TType extends 'vg' | 'classic' = 'vg' | 'classic'> = {
@@ -91,7 +89,7 @@ export type EyesClassicConfig<TElement = unknown, TSelector = unknown> = {
 
 export type EyesUFGConfig = {
   concurrentSessions?: number
-  browsersInfo?: (DesktopBrowserRenderer | ChromeEmulationDeviceRenderer | IOSDeviceRenderer)[]
+  browsersInfo?: BrowserInfoRenderer[]
   visualGridOptions?: Record<string, any>
   layoutBreakpoints?: boolean | number[]
   disableBrowserFetching?: boolean

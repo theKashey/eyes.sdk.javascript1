@@ -3,7 +3,7 @@ const spec = require('@applitools/spec-driver-selenium')
 const {makeSDK} = require('../../index')
 const assert = require('assert')
 
-describe('Core e2e - closeAllEyes', () => {
+describe('Core e2e - closeManager', () => {
   let driver, destroyDriver
   beforeEach(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
@@ -31,7 +31,7 @@ describe('Core e2e - closeAllEyes', () => {
       },
     })
     await eyes.check()
-    const results = await manager.closeAllEyes()
+    const results = await manager.closeManager()
     assert.ok(results && results.length === 1 && results[0].constructor.name === 'TestResults' && results[0].getIsAborted())
   })
 })

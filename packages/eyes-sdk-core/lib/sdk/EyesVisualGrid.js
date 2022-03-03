@@ -226,6 +226,7 @@ class EyesVisualGrid extends EyesCore {
   }
 
   async close() {
+    const browsersInfo = this._configuration.getBrowsersInfo()
     let isErrorCaught = false
     this._closePromise = this._closeCommand(true)
       .catch(err => {
@@ -235,16 +236,28 @@ class EyesVisualGrid extends EyesCore {
       .then(results => {
         this._isOpen = false
         if (isErrorCaught) {
-          const error = TypeUtils.isArray(results) ? results.find(result => result instanceof Error) : results
-          if (!error.info || !error.info.testResult) throw error
+          if (!Array.isArray(results)) throw results
         }
-        return results.map(result => (result instanceof Error ? result.info.testResult : result.toJSON()))
+        return results.map((result, i) => {
+          const testResults = result instanceof Error ? result.info && result.info.testResult : result.toJSON()
+          const exception = testResults ? null : result
+          return {
+            testResults,
+            exception,
+            browserInfo: browsersInfo[i]
+          }
+        })
       })
-      .then(results => {
+      .then(containers => {
         if (this._runner) {
-          this._runner._allTestResult.push(...results)
+          this._runner._allTestResult.push(...containers)
         }
-        return results
+        const errorContainer = containers.find(({exception}) => !!exception)
+        if (errorContainer) {
+          throw errorContainer.exception
+        }
+
+        return containers.map(({testResults}) => testResults)
       })
 
     return this._closePromise

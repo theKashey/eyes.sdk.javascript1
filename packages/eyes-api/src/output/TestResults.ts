@@ -39,14 +39,16 @@ export type TestResults = {
   readonly url?: string
 }
 
+export type DeleteTestFunc = (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>
+
 export class TestResultsData implements Required<TestResults> {
   private _results: Mutable<TestResults> = {} as any
-  private readonly _deleteTest: (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>
+  private readonly _deleteTest: DeleteTestFunc
 
   /** @internal */
   constructor(
     results?: TestResults,
-    deleteTest?: (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>,
+    deleteTest?: DeleteTestFunc,
   ) {
     this._deleteTest = deleteTest
     if (!results) return this

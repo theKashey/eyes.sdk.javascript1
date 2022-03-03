@@ -1,12 +1,11 @@
 import * as utils from '@applitools/utils'
-import {TestResultsStatusEnum} from '../enums/TestResultsStatus'
-import {TestFailedError} from '../errors/TestFailedError'
-import {TestResults} from './TestResults'
-import {TestResultContainer, TestResultContainerData} from './TestResultContainer'
+import type * as types from '@applitools/types'
+import {TestResultContainerData} from './TestResultContainer'
+import {DeleteTestFunc} from './TestResults'
 
-export type TestResultsSummary = Iterable<TestResultContainer>
+export type TestResultsSummary = types.TestResultSummary
 
-export class TestResultsSummaryData implements TestResultsSummary {
+export class TestResultsSummaryData implements Iterable<types.TestResultContainer> {
   private _results: TestResultContainerData[] = []
   private _passed = 0
   private _unresolved = 0
@@ -17,35 +16,19 @@ export class TestResultsSummaryData implements TestResultsSummary {
   private _matches = 0
 
   /** @internal */
-  constructor(results: (TestResults | TestResultContainer | Error)[]) {
-    for (const result of results) {
-      let container
-      if (utils.types.has(result, ['testResults', 'exception'])) {
-        container = new TestResultContainerData(result)
-      } else if (result instanceof TestFailedError) {
-        container = new TestResultContainerData({testResults: result.testResults, exception: result})
-      } else if (result instanceof Error) {
-        container = new TestResultContainerData({testResults: null, exception: result})
-      } else {
-        container = new TestResultContainerData({testResults: result, exception: null})
-      }
-
-      this._results.push(container)
-
-      if (container.exception) this._exceptions += 1
-
-      if (container.testResults) {
-        if (container.testResults.status) {
-          if (container.testResults.status === TestResultsStatusEnum.Failed) this._failed += 1
-          else if (container.testResults.status === TestResultsStatusEnum.Passed) this._passed += 1
-          else if (container.testResults.status === TestResultsStatusEnum.Unresolved) this._unresolved += 1
-        }
-
-        this._matches += container.testResults.matches
-        this._missing += container.testResults.missing
-        this._mismatches += container.testResults.mismatches
-      }
-    }
+  constructor(options?: {summary: types.TestResultSummary, deleteTest: DeleteTestFunc}) {
+    if (!options) return
+    
+    const {summary, deleteTest} = options
+    
+    this._results = summary.results.map(container => new TestResultContainerData(container, deleteTest))
+    this._passed = summary.passed
+    this._unresolved = summary.unresolved
+    this._failed = summary.failed
+    this._exceptions = summary.exceptions
+    this._mismatches = summary.mismatches
+    this._missing = summary.missing
+    this._matches = summary.matches
   }
 
   getAllResults(): TestResultContainerData[] {
@@ -57,12 +40,7 @@ export class TestResultsSummaryData implements TestResultsSummary {
   }
 
   /** @internal */
-  toObject(): TestResultsSummary {
-    return this._results
-  }
-
-  /** @internal */
-  toJSON(): Array<TestResultContainer> {
+  toJSON(): Array<types.TestResultContainer> {
     return this._results.map(container => utils.general.toJSON(container))
   }
 

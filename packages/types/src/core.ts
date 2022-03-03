@@ -1,4 +1,4 @@
-import {Size, Region, TextRegion, MatchResult, TestResult} from './data'
+import {Size, Region, TextRegion, MatchResult, TestResult, TestResultSummary} from './data'
 import {EyesManagerConfig, EyesConfig} from './config'
 import {
   CheckSettings,
@@ -28,7 +28,7 @@ export interface EyesManager<TDriver, TElement, TSelector> {
     logger?: Logger
     on?: (event: string, data?: Record<string, any>) => void
   }): Promise<Eyes<TElement, TSelector>>
-  closeAllEyes: (options?: {throwErr: boolean}) => Promise<TestResult[]>
+  closeManager: (options?: {throwErr: boolean}) => Promise<TestResultSummary>
 }
 
 export interface Eyes<TElement, TSelector> {

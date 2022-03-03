@@ -198,13 +198,15 @@ export type IOSDeviceRenderer = {
   }
 }
 
+export type BrowserInfoRenderer = DesktopBrowserRenderer | ChromeEmulationDeviceRenderer | IOSDeviceRenderer
+
 export type MatchResult = {
   readonly asExpected?: boolean
   readonly windowId?: number
 }
 
 export type TestResult = {
-  readonly testId?: string
+  readonly id?: string
   readonly name?: string
   readonly secretToken?: string
   readonly status?: TestResultsStatus
@@ -267,3 +269,20 @@ export type SessionUrls = {
   readonly batch?: string
   readonly session?: string
 }
+
+export type TestResultContainer = {
+  readonly exception?: Error
+  readonly testResults?: TestResult
+  readonly browserInfo?: BrowserInfoRenderer
+}
+
+export type TestResultSummary = {
+  results: TestResultContainer[];
+  passed: number;
+  unresolved: number;
+  failed: number;
+  exceptions: number;
+  mismatches: number;
+  missing: number;
+  matches: number
+} & Iterable<TestResultContainer>
