@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.1.1 - 2022/3/3
+
 - fix `pageId` optional property
 
 ## 1.1.0 - 2022/3/1
