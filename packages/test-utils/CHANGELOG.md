@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.1.1 - 2022/3/4
+
 - add error handling when a URL is not provided when checking if a docker container is ready
 
 ## 1.1.0 - 2022/3/2
