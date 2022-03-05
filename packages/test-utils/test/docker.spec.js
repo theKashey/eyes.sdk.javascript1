@@ -10,13 +10,23 @@ describe('docker', () => {
   })
 
   it('waitForDockerBrowsers waits the correct amount of time', async () => {
-    process.env.CVG_TESTS_REMOTE = undefined
-    process.env.CVG_TESTS_DOCKER_RETRY_COUNT = 1
     const start = Date.now()
-    try {
-      await waitForDockerBrowsers()
-    } catch (error) {}
+    await assert.rejects(
+      async () => {
+        await waitForDockerBrowsers({remoteUrl: 'http://localhost:4443/wd/hub', retries: 1})
+      },
+      {message: /containers failed to start before running tests/},
+    )
     const end = Date.now()
     assert.ok(end - start > 300)
+  })
+
+  it('waitForDockerBrowsers throws when the remote URL is not provided', () => {
+    return assert.rejects(
+      async () => {
+        await waitForDockerBrowsers({remoteUrl: undefined, retries: 0})
+      },
+      {message: /URL not provided/},
+    )
   })
 })
