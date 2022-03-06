@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+## 2.2.0 - 2022/3/6
+
 - support assigning 'scrollingElement' as 'body' or 'html' dom element
 
 ## 2.1.15 - 2022/2/16
