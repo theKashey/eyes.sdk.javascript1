@@ -102,7 +102,7 @@ export class EyesManager implements types.EyesManager<Driver, Element, Selector>
     return new Eyes({eyes, socket: this._socket})
   }
 
-  async closeManager({throwErr}): Promise<types.TestResultSummary> {
+  async closeManager({throwErr}: {throwErr: boolean}): Promise<types.TestResultSummary> {
     return this._socket.request('EyesManager.closeManager', {manager: this._manager, throwErr})
   }
 }
