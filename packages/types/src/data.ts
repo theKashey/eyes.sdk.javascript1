@@ -283,12 +283,12 @@ export type TestResultContainer = {
 }
 
 export type TestResultSummary = {
-  results: TestResultContainer[];
-  passed: number;
-  unresolved: number;
-  failed: number;
-  exceptions: number;
-  mismatches: number;
-  missing: number;
+  results: TestResultContainer[]
+  passed: number
+  unresolved: number
+  failed: number
+  exceptions: number
+  mismatches: number
+  missing: number
   matches: number
 } & Iterable<TestResultContainer>
