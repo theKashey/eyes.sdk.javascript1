@@ -1,15 +1,13 @@
-'use strict'
-const {describe, it} = require('mocha')
 const {expect} = require('chai')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const createFakeWrapper = require('../util/createFakeWrapper')
 const {apiKeyFailMsg} = require('../../src/sdk/wrapperUtils')
 const {delay} = require('@applitools/functional-commons')
 
-const apiKey = 'api key'
-const appName = 'app name'
-
 describe('renderingGridClient', () => {
+  const apiKey = 'api key'
+  const appName = 'app name'
+
   it('sets a new batch', async () => {
     const wrapper = createFakeWrapper('http://some_url')
     const {openEyes} = makeRenderingGridClient({
@@ -109,7 +107,7 @@ describe('renderingGridClient', () => {
 
   it('passes concurrentRendersPerTest from env var APPLITOOLS_CONCURRENT_RENDERS_PER_TEST', async () => {
     process.env.APPLITOOLS_CONCURRENT_RENDERS_PER_TEST = 2
-    const wrapper = createFakeWrapper('http://some_url')
+    const wrapper = createFakeWrapper('http://some_url', {empty: true})
     let renderCallCount = 0
     const origRenderBatch = wrapper.renderBatch
     wrapper.renderBatch = async renderRequests => {

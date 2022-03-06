@@ -9,8 +9,7 @@ const makeWaitForTestEnd = require('./makeWaitForTestEnd')
 function makeCheckWindow({
   globalState,
   testController,
-  createRGridDOMAndGetResourceMapping,
-  putResources,
+  createResourceMapping,
   getRenderJobInfo,
   render,
   waitForRenderedStatus,
@@ -28,6 +27,7 @@ function makeCheckWindow({
   matchLevel: _matchLevel,
   visualGridOptions: _visualGridOptions,
   resolveTests,
+  autProxy,
 }) {
   return function checkWindow({
     snapshot,
@@ -90,19 +90,14 @@ function makeCheckWindow({
     })
 
     const resourcesPromises = snapshots.map(async (snapshot, index) => {
-      const {rGridDom: dom, allResources: resources} = await createRGridDOMAndGetResourceMapping({
-        resourceUrls: snapshot.resourceUrls,
-        resourceContents: snapshot.resourceContents,
-        cdt: snapshot.cdt,
-        frames: snapshot.frames,
-        userAgent,
-        referer: url,
-        proxySettings: wrappers[0].getProxy(),
-        cookies,
+      return createResourceMapping({
+        snapshot,
         browserName: browsers[index].name,
+        userAgent,
+        cookies,
+        proxy: wrappers[0].getProxy(),
+        autProxy,
       })
-      await putResources([dom, ...Object.values(resources)])
-      return {dom, resources: Object.values(resources)}
     })
 
     const checkWindowRunningJobs = browsers.map((_browser, index) =>

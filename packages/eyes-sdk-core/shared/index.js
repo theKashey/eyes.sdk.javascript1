@@ -18,9 +18,6 @@ exports.RenderRequest = require('../lib/renderer/RenderRequest')
 exports.RenderStatus = require('../lib/renderer/RenderStatus')
 exports.RenderStatusResults = require('../lib/renderer/RenderStatusResults')
 
-exports.RGridResource = require('../lib/renderer/RGridResource')
-exports.RGridDom = require('../lib/renderer/RGridDom')
-
 exports.EyesBase = require('../lib/sdk/EyesBase')
 
 exports.getTunnelAgentFromProxy = require('../lib/server/getTunnelAgentFromProxy')

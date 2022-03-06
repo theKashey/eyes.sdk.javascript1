@@ -1,16 +1,14 @@
 /* global fetch */
 'use strict'
 
-const makeGetAllResources = require('./getAllResources')
-const extractCssResources = require('./extractCssResources')
-const makeFetchResource = require('./fetchResource')
-const createResourceCache = require('./createResourceCache')
+const makeFetchResource = require('./resources/fetchResource')
+const makePutResources = require('./resources/putResources')
+const makeProcessResources = require('./resources/processResources')
+const makeCreateResourceMapping = require('./resources/createResourceMapping')
 const makeWaitForRenderedStatus = require('./waitForRenderedStatus')
 const makeGetRenderStatus = require('./getRenderStatus')
-const makePutResources = require('./putResources')
-const makeRender = require('./render')
-const makeCreateRGridDOMAndGetResourceMapping = require('./createRGridDOMAndGetResourceMapping')
 const getRenderMethods = require('./getRenderMethods')
+const makeRender = require('./render')
 const {createRenderWrapper} = require('./wrapperUtils')
 const {ptimeoutWithError} = require('@applitools/functional-commons')
 const {makeLogger} = require('@applitools/logger')
@@ -27,37 +25,17 @@ function makeRenderer({apiKey, showLogs, serverUrl, proxy, renderingInfo, render
   )
   renderWrapper.setRenderingInfo(renderingInfo)
 
-  const resourceCache = createResourceCache()
-  const fetchCache = createResourceCache()
   const fetchWithTimeout = url =>
     ptimeoutWithError(fetch(url), fetchResourceTimeout, 'fetch timed out')
-  const fetchResource = makeFetchResource({logger, fetchCache, fetch: fetchWithTimeout})
-  const putResources = makePutResources({
-    logger,
-    doPutResource,
-    doCheckResources,
-    fetchCache,
-    resourceCache,
-  })
+  const fetchResource = makeFetchResource({logger, fetch: fetchWithTimeout})
+  const putResources = makePutResources({doPutResource, doCheckResources, logger})
+  const processResources = makeProcessResources({fetchResource, putResources, logger})
+  const createResourceMapping = makeCreateResourceMapping({processResources})
   const render = makeRender({logger, doRenderBatch, timeout: renderTimeout})
   const getRenderStatus = makeGetRenderStatus({logger, doGetRenderStatus})
   const waitForRenderedStatus = makeWaitForRenderedStatus({logger, getRenderStatus})
-  const getAllResources = makeGetAllResources({
-    resourceCache,
-    extractCssResources,
-    fetchResource,
-    logger,
-  })
-  const createRGridDOMAndGetResourceMapping = makeCreateRGridDOMAndGetResourceMapping({
-    getAllResources,
-  })
 
-  return {createRGridDOMAndGetResourceMapping, render: putResourcesAndRender, waitForRenderedStatus}
-
-  async function putResourcesAndRender(renderRequest) {
-    await putResources([renderRequest.getDom(), ...renderRequest.getResources()])
-    return render(renderRequest)
-  }
+  return {createResourceMapping, render, waitForRenderedStatus}
 }
 
 module.exports = makeRenderer

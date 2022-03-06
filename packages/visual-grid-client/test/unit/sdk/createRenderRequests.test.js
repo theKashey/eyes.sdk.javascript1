@@ -1,80 +1,58 @@
-'use strict'
-const {describe, it} = require('mocha')
 const {expect} = require('chai')
-const getSha256Hash = require('../../util/getSha256Hash')
 const createRenderRequest = require('../../../src/sdk/createRenderRequest')
-const createRGridDom = require('../../../src/sdk/createRGridDom')
+const createResource = require('../../../src/sdk/resources/createResource')
+const createDomResource = require('../../../src/sdk/resources/createDomResource')
 
 describe('createRenderRequest', () => {
-  let url, renderInfo, dom, domObj, resources, resourcesObj
+  let renderInfo, url, resources, dom
 
   beforeEach(() => {
-    url = 'url'
     renderInfo = {
       getResultsUrl: () => 'resultsUrl',
       getStitchingServiceUrl: () => 'stitchingServiceUrl',
     }
-    const cdt = 'cdt'
-    domObj = {
-      contentType: 'x-applitools-html/cdt',
-      hash: getSha256Hash(JSON.stringify({resources: {}, domNodes: cdt})),
-      hashFormat: 'sha256',
-    }
-    dom = createRGridDom({resources: {}, cdt})
-    resources = []
-    resourcesObj = {}
+    url = 'url'
+    const resource1 = createResource({url: 'url1', value: 'content1'})
+    const resource2 = createResource({url: 'url2', value: 'content2'})
+    resources = {[resource1.url]: resource1.hash, [resource2.url]: resource2.hash}
+    dom = createDomResource({cdt: 'cdt', resources}).hash
   })
 
   it('works', () => {
-    const r1 = {getUrl: () => 'url1', getHashAsObject: () => 'hash1'}
-    const r2 = {getUrl: () => 'url2', getHashAsObject: () => 'hash2'}
-    const url = 'url'
-    const cdt = 'cdt'
-    const resources = [r1, r2]
-    const dom = createRGridDom({resources: {['url1']: r1, ['url2']: r2}, cdt})
-    const browser = {width: 1, height: 2, name: 'b1'}
-    const sizeMode = 'sizeMode'
-    const selector = 'selector'
-    const region = {left: 1, top: 2, width: 3, height: 4}
-    const scriptHooks = 'scriptHooks'
-    const sendDom = 'sendDom'
+    const resource1 = createResource({url: 'url1', value: 'content1'})
+    const resource2 = createResource({url: 'url2', value: 'content2'})
+    const resources = {[resource1.url]: resource1.hash, [resource2.url]: resource2.hash}
+    const dom = createDomResource({cdt: 'cdt', resources})
 
     const renderRequest = createRenderRequest({
       url,
       dom,
       resources,
-      browser,
+      browser: {width: 1, height: 2, name: 'b1'},
       renderInfo,
-      sizeMode,
-      selector,
-      region,
-      scriptHooks,
-      sendDom,
+      sizeMode: 'sizeMode',
+      selector: 'selector',
+      region: {left: 1, top: 2, width: 3, height: 4},
+      scriptHooks: 'scriptHooks',
+      sendDom: 'sendDom',
       userRegions: [],
     })
-
-    const resourcesObj = {url1: 'hash1', url2: 'hash2'}
-    const domObj = {
-      contentType: 'x-applitools-html/cdt',
-      hash: getSha256Hash(JSON.stringify({resources: resourcesObj, domNodes: 'cdt'})),
-      hashFormat: 'sha256',
-    }
 
     expect(renderRequest.toJSON()).to.eql({
       webhook: 'resultsUrl',
       stitchingService: 'stitchingServiceUrl',
       url,
-      dom: domObj,
-      resources: resourcesObj,
+      dom,
+      resources: resources,
       browser: {name: 'b1'},
-      scriptHooks,
-      sendDom,
+      scriptHooks: 'scriptHooks',
+      sendDom: 'sendDom',
       enableMultipleResultsPerSelector: true,
       renderInfo: {
         width: 1,
         height: 2,
-        selector,
-        sizeMode,
+        selector: 'selector',
+        sizeMode: 'sizeMode',
         region: {x: 1, y: 2, width: 3, height: 4},
       },
     })
@@ -97,8 +75,8 @@ describe('createRenderRequest', () => {
       webhook: 'resultsUrl',
       stitchingService: 'stitchingServiceUrl',
       url,
-      dom: domObj,
-      resources: resourcesObj,
+      dom,
+      resources,
       enableMultipleResultsPerSelector: true,
       renderInfo: {
         emulationInfo: {deviceName, screenOrientation},
@@ -130,8 +108,8 @@ describe('createRenderRequest', () => {
       webhook: 'resultsUrl',
       stitchingService: 'stitchingServiceUrl',
       url,
-      dom: domObj,
-      resources: resourcesObj,
+      dom,
+      resources,
       enableMultipleResultsPerSelector: true,
       renderInfo: {
         emulationInfo: {
@@ -165,8 +143,8 @@ describe('createRenderRequest', () => {
       webhook: 'resultsUrl',
       stitchingService: 'stitchingServiceUrl',
       url,
-      dom: domObj,
-      resources: resourcesObj,
+      dom,
+      resources,
       enableMultipleResultsPerSelector: true,
       renderInfo: {
         height: 2,
@@ -198,8 +176,8 @@ describe('createRenderRequest', () => {
       webhook: 'resultsUrl',
       stitchingService: 'stitchingServiceUrl',
       url,
-      dom: domObj,
-      resources: resourcesObj,
+      dom,
+      resources,
       browser: {name: 'safari'},
       platform: {name: 'ios'},
       enableMultipleResultsPerSelector: true,

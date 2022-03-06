@@ -2,9 +2,10 @@
 
 ## Unreleased
 
-- add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeAllEyes
+- Support 'AUTProxy' capability
 - support assigning 'scrollingElement' as 'body' or 'html' dom element
 - rename manager.closeAllEyes to manager.closeManager
+- add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeManager
 
 ## 13.0.6 - 2022/2/20
 

@@ -1,10 +1,10 @@
 'use strict'
 
-const toUriEncoding = require('./toUriEncoding')
-const toUnAnchoredUri = require('./toUnAnchoredUri')
+const toUriEncoding = require('../toUriEncoding')
+const toUnAnchoredUri = require('../toUnAnchoredUri')
 const valueParser = require('postcss-value-parser')
 
-function extractCssResources(cssText) {
+function extractCssDependencyUrls(cssText) {
   const urls = []
   const parsedValue = valueParser(cssText)
   parsedValue.walk((node, i, nodes) => {
@@ -29,4 +29,4 @@ function nodeUrls(node, i, nodes) {
   }
 }
 
-module.exports = extractCssResources
+module.exports = extractCssDependencyUrls

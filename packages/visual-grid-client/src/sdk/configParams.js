@@ -27,6 +27,7 @@ module.exports = [
   'branchName',
   'branch',
   'proxy',
+  'autProxy',
   'saveDiffs',
   'saveFailedTests',
   'saveNewTests',

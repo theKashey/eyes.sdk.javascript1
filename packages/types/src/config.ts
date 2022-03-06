@@ -7,6 +7,7 @@ import {
   Size,
   Region,
   Proxy,
+  AutProxy,
   Batch,
   CustomProperty,
   ImageRotation,
@@ -34,6 +35,7 @@ export type EyesBaseConfig = {
   apiKey?: string
   serverUrl?: string
   proxy?: Proxy
+  autProxy?: AutProxy
   isDisabled?: boolean
   connectionTimeout?: number
   removeSession?: boolean

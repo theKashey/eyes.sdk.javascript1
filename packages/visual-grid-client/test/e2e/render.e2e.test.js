@@ -1,8 +1,5 @@
-'use strict'
-
 const uaParser = require('ua-parser-js')
 const fetch = require('node-fetch')
-const {describe, it, before} = require('mocha')
 const {expect} = require('chai')
 const makeRenderer = require('../../src/sdk/renderer')
 const createRenderRequest = require('../../src/sdk/createRenderRequest')
@@ -35,24 +32,26 @@ describe('render e2e', () => {
       // {width: 640, height: 480, name: 'edgechromium-2'},
     ]
 
-    const {createRGridDOMAndGetResourceMapping, render, waitForRenderedStatus} = makeRenderer({
+    const {createResourceMapping, render, waitForRenderedStatus} = makeRenderer({
       apiKey,
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
       renderingInfo,
     })
 
-    const {rGridDom, allResources} = await createRGridDOMAndGetResourceMapping({
-      resourceUrls: [],
-      resourceContents: [],
-      cdt: [{nodeType: 3, nodeValue: 'renders older browser versions - works!'}],
-      frames: [],
+    const {dom, resources} = await createResourceMapping({
+      snapshot: {
+        cdt: [{nodeType: 3, nodeValue: 'renders older browser versions - works!'}],
+        frames: [],
+        resourceUrls: [],
+        resourceContents: [],
+      },
     })
 
     const renderRequests = browsers.map(browser =>
       createRenderRequest({
         url: 'http://something',
-        dom: rGridDom,
-        resources: Object.values(allResources),
+        dom,
+        resources,
         browser,
         renderInfo: renderingInfo,
         sizeMode: 'full-page',

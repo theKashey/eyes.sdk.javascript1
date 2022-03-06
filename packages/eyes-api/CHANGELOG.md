@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Support 'AUTProxy' capability
 - change EyesManager.closeAllEyes to EyesManager.closeManager 
 
 ## 1.1.8 - 2022/2/16

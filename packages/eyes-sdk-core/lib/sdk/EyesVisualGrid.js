@@ -106,6 +106,7 @@ class EyesVisualGrid extends EyesCore {
       apiKey: this._configuration.getApiKey(),
       showLogs: this._configuration.getShowLogs(),
       proxy: this._configuration.getProxy(),
+      autProxy: this._configuration.getAutProxy(),
       serverUrl: this._configuration.getServerUrl(),
       concurrency: this._runner.legacyConcurrency || this._configuration.getConcurrentSessions(),
       testConcurrency: this._runner.testConcurrency,

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Support 'AUTProxy' capability
 
 ## 1.1.1 - 2022/3/3
 

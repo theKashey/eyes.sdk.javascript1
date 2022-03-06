@@ -595,7 +595,7 @@ class ServerConnector {
    */
   async renderCheckResources(resources) {
     ArgumentGuard.notNull(resources, 'resources')
-    const hashes = resources.map(resource => resource.getHashAsObject())
+    const hashes = resources.map(resource => resource.hash)
     this._logger.log(`ServerConnector.renderCheckResources called with resources - ${hashes.map(({hash}) => hash)}`)
 
     const config = {
@@ -630,23 +630,23 @@ class ServerConnector {
    */
   async renderPutResource(resource) {
     ArgumentGuard.notNull(resource, 'resource')
-    ArgumentGuard.notNull(resource.getContent(), 'resource.getContent()')
-    this._logger.log(`ServerConnector.putResource called with resource#${resource.getSha256Hash()}`)
+    ArgumentGuard.notNull(resource.value, 'resource.value')
+    this._logger.log(`ServerConnector.putResource called with resource#${resource.hash.hash}`)
 
     const config = {
       name: 'renderPutResource',
       withApiKey: false,
       method: 'PUT',
-      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/resources/sha256/', resource.getSha256Hash()),
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/resources/sha256/', resource.hash.hash),
       headers: {
         'X-Auth-Token': this._renderingInfo.getAccessToken(),
-        'Content-Type': resource.getContentType(),
+        'Content-Type': resource.type,
       },
       maxBodyLength: 35.5 * 1024 * 1024, // 29.5 MB  (VG limit is 30MB)
       params: {
         'render-id': GeneralUtils.guid(),
       },
-      data: resource.getContent(),
+      data: resource.value,
     }
 
     const response = await this._axios.request(config)
@@ -657,8 +657,9 @@ class ServerConnector {
     }
 
     throw new Error(
-      `ServerConnector.putResource - unexpected status (${response.statusText}) for resource ${resource.getUrl() ||
-        ''} ${resource.getContentType()}`,
+      `ServerConnector.putResource - unexpected status (${response.statusText}) for resource ${resource.url || ''} ${
+        resource.type
+      }`,
     )
   }
 

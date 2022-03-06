@@ -125,6 +125,8 @@ describe('Configuration', () => {
       modifiedValue = 'dummyapikey'
     } else if (type === '_proxySettings') {
       modifiedValue = new ProxySettings('http://localhost:8888')
+    } else if (type === '_autProxy') {
+      modifiedValue = {proxy: 'http://localhost:8888'}
     } else if (type === '_properties') {
       modifiedValue = [new PropertyData('dummy', 'value')]
     } else if (type === '_browsersInfo') {
@@ -285,6 +287,11 @@ describe('Configuration', () => {
       configuration.setUseDom(true)
       configuration.setEnablePatterns(true)
       configuration.setIgnoreDisplacements(true)
+      configuration.setAutProxy({
+        proxy: 'http://some.url2',
+        domains: ['example.com'],
+      })
+
       configuration.setProxy({
         url: 'http://some.url',
         username: 'daniel',
@@ -301,6 +308,8 @@ describe('Configuration', () => {
       assert.strictEqual(configuration.getUseDom(), true)
       assert.strictEqual(configuration.getEnablePatterns(), true)
       assert.strictEqual(configuration.getIgnoreDisplacements(), true)
+      assert.strictEqual(configuration.getAutProxy().proxy.getUri(), 'http://some.url2')
+      assert.deepStrictEqual(configuration.getAutProxy().domains, ['example.com'])
       assert.deepStrictEqual(configuration.getProxy().toProxyObject(), {
         auth: {
           password: '123456',

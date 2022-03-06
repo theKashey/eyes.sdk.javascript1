@@ -6,7 +6,6 @@ const makeRender = require('../../../src/sdk/render')
 const {RenderStatus} = require('@applitools/eyes-sdk-core/shared')
 const FakeRunningRender = require('../../util/FakeRunningRender')
 const FakeRenderRequest = require('../../util/FakeRenderRequest')
-const createResourceCache = require('../../../src/sdk/createResourceCache')
 const testLogger = require('../../util/testLogger')
 const psetTimeout = p(setTimeout)
 
@@ -47,8 +46,6 @@ describe('render', () => {
 
   beforeEach(() => {
     resourcesPutted = []
-    resourceCache = createResourceCache()
-    fetchCache = createResourceCache()
     render = makeRender({
       resourceCache,
       fetchCache,

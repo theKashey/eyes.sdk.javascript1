@@ -1,166 +1,152 @@
 /* global fetch */
-'use strict'
-const {describe, it} = require('mocha')
-const {expect} = require('chai')
-const nock = require('nock')
-const makeFetchResource = require('../../../src/sdk/fetchResource')
-const testLogger = require('../../util/testLogger')
-const psetTimeout = require('util').promisify(setTimeout)
-const {FetchError} = require('node-fetch')
-const createResourceCache = require('../../../src/sdk/createResourceCache')
-const {presult} = require('@applitools/functional-commons')
-const toRGridResource = require('../../util/toRGridResource')
+/* eslint-disable node/no-unsupported-features/node-builtins */
 require('@applitools/isomorphic-fetch')
+const {expect} = require('chai')
+const assert = require('assert')
+const nock = require('nock')
+const makeFetchResource = require('../../../src/sdk/resources/fetchResource')
+const createResource = require('../../../src/sdk/resources/createResource')
+const logger = require('../../util/testLogger')
 
 describe('fetchResource', () => {
+  const mockResource = {
+    url: 'http://something',
+    type: 'some/content-type',
+    value: Buffer.from('bla'),
+  }
+  const expectedResource = createResource(mockResource)
+
+  const mockMediaResource = {
+    url: 'http://something',
+    type: 'audio/content-type',
+    value: Buffer.from('bla'),
+  }
+  const expectedMediaResource = createResource(mockMediaResource)
+
+  const urlResource = createResource({url: mockResource.url})
+
   it('fetches with content and content-type', async () => {
-    const fetchResource = makeFetchResource({logger: testLogger, retries: 0, fetch})
-    const url = 'http://something'
-    nock(url)
+    nock(mockResource.url)
       .get('/')
-      .reply(200, 'bla', {'content-type': 'some/content-type'})
+      .reply(200, mockResource.value, {'content-type': mockResource.type})
 
-    const resource = await fetchResource(toRGridResource({url}))
+    const fetchResource = makeFetchResource({fetch, retries: 0, logger})
 
-    expect(resource).to.eql(
-      toRGridResource({
-        url,
-        type: 'some/content-type',
-        value: Buffer.from('bla'),
-      }),
-    )
+    const resource = await fetchResource(urlResource)
+
+    expect(resource).to.eql(expectedResource)
   })
 
   it('fetches with retries', async () => {
-    const fetchResourceWithRetry = makeFetchResource({logger: testLogger, retries: 3, fetch})
-    const fetchResourceWithoutRetry = makeFetchResource({logger: testLogger, retries: 0, fetch})
-    const url = 'http://something'
-    const type = 'some/content-type'
-    const p1 = fetchResourceWithRetry(toRGridResource({url})).then(resource => {
-      expect(resource).to.eql(toRGridResource({url, type, value: Buffer.from('bla')}))
-    })
-    const p2 = fetchResourceWithoutRetry(toRGridResource({url})).catch(err => {
-      expect(err).to.be.an.instanceof(FetchError)
-    })
-    await psetTimeout(50)
-    nock(url)
+    let counter = 0
+    nock(mockResource.url)
       .get('/')
-      .reply(200, 'bla', {'content-type': type})
+      .reply(() => {
+        counter += 1
+        if (counter < 3) return null
+        return [200, mockResource.value, {'content-type': mockResource.type}]
+      })
 
-    await Promise.all([p1, p2])
+    const fetchResource = makeFetchResource({logger, retries: 3, fetch})
+
+    const resource = await fetchResource(urlResource)
+
+    expect(resource).to.eql(expectedResource)
   })
 
   it('caches requests', async () => {
-    const fetchCache = createResourceCache()
-    const fetchResource = makeFetchResource({logger: testLogger, retries: 0, fetchCache, fetch})
-    const url = 'http://something'
-    let counter = 0
-    nock(url)
+    nock(mockResource.url)
       .get('/')
-      .times(2)
-      .reply(200, () => ++counter, {'content-type': 'some/content-type'})
+      .once()
+      .reply(200, mockResource.value, {'content-type': mockResource.type})
 
-    const r1 = await fetchResource(toRGridResource({url}))
-    const r2 = await fetchResource(toRGridResource({url}))
-    expect(r1).to.eql(r2)
+    const fetchResource = makeFetchResource({logger, retries: 0, fetch})
+
+    const [resource1, resource2] = await Promise.all([
+      fetchResource(urlResource),
+      fetchResource(urlResource),
+    ])
+
+    expect(resource1).to.eql(expectedResource)
+    expect(resource2).to.eql(expectedResource)
   })
 
   it('fetches with retries event though fails', async () => {
     let called = 0
     const dontFetch = () => ((called += 1), Promise.reject(new Error('DONT FETCH')))
-    const fetchResourceWithRetry = makeFetchResource({
-      logger: testLogger,
-      retries: 3,
-      fetch: dontFetch,
-    })
-    const url = 'http://something'
-    expect((await presult(fetchResourceWithRetry(toRGridResource({url}))))[0].message).to.equal(
-      'DONT FETCH',
-    )
+    const fetchResourceWithRetry = makeFetchResource({fetch: dontFetch, retries: 3, logger})
+
+    await assert.rejects(fetchResourceWithRetry(urlResource), new Error('DONT FETCH'))
+
     expect(called).to.equal(4)
   })
 
   it('stops retry and returns errosStatusCode when getting bad status', async () => {
     let called = 0
-    const response = {ok: false, status: 404}
-    const dontFetch = () => ((called += 1), Promise.resolve(response))
-    const fetchResourceWithRetry = makeFetchResource({
-      logger: testLogger,
-      retries: 3,
-      fetch: dontFetch,
-    })
-    const url = 'http://something'
+    const dontFetch = () => ((called += 1), Promise.resolve({ok: false, status: 404}))
+    const fetchResourceWithRetry = makeFetchResource({fetch: dontFetch, retries: 3, logger})
 
-    expect(await fetchResourceWithRetry(toRGridResource({url}))).to.eql(
-      toRGridResource({url, errorStatusCode: 404}),
-    )
+    const resource = await fetchResourceWithRetry(urlResource)
+
+    expect(resource).to.eql(createResource({url: urlResource.url, errorStatusCode: 404}))
 
     expect(called).to.equal(1)
   })
 
   describe('mediaDownloadTimeout', () => {
     it('stop fetching media after mediaDownloadTimeout', async () => {
-      const fetchResource = makeFetchResource({logger: testLogger, mediaDownloadTimeout: 80, fetch})
-      const url = 'http://something2'
-      nock(url)
+      nock(mockMediaResource.url)
         .get('/')
         .delayBody(200)
-        .reply(200, 'bla', {'content-type': 'audio/content-type'})
+        .reply(200, mockMediaResource.value, {'content-type': mockMediaResource.type})
 
-      expect(await fetchResource(toRGridResource({url}))).to.eql(
-        toRGridResource({url, errorStatusCode: 599}),
-      )
+      const fetchResource = makeFetchResource({fetch, mediaDownloadTimeout: 80, logger})
+
+      const resource = await fetchResource(urlResource)
+
+      expect(resource).to.eql(createResource({url: urlResource.url, errorStatusCode: 599}))
     })
 
     it("doesn't include headers fetching time", async () => {
-      const fetchResource = makeFetchResource({logger: testLogger, mediaDownloadTimeout: 80, fetch})
-      const url = 'http://something2'
-      nock(url)
+      nock(mockMediaResource.url)
         .get('/')
         .delay(200)
-        .reply(200, 'bla', {'content-type': 'audio/content-type'})
+        .reply(200, mockMediaResource.value, {'content-type': mockMediaResource.type})
 
-      expect(await fetchResource(toRGridResource({url}))).to.eql(
-        toRGridResource({
-          url,
-          type: 'audio/content-type',
-          value: Buffer.from('bla'),
-        }),
-      )
+      const fetchResource = makeFetchResource({fetch, mediaDownloadTimeout: 80, logger})
+
+      const resource = await fetchResource(urlResource)
+
+      expect(resource).to.eql(expectedMediaResource)
     })
 
     it("doesn't apply to requests with content length", async () => {
-      const fetchResource = makeFetchResource({logger: testLogger, mediaDownloadTimeout: 80, fetch})
-      const url = 'http://something2'
-      nock(url)
+      nock(mockMediaResource.url)
         .get('/')
         .delayBody(200)
-        .reply(200, 'bla', {'content-type': 'audio/content-type', 'content-length': 3})
+        .reply(200, mockMediaResource.value, {
+          'content-type': mockMediaResource.type,
+          'content-length': 3,
+        })
 
-      expect(await fetchResource(toRGridResource({url}))).to.eql(
-        toRGridResource({
-          url,
-          type: 'audio/content-type',
-          value: Buffer.from('bla'),
-        }),
-      )
+      const fetchResource = makeFetchResource({fetch, mediaDownloadTimeout: 80, logger})
+
+      const resource = await fetchResource(urlResource)
+
+      expect(resource).to.eql(expectedMediaResource)
     })
 
     it("doesn't apply to requests with non media content type", async () => {
-      const fetchResource = makeFetchResource({logger: testLogger, mediaDownloadTimeout: 80, fetch})
-      const url = 'http://something2'
-      nock(url)
+      nock(mockResource.url)
         .get('/')
         .delayBody(200)
-        .reply(200, 'bla', {'content-type': 'some/content-type'})
+        .reply(200, mockResource.value, {'content-type': mockResource.type})
 
-      expect(await fetchResource(toRGridResource({url}))).to.eql(
-        toRGridResource({
-          url,
-          type: 'some/content-type',
-          value: Buffer.from('bla'),
-        }),
-      )
+      const fetchResource = makeFetchResource({fetch, mediaDownloadTimeout: 80, logger})
+
+      const resource = await fetchResource(urlResource)
+
+      expect(resource).to.eql(expectedResource)
     })
   })
 })

@@ -8,13 +8,20 @@ const {
   Region,
   BatchInfo,
 } = require('@applitools/eyes-sdk-core/shared')
+const crypto = require('crypto')
 const {URL} = require('url')
-const {loadJsonFixture, loadFixtureBuffer} = require('./loadFixture')
-const getSha256Hash = require('./getSha256Hash')
+const {loadFixtureBuffer} = require('./loadFixture')
 const FakeRunningRender = require('./FakeRunningRender')
 const EventEmitter = require('events')
 
 let salt = 0
+
+function createSha256Hash(content) {
+  return crypto
+    .createHash('sha256')
+    .update(content)
+    .digest('hex')
+}
 
 function compare(o1, o2) {
   return JSON.stringify(o1) === JSON.stringify(o2)
@@ -39,6 +46,8 @@ const selectorsToLocations = {
 
 class FakeEyesWrapper extends EventEmitter {
   constructor({
+    alwaysMatchDom,
+    alwaysMatchResources,
     goodFilename,
     goodResourceUrls = [],
     goodTags,
@@ -52,6 +61,8 @@ class FakeEyesWrapper extends EventEmitter {
       verbose: console.log,
       log: console.log,
     }
+    this.alwaysMatchDom = alwaysMatchDom
+    this.alwaysMatchResources = alwaysMatchResources
     this.goodFilename = goodFilename
     this.goodResourceUrls = goodResourceUrls
     this.goodResources = goodResources
@@ -97,21 +108,14 @@ class FakeEyesWrapper extends EventEmitter {
 
   getRunningRenderForRequest(renderRequest) {
     const resources = renderRequest.getResources()
-    const actualResources = resources.map(resource => ({
-      url: resource.getUrl(),
-      hashOrErrorStatusCode: resource.getErrorStatusCode() || resource.getSha256Hash(),
-    }))
     const isGoodResources =
-      !actualResources.length ||
-      this.getExpectedResources().every(er => !!actualResources.find(ar => compare(er, ar)))
+      this.alwaysMatchResources ||
+      this.getExpectedResources().every(er => {
+        return compare(resources[er.url] && resources[er.url].hash, er.hash)
+      })
+    const isGoodDom =
+      this.alwaysMatchDom || compare(renderRequest.getDom(), this.getExpectedDomResource())
 
-    const cdt = JSON.parse(
-      renderRequest
-        .getDom()
-        .getContent()
-        .toString(),
-    ).domNodes
-    const isGoodCdt = cdt.length === 0 || compare(cdt, this.getExpectedCdt()) // allowing [] for easier testing (only need to pass `cdt:[]` in the test)
     const renderInfo = renderRequest.getRenderInfo()
     const sizeMode = renderInfo.getSizeMode()
     const browserName = renderRequest.getBrowserName()
@@ -123,7 +127,7 @@ class FakeEyesWrapper extends EventEmitter {
     const platform = renderRequest.getPlatform()
     const visualGridOptions = renderRequest.getVisualGridOptions()
 
-    const isGood = isGoodCdt && isGoodResources
+    const isGood = isGoodDom && isGoodResources
     const renderId = JSON.stringify({
       isGood,
       region,
@@ -276,8 +280,6 @@ class FakeEyesWrapper extends EventEmitter {
     )
   }
 
-  createRGridDom({cdt: _cdt, resources: _resources}) {}
-
   async close() {
     this.emit('closed')
     this.closed = !this.aborted
@@ -308,21 +310,26 @@ class FakeEyesWrapper extends EventEmitter {
     this.results.push({getAsExpected: () => true})
   }
 
-  getExpectedCdt() {
-    return loadJsonFixture(this.goodFilename)
+  getExpectedDomResource() {
+    const content = this.goodFilename
+      ? loadFixtureBuffer(this.goodFilename)
+      : Buffer.from(JSON.stringify({resources: {}, domNodes: []}))
+    return {
+      hashFormat: 'sha256',
+      hash: createSha256Hash(content),
+      contentType: 'x-applitools-html/cdt',
+    }
   }
 
   getExpectedResources() {
     const urlResources = this.goodResourceUrls.map(resourceUrl => ({
       url: resourceUrl,
-      hashOrErrorStatusCode: getSha256Hash(
-        loadFixtureBuffer(new URL(resourceUrl).pathname.slice(1)),
-      ),
+      hash: createSha256Hash(loadFixtureBuffer(new URL(resourceUrl).pathname.slice(1))),
     }))
 
     const recs = this.goodResources.map(resource => ({
       url: resource.url,
-      hashOrErrorStatusCode: getSha256Hash(resource.content),
+      hash: createSha256Hash(resource.content),
     }))
     return [...urlResources, ...recs]
   }

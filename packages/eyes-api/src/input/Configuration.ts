@@ -34,6 +34,7 @@ export type GeneralConfiguration = {
   apiKey?: string
   serverUrl?: string
   proxy?: ProxySettings
+  autProxy?: types.AutProxy
   isDisabled?: boolean
   /** @undocumented */
   connectionTimeout?: number
@@ -375,7 +376,19 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     }
     return this
   }
-
+  get autProxy(): types.AutProxy {
+    return this._config.autProxy
+  }
+  set autProxy(autProxy: types.AutProxy) {
+    this._config.autProxy = autProxy
+  }
+  getAutProxy(): types.AutProxy {
+    return this.autProxy
+  }
+  setAutProxy(autProxy: types.AutProxy) {
+    this.autProxy = autProxy
+    return this
+  }
   /** @undocumented */
   get connectionTimeout(): number {
     return this._config.connectionTimeout

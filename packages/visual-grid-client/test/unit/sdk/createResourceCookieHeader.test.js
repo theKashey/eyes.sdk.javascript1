@@ -1,7 +1,7 @@
 const {expect} = require('chai')
-const getResourceCookies = require('../../../src/sdk/getResourceCookies')
+const createResourceCookieHeader = require('../../../src/sdk/resources/createResourceCookieHeader')
 
-describe('getResourceCookies', () => {
+describe('createResourceCookieHeader', () => {
   it('should handle cookies per url', () => {
     const url = 'https://somedomain.com'
     const cookies = [
@@ -9,7 +9,7 @@ describe('getResourceCookies', () => {
       {domain: 'someotherdomain.com', path: '/', name: 'goodbye', value: 'moon'},
     ]
 
-    expect(getResourceCookies(url, cookies)).to.equal('hello=world;')
+    expect(createResourceCookieHeader(url, cookies)).to.equal('hello=world;')
   })
 
   it('should handle cookies per path', () => {
@@ -20,7 +20,7 @@ describe('getResourceCookies', () => {
       {domain: 'somedomain.com', path: '/images', name: 'goodbye', value: 'moon'},
     ]
 
-    expect(getResourceCookies(url, cookies)).to.equal('hello=world;goodbye=moon;')
+    expect(createResourceCookieHeader(url, cookies)).to.equal('hello=world;goodbye=moon;')
   })
 
   it('should handle subdomains', () => {
@@ -31,9 +31,9 @@ describe('getResourceCookies', () => {
       {domain: 'somedomain.com', path: '/images', name: 'yes', value: 'sir'},
     ]
 
-    expect(getResourceCookies(url, cookies)).to.equal('goodbye=moon;')
+    expect(createResourceCookieHeader(url, cookies)).to.equal('goodbye=moon;')
     expect(
-      getResourceCookies('https://domain.com', [
+      createResourceCookieHeader('https://domain.com', [
         {domain: '.domain.com', path: '/', name: 'sub', value: 'domain'},
       ]),
     ).to.equal('sub=domain;')
@@ -46,7 +46,7 @@ describe('getResourceCookies', () => {
       {domain: 'somedomain.com', path: '/images', name: 'yes', value: 'sir', secure: true},
     ]
 
-    expect(getResourceCookies(url, cookies)).to.equal('goodbye=moon;')
+    expect(createResourceCookieHeader(url, cookies)).to.equal('goodbye=moon;')
   })
 
   it('should handle expired cookies', () => {
@@ -62,6 +62,6 @@ describe('getResourceCookies', () => {
       },
     ]
 
-    expect(getResourceCookies(url, cookies)).to.equal('goodbye=moon;')
+    expect(createResourceCookieHeader(url, cookies)).to.equal('goodbye=moon;')
   })
 })

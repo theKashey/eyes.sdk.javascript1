@@ -73,7 +73,8 @@ describe('openEyes', () => {
     const resourceUrls = wrapper.goodResourceUrls
     const cdt = loadJsonFixture('test.cdt.json')
     checkWindow({snapshot: {resourceUrls, cdt}, tag: 'good1', url: `${baseUrl}/test.html`})
-    expect((await close())[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
+    const result = await close()
+    expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
   })
 
   it('fails with incorrect dom', async () => {
@@ -250,13 +251,14 @@ describe('openEyes', () => {
   })
 
   it('handles resourceContents in checkWindow', async () => {
+    const blobUrl = `${baseUrl}/blob.css`
+    const imageUrl = `${baseUrl}/smurfs4.jpg`
+
     const {checkWindow, close} = await openEyes({
       wrappers: [wrapper],
       appName,
     })
 
-    const blobUrl = `${baseUrl}/blob.css`
-    const imageUrl = `${baseUrl}/smurfs4.jpg`
     const resourceContents = {
       [blobUrl]: {
         url: blobUrl,
@@ -270,10 +272,12 @@ describe('openEyes', () => {
       },
     }
 
+    wrapper.alwaysMatchDom = true
     wrapper.goodResourceUrls = [blobUrl, imageUrl]
 
     checkWindow({snapshot: {cdt: [], resourceContents}, tag: 'good1', url: `${baseUrl}/test.html`})
-    expect((await close())[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
+    const result = await close()
+    expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
   })
 
   it('handles "selector" region', async () => {
@@ -281,6 +285,9 @@ describe('openEyes', () => {
       wrappers: [wrapper],
       appName,
     })
+
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
 
     checkWindow({snapshot: {cdt: []}, url: 'some url', selector: '.some selector'})
     expect((await close())[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
@@ -291,6 +298,9 @@ describe('openEyes', () => {
       wrappers: [wrapper],
       appName,
     })
+
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
 
     checkWindow({
       snapshot: {cdt: []},
@@ -1291,6 +1301,8 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
     const region = {left: 1, top: 2, width: 3, height: 4}
     const region2 = {left: 11, top: 22, width: 33, height: 44, accessibilityType: 'LargeText'}
     checkWindow({
@@ -1311,6 +1323,8 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
 
     const regionLayout = {left: 1, top: 2, width: 3, height: 4}
     const regionStrict = {left: 10, top: 20, width: 30, height: 40}
@@ -1335,6 +1349,8 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
 
     const ignoreSelector1 = {type: 'css', selector: 'sel1'}
     const region1FromStatusResults = FakeEyesWrapper.selectorsToLocations['sel1']
@@ -1453,6 +1469,9 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
+
     const selector = 'sel1'
     const ignoreRegion = {left: 1, top: 2, width: 3, height: 4}
     const layoutRegion = {left: 10, top: 20, width: 30, height: 40}
@@ -1545,6 +1564,9 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchResources = true
+    wrapper.alwaysMatchDom = true
+
     const selector = 'sel1'
     const ignoreRegion = {left: 1, top: 2, width: 3, height: 4}
     const layoutRegion = {left: 10, top: 20, width: 30, height: 40}
@@ -1673,6 +1695,9 @@ Received: 'firefox-1'.`,
       wrappers: [wrapper],
       appName,
     })
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
     checkWindow({
       url: '',
       snapshot: {cdt: []},
@@ -1780,6 +1805,9 @@ Received: 'firefox-1'.`,
       appName,
     })
 
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
     checkWindow({url: '', snapshot: {cdt: []}})
     const [results] = await close()
     expect(wrapper.getAppEnvironment().displaySize).to.eql(FakeEyesWrapper.devices['iPhone 4'])
@@ -1798,6 +1826,8 @@ Received: 'firefox-1'.`,
       },
       appName,
     })
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     checkWindow({url: '', snapshot: {cdt: []}})
     const [results] = await close()
@@ -1816,6 +1846,8 @@ Received: 'firefox-1'.`,
       },
       appName,
     })
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     checkWindow({url: '', snapshot: {cdt: []}})
     const [results] = await close()
@@ -1853,6 +1885,8 @@ Received: 'firefox-1'.`,
         resourceContents: wrapper.goodResources,
       },
     ]
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     const url = `${baseUrl}/inner-frame.html`
 
@@ -2055,6 +2089,10 @@ Received: 'firefox-1'.`,
       useDom: false,
       enablePatterns: false,
     }).openEyes
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
     const {checkWindow, close} = await openEyes({
       apiKey,
       wrappers: [wrapper],
@@ -2092,6 +2130,10 @@ Received: 'firefox-1'.`,
       useDom: true,
       enablePatterns: true,
     }).openEyes
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
     const {checkWindow, close} = await openEyes({
       apiKey,
       wrappers: [wrapper],
@@ -2128,6 +2170,9 @@ Received: 'firefox-1'.`,
       visualGridOptions: {aaa: true},
     }).openEyes
 
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
     const {checkWindow, close} = await openEyes({
       apiKey,
       wrappers: [wrapper],
@@ -2145,6 +2190,9 @@ Received: 'firefox-1'.`,
       apiKey,
       renderWrapper: wrapper,
     }).openEyes
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     const {checkWindow, close} = await openEyes({
       apiKey,
@@ -2164,6 +2212,9 @@ Received: 'firefox-1'.`,
       apiKey,
       renderWrapper: wrapper,
     }).openEyes
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     const {checkWindow, close} = await openEyes({
       apiKey,
@@ -2186,6 +2237,9 @@ Received: 'firefox-1'.`,
       apiKey,
       renderWrapper: wrapper,
     }).openEyes
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
 
     const {checkWindow, close} = await openEyes({
       apiKey,
@@ -2217,9 +2271,9 @@ Received: 'firefox-1'.`,
   })
 
   it('translates previous browser versions', async () => {
-    const wrapper1 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
-    const wrapper2 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
-    const wrapper3 = new FakeEyesWrapper({goodFilename: 'test.cdt.json', goodResourceUrls: []})
+    const wrapper1 = new FakeEyesWrapper({})
+    const wrapper2 = new FakeEyesWrapper({})
+    const wrapper3 = new FakeEyesWrapper({})
     const {checkWindow, close} = await openEyes({
       appName,
       wrappers: [wrapper1, wrapper2, wrapper3],
@@ -2229,6 +2283,8 @@ Received: 'firefox-1'.`,
         {width: 1, height: 2, name: 'edgechromium-one-version-back'},
       ],
     })
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
     checkWindow({
       snapshot: {cdt: []},
       url: '',

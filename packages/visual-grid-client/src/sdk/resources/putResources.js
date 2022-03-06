@@ -1,17 +1,7 @@
 'use strict'
 const throat = require('throat')
-const toCacheEntry = require('./toCacheEntry')
-const resourceType = require('./resourceType')
 
-function makePutResources({
-  logger,
-  doPutResource,
-  doCheckResources,
-  resourceCache,
-  fetchCache,
-  timeout = 300,
-  concurrency = 100,
-}) {
+function makePutResources({doPutResource, doCheckResources, timeout = 300, concurrency = 100}) {
   const putResource = throat(concurrency, doPutResource)
   const uploadedResources = new Set()
   const requestedResources = new Map()
@@ -20,7 +10,7 @@ function makePutResources({
 
   return async function(resources = []) {
     const promises = resources.map(resource => {
-      const hash = resource.getContent() ? resource.getSha256Hash() : null
+      const hash = resource.hash && resource.hash.hash
       if (!hash || uploadedResources.has(hash)) {
         return Promise.resolve()
       } else if (requestedResources.has(hash)) {
@@ -51,15 +41,7 @@ function makePutResources({
         throttleTimer = false
       }, timeout)
     }
-    const result = await Promise.all(promises)
-    for (const resource of resources) {
-      const cacheKey = resource.getCacheKey()
-      logger.verbose('setting resource to cache: ', cacheKey)
-      fetchCache.remove(cacheKey)
-      const doesRequireProcessing = Boolean(resourceType(resource.getContentType()))
-      resourceCache.setValue(cacheKey, toCacheEntry(resource, doesRequireProcessing))
-    }
-    return result
+    return Promise.all(promises)
   }
 
   async function putResources(requests) {

@@ -78,6 +78,7 @@ const DEFAULT_VALUES = {
  *
  * @prop {string} serverUrl
  * @prop {ProxySettings|PlainProxySettings} proxySettings
+ * @prop {AutProxy} autProxy
  * @prop {number} connectionTimeout
  * @prop {string} apiKey
  *
@@ -163,6 +164,8 @@ class Configuration {
     this._serverUrl = undefined
     /** @type {ProxySettings} */
     this._proxySettings = undefined
+    /** @type {AutProxy} */
+    this._autProxy = undefined
     /** @type {number} */
     this._connectionTimeout = undefined
     /** @type {boolean} */
@@ -365,6 +368,38 @@ class Configuration {
       this._proxySettings = new ProxySettings(value.url, value.username, value.password, value.isHttpOnly)
     }
     return this
+  }
+
+  /**
+   * @return {AutProxy} - The current AUTProxy settings, or {@code undefined} if no AUTProxy is set.
+   */
+
+  getAutProxy() {
+    return this._autProxy
+  }
+
+  /**
+   * Sets the AUTProxy settings to be used by the rest client for fetching resources.
+   *
+   * @param {AutProxy}
+   * @param {ProxySettings} proxy The ProxySettings object or proxy url to be used to fetch resources.
+   * @param {string[]?} domains list of relevant domains (if not set, all resources will use the proxy above - depending on 'AUTProxyMode')
+   * @param {string?} AUTProxyMode 'Allow' or 'Block', default is 'Allow', irrelevant in case 'domains' is not set
+   * @return {this}
+   */
+
+  setAutProxy({proxy, domains, AUTProxyMode = 'Allow'}) {
+    let this_proxy
+    if (TypeUtils.isNull(proxy)) {
+      this_proxy = undefined
+    } else if (proxy === false || TypeUtils.isString(proxy)) {
+      this_proxy = new ProxySettings(proxy)
+    } else if (proxy instanceof ProxySettings) {
+      this_proxy = proxy
+    } else {
+      this_proxy = new ProxySettings(proxy.url, proxy.username, proxy.password, proxy.isHttpOnly)
+    }
+    this._autProxy = {proxy: this_proxy, domains, AUTProxyMode}
   }
 
   /**

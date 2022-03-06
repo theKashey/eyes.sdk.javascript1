@@ -1,5 +1,3 @@
-'use strict'
-const {describe, it, before, after, beforeEach, afterEach} = require('mocha')
 const chai = require('chai')
 chai.use(require('chai-uuid'))
 const {expect} = chai
@@ -33,6 +31,8 @@ describe('closeEyes', () => {
     process.env = {}
 
     wrapper = createFakeWrapper(baseUrl)
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
     wrapper2 = createFakeWrapper(baseUrl)
 
     openEyes = makeRenderingGridClient({
@@ -49,17 +49,20 @@ describe('closeEyes', () => {
   })
 
   it("doesn't reject", async () => {
-    const {checkWindow, close} = await openEyes({
+    const eyes = await openEyes({
       wrappers: [wrapper],
       appName,
     })
-    checkWindow({
-      snapshot: {cdt: [], resourceUrls: []},
+
+    wrapper.alwaysMatchDom = true
+    wrapper.alwaysMatchResources = true
+
+    eyes.checkWindow({
+      snapshot: {cdt: []},
       tag: 'good1',
       url: `${baseUrl}/basic.html`,
     })
-    const [err, result] = await presult(close())
-    expect(err).to.be.undefined
+    const result = await eyes.close()
     expect(result[0].getStepsInfo().map(r => r.result.getAsExpected())).to.eql([true])
   })
 

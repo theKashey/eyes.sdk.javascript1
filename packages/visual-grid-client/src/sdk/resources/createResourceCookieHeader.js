@@ -1,6 +1,6 @@
 const {URL} = require('url')
 
-function getResourceCookies(url, cookies = []) {
+function createResourceCookieHeader(url, cookies = []) {
   return cookies.reduce((acc, cookie) => {
     const resourceUrl = new URL(url)
 
@@ -21,4 +21,4 @@ function getResourceCookies(url, cookies = []) {
   }, '')
 }
 
-module.exports = getResourceCookies
+module.exports = createResourceCookieHeader

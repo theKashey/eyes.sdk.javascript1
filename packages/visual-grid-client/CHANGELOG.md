@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Support 'AUTProxy' capability
 
 ## 15.9.0 - 2022/2/20
 

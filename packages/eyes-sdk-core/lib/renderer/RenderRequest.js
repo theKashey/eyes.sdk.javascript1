@@ -221,23 +221,12 @@ class RenderRequest {
    * @override
    */
   toJSON() {
-    const resources = {}
-    if (this.getResources()) {
-      this.getResources().forEach(resource => {
-        resources[resource.getUrl()] = resource.getHashAsObject()
-      })
-    }
-
     const object = {
       webhook: this._webhook,
       stitchingService: this._stitchingService,
       url: this._url,
-      dom: this._dom ? this._dom.getHashAsObject() : null,
-      resources: this._resources
-        ? this._resources.reduce((resources, resource) => {
-            return Object.assign(resources, {[resource.getUrl()]: resource.getHashAsObject()})
-          }, {})
-        : null,
+      dom: this._dom,
+      resources: this._resources,
       enableMultipleResultsPerSelector: true,
     }
 

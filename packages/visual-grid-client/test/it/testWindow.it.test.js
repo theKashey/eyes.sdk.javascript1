@@ -27,6 +27,7 @@ describe('testWindow', () => {
 
   beforeEach(() => {
     wrapper = createFakeWrapper(baseUrl)
+    wrapper.goodFilename = 'test.dom2.json'
     testWindow = makeRenderingGridClient({
       showLogs: process.env.APPLITOOLS_SHOW_LOGS,
       apiKey,

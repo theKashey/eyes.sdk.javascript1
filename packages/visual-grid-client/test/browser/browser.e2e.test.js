@@ -59,9 +59,10 @@ describe('browser visual grid', () => {
       ]
     }).then(({checkWindow, close}) => {
       return ((${processPageAndSerializeScript})()).then(({cdt, url, blobs, resourceUrls}) => {
-        const resourceContents = blobs.map(blob =>
-          blob.value ? Object.assign(blob, {value: Buffer.from(blob.value, 'base64')}) : blob
-        );
+        const resourceContents = blobs.reduce((acc, blob) => {
+          acc[blob.url] = blob.value !== undefined ? Object.assign(blob, {value: Buffer.from(blob.value, 'base64')}) : blob
+          return acc
+        }, {});
 
         checkWindow({
           snapshot: {resourceUrls, resourceContents, cdt},

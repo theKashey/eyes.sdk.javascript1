@@ -1,38 +1,41 @@
 'use strict'
 const retryFetch = require('@applitools/http-commons/src/retryFetch')
-const createResourceCache = require('./createResourceCache')
+const createFetchOptions = require('./createFetchOptions')
+const createResource = require('./createResource')
 const AbortController = require('abort-controller')
 
 function makeFetchResource({
-  logger,
-  retries = 5,
-  fetchCache = createResourceCache(),
   fetch,
+  retries = 5,
   mediaDownloadTimeout = 30 * 1000,
+  fetchCache = new Map(),
+  logger,
 }) {
-  return (rGridResource, opts) => {
-    return (
-      fetchCache.getValue(rGridResource.getCacheKey()) ||
-      fetchCache.setValue(rGridResource.getCacheKey(), doFetchResource(rGridResource, opts))
-    )
+  return function fetchResource(resource, options = {}) {
+    let job = fetchCache.get(resource.id)
+    if (!job) {
+      job = doFetchResource(resource, options).finally(() => fetchCache.delete(resource.id))
+      fetchCache.set(resource.id, job)
+    }
+
+    return job
   }
 
-  function doFetchResource(rGridResource, opts) {
-    const url = rGridResource.getUrl()
+  function doFetchResource(resource, options) {
+    const url = resource.url
+    const fetchOptions = createFetchOptions(resource, options)
 
     return retryFetch(
       async retry => {
         const retryStr = retry ? `(retry ${retry}/${retries})` : ''
-        const optsStr = JSON.stringify(opts) || ''
-        logger.verbose(`fetching ${url} ${retryStr} ${optsStr}`)
+        logger.verbose(`fetching ${url} ${retryStr} ${JSON.stringify(fetchOptions) || ''}`)
 
         const controller = new AbortController()
-        const resp = await fetch(url, {...opts, signal: controller.signal})
+        const resp = await fetch(url, {...fetchOptions, signal: controller.signal})
 
         if (!resp.ok) {
           logger.verbose(`failed to fetch ${url} status ${resp.status}, returning errorStatusCode`)
-          rGridResource.setErrorStatusCode(resp.status)
-          return rGridResource
+          return createResource({...resource, errorStatusCode: resp.status})
         }
 
         logger.verbose(`fetched ${url}`)
@@ -42,34 +45,33 @@ function makeFetchResource({
         if (isProbablyStreaming(resp)) {
           return createStreamingPromise(resp, bufferPromise, controller)
         } else {
-          const buffer = await bufferPromise
-          return createResource(resp, buffer)
+          return createResource({
+            ...resource,
+            value: Buffer.from(await bufferPromise),
+            type: resp.headers.get('Content-Type'),
+          })
         }
       },
       {retries},
     )
 
-    function createResource(resp, buffer) {
-      rGridResource.setContentType(
-        resp.headers.get('Content-Type') || 'application/x-applitools-unknown',
-      )
-      rGridResource.setContent(Buffer.from(buffer))
-      return rGridResource
-    }
-
     function createStreamingPromise(resp, bufferPromise, controller) {
       return new Promise(async resolve => {
         const timeoutId = setTimeout(() => {
           logger.verbose('streaming timeout reached for resource', url)
-          rGridResource.setErrorStatusCode(599)
-          resolve(rGridResource)
+          resolve(createResource({...resource, errorStatusCode: 599}))
           controller.abort()
         }, mediaDownloadTimeout)
 
         // aborting the request causes node-fetch to reject bufferPromise, so we need to handle it
         try {
-          const buffer = await bufferPromise
-          resolve(createResource(resp, buffer))
+          resolve(
+            createResource({
+              ...resource,
+              value: Buffer.from(await bufferPromise),
+              type: resp.headers.get('Content-Type'),
+            }),
+          )
         } catch (ex) {
           logger.verbose('streaming buffer exception', ex)
         } finally {
