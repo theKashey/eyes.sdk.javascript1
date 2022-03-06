@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.5.0 - 2022/3/6
+
 - add `waitForSelector` method
 - support assigning 'scrollingElement' as 'body' or 'html' dom element
 - updated to @applitools/snippets@2.2.0 (from 2.1.15)
