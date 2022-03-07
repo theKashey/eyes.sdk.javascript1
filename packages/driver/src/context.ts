@@ -428,8 +428,9 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       if (this._scrollingElement) {
         this._scrollingElement = await this.element(this._scrollingElement)
       } else if (this.driver.isWeb) {
-        const selector = await this.execute(snippets.getDocumentScrollingElement)
-        this._logger.log(`default SRE is ${selector}`)
+        const isIOS = this.driver.isIOS
+        const selector = isIOS ? 'html' : await this.execute(snippets.getDocumentScrollingElement)
+        this._logger.log(`default SRE is ${selector}${isIOS ? ' (because Safari on iOS)' : ''}`)
         this._scrollingElement = await this.element({type: 'css', selector})
       } else {
         this._scrollingElement = await this.element({type: 'xpath', selector: '//*[@scrollable="true"]'})
