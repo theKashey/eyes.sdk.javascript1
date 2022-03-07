@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix `getScrollingElement` in mobile native
 
 ## 1.5.0 - 2022/3/6
 
