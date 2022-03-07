@@ -427,12 +427,12 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       await this.focus()
       if (this._scrollingElement) {
         this._scrollingElement = await this.element(this._scrollingElement)
-      } else {
+      } else if (this.driver.isWeb) {
         const selector = await this.execute(snippets.getDocumentScrollingElement)
         this._logger.log(`default SRE is ${selector}`)
-        this._scrollingElement = await this.element(
-          this.driver.isWeb ? {type: 'css', selector} : {type: 'xpath', selector: '//*[@scrollable="true"]'},
-        )
+        this._scrollingElement = await this.element({type: 'css', selector})
+      } else {
+        this._scrollingElement = await this.element({type: 'xpath', selector: '//*[@scrollable="true"]'})
       }
     }
     return this._scrollingElement
