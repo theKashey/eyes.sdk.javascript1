@@ -46,10 +46,7 @@ export class TestResultsData implements Required<TestResults> {
   private readonly _deleteTest: DeleteTestFunc
 
   /** @internal */
-  constructor(
-    results?: TestResults,
-    deleteTest?: DeleteTestFunc,
-  ) {
+  constructor(results?: TestResults, deleteTest?: DeleteTestFunc) {
     this._deleteTest = deleteTest
     if (!results) return this
     this._results = results instanceof TestResultsData ? results.toJSON() : results

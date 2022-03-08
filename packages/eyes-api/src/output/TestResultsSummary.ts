@@ -16,11 +16,11 @@ export class TestResultsSummaryData implements Iterable<types.TestResultContaine
   private _matches = 0
 
   /** @internal */
-  constructor(options?: {summary: types.TestResultSummary, deleteTest: DeleteTestFunc}) {
+  constructor(options?: {summary: types.TestResultSummary; deleteTest: DeleteTestFunc}) {
     if (!options) return
-    
+
     const {summary, deleteTest} = options
-    
+
     this._results = summary.results.map(container => new TestResultContainerData(container, deleteTest))
     this._passed = summary.passed
     this._unresolved = summary.unresolved
