@@ -247,7 +247,7 @@ class EyesVisualGrid extends EyesCore {
           return {
             testResults,
             exception,
-            browserInfo: browsersInfo[i]
+            browserInfo: browsersInfo[i],
           }
         })
       })
@@ -276,11 +276,11 @@ class EyesVisualGrid extends EyesCore {
 
   async abort() {
     this._isOpen = false
-    return this._abortPromise = this._abortCommand().then(results => {
-      const resultJson = results.map(result => result ? result.toJSON() : result) // not sure if it can even happen that abortCommand from vgc can return partly null array
+    return (this._abortPromise = this._abortCommand().then(results => {
+      const resultJson = results.map(result => (result ? {testResults: result.toJSON()} : result)) // not sure if it can even happen that abortCommand from vgc can return partly null array
       this._runner._allTestResult.push(...resultJson.filter(result => !!result))
       return resultJson
-    })
+    }))
   }
 
   async getInferredEnvironment() {
