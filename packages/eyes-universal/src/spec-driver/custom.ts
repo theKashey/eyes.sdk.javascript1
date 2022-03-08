@@ -109,6 +109,15 @@ export function makeSpec(options: {
     async visit(driver: Driver, url: string): Promise<void> {
       return socket.request('Driver.visit', {driver, url})
     },
+    async waitForSelector(
+      _context: Context,
+      _selector: Selector,
+      _parent?: Element,
+      _options?: types.WaitOptions,
+    ): Promise<Element | null> {
+      // do nothing
+      return
+    },
     // #endregion
 
     // #region NATIVE COMMANDS
