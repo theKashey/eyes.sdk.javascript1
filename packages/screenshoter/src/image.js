@@ -84,6 +84,7 @@ function makeImage(data) {
         ? utils.geometry.intersect(transforms.crop, utils.geometry.offset(region, transforms.crop))
         : utils.geometry.intersect({x: 0, y: 0, ...size}, region)
       transforms.crop = region
+      size = utils.geometry.size(transforms.crop)
       return this
     },
     copy(srcImage, offset) {
