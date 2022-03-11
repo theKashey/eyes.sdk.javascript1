@@ -1,4 +1,8 @@
 #!/bin/bash
+cd ../logger
+rm -rf node_modules/@applitools
+yarn install --force
+yarn link
 cd ../types
 rm -rf node_modules/@applitools
 yarn install --force
@@ -44,6 +48,7 @@ yarn link @applitools/utils
 yarn link @applitools/driver
 yarn link @applitools/test-utils
 yarn link @applitools/screenshoter
+yarn link @applitools/logger
 yarn link
 cd ../visual-grid-client
 rm -rf node_modules/@applitools
@@ -55,12 +60,14 @@ yarn link @applitools/driver
 yarn link @applitools/test-utils
 yarn link @applitools/screenshoter
 yarn link @applitools/eyes-sdk-core
+yarn link @applitools/logger
 yarn link
 cd ../eyes-api
 rm -rf node_modules/@applitools
 yarn install --force
 yarn link @applitools/utils
 yarn link @applitools/types
+yarn link @applitools/logger
 yarn build
 yarn link
 cd ../eyes-selenium
