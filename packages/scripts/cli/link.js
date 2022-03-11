@@ -106,36 +106,32 @@ async function link({
   results.forEach(result => result.error && process.exit(1))
 
   async function task(target, packages, {depth = 0} = {}) {
-    handledPackages.add(target.name)
     const dependencies = target.dependencies
       .filter(dependencyName => packages.has(dependencyName))
       .map(dependencyName => packages.get(dependencyName))
 
     const result = await dependencies.reduce(async (promise, dependency) => {
       const results = await promise
-      let result, nestedResults
-      if (!handledPackages.has(dependency.name)) {
-        ;[result, ...nestedResults] = await new Promise(async resolve => {
-          const nestedResults = depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
-          const commands = ['yarn link']
-          if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
-          if (runBuild && dependency.hasBuild) commands.push('yarn build')
-          const command = commands.join(' && ')
-          console.log(`${dependency.name} --> ${command}`)
-          exec(command, {cwd: dependency.path}, async (error, stdout, stderr) => {
-            resolve([{target, dependency, error, stdout, stderr}, ...nestedResults])
-          })
+      let [result, ...nestedResults] = await new Promise(async resolve => {
+        const shouldRun = depth < maxDepth && !handledPackages.has(dependency.name)
+        const nestedResults = shouldRun ? await task(dependency, packages, {depth: depth + 1}) : []
+        const commands = ['yarn link']
+        if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
+        if (runBuild && dependency.hasBuild) commands.push('yarn build')
+        exec(commands.join(' && '), {cwd: dependency.path}, async (error, stdout, stderr) => {
+          resolve([{target, dependency, error, stdout, stderr}, ...nestedResults])
         })
-      }
-      if (!(result && result.error)) {
+      })
+      if (!result.error) {
         result = await new Promise(resolve => {
           exec(`yarn link ${dependency.name}`, {cwd: target.path}, (error, stdout, stderr) => {
             resolve({target, dependency, error, stdout, stderr})
           })
         })
       }
-      return results.concat(result, nestedResults || [])
+      return results.concat(result, nestedResults)
     }, Promise.resolve([]))
+    handledPackages.add(target.name)
     return result
   }
 }
