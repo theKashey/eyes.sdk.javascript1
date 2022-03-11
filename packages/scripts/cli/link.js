@@ -79,11 +79,7 @@ async function link({
 
   const packages = await getPackages(packagesPath, {include, exclude})
 
-  const sortedPackages = [...packages.values()].sort((pkg1, pkg2) =>
-    include.indexOf(pkg1.alias) > include.indexOf(pkg2.alias) ? 1 : -1,
-  )
-
-  for (const pkg of sortedPackages) {
+  for (const pkg of packages.values()) {
     const commands = ['yarn link']
     if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
     if (runBuild && pkg.hasBuild) commands.push('yarn build')
@@ -97,7 +93,6 @@ async function link({
     if (error) {
       console.error(error)
       console.error(stderr)
-      console.error(stdout)
       process.exit(1)
     } else {
       console.log(stdout)
