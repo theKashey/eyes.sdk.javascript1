@@ -78,6 +78,7 @@ async function link({
   if (!target) process.exit(1)
 
   const packages = await getPackages(packagesPath, {include, exclude})
+  const handledPackages = new Set()
 
   const results = await task(target, packages)
 
@@ -109,10 +110,11 @@ async function link({
       .filter(dependencyName => packages.has(dependencyName))
       .map(dependencyName => packages.get(dependencyName))
 
-    return dependencies.reduce(async (promise, dependency) => {
+    const result = await dependencies.reduce(async (promise, dependency) => {
       const results = await promise
       let [result, ...nestedResults] = await new Promise(async resolve => {
-        const nestedResults = depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
+        const shouldRun = depth < maxDepth && !handledPackages.has(dependency.name)
+        const nestedResults = shouldRun ? await task(dependency, packages, {depth: depth + 1}) : []
         const commands = ['yarn link']
         if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
         if (runBuild && dependency.hasBuild) commands.push('yarn build')
@@ -129,6 +131,8 @@ async function link({
       }
       return results.concat(result, nestedResults)
     }, Promise.resolve([]))
+    handledPackages.add(target.name)
+    return result
   }
 }
 
