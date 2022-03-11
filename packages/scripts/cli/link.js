@@ -85,13 +85,17 @@ async function link({
     if (runBuild && pkg.hasBuild) commands.push('yarn build')
     const command = commands.join(' && ')
     console.log(pkg.name, '-->', command)
-    const {error} = await new Promise(resolve => {
+    const {error, stdout, stderr} = await new Promise(resolve => {
       exec(command, {cwd: pkg.path}, async (error, stdout, stderr) => {
         resolve({error, stdout, stderr})
       })
     })
     if (error) {
-      console.error('###', error)
+      console.error(error)
+      console.error(stderr)
+      process.exit(1)
+    } else {
+      console.log(stdout)
     }
   }
 
