@@ -79,6 +79,22 @@ async function link({
 
   const packages = await getPackages(packagesPath, {include, exclude})
 
+  for (const pkg of packages.values()) {
+    const commands = ['yarn link']
+    if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
+    if (runBuild && pkg.hasBuild) commands.push('yarn build')
+    const command = commands.join(' && ')
+    console.log(pkg.name, '-->', command)
+    const {error} = await new Promise(resolve => {
+      exec(command, {cwd: pkg.path}, async (error, stdout, stderr) => {
+        resolve({error, stdout, stderr})
+      })
+    })
+    if (error) {
+      console.error('###', error)
+    }
+  }
+
   const results = await task(target, packages)
 
   results.forEach(result => {
@@ -111,22 +127,17 @@ async function link({
 
     return dependencies.reduce(async (promise, dependency) => {
       const results = await promise
-      let [result, ...nestedResults] = await new Promise(async resolve => {
+      const nestedResults = await new Promise(async resolve => {
         const nestedResults = depth < maxDepth ? await task(dependency, packages, {depth: depth + 1}) : []
-        const commands = ['yarn link']
-        if (runInstall) commands.push('yarn install', 'npm run upgrade:framework --if-present')
-        if (runBuild && dependency.hasBuild) commands.push('yarn build')
-        exec(commands.join(' && '), {cwd: dependency.path}, async (error, stdout, stderr) => {
-          resolve([{target, dependency, error, stdout, stderr}, ...nestedResults])
+        resolve(nestedResults)
+      })
+      const command = `yarn link ${dependency.name}`
+      console.log(target.name, '-->', command)
+      const result = await new Promise(resolve => {
+        exec(command, {cwd: target.path}, (error, stdout, stderr) => {
+          resolve({target, dependency, error, stdout, stderr})
         })
       })
-      if (!result.error) {
-        result = await new Promise(resolve => {
-          exec(`yarn link ${dependency.name}`, {cwd: target.path}, (error, stdout, stderr) => {
-            resolve({target, dependency, error, stdout, stderr})
-          })
-        })
-      }
       return results.concat(result, nestedResults)
     }, Promise.resolve([]))
   }
