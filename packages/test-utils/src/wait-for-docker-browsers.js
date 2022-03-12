@@ -12,7 +12,7 @@ async function waitForDockerBrowsers({remoteUrl, retries} = {}) {
     const result = await fetch(remoteUrl)
     console.log('waitForDockerBrowsers result retries:', retries)
     console.log('waitForDockerBrowsers result status:', result.status)
-    console.log('waitForDockerBrowsers result status:', result)
+    console.log('waitForDockerBrowsers result:', result)
     if (result.status === 200) return
     await delay(300)
     return waitForDockerBrowsers({remoteUrl, retries: retries - 1})
