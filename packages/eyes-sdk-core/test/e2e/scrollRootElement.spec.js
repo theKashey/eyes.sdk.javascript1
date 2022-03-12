@@ -17,7 +17,7 @@ describe('get root scrollingElement', () => {
       appName: 'scrollingElement',
       testName: 'test scrollingElement',
       saveNewTests: false,
-      logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined
+      logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined,
     }
   })
 

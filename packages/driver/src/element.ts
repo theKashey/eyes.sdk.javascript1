@@ -153,7 +153,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
               }
             })
             .catch(err => {
-              this._logger.log(`Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`, `'${err.message}'`)
+              this._logger.log(
+                `Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`,
+                `'${err.message}'`,
+              )
               return this._spec.getElementRegion(this.driver.target, this.target)
             })
           this._logger.log('Extracted native content size attribute', contentRegion)
@@ -235,7 +238,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         const data = await this.getAttribute('contentSize')
           .then(JSON.parse)
           .catch(err => {
-            this._logger.log(`Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`, `'${err.message}'`)
+            this._logger.log(
+              `Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`,
+              `'${err.message}'`,
+            )
           })
         this._touchPadding = data?.touchPadding ?? 20
         this._logger.log('touchPadding', this._touchPadding)

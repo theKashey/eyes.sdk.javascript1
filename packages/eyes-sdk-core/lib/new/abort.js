@@ -1,6 +1,6 @@
 function makeAbort({eyes}) {
   return async function abort() {
-    return await eyes.abort() || []
+    return (await eyes.abort()) || []
   }
 }
 

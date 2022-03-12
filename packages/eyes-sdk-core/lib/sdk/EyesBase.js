@@ -241,7 +241,7 @@ class EyesBase {
   getProxy() {
     return this._configuration.getProxy()
   }
-  
+
   /**
    * @return {number} - The timeout for web requests (in milliseconds).
    */

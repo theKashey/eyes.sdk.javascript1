@@ -21,7 +21,7 @@ function makeCloseManager({runner}) {
     for (const {testResults, exception} of testResultContainers) {
       if (throwErr) {
         if (exception) throw exception
-        
+
         if (testResults.status === TestResultsStatuses.Unresolved) {
           if (testResults.isNew) throw new NewTestError(testResults)
           else throw new DiffsFoundError(testResults)
