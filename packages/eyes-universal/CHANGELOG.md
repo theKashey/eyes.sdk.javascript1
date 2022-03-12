@@ -3,6 +3,10 @@
 ## Unreleased
 
 - update `Eyes.abort` so it fails gracefully when an Eyes instance is not found
+- support AUTProxy
+- support assigning 'scrollingElement' as 'body' or 'html' dom element
+- rename manager.closeAllEyes to manager.closeManager
+- add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeManager
 
 ## 1.1.0 - 2022/2/20
 
