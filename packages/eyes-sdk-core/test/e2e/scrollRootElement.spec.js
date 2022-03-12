@@ -24,7 +24,7 @@ describe('get root scrollingElement', () => {
   afterEach(async () => {
     if (destroyDriver) await destroyDriver()
     if (eyes) await eyes.abort()
-    manager.closeAllEyes()
+    await manager.closeManager()
   })
 
   it('test scrollingElement', async () => {
