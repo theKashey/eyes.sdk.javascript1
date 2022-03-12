@@ -40,6 +40,8 @@
     "test:e2e:android": "APPLITOOLS_TEST_REMOTE=sauce mocha ./test/e2e/android*/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-2}",
     "test:e2e:ios": "APPLITOOLS_TEST_REMOTE=sauce mocha ./test/e2e/ios*/*.spec.js --no-timeouts --parallel --jobs ${MOCHA_JOBS:-2}",
     "setup:web": "yarn docker:setup",
+    "setup:android": "echo \"setup:android - do nothing\"",
+    "setup:iod": "echo \"setup:ios - do nothing\"",
     "android:setup": "node ./scripts/android-emulator.js",
     "android:shutdown": "adb -s emulator-5555 emu kill || true && adb -s emulator-5557 emu kill || true",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
