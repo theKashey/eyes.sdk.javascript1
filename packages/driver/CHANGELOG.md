@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+ ## 1.5.3 - 2022/3/12
+
 - when handling shadowRoot, send the element containing the doc frage and the root itself to element constructor 
 - change the sensible default value for touchPadding when running on Android to 20 (from 24)
 - add error logging in element.ts when unable to complete a getAttribute lookup
