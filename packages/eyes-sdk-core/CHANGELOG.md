@@ -6,6 +6,10 @@
 - support assigning 'scrollingElement' as 'body' or 'html' dom element
 - rename manager.closeAllEyes to manager.closeManager
 - add support for aborting unclosed Eyes sessions and returning their results as part of manager.closeManager
+- updated to @applitools/driver@1.5.3 (from 1.4.16)
+- updated to @applitools/screenshoter@3.3.11 (from 3.3.10)
+- updated to @applitools/snippets@2.2.1 (from 2.1.15)
+- updated to @applitools/types@1.2.1 (from 1.0.25)
 
 ## 13.0.6 - 2022/2/20
 
