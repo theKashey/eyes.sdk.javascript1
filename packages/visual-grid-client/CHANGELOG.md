@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 15.10.0 - 2022/3/12
+
 - Support 'AUTProxy' capability
 - updated to @applitools/eyes-sdk-core@13.1.0 (from 13.0.6)
 
