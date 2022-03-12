@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.1.5 - 2022/3/12
+
 - troubleshooting
 
 ## 1.1.4 - 2022/3/12
