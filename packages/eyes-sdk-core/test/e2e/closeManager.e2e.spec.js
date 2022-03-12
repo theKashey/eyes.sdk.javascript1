@@ -36,11 +36,8 @@ describe('Core e2e - closeManager', () => {
 
     await eyes.check({fully: false})
     const summary = await manager.closeManager()
-    assert.ok(
-      summary.results &&
-        summary.results.length === 1 &&
-        summary.results[0].constructor.name === 'TestResultsContainer' &&
-        summary.results[0].getIsAborted(),
-    )
+    assert.ok(summary.results)
+    assert.ok(summary.results.length === 1)
+    assert.ok(summary.results[0].testResults.isAborted)
   })
 })
