@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.2 - 2022/3/12
+
 - remove Iterable from TestResultSummary type
 
 ## 1.2.1 - 2022/3/12
