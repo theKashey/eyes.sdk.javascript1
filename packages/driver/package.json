@@ -1,6 +1,6 @@
 {
   "name": "@applitools/driver",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Applitools universal framework wrapper",
   "keywords": [
     "applitools",
@@ -73,8 +73,8 @@
     }
   },
   "dependencies": {
-    "@applitools/snippets": "2.2.0",
-    "@applitools/types": "1.2.0",
+    "@applitools/snippets": "2.2.1",
+    "@applitools/types": "1.2.1",
     "@applitools/utils": "1.2.13"
   },
   "devDependencies": {
