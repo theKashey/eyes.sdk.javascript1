@@ -3,6 +3,9 @@
 
 ## Unreleased
 
+
+ ## 2.2.1 - 2022/3/12
+
 - consider dynamic scrollingElement in other snippets 
 
 ## 2.2.0 - 2022/3/6

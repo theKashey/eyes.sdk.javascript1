@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 1.2.1 - 2022/3/12
+
 - avoid inifinite recursion when generating SDK types
 
 ## 1.2.0 - 2022/3/6
