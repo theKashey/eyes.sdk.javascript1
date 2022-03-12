@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 
-const {RenderRequest, RGridResource} = require('../../../index')
+const {RenderRequest} = require('../../../index')
 
 describe('RenderRequest', () => {
   describe('constructor', () => {
@@ -40,28 +40,6 @@ describe('RenderRequest', () => {
 
   describe('toJSON', () => {
     it('returns the correct object', () => {
-      const resource1 = {
-        getUrl() {
-          return 'url1'
-        },
-        getHashAsObject() {
-          return 'hashAsObject1'
-        },
-      }
-      const resource2 = {
-        getUrl() {
-          return 'url2'
-        },
-        getHashAsObject() {
-          return 'hashAsObject2'
-        },
-      }
-      const dom = {
-        getHashAsObject() {
-          return 'dom_hashAsObject'
-        },
-      }
-
       const renderInfo = {
         toJSON() {
           return 'renderInfoToJSON'
@@ -71,8 +49,8 @@ describe('RenderRequest', () => {
       const renderRequest = new RenderRequest({
         webhook: 'webhook',
         url: 'url',
-        resources: [resource1, resource2],
-        dom,
+        resources: 'resources',
+        dom: 'dom',
         renderInfo,
         platform: 'platform',
         browserName: 'browserName',
@@ -86,11 +64,8 @@ describe('RenderRequest', () => {
         stitchingService: undefined,
         webhook: 'webhook',
         url: 'url',
-        dom: 'dom_hashAsObject',
-        resources: {
-          url1: 'hashAsObject1',
-          url2: 'hashAsObject2',
-        },
+        dom: 'dom',
+        resources: 'resources',
         renderInfo: 'renderInfoToJSON',
         browser: {
           name: 'browserName',
@@ -110,28 +85,6 @@ describe('RenderRequest', () => {
 
   describe('toString', () => {
     it('returns the correct string', () => {
-      const resource1 = {
-        getUrl() {
-          return 'url1'
-        },
-        getHashAsObject() {
-          return 'hashAsObject1'
-        },
-      }
-      const resource2 = {
-        getUrl() {
-          return 'url2'
-        },
-        getHashAsObject() {
-          return 'hashAsObject2'
-        },
-      }
-      const dom = {
-        getHashAsObject() {
-          return 'dom_hashAsObject'
-        },
-      }
-
       const renderInfo = {
         toJSON() {
           return 'renderInfoToJSON'
@@ -141,8 +94,8 @@ describe('RenderRequest', () => {
       const renderRequest = new RenderRequest({
         webhook: 'webhook',
         url: 'url',
-        dom,
-        resources: [resource1, resource2],
+        dom: 'dom',
+        resources: 'resources',
         renderInfo,
         platform: 'platform',
         browserName: 'browserName',
@@ -154,25 +107,8 @@ describe('RenderRequest', () => {
       })
       assert.strictEqual(
         renderRequest.toString(),
-        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom_hashAsObject","resources":{"url1":"hashAsObject1","url2":"hashAsObject2"},"enableMultipleResultsPerSelector":true,"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom","options":{"polyfillAdoptedStyleSheets":true}} }',
+        'RenderRequest { {"webhook":"webhook","url":"url","dom":"dom","resources":"resources","enableMultipleResultsPerSelector":true,"browser":{"name":"browserName"},"platform":{"name":"platform"},"renderInfo":"renderInfoToJSON","scriptHooks":"scriptHooks","selectorsToFindRegionsFor":"selectorsToFindRegionsFor","sendDom":"sendDom","options":{"polyfillAdoptedStyleSheets":true}} }',
       )
     })
-  })
-
-  it('dont trim CDT - constructor', async () => {
-    const LENGTH = 36000000
-    const content = Buffer.alloc(LENGTH)
-    const r1 = new RGridResource({content, contentType: 'x-applitools-html/cdt'})
-
-    assert.equal(r1._content.length, LENGTH)
-  })
-
-  it('dont trim CDT - setContent', async () => {
-    const LENGTH = 36000000
-    const content = Buffer.alloc(LENGTH)
-    const r1 = new RGridResource({contentType: 'x-applitools-html/cdt'})
-    r1.setContent(content)
-
-    assert.equal(r1._content.length, LENGTH)
   })
 })

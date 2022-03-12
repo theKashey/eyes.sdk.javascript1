@@ -18,7 +18,7 @@ const {
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const RenderRequest = require('../../../lib/renderer/RenderRequest')
-const createRGridDom = require('@applitools/visual-grid-client/src/sdk/createRGridDom')
+const createDomResource = require('@applitools/visual-grid-client/src/sdk/resources/createDomResource')
 const RenderInfo = require('../../../lib/renderer/RenderInfo')
 const logger = new makeLogger()
 
@@ -632,7 +632,7 @@ Parameter name: startInfo`),
           webhook: renderInfo.getResultsUrl(),
           stitchingService: renderInfo.getStitchingServiceUrl(),
           url: 'http://bla',
-          dom: createRGridDom({cdt: [], resources: {}}),
+          dom: createDomResource({cdt: [], resources: {}}),
           resources: [],
           renderInfo: new RenderInfo({iosDeviceInfo: {name: 'iPhone 123456789'}}),
         }),
