@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 2.0.0 - 2022/3/12
+
 - update `Eyes.abort` so it fails gracefully when an Eyes instance is not found
 - support AUTProxy
 - support assigning 'scrollingElement' as 'body' or 'html' dom element
