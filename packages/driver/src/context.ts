@@ -263,12 +263,13 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     if (this.driver.features?.shadowSelector) return {context, selector: elementSelector}
 
     let root = null as TElement
+    let element = null as TElement
     let currentSelector = elementSelector
     while (
       specUtils.isCommonSelector(this._spec, currentSelector) &&
       specUtils.isSelector(this._spec, currentSelector.shadow)
     ) {
-      const element = await this._spec.findElement(
+      element = await this._spec.findElement(
         this.target,
         specUtils.transformSelector(this._spec, currentSelector, this.driver),
         root,
@@ -281,7 +282,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
 
     return {
       context,
-      shadow: root ? new Element({spec: this._spec, context, element: root, logger: this._logger}) : null,
+      shadow: root ? new Element({spec: this._spec, context, element, logger: this._logger, root}) : null,
       selector: currentSelector,
     }
   }

@@ -1,8 +1,12 @@
 const setElementStyleProperties = require('./setElementStyleProperties')
+const getDocumentScrollingElement = require('./getDocumentScrollingElement')
 
 function getElementEntireSize([element] = []) {
   let originalStyleProperties
-  if (element === document.documentElement) {
+  if (
+    element === document.documentElement ||
+    element.tagName.toLowerCase() === getDocumentScrollingElement()
+  ) {
     originalStyleProperties = setElementStyleProperties([element, {transform: 'none'}])
   }
 

@@ -1,7 +1,6 @@
-const {makeDriver, test} = require('../e2e')
+const {makeDriver, test, logger} = require('../e2e')
 
 describe('screenshoter web', () => {
-  const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
   before(async () => {

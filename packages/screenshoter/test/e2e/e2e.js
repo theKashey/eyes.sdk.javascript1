@@ -7,6 +7,10 @@ const {Driver} = require('@applitools/driver')
 const makeImage = require('../../src/image')
 const takeScreenshot = require('../../src/take-screenshot')
 
+exports.logger = process.env.APPLITOOLS_SHOW_LOGS
+  ? {log: console.log, warn: console.log, error: console.log, verbose: console.log}
+  : {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
+
 async function sanitizeAndroidStatusBar(image) {
   const leftPatchImage = makeImage({
     width: 425,

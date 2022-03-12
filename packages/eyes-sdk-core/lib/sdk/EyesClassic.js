@@ -192,7 +192,7 @@ class EyesClassic extends EyesCore {
         if (this._runner) {
           this._runner._allTestResult.push(container)
         }
-        
+
         if (container.testResults) {
           return [container.testResults]
         } else {
@@ -204,7 +204,7 @@ class EyesClassic extends EyesCore {
   }
 
   async abort() {
-    return this._abortPromise = super.abort().then(results => {
+    return (this._abortPromise = super.abort().then(results => {
       if (results) {
         const resultsJson = results.toJSON()
         this._runner._allTestResult.push({testResults: resultsJson})
@@ -212,7 +212,7 @@ class EyesClassic extends EyesCore {
       } else {
         return results
       }
-    })
+    }))
   }
 
   async getAppEnvironment() {

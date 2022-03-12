@@ -58,10 +58,6 @@ async function takeScreenshot({
   try {
     if (!window) await scrollIntoViewport({...target, logger})
 
-    if (fully && target.scroller) {
-      await target.scroller.moveTo({x: 0, y: 0}, await driver.mainContext.getScrollingElement())
-    }
-
     const screenshot =
       fully && target.scroller
         ? await takeStitchedScreenshot({...target, withStatusBar, overlap, framed, wait, stabilization, debug, logger})
@@ -127,7 +123,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
         const region = isScrollable ? null : await element.getRegion()
         const scrollingElement = isScrollable ? element : await elementContext.getScrollingElement()
         // css stitching could be applied only to root element of its context
-        scrollingMode = scrollingMode === 'css' && !(await scrollingElement.isRoot()) ? 'mixed' : scrollingMode
+        scrollingMode = scrollingMode === 'css' && !(await scrollingElement.isRoot()) ? 'mixed+' : scrollingMode
         return {
           context: elementContext,
           region,

@@ -1,6 +1,7 @@
 const utils = require('@applitools/utils')
 const makeImage = require('./image')
 const makeTakeViewportScreenshot = require('./take-viewport-screenshot')
+const calculateScreenshotRegion = require('./calculate-screenshot-region')
 
 async function takeStitchedScreenshot({
   logger,
@@ -21,12 +22,24 @@ async function takeStitchedScreenshot({
   const scrollerState = await scroller.preserveState()
 
   const initialOffset = region ? utils.geometry.location(region) : {x: 0, y: 0}
-  const actualOffset = await scroller.getInnerOffset()
-  const expectedRemainingOffset = utils.geometry.offsetNegative(initialOffset, actualOffset)
+  const preMoveOffset = await scroller.getInnerOffset()
+  const postMoveOffset = await scroller.moveTo(initialOffset)
+  const expectedRemainingOffset = utils.geometry.offsetNegative(initialOffset, postMoveOffset)
 
   await utils.general.sleep(wait)
 
   const contentSize = await scroller.getContentSize()
+
+  logger.verbose(
+    'preMoveOffset',
+    preMoveOffset,
+    'initialOffset',
+    initialOffset,
+    'postMoveOffset',
+    postMoveOffset,
+    'context.isMain',
+    context.isMain,
+  )
 
   logger.verbose('Getting initial image...')
   let image = await takeViewportScreenshot({name: 'initial', withStatusBar})
@@ -34,14 +47,15 @@ async function takeStitchedScreenshot({
 
   const scrollerRegion = await scroller.getClientRegion()
   const targetRegion = region
-    ? utils.geometry.intersect(utils.geometry.region(actualOffset, scrollerRegion), region)
+    ? utils.geometry.intersect(utils.geometry.region(postMoveOffset, scrollerRegion), region)
     : scrollerRegion
 
   // TODO the solution should not check driver specifics,
   // in this case target region coordinate should be already related to the scrolling element of the context
   let cropRegion = driver.isNative ? targetRegion : await driver.getRegionInViewport(context, targetRegion)
+  if (utils.geometry.isEmpty(cropRegion)) throw new Error('Screenshot region is out of viewport')
 
-  logger.verbose('cropping...')
+  logger.verbose('cropping... cropRegion is', cropRegion)
   image.crop(withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion)
   await image.debug({...debug, name: 'initial', suffix: 'region'})
 
@@ -95,6 +109,7 @@ async function takeStitchedScreenshot({
       height: partRegion.height,
     }
     logger.verbose('Actual offset is', actualOffset, ', remaining offset is', remainingOffset)
+    logger.verbose('cropPartRegion is', cropPartRegion)
 
     await utils.general.sleep(wait)
 
@@ -126,12 +141,12 @@ async function takeStitchedScreenshot({
 
     return {
       image: stitchedImage,
-      region: utils.geometry.region({x: 0, y: 0}, stitchedImage.size),
+      region: calculateScreenshotRegion({stitchedImage, preMoveOffset, postMoveOffset}),
     }
   } else {
     return {
       image: stitchedImage,
-      region: utils.geometry.region(cropRegion, stitchedImage.size),
+      region: calculateScreenshotRegion({cropRegion, stitchedImage, preMoveOffset, postMoveOffset}),
     }
   }
 }

@@ -43,14 +43,10 @@ export type WaitOptions = {
   timeout?: number
 }
 
-export type CommonSelector<TSelector = never> = {
-  selector: TSelector | string
-  type?: string
-  shadow?: CommonSelector<TSelector> | TSelector | string
-  frame?: CommonSelector<TSelector> | TSelector | string
-}
-
-export type Selector<TSelector = never> = TSelector | string | CommonSelector<TSelector>
+export type Selector<TSelector = never> =
+  | TSelector
+  | string
+  | {selector: TSelector | string; type?: string; shadow?: Selector<TSelector>; frame?: Selector<TSelector>}
 
 export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   // #region UTILITY

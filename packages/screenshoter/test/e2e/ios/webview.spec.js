@@ -1,7 +1,6 @@
-const {makeDriver, sleep, test} = require('../e2e')
+const {makeDriver, sleep, test, logger} = require('../e2e')
 
 describe.skip('screenshoter ios app', () => {
-  const logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
   let driver, destroyDriver
 
   before(async () => {

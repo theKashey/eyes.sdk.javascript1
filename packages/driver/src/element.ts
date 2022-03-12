@@ -31,6 +31,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     selector?: types.Selector<TSelector>
     index?: number
     logger?: any
+    root?: TElement
   }) {
     if (options.element instanceof Element) return options.element
 
@@ -40,9 +41,13 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     if (options.logger) this._logger = options.logger
 
     if (this._spec.isElement(options.element)) {
-      this._target = this._spec.transformElement?.(options.element) ?? options.element
+      let elementToUse = options.element
+      if (options.root) {
+        elementToUse = options.root
+      }
+      this._target = this._spec.transformElement?.(elementToUse) ?? elementToUse
       // Some frameworks contains information about the selector inside an element
-      this._selector = options.selector ?? this._spec.extractSelector?.(options.element)
+      this._selector = options.selector ?? this._spec.extractSelector?.(elementToUse)
       this._index = options.index
     } else if (specUtils.isSelector(this._spec, options.selector)) {
       this._selector = options.selector
@@ -147,7 +152,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
                 height: (this.driver.isAndroid ? contentSize.height : 0) + contentSize.scrollableOffset,
               }
             })
-            .catch(() => {
+            .catch(err => {
+              this._logger.log(`Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`, `'${err.message}'`)
               return this._spec.getElementRegion(this.driver.target, this.target)
             })
           this._logger.log('Extracted native content size attribute', contentRegion)
@@ -160,6 +166,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
             height: Math.max(contentSize?.height ?? 0, contentRegion.height),
           }
           this._touchPadding = touchPadding ?? this._touchPadding
+          this._logger.log('touchPadding', this._touchPadding)
 
           if (this.driver.isAndroid) {
             this._state.contentSize = utils.geometry.scale(this._state.contentSize, 1 / this.driver.pixelRatio)
@@ -227,8 +234,11 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       else if (this.driver.isAndroid) {
         const data = await this.getAttribute('contentSize')
           .then(JSON.parse)
-          .catch(() => null)
-        this._touchPadding = data?.touchPadding ?? 24
+          .catch(err => {
+            this._logger.log(`Unable to get the attribute 'contentSize' when looking up touchPadding due to the following error:`, `'${err.message}'`)
+          })
+        this._touchPadding = data?.touchPadding ?? 20
+        this._logger.log('touchPadding', this._touchPadding)
       }
     }
     return this._touchPadding

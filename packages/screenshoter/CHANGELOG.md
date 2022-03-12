@@ -3,7 +3,9 @@
 
 ## Unreleased
 
-- scroll to 0,0 before taking stitched screenshot
+- disable scroll to 0,0 before taking stitched screenshot
+- add better error handling when taking a stitched screenshot
+- updated to @applitools/snippets@2.2.0 (from 2.1.15)
 
 ## 3.3.10 - 2022/2/16
 

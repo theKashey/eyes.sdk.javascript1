@@ -1,10 +1,17 @@
 import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 
+type CommonSelector<TSelector = never> = {
+  selector: TSelector | string
+  type?: string
+  shadow?: CommonSelector<TSelector> | TSelector | string
+  frame?: CommonSelector<TSelector> | TSelector | string
+}
+
 export function isCommonSelector<TSelector>(
   spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
   selector: any,
-): selector is types.CommonSelector<TSelector> {
+): selector is CommonSelector<TSelector> {
   return (
     utils.types.isPlainObject(selector) &&
     utils.types.has(selector, 'selector') &&
@@ -40,7 +47,7 @@ export function splitSelector<TSelector>(
   elementSelector: types.Selector<TSelector>
 } {
   let targetSelector = selector
-  let activeSelector = {} as types.CommonSelector<TSelector>
+  let activeSelector = {} as CommonSelector<TSelector>
   let elementSelector = activeSelector
   const contextSelectors = [] as types.Selector<TSelector>[]
   while (targetSelector) {
@@ -49,11 +56,11 @@ export function splitSelector<TSelector>(
       if (targetSelector.type) activeSelector.type = targetSelector.type
 
       if (targetSelector.shadow) {
-        activeSelector = activeSelector.shadow = {} as types.CommonSelector<TSelector>
+        activeSelector = activeSelector.shadow = {} as CommonSelector<TSelector>
         targetSelector = targetSelector.shadow
       } else if (targetSelector.frame) {
         contextSelectors.push(elementSelector)
-        elementSelector = activeSelector = {} as types.CommonSelector<TSelector>
+        elementSelector = activeSelector = {} as CommonSelector<TSelector>
         targetSelector = targetSelector.frame
       } else {
         targetSelector = null

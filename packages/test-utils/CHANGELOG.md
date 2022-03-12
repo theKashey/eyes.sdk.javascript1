@@ -3,6 +3,16 @@
 ## Unreleased
 
 
+## 1.1.3 - 2022/3/8
+
+- update waitForDockerBrowsers so it retries when the status code is not 200 (instead of just rely on an exception to handle it)
+
+## 1.1.2 - 2022/3/8
+
+- update waitForDockerBrowsers to check the status of the fetch to see if it's 200
+- set a sensible default for the remoteUrl in mocha-hooks
+- append the /status route suffix (for a Selenium Hub) to the remoteUrl specified in mocha-hooks
+
 ## 1.1.1 - 2022/3/4
 
 - add error handling when a URL is not provided when checking if a docker container is ready
