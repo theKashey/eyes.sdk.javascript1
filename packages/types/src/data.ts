@@ -291,4 +291,4 @@ export type TestResultSummary = {
   mismatches: number
   missing: number
   matches: number
-} & Iterable<TestResultContainer>
+}
