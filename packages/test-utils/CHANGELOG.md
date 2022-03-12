@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+
+## 1.1.4 - 2022/3/12
+
+- fix in waitForDockerBrowsers
 - fix in waitForDockerBrowsers
 ## 1.1.3 - 2022/3/8
 
