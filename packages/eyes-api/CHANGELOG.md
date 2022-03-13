@@ -4,6 +4,7 @@
 
 - Support 'AUTProxy' capability
 - change EyesManager.closeAllEyes to EyesManager.closeManager 
+- updated to @applitools/types@1.2.2 (from 1.0.25)
 
 ## 1.1.8 - 2022/2/16
 
