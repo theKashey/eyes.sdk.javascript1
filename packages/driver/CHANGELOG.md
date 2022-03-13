@@ -1,9 +1,12 @@
 # Change Log
 
 ## Unreleased
+
+
+## 1.5.4 - 2022/3/13
+
 - updated to @applitools/snippets@2.2.2 (from 2.2.1)
 - updated to @applitools/types@1.2.2 (from 1.2.1)
-
 
  ## 1.5.3 - 2022/3/12
 
