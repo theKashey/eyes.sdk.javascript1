@@ -6,6 +6,7 @@ describe('eyes-cypress', () => {
     cy.visit(url);
     cy.eyesOpen({
       appName: 'some app',
+      viewportSize: {width: 1000, height: 660}
     });
     cy.eyesCheckWindow();
     cy.eyesClose();

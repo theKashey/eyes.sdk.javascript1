@@ -31,13 +31,14 @@ describe('eyes-setup script', () => {
     process.chdir(cwd);
     writeFileSync(pluginFilePath, origPluginFileContent);
     writeFileSync(supportFilePath, origSupportFileContent);
+    unlinkSync(typescriptFilePath);
   });
 
   it('works', () => {
     require('../../../bin/eyes-setup');
 
     expect(readFileSync(pluginFilePath).toString()).to.equal(
-      origPluginFileContent.replace(/}\n$/, `}\n${pluginRequire}`),
+      origPluginFileContent.replace(/};\n$/, `};\n${pluginRequire}`),
     );
 
     expect(readFileSync(supportFilePath).toString()).to.equal(

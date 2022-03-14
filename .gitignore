@@ -36,14 +36,12 @@ docker-compose.yaml
 # other
 tags
 tags.*
-support
 eyes-testcafe-bak
 
 # generated
 dist
 docs
 doc
-bin
 **/types/**/*
 !packages/types
 .history/

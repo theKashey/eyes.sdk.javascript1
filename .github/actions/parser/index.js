@@ -50,7 +50,7 @@ const PACKAGES = [
   {name: 'nightwatch', dirname: 'eyes-nightwatch', framework: 'nightwatch', sdk: true, aliases: ['nw', '@applitools/eyes-nightwatch'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'testcafe', dirname: 'eyes-testcafe', framework: 'testcafe', sdk: true, aliases: ['@applitools/eyes-testcafe'], dependencies: ['types', 'utils', 'api', 'core', 'vgc', 'test-utils']},
   {name: 'browser-extension', dirname: 'eyes-browser-extension', sdk: true, xvfb: true, aliases: ['extension', '@applitools/eyes-browser-extension'], dependencies: ['utils', 'core', 'vgc', 'spec-playwright', 'test-utils']},
-  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: ['logger', 'vgc', 'test-server']},
+  {name: 'cypress', dirname: 'eyes-cypress', framework: 'cypress', sdk: true, aliases: ['cy', '@applitools/eyes-cypress'], dependencies: ['logger', 'universal', 'vgc', 'api']},
   {name: 'storybook', dirname: 'eyes-storybook', framework: 'storybook', sdk: true, aliases: ['@applitools/eyes-storybook'], dependencies: ['logger', 'core', 'vgc', 'spec-puppeteer', 'test-utils']},
   // #endregion
 ]

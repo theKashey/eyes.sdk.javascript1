@@ -17,6 +17,7 @@ describe('config', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 
@@ -33,6 +34,7 @@ describe('config', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 

@@ -1,0 +1,81 @@
+{
+  "name": "@applitools/eyes-cypress",
+  "version": "3.23.9",
+  "main": "index.js",
+  "license": "SEE LICENSE IN LICENSE",
+  "bin": {
+    "eyes-setup": "./bin/eyes-setup.js"
+  },
+  "scripts": {
+    "render": "run(){ npx cypress run --config integrationFolder=test/fixtures/testApp/cypress/render,pluginsFile=test/fixtures/testApp/cypress/plugins/index-render.js,supportFile=test/fixtures/testApp/cypress/support/index-run.js --env url=$1; }; run",
+    "test:unit": "mocha --no-timeouts 'test/unit/**/*.test.js'",
+    "test:it": "mocha --no-timeouts 'test/it/**/*.test.js'",
+    "test:e2e": "mkdir -p test/fixtures/testAppCopies && mocha --no-timeouts 'test/e2e/**/*.test.js'",
+    "lint": "eslint '**/*.js'",
+    "test": "yarn test:unit && yarn test:it && yarn test:e2e && yarn lint",
+    "cypress": "cd test/fixtures/testApp && cypress open --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-play.js",
+    "cypress:run": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js",
+    "cypress:play": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
+    "gh:publish": "gh workflow run publish-cypress.yml --ref $(git rev-parse --abbrev-ref HEAD)",
+    "preversion": "bongo preversion --skip-deps",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification",
+    "deps": "bongo deps",
+    "prepublish:setup": "sudo apt-get install xvfb"
+  },
+  "files": [
+    "src",
+    "bin",
+    "index.js",
+    "commands.js",
+    "eyes-index.d.ts"
+  ],
+  "types": "./eyes-index.d.ts",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-cypress"
+  },
+  "dependencies": {
+    "@applitools/dom-snapshot": "4.5.12",
+    "@applitools/functional-commons": "1.6.0",
+    "@applitools/logger": "1.0.11",
+    "@applitools/visual-grid-client": "15.9.0",
+    "body-parser": "1.19.0",
+    "chalk": "3.0.0",
+    "cors": "2.8.5",
+    "express": "4.17.1",
+    "lodash.flatten": "4.4.0",
+    "throat": "6.0.1"
+  },
+  "devDependencies": {
+    "@applitools/scripts": "^1.1.0",
+    "@applitools/sdk-release-kit": "0.13.11",
+    "@applitools/snaptdout": "1.0.1",
+    "@applitools/test-server": "1.0.8",
+    "chai": "^4.2.0",
+    "chai-spies": "^1.0.0",
+    "cookie-parser": "^1.4.4",
+    "cypress": "^6.5.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-mocha-no-only": "^1.1.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^2.7.0",
+    "husky": "^4.3.8",
+    "lodash.omit": "^4.5.0",
+    "mocha": "^8.0.1",
+    "morgan": "^1.9.1",
+    "ncp": "^2.0.0",
+    "node-fetch": "^2.6.7",
+    "prettier": "^1.19.1",
+    "typescript": "^3.9.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  }
+}

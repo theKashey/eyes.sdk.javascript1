@@ -1,19 +1,22 @@
 'use strict';
 const isGlobalHooksSupported = require('./isGlobalHooksSupported');
 const {presult} = require('@applitools/functional-commons');
+const makeGlobalRunHooks = require('./hooks');
 
-function makePluginExport({startServer, eyesConfig, globalHooks}) {
+function makePluginExport({startServer, eyesConfig}) {
   return function pluginExport(pluginModule) {
-    let closeEyesServer;
+    let eyesServer;
     const pluginModuleExports = pluginModule.exports;
     pluginModule.exports = async function(...args) {
-      const {eyesPort, closeServer} = await startServer();
-      closeEyesServer = closeServer;
+      const {server, port, closeManager, closeBatches, closeUniversalServer} = await startServer();
+      eyesServer = server;
+
+      const globalHooks = makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer});
+
       const [origOn, config] = args;
       const isGlobalHookCalledFromUserHandlerMap = new Map();
       eyesConfig.eyesIsGlobalHooksSupported = isGlobalHooksSupported(config);
       const moduleExportsResult = await pluginModuleExports(onThatCallsUserDefinedHandler, config);
-
       if (eyesConfig.eyesIsGlobalHooksSupported) {
         for (const [eventName, eventHandler] of Object.entries(globalHooks)) {
           if (!isGlobalHookCalledFromUserHandlerMap.get(eventName)) {
@@ -22,7 +25,7 @@ function makePluginExport({startServer, eyesConfig, globalHooks}) {
         }
       }
 
-      return Object.assign({}, eyesConfig, {eyesPort}, moduleExportsResult);
+      return Object.assign({}, eyesConfig, {eyesPort: port}, moduleExportsResult);
 
       // This piece of code exists because at the point of writing, Cypress does not support multiple event handlers:
       // https://github.com/cypress-io/cypress/issues/5240#issuecomment-948277554
@@ -49,7 +52,7 @@ function makePluginExport({startServer, eyesConfig, globalHooks}) {
       }
     };
     return function getCloseServer() {
-      return closeEyesServer;
+      return eyesServer.close();
     };
   };
 }

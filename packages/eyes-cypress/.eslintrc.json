@@ -1,4 +1,14 @@
 {
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "logs",
+    "tmp/",
+    "types/",
+    "test/generic",
+    "*.d.ts",
+    "*.ts"
+  ],
   "env": {
     "commonjs": true,
     "es6": true,

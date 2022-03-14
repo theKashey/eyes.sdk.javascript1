@@ -11,7 +11,7 @@ describe('pluginExport', () => {
 
   async function startServer() {
     return {
-      eyesPort: 123,
+      port: 123,
     };
   }
 
@@ -46,6 +46,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
 
     __module = {
@@ -71,6 +72,7 @@ describe('pluginExport', () => {
       experimentalRunEvents: true,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 
@@ -97,6 +99,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 
@@ -121,6 +124,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 
@@ -145,6 +149,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 
@@ -169,6 +174,7 @@ describe('pluginExport', () => {
       eyesTestConcurrency: 5,
       eyesWaitBeforeCapture: undefined,
       tapDirPath: undefined,
+      tapFileName: undefined,
     });
   });
 });

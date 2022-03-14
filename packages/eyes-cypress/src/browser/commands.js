@@ -1,17 +1,26 @@
-/* global Cypress,cy,window,before,after,navigator */
+/* global Cypress,cy,after */
 'use strict';
-const poll = require('./poll');
-const processPage = require('@applitools/dom-snapshot/dist/processPageCjs');
-const domSnapshotOptions = {dontFetchResources: Cypress.config('eyesDisableBrowserFetching')};
-const makeEyesCheckWindow = require('./eyesCheckWindow');
-const makeHandleCypressViewport = require('./makeHandleCypressViewport');
-const handleCypressViewport = makeHandleCypressViewport({cy});
-const makeSend = require('./makeSend');
-const send = makeSend(Cypress.config('eyesPort'), window.fetch);
-const makeSendRequest = require('./sendRequest');
-const sendRequest = makeSendRequest(send);
+const spec = require('../../dist/browser/spec-driver');
+const Refer = require('./refer');
+const Socket = require('./socket');
+const {socketCommands} = require('./socketCommands');
+const {eyesOpenMapValues} = require('./eyesOpenMapping');
+const {eyesCheckMapValues} = require('./eyesCheckMapping');
+const {TestResultsSummary} = require('@applitools/eyes-api');
 
-const eyesCheckWindow = makeEyesCheckWindow({sendRequest, processPage, domSnapshotOptions});
+const refer = new Refer(value => {
+  if (!value || !value.constructor || !value.constructor.name) return false;
+  const name = value.constructor.name;
+  return name === 'HTMLDocument' || name === 'Window' || value.ownerDocument;
+});
+const socket = new Socket();
+const throwErr = Cypress.config('failCypressOnDiff');
+socketCommands(socket, refer);
+let connectedToUniversal = false;
+
+let manager,
+  eyes,
+  closePromiseArr = [];
 
 function getGlobalConfigProperty(prop) {
   const property = Cypress.config(prop);
@@ -24,25 +33,60 @@ const shouldUseBrowserHooks =
   (getGlobalConfigProperty('isInteractive') ||
     !getGlobalConfigProperty('eyesIsGlobalHooksSupported'));
 
-if (shouldUseBrowserHooks) {
-  const batchEnd = poll(() => {
-    return sendRequest({command: 'batchEnd'});
-  });
+Cypress.Commands.add('eyesGetAllTestResults', () => {
+  Cypress.log({name: 'Eyes: getAllTestResults'});
+  return cy.then({timeout: 86400000}, async () => {
+    if (isCurrentTestDisabled) {
+      isCurrentTestDisabled = false;
+      return;
+    }
+    await Promise.all(closePromiseArr);
+    const summary = await socket.request('EyesManager.closeManager', {manager, throwErr});
 
-  before(() => {
-    sendRequest({
-      command: 'batchStart',
-      data: {isInteractive: getGlobalConfigProperty('isInteractive')},
-    });
-  });
-
-  after(() => {
-    cy.then({timeout: 86400000}, () => {
-      return batchEnd().catch(e => {
-        if (!!getGlobalConfigProperty('eyesFailCypressOnDiff')) {
-          throw e;
-        }
+    const deleteTest = ({testId, batchId, secretToken}) => {
+      const {serverUrl, proxy, apiKey} = Cypress.config('appliConfFile');
+      return socket.request('Core.deleteTest', {
+        settings: {
+          testId,
+          batchId,
+          secretToken,
+          serverUrl,
+          proxy,
+          apiKey,
+        },
       });
+    };
+
+    return new TestResultsSummary({summary, deleteTest});
+  });
+});
+
+if (shouldUseBrowserHooks) {
+  after(() => {
+    if (!manager) return;
+    return cy.then({timeout: 86400000}, async () => {
+      if (isCurrentTestDisabled) {
+        isCurrentTestDisabled = false;
+        return;
+      }
+      const resultConfig = {
+        showLogs: Cypress.config('appliConfFile').showLogs,
+        eyesFailCypressOnDiff: Cypress.config('eyesFailCypressOnDiff'),
+        isTextTerminal: Cypress.config('isTextTerminal'),
+        tapDirPath: Cypress.config('appliConfFile').tapDirPath,
+        tapFileName: Cypress.config('appliConfFile').tapFileName,
+      };
+      await Promise.all(closePromiseArr);
+      const summary = await socket.request('EyesManager.closeManager', {manager, throwErr});
+      const testResults = summary.results.map(({testResults}) => testResults);
+      const message = await socket.request('Test.printTestResults', {testResults, resultConfig});
+      if (
+        !!getGlobalConfigProperty('eyesFailCypressOnDiff') &&
+        message &&
+        message.includes('Eyes-Cypress detected diffs or errors')
+      ) {
+        throw new Error(message);
+      }
     });
   });
 }
@@ -50,98 +94,95 @@ if (shouldUseBrowserHooks) {
 let isCurrentTestDisabled;
 
 Cypress.Commands.add('eyesOpen', function(args = {}) {
-  Cypress.config('eyesOpenArgs', args);
   Cypress.log({name: 'Eyes: open'});
-  const userAgent = navigator.userAgent;
+  Cypress.config('eyesOpenArgs', args);
   const {title: testName} = this.currentTest || this.test || Cypress.currentTest;
-  const {browser: eyesOpenBrowser, isDisabled} = args;
-  const globalBrowser = getGlobalConfigProperty('eyesBrowser');
-  const defaultBrowser = {
-    width: getGlobalConfigProperty('viewportWidth'),
-    height: getGlobalConfigProperty('viewportHeight'),
-    name: 'chrome',
-  };
 
-  const browser =
-    validateBrowser(eyesOpenBrowser) || validateBrowser(globalBrowser) || defaultBrowser;
-
-  if (Cypress.config('eyesIsDisabled') && isDisabled === false) {
+  if (Cypress.config('eyesIsDisabled') && args.isDisabled === false) {
     throw new Error(
       `Eyes-Cypress is disabled by an env variable or in the applitools.config.js file, but the "${testName}" test was passed isDisabled:false. A single test cannot be enabled when Eyes.Cypress is disabled through the global configuration. Please remove "isDisabled:false" from cy.eyesOpen() for this test, or enable Eyes.Cypress in the global configuration, either by unsetting the APPLITOOLS_IS_DISABLED env var, or by deleting 'isDisabled' from the applitools.config.js file.`,
     );
   }
-  isCurrentTestDisabled = getGlobalConfigProperty('eyesIsDisabled') || isDisabled;
+  isCurrentTestDisabled = getGlobalConfigProperty('eyesIsDisabled') || args.isDisabled;
   if (isCurrentTestDisabled) return;
 
-  if (browser) {
-    if (Array.isArray(browser)) {
-      browser.forEach(fillDefaultBrowserName);
-    } else {
-      fillDefaultBrowserName(browser);
+  return cy.then({timeout: 86400000}, async () => {
+    setRootContext();
+    const driver = refer.ref(cy.state('window').document);
+
+    if (!connectedToUniversal) {
+      socket.connect(`ws://localhost:${Cypress.config('eyesPort')}/eyes`);
+      connectedToUniversal = true;
+      socket.emit('Core.makeSDK', {
+        name: 'eyes.cypress',
+        version: require('../../package.json').version,
+        commands: Object.keys(spec).concat(['isSelector', 'isDriver', 'isElement']), // TODO fix spec.isSelector and spec.isDriver and spec.isElement in driver utils
+        cwd: process.cwd(),
+      });
+
+      manager =
+        manager ||
+        (await socket.request(
+          'Core.makeManager',
+          Object.assign(
+            {},
+            {concurrency: Cypress.config('eyesTestConcurrency')},
+            {legacy: false, type: 'vg'},
+          ),
+        ));
     }
-  }
 
-  return handleCypressViewport(browser).then({timeout: 15000}, () =>
-    sendRequest({
-      command: 'open',
-      data: Object.assign({testName}, args, {browser, userAgent}),
-    }),
-  );
+    const appliConfFile = Cypress.config('appliConfFile');
+    const config = eyesOpenMapValues({
+      args,
+      appliConfFile,
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser: {
+        width: Cypress.config('viewportWidth'),
+        height: Cypress.config('viewportHeight'),
+        name: 'chrome',
+      },
+    });
+    eyes = await socket.request('EyesManager.openEyes', {manager, driver, config});
+  });
 });
 
-Cypress.Commands.add('eyesCheckWindow', args => {
-  Cypress.log({name: 'Eyes: check window'});
-  if (isCurrentTestDisabled) return;
-  const eyesOpenArgs = getGlobalConfigProperty('eyesOpenArgs');
-  const defaultBrowser = {
-    width: getGlobalConfigProperty('viewportWidth'),
-    height: getGlobalConfigProperty('viewportHeight'),
-  };
-  const globalArgs = {
-    browser: getGlobalConfigProperty('eyesBrowser'),
-    layoutBreakpoints: getGlobalConfigProperty('eyesLayoutBreakpoints'),
-    waitBeforeCapture: getGlobalConfigProperty('eyesWaitBeforeCapture'),
-  };
+Cypress.Commands.add('eyesCheckWindow', args =>
+  cy.then({timeout: 86400000}, () => {
+    if (isCurrentTestDisabled) return;
 
-  const browser = eyesOpenArgs.browser || globalArgs.browser || defaultBrowser;
-  const layoutBreakpoints =
-    (args && args.layoutBreakpoints) ||
-    (eyesOpenArgs && eyesOpenArgs.layoutBreakpoints) ||
-    globalArgs.layoutBreakpoints;
+    setRootContext();
 
-  const waitBeforeCapture =
-    (args && args.waitBeforeCapture) ||
-    (eyesOpenArgs && eyesOpenArgs.waitBeforeCapture) ||
-    globalArgs.waitBeforeCapture;
+    Cypress.log({name: 'Eyes: check window'});
 
-  const checkArgs = {layoutBreakpoints, browser, waitBeforeCapture};
-  if (typeof args === 'object') {
-    Object.assign(checkArgs, args);
-  } else {
-    Object.assign(checkArgs, {tag: args});
-  }
+    const checkSettings = eyesCheckMapValues({args});
 
-  return cy.document({log: false}).then({timeout: 60000}, doc => eyesCheckWindow(doc, checkArgs));
-});
+    return socket.request('Eyes.check', {
+      eyes,
+      settings: checkSettings,
+    });
+  }),
+);
 
 Cypress.Commands.add('eyesClose', () => {
-  Cypress.log({name: 'Eyes: close'});
-  if (isCurrentTestDisabled) {
-    isCurrentTestDisabled = false;
-    return;
-  }
-  return sendRequest({command: 'close'});
+  return cy.then({timeout: 86400000}, () => {
+    if (isCurrentTestDisabled) return;
+
+    Cypress.log({name: 'Eyes: close'});
+    if (isCurrentTestDisabled) {
+      isCurrentTestDisabled = false;
+      return;
+    }
+
+    // intentionally not returning the result in order to not wait on the close promise
+    const p = socket.request('Eyes.close', {eyes, throwErr: false}).catch(err => {
+      console.log('Error in cy.eyesClose', err);
+    });
+    closePromiseArr.push(p);
+  });
 });
 
-function fillDefaultBrowserName(browser) {
-  if (!browser.name && !browser.iosDeviceInfo && !browser.chromeEmulationInfo) {
-    browser.name = 'chrome';
-  }
-}
-
-function validateBrowser(browser) {
-  if (!browser) return false;
-  if (Array.isArray(browser)) return browser.length ? browser : false;
-  if (Object.keys(browser).length === 0) return false;
-  return browser;
+function setRootContext() {
+  cy.state('window').document['applitools-marker'] = 'root-context';
 }

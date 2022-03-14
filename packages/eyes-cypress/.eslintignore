@@ -1,3 +1,4 @@
 /commands.js
 test/fixtures/**
-test/it/setup/fixtures/cypress/
+test/coverage/generic/cypress/support/
+test/coverage/generic/cypress/integration/generic

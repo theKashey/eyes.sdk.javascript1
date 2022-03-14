@@ -1,0 +1,17 @@
+node_modules
+.env
+/cypress
+test/cypress/screenshots
+test/cypress/videos
+.applitools
+.private
+.History.md.swp
+*.tap
+cdt.json
+.vscode
+*.code-workspace
+.idea/
+.history
+test/cypress
+**/.debug
+example.json

@@ -1,0 +1,6 @@
+{
+  "pluginsFile": "cypress/plugins/index-spec-driver-plugin.js",
+  "supportFile": "cypress/support/index-spec-driver-support.js",
+  "screenshotOnRunFailure": false,
+  "video":false
+}

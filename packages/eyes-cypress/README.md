@@ -194,6 +194,8 @@ Applitools will take screenshots and perform the visual comparisons in the backg
     - [variationGroupId](#variationGroupId)
     - [waitBeforeCapture](#waitBeforeCapture)
   - [Close](#Close)
+  - [GetAllTestResults](#GetAllTestResults)
+  - [deletTestResults](#deleteTestResults)
 - [Concurrency](#Concurrency)
 - [Advanced configuration](#Advanced-configuration)
   - [Scoped configuration](#Here-are-the-available-configuration-properties)
@@ -518,6 +520,33 @@ Close receives no arguments.
 cy.eyesClose();
 ```
 
+#### GetAllTestResults
+
+Returns an object with the applitools test results from a given test / test file.
+This should be called after `close`. For example:
+
+```js
+after(() => {
+  cy.eyesGetAllTestResults().then(summary => {
+    console.log(summary)
+  })
+})
+```
+
+#### deleteTestResults
+
+
+```js
+after(() => {
+  cy.eyesGetAllTestResults().then(summary => {
+    for(const result of summary.getAllResults()) {
+      await result.getTestResults().delete()
+    }
+  })
+})
+```
+
+
 ## Concurrency
 
 The default level of concurrency for free accounts is `5`. This means that only up to 5 visual tests can run in parallel, and therefore the execution might be slow.
@@ -540,10 +569,14 @@ The list above is also the order of precedence, which means that if you pass a p
 | -------------             |:-------------               |:-----------   |
 | `testName`                | The value of Cypress's test title | Test name. If this is not specified, the test name will be the title of the `it` block where the test is running.    |
 | `browser`                 | { width: 800, height: 600, name: 'chrome' } | The size and browser of the generated screenshots. This doesn't need to be the same as the browser that Cypress is running. It could be a different size and also a different browser. For more info and possible values, see the [browser section below](#configuring-the-browser).|
+| `batchId`                 | random                      | Provides ability to group tests into batches. Read more about batches [here](https://applitools.com/docs/topics/working-with-test-batches/how-to-group-tests-into-batches.html). |
+| `batchName`               | The name of the first test in the batch                   | Provides a name to the batch (for display purpose only). |
+| `batchSequenceName`               | undefined | Name for managing batch statistics. |
 | `baselineEnvName`         | undefined                   | The name of the environment of the baseline. |
 | `envName`                 | undefined                   | A name for the environment in which the application under test is running. |
 | `ignoreCaret`             | false                       | Whether to ignore or the blinking caret or not when comparing images. |
 | `matchLevel`              | Strict                      | The method to use when comparing two screenshots, which expresses the extent to which the two images are expected to match. Possible values are `Strict`, `Exact`, `Layout` and `Content`. Read more about match levels [here](http://support.applitools.com/customer/portal/articles/2088359). |
+| `branchName`              | default                     | The name of the current branch. |
 | `baselineBranchName`      | undefined                   | The name of the baseline branch. |
 | `parentBranchName`        | undefined                   | Sets the branch under which new branches are created. |
 | `saveFailedTests`         | false                       | Set whether or not failed tests are saved by default. |
@@ -552,6 +585,7 @@ The list above is also the order of precedence, which means that if you pass a p
 | `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
 | `compareWithParentBranch` | false                       |  |
 | `ignoreBaseline`          | false                       |  |
+| `notifyOnCompletion`  | false | If `true` batch completion notifications are sent. |
 | `accessibilityValidation` | undefined | An object that specifies the accessibility level and guidelines version to use for the screenshots. Possible values for **level** are `None`, `AA` and `AAA`, and possible values for **guidelinesVersion** are `WCAG_2_0` and `WCAG_2_1`. For example: `{level: 'AA', guidelinesVersion: 'WCAG_2_0'}`|
 | `visualGridOptions` | undefined | An object that specifies options to configure renderings on the Ultrafast grid. See more information [here](#visualgridoptions) |
 |`layoutBreakpoints`| undefined | When set to `true`, a snapshot of the DOM will be taken once for each browser/device size in the `browser` configuration. For optimization purposes, an array of numbers can be passed. The DOM snapshot will be taken once for every **width** in the array. For more information, see [layoutBreakpoints](#layoutBreakpoints)|

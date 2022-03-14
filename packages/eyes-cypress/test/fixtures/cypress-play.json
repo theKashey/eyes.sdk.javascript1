@@ -1,0 +1,5 @@
+{
+  "integrationFolder":"test/fixtures/testApp/cypress/integration-play",
+  "pluginsFile":"test/fixtures/testApp/cypress/plugins/index-play.js",
+  "supportFile":"test/fixtures/testApp/cypress/support/index-play.js"
+}

@@ -1,39 +1,48 @@
 'use strict';
-const makeWaitForBatch = require('./waitForBatch');
-const makeHandleBatchResultsFile = require('./makeHandleBatchResultsFile');
-const getErrorsAndDiffs = require('./getErrorsAndDiffs');
-const processCloseAndAbort = require('./processCloseAndAbort');
-const errorDigest = require('./errorDigest');
-const runningTests = require('./runningTests');
+const {TestResults} = require('@applitools/visual-grid-client');
+const handleTestResults = require('./handleTestResults');
 
-function makeGlobalRunHooks({visualGridClient, logger}) {
-  let waitForBatch;
-
+function makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer}) {
   return {
     'before:run': ({config}) => {
-      const {isTextTerminal, eyesTestConcurrency: testConcurrency} = config;
       if (!config.isTextTerminal) return;
-
-      waitForBatch = makeWaitForBatch({
-        logger: (logger.extend && logger.extend('waitForBatch')) || console,
-        testConcurrency,
-        processCloseAndAbort,
-        getErrorsAndDiffs,
-        errorDigest,
-        isInteractive: !isTextTerminal,
-        handleBatchResultsFile: makeHandleBatchResultsFile(config),
-      });
     },
 
     'after:run': async ({config}) => {
-      if (!config.isTextTerminal) return;
-
       try {
-        await waitForBatch(runningTests.tests, visualGridClient.closeBatch);
-      } catch (e) {
-        if (!!config.eyesFailCypressOnDiff) {
-          throw e;
+        if (!config.isTextTerminal) return;
+        const resultConfig = {
+          showLogs: config.showLogs,
+          eyesFailCypressOnDiff: config.eyesFailCypressOnDiff,
+          isTextTerminal: config.isTextTerminal,
+        };
+        const summaries = await closeManager();
+        const testResultsArr = [];
+        for (const summary of summaries) {
+          const testResults = summary.results.map(({testResults}) => testResults);
+          for (const result of testResults) {
+            testResultsArr.push(new TestResults(result));
+          }
         }
+        if (!config.appliConfFile.dontCloseBatches) {
+          await closeBatches({
+            batchIds: [config.appliConfFile.batch.id],
+            serverUrl: config.appliConfFile.serverUrl,
+            proxy: config.appliConfFile.proxy,
+            apiKey: config.appliConfFile.apiKey,
+          });
+        }
+
+        if (config.appliConfFile.tapDirPath) {
+          await handleTestResults.handleBatchResultsFile(testResultsArr, {
+            tapDirPath: config.appliConfFile.tapDirPath,
+            tapFileName: config.appliConfFile.tapFileName,
+          });
+        }
+
+        handleTestResults.printTestResults({testResults: testResultsArr, resultConfig});
+      } finally {
+        await closeUniversalServer();
       }
     },
   };

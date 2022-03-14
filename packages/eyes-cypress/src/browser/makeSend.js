@@ -1,9 +1,7 @@
 'use strict';
-const throat = require('throat');
-const CONCURRENCY_LIMITATION = 100;
 
 function makeSend(port, fetch) {
-  const send = function send({
+  return function send({
     command,
     data,
     method = 'POST',
@@ -15,8 +13,6 @@ function makeSend(port, fetch) {
       headers,
     });
   };
-
-  return throat(CONCURRENCY_LIMITATION, send);
 }
 
 module.exports = makeSend;

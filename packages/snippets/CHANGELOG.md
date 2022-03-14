@@ -3,7 +3,6 @@
 
 ## Unreleased
 
-
 ## 2.2.2 - 2022/3/13
 
 - adjust getContextInfo to work with Cypress Universal (return isRoot=true for context with document which is marked as "[applitools-marker]=root-context")

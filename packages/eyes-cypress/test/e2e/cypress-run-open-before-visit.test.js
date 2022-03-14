@@ -31,7 +31,6 @@ describe('open before visit', () => {
         './node_modules/.bin/cypress run --headless --config testFiles=openBeforeVisit.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js ',
         {
           maxBuffer: 10000000,
-          // in case we don't call runningTests.abortTests() from handlers, then the test will fail after 35 seconds, but Cypress will continue to run in the background which is undesired
           timeout: 35000,
         },
       );

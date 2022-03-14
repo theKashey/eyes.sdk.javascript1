@@ -1,18 +1,27 @@
 'use strict';
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
-const fetch = require('../../util/fetchWithNoCAVerify');
 const makeStartServer = require('../../../src/plugin/server');
-const express = require('express');
+const {makeLogger} = require('@applitools/logger');
+
+const logger = makeLogger();
 
 describe('plugin server', () => {
-  it('starts at a random port', async () => {
-    const app = express();
-    app.get('/bla', (_req, res) => res.sendStatus(200));
-    const startServer = makeStartServer({app, logger: console});
-    const {eyesPort, closeServer} = await startServer();
-    const resp = await fetch(`https://localhost:${eyesPort}/bla`);
-    expect(resp.status).to.equal(200);
-    await closeServer();
+  it('starts at port 31077', async () => {
+    const startServer = makeStartServer({logger});
+    const {port, server} = await startServer();
+    expect(port).to.equal(31077);
+    await server.close();
+  });
+
+  it('starts at port 31078 if 31077 is already taken', async () => {
+    const startServer = makeStartServer({logger});
+    const {port, server} = await startServer();
+    expect(port).to.equal(31077);
+
+    const {port: port2, server: server2} = await startServer();
+    expect(port2).to.equal(31078);
+    await server.close();
+    await server2.close();
   });
 });
