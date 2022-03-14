@@ -3,6 +3,8 @@
 ## Unreleased
 
 - update snippets to address Cypres universal (AUT is hosted in an iframe inside the Cypres shell)
+- updated to @applitools/eyes-sdk-core@13.1.1 (from 13.1.0)
+- updated to @applitools/visual-grid-client@15.10.1 (from 15.10.0)
 
 ## 2.0.0 - 2022/3/12
 
