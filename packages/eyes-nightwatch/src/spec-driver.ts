@@ -245,7 +245,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
           output: false,
           webdriver: {
             host: !url.host.includes('localhost') ? url.host : undefined,
-            port: url.port,
+            port: url.port || 4444,
             default_path_prefix: url.pathname,
           },
           desiredCapabilities,
