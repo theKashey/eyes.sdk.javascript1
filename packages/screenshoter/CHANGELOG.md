@@ -4,6 +4,7 @@
 ## Unreleased
 
 - update snippets
+- updated to @applitools/snippets@2.2.2 (from 2.2.1)
 
 ## 3.3.11 - 2022/3/12
 
