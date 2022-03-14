@@ -2,11 +2,15 @@
 
 ## Unreleased
 
+
+## 1.10.3 - 2022/3/14
+
 - fixing: Nightwatch 1.10.2 throwing Module assert/Strict not found
 - updated to @applitools/eyes-api@1.2.0 (from 1.1.6)
 - updated to @applitools/eyes-sdk-core@13.1.1 (from 12.24.7)
 - updated to @applitools/types@1.2.2 (from 1.0.22)
 - updated to @applitools/utils@1.2.13 (from 1.2.4)
+- updated to @applitools/visual-grid-client@15.10.1 (from 15.8.53)
 - updated to @applitools/visual-grid-client@15.10.1 (from 15.8.53)
 ## 1.10.2 - 2021/12/21
 
