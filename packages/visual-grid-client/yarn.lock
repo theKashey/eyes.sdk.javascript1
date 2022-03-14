@@ -30,28 +30,28 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.3.tgz#64dc8a80e1ec3c9b64871b6928fb68a1ce7dd77a"
-  integrity sha512-MZF43ORZ3iRlQTxVf3j33dAtEPDdVgObpRVjiQXHGvDXXfaJttOyxWwIR8hj4ZHSsOa27azziY5eMpZNI0yZDA==
+"@applitools/driver@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.4.tgz#357f4a3c2b4e2fde309567a8d48744f8e9884467"
+  integrity sha512-5emdVxKzrrbqetpmnYfBWg8BnBeSarw+xWh4Ms8HvtaXi3yhBF6AkOog2TvbHfBF1Qph2SxMV9SayBD9XyFlaw==
   dependencies:
-    "@applitools/snippets" "2.2.1"
-    "@applitools/types" "1.2.1"
+    "@applitools/snippets" "2.2.2"
+    "@applitools/types" "1.2.2"
     "@applitools/utils" "1.2.13"
 
-"@applitools/eyes-sdk-core@13.1.0":
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.1.0.tgz#da10860571be99316c8e43dd62804dc4ea8385ff"
-  integrity sha512-T1394NCWeDYhLhAYQtnQQHRzXzxNU9iN71H1pOHeiV3rqUZcyzNWBtDjxHMbDzLfUMd20/Hcjokd/iPk40NB7A==
+"@applitools/eyes-sdk-core@13.1.1":
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.1.1.tgz#6b66e0e9913e14bb1f3e458bc279bb7ef1f649f9"
+  integrity sha512-WTFHEXvBx06vX3k3S/r0FuFuAgRhfXV/Qv2Gw72j1tfey4KXle03gMfDuSafwO8g1ajoF3+li9SGnOG9NxlWKg==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.5.3"
+    "@applitools/driver" "1.5.4"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.11"
-    "@applitools/screenshoter" "3.3.11"
-    "@applitools/snippets" "2.2.1"
-    "@applitools/types" "1.2.1"
+    "@applitools/screenshoter" "3.3.12"
+    "@applitools/snippets" "2.2.2"
+    "@applitools/types" "1.2.2"
     "@applitools/utils" "1.2.13"
     axios "0.26.0"
     chalk "3.0.0"
@@ -135,12 +135,12 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/screenshoter@3.3.11":
-  version "3.3.11"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.3.11.tgz#dd7e6d67ceb61df3540a983568b3b882946dae64"
-  integrity sha512-eRKvBSKeLJw1rPLeE2zkIU1N3hue7ApluyHjXdZ80hZ1V+GF7pjkbs0OU03YCAxUNbdxbReyp8IC7vOmkFvCxw==
+"@applitools/screenshoter@3.3.12":
+  version "3.3.12"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.3.12.tgz#58e7845d2ed5a388cecbaf15a4f52b607bd31bad"
+  integrity sha512-VbPmSJjvQpSRqEdFxUkk76rtFUR+Tce1WLiugWngVbffi5aRatflVfmB92iu96bqJaRyR2KaMucNX4OkmNYrSw==
   dependencies:
-    "@applitools/snippets" "2.2.1"
+    "@applitools/snippets" "2.2.2"
     "@applitools/utils" "1.2.13"
     png-async "0.9.4"
 
@@ -156,10 +156,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/snippets@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.2.1.tgz#6f5c7b09c5258aeed68ad8ff3afbe6057ba65e7e"
-  integrity sha512-WJMB5L/iqiNuFmaTmaphYI1y2bZnD9HPEHevsChLLkHHxV4qlHZvRsJaTTg6ZatK9Ahfx7+SB6hPjvlDLI79JQ==
+"@applitools/snippets@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.2.2.tgz#c5e5944323babee7b4077c04f203bc33ea5239c4"
+  integrity sha512-XOxdrsWgcEu6h6QTVL/S8/dJHoPGir1GKQLyWORbRfbjll15/mUj3Mzzi9MqL6lSN3KWp07ncLvMuhSETpi7Mg==
 
 "@applitools/test-server@1.0.8":
   version "1.0.8"
@@ -183,10 +183,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.2.1.tgz#c10aa57ade37c6e9629bdf3eeda4ceb2f1974ced"
-  integrity sha512-Ruo4cLaGkCVYCN1F7a/DQn/V9fV0CrFpOyAQ0nhjlv2E/NKLheFSDJ4DTDBkI6rAxdxAMMTiC+85SKwpMJ0dfg==
+"@applitools/types@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.2.2.tgz#2a7f018871617111782772f1ccff5b5e004ee83f"
+  integrity sha512-oGUT71HgPqHrBqRZr/hhBoPNxVDdHFK8JSzUlXKY8aTnJq6kHakzvlWC/gLrqDn5IChbwApIeGDHL1x8MyqaxQ==
 
 "@applitools/utils@1.2.11":
   version "1.2.11"
