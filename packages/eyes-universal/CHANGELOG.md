@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- update snippets to address Cypres universal (AUT is hosted in an iframe inside the Cypres shell)
 
 ## 2.0.0 - 2022/3/12
 
