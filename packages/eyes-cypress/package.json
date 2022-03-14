@@ -19,7 +19,7 @@
     "cypress:run": "cypress run --config-file test/fixtures/cypress-play.json --spec=test/fixtures/testApp/cypress/integration-play/play.js",
     "cypress:run:new": "node_modules/cypress-new/bin/cypress run --config-file test/fixtures/cypress-play.json --spec=test/fixtures/testApp/cypress/integration-play/play.js",
     "cypress:play": "cd test/fixtures/testApp && cypress run --config integrationFolder=cypress/integration-play,pluginsFile=cypress/plugins/index-play.js,supportFile=cypress/support/index-run.js --spec=cypress/integration-play/play.js",
-    "preversion": "bongo preversion --skip-deps",
+    "preversion": "bongo preversion --skip-deps && yarn build",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
