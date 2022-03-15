@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- fix test script
 
 ## 3.25.0 - 2022/3/15
 
