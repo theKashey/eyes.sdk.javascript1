@@ -1,5 +1,5 @@
 module.exports = (tracker, test) => {
-  const {useRef, addSyntax, addCommand, addExpression, addHook, withScope} = tracker;
+  const {addSyntax, addCommand} = tracker;
 
   // addSyntax('var', ({constant, name, value}) => `${value}.then(${name} => {})`)
   addSyntax('getter', ({target, key}) => `${target}['${key}']`);
