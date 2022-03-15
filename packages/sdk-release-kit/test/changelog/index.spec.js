@@ -6,7 +6,11 @@ const {
   verifyChangelogContents,
   getLatestReleaseEntries,
 } = require('../../src/changelog/query')
-const {addUnreleasedItem, createReleaseEntry, writeReleaseEntryToChangelog} = require('../../src/changelog/update')
+const {
+  addUnreleasedItem,
+  createReleaseEntry,
+  writeReleaseEntryToChangelog,
+} = require('../../src/changelog/update')
 const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
@@ -342,7 +346,9 @@ describe('verify-changelog', () => {
     }, /Invalid changelog entries found/)
   })
   it('should not throw if no changelog found', () => {
-    assert.doesNotThrow(() => {verifyChangelog('blah')})
+    assert.doesNotThrow(() => {
+      verifyChangelog('blah')
+    })
   })
 })
 

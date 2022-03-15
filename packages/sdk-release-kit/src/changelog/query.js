@@ -61,7 +61,9 @@ function verifyChangelogContents({changelogContents}) {
     targetHeading: '## Unreleased',
   })
   if (unreleasedEntries.length)
-    throw new Error('Invalid changelog entries found. Unreleased changelog entries need to be added topending-changes.yml and reviewed prior to publishing.')
+    throw new Error(
+      'Invalid changelog entries found. Unreleased changelog entries need to be added topending-changes.yml and reviewed prior to publishing.',
+    )
 }
 
 module.exports = {

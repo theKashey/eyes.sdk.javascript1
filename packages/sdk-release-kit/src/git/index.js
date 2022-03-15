@@ -26,13 +26,15 @@ async function expandAutoCommitLogEntry(logEntry) {
   const currentDeps = stdout.match(/\+ *"(.*)"/g)
   const previousDeps = stdout.match(/\- *"(.*)"/g)
   if (!currentDeps && !previousDeps) return []
-  let deps = currentDeps.map(dep => {
-    if (isInvalidPackageName(dep) || hasInvalidPackageVersion(dep)) return
-    const packageName = dep.match(/"(.*)":/)[1]
-    const upperVersion = dep.match(/: "(.*)"/)[1]
-    const packagePath = isInternalPackage(packageName) ? getPackagePath(packageName) : undefined
-    return {packageName, upperVersion, packagePath}
-  }).filter(dep => dep)
+  let deps = currentDeps
+    .map(dep => {
+      if (isInvalidPackageName(dep) || hasInvalidPackageVersion(dep)) return
+      const packageName = dep.match(/"(.*)":/)[1]
+      const upperVersion = dep.match(/: "(.*)"/)[1]
+      const packagePath = isInternalPackage(packageName) ? getPackagePath(packageName) : undefined
+      return {packageName, upperVersion, packagePath}
+    })
+    .filter(dep => dep)
   previousDeps.forEach(dep => {
     if (isInvalidPackageName(dep) || hasInvalidPackageVersion(dep)) return
     const packageName = dep.match(/"(.*)":/)[1]

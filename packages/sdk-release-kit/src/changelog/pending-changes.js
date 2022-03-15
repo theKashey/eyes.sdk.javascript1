@@ -1,4 +1,3 @@
-const {gitLog} = require('../git')
 const yaml = require('js-yaml')
 const path = require('path')
 const fs = require('fs')

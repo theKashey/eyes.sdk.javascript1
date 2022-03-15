@@ -11,10 +11,7 @@ function addReleaseEntryForUnreleasedItems({changelogContents, version}) {
   const indentationCount =
     unreleasedEntries[0].entry.length - unreleasedEntries[0].entry.trim().length
   const padding = new Array(indentationCount + 1).join(' ')
-  const releaseEntry = [
-    `${padding}## ${version}\n`,
-    ...unreleasedEntries.map(entry => entry.entry),
-  ]
+  const releaseEntry = [`${padding}## ${version}\n`, ...unreleasedEntries.map(entry => entry.entry)]
   const latestReleaseHeadingIndex = getLatestReleaseHeading(changelogContents).index
   const mutableChangelogContents = changelogContents.split('\n')
   mutableChangelogContents.splice(latestReleaseHeadingIndex - 1, 0, ...releaseEntry)

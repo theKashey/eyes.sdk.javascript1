@@ -42,23 +42,36 @@ yargs
       listVersions: {alias: 'lsv', type: 'boolean'},
     },
     async args => {
-      const {packageName, lowerVersion, upperVersion, expandAutoCommitLogEntries, cwd, versionsBack, listVersions} = args
+      const {
+        packageName,
+        lowerVersion,
+        upperVersion,
+        expandAutoCommitLogEntries,
+        cwd,
+        versionsBack,
+        listVersions,
+      } = args
 
       console.log('bongo commit-log output')
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
       console.log(`package: ${pkgName}`)
-      if (versionsBack && lowerVersion) console.log(`arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`)
+      if (versionsBack && lowerVersion)
+        console.log(
+          `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
+        )
 
       const versions = await findPackageVersionNumbers({cwd})
       const lower = lowerVersion || versions[versionsBack ? versionsBack : 1]
       const upper = upperVersion || versions[0]
-      
+
       if (listVersions) {
         if (!versionsBack) {
           console.log('--versionsBack (or --n) not provided, using sensible default')
         }
-        console.log(`Listing previous ${versionsBack ? versionsBack : 10 } version numbers`)
-        versions.slice(0, versionsBack ? versionsBack + 1 : 10 + 1).forEach(v => console.log(`- ${v}`))
+        console.log(`Listing previous ${versionsBack ? versionsBack : 10} version numbers`)
+        versions
+          .slice(0, versionsBack ? versionsBack + 1 : 10 + 1)
+          .forEach(v => console.log(`- ${v}`))
       } else {
         const output = await gitLog({
           packageName,
