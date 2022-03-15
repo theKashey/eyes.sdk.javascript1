@@ -24,7 +24,7 @@
     "postversion": "bongo postversion --skip-release-notification",
     "deps": "bongo deps",
     "generate:tests": "coverage-tests generate",
-    "test:coverage": "yarn generate:tests && cd test/coverage/generic &&  unset APPLITOOLS_API_KEY && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) cypress run ; cd -",
+    "test:coverage": "yarn generate:tests && cd test/coverage/generic &&  unset APPLITOOLS_API_KEY && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) cypress run",
     "prepublish:setup": "sudo apt-get install xvfb"
   },
   "files": [
