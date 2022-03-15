@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+
+## 3.25.0 - 2022/3/15
+
 - convert cypress to work on top of universal
 - expose `cy.eyesGetAllTestResults`
 - updated to @applitools/visual-grid-client@15.10.1 (from 15.9.0)
