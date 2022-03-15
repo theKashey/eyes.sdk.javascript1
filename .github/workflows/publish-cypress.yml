@@ -57,6 +57,7 @@ jobs:
         working-directory: ./packages/${{env.PACKAGE_DIR}}
         run: |
           yarn install
+          yarn build
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
       - name: Prepare environments
         id: prepare
