@@ -42,9 +42,17 @@ function getReleaseNumberFromHeading(heading) {
 }
 
 function verifyChangelog(targetFolder) {
-  const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
-  const {version} = require(path.resolve(targetFolder, 'package.json'))
-  verifyChangelogContents({changelogContents, version})
+  try {
+    const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
+    const {version} = require(path.resolve(targetFolder, 'package.json'))
+    verifyChangelogContents({changelogContents, version})
+  } catch (error) {
+    if (/no such file or directory/.test(error.message)) {
+      console.log('no changelog found')
+      return
+    }
+    throw error
+  }
 }
 
 function verifyChangelogContents({changelogContents}) {
@@ -52,8 +60,8 @@ function verifyChangelogContents({changelogContents}) {
     changelogContents,
     targetHeading: '## Unreleased',
   })
-  if (!unreleasedEntries.length)
-    throw new Error('No unreleased entries found in the changelog. Add some before releasing.')
+  if (unreleasedEntries.length)
+    throw new Error('Invalid changelog entries found. Unreleased changelog entries need to be added topending-changes.yml and reviewed prior to publishing.')
 }
 
 module.exports = {

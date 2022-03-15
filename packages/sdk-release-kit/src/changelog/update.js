@@ -12,7 +12,6 @@ function addReleaseEntryForUnreleasedItems({changelogContents, version}) {
     unreleasedEntries[0].entry.length - unreleasedEntries[0].entry.trim().length
   const padding = new Array(indentationCount + 1).join(' ')
   const releaseEntry = [
-    '',
     `${padding}## ${version}\n`,
     ...unreleasedEntries.map(entry => entry.entry),
   ]
@@ -22,13 +21,15 @@ function addReleaseEntryForUnreleasedItems({changelogContents, version}) {
   return mutableChangelogContents.join('\n')
 }
 
-function addUnreleasedItem({changelogContents, entry}) {
+function addUnreleasedItem({changelogContents, entry, prepend}) {
   const unreleasedEntries = getEntriesForHeading({
     changelogContents,
     targetHeading: '## Unreleased',
     includeHeading: true,
   })
-  const targetIndex = unreleasedEntries[unreleasedEntries.length - 1].index + 1
+  const targetIndex = prepend
+    ? unreleasedEntries[0].index + 1
+    : unreleasedEntries[unreleasedEntries.length - 1].index + 1
   const mutableChangelogContents = changelogContents.split('\n')
   mutableChangelogContents.splice(targetIndex, 0, entry)
   return mutableChangelogContents.join('\n')
@@ -61,17 +62,17 @@ function createReleaseEntry({changelogContents, version, withDate}) {
   return mutableChangelogContents
 }
 
-function writeReleaseEntryToChangelog(targetFolder) {
+function writeReleaseEntryToChangelog(targetFolder, {withDate = true} = {}) {
   const changeLogFilePath = path.resolve(targetFolder, 'CHANGELOG.md')
   const changelogContents = readFileSync(changeLogFilePath, 'utf8')
   const {version} = require(path.resolve(targetFolder, 'package.json'))
-  writeFileSync(changeLogFilePath, createReleaseEntry({changelogContents, version, withDate: true}))
+  writeFileSync(changeLogFilePath, createReleaseEntry({changelogContents, version, withDate}))
 }
 
-function writeUnreleasedItemToChangelog({targetFolder, entry}) {
+function writeUnreleasedItemToChangelog({targetFolder, entry, prepend} = {}) {
   const changeLogFilePath = path.resolve(targetFolder, 'CHANGELOG.md')
   const changelogContents = readFileSync(changeLogFilePath, 'utf8')
-  writeFileSync(changeLogFilePath, addUnreleasedItem({changelogContents, entry}))
+  writeFileSync(changeLogFilePath, addUnreleasedItem({changelogContents, entry, prepend}))
 }
 
 module.exports = {

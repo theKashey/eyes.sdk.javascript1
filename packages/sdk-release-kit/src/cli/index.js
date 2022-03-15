@@ -4,17 +4,74 @@ const yargs = require('yargs')
 const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
-const {verifyChangelog, writeReleaseEntryToChangelog} = require('../changelog')
+const {
+  removePendingChanges,
+  verifyChangelog,
+  verifyPendingChanges,
+  writePendingChangesToChangelog,
+  writeReleaseEntryToChangelog,
+} = require('../changelog')
 const {packInstall, lsDryRun} = require('../dry-run')
 const {lint} = require('../lint')
 const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
-const {gitAdd, gitCommit, gitPushWithTags, isChanged, gitStatus} = require('../git')
+const {
+  findPackageVersionNumbers,
+  gitAdd,
+  gitCommit,
+  gitPushWithTags,
+  isChanged,
+  gitStatus,
+  gitLog,
+} = require('../git')
 const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
+const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-changes.yaml')
 
 yargs
   .config({cwd: process.cwd()})
+  .command(
+    ['commit-log', 'log'],
+    'Show commit logs for a given package',
+    {
+      packageName: {alias: 'p', type: 'string'},
+      lowerVersion: {alias: 'lv', type: 'string'},
+      upperVersion: {alias: 'uv', type: 'string'},
+      expandAutoCommitLogEntries: {alias: 'expand', type: 'boolean', default: true},
+      versionsBack: {alias: 'n', type: 'number'},
+      listVersions: {alias: 'lsv', type: 'boolean'},
+    },
+    async args => {
+      const {packageName, lowerVersion, upperVersion, expandAutoCommitLogEntries, cwd, versionsBack, listVersions} = args
+
+      console.log('bongo commit-log output')
+      const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
+      console.log(`package: ${pkgName}`)
+      if (versionsBack && lowerVersion) console.log(`arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`)
+
+      const versions = await findPackageVersionNumbers({cwd})
+      const lower = lowerVersion || versions[versionsBack ? versionsBack : 1]
+      const upper = upperVersion || versions[0]
+      
+      if (listVersions) {
+        if (!versionsBack) {
+          console.log('--versionsBack (or --n) not provided, using sensible default')
+        }
+        console.log(`Listing previous ${versionsBack ? versionsBack : 10 } version numbers`)
+        versions.slice(0, versionsBack ? versionsBack + 1 : 10 + 1).forEach(v => console.log(`- ${v}`))
+      } else {
+        const output = await gitLog({
+          packageName,
+          cwd,
+          lowerVersion: lower,
+          upperVersion: upper,
+          expandAutoCommitLogEntries,
+        })
+        console.log(`changes from versions ${lower} to ${upper}`)
+        console.log(output)
+      }
+    },
+  )
   .command(
     ['preversion', 'release-pre-check', 'pre-version'],
     'Run all verification checks pre-release',
@@ -23,6 +80,7 @@ yargs
       skipVerifyVersions: {alias: 'svv', type: 'boolean'},
       skipDeps: {alias: 'sd', type: 'boolean'},
       skipCommit: {alias: 'sc', type: 'boolean', default: false},
+      verifyPendingChanges: {type: 'boolean', default: false},
     },
     async args => {
       const {cwd} = args
@@ -32,8 +90,12 @@ yargs
       }
       console.log('[bongo preversion] lint')
       await lint(cwd)
-      console.log('[bongo preversion] verify changelog')
-      verifyChangelog(cwd)
+      if (args.verifyPendingChanges) {
+        console.log('[bongo preversion] verify changelog')
+        verifyChangelog(cwd)
+        console.log('[bongo preversion] verify pending changes')
+        verifyPendingChanges({cwd, pendingChangesFilePath})
+      }
       console.log('[bongo preversion] verify unfixed dependencies')
       verifyUnfixedDeps(cwd)
       if (!args.skipVerifyVersions) {
@@ -59,10 +121,26 @@ yargs
       console.log('[bongo preversion] done!')
     },
   )
-  .command(['version'], 'Supportive steps to version a package', {}, async ({cwd}) => {
-    writeReleaseEntryToChangelog(cwd)
-    await gitAdd('CHANGELOG.md')
-  })
+  .command(
+    ['version'],
+    'Supportive steps to version a package',
+    {
+      skipAdd: {alias: 'sa', type: 'boolean', default: false},
+      withPendingChanges: {type: 'boolean', default: false},
+    },
+    async ({cwd, skipAdd, withPendingChanges}) => {
+      if (withPendingChanges) {
+        writePendingChangesToChangelog({cwd, pendingChangesFilePath})
+        removePendingChanges({cwd, pendingChangesFilePath})
+        writeReleaseEntryToChangelog(cwd)
+        if (!skipAdd) {
+          await gitAdd(pendingChangesFilePath)
+          await gitAdd('CHANGELOG.md')
+        }
+      }
+      // no commit here since it is implicitly handled as part of `yarn version`'s lifecycle script hooks
+    },
+  )
   .command(
     ['postversion'],
     'Supportive steps to after a package has been versioned',

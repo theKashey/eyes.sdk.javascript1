@@ -1,0 +1,82 @@
+Apollo SDK:
+  feature:
+    - Support including humans when launching to the moon
+    - Better probability of successful landing
+  bug-fix:
+    - Avoid consuming all oxygen during takeoff
+    - Remove kitchen to accommodate space for PlayStation
+applitools-for-selenium-ide:
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-cypress":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-nightwatch":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-playwright":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-protractor":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-puppeteer":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-selenium":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-storybook":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-testcafe":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-universal":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes.webdriverio":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-webdriverio4-service":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-webdriverio":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-webdriverio5-service":
+  feature:
+    - 
+  bug-fix:
+    - 
+eyes-browser-extension:
+  feature:
+    - 
+  bug-fix:
+    - 

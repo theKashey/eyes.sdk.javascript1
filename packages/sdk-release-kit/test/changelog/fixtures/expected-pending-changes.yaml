@@ -1,0 +1,45 @@
+"@applitools/eyes-cypress":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-nightwatch":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-playwright":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-protractor":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-puppeteer":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-selenium":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-storybook":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-testcafe":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-webdriverio":
+  feature:
+    - 
+  bug-fix:
+    - 

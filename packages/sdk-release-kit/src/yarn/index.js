@@ -4,7 +4,6 @@ const path = require('path')
 const pickby = require('lodash.pickby')
 const utils = require('@applitools/utils')
 const chalk = require('chalk')
-const {writeUnreleasedItemToChangelog} = require('../changelog')
 
 async function yarnInstall() {
   await utils.process.sh(`yarn install`)
@@ -23,13 +22,6 @@ async function yarnUpgrade({folder, upgradeAll}) {
     const cmd = `yarn upgrade --latest ${depsStr}`
     console.log(chalk.cyan(cmd))
     await utils.process.sh(cmd)
-
-    const newPkgJson = JSON.parse(fs.readFileSync(path.resolve(folder, 'package.json')))
-    const upgradedDeps = findUpgradedDeps(dependencies, newPkgJson.dependencies)
-    for (const [dep, oldVersion, newVersion] of upgradedDeps) {
-      const changelogEntry = `- updated to ${dep}@${newVersion} (from ${oldVersion})`
-      writeUnreleasedItemToChangelog({targetFolder: folder, entry: changelogEntry})
-    }
   }
 }
 

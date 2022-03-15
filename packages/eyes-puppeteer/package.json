@@ -51,8 +51,8 @@
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-puppeteer utils driver snippets screenshoter' -f linking-depth=3",
     "gh:publish": "gh workflow run publish-puppeteer.yml --ref $(git rev-parse --abbrev-ref HEAD)",
-    "preversion": "bongo preversion && yarn build",
-    "version": "bongo version",
+    "preversion": "bongo preversion --verifyPendingChanges && yarn build",
+    "version": "bongo version --withPendingChanges",
     "postversion": "bongo postversion"
   },
   "husky": {

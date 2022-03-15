@@ -1,5 +1,0 @@
-# Changelog
-
-## Unreleased
-
-- introduce `snaptdout`
