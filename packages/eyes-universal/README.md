@@ -157,7 +157,7 @@ This command has to be used in order to create an eyes object. It expects input 
 
 In response client should expect to get an eyes reference ([EyesRef](#Reference-format)), this reference has to be used in eyes related requests ([Eyes.check](#Eyes.check), [Eyes.locate](#Eyes.locate), [Eyes.extractTextRegions](#Eyes.extractTextRegions), [Eyes.extractText](#Eyes.extractText), [Eyes.close](#Eyes.close), [Eyes.abort](#Eyes.abort))
 
-#### EyesManage.closeManager
+#### EyesManager.closeManager
 This command is meant to be used to close all eyes objects created with this runner, abort unclosed test, and return a summary with results, and exceptions from each of the eyes objects. It expects an input with a related [ManagerRef](#Reference-format) (from [Core.makeManager](#Core.makeManager) and a `throwErr` property:
 ```ts
 {
@@ -166,9 +166,31 @@ This command is meant to be used to close all eyes objects created with this run
 }
 ```
 
-In response client will receive an array of [TestResult](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205)'s
+In response client will receive a summary object of the shape [TestResultSummary](https://github.com/applitools/eyes.sdk.javascript1/blob/1221f4e36ca2fbf5f49dfee5d32504c6bc574c9b/packages/types/src/data.ts#L285)
 
-> This command will never throw error due to test result status. This functionality should be implemented on client side.
+This command might throw an error if `throwErr` is `true`. The following JavaScript snippet shows how to handle such error:
+
+```
+catch (err) {
+
+  // if it's some internal error that is not mapped to a known state - throw it to the user
+  if (!err.info?.testResult) {
+    throw err
+  }
+
+  // wrap the testResult in the error with a data class 
+  const testResult = new TestResultsData(err.info.testResult, deleteTest)
+
+  // throw the right instance of error based on the reason
+  if (err.reason === 'test failed') {
+    throw new TestFailedError(err.message, testResult)
+  } else if (err.reason === 'test different') {
+    throw new DiffsFoundError(err.message, testResult)
+  } else if (err.reason === 'test new') {
+    throw new NewTestError(err.message, testResult)
+  }
+}
+```
 
 #### Eyes.check
 This command is used to perform a check/match action. It expects input with a related [EyesRef](#Reference-format), [CheckSettings](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/setting.ts#L66), and [EyesConfig](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/config.ts#L25) in a format:
