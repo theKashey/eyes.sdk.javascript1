@@ -16,6 +16,10 @@ jobs:
           node-version: 14
       - run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          # git diff exits w/ 0 when there are no changes found (hence the counter-intuitive negation)
+          if ! git diff --quiet pending-changes.yaml; then
+            exit 1
+          fi
           cd packages/
           packages=$(git diff HEAD~ --name-only | cut -d "/" -f 2 | uniq)
           for package in $packages; do
