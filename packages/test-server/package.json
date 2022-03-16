@@ -43,7 +43,7 @@
     "yargs": "17.0.1"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/sdk-release-kit": "1.0.0",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",

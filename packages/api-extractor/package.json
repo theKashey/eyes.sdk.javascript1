@@ -42,7 +42,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.13.11",
+    "@applitools/sdk-release-kit": "1.0.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^4.15.1",

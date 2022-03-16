@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@applitools/sdk-coverage-tests": "^2.3.18",
-    "@applitools/sdk-release-kit": "^0.13.11",
+    "@applitools/sdk-release-kit": "^1.0.0",
     "@applitools/test-utils": "^1.1.5",
     "@applitools/types": "1.2.2",
     "@types/mocha": "^9.0.0",

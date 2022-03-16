@@ -56,7 +56,7 @@
   "devDependencies": {
     "@applitools/api-extractor": "^1.2.3",
     "@applitools/scripts": "1.0.1",
-    "@applitools/sdk-release-kit": "0.13.4",
+    "@applitools/sdk-release-kit": "1.0.0",
     "@applitools/test-utils": "1.0.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.10.2",

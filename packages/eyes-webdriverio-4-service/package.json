@@ -28,18 +28,18 @@
     "@applitools/eyes.webdriverio": "2.26.0"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "^0.10.6",
+    "@applitools/sdk-release-kit": "^1.0.0",
     "chromedriver": "^87.0.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "mocha": "^6.2.2",
     "wdio-chromedriver-service": "^0.1.5",
     "wdio-dot-reporter": "0.0.10",
     "wdio-mocha-framework": "^0.6.4",
     "wdio-sync": "^0.7.3",
-    "webdriverio": "^4.14.4",
-    "eslint": "^7.9.0",
-    "eslint-plugin-mocha-no-only": "^1.1.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4"
+    "webdriverio": "^4.14.4"
   },
   "engines": {
     "node": ">=8.9.0 <12"

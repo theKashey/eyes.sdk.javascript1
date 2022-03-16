@@ -39,7 +39,7 @@
   "devDependencies": {
     "@applitools/scripts": "^1.0.1",
     "@applitools/sdk-coverage-tests": "^2.3.15",
-    "@applitools/sdk-release-kit": "^0.13.3",
+    "@applitools/sdk-release-kit": "^1.0.0",
     "@applitools/spec-driver-playwright": "^1.2.0",
     "@applitools/test-utils": "^1.0.7",
     "@babel/core": "^7.15.5",
