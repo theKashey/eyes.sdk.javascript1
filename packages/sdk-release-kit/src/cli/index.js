@@ -40,48 +40,67 @@ yargs
       expandAutoCommitLogEntries: {alias: 'expand', type: 'boolean', default: true},
       versionsBack: {alias: 'n', type: 'number'},
       listVersions: {alias: 'lsv', type: 'boolean'},
+      splitByVersion: {alias: 'split', type: 'boolean'},
     },
     async args => {
       const {
-        packageName,
-        lowerVersion,
-        upperVersion,
-        expandAutoCommitLogEntries,
         cwd,
-        versionsBack,
+        expandAutoCommitLogEntries,
         listVersions,
+        lowerVersion,
+        packageName,
+        splitByVersion,
+        upperVersion,
+        versionsBack,
       } = args
 
-      console.log('bongo commit-log output')
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
+      const versions = await findPackageVersionNumbers({cwd})
+      const lower = lowerVersion || versions[versionsBack ? versionsBack : 1]
+      const upper = upperVersion || versions[0]
+
+      console.log('bongo commit-log output')
       console.log(`package: ${pkgName}`)
       if (versionsBack && lowerVersion)
         console.log(
           `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
         )
-
-      const versions = await findPackageVersionNumbers({cwd})
-      const lower = lowerVersion || versions[versionsBack ? versionsBack : 1]
-      const upper = upperVersion || versions[0]
-
       if (listVersions) {
+        const sensibleDefault = 10
+        console.log(`Listing previous ${versionsBack ? versionsBack : sensibleDefault} version numbers`)
         if (!versionsBack) {
-          console.log('--versionsBack (or --n) not provided, using sensible default')
+          console.log(`--versionsBack (or --n) not provided, using sensible default of ${sensibleDefault}`)
         }
-        console.log(`Listing previous ${versionsBack ? versionsBack : 10} version numbers`)
         versions
-          .slice(0, versionsBack ? versionsBack + 1 : 10 + 1)
-          .forEach(v => console.log(`- ${v}`))
+          .slice(0, versionsBack ? versionsBack + 1 : sensibleDefault + 1)
+          .forEach(version => console.log(`- ${version}`))
       } else {
-        const output = await gitLog({
-          packageName,
-          cwd,
-          lowerVersion: lower,
-          upperVersion: upper,
-          expandAutoCommitLogEntries,
-        })
-        console.log(`changes from versions ${lower} to ${upper}`)
-        console.log(output)
+        if (splitByVersion) {
+          const sensibleDefault = 3
+          if (!versionsBack) console.log(`--splitByVersion called without --versionsBack, using sensible default of ${sensibleDefault}`)
+          console.log(`changes from versions ${versions[versionsBack ? versionsBack - 1 : sensibleDefault -1]} to ${upper}`)
+          const targetVersions = versions.slice(0, versionsBack ? versionsBack + 1: sensibleDefault + 1)
+          for (let index = 0; index < targetVersions.length - 1; index++) {
+            const output = await gitLog({
+              packageName,
+              cwd,
+              lowerVersion: targetVersions[index + 1],
+              upperVersion: targetVersions[index],
+              expandAutoCommitLogEntries,
+            })
+            console.log(targetVersions[index])
+            console.log(output)
+          }
+        } else {
+          const output = await gitLog({
+            packageName,
+            cwd,
+            lowerVersion: lower,
+            upperVersion: upper,
+            expandAutoCommitLogEntries,
+          })
+          console.log(output)
+        }
       }
     },
   )
