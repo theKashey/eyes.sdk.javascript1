@@ -119,7 +119,7 @@
     "@applitools/api-extractor": "1.2.7",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.18",
-    "@applitools/sdk-release-kit": "^1.0.1",
+    "@applitools/sdk-release-kit": "^1.0.2",
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/test-utils": "1.0.12",
     "@types/mocha": "^9.0.0",
