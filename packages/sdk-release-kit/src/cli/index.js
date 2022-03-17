@@ -40,7 +40,7 @@ yargs
       expandAutoCommitLogEntries: {alias: 'expand', type: 'boolean', default: true},
       versionsBack: {alias: 'n', type: 'number'},
       listVersions: {alias: 'lsv', type: 'boolean'},
-      splitByVersion: {alias: 'split', type: 'boolean'},
+      splitByVersion: {alias: 'split', type: 'boolean', default: true},
     },
     async args => {
       const {
