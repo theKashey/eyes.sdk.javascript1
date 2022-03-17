@@ -2,24 +2,24 @@
 
 const fs = require('fs')
 const path = require('path')
-const {execSync} = require('child_process')
+const {exec} = require('child_process')
+const {promisify} = require('util')
+const pexec = promisify(exec)
 
-function runCommandInAllPackages(command) {
+async function runCommandInAllPackages(command) {
   const pkgPaths = fs.readdirSync('./packages', {withFileTypes: true})
     .filter(entry => entry.isDirectory())
     .map(entry => path.resolve(process.cwd(), 'packages', entry.name))
-  pkgPaths.forEach(pkgPath => {
+  for (const pkgPath of pkgPaths) {
     try {
-      console.log(`cd ${pkgPath}`)
-      execSync(`cd ${pkgPath}`)
-      console.log(command)
-      const result = execSync(command)
-      if (result) console.log(result.toString('utf8'))
+      console.log(pkgPath)
+      const {stdout} = await pexec(`cd ${pkgPath} && ${command}`)
+      console.log(stdout)
     } catch (error) {
       console.log(error)
       // onto the next one
     }
-  })
+  }
 }
 
 if (require.main === module) {
