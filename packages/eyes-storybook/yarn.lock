@@ -195,10 +195,10 @@
     cli-table3 "0.6.0"
     yargs "15.3.1"
 
-"@applitools/sdk-release-kit@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.0.0.tgz#d4fafde1eedfa4b82ce1f5c00d9bf6b9fde4798f"
-  integrity sha512-rv9AHzElpsRE4khtzftSNWA0ByJ/mcJADQFV83n857dCRE9uycN2PxGtOgTebe2posO85xGXtUuZ7TQJ37AfYQ==
+"@applitools/sdk-release-kit@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.0.1.tgz#02e51f96ab9a86e226ea4c3dff4bec64b620e534"
+  integrity sha512-Jbz4lPB95VRBcXUMHx5IMcG+6E4bewCHiJzPNkcz0ehGSBBV5sIvr72gu1cjtJifK22vhHWM4i742udCyTWQHw==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
