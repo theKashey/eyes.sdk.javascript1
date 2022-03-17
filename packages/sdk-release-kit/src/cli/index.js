@@ -51,35 +51,32 @@ yargs
         packageName,
         splitByVersion,
         upperVersion,
-        versionsBack,
       } = args
 
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
       const versions = await findPackageVersionNumbers({cwd})
-      const lower = lowerVersion || versions[versionsBack ? versionsBack : 1]
+      const versionsBack = args.versionsBack ? args.versionsBack : 3
+      const lower = lowerVersion || versions[versionsBack]
       const upper = upperVersion || versions[0]
 
       console.log('bongo commit-log output')
       console.log(`package: ${pkgName}`)
+      if (!args.versionsBack) {
+        console.log(
+          `'versionsBack' (or --n) not provided, using a sensible default of ${versionsBack}`,
+        )
+      }
       if (versionsBack && lowerVersion)
         console.log(
           `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
         )
       if (listVersions) {
-        const sensibleDefault = 10
-        console.log(`Listing previous ${versionsBack ? versionsBack : sensibleDefault} version numbers`)
-        if (!versionsBack) {
-          console.log(`--versionsBack (or --n) not provided, using sensible default of ${sensibleDefault}`)
-        }
-        versions
-          .slice(0, versionsBack ? versionsBack + 1 : sensibleDefault + 1)
-          .forEach(version => console.log(`- ${version}`))
+        console.log(`Listing previous ${versionsBack} version numbers`)
+        versions.slice(0, versionsBack).forEach(version => console.log(`- ${version}`))
       } else {
+        console.log(`changes from versions ${versions[versionsBack - 1]} to ${upper}`)
         if (splitByVersion) {
-          const sensibleDefault = 3
-          if (!versionsBack) console.log(`--splitByVersion called without --versionsBack, using sensible default of ${sensibleDefault}`)
-          console.log(`changes from versions ${versions[versionsBack ? versionsBack - 1 : sensibleDefault -1]} to ${upper}`)
-          const targetVersions = versions.slice(0, versionsBack ? versionsBack + 1: sensibleDefault + 1)
+          const targetVersions = versions.slice(0, versionsBack + 1)
           for (let index = 0; index < targetVersions.length - 1; index++) {
             const output = await gitLog({
               packageName,
