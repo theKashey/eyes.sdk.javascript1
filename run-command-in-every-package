@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const {execSync} = require('child_process')
+
+function runCommandInAllPackages(command) {
+  const pkgPaths = fs.readdirSync('./packages', {withFileTypes: true})
+    .filter(entry => entry.isDirectory())
+    .map(entry => path.resolve(process.cwd(), 'packages', entry.name))
+  pkgPaths.forEach(pkgPath => {
+    try {
+      console.log(`cd ${pkgPath}`)
+      execSync(`cd ${pkgPath}`)
+      console.log(command)
+      const result = execSync(command)
+      if (result) console.log(result.toString('utf8'))
+    } catch (error) {
+      console.log(error)
+      // onto the next one
+    }
+  })
+}
+
+if (require.main === module) {
+  if (!process.argv[2]) throw new Error('no command provided')
+  runCommandInAllPackages(process.argv[2])
+}
+
+module.exports = runCommandInAllPackages
