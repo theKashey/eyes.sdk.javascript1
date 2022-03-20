@@ -60,7 +60,7 @@ Apollo SDK:
     - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - internal tests updates
   bug-fix:
     - fix Cypress Documentation inaccuracies
 "@applitools/eyes-storybook":

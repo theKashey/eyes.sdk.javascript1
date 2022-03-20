@@ -6,7 +6,7 @@ describe('works with waitBeforeCapture', () => {
       appName: 'some app',
       testName: 'test waitBeforeCapture, config file',
       browser: {width: 1200, height: 800},
-      layoutBreakPoints: true,
+      layoutBreakpoints: true,
     });
 
     cy.eyesCheckWindow({

@@ -29,20 +29,6 @@ describe('works with waitBeforeCapture', () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
   });
 
-  it('waitBeforeCapture works from eyesOpen and eyesCheck', async () => {
-    try {
-      await pexec(
-        './node_modules/.bin/cypress run --config testFiles=waitBeforeCapture.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
-        {
-          maxBuffer: 10000000,
-        },
-      );
-    } catch (ex) {
-      console.error('Error during test!', ex.stdout);
-      throw ex;
-    }
-  });
-
   it('waitBeforeCapture works from applitools.config file', async () => {
     const config = {...applitoolsConfig, waitBeforeCapture: 2000};
     fs.writeFileSync(
