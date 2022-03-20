@@ -76,35 +76,35 @@ declare namespace Eyes {
       matchLevel?: 'Strict' | 'Exact' | 'Layout' | 'Content'
 
       /**
-       * DEPRECATED, use baselineBranch.
+       * The name of the baseline branch.
+       * Default value: undefined
        */
       baselineBranchName?: string
 
       /**
-       * The name of the baseline branch.
-       * Default value: undefined
+       * DEPRECATED, use baselineBranchName.
        */
       baselineBranch?: string
-
-      /**
-       * DEPRECATED, use parentBranch.
-       */
-      parentBranchName?: string
 
       /**
        * Sets the branch under which new branches are created.
        * Default value: undefined
        */
-      parentBranch?: string
-
+      parentBranchName?: string
+      
       /**
-       * DEPRECATED, use branch.
+       * DEPRECATED, use parentBranchName.
        */
-      branchName?: string
+      parentBranch?: string
 
       /**
        * Sets the branch name.
        * Default value: undefined
+       */
+      branchName?: string
+      
+      /**
+       * DEPRECATED, use branchName.
        */
       branch?: string
 
@@ -150,13 +150,13 @@ declare namespace Eyes {
       accessibilitySettings?: AccessibilitySettings
 
       /**
-       * DEPRECATED, use batchNotify.
-       */
-      notifyOnCompletion?: boolean
-
-      /**
        * Set wether batch completion notifications should be sent.
        * Default value: false
+       */
+      notifyOnCompletion?: boolean
+      
+      /**
+       * DEPRECATED, use notifyOnCompletion.
        */
       batchNotify?: boolean
 

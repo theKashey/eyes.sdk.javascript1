@@ -62,7 +62,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - fix Cypress Documentation inaccuracies
 "@applitools/eyes-storybook":
   feature:
     - 
