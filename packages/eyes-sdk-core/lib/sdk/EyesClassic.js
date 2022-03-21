@@ -81,7 +81,10 @@ class EyesClassic extends EyesCore {
     await this._context.main.setScrollingElement(this._scrollRootElement)
     await this._context.setScrollingElement(checkSettings.scrollRootElement)
     if (checkSettings.pageId) {
-      const contentSize = await this._context.getContentSize()
+      const scrollingElement = await this._context.main.getScrollingElement()
+       const contentSize = scrollingElement
+         ? await scrollingElement.getContentSize()
+         : await this._driver.getViewportSize()
       this.pageCoverageInfo = {
         pageId: checkSettings.pageId,
         width: contentSize.width,
@@ -151,8 +154,10 @@ class EyesClassic extends EyesCore {
             dom = await takeDomCapture(this._logger, driver.mainContext).catch(() => null)
           }
           if (this._checkSettings.pageId) {
-            const scrollingElement = await driver.currentContext.getScrollingElement()
-            afterScreenShotScrollingOffeset = await scrollingElement.getScrollOffset()
+            const scrollingElement = await driver.mainContext.getScrollingElement()
+            // In case driver.isNative the scrolling element does not use 'preserveState' and 'restoreState'.
+            // as result, at this point the scrolling element will be at its scroll-most status
+            afterScreenShotScrollingOffeset = driver.isNative ? {x: 0, y: 0} : await scrollingElement.getScrollOffset()
           }
         },
       },
@@ -163,6 +168,7 @@ class EyesClassic extends EyesCore {
     if (afterScreenShotScrollingOffeset) {
       const imagePositionInPage_x = Math.round(afterScreenShotScrollingOffeset.x + screenshot.region.x)
       const imagePositionInPage_y = Math.round(afterScreenShotScrollingOffeset.y + screenshot.region.y)
+      this._logger.log('>>> imagePositionInPage', imagePositionInPage_x, imagePositionInPage_y)
       this.pageCoverageInfo.imagePositionInPage = {x: imagePositionInPage_x, y: imagePositionInPage_y}
     }
     this._matchSettings = await CheckSettingsUtils.toMatchSettings({
