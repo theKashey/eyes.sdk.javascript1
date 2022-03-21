@@ -71,6 +71,11 @@ async function expandAutoCommitLogEntry(logEntry) {
   return [...new Set(entries.filter(entry => !isReleaseCommit(entry)))]
 }
 
+async function getPublishDate({tag}) {
+  const {stdout} = await pexec(`git log -1 --format=%ai ${tag}`)
+  return stdout.trim()
+}
+
 async function gitAdd(target) {
   await pexec(`git add ${target}`)
 }
@@ -146,6 +151,7 @@ async function isChanged(...files) {
 module.exports = {
   expandAutoCommitLogEntry,
   findPackageVersionNumbers,
+  getPublishDate,
   gitAdd,
   gitCommit,
   gitLog,

@@ -53,9 +53,9 @@ runs:
         yarn install
         if [ "${{runner.os}}" = "Windows" ]
         then
-          npm run deps --if-present --script-shell $COMSPEC -- --skip-commit
+          npm run deps --if-present --script-shell $COMSPEC
         else
-          npm run deps --if-present -- --skip-commit
+          npm run deps --if-present
         fi
         npm run upgrade:framework --if-present
         echo "::endgroup::"

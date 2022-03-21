@@ -1,6 +1,7 @@
 const assert = require('assert')
 const {
   findPackageVersionNumbers,
+  getPublishDate,
   gitLog,
   gitStatus,
   isChanged,
@@ -19,6 +20,10 @@ async function randomizeJson() {
 
 describe('git', () => {
   describe('tag', () => {
+    it('gets publishing date by tag', async () => {
+      const result = await getPublishDate({tag: '@applitools/api-extractor@1.0.0'})
+      assert.deepStrictEqual(result, '2021-03-24 12:28:57 +0200')
+    })
     it('gets package versions by package name', async () => {
       const result = await findPackageVersionNumbers({packageName: '@applitools/eyes-sdk-core'})
       assert.ok(result.length > 2)

@@ -18,6 +18,7 @@ const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
 const {
   findPackageVersionNumbers,
+  getPublishDate,
   gitAdd,
   gitCommit,
   gitPushWithTags,
@@ -85,7 +86,9 @@ yargs
               upperVersion: targetVersions[index],
               expandAutoCommitLogEntries,
             })
+            const publishDate = await getPublishDate({tag: `${pkgName}@${targetVersions[index]}`})
             console.log(targetVersions[index])
+            console.log(publishDate)
             console.log(output)
           }
         } else {
@@ -96,7 +99,9 @@ yargs
             upperVersion: upper,
             expandAutoCommitLogEntries,
           })
+          const publishDate = await getPublishDate({tag: `${pkgName}@${upper}`})
           console.log(output)
+          console.log(publishDate)
         }
       }
     },
@@ -248,7 +253,7 @@ yargs
     ['deps', 'd'],
     'update internal deps',
     {
-      skipCommit: {type: 'boolean', default: false},
+      commit: {type: 'boolean', default: false},
       upgradeAll: {type: 'boolean', default: false},
     },
     async args => {
@@ -284,8 +289,8 @@ async function deps({cwd, upgradeAll}) {
   })
 }
 
-async function commitFiles({cwd, skipCommit}) {
-  if (!skipCommit) {
+async function commitFiles({cwd, commit}) {
+  if (commit) {
     console.log('[bongo] commit files running...\n', (await gitStatus()).stdout)
     const files = ['package.json', 'CHANGELOG.md', 'yarn.lock']
     for (const file of files) {

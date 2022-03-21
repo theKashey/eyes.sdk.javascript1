@@ -41,7 +41,7 @@ runs:
 
         echo "::group::Installing and updating dependencies"
         yarn install
-        npm run deps --if-present
+        npm run deps --if-present -- --commit
         echo "::endgroup::"
 
         echo "::group::Building package"
