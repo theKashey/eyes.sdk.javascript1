@@ -1,5 +1,6 @@
 {
     "chromeWebSecurity": true,
     "video": false,
-    "screenshotOnRunFailure": false
+    "screenshotOnRunFailure": false,
+    "defaultCommandTimeout": 86400000
 }
