@@ -46,6 +46,7 @@ module.exports = (tracker, test) => {
         parentBranchName: test.config.parentBranchName,
         browser: test.config.browsersInfo,
         layoutBreakpoints: test.config.layoutBreakpoints,
+        waitBeforeCapture: test.config.waitBeforeCapture,
       };
 
       return addCommand(js`cy.eyesOpen(${args})`);
