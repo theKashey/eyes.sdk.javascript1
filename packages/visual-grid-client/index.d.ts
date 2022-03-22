@@ -171,6 +171,11 @@ declare namespace Eyes {
        * Default value: false
        */
       ignoreDisplacements?: boolean
+
+      /**
+       * sets a batch object
+       */
+      batch?: {id?: string, name?: string, sequenceName?: string}
     }
 
     interface DesktopBrowserInfo {

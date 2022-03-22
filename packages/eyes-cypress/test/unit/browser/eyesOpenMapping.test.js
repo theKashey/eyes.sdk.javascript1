@@ -19,6 +19,7 @@ describe('eyes open mapping', () => {
       accessibilityValidation: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
       matchLevel: 'Layout',
       enablePatterns: true,
+      batch: {id: '1234'},
     };
 
     const expected = {
@@ -36,6 +37,7 @@ describe('eyes open mapping', () => {
         matchLevel: 'Layout',
         useDom: true,
       },
+      batch: {id: '1234'},
     };
 
     const coreConfig = eyesOpenMapValues({
@@ -45,7 +47,7 @@ describe('eyes open mapping', () => {
       shouldUseBrowserHooks,
       defaultBrowser,
     });
-    expect(coreConfig).to.be.deep.equal(expected);
+    expect(coreConfig).to.eql(expected);
   });
 
   it('should work with config file', () => {
@@ -69,6 +71,7 @@ describe('eyes open mapping', () => {
         matchLevel: 'Layout',
         useDom: true,
       },
+      batch: {id: '1234'},
     };
     const appliConfFile = {
       browser: [
@@ -86,6 +89,7 @@ describe('eyes open mapping', () => {
       accessibilityValidation: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
       matchLevel: 'Layout',
       enablePatterns: true,
+      batch: {id: '1234'},
     };
     const coreConfig = eyesOpenMapValues({
       args,
@@ -94,7 +98,7 @@ describe('eyes open mapping', () => {
       shouldUseBrowserHooks,
       defaultBrowser,
     });
-    expect(coreConfig).to.be.deep.equal(expected);
+    expect(coreConfig).to.eql(expected);
   });
 
   it('eyes open config should have precedence over config file', () => {
@@ -112,6 +116,9 @@ describe('eyes open mapping', () => {
       accessibilityValidation: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
       matchLevel: 'Layout',
       enablePatterns: true,
+      batchId: '12345',
+      batchName: 'test config file mapping 2',
+      batchSequenceName: 'S2',
     };
 
     const expected = {
@@ -130,6 +137,7 @@ describe('eyes open mapping', () => {
         matchLevel: 'Layout',
         useDom: true,
       },
+      batch: {id: '12345', name: 'test config file mapping 2', sequenceName: 'S2'},
     };
     const appliConfFile = {
       browser: [
@@ -143,6 +151,7 @@ describe('eyes open mapping', () => {
       accessibilityValidation: {level: 'AA', guidelinesVersion: 'WCAG_2_1'},
       matchLevel: 'Strict',
       enablePatterns: false,
+      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
     };
 
     const coreConfig = eyesOpenMapValues({
@@ -152,6 +161,134 @@ describe('eyes open mapping', () => {
       shouldUseBrowserHooks,
       defaultBrowser,
     });
-    expect(coreConfig).to.be.deep.equal(expected);
+    expect(coreConfig).to.eql(expected);
+  });
+
+  it('eyesOpen batch mapping, batch properties', () => {
+    const args = {
+      batchId: '1234',
+      batchName: 'test eyesOpen mapping',
+      batchSequenceName: 'S1',
+    };
+
+    const expected = {
+      browsersInfo: undefined,
+      defaultMatchSettings: {
+        accessibilitySettings: undefined,
+        enablePatterns: undefined,
+        enablePatterns: undefined,
+        ignoreCaret: undefined,
+        ignoreDisplacements: undefined,
+        matchLevel: undefined,
+        useDom: undefined,
+      },
+      dontCloseBatches,
+      testName,
+      batch: {id: '1234', name: 'test eyesOpen mapping', sequenceName: 'S1'},
+    };
+
+    const coreConfig = eyesOpenMapValues({
+      args,
+      appliConfFile: {},
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+    expect(coreConfig).to.eql(expected);
+  });
+
+  it('eyesOpen batch mapping, batch object', () => {
+    const args = {
+      batch: {id: '1234', name: 'test eyesOpen mapping', sequenceName: 'S1'},
+    };
+
+    const expected = {
+      browsersInfo: undefined,
+      defaultMatchSettings: {
+        accessibilitySettings: undefined,
+        enablePatterns: undefined,
+        enablePatterns: undefined,
+        ignoreCaret: undefined,
+        ignoreDisplacements: undefined,
+        matchLevel: undefined,
+        useDom: undefined,
+      },
+      dontCloseBatches,
+      testName,
+      batch: {id: '1234', name: 'test eyesOpen mapping', sequenceName: 'S1'},
+    };
+
+    const coreConfig = eyesOpenMapValues({
+      args,
+      appliConfFile: {},
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+    expect(coreConfig).to.eql(expected);
+  });
+
+  it('config file batch mapping, batch properties', () => {
+    const appliConfFile = {
+      batchId: '1234',
+      batchName: 'test config file mapping',
+      batchSequenceName: 'S1',
+    };
+
+    const expected = {
+      browsersInfo: undefined,
+      defaultMatchSettings: {
+        accessibilitySettings: undefined,
+        enablePatterns: undefined,
+        enablePatterns: undefined,
+        ignoreCaret: undefined,
+        ignoreDisplacements: undefined,
+        matchLevel: undefined,
+        useDom: undefined,
+      },
+      dontCloseBatches,
+      testName,
+      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
+    };
+
+    const coreConfig = eyesOpenMapValues({
+      args: {},
+      appliConfFile,
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+    expect(coreConfig).to.eql(expected);
+  });
+
+  it('config file batch mapping, batch obejct', () => {
+    const appliConfFile = {
+      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
+    };
+
+    const expected = {
+      browsersInfo: undefined,
+      defaultMatchSettings: {
+        accessibilitySettings: undefined,
+        enablePatterns: undefined,
+        enablePatterns: undefined,
+        ignoreCaret: undefined,
+        ignoreDisplacements: undefined,
+        matchLevel: undefined,
+        useDom: undefined,
+      },
+      dontCloseBatches,
+      testName,
+      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
+    };
+
+    const coreConfig = eyesOpenMapValues({
+      args: {},
+      appliConfFile,
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+    expect(coreConfig).to.eql(expected);
   });
 });

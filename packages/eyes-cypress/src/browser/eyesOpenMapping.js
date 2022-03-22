@@ -1,6 +1,31 @@
 function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks}) {
   let browsersInfo = args.browser || appliConfFile.browser;
   let accessibilitySettings = args.accessibilityValidation || appliConfFile.accessibilityValidation;
+  const batch = {
+    id:
+      args.batchId ||
+      (args.batch ? args.batch.id : undefined) ||
+      appliConfFile.batchId ||
+      (appliConfFile.batch ? appliConfFile.batch.id : undefined),
+    name:
+      args.batchName ||
+      (args.batch ? args.batch.name : undefined) ||
+      appliConfFile.batchName ||
+      (appliConfFile.batch ? appliConfFile.batch.name : undefined),
+    sequenceName:
+      args.batchSequenceName ||
+      (args.batch ? args.batch.sequenceName : undefined) ||
+      appliConfFile.batchSequenceName ||
+      (appliConfFile.batch ? appliConfFile.batch.sequenceName : undefined),
+  };
+
+  if (!batch.name) {
+    delete batch['name'];
+  }
+  if (!batch.sequenceName) {
+    delete batch['sequenceName'];
+  }
+
   const mappedValues = [
     'accessibilityValidation',
     'browser',
@@ -9,6 +34,9 @@ function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks
     'enablePatterns',
     'ignoreDisplacements',
     'ignoreCaret',
+    'batchName',
+    'batchId',
+    'batchSequenceName',
   ];
 
   if (browsersInfo) {
@@ -42,6 +70,7 @@ function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks
     ...args,
     browsersInfo,
     defaultMatchSettings,
+    batch,
   };
 
   return Object.assign(
