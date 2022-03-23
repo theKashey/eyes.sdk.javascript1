@@ -60,7 +60,7 @@ yargs
       const lower = lowerVersion || versions[versionsBack]
       const upper = upperVersion || versions[0]
 
-      console.log('bongo commit-log output')
+      console.log('bongo log output')
       console.log(`package: ${pkgName}`)
       if (!args.versionsBack) {
         console.log(
