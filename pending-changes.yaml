@@ -13,70 +13,89 @@ Apollo SDK:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - 
 "@applitools/eyes.webdriverio":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-playwright":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-protractor":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-puppeteer":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-testcafe":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-nightwatch":
   feature:
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - >
+      `runner.getAllTestResults` returns the corresponding UFG browser/device
+      configuration for each test. This is available as
+      `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
+    - >
+      `runner.getAllTestResults` now returns all results, including aborted
+      tests
 "@applitools/eyes-cypress":
   feature:
-    - internal tests updates
+    - 
   bug-fix:
-    - fix Cypress Documentation inaccuracies
-    - Support batchId, batchName and batchSequenceName from the config file, eyesOpen and environment variables
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 
