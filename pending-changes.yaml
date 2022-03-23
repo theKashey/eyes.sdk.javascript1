@@ -2,6 +2,7 @@ Apollo SDK:
   feature:
     - Support including humans when launching to the moon
     - Better probability of successful landing
+    - internal
   bug-fix:
     - Avoid consuming all oxygen during takeoff
     - Remove kitchen to accommodate space for PlayStation

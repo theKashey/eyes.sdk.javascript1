@@ -4,12 +4,14 @@ const path = require('path')
 function generateDockerComposeConfig({saveToDisk, platform = process.platform} = {}) {
   const volumes = ['/dev/shm:/dev/shm']
   if (process.env.VOLUME) volumes.push(process.env.VOLUME)
+  const chromeImage = process.env.CHROME_IMAGE || 'selenium/standalone-chrome' 
+  // use 'seleniarm/standalone-chromium' for Mac with Apple chip (M1)
   const environment = ['SE_NODE_OVERRIDE_MAX_SESSIONS=true', 'SE_NODE_MAX_SESSIONS=30']
   const config = {
     version: '3.4',
     services: {
       chrome: {
-        image: 'selenium/standalone-chrome',
+        image: chromeImage,
         environment,
         volumes,
         ...generateNetworkConfigForPlatform(platform),
