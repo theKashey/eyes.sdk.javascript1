@@ -32,7 +32,7 @@ const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-cha
 yargs
   .config({cwd: process.cwd()})
   .command(
-    ['commit-log', 'log', 'logs'],
+    ['log', 'logs'],
     'Show commit logs for a given package',
     {
       packageName: {alias: 'p', type: 'string'},
