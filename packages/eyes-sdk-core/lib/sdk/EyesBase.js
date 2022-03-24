@@ -127,6 +127,7 @@ class EyesBase {
 
   set logger(logger) {
     this._logger = logger
+    this._serverConnector._logger = logger
   }
 
   /**
