@@ -27,6 +27,15 @@ function removePendingChanges({packageName, cwd, pendingChangesFilePath} = {}) {
   const entries = getPendingChanges({pendingChangesFilePath})
   entries[pkgName].feature = []
   entries[pkgName]['bug-fix'] = []
+  console.log(entries)
+  console.log(
+    'step 1', 
+    JSON.parse(JSON.stringify(entries).replace(/\[\]/g, '[ null ]'))
+  )
+  console.log(
+    'step 2', 
+    yaml.dump(JSON.parse(JSON.stringify(entries).replace(/\[\]/g, '[ null ]')))
+  )
   fs.writeFileSync(
     pendingChangesFilePath,
     JSON.parse(

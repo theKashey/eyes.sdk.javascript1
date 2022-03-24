@@ -1,0 +1,49 @@
+"@applitools/eyes-cypress":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-nightwatch":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-playwright":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-protractor":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-puppeteer":
+  feature:
+    - 
+  bug-fix:
+    - 
+"@applitools/eyes-selenium":
+  feature:
+    - |
+       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+  bug-fix:
+    - 
+"@applitools/eyes-storybook":
+  feature:
+    - |
+       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+  bug-fix:
+    - 
+"@applitools/eyes-testcafe":
+  feature:
+    - |
+       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+  bug-fix:
+    - 
+"@applitools/eyes-webdriverio":
+  feature:
+    - |
+       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+  bug-fix:
+    - 
