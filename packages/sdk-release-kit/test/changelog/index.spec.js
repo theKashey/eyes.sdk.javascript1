@@ -6,10 +6,7 @@ const {
   verifyChangelogContents,
   getLatestReleaseEntries,
 } = require('../../src/changelog/query')
-const {
-  addUnreleasedItem,
-  createReleaseEntry,
-} = require('../../src/changelog/update')
+const {addUnreleasedItem, createReleaseEntry} = require('../../src/changelog/update')
 const assert = require('assert')
 
 describe('add-changelog-entry', () => {

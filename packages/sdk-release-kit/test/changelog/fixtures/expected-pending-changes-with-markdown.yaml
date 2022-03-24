@@ -25,25 +25,22 @@
     - 
 "@applitools/eyes-selenium":
   feature:
-    - |
-       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - 
   bug-fix:
     - 
 "@applitools/eyes-storybook":
   feature:
     - |
-       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - 
 "@applitools/eyes-testcafe":
   feature:
-    - |
-       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - 
   bug-fix:
     - 
 "@applitools/eyes-webdriverio":
   feature:
-    - |
-       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - 
   bug-fix:
     - 

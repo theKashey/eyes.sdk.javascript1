@@ -131,23 +131,26 @@ describe('pending changes', () => {
       const updatedYaml = fs.readFileSync(pendingChangesFilePath, {encoding: 'utf-8'})
       assert.deepStrictEqual(updatedYaml, expectedYaml)
     })
-    it.skip('removes entries for a package and leaves markdown intact for remaining entries', () => {
-      const pendingChangesFilePath = path.join(__dirname, 'fixtures/pending-changes-with-markdown.yaml')
+    it('preserves entries that are wide and contain free text', () => {
+      const pendingChangesFilePath = path.join(
+        __dirname,
+        'fixtures/pending-changes-with-markdown.yaml',
+      )
       const originalYaml = fs.readFileSync(pendingChangesFilePath, {encoding: 'utf-8'})
       const packageName = '@applitools/eyes-selenium'
       try {
-      assert.doesNotThrow(() => verifyPendingChanges({packageName, pendingChangesFilePath}))
-      removePendingChanges({cwd, pendingChangesFilePath})
-      assert.throws(
-        () => verifyPendingChanges({packageName, pendingChangesFilePath}),
-        /no pending changes entries found/i,
-      )
-      const expectedYaml = fs.readFileSync(
-        path.join(__dirname, 'fixtures/expected-pending-changes-with-markdown.yaml'),
-        {encoding: 'utf-8'},
-      )
-      const updatedYaml = fs.readFileSync(pendingChangesFilePath, {encoding: 'utf-8'})
-      assert.deepStrictEqual(updatedYaml, expectedYaml)
+        assert.doesNotThrow(() => verifyPendingChanges({packageName, pendingChangesFilePath}))
+        removePendingChanges({cwd, pendingChangesFilePath})
+        assert.throws(
+          () => verifyPendingChanges({packageName, pendingChangesFilePath}),
+          /no pending changes entries found/i,
+        )
+        const expectedYaml = fs.readFileSync(
+          path.join(__dirname, 'fixtures/expected-pending-changes-with-markdown.yaml'),
+          {encoding: 'utf-8'},
+        )
+        const updatedYaml = fs.readFileSync(pendingChangesFilePath, {encoding: 'utf-8'})
+        assert.deepStrictEqual(updatedYaml, expectedYaml)
       } finally {
         fs.writeFileSync(pendingChangesFilePath, originalYaml)
       }
