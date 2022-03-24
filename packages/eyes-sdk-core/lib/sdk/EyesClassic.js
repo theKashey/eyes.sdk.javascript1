@@ -1,5 +1,5 @@
 const utils = require('@applitools/utils')
-const takeScreenshot = require('@applitools/screenshoter')
+const {takeScreenshot} = require('@applitools/screenshoter')
 const {Driver} = require('@applitools/driver')
 const TypeUtils = require('../utils/TypeUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
@@ -82,9 +82,9 @@ class EyesClassic extends EyesCore {
     await this._context.setScrollingElement(checkSettings.scrollRootElement)
     if (checkSettings.pageId) {
       const scrollingElement = await this._context.main.getScrollingElement()
-       const contentSize = scrollingElement
-         ? await scrollingElement.getContentSize()
-         : await this._driver.getViewportSize()
+      const contentSize = scrollingElement
+        ? await scrollingElement.getContentSize()
+        : await this._driver.getViewportSize()
       this.pageCoverageInfo = {
         pageId: checkSettings.pageId,
         width: contentSize.width,
