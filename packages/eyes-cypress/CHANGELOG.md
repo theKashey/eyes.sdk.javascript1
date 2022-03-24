@@ -6,7 +6,6 @@
 ## 3.25.2 - 2022/3/23
 
 ### Features
-- internal tests updates
 ### Bug fixes
 - fix Cypress Documentation inaccuracies
 - Support batchId, batchName and batchSequenceName from the config file, eyesOpen and environment variables
