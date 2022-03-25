@@ -83,3 +83,16 @@ yarn link @applitools/eyes-api
 yarn link @applitools/eyes-sdk-core
 yarn link @applitools/visual-grid-client
 yarn build
+cd ../eyes-webdriverio-5
+rm -rf node_modules/@applitools
+yarn install --force
+yarn link @applitools/utils
+yarn link @applitools/types
+yarn link @applitools/driver
+yarn link @applitools/snippets
+yarn link @applitools/screenshoter
+yarn link @applitools/test-utils
+yarn link @applitools/eyes-api
+yarn link @applitools/eyes-sdk-core
+yarn link @applitools/visual-grid-client
+yarn build
