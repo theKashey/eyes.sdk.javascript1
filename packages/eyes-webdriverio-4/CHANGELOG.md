@@ -1,8 +1,6 @@
 # Change Log
 ## Unreleased
 
-- implement `getCapabilities` and `getBarsHeight` instead of `getDriverInfo`
-
 ## 2.34.0 - 2021/11/10
 
 - support cookie
