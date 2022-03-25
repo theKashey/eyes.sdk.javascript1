@@ -14,90 +14,57 @@ Apollo SDK:
 "@applitools/eyes-selenium":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - 
 "@applitools/eyes.webdriverio":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-playwright":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-protractor":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-puppeteer":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-testcafe":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-nightwatch":
   feature:
     - Support pageCoverage info in Native
-    - >
-      `runner.getAllTestResults` returns the corresponding UFG browser/device
-      configuration for each test. This is available as
-      `runner.getAllTestResults()[i].browserInfo`.
+    - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
-    - >
-      `runner.getAllTestResults` now returns all results, including aborted
-      tests
+    - `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-cypress":
   feature:
     - 
