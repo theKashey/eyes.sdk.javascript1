@@ -17,7 +17,7 @@ Apollo SDK:
     - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
     - 
-"@applitools/eyes.webdriverio":
+"@applitools/eyes-webdriverio":
   feature:
     - Support pageCoverage info in Native
     - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
