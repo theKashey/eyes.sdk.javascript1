@@ -44,8 +44,11 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       let elementToUse = options.element
       if (options.root) {
         elementToUse = options.root
+        this._target = elementToUse
+      } else {
+        this._target = this._spec.transformElement?.(elementToUse) ?? elementToUse
       }
-      this._target = this._spec.transformElement?.(elementToUse) ?? elementToUse
+
       // Some frameworks contains information about the selector inside an element
       this._selector = options.selector ?? this._spec.extractSelector?.(elementToUse)
       this._index = options.index
