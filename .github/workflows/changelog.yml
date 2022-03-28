@@ -16,6 +16,10 @@ jobs:
           node-version: 14
       - run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          if [[ $(git log origin/master... --grep=NO_CHANGELOG | wc -l) -gt 0 ]]; then
+            echo NO_CHANGELOG commit tag found. Skipping changelog check.
+            exit 0
+          fi
           # git diff --quiet leads to no output and an exit code based on the result
           # when there are no diffs, the exit code is 0 (true)
           # when there are diffs, the exit code is 1 (false)
