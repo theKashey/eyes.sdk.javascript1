@@ -45,7 +45,7 @@ yargs
     async args => {
       const {cwd, filterBySDK, packageName, sha, versionsBack} = args
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
-      const versions = await findPackageVersionNumbers({cwd})
+      const versions = await findPackageVersionNumbers({cwd, packageName})
       const tag = `${pkgName}@${versions[versionsBack]}`
       const filterByCollection = filterBySDK
         ? getSDKPackageNames(pendingChangesFilePath)
@@ -84,7 +84,7 @@ yargs
       } = args
 
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
-      const versions = await findPackageVersionNumbers({cwd})
+      const versions = await findPackageVersionNumbers({cwd, packageName})
       const lower = lowerVersion || versions[versionsBack]
       const upper = upperVersion || versions[0]
 
