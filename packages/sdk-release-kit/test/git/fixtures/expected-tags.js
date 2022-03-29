@@ -1,4 +1,17 @@
 // from  sha 3d496011d909b9c298caa20b2e30e2edc88a350f
+
+const sdkTags = [
+  '@applitools/eyes-cypress@3.23.9',
+  '@applitools/eyes-cypress@3.24.0-beta.1',
+  '@applitools/eyes-cypress@3.24.0-beta.2',
+  '@applitools/eyes-cypress@3.25.0',
+  '@applitools/eyes-cypress@3.25.1',
+  '@applitools/eyes-cypress@3.25.2',
+  '@applitools/eyes-nightwatch@1.10.3',
+  '@applitools/eyes-testcafe@1.15.5',
+  '@applitools/eyes-webdriverio@5.34.13',
+]
+
 const allTags = [
   '@applitools/driver@1.5.0',
   '@applitools/driver@1.5.1',
@@ -57,4 +70,5 @@ const allTags = [
 
 module.exports = {
   allTags,
+  sdkTags,
 }

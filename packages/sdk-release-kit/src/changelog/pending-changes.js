@@ -3,10 +3,18 @@ const path = require('path')
 const fs = require('fs')
 const {writeUnreleasedItemToChangelog} = require('./update')
 
-function getPendingChanges({packageName, cwd, pendingChangesFilePath} = {}) {
-  const pendingChanges = JSON.parse(
+function getSDKPackageNames(pendingChangesFilePath) {
+  return Object.keys(loadPendingChanges(pendingChangesFilePath))
+}
+
+function loadPendingChanges(pendingChangesFilePath) {
+  return JSON.parse(
     JSON.stringify(yaml.load(fs.readFileSync(pendingChangesFilePath))).replace(/null/g, ''),
   )
+}
+
+function getPendingChanges({packageName, cwd, pendingChangesFilePath} = {}) {
+  const pendingChanges = loadPendingChanges(pendingChangesFilePath)
   if (packageName || cwd) {
     const pkgName = packageName || require(path.join(cwd, 'package.json')).name
     const pkg = pendingChanges[pkgName]
@@ -61,6 +69,7 @@ function writePendingChangesToChangelog({cwd, pendingChangesFilePath}) {
 module.exports = {
   emitPendingChangesEntry,
   getPendingChanges,
+  getSDKPackageNames,
   removePendingChanges,
   verifyPendingChanges,
   writePendingChangesToChangelog,

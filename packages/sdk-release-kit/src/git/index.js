@@ -81,13 +81,19 @@ async function getSha({tag}) {
   return stdout.trim()
 }
 
-async function getTagsWith({sha, tag}) {
+async function getTagsWith({sha, tag, filterByCollection}) {
   if (tag) sha = await getSha({tag})
   const {stdout} = await pexec(`git tag --contains ${sha}`)
-  return stdout
+  const result = stdout
     .split('\n')
     .map(tag => tag.trim())
     .filter(tag => tag)
+  if (!filterByCollection) return result
+  return result.filter(tag => {
+    const match = tag.match(/^(@.*)@/)
+    const pkgName = match && match[1]
+    if (filterByCollection.find(entry => entry.includes(pkgName))) return tag
+  })
 }
 
 async function gitAdd(target) {

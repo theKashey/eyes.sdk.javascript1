@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
 const {
+  getSDKPackageNames,
   removePendingChanges,
   verifyChangelog,
   verifyPendingChanges,
@@ -36,16 +37,22 @@ yargs
     ['released'],
     'Show which SDK versions contain a given package version or commit',
     {
+      filterBySDK: {type: 'boolean', default: true},
       packageName: {alias: 'p', type: 'string'},
       sha: {type: 'string'},
       versionsBack: {alias: 'n', type: 'number', default: 1},
     },
     async args => {
-      const {cwd, packageName, sha, versionsBack} = args
+      const {cwd, filterBySDK, packageName, sha, versionsBack} = args
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
       const versions = await findPackageVersionNumbers({cwd})
       const tag = `${pkgName}@${versions[versionsBack]}`
-      const result = sha ? await getTagsWith({sha}) : await getTagsWith({tag})
+      const filterByCollection = filterBySDK
+        ? getSDKPackageNames(pendingChangesFilePath)
+        : undefined
+      const result = sha
+        ? await getTagsWith({sha, filterByCollection})
+        : await getTagsWith({tag, filterByCollection})
       console.log('bongo released output')
       if (!sha) console.log('using latest package version, to look at an older version use --n')
       console.log(`showing where ${sha ? sha : tag} has been released to`)

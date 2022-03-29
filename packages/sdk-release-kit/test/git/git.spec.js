@@ -29,14 +29,19 @@ describe('git', () => {
     })
     it('gets all tags that contain a given sha', async () => {
       const tags = await getTagsWith({sha: '3d496011d909b9c298caa20b2e30e2edc88a350f'})
-      assert.deepStrictEqual(tags, expectedTags.allTags)
+      assert.ok(tags.some(tag => expectedTags.allTags.includes(tag)))
     })
     it('get all tags that contain a tag', async () => {
       const tags = await getTagsWith({tag: '@applitools/screenshoter@3.3.10'})
-      assert.deepStrictEqual(tags, expectedTags.allTags)
+      assert.ok(tags.some(tag => expectedTags.allTags.includes(tag)))
     })
-    it.skip('filters list of tags to just SDKs', async () => {})
-    it.skip('filters list of tags to just internal packages', async () => {})
+    it('filters list of tags to just SDKs', async () => {
+      const tags = await getTagsWith({
+        tag: '@applitools/screenshoter@3.3.10',
+        filterByCollection: ['@applitools/eyes-nightwatch'],
+      })
+      assert.ok(tags.some(tag => expectedTags.sdkTags.includes(tag)))
+    })
     it('gets publishing date by tag', async () => {
       const result = await getPublishDate({tag: '@applitools/api-extractor@1.0.0'})
       assert.deepStrictEqual(result, '2021-03-24 12:28:57 +0200')

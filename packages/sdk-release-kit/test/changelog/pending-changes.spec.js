@@ -4,6 +4,7 @@ const path = require('path')
 const {
   emitPendingChangesEntry,
   getPendingChanges,
+  getSDKPackageNames,
   verifyPendingChanges,
   removePendingChanges,
   writePendingChangesToChangelog,
@@ -13,6 +14,19 @@ const {writeReleaseEntryToChangelog} = require('../../src/changelog/update')
 
 describe('pending changes', () => {
   const cwd = path.resolve(process.cwd(), '..', 'eyes-selenium')
+  it('getSDKPackageNames', () => {
+    assert.deepStrictEqual(getSDKPackageNames(pendingChangesFilePath), [
+      '@applitools/eyes-cypress',
+      '@applitools/eyes-nightwatch',
+      '@applitools/eyes-playwright',
+      '@applitools/eyes-protractor',
+      '@applitools/eyes-puppeteer',
+      '@applitools/eyes-selenium',
+      '@applitools/eyes-storybook',
+      '@applitools/eyes-testcafe',
+      '@applitools/eyes-webdriverio',
+    ])
+  })
   it('gets entries', () => {
     const entries = getPendingChanges({pendingChangesFilePath})
     const expected = {
