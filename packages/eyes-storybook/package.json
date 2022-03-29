@@ -15,8 +15,8 @@
   },
   "scripts": {
     "test": "yarn build && yarn test:mocha && yarn lint",
-    "test:mocha": "mocha --no-timeouts --trace-warnings 'test/unit/*.test.js' 'test/it/*.test.js' 'test/e2e/*.test.js'",
-    "test:unit": "STDOUT_LEVEL=1 mocha --no-timeouts --trace-warnings 'test/unit/*.test.js'",
+    "test:mocha": "yarn test:unit && yarn test:it && yarn test:e2e",
+    "test:unit": "STDOUT_LEVEL=0 mocha --no-timeouts --trace-warnings 'test/unit/*.test.js'",
     "test:it": "STDOUT_LEVEL=1 mocha --no-timeouts --trace-warnings 'test/it/*.test.js'",
     "test:e2e": "mocha --no-timeouts --trace-warnings 'test/e2e/*.test.js'",
     "build": "rollup -c rollup.config.js",
