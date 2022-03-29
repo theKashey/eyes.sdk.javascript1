@@ -74,7 +74,7 @@ Apollo SDK:
     - 
 "@applitools/eyes-storybook":
   feature:
-    - Preserve search parameters in Storybook URLs
+    - 
   bug-fix:
     - 
 "@applitools/eyes-webdriverio5-service":
