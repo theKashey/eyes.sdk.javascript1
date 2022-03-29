@@ -76,6 +76,17 @@ async function getPublishDate({tag}) {
   return stdout.trim()
 }
 
+async function getSha({tag}) {
+  const {stdout} = await pexec(`git rev-list -n 1 ${tag}`)
+  return stdout.trim()
+}
+
+async function getTagsWith({sha, tag}) {
+  if (tag) sha = await getSha({tag})
+  const {stdout} = await pexec(`git tag --contains ${sha}`)
+  return stdout.split('\n').map(tag => tag.trim()).filter(tag => tag)
+}
+
 async function gitAdd(target) {
   await pexec(`git add ${target}`)
 }
@@ -152,6 +163,8 @@ module.exports = {
   expandAutoCommitLogEntry,
   findPackageVersionNumbers,
   getPublishDate,
+  getSha,
+  getTagsWith,
   gitAdd,
   gitCommit,
   gitLog,

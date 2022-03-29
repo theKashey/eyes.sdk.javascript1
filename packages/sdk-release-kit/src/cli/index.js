@@ -19,6 +19,7 @@ const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../ver
 const {
   findPackageVersionNumbers,
   getPublishDate,
+  getTagsWith,
   gitAdd,
   gitCommit,
   gitPushWithTags,
@@ -32,6 +33,31 @@ const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-cha
 yargs
   .config({cwd: process.cwd()})
   .command(
+    ['released'],
+    'Show which SDK versions contain a given package version or commit',
+    {
+      packageName: {alias: 'p', type: 'string'},
+      sha: {type: 'string'},
+      versionsBack: {alias: 'n', type: 'number', default: 1},
+    },
+    async args => {
+      const {
+        cwd,
+        packageName,
+        sha,
+        versionsBack,
+      } = args
+      const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
+      const versions = await findPackageVersionNumbers({cwd})
+      const tag = `${pkgName}@${versions[versionsBack]}`
+      const result = sha ? await getTagsWith({sha}) : await getTagsWith({tag})
+      console.log('bongo released output')
+      if (!sha) console.log('using latest package version, to look at an older version use --n')
+      console.log(`showing where ${sha ? sha : tag} has been released to`)
+      console.log(result)
+    }
+  )
+  .command(
     ['log', 'logs'],
     'Show commit logs for a given package',
     {
@@ -39,7 +65,7 @@ yargs
       lowerVersion: {alias: 'lv', type: 'string'},
       upperVersion: {alias: 'uv', type: 'string'},
       expandAutoCommitLogEntries: {alias: 'expand', type: 'boolean', default: true},
-      versionsBack: {alias: 'n', type: 'number'},
+      versionsBack: {alias: 'n', type: 'number', default: 3},
       listVersions: {alias: 'lsv', type: 'boolean'},
       splitByVersion: {alias: 'split', type: 'boolean', default: true},
     },
@@ -52,21 +78,19 @@ yargs
         packageName,
         splitByVersion,
         upperVersion,
+        versionsBack,
       } = args
 
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
       const versions = await findPackageVersionNumbers({cwd})
-      const versionsBack = args.versionsBack ? args.versionsBack : 3
       const lower = lowerVersion || versions[versionsBack]
       const upper = upperVersion || versions[0]
 
       console.log('bongo log output')
       console.log(`package: ${pkgName}`)
-      if (!args.versionsBack) {
-        console.log(
-          `'versionsBack' (or --n) not provided, using a sensible default of ${versionsBack}`,
-        )
-      }
+      console.log(
+        `Looking ${versionsBack} versions back (specify a different number to look back with --n)`,
+      )
       if (versionsBack && lowerVersion)
         console.log(
           `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
