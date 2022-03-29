@@ -76,7 +76,7 @@ Apollo SDK:
       Fix config file parameters (e.g. `browser`) not being passed
 "@applitools/eyes-storybook":
   feature:
-    - Preserve search parameters in Storybook URLs
+    - 
   bug-fix:
     - 
 "@applitools/eyes-webdriverio5-service":

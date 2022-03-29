@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-storybook",
-  "version": "3.27.4",
+  "version": "3.27.5",
   "description": "",
   "engines": {
     "node": ">=8.6.0"

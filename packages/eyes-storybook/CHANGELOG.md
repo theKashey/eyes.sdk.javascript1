@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 3.27.5 - 2022/3/29
+
+### Features
+- Preserve search parameters in Storybook URLs
+### Bug fixes
+
 ## 3.27.4 - 2022/2/9
 
 - updated to @applitools/driver@1.4.9 (from 1.4.7)
