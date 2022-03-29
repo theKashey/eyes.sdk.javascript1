@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@applitools/dom-snapshot": "4.5.12",
-    "@applitools/sdk-release-kit": "1.2.0",
+    "@applitools/sdk-release-kit": "1.2.1",
     "@applitools/test-server": "1.0.8",
     "@applitools/test-utils": "1.1.5",
     "@applitools/utils": "^1.2.13",
