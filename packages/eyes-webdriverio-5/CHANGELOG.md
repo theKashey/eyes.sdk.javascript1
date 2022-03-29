@@ -8,7 +8,6 @@
 ## 5.34.13 - 2022/3/25
 
 ### Features
-- Support pageCoverage info in Native
 - `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
 ### Bug fixes
 - `runner.getAllTestResults` now aborts unclosed tests
