@@ -41,12 +41,7 @@ yargs
       versionsBack: {alias: 'n', type: 'number', default: 1},
     },
     async args => {
-      const {
-        cwd,
-        packageName,
-        sha,
-        versionsBack,
-      } = args
+      const {cwd, packageName, sha, versionsBack} = args
       const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
       const versions = await findPackageVersionNumbers({cwd})
       const tag = `${pkgName}@${versions[versionsBack]}`
@@ -55,7 +50,7 @@ yargs
       if (!sha) console.log('using latest package version, to look at an older version use --n')
       console.log(`showing where ${sha ? sha : tag} has been released to`)
       console.log(result)
-    }
+    },
   )
   .command(
     ['log', 'logs'],

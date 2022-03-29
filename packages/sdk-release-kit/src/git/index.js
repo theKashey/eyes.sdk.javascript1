@@ -84,7 +84,10 @@ async function getSha({tag}) {
 async function getTagsWith({sha, tag}) {
   if (tag) sha = await getSha({tag})
   const {stdout} = await pexec(`git tag --contains ${sha}`)
-  return stdout.split('\n').map(tag => tag.trim()).filter(tag => tag)
+  return stdout
+    .split('\n')
+    .map(tag => tag.trim())
+    .filter(tag => tag)
 }
 
 async function gitAdd(target) {

@@ -35,10 +35,8 @@ describe('git', () => {
       const tags = await getTagsWith({tag: '@applitools/screenshoter@3.3.10'})
       assert.deepStrictEqual(tags, expectedTags.allTags)
     })
-    it.skip('filters list of tags to just SDKs', async () => {
-    })
-    it.skip('filters list of tags to just internal packages', async () => {
-    })
+    it.skip('filters list of tags to just SDKs', async () => {})
+    it.skip('filters list of tags to just internal packages', async () => {})
     it('gets publishing date by tag', async () => {
       const result = await getPublishDate({tag: '@applitools/api-extractor@1.0.0'})
       assert.deepStrictEqual(result, '2021-03-24 12:28:57 +0200')

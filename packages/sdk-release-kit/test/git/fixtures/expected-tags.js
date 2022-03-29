@@ -52,7 +52,7 @@ const allTags = [
   '@applitools/types@1.2.2',
   '@applitools/visual-grid-client@15.10.0',
   '@applitools/visual-grid-client@15.10.1',
-  '@applitools/visual-grid-client@15.9.0'
+  '@applitools/visual-grid-client@15.9.0',
 ]
 
 module.exports = {
