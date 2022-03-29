@@ -12,7 +12,7 @@ describe('getIframeUrl', () => {
 
   it("keeps pathname that doesn't have a trailing slash and has query params", () => {
     const baseUrl = 'http://some/url?qqq=www';
-    const expected = 'http://some/url/iframe.html?eyes-storybook=true';
+    const expected = 'http://some/url/iframe.html?eyes-storybook=true&qqq=www';
     expect(getIframeUrl(baseUrl)).to.equal(expected);
   });
 
@@ -30,7 +30,7 @@ describe('getIframeUrl', () => {
 
   it('keeps pathname that has a trailing slash and query params', () => {
     const baseUrl = 'http://some/url/?qqq=www';
-    const expected = 'http://some/url/iframe.html?eyes-storybook=true';
+    const expected = 'http://some/url/iframe.html?eyes-storybook=true&qqq=www';
     expect(getIframeUrl(baseUrl)).to.equal(expected);
   });
 
@@ -42,7 +42,7 @@ describe('getIframeUrl', () => {
 
   it('removes .html files from pathname with query params', () => {
     const baseUrl = 'http://some/url/index.html/?hello=world';
-    const expected = 'http://some/url/iframe.html?eyes-storybook=true';
+    const expected = 'http://some/url/iframe.html?eyes-storybook=true&hello=world';
     expect(getIframeUrl(baseUrl)).to.equal(expected);
   });
 

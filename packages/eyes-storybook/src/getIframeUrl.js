@@ -2,7 +2,8 @@
 const {URL} = require('url');
 
 function getIframeUrl(baseUrl) {
-  const {origin, pathname} = new URL(baseUrl);
+  const {origin, pathname, search} = new URL(baseUrl);
+  const searchParam = search && search.replace(/^\?/, '&');
 
   let baseUrlFixed = `${origin}${pathname.replace(/\/[^\/]+\.html/, '')}`;
 
@@ -10,7 +11,10 @@ function getIframeUrl(baseUrl) {
     baseUrlFixed += '/';
   }
 
-  const url = new URL(`iframe.html?eyes-storybook=true`, baseUrlFixed);
+  const url = new URL(
+    `iframe.html?eyes-storybook=true${searchParam ? searchParam : ''}`,
+    baseUrlFixed,
+  );
   return url.href;
 }
 
