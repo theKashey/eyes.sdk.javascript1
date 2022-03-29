@@ -13,7 +13,6 @@ Apollo SDK:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
@@ -25,7 +24,6 @@ Apollo SDK:
     - 
 "@applitools/eyes-playwright":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
@@ -35,7 +33,6 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-protractor":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
@@ -45,7 +42,6 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-puppeteer":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
@@ -55,7 +51,6 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-testcafe":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
@@ -65,7 +60,6 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
 "@applitools/eyes-nightwatch":
   feature:
-    - 
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
   bug-fix:
