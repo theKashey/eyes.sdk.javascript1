@@ -38,6 +38,7 @@ describe('config', () => {
       tapDirPath: undefined,
       tapFileName: undefined,
     });
+    delete process.env.APPLITOOLS_BATCH_ID;
   });
 
   it('should convert accessibilityValidation to acceessibilityValidation', () => {
