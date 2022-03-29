@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+
+## 3.25.3 - 2022/3/29
+
+### Features
+### Bug fixes
+- consider batchId from config file and environments variable when closing batch
+- Fix config file parameters (e.g. `browser`) not being passed
+
 ## 3.25.2 - 2022/3/23
 
 ### Features

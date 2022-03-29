@@ -71,9 +71,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - consider batchId from config file and environments variable when closing batch
-    - |
-      Fix config file parameters (e.g. `browser`) not being passed
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Preserve search parameters in Storybook URLs
