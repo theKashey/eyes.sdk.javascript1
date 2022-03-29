@@ -236,10 +236,10 @@
     "@applitools/utils" "1.2.4"
     png-async "0.9.4"
 
-"@applitools/sdk-release-kit@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.1.0.tgz#8eb84eaaa5f6f352a20b221bac81a39a422e447e"
-  integrity sha512-ZY9UcoVmIfrjNCfvHVBqfqO9gXEWmOfWSr0JHQxSh4RN5srf2+2BR+nSMkIx4tIesngkS+oMmzfI/xxfA+e+2Q==
+"@applitools/sdk-release-kit@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.2.0.tgz#42e7259d09e6dc54765a373b4ad4cc1bab311944"
+  integrity sha512-l2pjEWfwtJ9W1+QPp94cOPZZBAtGsdqL9oRz2V/RU8fSBotLWv8F5039K/MQl2Myk9CZeA+0WGWw51d/NmZsow==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
