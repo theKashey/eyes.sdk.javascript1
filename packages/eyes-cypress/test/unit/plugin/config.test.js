@@ -23,7 +23,9 @@ describe('config', () => {
 
   it('should work with env variables', () => {
     process.env.APPLITOOLS_IS_DISABLED = true;
+    process.env.APPLITOOLS_BATCH_ID = 'batchId123';
     const {config, eyesConfig} = makeConfig();
+    expect(config.batchId).to.equal('batchId123');
     expect(config.isDisabled).to.be.true;
     expect(eyesConfig).to.deep.equal({
       eyesIsDisabled: true,

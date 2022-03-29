@@ -26,7 +26,7 @@ function makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer}) 
         }
         if (!config.appliConfFile.dontCloseBatches) {
           await closeBatches({
-            batchIds: [config.appliConfFile.batch.id],
+            batchIds: [config.appliConfFile.batchId || config.appliConfFile.batch.id],
             serverUrl: config.appliConfFile.serverUrl,
             proxy: config.appliConfFile.proxy,
             apiKey: config.appliConfFile.apiKey,
