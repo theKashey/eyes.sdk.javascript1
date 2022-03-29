@@ -73,7 +73,10 @@ yargs
         )
       if (listVersions) {
         console.log(`Listing previous ${versionsBack} version numbers`)
-        versions.slice(0, versionsBack).forEach(version => console.log(`- ${version}`))
+        versions.slice(0, versionsBack).forEach(async version => {
+          const publishDate = await getPublishDate({tag: `${pkgName}@${version}`})
+          console.log(`- ${version} (published ${publishDate})`)
+        })
       } else {
         console.log(`changes from versions ${versions[versionsBack - 1]} to ${upper}`)
         if (splitByVersion) {
