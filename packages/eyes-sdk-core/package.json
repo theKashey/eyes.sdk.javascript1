@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@applitools/sdk-fake-eyes-server": "2.1.1",
-    "@applitools/sdk-release-kit": "1.0.4",
+    "@applitools/sdk-release-kit": "1.1.0",
     "@applitools/spec-driver-selenium": "1.3.3",
     "@applitools/test-utils": "1.1.5",
     "@applitools/visual-grid-client": "15.10.1",
