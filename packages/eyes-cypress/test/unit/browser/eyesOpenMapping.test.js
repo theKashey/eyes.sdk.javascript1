@@ -291,4 +291,63 @@ describe('eyes open mapping', () => {
     });
     expect(coreConfig).to.eql(expected);
   });
+
+  it('make sure applitConfFile stays intact for all tests', () => {
+    const args = {};
+
+    const expected = {
+      browsersInfo: [
+        {width: 1200, height: 1000, name: 'chrome'},
+        {width: 800, height: 1000, name: 'chrome'},
+      ],
+      apiKey: 'my api key',
+      showLogs: true,
+      testName,
+      shouldUseBrowserHooks,
+      dontCloseBatches: false,
+      defaultMatchSettings: {
+        accessibilitySettings: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
+        enablePatterns: true,
+        ignoreCaret: true,
+        ignoreDisplacements: true,
+        matchLevel: 'Layout',
+        useDom: true,
+      },
+      batch: {id: '1234'},
+    };
+    const appliConfFile = {
+      browser: [
+        {width: 1200, height: 1000, name: 'chrome'},
+        {width: 800, height: 1000, name: 'chrome'},
+      ],
+      apiKey: 'my api key',
+      showLogs: true,
+      dontCloseBatches: false,
+      testName,
+      shouldUseBrowserHooks,
+      useDom: true,
+      ignoreCaret: true,
+      ignoreDisplacements: true,
+      accessibilityValidation: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
+      matchLevel: 'Layout',
+      enablePatterns: true,
+      batch: {id: '1234'},
+    };
+    eyesOpenMapValues({
+      args,
+      appliConfFile,
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+
+    const coreConfigTest2 = eyesOpenMapValues({
+      args,
+      appliConfFile,
+      testName,
+      shouldUseBrowserHooks,
+      defaultBrowser,
+    });
+    expect(coreConfigTest2).to.eql(expected);
+  });
 });

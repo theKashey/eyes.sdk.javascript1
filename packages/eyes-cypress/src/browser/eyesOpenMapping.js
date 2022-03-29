@@ -57,12 +57,13 @@ function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks
     ignoreDisplacements: args.ignoreDisplacements || appliConfFile.ignoreDisplacements,
   };
 
+  const appliConfFileCopy = {...appliConfFile};
   for (const val of mappedValues) {
     if (args.hasOwnProperty(val)) {
       delete args[val];
     }
-    if (appliConfFile.hasOwnProperty(val)) {
-      delete appliConfFile[val];
+    if (appliConfFileCopy.hasOwnProperty(val)) {
+      delete appliConfFileCopy[val];
     }
   }
 
@@ -75,7 +76,7 @@ function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks
 
   return Object.assign(
     {testName, dontCloseBatches: !shouldUseBrowserHooks},
-    appliConfFile,
+    appliConfFileCopy,
     mappedArgs,
   );
 }

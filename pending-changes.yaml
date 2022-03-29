@@ -77,7 +77,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Fix config file parameters (e.g. `browser`) not being passed
 "@applitools/eyes-storybook":
   feature:
     - 
