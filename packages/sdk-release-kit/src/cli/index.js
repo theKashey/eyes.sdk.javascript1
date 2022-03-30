@@ -185,6 +185,23 @@ yargs
     },
   )
   .command(
+    ['update-changelog'],
+    'Create changelog entry with what is in pending changes',
+    {},
+    async ({cwd}) => {
+      verifyChangelog(cwd)
+      verifyPendingChanges({cwd, pendingChangesFilePath})
+
+      writePendingChangesToChangelog({cwd, pendingChangesFilePath})
+      removePendingChanges({cwd, pendingChangesFilePath})
+      writeReleaseEntryToChangelog(cwd)
+
+      await gitAdd(pendingChangesFilePath)
+      await gitAdd('CHANGELOG.md')
+      await gitCommit('[auto commit] updated changelog')
+    },
+  )
+  .command(
     ['version'],
     'Supportive steps to version a package',
     {
@@ -268,9 +285,6 @@ yargs
     'Display dependencies from a verify-installed-versions run',
     {},
     () => lsDryRun(),
-  )
-  .command(['update-changelog', 'uc'], 'Create release entry in the changelog', {}, ({cwd}) =>
-    writeReleaseEntryToChangelog(cwd),
   )
   .command(
     ['send-release-notification', 'hello-world'],
