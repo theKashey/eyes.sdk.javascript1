@@ -2,18 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/logger@1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.11.tgz#b2acacad31aa5b913f025a832cc61afacca8de79"
-  integrity sha512-AcTTpLfUggo4/TISBk5+X4PdSZuMDEK0+gzsf+b9BCFzPDc7p4yrAHeftHdjOV/AE3yLQEWnupUmlsttdMayXQ==
-  dependencies:
-    "@applitools/utils" "1.2.13"
-    chalk "3.0.0"
-
-"@applitools/sdk-release-kit@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.2.1.tgz#0687b180f14c44b5cdd7085961304b9584c53faa"
-  integrity sha512-03O/z1k0B27kN55Hr22u55bpww93gSNjJ3ZDet9bK/nxG9K2qwWbpc+Vjd7fHtTbzEHaJg5YkHa/n3etziDO5g==
+"@applitools/bongo@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.0.tgz#62862f64fca5221bfeea84add83133956c1ffcdd"
+  integrity sha512-+x1YSRCrAkFQnWRenghLQKO46hwKYVESOFb2iandVi+kBUTLKJ2ajMZfOXOjoP4NUClgZE+A6CVvpgGOkuhXFw==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
@@ -23,6 +15,14 @@
     micromatch "4.0.2"
     node-fetch "2.6.1"
     yargs "15.0.2"
+
+"@applitools/logger@1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.11.tgz#b2acacad31aa5b913f025a832cc61afacca8de79"
+  integrity sha512-AcTTpLfUggo4/TISBk5+X4PdSZuMDEK0+gzsf+b9BCFzPDc7p4yrAHeftHdjOV/AE3yLQEWnupUmlsttdMayXQ==
+  dependencies:
+    "@applitools/utils" "1.2.13"
+    chalk "3.0.0"
 
 "@applitools/types@1.2.2":
   version "1.2.2"

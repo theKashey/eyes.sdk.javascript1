@@ -60,9 +60,9 @@
     "ws": "8.5.0"
   },
   "devDependencies": {
+    "@applitools/bongo": "^2.0.0",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.18",
-    "@applitools/sdk-release-kit": "1.2.1",
     "@applitools/snaptdout": "1.0.1",
     "@applitools/test-server": "1.0.8",
     "@applitools/test-utils": "1.1.5",

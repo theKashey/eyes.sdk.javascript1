@@ -34,11 +34,11 @@
   ],
   "main": "./bundle.js",
   "dependencies": {
-    "eyes.utils": "0.0.29",
-    "eyes.sdk": "0.0.71"
+    "eyes.sdk": "0.0.71",
+    "eyes.utils": "0.0.29"
   },
   "devDependencies": {
-    "@applitools/sdk-release-kit": "0.2.2",
+    "@applitools/bongo": "^2.0.0",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.0",
     "webpack": "^3.12.0",

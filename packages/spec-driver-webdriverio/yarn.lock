@@ -7,20 +7,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.2.7.tgz#acef8fa34c15cf19f64208fcc1cb0370427000b5"
   integrity sha512-RsXvwsfKsiyCoUMYHz9Zo98dses2WYkfRFtobujWk7R6p5TwjN7gx9F86HsXoII6AB1aaNXJT/rv/AWCKw+Z0w==
 
-"@applitools/scripts@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/scripts/-/scripts-1.1.0.tgz#cd0c87760f101bb27dfc42c7d07705f0557bca37"
-  integrity sha512-wwd53Y6WKVlnsgil8YmOETi95hFP0YX+Fz7yvRk3AKY0NAFFKddFCySFMnkH/lkwTbTzAhy2B/v2jqaY3xsIJg==
-  dependencies:
-    "@applitools/test-utils" "1.0.10"
-    chalk "3.0.0"
-    cli-table3 "0.6.0"
-    yargs "15.3.1"
-
-"@applitools/sdk-release-kit@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.2.1.tgz#0687b180f14c44b5cdd7085961304b9584c53faa"
-  integrity sha512-03O/z1k0B27kN55Hr22u55bpww93gSNjJ3ZDet9bK/nxG9K2qwWbpc+Vjd7fHtTbzEHaJg5YkHa/n3etziDO5g==
+"@applitools/bongo@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.0.tgz#62862f64fca5221bfeea84add83133956c1ffcdd"
+  integrity sha512-+x1YSRCrAkFQnWRenghLQKO46hwKYVESOFb2iandVi+kBUTLKJ2ajMZfOXOjoP4NUClgZE+A6CVvpgGOkuhXFw==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"
@@ -30,6 +20,16 @@
     micromatch "4.0.2"
     node-fetch "2.6.1"
     yargs "15.0.2"
+
+"@applitools/scripts@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/scripts/-/scripts-1.1.0.tgz#cd0c87760f101bb27dfc42c7d07705f0557bca37"
+  integrity sha512-wwd53Y6WKVlnsgil8YmOETi95hFP0YX+Fz7yvRk3AKY0NAFFKddFCySFMnkH/lkwTbTzAhy2B/v2jqaY3xsIJg==
+  dependencies:
+    "@applitools/test-utils" "1.0.10"
+    chalk "3.0.0"
+    cli-table3 "0.6.0"
+    yargs "15.3.1"
 
 "@applitools/test-utils@1.0.10":
   version "1.0.10"

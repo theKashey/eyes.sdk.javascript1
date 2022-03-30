@@ -7,6 +7,20 @@
   resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.2.3.tgz#d2bf3076a43d51a1a76d971b53dcf9a8608c14f9"
   integrity sha512-g6dYHrQK3YS7ge0PdL+8S6rxujSIesV+PnyICt2A1IFEJJINNSGEG3XT7iz6tRRpOPKuwoiBu2CztH5cYqm/Ow==
 
+"@applitools/bongo@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.0.tgz#62862f64fca5221bfeea84add83133956c1ffcdd"
+  integrity sha512-+x1YSRCrAkFQnWRenghLQKO46hwKYVESOFb2iandVi+kBUTLKJ2ajMZfOXOjoP4NUClgZE+A6CVvpgGOkuhXFw==
+  dependencies:
+    "@applitools/utils" "1.2.11"
+    chalk "3.0.0"
+    compare-versions "4.1.3"
+    js-yaml "4.1.0"
+    lodash.pickby "4.6.0"
+    micromatch "4.0.2"
+    node-fetch "2.6.1"
+    yargs "15.0.2"
+
 "@applitools/dom-capture@11.0.2":
   version "11.0.2"
   resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.0.2.tgz#3410630a5050e99f505f61847fdd164744d10e44"
@@ -202,20 +216,6 @@
     sync-fetch "0.3.0"
     xml-js "1.6.11"
     yargs "16.0.3"
-
-"@applitools/sdk-release-kit@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-release-kit/-/sdk-release-kit-1.2.1.tgz#0687b180f14c44b5cdd7085961304b9584c53faa"
-  integrity sha512-03O/z1k0B27kN55Hr22u55bpww93gSNjJ3ZDet9bK/nxG9K2qwWbpc+Vjd7fHtTbzEHaJg5YkHa/n3etziDO5g==
-  dependencies:
-    "@applitools/utils" "1.2.11"
-    chalk "3.0.0"
-    compare-versions "4.1.3"
-    js-yaml "4.1.0"
-    lodash.pickby "4.6.0"
-    micromatch "4.0.2"
-    node-fetch "2.6.1"
-    yargs "15.0.2"
 
 "@applitools/sdk-shared@0.9.9":
   version "0.9.9"

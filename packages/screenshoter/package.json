@@ -65,9 +65,9 @@
     "png-async": "0.9.4"
   },
   "devDependencies": {
+    "@applitools/bongo": "^2.0.0",
     "@applitools/driver": "1.5.5",
     "@applitools/scripts": "1.1.0",
-    "@applitools/sdk-release-kit": "1.2.1",
     "@applitools/spec-driver-webdriverio": "1.2.8",
     "@applitools/test-utils": "1.1.5",
     "appium": "^1.22.2",
