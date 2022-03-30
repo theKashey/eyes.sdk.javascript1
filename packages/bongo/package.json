@@ -1,5 +1,5 @@
 {
-  "name": "@applitools/sdk-release-kit",
+  "name": "@applitools/bongo",
   "version": "1.2.1",
   "engines": {
     "node": ">=10.0.0"
@@ -21,7 +21,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
-    "directory": "packages/sdk-release-kit"
+    "directory": "packages/bongo"
   },
   "scripts": {
     "test": "mocha test/**/*.spec.js",

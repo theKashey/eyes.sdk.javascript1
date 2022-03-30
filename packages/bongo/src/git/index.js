@@ -100,7 +100,7 @@ async function gitAdd(target) {
   await pexec(`git add ${target}`)
 }
 
-async function gitCommit(message = 'Committed with sdk-release-kit') {
+async function gitCommit(message = 'Committed with bongo') {
   await pexec(`git commit -m "${message}"`)
 }
 
