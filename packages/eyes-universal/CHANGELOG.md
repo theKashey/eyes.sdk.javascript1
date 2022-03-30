@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 2.0.2 - 2022/3/30
+
+### Features
+### Bug fixes
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+
 ## 2.0.1 - 2022/3/14
 
 - update snippets to address Cypres universal (AUT is hosted in an iframe inside the Cypres shell)

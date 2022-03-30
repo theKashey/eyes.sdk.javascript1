@@ -10,8 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - |
-      `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
