@@ -5,7 +5,7 @@
     "node": ">=10.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   },
   "directories": {
     "lib": "./src",
