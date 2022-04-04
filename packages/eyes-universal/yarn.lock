@@ -53,10 +53,10 @@
     "@applitools/types" "1.2.2"
     "@applitools/utils" "1.2.13"
 
-"@applitools/driver@1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.5.tgz#26a48bfe63a2b83371db372b103784fff957099a"
-  integrity sha512-dq0BooVtfegGz017F/Dor4wAbD68AOJL1/Z20iwtKx4sdSny3+1PYvLsflVWwenPh9G1FyTOU3a+70epzTbGIw==
+"@applitools/driver@1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.6.tgz#248cf867013f47640481543b247c65122b7baff2"
+  integrity sha512-kxJMUENWeh/Dwh0EOtW/n204CWGBzPz1CBGYcyTTHQ1lu0UE6GfCr7J3n0mjt3tgkGuo62rJEMxeVu4QafKFig==
   dependencies:
     "@applitools/snippets" "2.2.2"
     "@applitools/types" "1.2.2"
@@ -85,14 +85,14 @@
     stack-trace "0.0.10"
     tunnel "0.0.6"
 
-"@applitools/eyes-sdk-core@13.1.3":
-  version "13.1.3"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.1.3.tgz#164520f93a597b5f5dccde264265fadc300d3253"
-  integrity sha512-mpf889MHsqoC3F/QczmetTZAajvKHG7Dq4g9Ru0FFu0/dIQ+pURxqrF/S6s9XmMYXU4jpYOpxgtst6Hqm4pgzg==
+"@applitools/eyes-sdk-core@13.1.4":
+  version "13.1.4"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.1.4.tgz#0a2aa20410173f5d2ed66d7d549b0d830c957f3d"
+  integrity sha512-IZudycDRjAaeDmk163lFXbLCyoY5YOzzteHrzRmKp+II6whJsgekqo1jc2LhlJT9t4+Q245+pDTsPpq77W28pQ==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.5.5"
+    "@applitools/driver" "1.5.6"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.11"
     "@applitools/screenshoter" "3.3.13"
