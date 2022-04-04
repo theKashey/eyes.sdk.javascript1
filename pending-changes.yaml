@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - accept ios and android lowercase as driver platformName capability when using custom grid
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |

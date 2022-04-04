@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 2.0.4 - 2022/4/4
+
+### Features
+### Bug fixes
+- accept ios and android lowercase as driver platformName capability when using custom grid
+
 ## 2.0.3 - 2022/4/4
 
 ### Features
