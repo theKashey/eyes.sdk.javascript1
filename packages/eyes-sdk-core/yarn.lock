@@ -53,10 +53,10 @@
     "@applitools/types" "1.2.2"
     "@applitools/utils" "1.2.13"
 
-"@applitools/driver@1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.5.tgz#26a48bfe63a2b83371db372b103784fff957099a"
-  integrity sha512-dq0BooVtfegGz017F/Dor4wAbD68AOJL1/Z20iwtKx4sdSny3+1PYvLsflVWwenPh9G1FyTOU3a+70epzTbGIw==
+"@applitools/driver@1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.5.6.tgz#248cf867013f47640481543b247c65122b7baff2"
+  integrity sha512-kxJMUENWeh/Dwh0EOtW/n204CWGBzPz1CBGYcyTTHQ1lu0UE6GfCr7J3n0mjt3tgkGuo62rJEMxeVu4QafKFig==
   dependencies:
     "@applitools/snippets" "2.2.2"
     "@applitools/types" "1.2.2"
