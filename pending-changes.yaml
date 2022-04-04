@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - accept ios and android lowercase as driver platformName capability when using custom grid 
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
@@ -18,14 +18,14 @@ Apollo SDK:
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
-    - accept ios and android lowercase as driver platformName capability when using custom grid 
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
-    - accept ios and android lowercase as driver platformName capability when using custom grid 
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-playwright":
   feature:
     - |
