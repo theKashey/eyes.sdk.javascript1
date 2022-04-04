@@ -488,4 +488,34 @@ describe('driver mobile', () => {
       browserVersion: '12',
     })
   })
+
+  it('should work with lower case platformName: ios', async () => {
+    const driver: Driver<any, any, any, any> = await new Driver({
+      logger,
+      spec,
+      driver: new MockDriver({
+        ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
+        device: {isMobile: true, name: 'MobilePhone'},
+        platform: {name: 'ios', version: '14.0'},
+        browser: {name: 'safari', version: '0'},
+      }),
+    }).init()
+
+    assert.equal(driver.isIOS, true)
+  })
+
+  it('should work with lower case platformName: android', async () => {
+    const driver: Driver<any, any, any, any> = await new Driver({
+      logger,
+      spec,
+      driver: new MockDriver({
+        ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1',
+        device: {isMobile: true, name: 'MobilePhone'},
+        platform: {name: 'android', version: '12.0'},
+        browser: {name: 'chrome', version: '0'},
+      }),
+    }).init()
+
+    assert.equal(driver.isAndroid, true)
+  })
 })

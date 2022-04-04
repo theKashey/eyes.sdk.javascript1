@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - accept ios and android lowercase as driver platformName capability when using custom grid 
 "@applitools/eyes-selenium":
   feature:
     - |
@@ -18,12 +18,14 @@ Apollo SDK:
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid 
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid 
 "@applitools/eyes-playwright":
   feature:
     - |
@@ -35,6 +37,7 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-protractor":
   feature:
     - |
@@ -46,6 +49,7 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-puppeteer":
   feature:
     - |
@@ -57,6 +61,7 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-testcafe":
   feature:
     - |
@@ -79,6 +84,7 @@ Apollo SDK:
       `runner.getAllTestResults` now returns all results, including aborted tests
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - accept ios and android lowercase as driver platformName capability when using custom grid
 "@applitools/eyes-cypress":
   feature:
     - 

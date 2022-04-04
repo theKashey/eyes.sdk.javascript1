@@ -108,10 +108,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this._driverInfo?.isMobile ?? false
   }
   get isIOS(): boolean {
-    return this.platformName === 'iOS'
+    return this.platformName?.toLowerCase() === 'ios'
   }
   get isAndroid(): boolean {
-    return this.platformName === 'Android'
+    return this.platformName?.toLowerCase() === 'android'
   }
   get isIE(): boolean {
     return /(internet explorer|ie)/i.test(this.browserName)
