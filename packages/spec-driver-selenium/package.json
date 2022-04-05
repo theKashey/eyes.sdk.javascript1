@@ -72,7 +72,7 @@
     "@types/selenium-webdriver": "^4.0.15",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
-    "chromedriver": "^96",
+    "chromedriver": "100",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
