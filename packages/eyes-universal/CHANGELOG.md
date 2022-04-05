@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+
+## 2.1.1 - 2022/4/5
+
+### Features
+### Bug fixes
+- `extractText` now supports selectors provided as a string (a regression introduced in `13.1.3`)
+
 ## 2.1.0 - 2022/4/5
 
 ### Features
