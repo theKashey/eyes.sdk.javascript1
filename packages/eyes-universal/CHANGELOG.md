@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 2.1.0 - 2022/4/5
+
+### Features
+- Support UFG for native mobile
+### Bug fixes
+
 ## 2.0.4 - 2022/4/4
 
 ### Features

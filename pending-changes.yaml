@@ -8,7 +8,7 @@ Apollo SDK:
     - Remove kitchen to accommodate space for PlayStation
 "@applitools/eyes-universal":
   feature:
-    - Support UFG for native mobile
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
