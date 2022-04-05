@@ -28,6 +28,7 @@
     "@applitools/eyes.webdriverio": "2.26.0"
   },
   "devDependencies": {
+    "@applitools/bongo": "^2.0.0",
     "chromedriver": "^87.0.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

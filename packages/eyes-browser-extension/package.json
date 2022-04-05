@@ -37,6 +37,7 @@
     "webextension-polyfill": "0.7.0"
   },
   "devDependencies": {
+    "@applitools/bongo": "^2.0.0",
     "@applitools/scripts": "^1.0.1",
     "@applitools/sdk-coverage-tests": "^2.3.15",
     "@applitools/spec-driver-playwright": "^1.2.0",
