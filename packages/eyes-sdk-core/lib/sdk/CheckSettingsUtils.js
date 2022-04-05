@@ -104,10 +104,10 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
   if (checkSettings.region) {
     if (utils.types.has(checkSettings.region, ['width', 'height'])) {
       config.target = 'region'
-      config.region = utils.types.has(checkSettings.region, ['x', 'y'])
+      config.region = utils.types.has(checkSettings.region, ['left', 'top'])
         ? {
-            left: checkSettings.region.x,
-            top: checkSettings.region.y,
+            x: checkSettings.region.left,
+            y: checkSettings.region.top,
             width: checkSettings.region.width,
             height: checkSettings.region.height,
           }

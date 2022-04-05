@@ -193,7 +193,7 @@ describe('CheckSettingsUtils', () => {
     })
 
     assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
-    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {left: 1, top: 2, width: 500, height: 501})
+    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {x: 1, y: 2, width: 500, height: 501})
   })
 
   it('toCheckWindowConfiguration handles region target with coordinates x/y', async () => {
@@ -205,7 +205,7 @@ describe('CheckSettingsUtils', () => {
     })
 
     assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
-    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {left: 1, top: 2, width: 500, height: 501})
+    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {x: 1, y: 2, width: 500, height: 501})
   })
 
   it('toCheckWindowConfiguration no longer populates `fully` - false with no default', async () => {
