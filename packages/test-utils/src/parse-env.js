@@ -1,10 +1,5 @@
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
 
-// need alternate Sauce URL due to error:
-// 'The storage authorization is not possible due to the missing token'
-// re: https://support.saucelabs.com/hc/en-us/articles/360053512753--Failed-to-download-mobile-app-The-storage-authorization-is-not-possible-due-to-the-missing-token-error-when-running-automated-tests
-const SAUCE_NATIVE_SERVER_URL = 'https://ondemand.us-west-1.saucelabs.com:443/wd/hub'
-
 const SAUCE_CREDENTIALS = {
   username: process.env.SAUCE_USERNAME,
   accessKey: process.env.SAUCE_ACCESS_KEY,
@@ -574,8 +569,9 @@ function parseEnv(
       env.capabilities['appium:processArguments'] = {
         args: [],
         env: {
-          DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
-        }
+          DYLD_INSERT_LIBRARIES:
+            '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
+        },
       }
     }
   } else if (protocol === 'cdp') {
