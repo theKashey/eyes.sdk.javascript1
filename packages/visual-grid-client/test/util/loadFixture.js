@@ -9,8 +9,8 @@ function loadJsonFixture(filename) {
   return JSON.parse(JSON.stringify(json))
 }
 
-function loadFixtureBuffer(filename) {
-  return fs.readFileSync(path.resolve(__dirname, `../fixtures/${filename}`))
+function loadFixtureBuffer(filename, encoding) {
+  return fs.readFileSync(path.resolve(__dirname, `../fixtures/${filename}`), {encoding})
 }
 
 function loadFixture(filename) {

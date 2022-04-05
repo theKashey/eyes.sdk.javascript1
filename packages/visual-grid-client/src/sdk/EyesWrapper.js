@@ -128,7 +128,6 @@ class EyesWrapper extends EyesBase {
    * @return {Promise<String[]>} - The results of the render
    */
   renderBatch(renderRequests) {
-    renderRequests.forEach(rr => rr.setAgentId(this.getBaseAgentId()))
     return this._serverConnector.render(renderRequests)
   }
 

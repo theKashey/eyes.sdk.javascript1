@@ -111,7 +111,8 @@ describe('testWindow', () => {
           useDom: undefined,
           enablePatterns: undefined,
           ignoreDisplacements: undefined,
-          renderId: '{"isGood":true,"sizeMode":"full-page"}',
+          renderId:
+            '{"isGood":true,"browserName":"chrome","target":"full-page","platform":{"name":"linux","type":"web"}}',
           matchLevel: undefined,
           variationGroupId: undefined,
         },
@@ -119,7 +120,8 @@ describe('testWindow', () => {
         throwEx: true,
         domUrl: undefined,
         imageLocation: undefined,
-        screenshotUrl: '{"isGood":true,"sizeMode":"full-page"}',
+        screenshotUrl:
+          '{"isGood":true,"browserName":"chrome","target":"full-page","platform":{"name":"linux","type":"web"}}',
         tag: 'good1',
         url: `${baseUrl}/test.html`,
       },

@@ -2,7 +2,7 @@ const uaParser = require('ua-parser-js')
 const fetch = require('node-fetch')
 const {expect} = require('chai')
 const makeRenderer = require('../../src/sdk/renderer')
-const createRenderRequest = require('../../src/sdk/createRenderRequest')
+const {createRenderRequest} = require('../../src/sdk/render/createRenderRequest')
 const {RenderingInfo} = require('@applitools/eyes-sdk-core/shared')
 
 describe('render e2e', () => {
@@ -50,11 +50,11 @@ describe('render e2e', () => {
     const renderRequests = browsers.map(browser =>
       createRenderRequest({
         url: 'http://something',
-        dom,
+        snapshot: dom,
         resources,
         browser,
         renderInfo: renderingInfo,
-        sizeMode: 'full-page',
+        target: 'full-page',
       }),
     )
 

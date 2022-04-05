@@ -85,13 +85,9 @@ exports.metadata = {
   StartInfo: require('./lib/metadata/StartInfo'),
 }
 
-exports.RenderInfo = require('./lib/renderer/RenderInfo')
-exports.RenderRequest = require('./lib/renderer/RenderRequest')
 exports.RenderStatus = require('./lib/renderer/RenderStatus')
 exports.RenderStatusResults = require('./lib/renderer/RenderStatusResults')
 exports.RunningRender = require('./lib/renderer/RunningRender')
-exports.EmulationInfo = require('./lib/renderer/EmulationInfo')
-exports.EmulationDevice = require('./lib/renderer/EmulationDevice')
 
 exports.RenderingInfo = require('./lib/server/RenderingInfo')
 exports.RunningSession = require('./lib/server/RunningSession')

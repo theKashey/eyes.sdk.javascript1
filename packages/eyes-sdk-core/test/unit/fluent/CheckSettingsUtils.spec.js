@@ -127,7 +127,7 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration(),
     })
 
-    assert.strictEqual(windowCheckWindowConfiguration.target, 'window')
+    assert.strictEqual(windowCheckWindowConfiguration.target, 'viewport')
   })
 
   it('toCheckWindowConfiguration handles region target with selector', async () => {
@@ -147,7 +147,14 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration(),
     })
 
-    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+    assert.strictEqual(regionCheckWindowConfiguration.target, 'selector')
+    assert.ok(regionCheckWindowConfiguration.selector)
+    assert.strictEqual(regionCheckWindowConfiguration.selector.type, 'css')
+    assert.strictEqual(regionCheckWindowConfiguration.selector.nodeType, 'element')
+    assert.match(
+      regionCheckWindowConfiguration.selector.selector,
+      /\[data-applitools-selector~="[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"\]/,
+    )
   })
 
   it('toCheckWindowConfiguration handles region target with element', async () => {
@@ -167,59 +174,17 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration(),
     })
 
-    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+    assert.strictEqual(regionCheckWindowConfiguration.target, 'selector')
+    assert.ok(regionCheckWindowConfiguration.selector)
+    assert.strictEqual(regionCheckWindowConfiguration.selector.type, 'css')
+    assert.strictEqual(regionCheckWindowConfiguration.selector.nodeType, 'element')
+    assert.match(
+      regionCheckWindowConfiguration.selector.selector,
+      /\[data-applitools-selector~="[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}"\]/,
+    )
   })
 
-  it('toCheckWindowConfiguration handles window target', async () => {
-    const windowCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
-      checkSettings: {},
-      configuration: new Configuration(),
-    })
-
-    assert.strictEqual(windowCheckWindowConfiguration.target, 'window')
-  })
-
-  it('toCheckWindowConfiguration handles region target with selector', async () => {
-    const mockDriver = new MockDriver()
-    mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
-
-    const regionCheckSettings = {region: 'some selector'}
-    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
-      checkSettings: regionCheckSettings,
-      context: driver,
-      logger,
-    })
-
-    const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
-      checkSettings: persistedCheckSettings,
-      configuration: new Configuration(),
-    })
-
-    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
-  })
-
-  it('toCheckWindowConfiguration handles region target with element', async () => {
-    const mockDriver = new MockDriver()
-    mockDriver.mockElements([{selector: 'some selector', rect: {x: 1, y: 2, width: 500, height: 501}}])
-    const driver = new Driver({logger, spec, driver: mockDriver})
-
-    const regionCheckSettings = {region: await mockDriver.findElement('some selector')}
-    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
-      checkSettings: regionCheckSettings,
-      context: driver,
-      logger,
-    })
-
-    const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
-      checkSettings: persistedCheckSettings,
-      configuration: new Configuration(),
-    })
-
-    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
-  })
-
-  it('toCheckWindowConfiguration handles region target with coordinates', async () => {
+  it('toCheckWindowConfiguration handles region target with coordinates left/top', async () => {
     const regionCheckSettings = {region: {left: 1, top: 2, width: 500, height: 501}}
 
     const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
@@ -228,18 +193,31 @@ describe('CheckSettingsUtils', () => {
     })
 
     assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {left: 1, top: 2, width: 500, height: 501})
   })
 
-  it('toCheckWindowConfiguration handles fully false with no default', async () => {
+  it('toCheckWindowConfiguration handles region target with coordinates x/y', async () => {
+    const regionCheckSettings = {region: {x: 1, y: 2, width: 500, height: 501}}
+
+    const regionCheckWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: regionCheckSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.strictEqual(regionCheckWindowConfiguration.target, 'region')
+    assert.deepStrictEqual(regionCheckWindowConfiguration.region, {left: 1, top: 2, width: 500, height: 501})
+  })
+
+  it('toCheckWindowConfiguration no longer populates `fully` - false with no default', async () => {
     const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
       checkSettings: {},
       configuration: new Configuration(),
     })
 
-    assert.strictEqual(checkWindowConfiguration.fully, false)
+    assert.strictEqual(checkWindowConfiguration.fully, undefined)
   })
 
-  it('toCheckWindowConfiguration handles fully true with no default', async () => {
+  it('toCheckWindowConfiguration no longer populates `fully` - true with no default', async () => {
     const checkSettings = {fully: true}
 
     const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
@@ -247,19 +225,21 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration(),
     })
 
-    assert.strictEqual(checkWindowConfiguration.fully, true)
+    assert.strictEqual(checkWindowConfiguration.fully, undefined)
+    assert.strictEqual(checkWindowConfiguration.target, 'full-page')
   })
 
-  it('toCheckWindowConfiguration handles fully false with default', async () => {
+  it('toCheckWindowConfiguration no longer populates `fully` - false with default', async () => {
     const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
       checkSettings: {},
       configuration: new Configuration({forceFullPageScreenshot: true}),
     })
 
-    assert.strictEqual(checkWindowConfiguration.fully, true)
+    assert.strictEqual(checkWindowConfiguration.fully, undefined)
+    assert.strictEqual(checkWindowConfiguration.target, 'full-page')
   })
 
-  it('toCheckWindowConfiguration handles fully true with default', async () => {
+  it('toCheckWindowConfiguration no longer populates `fully` - true with default', async () => {
     const checkSettings = {fully: true}
 
     const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
@@ -267,7 +247,8 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration({forceFullPageScreenshot: false}),
     })
 
-    assert.strictEqual(checkWindowConfiguration.fully, true)
+    assert.strictEqual(checkWindowConfiguration.fully, undefined)
+    assert.strictEqual(checkWindowConfiguration.target, 'full-page')
   })
 
   it('toCheckWindowConfiguration handles tag', async () => {

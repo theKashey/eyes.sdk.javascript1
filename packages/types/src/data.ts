@@ -204,6 +204,35 @@ export type IOSDeviceRenderer = {
   }
 }
 
+export type AndroidDevice =
+  | 'Pixel 3 XL'
+  | 'Pixel 4'
+  | 'Pixel 4 XL'
+  | 'Galaxy Note 8'
+  | 'Galaxy Note 9'
+  | 'Galaxy S8'
+  | 'Galaxy S8 Plus'
+  | 'Galaxy S9'
+  | 'Galaxy S9 Plus'
+  | 'Galaxy S10'
+  | 'Galaxy S10 Plus'
+  | 'Galaxy Note 10'
+  | 'Galaxy Note 10 Plus'
+  | 'Galaxy S20'
+  | 'Galaxy S20 Plus'
+  | 'Galaxy S21'
+  | 'Galaxy S21 Plus'
+  | 'Galaxy S21 Ultra'
+
+export type AndroidVersion = 'latest' | 'latest-1' | 'latest-2'
+
+export type AndroidDeviceRenderer = {
+  androidDeviceInfo: {
+    deviceName: AndroidDevice
+    version?: AndroidVersion
+    screenOrientation?: ScreenOrientation
+  }
+}
 export type BrowserInfoRenderer = DesktopBrowserRenderer | ChromeEmulationDeviceRenderer | IOSDeviceRenderer
 
 export type MatchResult = {

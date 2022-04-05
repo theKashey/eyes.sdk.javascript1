@@ -23,7 +23,7 @@ function createResource(data = {}) {
 
   if ('value' in data) {
     resource.value =
-      value && type !== 'x-applitools-html/cdt' && value.length > VISUAL_GRID_MAX_BUFFER_SIZE
+      value && !isDomOrVHS(type) && value.length > VISUAL_GRID_MAX_BUFFER_SIZE
         ? value.slice(0, VISUAL_GRID_MAX_BUFFER_SIZE - 100000)
         : value || ''
     resource.type = type || 'application/x-applitools-unknown'
@@ -75,6 +75,15 @@ const userAgents = {
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763',
   Edgechromium:
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4501.0 Safari/537.36 Edg/91.0.866.0',
+}
+
+function isDomOrVHS(type) {
+  return [
+    'x-applitools-html/cdt',
+    'x-applitools-vhs/ios',
+    'x-applitools-vhs/android-x',
+    'x-applitools-vhs/android-support',
+  ].includes(type)
 }
 
 module.exports = createResource

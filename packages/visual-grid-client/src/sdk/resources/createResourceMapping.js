@@ -2,6 +2,7 @@
 
 const createResource = require('./createResource')
 const createDomResource = require('./createDomResource')
+const createVHSResource = require('./createVHSResource')
 
 function makeCreateResourceMapping({processResources}) {
   return async function createResourceMapping({
@@ -12,6 +13,7 @@ function makeCreateResourceMapping({processResources}) {
     proxy,
     autProxy,
   }) {
+    const isWeb = !!snapshot.cdt
     const processedSnapshotResources = await processSnapshotResources({
       snapshot,
       browserName,
@@ -23,8 +25,10 @@ function makeCreateResourceMapping({processResources}) {
 
     const resources = await processedSnapshotResources.promise
 
-    const dom = resources[snapshot.url]
-    delete resources[snapshot.url]
+    const dom = resources[isWeb ? snapshot.url : 'vhs']
+    if (isWeb) {
+      delete resources[snapshot.url]
+    }
 
     return {dom, resources}
   }
@@ -74,14 +78,27 @@ function makeCreateResourceMapping({processResources}) {
       return Object.assign(mapping, {[frameUrl]: resources.mapping[frameUrl]})
     }, {})
 
-    const domResource = await processResources({
-      resources: {
+    let domResource
+    const resourceMappingWithoutDom = {...snapshotResources.mapping, ...frameDomResourceMapping}
+    if (snapshot.cdt) {
+      domResource = {
         [snapshot.url]: createDomResource({
           cdt: snapshot.cdt,
-          resources: {...snapshotResources.mapping, ...frameDomResourceMapping},
+          resources: resourceMappingWithoutDom,
         }),
-      },
-    })
+      }
+    } else {
+      domResource = {
+        vhs: createVHSResource({
+          vhsHash: snapshot.vhsHash || snapshotResources.mapping.vhs, // the first is android, and the second is iOS
+          resourceMapping: resourceMappingWithoutDom, // this will be empty until resources are supported inside VHS
+          vhsType: snapshot.vhsType, // will only be populated in android
+          platformName: snapshot.platformName,
+        }),
+      }
+    }
+
+    const processedDomResource = await processResources({resources: domResource})
 
     const frameResourceMapping = frameResources.reduce((mapping, resources) => {
       return Object.assign(mapping, resources.mapping)
@@ -90,13 +107,13 @@ function makeCreateResourceMapping({processResources}) {
     const resourceMapping = {
       ...frameResourceMapping,
       ...snapshotResources.mapping,
-      ...domResource.mapping,
+      ...processedDomResource.mapping,
     }
     return {
       mapping: resourceMapping,
       promise: Promise.all([
         snapshotResources.promise,
-        domResource.promise,
+        processedDomResource.promise,
         ...frameResources.map(resources => resources.promise),
       ]).then(() => resourceMapping),
     }

@@ -1,4 +1,4 @@
-import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
+import type {Size, Region, Cookie, DriverInfo, WaitOptions} from '@applitools/types'
 import * as Selenium from 'selenium-webdriver'
 import * as utils from '@applitools/utils'
 
@@ -99,7 +99,7 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   return driver
 }
 
-export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
+export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element | null> {
   try {
     const root = parent ? transformShadowRoot(driver, parent) : driver
     return await root.findElement(selector)
@@ -111,6 +111,19 @@ export async function findElement(driver: Driver, selector: Selector, parent?: E
 export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
   const root = parent ? transformShadowRoot(driver, parent) : driver
   return root.findElements(selector)
+}
+export async function waitForSelector(
+  driver: Driver,
+  selector: Selector,
+  _parent?: Element,
+  options?: WaitOptions,
+): Promise<Element | null> {
+  if ((options?.state ?? 'exists') === 'exist') {
+    return driver.wait(Selenium.until.elementLocated(selector), options?.timeout)
+  } else if (options?.state === 'visible') {
+    const element = await findElement(driver, selector)
+    return driver.wait(Selenium.until.elementIsVisible(element), options?.timeout)
+  }
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
   try {

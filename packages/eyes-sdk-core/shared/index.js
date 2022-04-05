@@ -12,9 +12,7 @@ exports.Location = require('../lib/geometry/Location')
 exports.Region = require('../lib/geometry/Region')
 exports.AccessibilityRegionType = require('../lib/config/AccessibilityRegionType')
 
-exports.RenderInfo = require('../lib/renderer/RenderInfo')
 exports.RenderingInfo = require('../lib/server/RenderingInfo')
-exports.RenderRequest = require('../lib/renderer/RenderRequest')
 exports.RenderStatus = require('../lib/renderer/RenderStatus')
 exports.RenderStatusResults = require('../lib/renderer/RenderStatusResults')
 

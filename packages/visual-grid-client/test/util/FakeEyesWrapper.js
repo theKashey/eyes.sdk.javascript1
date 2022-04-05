@@ -94,38 +94,38 @@ class FakeEyesWrapper extends EventEmitter {
     if (this.failRender) {
       throw new Error('render error')
     }
-    const renderInfo = renderRequests[0].getRenderInfo()
-    this.sizeMode = renderInfo.getSizeMode()
-    this.selector = renderInfo.getSelector()
-    this.region = renderInfo.getRegion()
-    this.emulationInfo = renderInfo.getEmulationInfo()
-    this.iosDeviceInfo = renderInfo.getIosDeviceInfo()
-    this.selectorsToFindRegionsFor = renderRequests[0].getSelectorsToFindRegionsFor()
-    this.platform = renderRequests[0].getPlatform()
+    const renderInfo = renderRequests[0].renderInfo
+    this.target = renderInfo.target
+    this.selector = renderInfo.selector
+    this.region = renderInfo.region
+    this.emulationInfo = renderInfo.emulationInfo
+    this.iosDeviceInfo = renderInfo.iosDeviceInfo
+    this.selectorsToFindRegionsFor = renderRequests[0].selectorsToFindRegionsFor
+    this.platform = renderRequests[0].platform
 
     return renderRequests.map(renderRequest => this.getRunningRenderForRequest(renderRequest))
   }
 
   getRunningRenderForRequest(renderRequest) {
-    const resources = renderRequest.getResources()
+    const resources = renderRequest.resources
     const isGoodResources =
       this.alwaysMatchResources ||
       this.getExpectedResources().every(er => {
         return compare(resources[er.url] && resources[er.url].hash, er.hash)
       })
     const isGoodDom =
-      this.alwaysMatchDom || compare(renderRequest.getDom(), this.getExpectedDomResource())
+      this.alwaysMatchDom || compare(renderRequest.snapshot, this.getExpectedDomResource())
 
-    const renderInfo = renderRequest.getRenderInfo()
-    const sizeMode = renderInfo.getSizeMode()
-    const browserName = renderRequest.getBrowserName()
-    const selector = renderInfo.getSelector()
-    const region = renderInfo.getRegion()
-    const emulationInfo = renderInfo.getEmulationInfo()
-    const iosDeviceInfo = renderInfo.getIosDeviceInfo()
-    const selectorsToFindRegionsFor = renderRequest.getSelectorsToFindRegionsFor()
-    const platform = renderRequest.getPlatform()
-    const visualGridOptions = renderRequest.getVisualGridOptions()
+    const renderInfo = renderRequest.renderInfo
+    const target = renderInfo.target
+    const browserName = renderRequest.browser.name
+    const selector = renderInfo.selector
+    const region = renderInfo.region
+    const emulationInfo = renderInfo.emulationInfo
+    const iosDeviceInfo = renderInfo.iosDeviceInfo
+    const selectorsToFindRegionsFor = renderRequest.selectorsToFindRegionsFor
+    const platform = renderRequest.platform
+    const visualGridOptions = renderRequest.options
 
     const isGood = isGoodDom && isGoodResources
     const renderId = JSON.stringify({
@@ -133,7 +133,7 @@ class FakeEyesWrapper extends EventEmitter {
       region,
       browserName,
       selector,
-      sizeMode,
+      target,
       emulationInfo,
       iosDeviceInfo,
       selectorsToFindRegionsFor,
@@ -153,7 +153,7 @@ class FakeEyesWrapper extends EventEmitter {
         iosDeviceInfo,
         selectorsToFindRegionsFor,
         region,
-        sizeMode,
+        target,
         selector,
       } = JSON.parse(renderId)
       const deviceName =
@@ -164,9 +164,9 @@ class FakeEyesWrapper extends EventEmitter {
           : undefined
 
       let imagePositionInActiveFrame
-      if (sizeMode === 'region') {
+      if (target === 'region' && region) {
         imagePositionInActiveFrame = {x: region.left, y: region.top}
-      } else if (sizeMode === 'selector' || sizeMode === 'full-selector') {
+      } else if (target === 'selector' || target === 'full-selector') {
         const loc = selectorsToLocations[selector.selector || selector]
         imagePositionInActiveFrame = {x: loc.x, y: loc.y}
       }
@@ -205,21 +205,21 @@ class FakeEyesWrapper extends EventEmitter {
 
   async getRenderJobInfo(renderRequests) {
     return renderRequests.map(renderRequest => {
-      const renderInfo = renderRequest.getRenderInfo()
-      const emulationInfo = renderInfo.getEmulationInfo()
-      const iosDeviseInfo = renderInfo.getIosDeviceInfo()
+      const renderInfo = renderRequest.renderInfo
+      const emulationInfo = renderInfo.emulationInfo
+      const iosDeviceInfo = renderInfo.iosDeviceInfo
       const deviceName =
-        (emulationInfo && emulationInfo.getDeviceName()) ||
-        (iosDeviseInfo && iosDeviseInfo.deviceName)
+        (emulationInfo && emulationInfo.deviceName) || (iosDeviceInfo && iosDeviceInfo.name)
+      const browserName = renderRequest.browser.name
       return {
         renderer: 'renderer-uid',
         eyesEnvironment: {
-          os: renderRequest.getPlatform(),
-          osInfo: renderRequest.getPlatform(),
-          hostingApp: renderRequest.getBrowserName(),
-          hostingAppInfo: renderRequest.getBrowserName(),
+          os: renderRequest.platform,
+          osInfo: renderRequest.platform,
+          hostingApp: browserName,
+          hostingAppInfo: browserName,
           deviceInfo: deviceName || 'Desktop',
-          inferred: `useragent:${renderRequest.getBrowserName()}`,
+          inferred: `useragent:${browserName}`,
           displaySize: deviceName && devices[deviceName],
         },
       }
@@ -235,7 +235,7 @@ class FakeEyesWrapper extends EventEmitter {
     const result = new MatchResult()
     const {
       isGood,
-      sizeMode,
+      target,
       browserName,
       selector,
       region,
@@ -246,21 +246,27 @@ class FakeEyesWrapper extends EventEmitter {
     } = JSON.parse(screenshotUrl)
 
     let expectedImageLocation = undefined
-    if (sizeMode === 'selector' || sizeMode === 'full-selector') {
+    if (target === 'selector' || (target === 'full-selector' && selector)) {
       expectedImageLocation = new Location(selectorsToLocations[selector])
-    } else if (sizeMode === 'region') {
+    } else if (target === 'region' && region) {
       expectedImageLocation = new Region(this.region).getLocation()
     }
 
     const asExpected =
       isGood &&
-      (!this.sizeMode || sizeMode === this.sizeMode) &&
+      (!this.target || target === this.target) &&
       (!this.selector || compare(selector, this.selector)) &&
       compare(region, this.region) &&
       compare(emulationInfo, this.emulationInfo) &&
       compare(iosDeviceInfo, this.iosDeviceInfo) &&
-      compare(selectorsToFindRegionsFor, this.selectorsToFindRegionsFor) &&
-      compare(platform, this.platform) &&
+      // selectorsToFindRegionsFor should be undefined when not provided, but
+      // it can also (apparently) be an empty array, so adding this as the sensible
+      // default to resolve integration test failures
+      compare(selectorsToFindRegionsFor || [], this.selectorsToFindRegionsFor || []) &&
+      // the default for `platform` is {name: 'linux', type: 'web'} if `type` is undefined in createRenderRequest
+      // this.platform is only set in this wrapper as part of running a batch
+      // so we need to also include the sensible default in this check
+      compare(platform, this.platform || {name: 'linux', type: 'web'}) &&
       compare(imageLocation, expectedImageLocation)
 
     result.setAsExpected(asExpected)

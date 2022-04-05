@@ -8,7 +8,6 @@ const {
 const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
-const isEmulation = require('./isEmulation')
 const mapChromeEmulationInfo = require('./mapChromeEmulationInfo')
 const getSupportedBrowsers = require('./supportedBrowsers')
 const chalk = require('chalk')
@@ -327,13 +326,13 @@ function makeOpenEyes({
       }
       if (
         browser.name &&
-        !browser.deviceName &&
+        !browser.chromeEmulationInfo &&
         !browser.iosDeviceInfo &&
         (!browser.height || !browser.width)
       ) {
         return `browser '${browser.name}' should include 'height' and 'width' parameters.`
       }
-      if (isEmulation(browser) && !isSupportsDeviceEmulation(browser.name)) {
+      if (browser.chromeEmulationInfo && !isSupportsDeviceEmulation(browser.name)) {
         return `browser '${browser.name}' does not support mobile device emulation. Please remove 'mobile:true' or 'deviceName' from the browser configuration`
       }
     }

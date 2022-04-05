@@ -59,6 +59,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
   }
 
   async function makePersistance() {
+    if (!mapping.elements.length) return
     const selectors = await context.execute(snippets.addElementIds, [mapping.elements, mapping.ids])
     selectors.forEach((selectors, index) => {
       const resolver = mapping.resolvers[index]
@@ -73,12 +74,14 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
   }
 
   async function cleanupPersistance() {
+    if (!mapping.elements.length) return
     await context.execute(snippets.cleanupElementIds, [mapping.elements])
     logger.log(`elements cleaned up: ${mapping.ids}`)
   }
 }
 
 function toCheckWindowConfiguration({checkSettings, configuration}) {
+  const fully = configuration.getForceFullPageScreenshot() || checkSettings.fully || false
   const config = {
     ignore: transformRegions(checkSettings.ignoreRegions),
     floating: transformRegions(checkSettings.floatingRegions),
@@ -86,8 +89,6 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
     layout: transformRegions(checkSettings.layoutRegions),
     content: transformRegions(checkSettings.contentRegions),
     accessibility: transformRegions(checkSettings.accessibilityRegions),
-    target: checkSettings.region ? 'region' : 'window',
-    fully: configuration.getForceFullPageScreenshot() || checkSettings.fully || false,
     tag: checkSettings.name,
     scriptHooks: checkSettings.hooks,
     sendDom: configuration.getSendDom() || checkSettings.sendDom, // this is wrong, but kept for backwards compatibility,
@@ -100,8 +101,9 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
     pageId: checkSettings.pageId || undefined,
   }
 
-  if (config.target === 'region') {
+  if (checkSettings.region) {
     if (utils.types.has(checkSettings.region, ['width', 'height'])) {
+      config.target = 'region'
       config.region = utils.types.has(checkSettings.region, ['x', 'y'])
         ? {
             left: checkSettings.region.x,
@@ -111,8 +113,11 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
           }
         : checkSettings.region
     } else {
+      config.target = fully ? 'full-selector' : 'selector'
       config.selector = checkSettings.region
     }
+  } else {
+    config.target = fully ? 'full-page' : 'viewport'
   }
 
   return config

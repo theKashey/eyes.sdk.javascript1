@@ -1,7 +1,7 @@
 'use strict'
 
 const makeRenderer = require('./renderer')
-const createRenderRequest = require('./createRenderRequest')
+const {createRenderRequest} = require('./render/createRenderRequest')
 const {RenderingInfo, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
 
 require('@applitools/isomorphic-fetch') // TODO can just use node-fetch
@@ -13,10 +13,11 @@ async function takeScreenshot({
   proxy,
   autProxy,
   renderInfo,
+  type = 'web',
   snapshot,
   url,
   browsers = [{width: 1024, height: 768}],
-  sizeMode = 'full-page',
+  target = 'full-page',
   selector,
   region,
   scriptHooks,
@@ -45,12 +46,13 @@ async function takeScreenshot({
         snapshot: {cdt, frames, resourceUrls, resourceContents},
       })
       return createRenderRequest({
+        type,
         url,
-        dom,
+        snapshot: dom,
         resources,
         browser: browsers[index],
         renderInfo: renderingInfo,
-        sizeMode,
+        target,
         selector,
         region,
         scriptHooks,

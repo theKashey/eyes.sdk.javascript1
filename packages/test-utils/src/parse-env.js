@@ -1,4 +1,10 @@
 const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
+
+// need alternate Sauce URL due to error:
+// 'The storage authorization is not possible due to the missing token'
+// re: https://support.saucelabs.com/hc/en-us/articles/360053512753--Failed-to-download-mobile-app-The-storage-authorization-is-not-possible-due-to-the-missing-token-error-when-running-automated-tests
+const SAUCE_NATIVE_SERVER_URL = 'https://ondemand.us-west-1.saucelabs.com:443/wd/hub'
+
 const SAUCE_CREDENTIALS = {
   username: process.env.SAUCE_USERNAME,
   accessKey: process.env.SAUCE_ACCESS_KEY,
@@ -48,6 +54,23 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
+  // 'iPhone 12 UFG native': {
+  //   type: 'sauce',
+  //   url: SAUCE_NATIVE_SERVER_URL,
+  //   capabilities: {
+  //     deviceName: 'iPhone 12 Pro Simulator',
+  //     platformName: 'iOS',
+  //     platformVersion: '15.2',
+  //     deviceOrientation: 'portrait',
+  //     processArguments: {
+  //       args: [],
+  //       env: {
+  //         DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
+  //       }
+  //     },
+  //     ...SAUCE_CREDENTIALS,
+  //   },
+  // },
   'iPhone 11': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -509,7 +532,7 @@ const BROWSERS = {
 }
 
 function parseEnv(
-  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, eg, ...options} = {},
+  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, eg, injectUFGLib, ...options} = {},
   protocol = 'wd',
 ) {
   const env = {browser, device, headless, protocol, ...options}
@@ -546,6 +569,14 @@ function parseEnv(
     }
     if (eg && (!preset || preset.type === 'local')) {
       env.url = new URL(process.env.CVG_TESTS_EG_REMOTE)
+    }
+    if (injectUFGLib) {
+      env.capabilities['appium:processArguments'] = {
+        args: [],
+        env: {
+          DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
+        }
+      }
     }
   } else if (protocol === 'cdp') {
     url = url || process.env.CVG_TESTS_CDP_REMOTE

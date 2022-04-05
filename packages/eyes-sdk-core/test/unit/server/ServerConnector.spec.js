@@ -17,9 +17,6 @@ const {
   MatchWindowData,
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
-const RenderRequest = require('../../../lib/renderer/RenderRequest')
-// const createDomResource = require('@applitools/visual-grid-client/src/sdk/resources/createDomResource')
-const RenderInfo = require('../../../lib/renderer/RenderInfo')
 const logger = new makeLogger()
 
 // #region temporary
@@ -721,16 +718,18 @@ Parameter name: startInfo`),
 
     // case #1: 400 bad request
     const [renderBadRequestErr] = await presult(
-      serverConnector.render(
-        new RenderRequest({
-          webhook: renderInfo.getResultsUrl(),
-          stitchingService: renderInfo.getStitchingServiceUrl(),
-          url: 'http://bla',
-          dom: createDomResource({cdt: [], resources: {}}),
-          resources: [],
-          renderInfo: new RenderInfo({iosDeviceInfo: {name: 'iPhone 123456789'}}),
-        }),
-      ),
+      serverConnector.render({
+        webhook: renderInfo.getResultsUrl(),
+        stitchingService: renderInfo.getStitchingServiceUrl(),
+        url: 'http://bla',
+        dom: createDomResource({cdt: [], resources: {}}),
+        resources: {},
+        renderInfo: {
+          iosDeviceInfo: {
+            name: 'iPhone 123456789',
+          },
+        },
+      }),
     )
 
     // case #2 400 Internal server error (actually this should be a 400 from server's perspective)

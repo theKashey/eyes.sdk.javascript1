@@ -1,7 +1,7 @@
 'use strict'
 
 const {presult} = require('@applitools/functional-commons')
-const createRenderRequest = require('./createRenderRequest')
+const {createRenderRequest, enrichRenderRequest} = require('./render/createRenderRequest')
 const isInvalidAccessibility = require('./isInvalidAccessibility')
 const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 const makeWaitForTestEnd = require('./makeWaitForTestEnd')
@@ -30,12 +30,11 @@ function makeCheckWindow({
   autProxy,
 }) {
   return function checkWindow({
+    isNativeUFG,
     snapshot,
     url,
     tag,
-    target = 'window',
-    fully = true,
-    sizeMode = 'full-page',
+    target = 'full-page',
     selector,
     region,
     scriptHooks,
@@ -58,14 +57,6 @@ function makeCheckWindow({
     cookies,
   }) {
     const snapshots = Array.isArray(snapshot) ? snapshot : Array(browsers.length).fill(snapshot)
-
-    if (target === 'window' && !fully) {
-      sizeMode = 'viewport'
-    } else if (target === 'region' && selector) {
-      sizeMode = fully ? 'full-selector' : 'selector'
-    } else if (target === 'region' && region) {
-      sizeMode = 'region'
-    }
 
     const accErr = isInvalidAccessibility(accessibility)
     if (accErr) {
@@ -165,10 +156,11 @@ function makeCheckWindow({
       }
 
       const renderRequest = createRenderRequest({
+        isNativeUFG,
         url,
         browser: browsers[index],
         renderInfo,
-        sizeMode,
+        target,
         selector,
         selectorsToFindRegionsFor,
         region,
@@ -176,6 +168,7 @@ function makeCheckWindow({
         sendDom,
         visualGridOptions,
         includeFullPageSize: !!pageId,
+        agentId: wrapper.getBaseAgentId(),
       })
 
       if (!wrapper.getAppEnvironment()) {
@@ -186,9 +179,12 @@ function makeCheckWindow({
       await wrapper.ensureRunningSession()
 
       const {dom, resources} = await resourcesPromises[index]
-      renderRequest.setDom(dom)
-      renderRequest.setResources(resources)
-      renderRequest.setRenderer(wrapper.getRenderer())
+      enrichRenderRequest(renderRequest, {
+        dom,
+        resources,
+        renderer: wrapper.getRenderer(),
+        snapshot: snapshots[index],
+      })
 
       const [renderErr, renderId] = await presult(renderJob(renderRequest))
 
@@ -211,7 +207,7 @@ function makeCheckWindow({
       testController.addRenderId(index, renderId)
 
       logger.verbose(
-        `render request complete for ${renderId}. test=${testName} stepCount #${currStepCount} tag=${tag} target=${target} fully=${fully} region=${JSON.stringify(
+        `render request complete for ${renderId}. test=${testName} stepCount #${currStepCount} tag=${tag} target=${target} region=${JSON.stringify(
           region,
         )} selector=${JSON.stringify(selector)} browser: ${JSON.stringify(browsers[index])}`,
       )
