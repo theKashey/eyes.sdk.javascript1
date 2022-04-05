@@ -10,7 +10,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      `extractText` now supports selectors provided as a string (a regression introduced in `13.1.3`)
 "@applitools/eyes-selenium":
   feature:
     - Support UFG for native mobile
