@@ -45,8 +45,7 @@ describe('EyesVisualGrid', async () => {
     expect(matchLevel).to.be.eql('Layout')
   })
 
-  // temporary skip
-  it.skip('should return original render request', async () => {
+  it('should return original render request', async () => {
     const config = eyes.getConfiguration()
     config.addBrowser({width: 888, height: 777, name: 'firefox'})
     eyes.setConfiguration(config)
