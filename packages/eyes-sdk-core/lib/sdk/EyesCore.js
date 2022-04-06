@@ -111,7 +111,10 @@ class EyesCore extends EyesBase {
         },
       })
 
-      if (region.hint === undefined && (TypeUtils.isString(region.target) || this.spec.isSelector(region.target) || this.spec.isElement(region.target))) {
+      if (
+        region.hint === undefined &&
+        (TypeUtils.isString(region.target) || this.spec.isSelector(region.target) || this.spec.isElement(region.target))
+      ) {
         const element = await this._context.element(region.target)
         if (!element) {
           throw new Error(`Unable to find element using provided selector - "${region.target}"`)
