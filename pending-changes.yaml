@@ -97,6 +97,7 @@ Apollo SDK:
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - add 'waitBeforeCapture' as an available type for 'Eyes.Open' and 'Eyes.Check' (for Typescript)
 "@applitools/eyes-storybook":
   feature:
     - 

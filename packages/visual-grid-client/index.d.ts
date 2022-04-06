@@ -176,6 +176,11 @@ declare namespace Eyes {
        * sets a batch object
        */
       batch?: {id?: string, name?: string, sequenceName?: string}
+
+      /**
+       * a period of time in milliseconds that 'capture' should wait
+       */
+      waitBeforeCapture?: number
     }
 
     interface DesktopBrowserInfo {
@@ -339,6 +344,11 @@ declare namespace Eyes {
        * A flag that specify whether layout algorithm should not flag repeating patters as differences
        */
       enablePatterns?: boolean
+
+      /**
+       * a period of time in milliseconds that 'capture' should wait
+       */
+      waitBeforeCapture?: number
     }
 
     interface Selector {
