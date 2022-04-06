@@ -437,7 +437,18 @@ class ServerConnector {
       })
     }
 
-    throw new Error(`ServerConnector.matchWindowAndClose - unexpected status (${response.statusText})`)
+    let renderId
+    try {
+      renderId = matchWindowData.getAppOutput().options.renderId
+    } catch (error) {
+      // no-op
+    }
+
+    if (renderId)
+      throw new Error(
+        `ServerConnector.matchWindowAndClose - unexpected status (${response.statusText}) for renderId ${renderId}`,
+      )
+    else throw new Error(`ServerConnector.matchWindowAndClose - unexpected status (${response.statusText})`)
   }
 
   /**
