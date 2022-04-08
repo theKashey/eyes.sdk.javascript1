@@ -4,6 +4,12 @@
 
 
 
+## 2.1.2 - 2022/4/8
+
+### Features
+### Bug fixes
+- Native iOS, allow capturing NavigationBar and TabBar regions
+
 ## 2.1.1 - 2022/4/5
 
 ### Features

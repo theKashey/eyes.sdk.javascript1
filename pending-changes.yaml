@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Support UFG for native mobile
