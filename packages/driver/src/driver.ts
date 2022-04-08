@@ -394,10 +394,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this.currentContext
   }
 
-  async normalizeRegion(region: types.Region): Promise<types.Region> {
+  async normalizeRegion(region: types.Region, shouldIgnoreSafeRegion?: boolean): Promise<types.Region> {
     if (this.isWeb || !utils.types.has(this._driverInfo, ['viewportSize', 'statusBarHeight'])) return region
     const scaledRegion = this.isAndroid ? utils.geometry.scale(region, 1 / this.pixelRatio) : region
-    const safeRegion = this.isIOS ? utils.geometry.intersect(scaledRegion, this._driverInfo.safeArea) : scaledRegion
+    const safeRegion =
+      this.isIOS && !shouldIgnoreSafeRegion
+        ? utils.geometry.intersect(scaledRegion, this._driverInfo.safeArea)
+        : scaledRegion
     const offsetRegion = utils.geometry.offsetNegative(safeRegion, {x: 0, y: this.statusBarHeight})
     if (offsetRegion.y < 0) {
       offsetRegion.height += offsetRegion.y

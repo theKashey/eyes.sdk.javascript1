@@ -2,6 +2,28 @@
 
 const utils = require('@applitools/utils')
 
+function isNavigationBar(region) {
+  if (
+    (region.value && region.value.includes(`type == "XCUIElementTypeNavigationBar"`)) ||
+    (region.selector && region.selector.includes(`type == "XCUIElementTypeNavigationBar"`))
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function isTabBar(region) {
+  if (
+    (region.value && region.value.includes('type == "XCUIElementTypeTabBar"')) ||
+    (region.selector && region.selector.includes(`type == "XCUIElementTypeTabBar"`))
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
 async function getTarget({window, context, region, fully, scrollingMode}) {
   if (window) {
     // window/app
@@ -41,9 +63,11 @@ async function getTarget({window, context, region, fully, scrollingMode}) {
         }
       } else {
         const scrollingElement = await context.getScrollingElement()
+        const navBar = isNavigationBar(region)
+        const tabBar = isTabBar(region)
         return {
           context: elementContext,
-          region: await element.getRegion(),
+          region: await element.getRegion(navBar || tabBar),
           scrollingElement,
         }
       }
