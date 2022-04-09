@@ -2,7 +2,7 @@ const setupTests = require('./utils/core-e2e-utils')
 
 // This is for demo purposes, and was done as part of implementing support for UFG native in core
 // The reason it is skipped is because there are generic coverage tests covering the same scenario
-describe('UFG native', () => {
+describe.skip('UFG native', () => {
   describe('Android', () => {
     const env = {
       device: 'Pixel 3 XL',
