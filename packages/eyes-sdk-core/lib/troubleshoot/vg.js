@@ -5,7 +5,7 @@
 const {URL} = require('url')
 const https = require('https')
 const axios = require('axios')
-const {RGridResource, RunningRender} = require('../../index')
+const crypto = require('crypto')
 const {pexec, presult, getServer, getProxyStr, userConfig} = require('./utils')
 const {url: renderInfoUrl} = require('./eyes')
 require('@applitools/isomorphic-fetch')
@@ -44,7 +44,17 @@ const getResource = () => {
       domNodes: [],
     }),
   )
-  return new RGridResource({content, contentType: 'x-applitools-html/cdt'})
+
+  const sha256Hash = crypto
+    .createHash('sha256')
+    .update(content)
+    .digest('hex')
+
+  return {
+    getSha256Hash: () => sha256Hash,
+    getContent: () => content,
+    getType: () => 'x-applitools-html/cdt',
+  }
 }
 
 const getPutUrl = () => {
@@ -56,6 +66,7 @@ const VG = {
   testFetch: async () => {
     const resource = getResource()
     const authToken = await getAuthToken()
+    if (!authToken) throw new Error('could not receive auth token since cURL command to get it failed.')
     const url = getPutUrl()
     const response = await global.fetch(url, {
       method: 'PUT',
@@ -73,6 +84,7 @@ const VG = {
     const data = resource.getContent()
     const url = getPutUrl()
     const authToken = await getAuthToken()
+    if (!authToken) throw new Error('could not receive auth token since cURL command to get it failed.')
     const proxyParam = getProxyStr(userConfig.proxy) ? `-x ${getProxyStr(userConfig.proxy)}` : ''
     return `curl -X PUT -H "Content-Type: application/json" -H "X-Auth-Token: ${authToken}" -d '${data}' ${url} ${proxyParam}`
   },
@@ -85,6 +97,7 @@ const VG = {
   testAxios: async () => {
     const resource = getResource()
     const authToken = await getAuthToken()
+    if (!authToken) throw new Error('could not receive auth token since cURL command to get it failed.')
     const url = getPutUrl()
     const options = {
       method: 'PUT',
@@ -106,9 +119,18 @@ const VG = {
   },
   testServer: async () => {
     const resource = getResource()
-    const rr = new RunningRender({renderId: 'fake'})
     const server = getServer() // Note: the vg url here comes from the server
-    const [err, res] = await presult(server.renderPutResource(rr, resource))
+    if (!server.getRenderingInfo())
+      throw new Error('could not determine service URL since cURL command to get it failed.')
+
+    const resourceObj = {
+      value: resource.getContent(),
+      hash: {
+        hash: resource.getSha256Hash(),
+      },
+      type: resource.getType(),
+    }
+    const [err, res] = await presult(server.renderPutResource(resourceObj))
     if (err || !res) {
       throw new Error(`bad VG result ${err}`)
     }
@@ -118,6 +140,7 @@ const VG = {
     const p = new Promise((_res, _rej) => ((res = _res), (rej = _rej)))
 
     const authToken = await getAuthToken()
+    if (!authToken) throw new Error('could not receive auth token since cURL command to get it failed.')
     const url = new URL(getPutUrl())
     const resource = getResource()
     const options = {

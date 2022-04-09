@@ -30,7 +30,7 @@ const Eyes = {
       .then(res => validateRednerInfoResult(res)),
   getCurlCmd: () => {
     const proxyParam = getProxyStr(userConfig.proxy) ? `-x ${getProxyStr(userConfig.proxy)}` : ''
-    return `curl -s ${RENDER_INFO_URL} ${proxyParam}`
+    return `curl ${RENDER_INFO_URL} ${proxyParam}`
   },
   testCurl: async () => {
     const cmd = await Eyes.getCurlCmd()

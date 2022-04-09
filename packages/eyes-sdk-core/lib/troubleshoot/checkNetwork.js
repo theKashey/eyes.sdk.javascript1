@@ -35,7 +35,7 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
   }
 
   function print(...msg) {
-    stream.write(chalk.cyan(...msg))
+    stream.write(chalk(...msg))
   }
 
   function printErr(...msg) {
@@ -58,8 +58,9 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
       printErr('Missing "apiKey". Add APPLITOOLS_API_KEY as an env variable or add "apiKey" in applitools.config.js\n')
       return
     }
-    const proxyEnvMsg = `HTTP_PROXY="${process.env.HTTP_PROXY || ''}" HTTPS_PROXY="${process.env.HTTPS_PROXY || ''}".`
-    print(`Eyes Check Network. Running with:\n${JSON.stringify(userConfig)} ${proxyEnvMsg} \n\n`)
+    const proxyEnvMsg = `HTTP_PROXY="${process.env.HTTP_PROXY || ''}"\nHTTPS_PROXY="${process.env.HTTPS_PROXY || ''}"`
+    const configMsg = `User config: ${JSON.stringify(userConfig, null, 2)}\n${proxyEnvMsg}`
+    print(`Eyes Check Network. Running with:\n\n---\n\n${chalk.cyan(configMsg)}\n\n---\n\n`)
 
     let hasErr = false
     let curlRenderErr = true
@@ -75,24 +76,23 @@ function makeCheckNetwork({stream = process.stdout, eyes = _eyes, vg = _vg}) {
     hasErr = (await doTest(eyes.testFetch, '[eyes] node-fetch')) || hasErr
     hasErr = await doTest(eyes.testServer, '[eyes] server connector')
 
-    print('[2] Checking visual grid API', vg.url.origin, '\n')
-    curlVgErr = await doTest(vg.testCurl, '[VG] cURL')
+    print('[2] Checking Ultrafast grid API', vg.url.origin, '\n')
+    curlVgErr = await doTest(vg.testCurl, '[UFG] cURL')
     hasErr = curlVgErr || hasErr
-    hasErr = (await doTest(vg.testHttps, '[VG] https')) || hasErr
-    hasErr = (await doTest(vg.testAxios, '[VG] axios')) || hasErr
-    hasErr = (await doTest(vg.testFetch, '[VG] node-fetch')) || hasErr
-    hasErr = (await doTest(vg.testServer, '[VG] server connector')) || hasErr
+    hasErr = (await doTest(vg.testHttps, '[UFG] https')) || hasErr
+    hasErr = (await doTest(vg.testAxios, '[UFG] axios')) || hasErr
+    hasErr = (await doTest(vg.testFetch, '[UFG] node-fetch')) || hasErr
+    hasErr = (await doTest(vg.testServer, '[UFG] server connector')) || hasErr
 
     if (!hasErr) {
       printSuccess('\nSuccess!\n')
     }
 
     const proxyMsg =
-      '\nYour proxy seems to be blocking requests to Applitools, please make sure the following command succeed:'
+      '\nYour proxy seems to be blocking requests to Applitools. Please make sure the following command succeeds:'
     if (curlRenderErr) {
       printErr(proxyMsg, '\n', eyes.getCurlCmd(), '\n')
-    }
-    if (curlVgErr) {
+    } else if (curlVgErr) {
       printErr(proxyMsg, '\n', await vg.getCurlCmd())
     }
   }
