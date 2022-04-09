@@ -10,7 +10,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      `extractText` now handles regions with common selector (`{type, selecor}`)
 "@applitools/eyes-selenium":
   feature:
     - Support UFG for native mobile

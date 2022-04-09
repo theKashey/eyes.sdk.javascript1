@@ -1,5 +1,5 @@
 'use strict'
-const {Driver} = require('@applitools/driver')
+const {Driver, specUtils} = require('@applitools/driver')
 const {makeLogger} = require('@applitools/logger')
 const utils = require('@applitools/utils')
 const {takeScreenshot} = require('@applitools/screenshoter')
@@ -113,7 +113,7 @@ class EyesCore extends EyesBase {
 
       if (
         region.hint === undefined &&
-        (TypeUtils.isString(region.target) || this.spec.isSelector(region.target) || this.spec.isElement(region.target))
+        (specUtils.isSelector(this.spec, region.target) || this.spec.isElement(region.target))
       ) {
         const element = await this._context.element(region.target)
         if (!element) {
