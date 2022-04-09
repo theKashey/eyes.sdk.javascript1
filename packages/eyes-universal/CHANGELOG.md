@@ -4,6 +4,13 @@
 
 
 
+
+## 2.1.3 - 2022/4/9
+
+### Features
+### Bug fixes
+- `extractText` now handles regions with common selector (`{type, selecor}`)
+
 ## 2.1.2 - 2022/4/8
 
 ### Features
