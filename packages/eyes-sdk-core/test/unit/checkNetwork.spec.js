@@ -91,7 +91,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n' + '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' + '\n',
+      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "7eMlvN103YkxFK9Os4e7bz8mzofaDK110NSzFQrl3l62ZgY110"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ OK ]  +0 \n',
@@ -103,17 +103,17 @@ describe('checkNetwork', () => {
       '[eyes] node-fetch              [ OK ]  +0 \n',
       '[eyes] server connector        [ ?  ]',
       '[eyes] server connector        [ OK ]  +0 \n',
-      '[2] Checking visual grid API https://vg.com \n',
-      '[VG] cURL                      [ ?  ]',
-      '[VG] cURL                      [ OK ]  +0 \n',
-      '[VG] https                     [ ?  ]',
-      '[VG] https                     [ OK ]  +0 \n',
-      '[VG] axios                     [ ?  ]',
-      '[VG] axios                     [ OK ]  +0 \n',
-      '[VG] node-fetch                [ ?  ]',
-      '[VG] node-fetch                [ OK ]  +0 \n',
-      '[VG] server connector          [ ?  ]',
-      '[VG] server connector          [ OK ]  +0 \n',
+      '[2] Checking Ultrafast grid API https://vg.com \n',
+      '[UFG] cURL                     [ ?  ]',
+      '[UFG] cURL                     [ OK ]  +0 \n',
+      '[UFG] https                    [ ?  ]',
+      '[UFG] https                    [ OK ]  +0 \n',
+      '[UFG] axios                    [ ?  ]',
+      '[UFG] axios                    [ OK ]  +0 \n',
+      '[UFG] node-fetch               [ ?  ]',
+      '[UFG] node-fetch               [ OK ]  +0 \n',
+      '[UFG] server connector         [ ?  ]',
+      '[UFG] server connector         [ OK ]  +0 \n',
       '\nSuccess!\n',
     ])
   })
@@ -123,7 +123,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n' + '{"apiKey":"someKey"} HTTP_PROXY="" HTTPS_PROXY="". \n' + '\n',
+      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "7eMlvN103YkxFK9Os4e7bz8mzofaDK110NSzFQrl3l62ZgY110"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ X  ]  +0 eyes:Curl \n',
@@ -135,19 +135,19 @@ describe('checkNetwork', () => {
       '[eyes] node-fetch              [ OK ]  +0 \n',
       '[eyes] server connector        [ ?  ]',
       '[eyes] server connector        [ X  ]  +0 eyes:Server \n',
-      '[2] Checking visual grid API https://vg.com \n',
-      '[VG] cURL                      [ ?  ]',
-      '[VG] cURL                      [ OK ]  +0 \n',
-      '[VG] https                     [ ?  ]',
-      '[VG] https                     [ OK ]  +0 \n',
-      '[VG] axios                     [ ?  ]',
-      '[VG] axios                     [ X  ]  +0 vg:Axios \n',
-      '[VG] node-fetch                [ ?  ]',
-      '[VG] node-fetch                [ X  ]  +0 vg:Fetch \n',
-      '[VG] server connector          [ ?  ]',
-      '[VG] server connector          [ OK ]  +0 \n',
+      '[2] Checking Ultrafast grid API https://vg.com \n',
+      '[UFG] cURL                     [ ?  ]',
+      '[UFG] cURL                     [ OK ]  +0 \n',
+      '[UFG] https                    [ ?  ]',
+      '[UFG] https                    [ OK ]  +0 \n',
+      '[UFG] axios                    [ ?  ]',
+      '[UFG] axios                    [ X  ]  +0 vg:Axios \n',
+      '[UFG] node-fetch               [ ?  ]',
+      '[UFG] node-fetch               [ X  ]  +0 vg:Fetch \n',
+      '[UFG] server connector         [ ?  ]',
+      '[UFG] server connector         [ OK ]  +0 \n',
       '\n' +
-        'Your proxy seems to be blocking requests to Applitools, please make sure the following command succeed: \n' +
+        'Your proxy seems to be blocking requests to Applitools. Please make sure the following command succeeds: \n' +
         ' curl eyes.com \n',
     ])
   })
