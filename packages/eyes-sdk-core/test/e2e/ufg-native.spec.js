@@ -1,35 +1,21 @@
-const VisualGridClient = require('@applitools/visual-grid-client')
-const spec = require('@applitools/spec-driver-selenium')
-const makeSDK = require('../../lib/new/sdk')
+const setupTests = require('./utils/core-e2e-utils')
 
 // This is for demo purposes, and was done as part of implementing support for UFG native in core
 // The reason it is skipped is because there are generic coverage tests covering the same scenario
-describe.skip('UFG native', () => {
-  let driver, destroyDriver, sdk, manager
-
-  before(async () => {
-    sdk = makeSDK({
-      name: 'eyes-core',
-      version: require('../../package.json').version,
-      spec,
-      VisualGridClient,
-    })
-    manager = await sdk.makeManager({type: 'vg', concurrency: 5})
-  })
-
-  after(async () => {
-    if (destroyDriver) await destroyDriver()
-  })
-
+describe('UFG native', () => {
   describe('Android', () => {
-    before(async () => {
-      ;[driver, destroyDriver] = await spec.build({
-        device: 'Pixel 3 XL',
-        app: 'https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk',
-      })
-    })
+    const env = {
+      device: 'Pixel 3 XL',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk',
+    }
+    const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach, env})
 
     it('works', async () => {
+      const sdk = getSDK()
+      const driver = getDriver()
+
+      const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
+
       const config = {
         appName: 'core app',
         testName: 'native ufg android',
@@ -44,14 +30,15 @@ describe.skip('UFG native', () => {
   })
 
   describe('iOS', () => {
-    before(async () => {
-      ;[driver, destroyDriver] = await spec.build({
-        device: 'iPhone 12',
-        app: 'https://applitools.jfrog.io/artifactory/Examples/DuckDuckGo-instrumented.app.zip',
-      })
-    })
+    const env = {
+      device: 'iPhone 12',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/DuckDuckGo-instrumented.app.zip',
+    }
+    const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach, env})
 
     it('works', async () => {
+      const sdk = getSDK()
+      const driver = getDriver()
       const config = {
         appName: 'core app',
         testName: 'native ufg ios',
@@ -59,6 +46,7 @@ describe.skip('UFG native', () => {
         browsersInfo: [{iosDeviceInfo: {deviceName: 'iPhone 12', iosVersion: 'latest'}}],
         saveNewTests: false,
       }
+      const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
       const eyes = await manager.openEyes({driver, config})
       await eyes.check()
       await eyes.close({throwErr: true})

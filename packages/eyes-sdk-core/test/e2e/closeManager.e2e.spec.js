@@ -1,28 +1,13 @@
-const VisualGridClient = require('@applitools/visual-grid-client')
-const spec = require('@applitools/spec-driver-selenium')
-const {makeSDK} = require('../../index')
+const setupTests = require('./utils/core-e2e-utils')
 const assert = require('assert')
 
 describe('Core e2e - closeManager', () => {
-  let driver, destroyDriver, sdk
-  beforeEach(async () => {
-    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-  })
-
-  afterEach(async () => {
-    if (destroyDriver) await destroyDriver()
-  })
-
-  before(() => {
-    sdk = makeSDK({
-      name: 'some sdk',
-      version: '1.2.5.',
-      spec,
-      VisualGridClient,
-    })
-  })
+  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
 
   it('aborts unclosed tests with test results', async () => {
+    const sdk = getSDK()
+    const driver = getDriver()
+
     const manager = await sdk.makeManager()
     const eyes = await manager.openEyes({
       driver,

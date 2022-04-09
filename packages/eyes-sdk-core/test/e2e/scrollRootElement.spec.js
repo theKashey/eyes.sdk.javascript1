@@ -1,36 +1,21 @@
-const VisualGridClient = require('@applitools/visual-grid-client')
-const spec = require('@applitools/spec-driver-selenium')
-const {makeSDK} = require('../../index')
+const setupTests = require('./utils/core-e2e-utils')
 
 describe('get root scrollingElement', () => {
-  let driver, destroyDriver, sdk, manager, eyes, config
-  beforeEach(async () => {
-    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-    sdk = makeSDK({
-      name: 'scrollingElement',
-      version: '1.2.5.',
-      spec,
-      VisualGridClient,
-    })
-    manager = await sdk.makeManager()
-    config = {
-      appName: 'scrollingElement',
-      testName: 'test scrollingElement',
-      saveNewTests: false,
-      logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined,
-    }
-  })
-
-  afterEach(async () => {
-    if (destroyDriver) await destroyDriver()
-    if (eyes) await eyes.abort()
-    await manager.closeManager()
-  })
+  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
 
   it('test scrollingElement', async () => {
-    eyes = await manager.openEyes({
+    const sdk = getSDK()
+    const driver = getDriver()
+
+    const manager = await sdk.makeManager()
+    const eyes = await manager.openEyes({
       driver,
-      config,
+      config: {
+        appName: 'scrollingElement',
+        testName: 'test scrollingElement',
+        saveNewTests: false,
+        logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined,
+      },
     })
     await driver.get('https://applitools.github.io/demo/TestPages/ScrollingElement/body.html')
     await eyes.check({name: 'body scrolling element'})
