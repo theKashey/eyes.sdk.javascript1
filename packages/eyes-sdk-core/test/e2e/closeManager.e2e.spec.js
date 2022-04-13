@@ -2,7 +2,7 @@ const setupTests = require('./utils/core-e2e-utils')
 const assert = require('assert')
 
 describe('Core e2e - closeManager', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   it('aborts unclosed tests with test results', async () => {
     const sdk = getSDK()

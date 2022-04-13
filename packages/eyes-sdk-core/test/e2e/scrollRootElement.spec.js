@@ -1,7 +1,7 @@
 const setupTests = require('./utils/core-e2e-utils')
 
 describe('get root scrollingElement', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   it('test scrollingElement', async () => {
     const sdk = getSDK()

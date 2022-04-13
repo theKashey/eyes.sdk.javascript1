@@ -3,7 +3,7 @@ const assert = require('assert')
 const utils = require('@applitools/utils')
 
 describe('extractText e2e', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   it('works', async () => {
     const sdk = getSDK()

@@ -1,7 +1,7 @@
 const setupTests = require('./utils/core-e2e-utils')
 
 describe('waitBeforeCapture', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   let sdk, manager
   beforeEach(async () => {

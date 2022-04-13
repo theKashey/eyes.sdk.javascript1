@@ -2,7 +2,7 @@ const setupTests = require('./utils/core-e2e-utils')
 
 // sample test used to track down universal sdk issues reported by non-JS languages
 describe.skip('repro', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   it('works', async () => {
     const sdk = getSDK()

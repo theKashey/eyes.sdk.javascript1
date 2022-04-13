@@ -1,17 +1,24 @@
 const VisualGridClient = require('@applitools/visual-grid-client')
 const spec = require('@applitools/spec-driver-selenium')
+const {testServerInProcess} = require('@applitools/test-server')
 const {makeSDK} = require('../../../index')
 
-function setupTests({before, beforeEach, afterEach, env = {browser: 'chrome'}}) {
-  let driver, destroyDriver, sdk
+function setupTests({before, after, beforeEach, afterEach, env = {browser: 'chrome'}}) {
+  let driver, destroyDriver, sdk, testServer
 
-  before(() => {
+  before(async () => {
     sdk = makeSDK({
       name: 'core e2e',
       version: '1.2.3',
       spec,
       VisualGridClient,
     })
+
+    testServer = await testServerInProcess()
+  })
+
+  after(async () => {
+    await testServer.close()
   })
 
   beforeEach(async () => {
@@ -25,6 +32,7 @@ function setupTests({before, beforeEach, afterEach, env = {browser: 'chrome'}}) 
   return {
     getDriver: () => driver,
     getSDK: () => sdk,
+    getBaseUrl: () => `http://localhost:${testServer.port}`,
   }
 }
 

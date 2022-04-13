@@ -465,6 +465,58 @@ describe('takeDomSnapshot', () => {
       },
     ])
   })
+
+  it('should modify data urls on iframes', async () => {
+    // the following is a mock of an element like this: <iframe src="data:text/html,<div>hi there</div>"></iframe>
+    mock.mockElements([
+      {
+        name: 'some-frame-with-data-url',
+        selector: '[data-applitools-selector="1"]',
+        frame: true,
+        isCORS: true,
+      },
+    ])
+    mock.mockScript('dom-snapshot', function() {
+      switch (this.name) {
+        case 'some-frame-with-data-url':
+          return generateSnapshotResponse({
+            cdt: 'some frame with data url',
+            url: 'data:text/html,bla bla bla',
+          })
+        default:
+          return generateSnapshotResponse({
+            cdt: [{nodeName: 'IFRAME', attributes: []}],
+            crossFrames: [{selector: '[data-applitools-selector="1"]', index: 0}],
+          })
+      }
+    })
+    const snapshot = await takeDomSnapshot(logger, driver.currentContext, {
+      uniqueUrl: (url, query) => `URL:${url}--QUERY:${query}`,
+    })
+    expect(snapshot).to.eql({
+      cdt: [
+        {
+          nodeName: 'IFRAME',
+          attributes: [{name: 'data-applitools-src', value: 'URL:http://data-url-frame--QUERY:applitools-iframe'}],
+        },
+      ],
+      resourceContents: {},
+      resourceUrls: [],
+      scriptVersion: 'mock value',
+      srcAttr: null,
+      frames: [
+        {
+          cdt: 'some frame with data url',
+          resourceContents: {},
+          resourceUrls: [],
+          scriptVersion: 'mock value',
+          srcAttr: null,
+          url: 'URL:http://data-url-frame--QUERY:applitools-iframe',
+          frames: [],
+        },
+      ],
+    })
+  })
 })
 
 function generateSnapshotResponse(overrides) {
