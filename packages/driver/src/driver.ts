@@ -401,7 +401,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this.isIOS && !shouldIgnoreSafeRegion
         ? utils.geometry.intersect(scaledRegion, this._driverInfo.safeArea)
         : scaledRegion
-    const offsetRegion = utils.geometry.offsetNegative(safeRegion, {x: 0, y: this.statusBarHeight})
+    const offsetRegion = utils.geometry.offsetNegative(safeRegion, {
+      x: this.isAndroid && this.orientation === 'landscape' && this.platformVersion > 7 ? this.navigationBarHeight : 0,
+      y: this.statusBarHeight,
+    })
     if (offsetRegion.y < 0) {
       offsetRegion.height += offsetRegion.y
       offsetRegion.y = 0

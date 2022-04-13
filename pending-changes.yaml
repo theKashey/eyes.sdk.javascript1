@@ -10,6 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-selenium":
   feature:
@@ -20,7 +21,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image. Also account for an Appium bug when calculating system bars height.
     - Support data urls in iframes
 "@applitools/eyes-webdriverio":
   feature:
@@ -29,7 +31,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-playwright":
   feature:
@@ -44,7 +47,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-protractor":
   feature:
@@ -59,7 +63,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-puppeteer":
   feature:
@@ -74,7 +79,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-testcafe":
   feature:
@@ -102,7 +108,8 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Native iOS, allow capturing NavigationBar and TabBar regions
+    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
     - Support data urls in iframes
 "@applitools/eyes-cypress":
   feature:
