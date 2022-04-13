@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 3.27.6 - 2022/4/13
+
+### Features
+### Bug fixes
+- Support data urls in iframes
+
 ## 3.27.5 - 2022/3/29
 
 ### Features

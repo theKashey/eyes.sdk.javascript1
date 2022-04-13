@@ -116,7 +116,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Support data urls in iframes
+    - 
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
