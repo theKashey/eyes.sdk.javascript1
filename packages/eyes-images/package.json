@@ -35,7 +35,7 @@
     "@applitools/eyes-sdk-core": "12.17.4"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@applitools/test-utils": "1.0.0",
     "assert-rejects": "^1.0.0",
     "axios": "^0.21.1",

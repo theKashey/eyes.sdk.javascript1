@@ -22,7 +22,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@applitools/snaptdout": "^1.5.4",
     "@applitools/visual-grid-client": "^15.8.2",
     "mocha": "^8.3.2"

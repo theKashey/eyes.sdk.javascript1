@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "@applitools/api-extractor": "^1.2.3",
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@applitools/scripts": "1.0.1",
     "@applitools/test-utils": "1.0.9",
     "@types/mocha": "^9.0.0",

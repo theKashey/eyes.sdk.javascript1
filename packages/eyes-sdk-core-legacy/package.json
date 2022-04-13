@@ -45,7 +45,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@types/node": "*",
     "mocha": "^6.2.2",
     "typescript": "^3.6.4"

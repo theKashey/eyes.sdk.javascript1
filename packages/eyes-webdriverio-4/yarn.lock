@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/api-extractor/-/api-extractor-1.2.2.tgz#ca7296bb4202016d823d943e23faafe0251d0d6f"
   integrity sha512-aU0cpQ5r9kp7Zo9nhJJ3RhepPSGuAFP2FJxw904owIpcb4WPe0NvSEwj4VikycGRyR0MJQ2k0/LaiuJTngyWeg==
 
-"@applitools/bongo@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.0.tgz#62862f64fca5221bfeea84add83133956c1ffcdd"
-  integrity sha512-+x1YSRCrAkFQnWRenghLQKO46hwKYVESOFb2iandVi+kBUTLKJ2ajMZfOXOjoP4NUClgZE+A6CVvpgGOkuhXFw==
+"@applitools/bongo@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.1.tgz#dfa9dcfb0023f81c8924aaae28a6463106197174"
+  integrity sha512-Pb8C2gLlRN3PgnSyB4GanaUf8RvUQ4auAs7BR7puoWv8nJ3sn34Mc2UXrrMPLpLjl/wCan0ZcYRB+K+CTA9b1A==
   dependencies:
     "@applitools/utils" "1.2.11"
     chalk "3.0.0"

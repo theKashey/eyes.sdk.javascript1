@@ -42,7 +42,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^4.15.1",

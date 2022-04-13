@@ -38,7 +38,7 @@
     "eyes.utils": "0.0.29"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "mocha": "^5.2.0",
     "uglify-js": "^3.4.0",
     "webpack": "^3.12.0",

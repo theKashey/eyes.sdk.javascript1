@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.6",
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "2.3.18",
     "@applitools/sdk-shared": "0.9.11",

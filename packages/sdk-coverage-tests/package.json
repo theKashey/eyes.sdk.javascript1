@@ -42,7 +42,7 @@
     "yargs": "16.0.3"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.0",
+    "@applitools/bongo": "^2.0.1",
     "@typescript-eslint/parser": "4.2.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
