@@ -8,7 +8,11 @@ const path = require('path')
 
 describe('versions-utils', () => {
   it('finds all references to a given package', () => {
-    const packageLock = require(path.join(__dirname, 'fixtures', 'package-lock.json'))
+    const packageLock = require(path.join(
+      __dirname,
+      'fixtures',
+      'package-lock-lockFileVersion1.json',
+    ))
     const expected = [
       {'@applitools/eyes-webdriverio@file:../dry-run.tgz': '@applitools/eyes-sdk-core@9.0.2'},
       {'@applitools/visual-grid-client@13.6.12': '@applitools/eyes-sdk-core@9.0.3'},
@@ -21,11 +25,31 @@ describe('versions-utils', () => {
 })
 
 describe('versions', () => {
-  describe('verify-installed-versions', () => {
+  describe('verify-installed-versions to see if different versions of the same package are installed', () => {
     describe('with package-lock.json', () => {
-      it('checks if different versions of the same package are installed', () => {
-        const packageLock = require(path.join(__dirname, 'fixtures', 'package-lock.json'))
+      it('lockFileVersion: 1', () => {
+        const packageLock = require(path.join(
+          __dirname,
+          'fixtures',
+          'package-lock-lockFileVersion1.json',
+        ))
         const packageNames = ['@applitools/eyes-sdk-core', '@applitools/dom-utils']
+        assert.throws(() => {
+          checkPackagesForUniqueVersions(packageLock, packageNames, {isNpmLs: false})
+        }, /Non-unique package versions found of @applitools\/eyes\-sdk-core\./)
+      })
+      it('lockFileVersion: 2', () => {
+        const packageLock = require(path.join(
+          __dirname,
+          'fixtures',
+          'package-lock-lockFileVersion2.json',
+        ))
+        const packageNames = [
+          '@applitools/eyes-api',
+          '@applitools/eyes-sdk-core',
+          '@applitools/spec-driver-selenium',
+          '@applitools/visual-grid-client',
+        ]
         assert.throws(() => {
           checkPackagesForUniqueVersions(packageLock, packageNames, {isNpmLs: false})
         }, /Non-unique package versions found of @applitools\/eyes\-sdk-core\./)

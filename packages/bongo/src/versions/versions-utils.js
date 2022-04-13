@@ -70,7 +70,7 @@ function checkPackagesForUniqueVersions(input, packageNames, {isNpmLs} = {isNpmL
     let affectedPackages = []
     for (const packageName in found) {
       const versions = found[packageName].map(entry => Object.values(entry)[0])
-      const hasUniqueVersion = new Set(versions).size === 1
+      const hasUniqueVersion = !versions.length || new Set(versions).size === 1
       if (!hasUniqueVersion) {
         found[packageName].forEach(versionEntry => {
           for (const [key, value] of Object.entries(versionEntry)) {
