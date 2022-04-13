@@ -8,7 +8,7 @@ describe.skip('UFG native', () => {
       device: 'Pixel 3 XL',
       app: 'https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk',
     }
-    const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach, env})
+    const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
 
     it('works', async () => {
       const sdk = getSDK()
@@ -34,7 +34,7 @@ describe.skip('UFG native', () => {
       device: 'iPhone 12',
       app: 'https://applitools.jfrog.io/artifactory/Examples/DuckDuckGo-instrumented.app.zip',
     }
-    const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach, env})
+    const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
 
     it('works', async () => {
       const sdk = getSDK()

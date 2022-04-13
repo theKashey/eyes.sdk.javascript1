@@ -2,7 +2,7 @@ const setupTests = require('./utils/core-e2e-utils')
 
 // this is an example
 describe.skip('check e2e', () => {
-  const {getDriver, getSDK} = setupTests({before, beforeEach, afterEach})
+  const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach})
 
   it('works', async () => {
     const sdk = getSDK()
