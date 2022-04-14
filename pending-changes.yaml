@@ -10,12 +10,8 @@ Apollo SDK:
   feature:
     - Support passing 'serverUrl' and 'proxy' to VHS.
   bug-fix:
-<<<<<<< HEAD
     - Use Math.ceil instead of Math.round for viewportSize calculation when passed useCeilForViewportSize:true
     - Support data urls in iframes
-=======
-    - 
->>>>>>> master
 "@applitools/eyes-selenium":
   feature:
     - 
