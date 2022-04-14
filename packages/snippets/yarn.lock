@@ -9,12 +9,12 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@applitools/bongo@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.1.tgz#dfa9dcfb0023f81c8924aaae28a6463106197174"
-  integrity sha512-Pb8C2gLlRN3PgnSyB4GanaUf8RvUQ4auAs7BR7puoWv8nJ3sn34Mc2UXrrMPLpLjl/wCan0ZcYRB+K+CTA9b1A==
+"@applitools/bongo@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.2.tgz#63f01b82fb6eeb269a75cf4f61954cc1e14a9bb7"
+  integrity sha512-Vl5rAtqHR+7NC+1ChvmDBJhFyw32Xrb/6LCJ08RKeKoGO3FdwcngGFCWNB7MH+6YCnnC/jAKuurkaH9Ty4+eCg==
   dependencies:
-    "@applitools/utils" "1.2.11"
+    "@applitools/utils" "1.2.13"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -23,10 +23,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/utils@1.2.11":
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.11.tgz#e4981090149ee7cf327a04fb939f3a4c8a2fa0c1"
-  integrity sha512-khBpPL+wtoF6wlGq6YNK0dWSz0lAfsnKZ3/7dubIQ9d7EZvsvbRqAfw1iJ+vHlBFMeUx3UhQ+5MbEgXaf+WC5w==
+"@applitools/utils@1.2.13":
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.13.tgz#8c00475dc02dd2708fdef84b929e79a3a8f0385b"
+  integrity sha512-yZ333Y/bAH/A05UMBllEdqBAwkFQknih2arIRSfN+QBpiFrfuLtQEdCwXAdnvU/MbAzZ/Tje7iv93FMzs5gFZA==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
