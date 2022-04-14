@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.2.tgz#63f01b82fb6eeb269a75cf4f61954cc1e14a9bb7"
-  integrity sha512-Vl5rAtqHR+7NC+1ChvmDBJhFyw32Xrb/6LCJ08RKeKoGO3FdwcngGFCWNB7MH+6YCnnC/jAKuurkaH9Ty4+eCg==
+"@applitools/bongo@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.3.tgz#bed4f6db83201bb229db7fd8d0133f4b630512af"
+  integrity sha512-a3Hl+Liblxh+Cmaw90DTLQ0D8Qs7yLY69mZ5rj/T41O5Ztb7kdil+IJSJonUu4iISW9zLfptcXOcPk8JmKrbCA==
   dependencies:
-    "@applitools/utils" "1.2.13"
+    "@applitools/utils" "1.2.14"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -112,10 +112,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.0.1.tgz#13d4cc0d2a964c8cca838e8ba8306f1e4512a006"
   integrity sha512-Zj+fmrCcExPp1KagDa6bIHS9L6WEdFBbjFgjweZTQoWGnW8dbvcC0OmoVxdbO5+hXN5qAnRVsVG9Cs6QdWqfvQ==
 
-"@applitools/utils@1.2.13":
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.13.tgz#8c00475dc02dd2708fdef84b929e79a3a8f0385b"
-  integrity sha512-yZ333Y/bAH/A05UMBllEdqBAwkFQknih2arIRSfN+QBpiFrfuLtQEdCwXAdnvU/MbAzZ/Tje7iv93FMzs5gFZA==
+"@applitools/utils@1.2.14":
+  version "1.2.14"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.14.tgz#9e6b3a2b992e7c6e1a9f4447f8ac2b48b6037a2e"
+  integrity sha512-pnul7WuGuVScqm8jyHJQgBP3QcApzWC4u/RjZkWxFSFVVapVJsnuBENbs0aAOMeYtxqRvUWDG5MyyjMZIpEDxw==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"

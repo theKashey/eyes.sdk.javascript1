@@ -27,7 +27,7 @@
     "url": "https://github.com/applitools/snaptdout/issues"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.2",
+    "@applitools/bongo": "^2.0.3",
     "mocha": "^8.3.2"
   },
   "dependencies": {

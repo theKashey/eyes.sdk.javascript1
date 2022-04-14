@@ -52,7 +52,7 @@
     "throat": "6.0.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.2",
+    "@applitools/bongo": "^2.0.3",
     "@applitools/scripts": "^1.1.0",
     "@applitools/snaptdout": "1.0.1",
     "@applitools/test-server": "1.0.8",

@@ -102,7 +102,7 @@
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.7",
-    "@applitools/bongo": "^2.0.2",
+    "@applitools/bongo": "^2.0.3",
     "@applitools/scripts": "1.1.0",
     "@applitools/test-utils": "1.1.5",
     "@types/mocha": "^9.0.0",
