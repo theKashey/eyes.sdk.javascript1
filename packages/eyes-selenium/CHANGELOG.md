@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+
+
+## 4.58.4 - 2022/4/14
+
+### Features
+- Support UFG for native mobile
+- `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+### Bug fixes
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- accept ios and android lowercase as driver platformName capability when using custom grid
+- when running on a native iOS app, allow capturing NavigationBar and TabBar regions
+- When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image. Also account for an Appium bug when calculating system bars height.
+- Support data urls in iframes
+
 ## 4.58.3 - 2022/1/12
 
 - fix bugs
