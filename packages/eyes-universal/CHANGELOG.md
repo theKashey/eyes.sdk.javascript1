@@ -5,6 +5,13 @@
 
 
 
+## 2.1.4 - 2022/4/14
+
+### Features
+### Bug fixes
+- When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+- Support data urls in iframes
+
 ## 2.1.3 - 2022/4/9
 
 ### Features

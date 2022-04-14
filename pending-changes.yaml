@@ -10,8 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
-    - Support data urls in iframes
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Support UFG for native mobile
