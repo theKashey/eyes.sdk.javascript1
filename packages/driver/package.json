@@ -74,8 +74,8 @@
   },
   "dependencies": {
     "@applitools/snippets": "2.2.2",
-    "@applitools/types": "1.3.0",
-    "@applitools/utils": "1.2.13"
+    "@applitools/types": "1.3.1",
+    "@applitools/utils": "1.2.14"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.0.3",
