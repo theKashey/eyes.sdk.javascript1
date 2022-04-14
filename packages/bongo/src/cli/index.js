@@ -16,13 +16,7 @@ const {lint} = require('../lint')
 const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
-const {
-  gitAdd,
-  gitCommit,
-  gitPushWithTags,
-  isChanged,
-  gitStatus,
-} = require('../git')
+const {gitAdd, gitCommit, gitPushWithTags, isChanged, gitStatus} = require('../git')
 const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
 const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-changes.yaml')
 const log = require('../log')

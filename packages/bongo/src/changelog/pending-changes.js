@@ -60,8 +60,8 @@ function emitPendingChangesEntry(changes = {feature: [], 'bug-fix': []}) {
   return changelogEntry
 }
 
-function writePendingChangesToChangelog({cwd, pendingChangesFilePath}) {
-  const pendingChanges = getPendingChanges({cwd, pendingChangesFilePath})
+function writePendingChangesToChangelog({cwd, packageName, pendingChangesFilePath}) {
+  const pendingChanges = getPendingChanges({cwd, packageName, pendingChangesFilePath})
   const entry = emitPendingChangesEntry(pendingChanges)
   return writeUnreleasedItemToChangelog({targetFolder: cwd, entry, prepend: true})
 }

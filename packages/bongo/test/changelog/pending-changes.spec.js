@@ -170,11 +170,13 @@ describe('pending changes', () => {
       }
     })
     it('updates a changelog with pending changes entries', () => {
-      const originalChangelog = fs.readFileSync(path.join(cwd, 'CHANGELOG.md'), {encoding: 'utf-8'})
+      const cwd = path.join(__dirname, 'fixtures')
+      const changelogPath = path.join(__dirname, 'fixtures/CHANGELOG.md')
+      const originalChangelog = fs.readFileSync(changelogPath, {encoding: 'utf-8'})
       try {
-        writePendingChangesToChangelog({cwd, pendingChangesFilePath})
+        writePendingChangesToChangelog({packageName: '@applitools/eyes-selenium', pendingChangesFilePath, cwd})
         const updatedChangelog = fs
-          .readFileSync(path.join(cwd, 'CHANGELOG.md'), {
+          .readFileSync(changelogPath, {
             encoding: 'utf-8',
           })
           .split('\n')
@@ -187,16 +189,18 @@ describe('pending changes', () => {
         )
         assert.deepStrictEqual(updatedChangelog, expectedChangelog)
       } finally {
-        fs.writeFileSync(path.join(cwd, 'CHANGELOG.md'), originalChangelog)
+        fs.writeFileSync(changelogPath, originalChangelog)
       }
     })
     it('updates a changelog with a release entry', () => {
-      const originalChangelog = fs.readFileSync(path.join(cwd, 'CHANGELOG.md'), {encoding: 'utf-8'})
+      const cwd = path.join(__dirname, 'fixtures')
+      const changelogPath = path.join(__dirname, 'fixtures/CHANGELOG.md')
+      const originalChangelog = fs.readFileSync(changelogPath, {encoding: 'utf-8'})
       try {
-        writePendingChangesToChangelog({cwd, pendingChangesFilePath})
+        writePendingChangesToChangelog({packageName: '@applitools/eyes-selenium', pendingChangesFilePath, cwd})
         writeReleaseEntryToChangelog(cwd, {withDate: false})
         const updatedChangelog = fs
-          .readFileSync(path.join(cwd, 'CHANGELOG.md'), {
+          .readFileSync(changelogPath, {
             encoding: 'utf-8',
           })
           .split('\n')
@@ -209,7 +213,7 @@ describe('pending changes', () => {
         )
         assert.deepStrictEqual(updatedChangelog, expectedChangelog)
       } finally {
-        fs.writeFileSync(path.join(cwd, 'CHANGELOG.md'), originalChangelog)
+        fs.writeFileSync(changelogPath, originalChangelog)
       }
     })
   })

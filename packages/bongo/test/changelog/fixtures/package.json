@@ -1,0 +1,104 @@
+{
+  "name": "@applitools/eyes-selenium",
+  "version": "4.58.4",
+  "description": "Applitools Eyes SDK for Selenium WebDriver",
+  "keywords": [
+    "eyes-selenium",
+    "eyes-rendering",
+    "eyes-visual-grid",
+    "applitools",
+    "eyes",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests",
+    "selenium",
+    "webdriver",
+    "webdriverjs"
+  ],
+  "homepage": "https://applitools.com",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-selenium"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "directories": {
+    "lib": "./lib",
+    "example": "./example",
+    "test": "./test"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "lint": "eslint '**/*.ts'",
+    "build": "ttsc",
+    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes-selenium'",
+    "test": "yarn test:coverage",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
+    "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-selenium'",
+    "setup": "yarn docker:setup",
+    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:teardown": "docker-compose down",
+    "upgrade:framework": "if [ ! -z $APPLITOOLS_SELENIUM_MAJOR_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile selenium-webdriver@$APPLITOOLS_SELENIUM_MAJOR_VERSION; echo \"$packagejson\" > package.json; fi",
+    "deps": "bongo deps",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='selenium selenium@3' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-selenium utils driver snippets screenshoter' -f linking-depth=3",
+    "gh:publish": "gh workflow run publish-selenium.yml --ref $(git rev-parse --abbrev-ref HEAD)",
+    "preversion": "bongo preversion --verifyPendingChanges && yarn build",
+    "version": "bongo version --withPendingChanges",
+    "postversion": "bongo postversion"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {
+    "@applitools/eyes-api": "1.2.0",
+    "@applitools/eyes-sdk-core": "13.2.6",
+    "@applitools/spec-driver-selenium": "1.3.5",
+    "@applitools/visual-grid-client": "15.11.3"
+  },
+  "devDependencies": {
+    "@applitools/api-extractor": "1.2.7",
+    "@applitools/bongo": "^2.0.2",
+    "@applitools/scripts": "1.1.0",
+    "@applitools/sdk-coverage-tests": "2.3.18",
+    "@applitools/sdk-shared": "0.9.11",
+    "@applitools/test-utils": "1.3.0",
+    "@types/selenium-webdriver": "^4.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "chromedriver": "^87.0.4",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.8",
+    "mocha": "^9.1.2",
+    "prettier": "^2.1.2",
+    "selenium-webdriver": "^4.1.1",
+    "spec-xunit-file": "0.0.1-3",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.4"
+  },
+  "peerDependencies": {
+    "selenium-webdriver": ">=3.6.0"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}
