@@ -1,6 +1,15 @@
 const path = require('path')
 const {findPackageVersionNumbers, gitLog, getPublishDate} = require('../git')
 
+async function doListVersions({pkgName, versions, versionsBack}) {
+  console.log(`Listing previous ${versionsBack} version numbers`)
+  const versionsChunk = versions.slice(0, versionsBack)
+  for (const version of versionsChunk) {
+    const publishDate = await getPublishDate({tag: `${pkgName}@${version}`})
+    console.log(`- ${version} (published ${publishDate})`)
+  }
+}
+
 async function log(args) {
     const {
       cwd,
@@ -13,7 +22,6 @@ async function log(args) {
       versionsBack,
     } = args
 
-    console.log(path.join(cwd, 'package.json'))
     const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
     const versions = await findPackageVersionNumbers({cwd, packageName})
     const lower = lowerVersion || versions[versionsBack]
@@ -29,11 +37,7 @@ async function log(args) {
         `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
       )
     if (listVersions) {
-      console.log(`Listing previous ${versionsBack} version numbers`)
-      versions.slice(0, versionsBack).forEach(async version => {
-        const publishDate = await getPublishDate({tag: `${pkgName}@${version}`})
-        console.log(`- ${version} (published ${publishDate})`)
-      })
+      await doListVersions({pkgName, versions, versionsBack})
     } else {
       console.log(`changes from versions ${versions[versionsBack - 1]} to ${upper}`)
       if (splitByVersion) {
