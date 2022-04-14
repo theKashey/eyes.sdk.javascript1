@@ -652,7 +652,9 @@ class ServerConnector {
   async renderPutResource(resource) {
     ArgumentGuard.notNull(resource, 'resource')
     ArgumentGuard.notNull(resource.value, 'resource.value')
-    this._logger.log(`ServerConnector.putResource called with resource#${resource.hash.hash}`)
+    this._logger.log(
+      `ServerConnector.putResource called with resource#${resource.hash.hash} (content type ${resource.type})`,
+    )
 
     const config = {
       name: 'renderPutResource',

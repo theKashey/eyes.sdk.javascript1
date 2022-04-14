@@ -354,7 +354,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     const root = await this.root(selector)
     if (!root) return null
 
-    options = {state: 'exist', timeout: 10_000, interval: 500, ...options}
+    options = {state: 'exist', timeout: 10000, interval: 500, ...options}
 
     if (this._spec.waitForSelector) {
       const element = await this._spec.waitForSelector(

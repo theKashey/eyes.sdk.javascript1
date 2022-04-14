@@ -68,6 +68,7 @@ export type EyesOpenConfig = {
   saveNewTests?: boolean
   saveDiffs?: boolean
   dontCloseBatches?: boolean
+  useCeilForViewportSize?: boolean
 }
 
 export type EyesCheckConfig = {

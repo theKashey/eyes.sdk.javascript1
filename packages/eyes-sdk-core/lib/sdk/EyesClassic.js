@@ -47,8 +47,9 @@ class EyesClassic extends EyesCore {
 
   async open(driver, appName, testName, viewportSize, sessionType) {
     ArgumentGuard.notNull(driver, 'driver')
-
-    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger}).init()
+    const useCeilForViewportSize = this._configuration.getUseCeilForViewportSize()
+    const customConfig = {useCeilForViewportSize}
+    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger, customConfig}).init()
     this._context = this._driver.currentContext
 
     this._configuration.setAppName(TypeUtils.getOrDefault(appName, this._configuration.getAppName()))

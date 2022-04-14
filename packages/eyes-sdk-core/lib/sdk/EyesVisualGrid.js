@@ -62,8 +62,9 @@ class EyesVisualGrid extends EyesCore {
 
   async open(driver, optArg1, optArg2, optArg3, optArg4) {
     ArgumentGuard.notNull(driver, 'driver')
-
-    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger}).init()
+    const useCeilForViewportSize = this._configuration.getUseCeilForViewportSize()
+    const customConfig = {useCeilForViewportSize}
+    this._driver = await new Driver({spec: this.spec, driver, logger: this._logger, customConfig}).init()
     this._context = this._driver.currentContext
 
     if (optArg1 instanceof Configuration) {
@@ -189,6 +190,8 @@ class EyesVisualGrid extends EyesCore {
             driver: this._driver,
             browsers,
             apiKey: this._configuration.getApiKey(),
+            serverUrl: this._configuration.getServerUrl(),
+            proxy: this._configuration.getProxy(),
             waitBeforeCapture: () => utils.general.sleep(waitBeforeCapture),
             logger: this._logger,
           })

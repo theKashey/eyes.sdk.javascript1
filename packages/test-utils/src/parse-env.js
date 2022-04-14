@@ -200,7 +200,20 @@ const DEVICES = {
       platformName: 'Android',
       platformVersion: '10.0',
       deviceOrientation: 'portrait',
+      autoGrantPermissions: true,
+      autoAcceptAlerts: true,
       ...SAUCE_CREDENTIALS,
+    },
+  },
+  'Pixel 3 XL Local': {
+    url: 'http://localhost:4723/wd/hub',
+    capabilities: {
+      deviceName: 'Google Pixel 3 XL GoogleAPI Emulator',
+      platformName: 'Android',
+      platformVersion: '11.0',
+      deviceOrientation: 'portrait',
+      autoGrantPermissions: true,
+      autoAcceptAlerts: true,
     },
   },
   'Pixel 3a XL': {
@@ -288,6 +301,26 @@ const DEVICES = {
       app: 'PRIVATE:eyes-hello-world.apk',
       securityToken: PERFECTO_ACCESS_KEY,
       enableAppiumBehavior: true,
+    },
+  },
+  'BrowserStack Google Pixel 2': {
+    url: 'https://hub-cloud.browserstack.com/wd/hub',
+    capabilities: {
+      deviceName: 'Google Pixel 2',
+      platformName: 'Android',
+      platformVersion: '9.0',
+      deviceOrientation: 'portrait',
+      automationName: 'UiAutomator2',
+      'bstack:options': {
+        deviceName: 'Google Pixel 2',
+        "osVersion" : "9.0",
+        "realMobile" : "true",
+        "local" : "false",
+        userName: process.env.BROWSERSTACK_USERNAME,
+        accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+      },
+      userName: process.env.BROWSERSTACK_USERNAME,
+      accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
     },
   },
 }

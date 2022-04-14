@@ -110,6 +110,7 @@ const DEFAULT_VALUES = {
  * @prop {string} hostAppInfo
  * @prop {string} hostOSInfo
  * @prop {string} deviceInfo
+ * @prop {boolean} useCeilForViewportSize
  */
 
 /**
@@ -257,6 +258,9 @@ class Configuration {
 
     /** @type {boolean} */
     this._ignoreGitMergeBase = undefined
+
+    /** @type {boolean} */
+    this._useCeilForViewportSize = undefined
 
     if (configuration) {
       this.mergeConfig(configuration)
@@ -1402,6 +1406,24 @@ class Configuration {
     return this
   }
 
+  /**
+   * @return {boolean} useCeilForViewportSize
+   */
+
+  getUseCeilForViewportSize() {
+    return this._useCeilForViewportSize
+  }
+
+  /**
+   * Sets the useCeilForViewportSize
+   *
+   * @param {boolean?} useCeilForViewportSize
+   * @return {this}
+   */
+
+  setUseCeilForViewportSize(value) {
+    this._useCeilForViewportSize = value
+  }
   /**
    * @param {Configuration|object} other
    */

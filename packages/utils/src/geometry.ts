@@ -40,6 +40,23 @@ export function round(target: Region | RectangleSize | Location): typeof target 
   return result
 }
 
+export function ceil(region: Region): Region
+export function ceil(region: RectangleSize): RectangleSize
+export function ceil(region: Location): Location
+export function ceil(target: Region | RectangleSize | Location): typeof target {
+  const result = {...target} as any
+  if (types.has(target, ['x', 'y'])) {
+    // intentionally using Math.round and not Math.ceil here, because the point is that for width and height it makes sense to use ceil, but not for x and y
+    result.x = Math.round(target.x)
+    result.y = Math.round(target.y)
+  }
+  if (types.has(target, ['width', 'height'])) {
+    result.width = Math.ceil(target.width)
+    result.height = Math.ceil(target.height)
+  }
+  return result
+}
+
 export function rotate(size: RectangleSize, degrees: number): RectangleSize
 export function rotate(region: Region, degrees: number, size: RectangleSize): Region
 export function rotate(location: Location, degrees: number, size: RectangleSize): RectangleSize

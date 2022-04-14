@@ -5,8 +5,9 @@ const setupTests = require('./utils/core-e2e-utils')
 describe.skip('UFG native', () => {
   describe('Android', () => {
     const env = {
+      // device: 'Pixel 3 XL Local',
       device: 'Pixel 3 XL',
-      app: 'https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/runnerup_multiple_checks.apk',
     }
     const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
 
@@ -24,6 +25,7 @@ describe.skip('UFG native', () => {
         saveNewTests: false,
       }
       const eyes = await manager.openEyes({driver, config})
+      await eyes.check()
       await eyes.check()
       await eyes.close({throwErr: true})
     })
@@ -48,6 +50,7 @@ describe.skip('UFG native', () => {
       }
       const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
       const eyes = await manager.openEyes({driver, config})
+      await eyes.check()
       await eyes.check()
       await eyes.close({throwErr: true})
     })
