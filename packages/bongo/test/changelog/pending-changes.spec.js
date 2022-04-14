@@ -174,7 +174,11 @@ describe('pending changes', () => {
       const changelogPath = path.join(__dirname, 'fixtures/CHANGELOG.md')
       const originalChangelog = fs.readFileSync(changelogPath, {encoding: 'utf-8'})
       try {
-        writePendingChangesToChangelog({packageName: '@applitools/eyes-selenium', pendingChangesFilePath, cwd})
+        writePendingChangesToChangelog({
+          packageName: '@applitools/eyes-selenium',
+          pendingChangesFilePath,
+          cwd,
+        })
         const updatedChangelog = fs
           .readFileSync(changelogPath, {
             encoding: 'utf-8',
@@ -197,7 +201,11 @@ describe('pending changes', () => {
       const changelogPath = path.join(__dirname, 'fixtures/CHANGELOG.md')
       const originalChangelog = fs.readFileSync(changelogPath, {encoding: 'utf-8'})
       try {
-        writePendingChangesToChangelog({packageName: '@applitools/eyes-selenium', pendingChangesFilePath, cwd})
+        writePendingChangesToChangelog({
+          packageName: '@applitools/eyes-selenium',
+          pendingChangesFilePath,
+          cwd,
+        })
         writeReleaseEntryToChangelog(cwd, {withDate: false})
         const updatedChangelog = fs
           .readFileSync(changelogPath, {
