@@ -5,6 +5,14 @@
 
 
 
+## 2.2.0 - 2022/4/14
+
+### Features
+- Support passing 'serverUrl' and 'proxy' to VHS.
+### Bug fixes
+- Use Math.ceil instead of Math.round for viewportSize calculation when passed useCeilForViewportSize:true
+- Support data urls in iframes
+
 ## 2.1.4 - 2022/4/14
 
 ### Features

@@ -8,10 +8,9 @@ Apollo SDK:
     - Remove kitchen to accommodate space for PlayStation
 "@applitools/eyes-universal":
   feature:
-    - Support passing 'serverUrl' and 'proxy' to VHS.
+    - 
   bug-fix:
-    - Use Math.ceil instead of Math.round for viewportSize calculation when passed useCeilForViewportSize:true
-    - Support data urls in iframes
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
