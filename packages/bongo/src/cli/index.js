@@ -5,7 +5,6 @@ const chalk = require('chalk')
 const path = require('path')
 const fs = require('fs')
 const {
-  getSDKPackageNames,
   removePendingChanges,
   verifyChangelog,
   verifyPendingChanges,
@@ -18,18 +17,16 @@ const sendReleaseNotification = require('../send-report')
 const {createDotFolder} = require('../setup')
 const {verifyCommits, verifyInstalledVersions, verifyVersions} = require('../versions')
 const {
-  findPackageVersionNumbers,
-  getPublishDate,
-  getTagsWith,
   gitAdd,
   gitCommit,
   gitPushWithTags,
   isChanged,
   gitStatus,
-  gitLog,
 } = require('../git')
 const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
 const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-changes.yaml')
+const log = require('../log')
+const released = require('../released')
 
 yargs
   .config({cwd: process.cwd()})
@@ -44,23 +41,7 @@ yargs
       versionsBack: {alias: 'n', type: 'number', default: 1},
     },
     async args => {
-      const {cwd, filterBySDK, packageName, sha, version, versionsBack} = args
-      const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
-      const versions = await findPackageVersionNumbers({cwd, packageName})
-      const tag = version ? `${pkgName}@${version}` : `${pkgName}@${versions[versionsBack]}`
-      const filterByCollection = filterBySDK
-        ? getSDKPackageNames(pendingChangesFilePath)
-        : undefined
-      const result = sha
-        ? await getTagsWith({sha, filterByCollection})
-        : await getTagsWith({tag, filterByCollection})
-      console.log('bongo released output')
-      if (!sha)
-        console.log(
-          'you can specify a different package version with either an explicit version (with --version or --v) or through a relative number (with --versionsBack or --n)',
-        )
-      console.log(`showing where ${sha ? sha : tag} has been released to`)
-      console.log(result)
+      await released({args, pendingChangesFilePath})
     },
   )
   .command(
@@ -76,67 +57,7 @@ yargs
       splitByVersion: {alias: 'split', type: 'boolean', default: true},
     },
     async args => {
-      const {
-        cwd,
-        expandAutoCommitLogEntries,
-        listVersions,
-        lowerVersion,
-        packageName,
-        splitByVersion,
-        upperVersion,
-        versionsBack,
-      } = args
-
-      const pkgName = packageName ? packageName : require(path.join(cwd, 'package.json')).name
-      const versions = await findPackageVersionNumbers({cwd, packageName})
-      const lower = lowerVersion || versions[versionsBack]
-      const upper = upperVersion || versions[0]
-
-      console.log('bongo log output')
-      console.log(`package: ${pkgName}`)
-      console.log(
-        `Looking ${versionsBack} versions back (specify a different number to look back with --n)`,
-      )
-      if (versionsBack && lowerVersion)
-        console.log(
-          `arguments 'versionsBack' and 'lowerVersion' both provided, using 'lowerVersion' and ignoring 'versionsBack'`,
-        )
-      if (listVersions) {
-        console.log(`Listing previous ${versionsBack} version numbers`)
-        versions.slice(0, versionsBack).forEach(async version => {
-          const publishDate = await getPublishDate({tag: `${pkgName}@${version}`})
-          console.log(`- ${version} (published ${publishDate})`)
-        })
-      } else {
-        console.log(`changes from versions ${versions[versionsBack - 1]} to ${upper}`)
-        if (splitByVersion) {
-          const targetVersions = versions.slice(0, versionsBack + 1)
-          for (let index = 0; index < targetVersions.length - 1; index++) {
-            const output = await gitLog({
-              packageName,
-              cwd,
-              lowerVersion: targetVersions[index + 1],
-              upperVersion: targetVersions[index],
-              expandAutoCommitLogEntries,
-            })
-            const publishDate = await getPublishDate({tag: `${pkgName}@${targetVersions[index]}`})
-            console.log(targetVersions[index])
-            console.log(publishDate)
-            console.log(output)
-          }
-        } else {
-          const output = await gitLog({
-            packageName,
-            cwd,
-            lowerVersion: lower,
-            upperVersion: upper,
-            expandAutoCommitLogEntries,
-          })
-          const publishDate = await getPublishDate({tag: `${pkgName}@${upper}`})
-          console.log(output)
-          console.log(publishDate)
-        }
-      }
+      await log(args)
     },
   )
   .command(
