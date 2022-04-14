@@ -313,9 +313,9 @@ const DEVICES = {
       automationName: 'UiAutomator2',
       'bstack:options': {
         deviceName: 'Google Pixel 2',
-        "osVersion" : "9.0",
-        "realMobile" : "true",
-        "local" : "false",
+        osVersion: '9.0',
+        realMobile: 'true',
+        local: 'false',
         userName: process.env.BROWSERSTACK_USERNAME,
         accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
       },
