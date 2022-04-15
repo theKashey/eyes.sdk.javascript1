@@ -4,6 +4,15 @@
 
 
 
+
+## 3.25.4 - 2022/4/15
+
+### Features
+### Bug fixes
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- add 'waitBeforeCapture' as an available type for 'Eyes.Open' and 'Eyes.Check' (for Typescript)
+- Support data urls in iframes
+
 ## 3.25.3 - 2022/3/29
 
 ### Features
