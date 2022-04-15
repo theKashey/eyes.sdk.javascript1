@@ -15,7 +15,7 @@ describe('layout breakpoints', () => {
   before(async () => {
     const staticPath = path.resolve(__dirname, '../fixtures');
     const server = await testServerInProcess({
-      port: 5555,
+      port: 5556,
       staticPath,
       middlewares: ['slow'],
     });

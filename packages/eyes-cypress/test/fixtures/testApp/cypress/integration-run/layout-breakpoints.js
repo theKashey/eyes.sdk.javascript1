@@ -51,7 +51,7 @@ describe('JS layout', () => {
   });
 
   it('should not hit the cypress default command timeout', () => {
-    cy.visit('http://localhost:5555/breakpoints.html');
+    cy.visit('http://localhost:5556/breakpoints.html');
     cy.get('#smurfs-img');
     cy.eyesOpen({
       appName: 'JS layout',
