@@ -35,8 +35,11 @@ describe('simple with middleware', () => {
   });
 
   after(async () => {
-    fs.rmdirSync(targetTestAppPath, {recursive: true});
-    await closeServer();
+    try {
+      fs.rmdirSync(targetTestAppPath, {recursive: true});
+    } finally {
+      await closeServer();
+    }
   });
 
   it('works for simple.js', async () => {

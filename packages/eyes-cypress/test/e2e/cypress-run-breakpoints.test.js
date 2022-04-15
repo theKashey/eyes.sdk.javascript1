@@ -14,11 +14,17 @@ describe('layout breakpoints', () => {
   let closeServer;
   before(async () => {
     const staticPath = path.resolve(__dirname, '../fixtures');
-    const server = await testServerInProcess({
-      port: 5556,
-      staticPath,
-      middlewares: ['slow'],
-    });
+    let server;
+    try {
+      server = await testServerInProcess({
+        port: 5556,
+        staticPath,
+        middlewares: ['slow'],
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
     closeServer = server.close;
     if (fs.existsSync(targetTestAppPath)) {
       fs.rmdirSync(targetTestAppPath, {recursive: true});
@@ -31,8 +37,11 @@ describe('layout breakpoints', () => {
   });
 
   after(async () => {
-    fs.rmdirSync(targetTestAppPath, {recursive: true});
-    await closeServer();
+    try {
+      fs.rmdirSync(targetTestAppPath, {recursive: true});
+    } finally {
+      await closeServer();
+    }
   });
 
   it('works for js layouts', async () => {

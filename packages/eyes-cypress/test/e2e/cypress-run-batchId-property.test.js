@@ -34,8 +34,11 @@ describe('handle batchId property', () => {
   });
 
   after(async () => {
-    fs.rmdirSync(targetTestAppPath, {recursive: true});
-    await closeServer();
+    try {
+      fs.rmdirSync(targetTestAppPath, {recursive: true});
+    } finally {
+      await closeServer();
+    }
   });
 
   it('works with batchId from env var with global hooks', async () => {
