@@ -32,7 +32,7 @@ describe('takeVHSes', () => {
     await driver.init()
     const [error] = await presult(takeVHSes({driver, logger}))
     expect(error).not.to.be.undefined
-    expect(error.message).to.equal('Error while taking VHS - UFG_TriggerArea element could not be found')
+    expect(error.message).to.include('Error while taking VHS - UFG_TriggerArea element could not be found')
   })
 
   it('should fail if UFG_TriggerArea element could not be found - Android ', async () => {
@@ -48,6 +48,6 @@ describe('takeVHSes', () => {
     await driver.init()
     const [error] = await presult(takeVHSes({driver, logger}))
     expect(error).not.to.be.undefined
-    expect(error.message).to.equal('Error while taking VHS - UFG_TriggerArea element could not be found')
+    expect(error.message).to.include('Error while taking VHS - UFG_TriggerArea element could not be found')
   })
 })
