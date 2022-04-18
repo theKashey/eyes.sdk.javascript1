@@ -1,3 +1,48 @@
+const utils = require('@applitools/utils')
+
+async function findElement(options) {
+  const {selector, timeout = 0, throwErr = true} = options
+
+  let element = await findElementBySelector(options)
+  if (!element && timeout) element = await waitFor(options)
+  if (!element && throwErr) {
+    const timeoutError = timeout ? `, (waited for ${timeout} ms)` : '.'
+    throwError(`${selector} element could not be found${timeoutError}`)
+  }
+  return element
+
+  async function waitFor(options) {
+    const {timeout} = options
+    const interval = 500
+    let waiting = true
+    const waitTime = setTimeout(() => (waiting = false), timeout)
+    while (waiting) {
+      let element = await findElementBySelector(options)
+      if (element) {
+        clearTimeout(waitTime)
+        return element
+      }
+      await utils.general.sleep(interval)
+    }
+    return null
+  }
+
+  async function findElementBySelector(options) {
+    const {driver, selector, type} = options
+    const context = driver.currentContext
+    let element
+    if (driver.isAndroid) {
+      element = await driver.element({
+        type: 'xpath',
+        selector: `//android.widget.${type}[@content-desc="${selector}"]`,
+      })
+    } else {
+      element = await context.element({type: 'accessibility id', selector})
+    }
+    return element
+  }
+}
+
 async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBeforeCapture, logger}) {
   log('taking VHS')
 
@@ -7,15 +52,20 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
 
   if (waitBeforeCapture) await waitBeforeCapture()
 
-  const context = driver.currentContext
-
-  const trigger = await context.waitFor({type: 'accessibility id', selector: 'UFG_TriggerArea'}, {timeout: 30000})
-  if (!trigger) {
-    throwError('UFG_TriggerArea element could not be found')
-  }
+  const trigger = await findElement({
+    driver,
+    selector: 'UFG_TriggerArea',
+    type: 'Button',
+    timeout: 30000,
+  })
 
   if (driver.isAndroid) {
-    const apiKeyInput = await context.element({type: 'accessibility id', selector: 'UFG_Apikey'})
+    const apiKeyInput = await findElement({
+      driver,
+      selector: 'UFG_Apikey',
+      type: 'EditText',
+      throwErr: false,
+    })
     if (apiKeyInput) {
       // in case 'apiKeyInput' does not exist, it means it was already triggered on previous cycle
       // this condition is to avoid re-sending 'inputJson' multiple times
@@ -28,10 +78,11 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
       const inputString = JSON.stringify(inputJson)
       log('sending API key to UFG lib', inputString)
       await apiKeyInput.type(inputString)
-      const ready = await context.element({type: 'accessibility id', selector: 'UFG_ApikeyReady'})
-      if (!ready) {
-        throwError('UFG_ApikeyReady element could not be found')
-      }
+      const ready = await findElement({
+        driver,
+        selector: 'UFG_ApikeyReady',
+        type: 'Button',
+      })
       await ready.click()
     } else {
       log('UFG_Apikey was skipped')
@@ -40,25 +91,39 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
 
   await trigger.click() // TODO handle stale element exception and then find the trigger again and click it
 
-  let label = await context.waitFor({type: 'accessibility id', selector: 'UFG_SecondaryLabel'}, {timeout: 10000})
+  let label = await findElement({
+    driver,
+    selector: 'UFG_SecondaryLabel',
+    type: 'TextView',
+    timeout: 10000,
+    throwErr: false,
+  })
   if (!label) {
     // This might happen if the tap on the trigger area didn't happen due to Appium bug. So we try to find the trigger again and if it's present, we'll tap it.
     // If the trigger area is not present, then we're probably at the middle of taking the VHS - give it 50 seconds more until we give up
     log('UFG_SecondaryLabel was not found after 10 seconds, trying to click UFG_TriggerArea again')
-    const triggerRetry = await context.element({type: 'accessibility id', selector: 'UFG_TriggerArea'})
+    const triggerRetry = await findElement({
+      driver,
+      selector: 'UFG_TriggerArea',
+      type: 'Button',
+      timeout: 30000,
+      throwErr: false,
+    })
     if (triggerRetry) {
       log('UFG_TriggerArea was found on retry. clicking it.')
       await triggerRetry.click()
     } else {
       log('UFG_TriggerArea was NOT found on retry. Probably VHS is being taken.')
     }
-
-    label = await context.waitFor({type: 'accessibility id', selector: 'UFG_SecondaryLabel'}, {timeout: 50000})
-  }
-
-  if (!label) {
-    log('UFG_SecondaryLabel was not found eventually. Giving up.')
-    throwError('UFG_SecondaryLabel element could not be found')
+    label = await findElement({
+      driver,
+      selector: 'UFG_SecondaryLabel',
+      type: 'TextView',
+      timeout: 50000,
+    })
+    if (!label) {
+      log('UFG_SecondaryLabel was not found eventually. Giving up.')
+    }
   }
   const info = JSON.parse(await label.getText())
 
@@ -79,10 +144,12 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
     throwError(`unknown mode for android: ${info.mode}`)
   }
 
-  const clear = await context.element({type: 'accessibility id', selector: 'UFG_ClearArea'})
-  if (!clear) {
-    throwError('UFG_ClearArea element could not be found')
-  }
+  const clear = await findElement({
+    driver,
+    selector: 'UFG_ClearArea',
+    type: 'Button',
+    timeout: 30000,
+  })
   await clear.click()
 
   let snapshot
@@ -116,15 +183,31 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
   return {snapshots: Array(browsers.length).fill(snapshot)}
 
   async function extractVHS() {
-    const label = await context.element({type: 'accessibility id', selector: 'UFG_Label'})
+    const label = await findElement({
+      driver,
+      selector: 'UFG_Label',
+      type: 'TextView',
+    })
     return await label.getText()
   }
 
   async function collectChunkedVHS({count}) {
     const labels = [
-      await context.element({type: 'accessibility id', selector: 'UFG_Label_0'}),
-      await context.element({type: 'accessibility id', selector: 'UFG_Label_1'}),
-      await context.element({type: 'accessibility id', selector: 'UFG_Label_2'}),
+      await findElement({
+        driver,
+        selector: 'UFG_Label_0',
+        type: 'TextView',
+      }),
+      await findElement({
+        driver,
+        selector: 'UFG_Label_1',
+        type: 'TextView',
+      }),
+      await findElement({
+        driver,
+        selector: 'UFG_Label_2',
+        type: 'TextView',
+      }),
     ]
 
     let vhs = ''

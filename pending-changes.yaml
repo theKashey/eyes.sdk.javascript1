@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Support Android x-path in 'takeVHSes.js' (was 'accessibility id', iOS logic not changed)
 "@applitools/eyes-selenium":
   feature:
     - 
