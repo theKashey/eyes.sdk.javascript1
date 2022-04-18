@@ -5,6 +5,12 @@
 
 
 
+## 2.2.1 - 2022/4/18
+
+### Features
+### Bug fixes
+- Support Android x-path in 'takeVHSes.js' (was 'accessibility id', iOS logic not changed)
+
 ## 2.2.0 - 2022/4/14
 
 ### Features
