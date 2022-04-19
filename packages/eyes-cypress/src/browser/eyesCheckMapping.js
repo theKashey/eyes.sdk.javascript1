@@ -5,7 +5,7 @@ function eyesCheckMapValues({args}) {
 function toCheckWindowConfiguration(config = {}) {
   const mappedValues = [
     'tag',
-    'hooks',
+    'scriptHooks',
     'ignore',
     'floating',
     'strict',
@@ -20,7 +20,7 @@ function toCheckWindowConfiguration(config = {}) {
   let shadowDomSettings = {};
   const checkSettings = {
     name: config.tag,
-    scriptHooks: config.hooks,
+    hooks: config.scriptHooks,
     ignoreRegions: config.ignore,
     floatingRegions: convertFloatingRegion(config.floating),
     strictRegions: config.strict,

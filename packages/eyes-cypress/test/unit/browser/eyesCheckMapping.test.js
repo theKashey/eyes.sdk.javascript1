@@ -6,10 +6,8 @@ describe('eyes check mapping', () => {
   it('should mapp values correctly', () => {
     const args = {
       tag: 'some tag name',
-      hooks: {
-        scriptHooks: {
-          beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'",
-        },
+      scriptHooks: {
+        beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'",
       },
       ignore: [{selector: 'some ignore region selector'}],
       layout: [{selector: 'some layout region selector'}],
@@ -47,10 +45,8 @@ describe('eyes check mapping', () => {
 
     const expected = {
       name: 'some tag name',
-      scriptHooks: {
-        scriptHooks: {
-          beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'",
-        },
+      hooks: {
+        beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'",
       },
       ignoreRegions: [{selector: 'some ignore region selector'}],
       layoutRegions: [{selector: 'some layout region selector'}],
