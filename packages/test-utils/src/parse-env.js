@@ -206,6 +206,7 @@ const DEVICES = {
       'settings[allowInvisibleElements]': true,
       ...SAUCE_CREDENTIALS,
     },
+  },
   'Pixel 3 XL': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
