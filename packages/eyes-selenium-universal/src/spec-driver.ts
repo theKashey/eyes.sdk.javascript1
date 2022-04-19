@@ -10,10 +10,20 @@ export type TransformedSelector = types.Selector<never>
 export async function transformDriver(driver: Driver): Promise<TransformedDriver> {
   const session = await driver.getSession()
   const capabilities = await driver.getCapabilities()
+  let serverUrl
+  switch (process.env.APPLITOOLS_TEST_REMOTE) {
+    case 'sauce':
+      serverUrl = 'https://ondemand.saucelabs.com/wd/hub'
+      break
+    case 'browserstack':
+      serverUrl = 'https://ondemand.saucelabs.com/wd/hub'
+      break
+    default:
+      serverUrl = 'http://localhost:4444/wd/hub'
+      break
+  }
   return {
-    serverUrl: 'http://localhost:4444/wd/hub',
-    // serverUrl: 'https://ondemand.saucelabs.com/wd/hub',
-    // serverUrl: 'https://hub.browserstack.com/wd/hub',
+    serverUrl,
     sessionId: session.getId(),
     capabilities: Array.from(capabilities.keys()).reduce((caps, key) => {
       caps[key] = capabilities.get(key)
