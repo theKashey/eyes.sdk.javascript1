@@ -51,7 +51,7 @@ const DEVICES = {
   },
   'iPhone 12 UFG native': {
     type: 'sauce',
-    url: SAUCE_NATIVE_SERVER_URL,
+    url: SAUCE_SERVER_URL,
     capabilities: {
       deviceName: 'iPhone 12 Pro Simulator',
       platformName: 'iOS',
