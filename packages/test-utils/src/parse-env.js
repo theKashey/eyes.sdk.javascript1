@@ -191,7 +191,21 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
-
+  'Pixel 3 XL duckduckgo': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      deviceName: 'Google Pixel 3 XL GoogleAPI Emulator',
+      platformName: 'Android',
+      platformVersion: '10.0',
+      deviceOrientation: 'portrait',
+      autoGrantPermissions: true,
+      autoAcceptAlerts: true,
+      appPackage: "com.duckduckgo.mobile.android.debug",
+      appActivity: "com.duckduckgo.app.launch.Launcher",
+      'settings[allowInvisibleElements]': true,
+      ...SAUCE_CREDENTIALS,
+    },
   'Pixel 3 XL': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -201,10 +215,7 @@ const DEVICES = {
       platformVersion: '10.0',
       deviceOrientation: 'portrait',
       autoGrantPermissions: true,
-      //allowInvisibleElements: true,
       autoAcceptAlerts: true,
-      // appPackage: 'com.duckduckgo.mobile.android.debug',
-      appActivity: 'com.duckduckgo.app.launch.Launcher',
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -314,6 +325,9 @@ const DEVICES = {
       platformVersion: '9.0',
       deviceOrientation: 'portrait',
       automationName: 'UiAutomator2',
+      appPackage: "com.duckduckgo.mobile.android.debug",
+      appActivity: "com.duckduckgo.app.launch.Launcher",
+      'settings[allowInvisibleElements]': true,
       'bstack:options': {
         deviceName: 'Google Pixel 2',
         osVersion: '9.0',
