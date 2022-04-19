@@ -107,7 +107,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - fix beforeCaptureScreenshot hook not being respected
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 

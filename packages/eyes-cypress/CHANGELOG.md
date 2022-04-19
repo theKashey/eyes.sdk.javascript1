@@ -5,6 +5,12 @@
 
 
 
+## 3.25.5 - 2022/4/19
+
+### Features
+### Bug fixes
+- fix beforeCaptureScreenshot hook not being respected
+
 ## 3.25.4 - 2022/4/15
 
 ### Features
