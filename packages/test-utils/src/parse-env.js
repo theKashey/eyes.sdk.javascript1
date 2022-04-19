@@ -49,23 +49,23 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
-  // 'iPhone 12 UFG native': {
-  //   type: 'sauce',
-  //   url: SAUCE_NATIVE_SERVER_URL,
-  //   capabilities: {
-  //     deviceName: 'iPhone 12 Pro Simulator',
-  //     platformName: 'iOS',
-  //     platformVersion: '15.2',
-  //     deviceOrientation: 'portrait',
-  //     processArguments: {
-  //       args: [],
-  //       env: {
-  //         DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
-  //       }
-  //     },
-  //     ...SAUCE_CREDENTIALS,
-  //   },
-  // },
+  'iPhone 12 UFG native': {
+    type: 'sauce',
+    url: SAUCE_NATIVE_SERVER_URL,
+    capabilities: {
+      deviceName: 'iPhone 12 Pro Simulator',
+      platformName: 'iOS',
+      platformVersion: '15.2',
+      deviceOrientation: 'portrait',
+      processArguments: {
+        args: [],
+        env: {
+          DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
+        }
+      },
+      ...SAUCE_CREDENTIALS,
+    },
+  },
   'iPhone 11': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
@@ -206,7 +206,6 @@ const DEVICES = {
       'settings[allowInvisibleElements]': true,
       ...SAUCE_CREDENTIALS,
     },
-  },
   'Pixel 3 XL': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
