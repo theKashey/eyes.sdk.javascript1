@@ -5,9 +5,8 @@ const setupTests = require('./utils/core-e2e-utils')
 describe.skip('UFG native', () => {
   describe('Android', () => {
     const env = {
-      // device: 'Pixel 3 XL Local',
-      device: 'Pixel 3 XL',
-      app: 'https://applitools.jfrog.io/artifactory/Examples/runnerup_multiple_checks.apk',
+      device: 'Pixel 3 XL duckduckgo',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/duckduckgo-5.87.0-play-debug.apk',
     }
     const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
 
@@ -33,7 +32,7 @@ describe.skip('UFG native', () => {
 
   describe('iOS', () => {
     const env = {
-      device: 'iPhone 12',
+      device: 'iPhone 12 UFG native',
       app: 'https://applitools.jfrog.io/artifactory/Examples/DuckDuckGo-instrumented.app.zip',
     }
     const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
