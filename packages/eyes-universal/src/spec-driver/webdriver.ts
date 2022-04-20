@@ -25,6 +25,8 @@ const APPIUM_CAPABILITIES = ['appiumVersion', 'deviceType', 'deviceOrientation',
 const LEGACY_APPIUM_CAPABILITIES = ['appium-version', 'device-type', 'device-orientation']
 const CHROME_CAPABILITIES = ['chrome', 'goog:chromeOptions']
 const MOBILE_BROWSER_NAMES = ['ipad', 'iphone', 'android']
+const NATIVE_CAPABILITIES = ['app', 'automationName']
+const ANDROID_AUTOMATION_NAME_CAPABILITY = 'uiautomator2'
 
 function extractElementId(element: Element): string {
   return (element as any).elementId ?? (element as any)[ELEMENT_ID] ?? (element as any)[LEGACY_ELEMENT_ID]
@@ -45,11 +47,15 @@ function extractEnvironment(capabilities: Record<string, any>) {
     isAppium ||
     LEGACY_APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
     MOBILE_BROWSER_NAMES.includes(capabilities.browserName?.toLowerCase())
+  const isNative = NATIVE_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
+  const isAndroid = capabilities.automationName === ANDROID_AUTOMATION_NAME_CAPABILITY
 
   return {
-    isW3C,
-    isMobile,
+    isAndroid,
     isChrome,
+    isMobile,
+    isNative,
+    isW3C,
   }
 }
 
@@ -72,7 +78,7 @@ export function isSelector(selector: any): selector is Selector {
 export function transformDriver(driver: Driver | StaticDriver): Driver {
   if (!utils.types.has(driver, ['sessionId', 'serverUrl'])) return driver
   const url = new URL(driver.serverUrl)
-
+  const environment = extractEnvironment(driver.capabilities)
   const options: WD.AttachOptions = {
     sessionId: driver.sessionId,
     protocol: url.protocol ? url.protocol.replace(/:$/, '') : undefined,
@@ -81,7 +87,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     path: url.pathname,
     capabilities: driver.capabilities,
     logLevel: 'silent',
-    ...extractEnvironment(driver.capabilities),
+    ...environment,
   }
   if (!options.port) {
     if (options.protocol === 'http') options.port = 80
@@ -121,7 +127,11 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     },
   }
 
-  return WebDriver.attachToSession(options, undefined, additionalCommands)
+  const modifiedDriver = WebDriver.attachToSession(options, undefined, additionalCommands)
+  if (environment.isMobile && environment.isNative && environment.isAndroid) {
+    modifiedDriver?.updateSettings({allowInvisibleElements: true})
+  }
+  return modifiedDriver
 }
 export function transformElement(element: Element | StaticElement): Element {
   if (!utils.types.has(element, 'elementId')) return element
@@ -219,7 +229,9 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
   })
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
-  return browser.getSession?.() ?? browser.capabilities
+  const caps = await browser.getSession?.()
+  if (caps && utils.types.isObject(caps)) return caps
+  return browser.capabilities
 }
 export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   return {sessionId: driver.sessionId}

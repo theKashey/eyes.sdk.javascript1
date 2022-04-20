@@ -10,7 +10,9 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      implicitly set `allowInvisibleElements` in Appium when running on native Android
+    - return the correct capabilities when running on native iOS
 "@applitools/eyes-selenium":
   feature:
     - 

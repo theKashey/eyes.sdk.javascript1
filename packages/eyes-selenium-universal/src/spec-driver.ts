@@ -18,6 +18,9 @@ export async function transformDriver(driver: Driver): Promise<TransformedDriver
     case 'browserstack':
       serverUrl = 'https://ondemand.saucelabs.com/wd/hub'
       break
+    case 'appium':
+      serverUrl = 'http://0.0.0.0:4723/wd/hub'
+      break
     default:
       serverUrl = 'http://localhost:4444/wd/hub'
       break
