@@ -10,7 +10,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Support `version` in deviceInfo options
 "@applitools/eyes-selenium":
   feature:
     - 

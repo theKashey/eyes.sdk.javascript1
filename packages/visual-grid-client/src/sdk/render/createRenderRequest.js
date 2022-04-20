@@ -81,7 +81,8 @@ function modifyDeviceInfo(deviceInfo) {
     ? {
         ...deviceInfo,
         name: deviceInfo.deviceName,
-        version: deviceInfo.iosVersion || deviceInfo.androidVersion,
+        // TODO: added `version` due to inconsistency in the device types, need to unify them
+        version: deviceInfo.iosVersion || deviceInfo.androidVersion || deviceInfo.version,
       }
     : undefined
 
