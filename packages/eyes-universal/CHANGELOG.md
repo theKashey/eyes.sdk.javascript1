@@ -6,6 +6,13 @@
 
 
 
+
+## 2.2.3 - 2022/4/20
+
+### Features
+### Bug fixes
+- Support `version` in deviceInfo options
+
 ## 2.2.2 - 2022/4/20
 
 ### Features
