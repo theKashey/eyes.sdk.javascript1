@@ -5,6 +5,14 @@
 
 
 
+
+## 2.2.2 - 2022/4/20
+
+### Features
+### Bug fixes
+- implicitly set `allowInvisibleElements` in Appium when running on native Android
+- return the correct capabilities when running on native iOS
+
 ## 2.2.1 - 2022/4/18
 
 ### Features
