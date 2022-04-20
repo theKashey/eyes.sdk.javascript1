@@ -40,8 +40,8 @@ class EyesRunner {
   }
 
   async getAllTestResults() {
-    await this._closeAllBatches()
     await this._awaitAllClosePromises()
+    await this._closeAllBatches()
     await this._abortAllUnclosedEyes()
     return this._allTestResult
   }
