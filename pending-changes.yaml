@@ -10,7 +10,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - fix the problem that intermittently we don't get all tested environments in the same batch
 "@applitools/eyes-selenium":
   feature:
     - 
