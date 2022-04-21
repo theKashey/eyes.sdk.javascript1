@@ -7,6 +7,12 @@
 
 
 
+## 2.2.4 - 2022/4/21
+
+### Features
+### Bug fixes
+- fix the problem that intermittently we don't get all tested environments in the same batch
+
 ## 2.2.3 - 2022/4/20
 
 ### Features
