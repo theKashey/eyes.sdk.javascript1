@@ -26,7 +26,8 @@ const LEGACY_APPIUM_CAPABILITIES = ['appium-version', 'device-type', 'device-ori
 const CHROME_CAPABILITIES = ['chrome', 'goog:chromeOptions']
 const MOBILE_BROWSER_NAMES = ['ipad', 'iphone', 'android']
 const NATIVE_CAPABILITIES = ['app', 'automationName']
-const ANDROID_AUTOMATION_NAME_CAPABILITY = 'uiautomator2'
+const ANDROID_AUTOMATION_NAME = 'uiautomator2'
+const ANDROID_PLATFORM_NAME = 'android'
 
 function extractElementId(element: Element): string {
   return (element as any).elementId ?? (element as any)[ELEMENT_ID] ?? (element as any)[LEGACY_ELEMENT_ID]
@@ -48,7 +49,8 @@ function extractEnvironment(capabilities: Record<string, any>) {
     LEGACY_APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
     MOBILE_BROWSER_NAMES.includes(capabilities.browserName?.toLowerCase())
   const isNative = NATIVE_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
-  const isAndroid = capabilities.automationName === ANDROID_AUTOMATION_NAME_CAPABILITY
+  const isAndroid = capabilities.automationName?.toLowerCase() === ANDROID_AUTOMATION_NAME ||
+    capabilities.platformName?.toLowerCase() === ANDROID_PLATFORM_NAME
 
   return {
     isAndroid,
