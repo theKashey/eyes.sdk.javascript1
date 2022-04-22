@@ -6,11 +6,14 @@ Apollo SDK:
   bug-fix:
     - Avoid consuming all oxygen during takeoff
     - Remove kitchen to accommodate space for PlayStation
+    - |
+      An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Support `appium:` prefixed capabilities. Fixes support for Appium 8 in Java
 "@applitools/eyes-selenium":
   feature:
     - 

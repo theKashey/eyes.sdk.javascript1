@@ -36,19 +36,18 @@ function transformShadowRoot(shadowRoot: ShadowRoot | Element): Element {
   return isElement(shadowRoot) ? shadowRoot : {[ELEMENT_ID]: shadowRoot[SHADOW_ROOT_ID]}
 }
 function extractEnvironment(capabilities: Record<string, any>) {
-  const isAppium = APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
+  const isAppium = APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
+  APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(`appium:${capability}`))
   const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
   const isW3C =
     isAppium ||
     W3C_SECONDARY_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_SAFARI_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability))
-  const isMobile =
-    capabilities.browserName === '' ||
+  const isMobile = capabilities.browserName === '' ||
     isAppium ||
     LEGACY_APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
     MOBILE_BROWSER_NAMES.includes(capabilities.browserName?.toLowerCase())
-  const isNative = NATIVE_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
   const isAndroid = capabilities.automationName?.toLowerCase() === ANDROID_AUTOMATION_NAME ||
     capabilities.platformName?.toLowerCase() === ANDROID_PLATFORM_NAME
 
@@ -56,7 +55,6 @@ function extractEnvironment(capabilities: Record<string, any>) {
     isAndroid,
     isChrome,
     isMobile,
-    isNative,
     isW3C,
   }
 }
@@ -81,6 +79,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
   if (!utils.types.has(driver, ['sessionId', 'serverUrl'])) return driver
   const url = new URL(driver.serverUrl)
   const environment = extractEnvironment(driver.capabilities)
+  console.log('transformDriver extracted environment', environment)
   const options: WD.AttachOptions = {
     sessionId: driver.sessionId,
     protocol: url.protocol ? url.protocol.replace(/:$/, '') : undefined,
@@ -130,7 +129,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
   }
 
   const modifiedDriver = WebDriver.attachToSession(options, undefined, additionalCommands)
-  if (environment.isMobile && environment.isNative && environment.isAndroid) {
+  if (environment.isAndroid) {
     modifiedDriver?.updateSettings({allowInvisibleElements: true})
   }
   return modifiedDriver
