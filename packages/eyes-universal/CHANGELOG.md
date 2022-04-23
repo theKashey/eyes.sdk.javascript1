@@ -7,6 +7,13 @@
 
 
 
+
+## 2.2.5 - 2022/4/23
+
+### Features
+### Bug fixes
+- Support `appium:` prefixed capabilities. Fixes support for Appium 8 in Java
+
 ## 2.2.4 - 2022/4/21
 
 ### Features
