@@ -25,7 +25,6 @@ const APPIUM_CAPABILITIES = ['appiumVersion', 'deviceType', 'deviceOrientation',
 const LEGACY_APPIUM_CAPABILITIES = ['appium-version', 'device-type', 'device-orientation']
 const CHROME_CAPABILITIES = ['chrome', 'goog:chromeOptions']
 const MOBILE_BROWSER_NAMES = ['ipad', 'iphone', 'android']
-const NATIVE_CAPABILITIES = ['app', 'automationName']
 const ANDROID_AUTOMATION_NAME = 'uiautomator2'
 const ANDROID_PLATFORM_NAME = 'android'
 
@@ -36,19 +35,22 @@ function transformShadowRoot(shadowRoot: ShadowRoot | Element): Element {
   return isElement(shadowRoot) ? shadowRoot : {[ELEMENT_ID]: shadowRoot[SHADOW_ROOT_ID]}
 }
 function extractEnvironment(capabilities: Record<string, any>) {
-  const isAppium = APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
-  APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(`appium:${capability}`))
+  const isAppium =
+    APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
+    APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(`appium:${capability}`))
   const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
   const isW3C =
     isAppium ||
     W3C_SECONDARY_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
     W3C_SAFARI_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability))
-  const isMobile = capabilities.browserName === '' ||
+  const isMobile =
+    capabilities.browserName === '' ||
     isAppium ||
     LEGACY_APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
     MOBILE_BROWSER_NAMES.includes(capabilities.browserName?.toLowerCase())
-  const isAndroid = capabilities.automationName?.toLowerCase() === ANDROID_AUTOMATION_NAME ||
+  const isAndroid =
+    capabilities.automationName?.toLowerCase() === ANDROID_AUTOMATION_NAME ||
     capabilities.platformName?.toLowerCase() === ANDROID_PLATFORM_NAME
 
   return {
