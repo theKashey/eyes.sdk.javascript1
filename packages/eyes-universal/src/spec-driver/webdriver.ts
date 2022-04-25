@@ -38,7 +38,7 @@ function extractEnvironment(capabilities: Record<string, any>) {
   const isAppium =
     APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability)) ||
     APPIUM_CAPABILITIES.some(capability => capabilities.hasOwnProperty(`appium:${capability}`))
-  const isChrome = CHROME_CAPABILITIES.some(capability => capabilities.hasOwnProperty(capability))
+  const isChrome = CHROME_CAPABILITIES.includes(capabilities.browserName?.toLowerCase())
   const isW3C =
     isAppium ||
     W3C_SECONDARY_CAPABILITIES.every(capability => capabilities.hasOwnProperty(capability)) ||
@@ -232,9 +232,14 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
   })
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
-  const caps = await browser.getSession?.()
-  if (caps && utils.types.isObject(caps)) return caps
-  return browser.capabilities
+  if (browser.capabilities) return browser.capabilities
+  try {
+    const caps = await browser.getSession?.()
+    if (caps && utils.types.isObject(caps)) return caps
+  } catch (error) {
+    throw new Error(`Unable to retrieve capabilities due to an error. The original error is ${error.message}`)
+  }
+  throw new Error('Unable to retrieve capabilities')
 }
 export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   return {sessionId: driver.sessionId}

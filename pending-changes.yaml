@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix non-W3C command being called when in W3C mode
 "@applitools/eyes-selenium":
   feature:
     - 
