@@ -1,29 +1,35 @@
+const batchPropertiesRetriever = (args, appliConfFile) => {
+  return function(prop, nestedProp) {
+    nestedProp = nestedProp || prop;
+    if (args.hasOwnProperty(prop)) {
+      return args[prop];
+    } else if (args.batch && args.batch.hasOwnProperty(nestedProp)) {
+      return args.batch[nestedProp];
+    } else if (appliConfFile.hasOwnProperty(prop)) {
+      return appliConfFile[prop];
+    } else if (appliConfFile.batch && appliConfFile.batch.hasOwnProperty(nestedProp)) {
+      return appliConfFile.batch[nestedProp];
+    }
+    return undefined;
+  };
+};
 function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks}) {
   let browsersInfo = args.browser || appliConfFile.browser;
   let accessibilitySettings = args.accessibilityValidation || appliConfFile.accessibilityValidation;
+  const batchProperties = batchPropertiesRetriever(args, appliConfFile);
   const batch = {
-    id:
-      args.batchId ||
-      (args.batch ? args.batch.id : undefined) ||
-      appliConfFile.batchId ||
-      (appliConfFile.batch ? appliConfFile.batch.id : undefined),
-    name:
-      args.batchName ||
-      (args.batch ? args.batch.name : undefined) ||
-      appliConfFile.batchName ||
-      (appliConfFile.batch ? appliConfFile.batch.name : undefined),
-    sequenceName:
-      args.batchSequenceName ||
-      (args.batch ? args.batch.sequenceName : undefined) ||
-      appliConfFile.batchSequenceName ||
-      (appliConfFile.batch ? appliConfFile.batch.sequenceName : undefined),
+    id: batchProperties('batchId', 'id'),
+    name: batchProperties('batchName', 'name'),
+    sequenceName: batchProperties('batchSequenceName', 'sequenceName'),
+    notifyOnCompletion: batchProperties('notifyOnCompletion'),
+    properties:
+      (args.batch ? args.batch.properties : undefined) ||
+      (appliConfFile.batch ? appliConfFile.batch.properties : undefined),
   };
-
-  if (!batch.name) {
-    delete batch['name'];
-  }
-  if (!batch.sequenceName) {
-    delete batch['sequenceName'];
+  for (let prop in batch) {
+    if (typeof batch[prop] === 'undefined') {
+      delete batch[prop];
+    }
   }
 
   const mappedValues = [

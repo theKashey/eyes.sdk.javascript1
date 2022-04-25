@@ -197,9 +197,15 @@ describe('eyes open mapping', () => {
     expect(coreConfig).to.eql(expected);
   });
 
-  it('eyesOpen batch mapping, batch object', () => {
+  it('eyesOpen batch mapping, batch object with boolean', () => {
     const args = {
-      batch: {id: '1234', name: 'test eyesOpen mapping', sequenceName: 'S1'},
+      batch: {
+        id: '1234',
+        name: 'test eyesOpen mapping',
+        sequenceName: 'S1',
+        properties: 'Any properties',
+        notifyOnCompletion: false,
+      },
     };
 
     const expected = {
@@ -215,7 +221,13 @@ describe('eyes open mapping', () => {
       },
       dontCloseBatches,
       testName,
-      batch: {id: '1234', name: 'test eyesOpen mapping', sequenceName: 'S1'},
+      batch: {
+        id: '1234',
+        name: 'test eyesOpen mapping',
+        sequenceName: 'S1',
+        notifyOnCompletion: false,
+        properties: 'Any properties',
+      },
     };
 
     const coreConfig = eyesOpenMapValues({
@@ -263,7 +275,13 @@ describe('eyes open mapping', () => {
 
   it('config file batch mapping, batch obejct', () => {
     const appliConfFile = {
-      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
+      batch: {
+        id: '1234',
+        name: 'test config file mapping',
+        sequenceName: 'S1',
+        notifyOnCompletion: true,
+        properties: 'Any properties',
+      },
     };
 
     const expected = {
@@ -279,7 +297,13 @@ describe('eyes open mapping', () => {
       },
       dontCloseBatches,
       testName,
-      batch: {id: '1234', name: 'test config file mapping', sequenceName: 'S1'},
+      batch: {
+        id: '1234',
+        name: 'test config file mapping',
+        sequenceName: 'S1',
+        notifyOnCompletion: true,
+        properties: 'Any properties',
+      },
     };
 
     const coreConfig = eyesOpenMapValues({
