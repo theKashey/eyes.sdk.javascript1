@@ -8,6 +8,12 @@
 
 
 
+## 2.2.7 - 2022/4/25
+
+### Features
+### Bug fixes
+- Fix regression introduced when looking up driver capabilities
+
 ## 2.2.6 - 2022/4/25
 
 ### Features
