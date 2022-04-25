@@ -109,10 +109,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - |
-      'batch.properties' and 'batch.notifyOnCompletion' not propagated correctly
-    - |
-      'batch.name' was overridden in case 'batch.id' was not defined
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 

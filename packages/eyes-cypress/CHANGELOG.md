@@ -5,6 +5,15 @@
 
 
 
+
+
+## 3.25.6 - 2022/4/25
+
+### Features
+### Bug fixes
+- 'batch.properties' and 'batch.notifyOnCompletion' not propagated correctly
+- 'batch.name' was overridden in case 'batch.id' was not defined
+
 ## 3.25.5 - 2022/4/19
 
 ### Features
