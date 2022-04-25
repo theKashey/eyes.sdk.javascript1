@@ -232,11 +232,12 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
   })
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
-  if (browser.capabilities) return browser.capabilities
   try {
     const caps = await browser.getSession?.()
     if (caps && utils.types.isObject(caps)) return caps
+    return browser.capabilities
   } catch (error) {
+    if (/Cannot call non W3C standard command while in W3C mode/.test(error.message)) return browser.capabilities
     throw new Error(`Unable to retrieve capabilities due to an error. The original error is ${error.message}`)
   }
   throw new Error('Unable to retrieve capabilities')

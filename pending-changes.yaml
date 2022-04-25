@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix regression introduced when looking up driver capabilities
 "@applitools/eyes-selenium":
   feature:
     - 
