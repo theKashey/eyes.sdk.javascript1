@@ -8,6 +8,12 @@
 
 
 
+## 2.2.6 - 2022/4/25
+
+### Features
+### Bug fixes
+- Fix non-W3C command being called when in W3C mode
+
 ## 2.2.5 - 2022/4/23
 
 ### Features
