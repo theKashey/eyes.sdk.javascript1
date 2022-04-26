@@ -30,7 +30,7 @@
   "scripts": {
     "lint": "eslint '**/*.ts' '**/*.js'",
     "build": "ttsc",
-    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-selenium-universal'",
+    "generate:tests": "coverage-tests generate https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/js/config.js --name 'eyes-selenium-universal'",
     "test": "yarn build:dist && yarn test:coverage",
     "test:test": "yarn generate:tests && mocha --no-timeouts ./test/generic/CheckWindowWithCssStitching.spec.js",
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-selenium' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
