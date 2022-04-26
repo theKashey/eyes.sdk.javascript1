@@ -14,6 +14,28 @@ exports.mochaHooks = {
           driver = await context.newPage()
           await driver.setViewportSize({width: 800, height: 600})
           drivers.set('chrome', {driver, cleanup: () => browser.close()})
+        } else if (name === 'firefox') {
+          driver = await remote({
+            protocol: 'https',
+            hostname: 'ondemand.saucelabs.com',
+            path: '/wd/hub',
+            port: 443,
+            logLevel: 'silent',
+            capabilities: {
+              browserName: 'firefox',
+              //browserVersion: '11.285',
+              platformName: 'Windows 10',
+              'sauce:options': {
+                name: 'Snippets tests',
+                idleTimeout: 1000,
+                username: process.env.SAUCE_USERNAME,
+                accessKey: process.env.SAUCE_ACCESS_KEY,
+              },
+            },
+            connectionRetryCount: 0,
+          })
+          await driver.setWindowSize(816, 686)
+          drivers.set('firefox', {driver, cleanup: () => driver.deleteSession()})
         } else if (name === 'internet explorer') {
           driver = await remote({
             protocol: 'https',

@@ -65,6 +65,17 @@ async function takeStitchedScreenshot({
   if (region) region = utils.geometry.intersect(region, contentRegion)
   else region = contentRegion
 
+  if (targetRegion.x !== region.x && targetRegion.width !== region.width) {
+    logger.verbose('Compensating for region width differences...')
+    logger.verbose(
+      'region before compensation and the values to be used (a.k.a. expectedRemainingOffset)',
+      region,
+      expectedRemainingOffset,
+    )
+    region.x += expectedRemainingOffset.x
+    region.width += expectedRemainingOffset.x
+    logger.verbose('region after compensation', region)
+  }
   region = utils.geometry.round(region)
 
   const [initialRegion, ...partRegions] = utils.geometry.divide(region, image.size, overlap)

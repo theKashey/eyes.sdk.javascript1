@@ -12,12 +12,12 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed check region fully in classic execution when using CSS stitching
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed check region fully in classic execution when using CSS stitching
 "@applitools/eyes-webdriverio":
   feature:
     - Support UFG for native mobile
@@ -25,8 +25,7 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 "@applitools/eyes-playwright":
   feature:
@@ -41,8 +40,7 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 "@applitools/eyes-protractor":
   feature:
@@ -57,8 +55,7 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 "@applitools/eyes-puppeteer":
   feature:
@@ -73,8 +70,7 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 "@applitools/eyes-testcafe":
   feature:
@@ -102,8 +98,7 @@ Apollo SDK:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - accept ios and android lowercase as driver platformName capability when using custom grid
-    - when running on a native iOS app, allow capturing NavigationBar and TabBar regions
-    - When running a native app on Android, in case we test a device in landscape mode, make sure to account for the navigation bar on the left or right and not at the bottom of the image.
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 "@applitools/eyes-cypress":
   feature:
@@ -121,6 +116,7 @@ Apollo SDK:
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 eyes-browser-extension:
   feature:
@@ -128,6 +124,7 @@ eyes-browser-extension:
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+    - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
 applitools-for-selenium-ide:
   feature:
