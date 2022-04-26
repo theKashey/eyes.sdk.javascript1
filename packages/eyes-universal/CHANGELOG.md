@@ -8,6 +8,12 @@
 
 
 
+## 2.2.8 - 2022/4/26
+
+### Features
+### Bug fixes
+- Fixed check region fully in classic execution when using CSS stitching
+
 ## 2.2.7 - 2022/4/25
 
 ### Features

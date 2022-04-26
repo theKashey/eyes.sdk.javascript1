@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed check region fully in classic execution when using CSS stitching
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
