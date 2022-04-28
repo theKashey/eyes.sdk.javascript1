@@ -104,12 +104,12 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - added `properties` and `notifyOnCompletion` as optional Types of Batch (for TS)
 "@applitools/eyes-storybook":
   feature:
     - 
   bug-fix:
-    - 
+    - added `properties` and `notifyOnCompletion` as optional Types of Batch (for TS)
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile

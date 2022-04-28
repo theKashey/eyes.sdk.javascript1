@@ -175,7 +175,7 @@ declare namespace Eyes {
       /**
        * sets a batch object
        */
-      batch?: {id?: string, name?: string, sequenceName?: string}
+      batch?: {id?: string, name?: string, sequenceName?: string, notifyOnCompletion?: boolean, properties?: {name: string; value: any}[]}
 
       /**
        * a period of time in milliseconds that 'capture' should wait
