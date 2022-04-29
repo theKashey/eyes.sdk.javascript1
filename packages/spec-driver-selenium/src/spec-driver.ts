@@ -241,31 +241,25 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 // #endregion
 
 // #region MOBILE COMMANDS
-export async function getBarsHeight(driver: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+export async function getBarsSize(
+  driver: Driver,
+): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
   const {Command} = require('selenium-webdriver/lib/command')
-  const orientation = await getOrientation(driver)
 
-  // when calling getSystemBars when orientation is landscape it seems that appium is buggy and returns the wrong dimensions
-  // therefore, we set the orientation to portrait to get the correct systemBars dimensions and we flip back to landscape
-  if (orientation.toLowerCase() === 'landscape') {
-    await setOrientation(driver, 'portrait')
-  }
   const getSystemBarsCommand = new Command('getSystemBars')
   const {statusBar, navigationBar} =
     process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
       ? await (driver as any).schedule(getSystemBarsCommand)
       : await driver.execute(getSystemBarsCommand)
 
-  if (orientation.toLowerCase() === 'landscape') {
-    await setOrientation(driver, 'landscape')
-  }
   return {
     statusBarHeight: statusBar.visible ? statusBar.height : 0,
     navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
   }
 }
 
-async function setOrientation(driver: Driver, orientation: ScreenOrientation) {
+export async function setOrientation(driver: Driver, orientation: ScreenOrientation) {
   const {Command} = require('selenium-webdriver/lib/command')
   const setOrientationCommand = new Command('setOrientation').setParameters({orientation})
   process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'

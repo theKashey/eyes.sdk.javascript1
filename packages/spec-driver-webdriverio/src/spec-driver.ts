@@ -314,16 +314,22 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
 
 // #region MOBILE COMMANDS
 
-export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+export async function getBarsSize(
+  browser: Driver,
+): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
   const {statusBar, navigationBar}: any = await browser.getSystemBars()
   return {
     statusBarHeight: statusBar.visible ? statusBar.height : 0,
     navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
   }
 }
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = await browser.getOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function setOrientation(browser: Driver, orientation: 'portrait' | 'landscape') {
+  return await browser.setOrientation(orientation)
 }
 export async function getElementRegion(browser: Driver, element: Element): Promise<Region> {
   const extendedElement = await browser.$(element as any)

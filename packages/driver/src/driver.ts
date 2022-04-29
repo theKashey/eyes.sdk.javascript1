@@ -158,18 +158,19 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._driverInfo.features.allCookies ??=
         /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
     } else {
-      const barsHeight = await this._spec.getBarsHeight?.(this.target).catch(() => undefined as never)
+      const barsHeight = await this._spec.getBarsSize?.(this.target).catch(() => undefined as never)
       const displaySize = await this.getDisplaySize()
-
       // calculate status and navigation bars sizes
       if (barsHeight) {
+        const orientation = await this.getOrientation()
         // when status bar is overlapping content on android it returns status bar height equal to viewport height
         if (this.isAndroid && barsHeight.statusBarHeight / this.pixelRatio < displaySize.height) {
           this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsHeight.statusBarHeight)
         }
+        // android witches the width and height only for the navigationBar in landscape mode.
         this._driverInfo.navigationBarHeight = Math.max(
           this._driverInfo.navigationBarHeight ?? 0,
-          barsHeight.navigationBarHeight,
+          orientation === 'landscape' ? barsHeight.navigationBarWidth : barsHeight.navigationBarHeight,
         )
       }
       if (this.isAndroid) {
@@ -529,6 +530,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     const orientation = this._spec.getOrientation(this.target)
     this._logger.log('Extracted device orientation:', orientation)
     return orientation
+  }
+
+  async setOrientation(orientation: types.ScreenOrientation): Promise<void> {
+    if (this.isWeb && !this.isMobile) return
+    await this._spec.setOrientation(this.target, orientation)
+    this._logger.log('set device orientation:', orientation)
   }
 
   async getCookies(): Promise<types.Cookie[]> {

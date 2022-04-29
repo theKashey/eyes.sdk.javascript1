@@ -189,13 +189,16 @@ export async function waitUntilDisplayed(browser: Driver, selector: Selector, ti
 
 // #region MOBILE COMMANDS
 
-export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+export async function getBarsSize(
+  browser: Driver,
+): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
   const {statusBar, navigationBar} = await (browser as any).requestHandler
     .create({method: 'GET', path: '/session/:sessionId/appium/device/system_bars'})
     .then(({value}: any) => value)
   return {
     statusBarHeight: statusBar.visible ? statusBar.height : 0,
     navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
   }
 }
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {

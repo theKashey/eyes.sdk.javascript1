@@ -1,4 +1,4 @@
-import {Size, Region} from './data'
+import {Size, Region, ScreenOrientation} from './data'
 
 export type DriverInfo = {
   sessionId?: string
@@ -93,7 +93,10 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
 
   // #region MOBILE COMMANDS
   getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape'>
-  getBarsHeight?(driver: TDriver): Promise<{statusBarHeight: number; navigationBarHeight: number}>
+  setOrientation?(driver: TDriver, orientation: ScreenOrientation): Promise<void>
+  getBarsSize?(
+    driver: TDriver,
+  ): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}>
   getElementRegion?(driver: TDriver, element: TElement): Promise<Region>
   getElementAttribute?(driver: TDriver, element: TElement, attr: string): Promise<string>
   getElementText?(driver: TDriver, element: TElement): Promise<string>
@@ -132,7 +135,10 @@ export interface UniversalSpecDriver<TDriver, TContext, TElement, TSelector> {
 
   // #region MOBILE COMMANDS
   getOrientation?(options: {driver: TDriver}): Promise<'portrait' | 'landscape'>
-  getBarsHeight?(options: {driver: TDriver}): Promise<{statusBarHeight: number; navigationBarHeight: number}>
+  setOrientation?(options: {driver: TDriver; orientation: ScreenOrientation}): Promise<void>
+  getBarsSize?(options: {
+    driver: TDriver
+  }): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}>
   getElementRegion?(options: {driver: TDriver; element: TElement}): Promise<Region>
   getElementAttribute?(options: {driver: TDriver; element: TElement; attr: string}): Promise<string>
   getElementText?(options: {driver: TDriver; element: TElement}): Promise<string>

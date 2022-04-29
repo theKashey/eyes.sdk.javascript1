@@ -46,7 +46,7 @@ The API and abstractions of the interface provides an extra functionality which 
     - [spec.type(context, element, value)](#spectypecontext-element-value)
     - [spec.visit(driver, url)](#specvisitdriver-url)
     - [spec.getOrientation(driver)](#specgetorientationdriver)
-    - [spec.getBarsHeight(driver)](#specgetbarsheightdriver)
+    - [spec.getBarsSize(driver)](#specgetbarsSizedriver)
     - [spec.getElementRegion(driver, element)](#specgetelementregiondriver-element)
     - [spec.getElementAttribute(driver, element, attribute)](#specgetelementattributedriver-element-attribute)
     - [spec.getElementText(driver, element)](#specgetelementtextdriver-element)
@@ -433,7 +433,7 @@ This command is optional.
 ### spec.getOrientation(driver)
 TBD
 
-### spec.getBarsHeight(driver)
+### spec.getBarsSize(driver)
 TBD
 
 ### spec.getElementRegion(driver, element)

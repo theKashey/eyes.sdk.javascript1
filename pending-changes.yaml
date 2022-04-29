@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Account for an Appium bug when calculating system bars height
 "@applitools/eyes-selenium":
   feature:
     - 
@@ -27,6 +27,7 @@ Apollo SDK:
     - accept ios and android lowercase as driver platformName capability when using custom grid
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
+    - Account for an Appium bug when calculating system bars height
 "@applitools/eyes-playwright":
   feature:
     - Support UFG for native mobile

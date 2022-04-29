@@ -269,16 +269,22 @@ export async function type(driver: Driver, element: Element, value: string): Pro
 
 // #region NATIVE COMMANDS
 
-export async function getBarsHeight(browser: Driver): Promise<{statusBarHeight: number; navigationBarHeight: number}> {
+export async function getBarsSize(
+  browser: Driver,
+): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
   const {statusBar, navigationBar}: any = await browser.getSystemBars()
   return {
     statusBarHeight: statusBar.visible ? statusBar.height : 0,
     navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
+    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
   }
 }
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = await browser.getOrientation()
   return orientation.toLowerCase() as 'portrait' | 'landscape'
+}
+export async function setOrientation(browser: Driver, orientation: 'portrait' | 'landscape') {
+  return await browser.setOrientation(orientation)
 }
 export async function getElementRegion(driver: Driver, element: Element): Promise<Region> {
   return driver.getElementRect(extractElementId(element))
