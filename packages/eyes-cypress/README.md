@@ -580,7 +580,7 @@ The list above is also the order of precedence, which means that if you pass a p
 | `baselineBranchName`      | undefined                   | The name of the baseline branch. |
 | `parentBranchName`        | undefined                   | Sets the branch under which new branches are created. |
 | `saveFailedTests`         | false                       | Set whether or not failed tests are saved by default. |
-| `saveNewTests`            | false                       | Set whether or not new tests are saved by default. |
+| `saveNewTests`            | true                       | Set whether or not new tests are saved by default. |
 | `properties`              | undefined                   | Custom properties for the eyes test. The format is an array of objects with name/value properties. For example: `[{name: 'My prop', value:'My value'}]`. |
 | `ignoreDisplacements`     | false                       | Sets whether Test Manager should intially display mismatches for image features that have only been displaced, as opposed to real mismatches. |
 | `compareWithParentBranch` | false                       |  |
