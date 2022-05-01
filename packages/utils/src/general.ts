@@ -83,3 +83,17 @@ export function pluralize(object: [] | number, config?: [manyCase: string, singl
   }
   return res
 }
+
+export function isNotDefined(value: any) {
+  return (
+    value === null ||
+    typeof value === 'undefined' ||
+    (types.isString(value)
+      ? !value.length || value.toLowerCase() === 'null' || value.toLowerCase() === 'undefined'
+      : false)
+  )
+}
+
+export function isDefined(value: any) {
+  return !isNotDefined(value)
+}

@@ -54,7 +54,6 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
           runnerOrConfigOrOptions?.runner ??
           new api.VisualGridRunner({testConcurrency: testcafeConfig.concurrency ?? testcafeConfig.testConcurrency ?? 1})
         super(runner, transformConfig(testcafeConfig))
-        testcafeConfig.failTestcafeOnDiff ??= true
         this._testcafeConfig = testcafeConfig
       } else {
         super(runnerOrConfigOrOptions as api.EyesRunner, configOrRunner as api.ConfigurationPlain<TElement, TSelector>)
@@ -113,12 +112,12 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
     }
 
     async close(throwErr = true): Promise<api.TestResults> {
-      return super.close(throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff))
+      return super.close(throwErr && getFailTestcafeOnDiff(this._testcafeConfig))
     }
 
     async waitForResults(throwErr = true) {
       const resultsSummary = await this.runner.getAllTestResults(
-        throwErr && Boolean(this._testcafeConfig?.failTestcafeOnDiff),
+        throwErr && getFailTestcafeOnDiff(this._testcafeConfig),
       )
       if (this._testcafeConfig?.tapDirPath) {
         const results = resultsSummary.getAllResults().map(r => r.getTestResults())
@@ -130,6 +129,23 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
       return resultsSummary
     }
   }
+}
+
+function getFailTestcafeOnDiff(_testcafeConfig?: TestCafeConfiguration): boolean {
+  // NOTE for 'failTestcafeOnDiff':
+  // There are two optional ways to determine the value of 'failTestcafeOnDiff'
+  // 1. via config file (or path)
+  // 2. via env variable
+  if (utils.general.isDefined(process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF)) {
+    // verifying it's not null or undefined and use it as boolean
+    return String(process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF).toLowerCase() === 'true'
+  }
+  if (_testcafeConfig && utils.general.isDefined(_testcafeConfig.failTestcafeOnDiff)) {
+    // verifying it's not null or undefined and use it as boolean
+    return String(_testcafeConfig.failTestcafeOnDiff).toLowerCase() === 'true'
+  }
+  // The default value of 'failTestcafeOnDiff' should be true, so in case value was not set at all...
+  return true
 }
 
 type RegionReference<TSelector> = api.RegionPlain | TSelector | {selector: TSelector}

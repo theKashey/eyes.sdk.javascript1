@@ -78,6 +78,7 @@ Apollo SDK:
     - Support UFG for native mobile
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - Support `failTestcafeOnDiff` as environment variable `APPLITOOLS_FAIL_TESTCAFE_ON_DIFF` 
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests

@@ -5,6 +5,7 @@ const utils = require('@applitools/utils')
 const {getTestInfo} = require('@applitools/test-utils')
 const {Eyes, TestResultsSummary} = require('../../dist')
 const eyes = new Eyes()
+
 process.env.APPLITOOLS_BATCH_NAME = 'JS Coverage Tests - eyes-testcafe (legacy API)'
 process.env.APPLITOOLS_BATCH_ID = utils.general.guid()
 
@@ -230,6 +231,65 @@ test('eyes failTestcafeOnDiff true', async t => {
     else assert(false)
   }
 })
+test
+  .before(async () => {
+    process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF = false
+  })('eyes process env failTestcafeOnDiff false', async t => {
+    const eyes = new Eyes()
+    //
+    await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await eyes.open({
+      t,
+      appName: 'eyes-testcafe',
+      testName: 'legacy api test: failTestcafeOnDiff via process.env',
+      saveDiffs: false,
+    })
+    // force a diff
+    await eyes.checkWindow({
+      scriptHooks: {
+        beforeCaptureScreenshot: "document.body.style.backgroundColor = 'pink'",
+      },
+    })
+    // even when set to throw ex, the test should still pass
+    await eyes.close(true)
+    await eyes.waitForResults(true)
+  })
+  .after(async () => {
+    process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF = undefined
+  })
+
+test
+  .before(async () => {
+    process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF = true
+  })('eyes process env failTestcafeOnDiff true', async t => {
+    const eyes = new Eyes()
+    await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
+    await eyes.open({
+      t,
+      appName: 'eyes-testcafe',
+      testName: 'legacy api test: failTestcafeOnDiff via process.env',
+      saveDiffs: false,
+    })
+    // force a diff
+    await eyes.checkWindow({
+      scriptHooks: {
+        beforeCaptureScreenshot: "document.body.style.backgroundColor = 'hotpink'",
+      },
+    })
+    try {
+      // when set to throw ex, the test fail
+      await eyes.close(true)
+      await eyes.waitForResults(true)
+      assert(false) // we should not reach this
+    } catch (error) {
+      // we should not reach this
+      if (error.message.includes('detected differences')) assert(true)
+      else assert(false)
+    }
+  })
+  .after(async () => {
+    process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF = undefined
+  })
 test('eyes failTestcafeOnDiff default value is true', async t => {
   const eyes = new Eyes()
   await t.navigateTo('https://applitools.github.io/demo/TestPages/FramesTestPage/')
