@@ -30,19 +30,9 @@ Apollo SDK:
     - Account for an Appium bug when calculating system bars height
 "@applitools/eyes-playwright":
   feature:
-    - Support UFG for native mobile
-    - |
-      `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+    - 
   bug-fix:
-    - |
-      `runner.getAllTestResults` now aborts unclosed tests
-    - |
-      `runner.getAllTestResults` now returns all results, including aborted tests
-    - |
-      `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
-    - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Fixed check region fully in classic execution when using CSS stitching
-    - Support data urls in iframes
+    - 
 "@applitools/eyes-protractor":
   feature:
     - Support UFG for native mobile
@@ -78,7 +68,7 @@ Apollo SDK:
     - Support UFG for native mobile
     - |
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
-    - Support `failTestcafeOnDiff` as environment variable `APPLITOOLS_FAIL_TESTCAFE_ON_DIFF` 
+    - Support `failTestcafeOnDiff` as environment variable `APPLITOOLS_FAIL_TESTCAFE_ON_DIFF`
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests

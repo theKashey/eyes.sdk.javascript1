@@ -3,6 +3,23 @@
 ## Unreleased
 
 
+
+
+
+
+## 1.11.3 - 2022/5/2
+
+### Features
+- Support UFG for native mobile
+- `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+### Bug fixes
+- `runner.getAllTestResults` now aborts unclosed tests
+- `runner.getAllTestResults` now returns all results, including aborted tests
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- accept ios and android lowercase as driver platformName capability when using custom grid
+- Fixed check region fully in classic execution when using CSS stitching
+- Support data urls in iframes
+
 ## 1.11.2 - 2022/1/13
 
 - fix taking multiple dom snapshots with `layoutBreakpoints`
