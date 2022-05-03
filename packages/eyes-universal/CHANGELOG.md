@@ -8,6 +8,13 @@
 
 
 
+## 2.3.0 - 2022/5/3
+
+### Features
+### Bug fixes
+- Account for an Appium bug when calculating system bars height
+- Make sure android platformName starts with uppercase if `config.keepPlatformNameAsIs` is set to true
+
 ## 2.2.8 - 2022/4/26
 
 ### Features
