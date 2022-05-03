@@ -18,7 +18,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _currentContext: Context<TDriver, TContext, TElement, TSelector>
   private _driverInfo: types.DriverInfo
   private _logger: any
-  private _customConfig: any
+  private _customConfig: types.CustomDriverConfig
   private _helper?:
     | HelperAndroid<TDriver, TContext, TElement, TSelector>
     | HelperIOS<TDriver, TContext, TElement, TSelector>
@@ -29,7 +29,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector> | TDriver
     logger?: any
-    customConfig?: any
+    customConfig?: types.CustomDriverConfig
   }) {
     if (options.driver instanceof Driver) return options.driver
 
@@ -131,8 +131,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     const capabilities = await this._spec.getCapabilities?.(this.target)
 
     this._logger.log('Driver capabilities', capabilities)
-
-    const capabilitiesInfo = capabilities ? parseCapabilities(capabilities) : undefined
+    const capabilitiesInfo = capabilities ? parseCapabilities(capabilities, this._customConfig) : undefined
     const driverInfo = await this._spec.getDriverInfo?.(this.target)
 
     this._driverInfo = {...capabilitiesInfo, ...driverInfo}

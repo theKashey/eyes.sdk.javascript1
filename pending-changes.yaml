@@ -13,6 +13,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Account for an Appium bug when calculating system bars height
+    - Make sure android platformName starts with uppercase if `config.keepPlatformNameAsIs` is set to true
 "@applitools/eyes-selenium":
   feature:
     - 

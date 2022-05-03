@@ -26,6 +26,14 @@ export type DriverInfo = {
   }
 }
 
+export type CustomCapabilitiesConfig = {
+  keepPlatformNameAsIs?: boolean
+}
+
+export type CustomDriverConfig = CustomCapabilitiesConfig & {
+  useCeilForViewportSize?: boolean
+}
+
 export type Cookie = {
   name: string
   value: string

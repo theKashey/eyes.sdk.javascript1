@@ -111,6 +111,7 @@ const DEFAULT_VALUES = {
  * @prop {string} hostOSInfo
  * @prop {string} deviceInfo
  * @prop {boolean} useCeilForViewportSize
+ * @prop {boolean} keepPlatformNameAsIs
  */
 
 /**
@@ -261,6 +262,9 @@ class Configuration {
 
     /** @type {boolean} */
     this._useCeilForViewportSize = undefined
+
+    /** @type {boolean} */
+    this._keepPlatformNameAsIs = undefined
 
     if (configuration) {
       this.mergeConfig(configuration)
@@ -1423,6 +1427,25 @@ class Configuration {
 
   setUseCeilForViewportSize(value) {
     this._useCeilForViewportSize = value
+  }
+
+  /**
+   * @return {boolean} keepPlatformNameAsIs
+   */
+
+  getKeepPlatformNameAsIs() {
+    return this._keepPlatformNameAsIs
+  }
+
+  /**
+   * Sets the keepPlatformNameAsIs
+   *
+   * @param {boolean?} keepPlatformNameAsIs
+   * @return {this}
+   */
+
+  setKeepPlatformNameAsIs(value) {
+    this._keepPlatformNameAsIs = value
   }
   /**
    * @param {Configuration|object} other

@@ -69,6 +69,7 @@ export type EyesOpenConfig = {
   saveDiffs?: boolean
   dontCloseBatches?: boolean
   useCeilForViewportSize?: boolean
+  keepPlatformNameAsIs?: boolean
 }
 
 export type EyesCheckConfig = {

@@ -55,6 +55,7 @@ const BOOLEAN_CONFIGS = [
   '_layoutBreakpoints',
   '_disableBrowserFetching',
   '_useCeilForViewportSize',
+  '_keepPlatformNameAsIs',
 ]
 
 const NUMBER_CONFIGS = [

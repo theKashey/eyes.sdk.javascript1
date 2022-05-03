@@ -175,7 +175,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
     if (this._config.isDisabled) return driver
 
-    const config = this._config.toJSON()
+    const config: types.EyesConfig<TElement, TSelector> = this._config.toJSON()
     if (utils.types.instanceOf(configOrAppName, ConfigurationData)) {
       Object.assign(config, configOrAppName.toJSON())
     } else if (utils.types.isObject(configOrAppName)) {
@@ -187,6 +187,8 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (utils.types.has(viewportSize, ['width', 'height'])) config.viewportSize = viewportSize
     if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.sessionType = sessionType
 
+    // while using JS we want to keep the platformName as is: no first letter uppercase
+    config.keepPlatformNameAsIs = true
     this._eyes = await this._runner.openEyes({
       driver,
       config,

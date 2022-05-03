@@ -2,8 +2,14 @@ import type * as types from '@applitools/types'
 
 type Capabilities = Record<string, any>
 
-export function parseCapabilities(capabilities: Capabilities): types.DriverInfo {
+export function parseCapabilities(
+  capabilities: Capabilities,
+  customConfig?: types.CustomCapabilitiesConfig,
+): types.DriverInfo {
   if (capabilities.capabilities) capabilities = capabilities.capabilities
+  if (capabilities.platformName?.startsWith('android') && !customConfig?.keepPlatformNameAsIs) {
+    capabilities.platformName = capabilities.platformName.charAt(0).toUpperCase() + capabilities.platformName.slice(1)
+  }
 
   const info: types.DriverInfo = {
     browserName:
