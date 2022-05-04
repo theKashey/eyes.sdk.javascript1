@@ -44,15 +44,6 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.0.tgz#e54d35c889032fbb5f09978e367545537f7357d9"
-  integrity sha512-g+hsaYRUyAujza3dssErnY2airGYD8I95e4vBqb+4HIjNEfsM+FogXXnlgPQTNl6ryRsfhwEekdO27DzU6xq/w==
-  dependencies:
-    "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.4.0"
-    "@applitools/utils" "1.2.14"
-
 "@applitools/driver@1.8.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.1.tgz#9cae926ec67a8a9584bfb5667ef39894051b1a9a"
@@ -62,16 +53,16 @@
     "@applitools/types" "1.4.0"
     "@applitools/utils" "1.2.14"
 
-"@applitools/eyes-sdk-core@13.4.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.4.0.tgz#80079c439d37a405361bd124876483823000f8ca"
-  integrity sha512-q5kNCEOQWWoLI0z5rZOGT5NaE5fstDvyG0QjyU4m8zjVN3yPijRRlYGXpZ4o0scmdW4JxN8HQ+8Nt/HsGSCghA==
+"@applitools/eyes-sdk-core@13.4.1":
+  version "13.4.1"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.4.1.tgz#cf6d58761776fca56490e01bfe1d6badd6d45f8d"
+  integrity sha512-S1WY6IWQagJO5JV9wLcnGhcIk78w3pqrtkbMXCQO6R781SUoNx0oxKC5+tMqoYICxgSUU/1JnwmeaLOzOz5GmA==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.8.0"
+    "@applitools/driver" "1.8.1"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/logger" "1.0.12"
+    "@applitools/logger" "1.1.0"
     "@applitools/screenshoter" "3.3.17"
     "@applitools/snippets" "2.2.3"
     "@applitools/types" "1.4.0"
@@ -143,18 +134,18 @@
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
 
-"@applitools/logger@1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.0.12.tgz#02c25e3cd9a5d899b55bba5939355a3cde9c744e"
-  integrity sha512-TCSYb94D+lLjzi3S9bG7T8Cbn9UW5Tebs5oBm5Xa2IktL6ivF3oHdujL5pXVmBu+jD5H+2+AtUBnVkMaMmPtsw==
-  dependencies:
-    "@applitools/utils" "1.2.14"
-    chalk "3.0.0"
-
 "@applitools/logger@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.0.tgz#6261ef598176cf17f6eb2f92f1fb5083334f86d5"
   integrity sha512-as/mFmmugw0L+wClgN+TPL5VGEYyYgxYXlfKWTpUC/QAiKLUD/PnAsmTXten75ud1n+EjugOWixHyXOx2FJ5ag==
+  dependencies:
+    "@applitools/utils" "1.2.14"
+    chalk "4.1.2"
+
+"@applitools/logger@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.1.tgz#28262ad525c5f7896e43788302acb8e6ffdab2b7"
+  integrity sha512-4jtQB8kv+pe3SDPWp614oSw9y5HlEWVHfCqks3HhntvbhuCvjnHOVUiGUTSl9DuroMKQozmpfgxQi0i/f+OrPQ==
   dependencies:
     "@applitools/utils" "1.2.14"
     chalk "4.1.2"
@@ -242,17 +233,17 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
   integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
-"@applitools/visual-grid-client@15.12.7":
-  version "15.12.7"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.7.tgz#f95f1576ba237ec5d67e3a1c6fb00466e09e7636"
-  integrity sha512-ai0RH9veD4U2KIfYlbQhHIE4yd+uEJllkAQIIwAlelJcRLgMpnnRILQksOXLTiKOzHupMnDO3PUcJV8UXyiiCg==
+"@applitools/visual-grid-client@15.12.8":
+  version "15.12.8"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.8.tgz#5054c1130eb68d3df7113e933b6d8a7a2bba5f35"
+  integrity sha512-NJd9GJZOutKUxrYgXQPmSOC4zy6GHaLeKaqLj9UPGX3OHWK3g6qNFcMxjRwsQLm9t7v6ZqDaEeqk3LTC5ZKT7A==
   dependencies:
-    "@applitools/eyes-sdk-core" "13.4.0"
+    "@applitools/eyes-sdk-core" "13.4.1"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.5"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/jsdom" "1.0.4"
-    "@applitools/logger" "1.0.12"
+    "@applitools/logger" "1.1.0"
     abort-controller "3.0.0"
     chalk "3.0.0"
     postcss-value-parser "4.1.0"
