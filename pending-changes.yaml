@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - |
-      Make sure `ios` platformName is changed to `iOS` (fixing a bug in Java Appium)
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

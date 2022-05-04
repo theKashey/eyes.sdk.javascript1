@@ -8,6 +8,13 @@
 
 
 
+
+## 2.3.1 - 2022/5/4
+
+### Features
+### Bug fixes
+- Make sure `ios` platformName is changed to `iOS` (fixing a bug in Java Appium)
+
 ## 2.3.0 - 2022/5/3
 
 ### Features
