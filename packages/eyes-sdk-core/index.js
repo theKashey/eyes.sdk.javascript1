@@ -3,6 +3,7 @@
 
 exports.checkSpecDriver = require('@applitools/driver/dist/debug').checkSpecDriver
 exports.makeSDK = require('./lib/new/sdk')
+exports.makeExecutionGridClient = require('@applitools/execution-grid-client').makeServer
 
 // config
 exports.AccessibilityLevel = require('./lib/config/AccessibilityLevel')

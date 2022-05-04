@@ -2,6 +2,7 @@
 
 import yargs from 'yargs'
 import {makeServer} from './universal-server'
+import {makeExecutionGridClient} from '@applitools/eyes-sdk-core'
 
 yargs
   .example([
@@ -9,6 +10,7 @@ yargs
     ['$ eyes-universal --port 8080', 'Run Eyes Universal server on port 8080'],
     ['$ eyes-universal --no-singleton', 'Run Eyes Universal server on a non-singleton mode'],
     ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
+    ['$ eyes-universal --eg', 'Launch the execution grid client'],
   ])
   .command({
     command: '*',
@@ -45,6 +47,14 @@ yargs
           type: 'string',
           coerce: JSON.parse,
         },
+        eg: {
+          description: 'launch the execution grid client',
+          type: 'boolean',
+          default: false,
+        },
       }),
-    handler: args => makeServer(args.config ?? (args as any)),
+    handler: args => {
+      if (args.eg) return makeExecutionGridClient()
+      return makeServer(args.config ?? (args as any))
+    },
   }).argv

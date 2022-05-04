@@ -1,4 +1,5 @@
 import type * as types from '@applitools/types'
+export {makeServer as makeExecutionGridClient} from '@applitools/execution-grid-client'
 
 export function makeSDK<TDriver, TContext, TElement, TSelector>(options: {
   name: string
