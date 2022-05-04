@@ -7,9 +7,6 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "publishConfig": {
-    "access": "restricted"
-  },
   "bin": {
     "eg-client": "./bin/cli.js"
   },
