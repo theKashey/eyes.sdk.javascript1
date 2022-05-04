@@ -1,9 +1,9 @@
 import * as utils from '@applitools/utils'
 import {inspect} from 'util'
-import chalk, {type ForegroundColor, type BackgroundColor} from 'chalk'
+import chalk from 'chalk'
 import {type LogLevelName} from './log-level'
 
-type Style = ForegroundColor | BackgroundColor
+type Style = typeof chalk.ForegroundColor | typeof chalk.BackgroundColor
 
 export type ColoringOptions = {
   timestamp?: Style | Style[]
