@@ -995,7 +995,7 @@ describe('user agent', () => {
         maxTypingFrequency: 8,
         noSign: true,
         deviceApiLevel: 24,
-        platformName: 'android',
+        platformName: 'android', // THIS IS THE IMPORTANT PART
         events: {
           commands: [[Object], [Object], [Object], [Object], [Object], [Object]],
         },
@@ -1043,7 +1043,7 @@ describe('user agent', () => {
     assert.deepStrictEqual(driverInfo, {
       browserName: undefined,
       browserVersion: undefined,
-      platformName: 'android',
+      platformName: 'android', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
       platformVersion: '7.0',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
       orientation: 'portrait',
@@ -1056,6 +1056,7 @@ describe('user agent', () => {
       isAndroid: true,
     })
   })
+
   it('should set android platformName to start with uppercase if config.keepPlatformNameAsIs is not set', () => {
     const driverInfo = parseCapabilities({
       deviceName: 'emulator-5554',
@@ -1077,7 +1078,7 @@ describe('user agent', () => {
       maxTypingFrequency: 8,
       noSign: true,
       deviceApiLevel: 24,
-      platformName: 'android',
+      platformName: 'android', // THIS IS THE IMPORTANT PART
       events: {
         commands: [[Object], [Object], [Object], [Object], [Object], [Object]],
       },
@@ -1123,7 +1124,7 @@ describe('user agent', () => {
     assert.deepStrictEqual(driverInfo, {
       browserName: undefined,
       browserVersion: undefined,
-      platformName: 'Android',
+      platformName: 'Android', // THIS IS THE IMPORTANT PART (it was capitalized because keepPlatformNameAsIs was not set)
       platformVersion: '7.0',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
       orientation: 'portrait',
@@ -1136,6 +1137,60 @@ describe('user agent', () => {
       isAndroid: true,
     })
   })
+
+  it('should keep ios platformName with lowercase if config.keepPlatformNameAsIs is set to true', () => {
+    const driverInfo = parseCapabilities(
+      {
+        deviceName: 'iPhone 8',
+        platformVersion: '11.0',
+        platformName: 'ios', // THIS IS THE IMPORTANT PART
+        orientation: 'PORTRAIT',
+        pixelRatio: 2,
+      },
+      {keepPlatformNameAsIs: true},
+    )
+    assert.deepStrictEqual(driverInfo, {
+      browserName: undefined,
+      browserVersion: undefined,
+      deviceName: 'iPhone 8',
+      platformName: 'ios', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
+      platformVersion: '11.0',
+      orientation: 'portrait',
+      statusBarHeight: undefined,
+      pixelRatio: 2,
+      isW3C: true,
+      isMobile: true,
+      isNative: true,
+      isIOS: true,
+      isAndroid: false,
+    })
+  })
+
+  it('should set ios platformName to start with uppercase if config.keepPlatformNameAsIs is not set', () => {
+    const driverInfo = parseCapabilities({
+      deviceName: 'iPhone 8',
+      platformVersion: '11.0',
+      platformName: 'ios', // THIS IS THE IMPORTANT PART
+      orientation: 'PORTRAIT',
+      pixelRatio: 2,
+    })
+    assert.deepStrictEqual(driverInfo, {
+      browserName: undefined,
+      browserVersion: undefined,
+      deviceName: 'iPhone 8',
+      platformName: 'iOS', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
+      platformVersion: '11.0',
+      orientation: 'portrait',
+      statusBarHeight: undefined,
+      pixelRatio: 2,
+      isW3C: true,
+      isMobile: true,
+      isNative: true,
+      isIOS: true,
+      isAndroid: false,
+    })
+  })
+
   it('should work with Safari on iPhone 8 using Appium 1.8 in Sauce', () => {
     const driverInfo = parseCapabilities({
       deviceName: 'iPhone 8',

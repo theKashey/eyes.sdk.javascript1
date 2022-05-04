@@ -7,8 +7,17 @@ export function parseCapabilities(
   customConfig?: types.CustomCapabilitiesConfig,
 ): types.DriverInfo {
   if (capabilities.capabilities) capabilities = capabilities.capabilities
-  if (capabilities.platformName?.startsWith('android') && !customConfig?.keepPlatformNameAsIs) {
-    capabilities.platformName = capabilities.platformName.charAt(0).toUpperCase() + capabilities.platformName.slice(1)
+
+  if (!customConfig?.keepPlatformNameAsIs) {
+    // We use `startsWith` for just a theorerical reason. It's not based on any concrete case that we knew of at the time of writing this code.
+    if (capabilities.platformName?.startsWith('android')) {
+      capabilities.platformName = capabilities.platformName.charAt(0).toUpperCase() + capabilities.platformName.slice(1)
+    }
+
+    // We use `startsWith` for just a theorerical reason. It's not based on any concrete case that we knew of at the time of writing this code.
+    if (capabilities.platformName?.startsWith('ios')) {
+      capabilities.platformName = 'iOS' + capabilities.platformName.slice(3)
+    }
   }
 
   const info: types.DriverInfo = {
