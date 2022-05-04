@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2.4.0 - 2022/5/4
+
+### Features
+- Add the ability to launch the execution grid client through a command-line argument
+### Bug fixes
+
 ## 2.3.1 - 2022/5/4
 
 ### Features
