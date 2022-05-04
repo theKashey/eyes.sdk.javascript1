@@ -44,15 +44,6 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.7.2.tgz#33fb31d86842090a698bf5a658890f258b6a7742"
-  integrity sha512-huBRd3W7mTelLI0xLpU68p/rb0SafYp6YKgg79qxDKKKNVzNC8jrm20K2n5Wn5VuPDDleTzwkgADGt/UAhkYiQ==
-  dependencies:
-    "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.3.2"
-    "@applitools/utils" "1.2.14"
-
 "@applitools/driver@1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.0.tgz#e54d35c889032fbb5f09978e367545537f7357d9"
@@ -62,19 +53,28 @@
     "@applitools/types" "1.4.0"
     "@applitools/utils" "1.2.14"
 
-"@applitools/eyes-sdk-core@13.3.5":
-  version "13.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.3.5.tgz#60eafd54b60a1fc367b65059eec0f839be5ab319"
-  integrity sha512-XlG7IWRYDRrnIyMz2hKZdDKX/xGGlJnt1ZRLv7VsfKHxU/Rnxcc+Cwh88uDIumCLgt0t/XXyCrSqLX5uzyFLRQ==
+"@applitools/driver@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.1.tgz#9cae926ec67a8a9584bfb5667ef39894051b1a9a"
+  integrity sha512-q8VLCdRwXqae7hElL+XEiIJSIJMfa8kcgfr+lDATm/FEYxe8jFLG2FWkNLrmo+piuAtI0fZGSExlLk0B1TYgKA==
+  dependencies:
+    "@applitools/snippets" "2.2.3"
+    "@applitools/types" "1.4.0"
+    "@applitools/utils" "1.2.14"
+
+"@applitools/eyes-sdk-core@13.4.0":
+  version "13.4.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.4.0.tgz#80079c439d37a405361bd124876483823000f8ca"
+  integrity sha512-q5kNCEOQWWoLI0z5rZOGT5NaE5fstDvyG0QjyU4m8zjVN3yPijRRlYGXpZ4o0scmdW4JxN8HQ+8Nt/HsGSCghA==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.7.2"
+    "@applitools/driver" "1.8.0"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.0.12"
     "@applitools/screenshoter" "3.3.17"
     "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.3.2"
+    "@applitools/types" "1.4.0"
     "@applitools/utils" "1.2.14"
     axios "0.26.0"
     chalk "3.0.0"
@@ -150,6 +150,14 @@
   dependencies:
     "@applitools/utils" "1.2.14"
     chalk "3.0.0"
+
+"@applitools/logger@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.0.tgz#6261ef598176cf17f6eb2f92f1fb5083334f86d5"
+  integrity sha512-as/mFmmugw0L+wClgN+TPL5VGEYyYgxYXlfKWTpUC/QAiKLUD/PnAsmTXten75ud1n+EjugOWixHyXOx2FJ5ag==
+  dependencies:
+    "@applitools/utils" "1.2.14"
+    chalk "4.1.2"
 
 "@applitools/monitoring-commons@^1.0.19":
   version "1.0.19"
@@ -234,12 +242,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
   integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
-"@applitools/visual-grid-client@15.12.6":
-  version "15.12.6"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.6.tgz#2fa79a09350e1c6a98fb1275f1109a56fe478667"
-  integrity sha512-bXDbuesErXQKHPGAeHzs5Oz34luGPzuWuOPzyhbZPTfmgdJsAeMlfViQfm3CjNayUnw8rEwVFDFa4kvSkOKzWA==
+"@applitools/visual-grid-client@15.12.7":
+  version "15.12.7"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.7.tgz#f95f1576ba237ec5d67e3a1c6fb00466e09e7636"
+  integrity sha512-ai0RH9veD4U2KIfYlbQhHIE4yd+uEJllkAQIIwAlelJcRLgMpnnRILQksOXLTiKOzHupMnDO3PUcJV8UXyiiCg==
   dependencies:
-    "@applitools/eyes-sdk-core" "13.3.5"
+    "@applitools/eyes-sdk-core" "13.4.0"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.5"
     "@applitools/isomorphic-fetch" "3.0.0"
@@ -571,6 +579,14 @@ chalk@4.1.1:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+chalk@4.1.2, chalk@^4.0.0:
+  version "4.1.2"
+  resolved "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
+  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
 chalk@^2.0.0:
   version "2.4.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz"
@@ -579,14 +595,6 @@ chalk@^2.0.0:
     ansi-styles "^3.2.1"
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
-
-chalk@^4.0.0:
-  version "4.1.2"
-  resolved "https://registry.npmjs.org/chalk/-/chalk-4.1.2.tgz"
-  integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
-  dependencies:
-    ansi-styles "^4.1.0"
-    supports-color "^7.1.0"
 
 check-error@^1.0.2:
   version "1.0.2"
