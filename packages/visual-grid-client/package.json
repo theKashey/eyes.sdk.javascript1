@@ -32,12 +32,12 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "13.4.1",
+    "@applitools/eyes-sdk-core": "13.4.2",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.5",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/jsdom": "1.0.4",
-    "@applitools/logger": "1.1.0",
+    "@applitools/logger": "1.1.1",
     "abort-controller": "3.0.0",
     "chalk": "3.0.0",
     "postcss-value-parser": "4.1.0",
