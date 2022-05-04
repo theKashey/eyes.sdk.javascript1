@@ -9,6 +9,7 @@ declare namespace Applitools {
       getUrl(): string
       getTitle(): string
       getOrientation(): string
+      setOrientation(orientation: string): void
       getSystemBars(): object[]
       getContext(): string
       getElementAttribute(elementId: string, attr: string): string

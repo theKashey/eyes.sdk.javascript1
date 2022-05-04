@@ -9,6 +9,7 @@ declare namespace Applitools {
       getUrl(): Promise<string>
       getTitle(): Promise<string>
       getOrientation(): Promise<string>
+      setOrientation(orientation: string): Promise<void>
       getSystemBars(): Promise<object[]>
       getContext(): Promise<string>
       getElementAttribute(elementId: string, attr: string): Promise<string>
