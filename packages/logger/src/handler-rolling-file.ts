@@ -1,16 +1,25 @@
-const path = require('path')
-const fs = require('fs')
-const os = require('os')
+import * as path from 'path'
+import * as fs from 'fs'
+import * as os from 'os'
+import {type Handler} from './handler'
 
-function makeRollingFileLogger({
+export type RollingFileHandler = {
+  type: 'rolling file'
+  dirname?: string
+  name?: string
+  maxFileLength?: number
+  maxFileNumber?: number
+}
+
+export function makeRollingFileHandler({
   dirname = os.tmpdir(),
   name = 'rolling-log',
   maxFileLength = 52428800 /* 50 MB */,
   maxFileNumber = 4,
-}) {
-  let writer = null
+}: Omit<RollingFileHandler, 'type'> = {}): Handler {
+  let writer: fs.WriteStream = null
   let fileLength = 0
-  let logFiles = findLogFiles({dirname, name})
+  const logFiles = findLogFiles({dirname, name})
 
   return {log, open, close}
 
@@ -31,7 +40,7 @@ function makeRollingFileLogger({
     writer.end()
     writer = null
   }
-  function log(message) {
+  function log(message: string) {
     if (!writer) open()
     message += os.EOL
     const messageLength = Buffer.byteLength(message, 'utf8')
@@ -41,7 +50,7 @@ function makeRollingFileLogger({
   }
 }
 
-function findLogFiles({dirname, name}) {
+function findLogFiles({dirname, name}: {dirname: string; name: string}): string[] {
   if (!fs.existsSync(dirname)) return []
   const filenames = fs.readdirSync(dirname)
   const filenamePattern = new RegExp(`^${name}-\\d{4}_\\d{2}_\\d{2}_\\d{2}_\\d{2}_\\d{2}\\_\\d{3}Z\\.log$`)
@@ -51,12 +60,10 @@ function findLogFiles({dirname, name}) {
     .map(filename => path.resolve(dirname, filename))
 }
 
-function ensureDirectoryExistence(filename) {
+function ensureDirectoryExistence(filename: string) {
   const dirname = path.dirname(filename)
   if (!fs.existsSync(dirname)) {
     ensureDirectoryExistence(dirname)
     fs.mkdirSync(dirname)
   }
 }
-
-module.exports = makeRollingFileLogger

@@ -22,24 +22,27 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "main": "./index.js",
   "browser": {
     "tunnel": false
   },
-  "types": "./index.d.ts",
-  "directories": {
-    "lib": "./src",
-    "test": "./test"
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./dist/*": "./dist/*.js",
+    "./package.json": "./package.json"
   },
   "files": [
-    "src",
-    "index.js",
-    "index.d.ts"
+    "dist",
+    "types"
   ],
   "scripts": {
-    "lint": "eslint '**/*.js'",
-    "test": "yarn test:e2e",
-    "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
+    "lint": "eslint '**/*.ts'",
+    "build": "tsc",
+    "test": "mocha --no-timeouts -r ts-node/register ./test/**/*.spec.ts",
     "deps": "bongo deps",
     "preversion": "bongo preversion",
     "version": "bongo version",
@@ -52,17 +55,24 @@
   },
   "dependencies": {
     "@applitools/utils": "1.2.14",
-    "chalk": "3.0.0"
+    "chalk": "4.1.2"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.0.3",
-    "eslint": "^7.9.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.31",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^4.3.8",
-    "mocha": "^8.0.1",
-    "prettier": "^2.1.2"
+    "mocha": "9",
+    "prettier": "^2.6.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6"
   },
   "engines": {
     "node": ">= 8.9.0"

@@ -1,9 +1,9 @@
-const assert = require('assert')
-const fs = require('fs')
-const path = require('path')
-const chalk = require('chalk')
-const utils = require('@applitools/utils')
-const makeLogger = require('../../src/logger')
+import assert from 'assert'
+import * as fs from 'fs'
+import * as path from 'path'
+import chalk from 'chalk'
+import * as utils from '@applitools/utils'
+import {makeLogger} from '../../src'
 
 describe('logger', () => {
   it('level silent', () => {
@@ -90,7 +90,7 @@ describe('logger', () => {
   })
 
   it('colors', () => {
-    const timestamp = new Date('2021-03-19T16:49:00.000Z').toISOString()
+    const timestamp = new Date('2021-03-19T16:49:00.000Z') as any
     const tags = {applitools: true}
     const logger = makeLogger({
       handler: {type: 'console'},
@@ -107,7 +107,7 @@ describe('logger', () => {
       logger.fatal('fatal')
     })
 
-    const prelude = `${chalk.cyan('Applitools')} ${chalk.greenBright(timestamp)}`
+    const prelude = `${chalk.cyan('Applitools')} ${chalk.greenBright(timestamp.toISOString())}`
 
     assert.deepStrictEqual(output.stdout, [
       `${prelude} ${chalk.bgBlueBright.black(' INFO  ')} ${chalk.blueBright(JSON.stringify(tags))} info\n`,
@@ -125,7 +125,7 @@ describe('logger', () => {
       handler: {type: 'file', filename},
       level: 'info',
       tags: {tag: '&&&'},
-      timestamp: new Date('2021-03-19T16:49:00.000Z'),
+      timestamp: new Date('2021-03-19T16:49:00.000Z') as any,
     })
 
     logger.log('info')
@@ -154,7 +154,7 @@ describe('logger', () => {
       handler: {type: 'rolling file', dirname, name: 'test', maxFileLength: 100},
       level: 'info',
       tags: {tag: '&&&'},
-      timestamp: new Date('2021-03-19T16:49:00.000Z'),
+      timestamp: new Date('2021-03-19T16:49:00.000Z') as any,
     })
 
     logger.log('info')
@@ -187,7 +187,7 @@ describe('logger', () => {
   it('handler custom', () => {
     const output = []
     const handler = {log: message => output.push(message)}
-    const logger = makeLogger({handler, level: 'info', timestamp: new Date('2021-03-19T16:49:00.000Z')})
+    const logger = makeLogger({handler, level: 'info', timestamp: new Date('2021-03-19T16:49:00.000Z') as any})
 
     logger.log('info')
     logger.warn('warn')
@@ -206,7 +206,7 @@ describe('logger', () => {
     const output = []
     const format = (chunks, options) => ({chunks, ...options})
     const handler = {log: message => output.push(message)}
-    const timestamp = new Date('2021-03-19T16:49:00.000Z')
+    const timestamp = new Date('2021-03-19T16:49:00.000Z') as any
     const label = 'Test'
     const logger = makeLogger({handler, format, level: 'info', label, timestamp})
 
@@ -216,10 +216,10 @@ describe('logger', () => {
     logger.fatal('fatal')
 
     assert.deepStrictEqual(output, [
-      {chunks: ['info'], label, level: 'info', tags: undefined, timestamp, colors: false},
-      {chunks: ['warn'], label, level: 'warn', tags: undefined, timestamp, colors: false},
-      {chunks: ['error'], label, level: 'error', tags: undefined, timestamp, colors: false},
-      {chunks: ['fatal'], label, level: 'fatal', tags: undefined, timestamp, colors: false},
+      {chunks: ['info'], label, level: 'info', tags: undefined, timestamp, colors: undefined},
+      {chunks: ['warn'], label, level: 'warn', tags: undefined, timestamp, colors: undefined},
+      {chunks: ['error'], label, level: 'error', tags: undefined, timestamp, colors: undefined},
+      {chunks: ['fatal'], label, level: 'fatal', tags: undefined, timestamp, colors: undefined},
     ])
   })
 
@@ -256,12 +256,8 @@ describe('logger', () => {
     const output = {stdout: [], stderr: []}
     const originalStdoutWrite = process.stdout.write.bind(process.stdout)
     const originalStderrWrite = process.stderr.write.bind(process.stderr)
-    process.stdout.write = (chunk, encoding, callback) => (
-      output.stdout.push(chunk), originalStdoutWrite(chunk, encoding, callback)
-    )
-    process.stderr.write = (chunk, encoding, callback) => (
-      output.stderr.push(chunk), originalStderrWrite(chunk, encoding, callback)
-    )
+    process.stdout.write = (chunk, ...rest: any[]) => (output.stdout.push(chunk), originalStdoutWrite(chunk, ...rest))
+    process.stderr.write = (chunk, ...rest: any[]) => (output.stderr.push(chunk), originalStderrWrite(chunk, ...rest))
     action()
     process.stdout.write = originalStdoutWrite
     process.stderr.write = originalStderrWrite

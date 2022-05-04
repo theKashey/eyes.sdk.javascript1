@@ -1,9 +1,16 @@
-const path = require('path')
-const fs = require('fs')
-const os = require('os')
+import * as path from 'path'
+import * as fs from 'fs'
+import * as os from 'os'
+import {type Handler} from './handler'
 
-function makeFileLogger({filename = 'eyes.log', append = true}) {
-  let writer = null
+export type FileHandler = {
+  type: 'file'
+  filename?: string
+  append?: boolean
+}
+
+export function makeFileHandler({filename = 'eyes.log', append = true}: Omit<FileHandler, 'type'> = {}): Handler {
+  let writer: fs.WriteStream = null
 
   return {log, open, close}
 
@@ -17,18 +24,16 @@ function makeFileLogger({filename = 'eyes.log', append = true}) {
     writer.end()
     writer = null
   }
-  function log(message) {
+  function log(message: string) {
     if (!writer) open()
     writer.write(message + os.EOL)
   }
 }
 
-function ensureDirectoryExistence(filename) {
+function ensureDirectoryExistence(filename: string) {
   const dirname = path.dirname(filename)
   if (!fs.existsSync(dirname)) {
     ensureDirectoryExistence(dirname)
     fs.mkdirSync(dirname)
   }
 }
-
-module.exports = makeFileLogger
