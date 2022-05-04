@@ -37,7 +37,7 @@
     "@applitools/dom-capture": "11.1.0",
     "@applitools/dom-snapshot": "4.5.12",
     "@applitools/driver": "1.8.1",
-    "@applitools/execution-grid-client": "^1.0.1",
+    "@applitools/execution-grid-client": "1.0.1",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/logger": "1.1.1",
     "@applitools/screenshoter": "3.3.17",
