@@ -14,7 +14,7 @@ export type LoggerOptions = Omit<PrinterOptions, 'handler' | 'level' | 'colors'>
   console?: boolean | Handler
 }
 
-export type ExtendOptions = Omit<LoggerOptions, 'handler' | 'console'>
+export type ExtendOptions = Omit<LoggerOptions, 'handler'>
 
 export interface Logger extends Printer {
   isLogger: true
