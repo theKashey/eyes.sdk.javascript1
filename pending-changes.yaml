@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Add execution grid tunnel support to the execution grid client
   bug-fix:
     - 
 "@applitools/eyes-selenium":
