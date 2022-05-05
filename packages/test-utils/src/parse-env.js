@@ -60,8 +60,9 @@ const DEVICES = {
       processArguments: {
         args: [],
         env: {
-          DYLD_INSERT_LIBRARIES: '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib'
-        }
+          DYLD_INSERT_LIBRARIES:
+            '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
+        },
       },
       ...SAUCE_CREDENTIALS,
     },
@@ -201,8 +202,8 @@ const DEVICES = {
       deviceOrientation: 'portrait',
       autoGrantPermissions: true,
       autoAcceptAlerts: true,
-      appPackage: "com.duckduckgo.mobile.android.debug",
-      appActivity: "com.duckduckgo.app.launch.Launcher",
+      appPackage: 'com.duckduckgo.mobile.android.debug',
+      appActivity: 'com.duckduckgo.app.launch.Launcher',
       'settings[allowInvisibleElements]': true,
       ...SAUCE_CREDENTIALS,
     },
@@ -326,8 +327,8 @@ const DEVICES = {
       platformVersion: '9.0',
       deviceOrientation: 'portrait',
       automationName: 'UiAutomator2',
-      appPackage: "com.duckduckgo.mobile.android.debug",
-      appActivity: "com.duckduckgo.app.launch.Launcher",
+      appPackage: 'com.duckduckgo.mobile.android.debug',
+      appActivity: 'com.duckduckgo.app.launch.Launcher',
       'settings[allowInvisibleElements]': true,
       'bstack:options': {
         deviceName: 'Google Pixel 2',
