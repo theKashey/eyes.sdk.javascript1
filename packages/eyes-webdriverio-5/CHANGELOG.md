@@ -5,6 +5,18 @@
 
 
 
+
+## 5.34.14 - 2022/5/5
+
+### Features
+- Support UFG for native mobile
+### Bug fixes
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- accept ios and android lowercase as driver platformName capability when using custom grid
+- Fixed check region fully in classic execution when using CSS stitching
+- Support data urls in iframes
+- Account for an Appium bug when calculating system bars height
+
 ## 5.34.13 - 2022/3/25
 
 ### Features

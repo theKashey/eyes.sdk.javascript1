@@ -20,14 +20,9 @@ Apollo SDK:
     - Fixed check region fully in classic execution when using CSS stitching
 "@applitools/eyes-webdriverio":
   feature:
-    - Support UFG for native mobile
+    - 
   bug-fix:
-    - |
-      `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
-    - accept ios and android lowercase as driver platformName capability when using custom grid
-    - Fixed check region fully in classic execution when using CSS stitching
-    - Support data urls in iframes
-    - Account for an Appium bug when calculating system bars height
+    - 
 "@applitools/eyes-playwright":
   feature:
     - 
