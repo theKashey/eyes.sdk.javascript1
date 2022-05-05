@@ -1,4 +1,4 @@
-const SAUCE_SERVER_URL = 'https://ondemand.saucelabs.com:443/wd/hub'
+const SAUCE_SERVER_URL = 'https://ondemand.us-west-1.saucelabs.com/wd/hub'
 
 const SAUCE_CREDENTIALS = {
   username: process.env.SAUCE_USERNAME,
