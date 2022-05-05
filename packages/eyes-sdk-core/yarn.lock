@@ -53,18 +53,6 @@
     "@applitools/types" "1.4.0"
     "@applitools/utils" "1.2.14"
 
-"@applitools/execution-grid-client@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.0.1.tgz#1d756e6482033f315f13369e445bd4423a0ef262"
-  integrity sha512-D9iZSOkJZDP8lg6CSIglwqrtdfUEg1rf84FuDwJIGNYyu5ekCCnHsyD7Ii/GEdDZjscNshXProkhVvHPe+ANBA==
-  dependencies:
-    "@applitools/logger" "1.1.1"
-    "@applitools/utils" "1.2.14"
-    http-proxy "1.18.1"
-    node-fetch "3.2.4"
-    raw-body "2.5.1"
-    yargs "17.4.1"
-
 "@applitools/execution-grid-client@1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.0.tgz#d072786c470708a19879beca0bae8d9859361fa3"
@@ -77,15 +65,15 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.5.0":
-  version "13.5.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.5.0.tgz#0b663445b131fcbcabd3ba2133e72e91746cdc65"
-  integrity sha512-WyV9c7x9IzhSTlt6mQTMYoauAJm+WDGv8RGVGSDt8rsaxEcd5h4ddHRQ+54Nm1G2T5Z4KanfrIgeD8yhoNNg9w==
+"@applitools/eyes-sdk-core@13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.0.tgz#cd8559754b947a8e19352e4b4e936d75265e80c2"
+  integrity sha512-LfeaJYME3nQsOiKU+D9tK1Q8aRtcLF++dLYxPVZfajcKP0Rrcupq69xfE0O4I7lfzZA/flg7nl6ZaIa+YnqLbw==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
     "@applitools/driver" "1.8.1"
-    "@applitools/execution-grid-client" "1.0.1"
+    "@applitools/execution-grid-client" "1.1.0"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.1.1"
     "@applitools/screenshoter" "3.3.17"
@@ -250,12 +238,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.4.tgz#4cf47b3fb0961fb170195c599ee5ca8ec5a0fb74"
   integrity sha512-w7ma6FFGyqhdP6LEcuHFWOcH7EzBjnoAX3UfbFWcTHA3QXnXPX37Y2ENYRodfwkorP1cUKyUHwNXJB/BMIj/hg==
 
-"@applitools/visual-grid-client@15.12.10":
-  version "15.12.10"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.10.tgz#9fa9c5155fd22e4b4addd3f678261f72dd29ef44"
-  integrity sha512-9Xdp/5ljGQazWUfMiHGWUvMLZlp7NFT5nWxqyVQdTgmJ2gv+vgdtAvkOIY2D6kcsyJx3rCszxyyQbXOgDEjiCQ==
+"@applitools/visual-grid-client@15.12.11":
+  version "15.12.11"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-15.12.11.tgz#696f4b603a2b8e28b2a71398cc0c76528f9c2213"
+  integrity sha512-TE8zfLybdjDN3NnT4HfOT2MEc+LjfVLs71ZSXLONHcgBrU1NzHf3izQbAnCeHgjjvHcFjvTI6PYCePhJah3xZQ==
   dependencies:
-    "@applitools/eyes-sdk-core" "13.5.0"
+    "@applitools/eyes-sdk-core" "13.6.0"
     "@applitools/functional-commons" "1.6.0"
     "@applitools/http-commons" "2.4.5"
     "@applitools/isomorphic-fetch" "3.0.0"
@@ -797,11 +785,6 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-data-uri-to-buffer@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/data-uri-to-buffer/-/data-uri-to-buffer-4.0.0.tgz#b5db46aea50f6176428ac05b73be39a57701a64b"
-  integrity sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==
-
 data-urls@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/data-urls/-/data-urls-3.0.1.tgz"
@@ -1193,14 +1176,6 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.npmjs.org/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fetch-blob@^3.1.2, fetch-blob@^3.1.4:
-  version "3.1.5"
-  resolved "https://registry.npmjs.org/fetch-blob/-/fetch-blob-3.1.5.tgz#0077bf5f3fcdbd9d75a0b5362f77dbb743489863"
-  integrity sha512-N64ZpKqoLejlrwkIAnb9iLSA3Vx/kjgzpcDhygcqJ2KKjky8nCgUQ+dzXtbrLaWZGZNmNfQTsiQ0weZ1svglHg==
-  dependencies:
-    node-domexception "^1.0.0"
-    web-streams-polyfill "^3.0.3"
-
 file-entry-cache@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npmjs.org/file-entry-cache/-/file-entry-cache-6.0.1.tgz"
@@ -1301,13 +1276,6 @@ form-data@^4.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
-
-formdata-polyfill@^4.0.10:
-  version "4.0.10"
-  resolved "https://registry.npmjs.org/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz#24807c31c9d402e002ab3d8c720144ceb8848423"
-  integrity sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==
-  dependencies:
-    fetch-blob "^3.1.2"
 
 forwarded@0.2.0:
   version "0.2.0"
@@ -1909,11 +1877,6 @@ nock@^13.0.4:
     lodash.set "^4.3.2"
     propagate "^2.0.0"
 
-node-domexception@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
-  integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
-
 node-fetch@2.6.0:
   version "2.6.0"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.0.tgz"
@@ -1930,15 +1893,6 @@ node-fetch@2.6.7:
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
   dependencies:
     whatwg-url "^5.0.0"
-
-node-fetch@3.2.4:
-  version "3.2.4"
-  resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-3.2.4.tgz#3fbca2d8838111048232de54cb532bd3cf134947"
-  integrity sha512-WvYJRN7mMyOLurFR2YpysQGuwYrJN+qrrpHjJDuKMcSPdfFccRUla/kng2mz6HWSBxJcqPbvatS6Gb4RhOzCJw==
-  dependencies:
-    data-uri-to-buffer "^4.0.0"
-    fetch-blob "^3.1.4"
-    formdata-polyfill "^4.0.10"
 
 node-fetch@^2.3.0, node-fetch@^2.6.0:
   version "2.6.5"
@@ -2682,11 +2636,6 @@ w3c-xmlserializer@^3.0.0:
   integrity sha512-3WFqGEgSXIyGhOmAFtlicJNMjEps8b1MG31NCA0/vOF9+nKMUW1ckhi9cnNHmf88Rzw5V+dwIwsm2C7X8k9aQg==
   dependencies:
     xml-name-validator "^4.0.0"
-
-web-streams-polyfill@^3.0.3:
-  version "3.2.1"
-  resolved "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
-  integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
 
 webidl-conversions@^3.0.0:
   version "3.0.1"
