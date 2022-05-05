@@ -105,7 +105,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getRegion(shouldIgnoreSafeRegion?: boolean): Promise<types.Region> {
+  async getRegion(): Promise<types.Region> {
     const region = await this.withRefresh(async () => {
       if (this.driver.isWeb) {
         this._logger.log('Extracting region of web element with selector', this.selector)
@@ -114,7 +114,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         this._logger.log('Extracting region of native element with selector', this.selector)
         const region = await this._spec.getElementRegion(this.driver.target, this.target)
         this._logger.log('Extracted native region', region)
-        return this.driver.normalizeRegion(region, shouldIgnoreSafeRegion)
+        return this.driver.normalizeRegion(region)
       }
     })
     this._logger.log('Extracted region', region)
