@@ -184,7 +184,7 @@ class ServerConnector {
       return runningSession
     }
 
-    throw new Error(`ServerConnector.startSession - unexpected status (${response.statusText})`)
+    throw new Error('ServerConnector.startSession - unexpected status', response.status, response.statusText)
   }
 
   /**

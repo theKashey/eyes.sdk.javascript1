@@ -1719,7 +1719,7 @@ class EyesBase {
 
     await this._sessionEventHandlers.initStarted()
     const appEnvironment = await this.getAppEnvironment()
-    this._logger.log(`Application environment is ${appEnvironment}`)
+    this._logger.log('Application environment is', appEnvironment)
     await this._sessionEventHandlers.initEnded()
 
     let parentBranchBaselineSavedBefore
@@ -1750,7 +1750,7 @@ class EyesBase {
       agentRunId: this.agentRunId,
     })
 
-    this._logger.log('Starting server session...')
+    this._logger.log('Starting server session...', this._sessionStartInfo)
     this._runningSession = await this._serverConnector.startSession(this._sessionStartInfo)
     this._logger.log(`Server session ID is ${this._runningSession.getId()}`)
 
