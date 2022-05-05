@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2.5.0 - 2022/5/5
+
+### Features
+- Add execution grid tunnel support to the execution grid client
+### Bug fixes
+
 ## 2.4.0 - 2022/5/4
 
 ### Features
