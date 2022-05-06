@@ -102,8 +102,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - update the README entry 'saveNewTests'
-    - added `properties` and `notifyOnCompletion` as optional Types of Batch (for TS)
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 

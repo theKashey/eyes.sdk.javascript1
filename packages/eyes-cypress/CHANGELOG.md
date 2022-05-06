@@ -7,6 +7,13 @@
 
 
 
+## 3.25.7 - 2022/5/6
+
+### Features
+### Bug fixes
+- update the README entry 'saveNewTests'
+- added `properties` and `notifyOnCompletion` as optional Types of Batch (for TS)
+
 ## 3.25.6 - 2022/4/25
 
 ### Features
