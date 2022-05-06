@@ -171,10 +171,10 @@
     "@applitools/utils" "1.2.13"
     chalk "3.0.0"
 
-"@applitools/logger@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.1.tgz#28262ad525c5f7896e43788302acb8e6ffdab2b7"
-  integrity sha512-4jtQB8kv+pe3SDPWp614oSw9y5HlEWVHfCqks3HhntvbhuCvjnHOVUiGUTSl9DuroMKQozmpfgxQi0i/f+OrPQ==
+"@applitools/logger@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/@applitools/logger/-/logger-1.1.2.tgz#d7712df8a258434fa5af757bd9698dcf95de31ad"
+  integrity sha512-oi2QrXaIIz6qadXHOLBE0oGa8KdUQnzY+BY78QbNBkbgKuvgg3YW9ii+E5CWo3BScdZvzU4Obowv+3GR6gEM0w==
   dependencies:
     "@applitools/utils" "1.2.14"
     chalk "4.1.2"
