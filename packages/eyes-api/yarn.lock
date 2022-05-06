@@ -16,18 +16,18 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/logger@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.1.tgz#28262ad525c5f7896e43788302acb8e6ffdab2b7"
-  integrity sha512-4jtQB8kv+pe3SDPWp614oSw9y5HlEWVHfCqks3HhntvbhuCvjnHOVUiGUTSl9DuroMKQozmpfgxQi0i/f+OrPQ==
+"@applitools/logger@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/@applitools/logger/-/logger-1.1.2.tgz#d7712df8a258434fa5af757bd9698dcf95de31ad"
+  integrity sha512-oi2QrXaIIz6qadXHOLBE0oGa8KdUQnzY+BY78QbNBkbgKuvgg3YW9ii+E5CWo3BScdZvzU4Obowv+3GR6gEM0w==
   dependencies:
     "@applitools/utils" "1.2.14"
     chalk "4.1.2"
 
-"@applitools/types@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.0.tgz#9de5fcfa59c3e2b14bc5560da8bd92afd3078513"
-  integrity sha512-oyoAYJyW7C8YNhGKcoCWD67EtOtl3+DZJxe4fr93C/WDnwDE6c4I8u1e15tsGWb3ho79GM0AyoEvejDOVbvr8g==
+"@applitools/types@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/@applitools/types/-/types-1.4.2.tgz#b6c5c4678bb49d8625b3fb897cfbba962a72a9af"
+  integrity sha512-q0snFPtSQFH+0FhLNMXDbBsBeHQqOjuQEZPwlYb00KkrBHEwjq+DZ8zt14i/fISLBb/6cXzKkcMKkyWv2l6CMQ==
 
 "@applitools/utils@1.2.14":
   version "1.2.14"
