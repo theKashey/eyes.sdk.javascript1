@@ -2,7 +2,8 @@ const setupTests = require('./utils/core-e2e-utils')
 const {getTestInfo} = require('@applitools/test-utils')
 const assert = require('assert')
 
-describe('core e2e', () => {
+// TODO: The app used is no longer available in BrowserStack. Need to get that sorted.
+describe.skip('core e2e', () => {
   const env = {
     device: 'BrowserStack Google Pixel 2',
     app: 'app_android',
