@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - improve logging around Eyes start session requests
 "@applitools/eyes-selenium":
   feature:
     - |
