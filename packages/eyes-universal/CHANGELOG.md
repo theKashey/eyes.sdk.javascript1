@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2.5.1 - 2022/5/6
+
+### Features
+### Bug fixes
+- improve logging around Eyes start session requests
+
 ## 2.5.0 - 2022/5/5
 
 ### Features
