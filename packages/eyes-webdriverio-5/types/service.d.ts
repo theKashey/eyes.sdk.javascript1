@@ -10,22 +10,25 @@ import type {
   TestResultsSummary,
 } from './index'
 
-declare module WebdriverIO {
-  interface ServiceOption extends ConfigurationPlain {
-    useVisualGrid?: boolean
-    concurrency?: number
-    eyes?: ServiceOption
-  }
-  interface Browser {
-    getEyes(): Eyes
-    eyesCheck(title: string, checkSettings: CheckSettings | CheckSettingsPlain): Promise<void>
-    eyesSetScrollRootElement(element: Element | Selector): void
-    eyesAddProperty(key: string, value: string): void
-    eyesClearProperties(): void
-    eyesGetTestResults(): Promise<TestResults>
-    eyesSetConfiguration(configuration: ConfigurationPlain): void
-    eyesGetConfiguration(): Configuration
-    eyesGetIsOpen(): boolean
-    eyesGetAllTestResults(throwErr: boolean): Promise<TestResultsSummary>
+declare global {
+  namespace WebdriverIO {
+    interface ServiceOption extends ConfigurationPlain {
+      useVisualGrid?: boolean
+      concurrency?: number
+      eyes?: ServiceOption
+    }
+    interface Browser {
+      getEyes(): Eyes
+      eyesCheck(checkSettings?: CheckSettingsPlain): Promise<void>
+      eyesCheck(title: string, checkSettings: CheckSettings): Promise<void>
+      eyesSetScrollRootElement(element: Element | Selector): void
+      eyesAddProperty(key: string, value: string): void
+      eyesClearProperties(): void
+      eyesGetTestResults(): Promise<TestResults>
+      eyesSetConfiguration(configuration: ConfigurationPlain): void
+      eyesGetConfiguration(): Configuration
+      eyesGetIsOpen(): boolean
+      eyesGetAllTestResults(throwErr: boolean): Promise<TestResultsSummary>
+    }
   }
 }

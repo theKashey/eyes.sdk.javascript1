@@ -54,6 +54,7 @@
       "types": "./types/v5-sync.d.ts"
     },
     "./dist/*": "./dist/*.js",
+    "./types/*": "./dist/*.d.ts",
     "./package.json": "./package.json"
   },
   "typesVersions": {
