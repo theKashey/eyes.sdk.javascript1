@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - |
-      handle `firstMatch` property during start session request in eg-client
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |

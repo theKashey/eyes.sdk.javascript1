@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+
+## 2.5.4 - 2022/5/9
+
+### Features
+### Bug fixes
+- handle `firstMatch` property during start session request in eg-client
+
 ## 2.5.3 - 2022/5/9
 
 ### Features
