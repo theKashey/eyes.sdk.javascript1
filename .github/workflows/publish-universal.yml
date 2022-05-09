@@ -72,7 +72,7 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{env.PACKAGE_DIR}}
-          type: e2e
+          test-type: e2e
   publish:
     needs: [test]
     name: Publish
