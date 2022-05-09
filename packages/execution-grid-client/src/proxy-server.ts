@@ -49,7 +49,7 @@ export function makeServer({
         return await handleStopSession({request, response, logger: requestLogger})
       } else {
         requestLogger.log('Passthrough request')
-        return proxy(request, response, {target: forwardingUrl})
+        return await proxy(request, response, {target: forwardingUrl})
       }
     } catch (err) {
       logger.error(`Error during processing request:`, err)
@@ -135,7 +135,7 @@ export function makeServer({
     const sessionId = request.url.split('/').pop()
     logger.log(`Request was intercepted with sessionId:`, sessionId)
 
-    const proxyResponse = await proxy(request, response, {target: forwardingUrl, handle: true})
+    await proxy(request, response, {target: forwardingUrl})
 
     const session = sessions.get(sessionId)
     if (session.tunnelId) {
@@ -143,7 +143,5 @@ export function makeServer({
       logger.log(`Tunnel with id ${session.tunnelId} was deleted for session with id ${sessionId}`)
     }
     sessions.delete(sessionId)
-
-    proxyResponse.pipe(response.writeHead(proxyResponse.statusCode, proxyResponse.headers))
   }
 }
