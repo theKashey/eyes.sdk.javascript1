@@ -4,7 +4,7 @@ import {Readable} from 'stream'
 
 type ProxyOptions = {
   target: string
-  forward?: boolean
+  handle?: boolean
   body?: Record<string, any>
   headers?: Record<string, string>
 }
@@ -18,8 +18,8 @@ export async function proxy(
   return new Promise((resolve, reject) => {
     const content = options.body ? JSON.stringify(options.body) : undefined
     const settings = {
-      [options.forward ? 'forward' : 'target']: options.target,
-      selfHandleResponse: !options.forward,
+      target: options.target,
+      selfHandleResponse: options.handle,
       ws: true,
       changeOrigin: true,
       buffer: content

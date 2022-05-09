@@ -38,13 +38,18 @@ export function makeServer({
   const {createTunnel, deleteTunnel} = makeTunnelManager({tunnelUrl, logger})
 
   const server = createServer(async (request, response) => {
+    const requestLogger = logger.extend({
+      tags: {signature: `[${request.method}]${request.url}`, requestId: utils.general.guid()},
+    })
+
     try {
       if (request.method === 'POST' && /^\/session\/?$/.test(request.url)) {
-        return await handleNewSession(request, response)
+        return await handleNewSession({request, response, logger: requestLogger})
       } else if (request.method === 'DELETE' && /^\/session\/[^\/]+\/?$/.test(request.url)) {
-        return await handleStopSession(request, response)
+        return await handleStopSession({request, response, logger: requestLogger})
       } else {
-        return proxy(request, response, {target: forwardingUrl, forward: true})
+        requestLogger.log('Passthrough request')
+        return proxy(request, response, {target: forwardingUrl})
       }
     } catch (err) {
       logger.error(`Error during processing request:`, err)
@@ -68,16 +73,21 @@ export function makeServer({
     })
   })
 
-  async function handleNewSession(request: IncomingMessage, response: ServerResponse): Promise<void> {
+  async function handleNewSession({
+    request,
+    response,
+    logger,
+  }: {
+    request: IncomingMessage
+    response: ServerResponse
+    logger: Logger
+  }): Promise<void> {
     const session = {} as any
-    const requestLogger = logger.extend({
-      tags: {signature: `[${request.method}]${request.url}`, requestId: utils.general.guid()},
-    })
 
     const requestBody = await parseBody(request, 'utf-8').then(body => (body ? JSON.parse(body) : undefined))
-    if (!requestBody) return requestLogger.log(`Request has no body`)
+    if (!requestBody) return logger.log(`Request has no body`)
 
-    requestLogger.log(`Request was intercepted with body:`, requestBody)
+    logger.log(`Request was intercepted with body:`, requestBody)
 
     const capabilities = requestBody.capabilities?.alwaysMatch ?? requestBody.desiredCapabilities
     session.serverUrl = capabilities['applitools:eyesServerUrl'] = capabilities['applitools:eyesServerUrl'] ?? serverUrl
@@ -86,20 +96,20 @@ export function makeServer({
       session.tunnelId = capabilities['applitools:x-tunnel-id-0'] = await createTunnel(session)
     }
 
-    requestLogger.log('Request body has modified:', requestBody)
+    logger.log('Request body has modified:', requestBody)
 
     let attempt = 0
     while (true) {
-      const proxyResponse = await proxy(request, response, {target: forwardingUrl, body: requestBody})
+      const proxyResponse = await proxy(request, response, {target: forwardingUrl, body: requestBody, handle: true})
 
       const responseBody = await parseBody(proxyResponse, 'utf-8').then(body => (body ? JSON.parse(body) : undefined))
 
       if (!responseBody) {
         response.writeHead(proxyResponse.statusCode, proxyResponse.headers).end()
-        return requestLogger.log(`Response has no body`)
+        return logger.log(`Response has no body`)
       }
 
-      requestLogger.log(`Response was intercepted with body:`, responseBody)
+      logger.log(`Response was intercepted with body:`, responseBody)
 
       if (!RETRY_ERROR_CODES.includes(responseBody.value?.data?.appliErrorCode)) {
         if (responseBody.value?.sessionId) sessions.set(responseBody.value.sessionId, session)
@@ -109,24 +119,28 @@ export function makeServer({
       await utils.general.sleep(RETRY_BACKOFF[Math.min(attempt, RETRY_BACKOFF.length - 1)])
       attempt += 1
       request.removeAllListeners()
-      requestLogger.log(`Retrying sending the request (attempt ${attempt})`)
+      logger.log(`Retrying sending the request (attempt ${attempt})`)
     }
   }
 
-  async function handleStopSession(request: IncomingMessage, response: ServerResponse): Promise<void> {
-    const requestLogger = logger.extend({
-      tags: {signature: `[${request.method}]${request.url}`, requestId: utils.general.guid()},
-    })
-
+  async function handleStopSession({
+    request,
+    response,
+    logger,
+  }: {
+    request: IncomingMessage
+    response: ServerResponse
+    logger: Logger
+  }): Promise<void> {
     const sessionId = request.url.split('/').pop()
-    requestLogger.log(`Request was intercepted with sessionId:`, sessionId)
+    logger.log(`Request was intercepted with sessionId:`, sessionId)
 
-    const proxyResponse = await proxy(request, response, {target: forwardingUrl})
+    const proxyResponse = await proxy(request, response, {target: forwardingUrl, handle: true})
 
     const session = sessions.get(sessionId)
     if (session.tunnelId) {
       await deleteTunnel(session)
-      requestLogger.log(`Tunnel with id ${session.tunnelId} was deleted for session with id ${sessionId}`)
+      logger.log(`Tunnel with id ${session.tunnelId} was deleted for session with id ${sessionId}`)
     }
     sessions.delete(sessionId)
 

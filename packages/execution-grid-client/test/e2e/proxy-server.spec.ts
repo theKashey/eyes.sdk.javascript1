@@ -1,3 +1,4 @@
+import assert from 'assert'
 import {Builder} from 'selenium-webdriver'
 import {makeServer} from '../../src'
 
@@ -10,12 +11,14 @@ describe('proxy-server', () => {
 
   it('works with real server', async () => {
     proxy = await makeServer({serverUrl: 'https://eyes.applitools.com', apiKey: process.env.APPLITOOLS_API_KEY})
-
     const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
 
-    await driver.get('https://applitools.com')
+    await driver.get('https://demo.applitools.com')
+    const title = await driver.executeScript('return document.title')
 
     await driver.quit()
+
+    assert.strictEqual(title, 'ACME demo app')
   })
 
   it.skip('works with real server and tunnels', async () => {
