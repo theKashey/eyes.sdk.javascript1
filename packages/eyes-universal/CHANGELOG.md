@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 2.5.3 - 2022/5/9
+
+### Features
+### Bug fixes
+- Passthrough requests for execution grid client respond with a body now
+
 ## 2.5.2 - 2022/5/9
 
 ### Features
