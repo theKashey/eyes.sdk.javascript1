@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Passthrough requests for execution grid client respond with a body now
 "@applitools/eyes-selenium":
   feature:
     - |
