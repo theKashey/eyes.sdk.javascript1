@@ -89,11 +89,31 @@ export function makeServer({
 
     logger.log(`Request was intercepted with body:`, requestBody)
 
-    const capabilities = requestBody.capabilities?.alwaysMatch ?? requestBody.desiredCapabilities
-    session.serverUrl = capabilities['applitools:eyesServerUrl'] = capabilities['applitools:eyesServerUrl'] ?? serverUrl
-    session.apiKey = capabilities['applitools:apiKey'] = capabilities['applitools:apiKey'] ?? apiKey
-    if (capabilities['applitools:tunnel']) {
-      session.tunnelId = capabilities['applitools:x-tunnel-id-0'] = await createTunnel(session)
+    session.serverUrl =
+      requestBody.capabilities?.alwaysMatch?.['applitools:eyesServerUrl'] ??
+      requestBody.desiredCapabilities?.['applitools:eyesServerUrl'] ??
+      serverUrl
+    session.apiKey =
+      requestBody.capabilities?.alwaysMatch?.['applitools:apiKey'] ??
+      requestBody.desiredCapabilities?.['applitools:apiKey'] ??
+      apiKey
+    session.tunnelId =
+      requestBody.capabilities?.alwaysMatch?.['applitools:tunnel'] ||
+      requestBody.desiredCapabilities?.['applitools:tunnel']
+        ? await createTunnel(session)
+        : undefined
+
+    const applitoolsCapabilities = {
+      'applitools:eyesServerUrl': session.serverUrl,
+      'applitools:apiKey': session.apiKey,
+      'applitools:x-tunnel-id-0': session.tunnelId,
+    }
+
+    if (requestBody.capabilities?.alwaysMatch || requestBody.capabilities?.firstMatch) {
+      requestBody.capabilities.alwaysMatch = {...requestBody.capabilities?.alwaysMatch, ...applitoolsCapabilities}
+    }
+    if (requestBody.desiredCapabilities) {
+      requestBody.desiredCapabilities = {...requestBody.desiredCapabilities, ...applitoolsCapabilities}
     }
 
     logger.log('Request body has modified:', requestBody)
