@@ -82,6 +82,35 @@ All of the commands should be treated as requests, which means that response is 
 
 Reference implementation: [JS implementation](https://github.com/applitools/eyes.sdk.javascript1/blob/1a54c6b3f28b25b41a708f5b600ceabbf8fc9db6/packages/eyes-universal/src/socket.js), [Ruby implementation](https://github.com/applitools/eyes.sdk.javascript1/blob/poc/universal-ruby-sdk/rb/eyes-selenium/lib/applitools/socket.rb)
 
+## Running the universal server
+A client wishing to spawn the universal server and communicate with it should know the port on which the server is listening to incoming WebSocket requests. The way to know the port is by consuming the first line of the output to the server's `stdout` stream. This line will be the port number to use in `ws://localhost:{port}/eyes`, for example if this line is `21077`, then the URL to connect to the server is `ws://localhost:21077/eyes`.
+
+When spawning the server, there might be a situation of a conflict - a universal server may already be running at the desired port. When this happens, the universal server attempts a "handshake" with the process that listens on `port`. If there is another universal server **of the same version** listening on the port, and `singleton` is specified (that's the default, see [CLI arguments](#cli-arguments) below), then the universal server process will write the `port` to stdout, and shutdown itself. **To the client, this is seamless** - the client doesn't have a way to know if the process it spawned is indeed the same process that is listening on this port.
+
+If the handshake fails, meaning that there is no universal-server or that it's a universal server of a different version, then the behavior is defined by the value of the `lazy` argument. By default, `lazy` is `true` which means that the server will try to find a free port to listen on. If `lazy` is `false`, then the server process will exit with a non-zero code.
+
+### CLI arguments
+
+```
+$ ./universal-server-linux --help
+
+Options:
+      --help          Show help                                        [boolean]
+      --version       Show version number                              [boolean]
+  -p, --port          run server on a specific port.   [number] [default: 21077]
+  -s, --singleton     runs server on a singleton mode. It will prevent the
+                      server to start in case the same server is already
+                      started.                         [boolean] [default: true]
+  -l, --lazy          runs server on a lazy mode. It will not try to find a free
+                      port if the required one is already taken.
+                                                      [boolean] [default: false]
+      --idle-timeout  time in minutes for server to stay responsible in case of
+                      idle.                               [number] [default: 15]
+      --config        json string to use instead of cli arguments       [string]
+      --eg            launch the execution grid client[boolean] [default: false]
+
+```
+
 ### Universal SDK messaging protocol
 The protocol describes the format of messages of different types such as [Request](#Request-format), [Response](#Response-format), and [Event](#Event-format). Each of the messages should be formatted as a JSON string.
 
