@@ -162,7 +162,7 @@ class ServerConnector {
    */
   async startSession(sessionStartInfo) {
     ArgumentGuard.notNull(sessionStartInfo, 'sessionStartInfo')
-    this._logger.log(`ServerConnector.startSession called with: ${JSON.stringify(sessionStartInfo)}`)
+    this._logger.log('ServerConnector.startSession called with', sessionStartInfo.toJSON())
 
     const config = {
       name: 'startSession',
@@ -184,7 +184,9 @@ class ServerConnector {
       return runningSession
     }
 
-    throw new Error('ServerConnector.startSession - unexpected status', response.status, response.statusText)
+    throw new Error(
+      `ServerConnector.startSession - unexpected status (status=${response.status}, statusText=${response.statusText})`,
+    )
   }
 
   /**
