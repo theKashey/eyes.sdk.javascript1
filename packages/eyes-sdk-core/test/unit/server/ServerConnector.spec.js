@@ -121,7 +121,7 @@ function getServerConnector(config = {}) {
   })
 }
 
-describe.only('ServerConnector', () => {
+describe('ServerConnector', () => {
   it('sends startSession request', async () => {
     const {port, close} = await startFakeEyesServer({logger})
     try {
