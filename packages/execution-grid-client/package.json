@@ -8,7 +8,7 @@
     "email": "team@applitools.com"
   },
   "bin": {
-    "eg-client": "./bin/cli.js"
+    "eg-client": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
