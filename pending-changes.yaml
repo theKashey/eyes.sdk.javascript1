@@ -10,8 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - |
-      add `--fork` flag to the cli to run server in the fork
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":

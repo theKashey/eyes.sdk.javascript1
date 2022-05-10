@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+
+## 2.5.5 - 2022/5/10
+
+### Features
+- add `--fork` flag to the cli to run server in the fork
+### Bug fixes
+
 ## 2.5.4 - 2022/5/9
 
 ### Features
