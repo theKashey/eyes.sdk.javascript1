@@ -121,7 +121,7 @@ function getServerConnector(config = {}) {
   })
 }
 
-describe('ServerConnector', () => {
+describe.only('ServerConnector', () => {
   it('sends startSession request', async () => {
     const {port, close} = await startFakeEyesServer({logger})
     try {
@@ -130,14 +130,18 @@ describe('ServerConnector', () => {
       const appIdOrName = 'ServerConnector unit test'
       const scenarioIdOrName = "doesn't throw exception on server failure"
       const batchId = String(Date.now())
-      const runningSession = await serverConnector.startSession({
-        appIdOrName,
-        scenarioIdOrName,
-        environment: {displaySize: {width: 1, height: 2}},
-        batchInfo: {
-          id: batchId,
-        },
-      })
+      const runningSession = await serverConnector.startSession(
+        new SessionStartInfo({
+          agentId: 'agent-id/1',
+          appIdOrName,
+          scenarioIdOrName,
+          environment: {displaySize: {width: 1, height: 2}},
+          batchInfo: {
+            id: batchId,
+          },
+          defaultMatchSettings: {},
+        }),
+      )
       const sessionId = `${appIdOrName}__${scenarioIdOrName}`
       assert.deepStrictEqual(runningSession.toJSON(), {
         baselineId: `${sessionId}__baseline`,
@@ -296,7 +300,20 @@ describe('ServerConnector', () => {
     try {
       const serverUrl = `http://localhost:${port}`
       const serverConnector = getServerConnector({serverUrl})
-      const [err] = await presult(serverConnector.startSession({}))
+      const [err] = await presult(
+        serverConnector.startSession(
+          new SessionStartInfo({
+            agentId: 'agent-id/1',
+            appIdOrName: 'app',
+            scenarioIdOrName: 'name',
+            batchInfo: {
+              id: 'batch-id',
+            },
+            environment: {displaySize: {width: 1, height: 2}},
+            defaultMatchSettings: {},
+          }),
+        ),
+      )
       assert.deepStrictEqual(err, new Error('Error in request startSession: socket hang up'))
     } finally {
       await close()
@@ -544,7 +561,18 @@ describe('ServerConnector', () => {
       config,
     })
 
-    const runningSession = await serverConnector.startSession({})
+    const runningSession = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agent-id/1',
+        appIdOrName: 'app',
+        scenarioIdOrName: 'name',
+        batchInfo: {
+          id: 'batch-id',
+        },
+        environment: {displaySize: {width: 1, height: 2}},
+        defaultMatchSettings: {},
+      }),
+    )
     assert.strictEqual(runningSession.getIsNew(), false)
   })
 
@@ -556,7 +584,18 @@ describe('ServerConnector', () => {
       config,
     })
 
-    const runningSession = await serverConnector.startSession({})
+    const runningSession = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agent-id/1',
+        appIdOrName: 'app',
+        scenarioIdOrName: 'name',
+        batchInfo: {
+          id: 'batch-id',
+        },
+        environment: {displaySize: {width: 1, height: 2}},
+        defaultMatchSettings: {},
+      }),
+    )
     assert.strictEqual(runningSession.getIsNew(), true)
   })
 
@@ -568,7 +607,18 @@ describe('ServerConnector', () => {
       config,
     })
 
-    const runningSessionWithIsNewTrue = await serverConnector.startSession({})
+    const runningSessionWithIsNewTrue = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agent-id/1',
+        appIdOrName: 'app',
+        scenarioIdOrName: 'name',
+        batchInfo: {
+          id: 'batch-id',
+        },
+        environment: {displaySize: {width: 1, height: 2}},
+        defaultMatchSettings: {},
+      }),
+    )
     assert.strictEqual(runningSessionWithIsNewTrue.getIsNew(), true)
 
     serverConnector._axios.defaults.adapter = async config => ({
@@ -577,7 +627,18 @@ describe('ServerConnector', () => {
       config,
     })
 
-    const runningSessionWithIsNewFalse = await serverConnector.startSession({})
+    const runningSessionWithIsNewFalse = await serverConnector.startSession(
+      new SessionStartInfo({
+        agentId: 'agent-id/1',
+        appIdOrName: 'app',
+        scenarioIdOrName: 'name',
+        batchInfo: {
+          id: 'batch-id',
+        },
+        environment: {displaySize: {width: 1, height: 2}},
+        defaultMatchSettings: {},
+      }),
+    )
     assert.strictEqual(runningSessionWithIsNewFalse.getIsNew(), false)
   })
 
@@ -589,7 +650,21 @@ describe('ServerConnector', () => {
       throw {config, code: 'ENOTFOUND'}
     }
 
-    await assertRejects(serverConnector.startSession({}), 'ENOTFOUND')
+    await assertRejects(
+      serverConnector.startSession(
+        new SessionStartInfo({
+          agentId: 'agent-id/1',
+          appIdOrName: 'app',
+          scenarioIdOrName: 'name',
+          batchInfo: {
+            id: 'batch-id',
+          },
+          environment: {displaySize: {width: 1, height: 2}},
+          defaultMatchSettings: {},
+        }),
+      ),
+      'ENOTFOUND',
+    )
     assert.strictEqual(tries, 6)
   })
 
@@ -677,12 +752,18 @@ describe('ServerConnector', () => {
       appOutput: new AppOutput({screenshot: buff, imageLocation: new Location(20, 40)}),
     })
     try {
-      const runningSession = await serverConnector.startSession({
-        appIdOrName: 'appIdOrName',
-        scenarioIdOrName: 'scenarioIdOrName',
-        environment: {displaySize: {width: 1, height: 2}},
-        batchInfo: {},
-      })
+      const runningSession = await serverConnector.startSession(
+        new SessionStartInfo({
+          agentId: 'agent-id/1',
+          appIdOrName: 'app',
+          scenarioIdOrName: 'name',
+          batchInfo: {
+            id: 'batch-id',
+          },
+          environment: {displaySize: {width: 1, height: 2}},
+          defaultMatchSettings: {},
+        }),
+      )
       await serverConnector.matchWindow(runningSession, matchWindowData)
     } finally {
       await close()
@@ -692,14 +773,16 @@ describe('ServerConnector', () => {
   it('outputs correct error message for bad requests to Eyes server', async () => {
     const serverConnector = getServerConnector()
     const [err] = await presult(
-      serverConnector.startSession({
-        appIdOrName: 'app id or name',
-        scenarioIdOrName: 'scenario id or name',
-        agentId: 'agent id',
-        batchInfo: {name: 'batch name'},
-        environment: {os: 'os', hostingApp: 'hosting app', displaySize: {width: 1.5, height: 1.5}},
-        defaultMatchSettings: {},
-      }),
+      serverConnector.startSession(
+        new SessionStartInfo({
+          appIdOrName: 'app id or name',
+          scenarioIdOrName: 'scenario id or name',
+          agentId: 'agent id',
+          batchInfo: {name: 'batch name'},
+          environment: {os: 'os', hostingApp: 'hosting app', displaySize: {width: 1.5, height: 1.5}},
+          defaultMatchSettings: {},
+        }),
+      ),
     )
 
     // Eyes doesn't handle fractions well, so it fails to parse the environment.displaySize value and therefore detects the entire startInfo as null
