@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs'
-import {makeServer} from './universal-server'
 import {makeExecutionGridClient} from '@applitools/eyes-sdk-core'
+import {makeServerProcess} from './universal-server-process'
+import {makeServer} from './universal-server'
 
 yargs
   .example([
     ['$ eyes-universal', 'Run Eyes Universal server on default port (21077)'],
+    ['$ eyes-universal --fork', 'Run Eyes Universal server in a forked process'],
     ['$ eyes-universal --port 8080', 'Run Eyes Universal server on port 8080'],
     ['$ eyes-universal --no-singleton', 'Run Eyes Universal server on a non-singleton mode'],
     ['$ eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
@@ -36,6 +38,11 @@ yargs
           type: 'boolean',
           default: false,
         },
+        fork: {
+          description: 'runs server in a forked process.',
+          type: 'boolean',
+          default: false,
+        },
         'idle-timeout': {
           description: 'time in minutes for server to stay responsible in case of idle.',
           type: 'number',
@@ -53,8 +60,14 @@ yargs
           default: false,
         },
       }),
-    handler: args => {
-      if (args.eg) return makeExecutionGridClient()
-      return makeServer(args.config ?? (args as any))
+    handler: async (args: any) => {
+      if (args.eg) {
+        makeExecutionGridClient()
+      } else if (args.fork) {
+        const {port} = await makeServerProcess({...args, fork: false})
+        console.log(port) // NOTE: this is a part of the generic protocol
+      } else {
+        makeServer({...args, ...args.config})
+      }
     },
   }).argv
