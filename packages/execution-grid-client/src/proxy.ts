@@ -9,6 +9,8 @@ type ProxyOptions = {
   headers?: Record<string, string>
 }
 
+// TODO: get rid of http-proxy library
+
 export async function proxy(
   request: IncomingMessage,
   response: ServerResponse,
@@ -34,7 +36,11 @@ export async function proxy(
         ? {...options.headers, 'Content-Length': Buffer.byteLength(content).toString()}
         : options.headers,
     }
+
+    // prevent modification of the request headers in the http-proxy library
+    Object.freeze(request.headers)
+
+    proxy.on('proxyRes', proxyResponse => resolve(proxyResponse))
     proxy.web(request, response, settings, reject)
-    proxy.on('proxyRes', resolve)
   })
 }

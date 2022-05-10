@@ -56,6 +56,8 @@ export function makeServer({
       response
         .writeHead(500)
         .end(JSON.stringify({value: {error: 'internal proxy server error', message: err.message, stacktrace: ''}}))
+    } finally {
+      requestLogger.log(`Request was responded with status ${response.statusCode}`)
     }
   })
 
@@ -82,13 +84,12 @@ export function makeServer({
     response: ServerResponse
     logger: Logger
   }): Promise<void> {
-    const session = {} as any
-
     const requestBody = await parseBody(request, 'utf-8').then(body => (body ? JSON.parse(body) : undefined))
     if (!requestBody) return logger.log(`Request has no body`)
 
     logger.log(`Request was intercepted with body:`, requestBody)
 
+    const session = {} as any
     session.serverUrl =
       requestBody.capabilities?.alwaysMatch?.['applitools:eyesServerUrl'] ??
       requestBody.desiredCapabilities?.['applitools:eyesServerUrl'] ??

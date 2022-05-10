@@ -19,7 +19,10 @@ describe('proxy-server', () => {
       .post('/session')
       .reply(200, {value: {capabilities: {}, sessionId: 'session-guid'}})
 
-    await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
+    nock('https://exec-wus.applitools.com').persist().delete('/session/session-guid').reply(200, {value: null})
+
+    const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
+    await driver.quit()
   })
 
   it('performs retries on concurrency and availability errors', async () => {
