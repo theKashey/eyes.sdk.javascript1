@@ -10,7 +10,8 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - |
+      Replace `--eg` flag with `eg-client` command
   bug-fix:
     - 
 "@applitools/eyes-selenium":
