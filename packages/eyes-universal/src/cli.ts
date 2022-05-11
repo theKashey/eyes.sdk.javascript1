@@ -62,7 +62,8 @@ yargs
       }),
     handler: async (args: any) => {
       if (args.eg) {
-        makeExecutionGridClient()
+        const proxy = await makeExecutionGridClient()
+        console.log(proxy.url)
       } else if (args.fork) {
         const {port} = await makeServerProcess({...args, fork: false})
         console.log(port) // NOTE: this is a part of the generic protocol
