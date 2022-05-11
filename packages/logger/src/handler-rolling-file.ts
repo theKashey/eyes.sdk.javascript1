@@ -12,7 +12,7 @@ export type RollingFileHandler = {
 }
 
 export function makeRollingFileHandler({
-  dirname = os.tmpdir(),
+  dirname = process.env.APPLITOOLS_LOG_DIR ?? os.tmpdir(),
   name = 'rolling-log',
   maxFileLength = 52428800 /* 50 MB */,
   maxFileNumber = 4,

@@ -26,16 +26,26 @@ export interface Logger extends Printer {
 }
 
 export function makeLogger({
-  handler = {type: 'console'},
-  format = defaultFormat,
+  handler,
   label,
   tags,
   timestamp,
   level,
   colors,
+  format = defaultFormat,
   console = true,
   extended = false,
 }: LoggerOptions & {extended?: boolean} = {}): Logger {
+  if (!handler) {
+    if (process.env.APPLITOOLS_LOG_FILE) {
+      handler = {type: 'file', filename: process.env.APPLITOOLS_LOG_FILE}
+    } else if (process.env.APPLITOOLS_LOG_DIR) {
+      handler = {type: 'rolling file', dirname: process.env.APPLITOOLS_LOG_DIR}
+    } else {
+      handler = {type: 'console'}
+    }
+  }
+
   if (!utils.types.isNumber(level)) {
     level =
       level ??
@@ -75,8 +85,6 @@ export function makeLogger({
   }
 
   const consoleHandler = console ? (utils.types.isObject(console) ? console : makeConsoleHandler()) : handler
-
-  handler
 
   return {
     isLogger: true,

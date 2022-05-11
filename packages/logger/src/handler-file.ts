@@ -9,7 +9,10 @@ export type FileHandler = {
   append?: boolean
 }
 
-export function makeFileHandler({filename = 'eyes.log', append = true}: Omit<FileHandler, 'type'> = {}): Handler {
+export function makeFileHandler({
+  filename = process.env.APPLITOOLS_LOG_FILE ?? 'eyes.log',
+  append = true,
+}: Omit<FileHandler, 'type'> = {}): Handler {
   let writer: fs.WriteStream = null
 
   return {log, open, close}
