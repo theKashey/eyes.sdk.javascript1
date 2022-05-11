@@ -6,7 +6,6 @@
     "declaration": true,
     "declarationMap": false,
     "sourceMap": false,
-    "allowJs": true,
 
     "module": "commonjs",
     "target": "es2017",
