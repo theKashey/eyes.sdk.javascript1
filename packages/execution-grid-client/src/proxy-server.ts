@@ -6,7 +6,7 @@ import parseBody from 'raw-body'
 import {type Logger, makeLogger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 
-export type ProxyServerOptions = {
+export type ServerOptions = {
   port?: number
   forwardingUrl?: string
   tunnelUrl?: string
@@ -30,7 +30,7 @@ export function makeServer({
   serverUrl = process.env.APPLITOOLS_SERVER_URL,
   apiKey = process.env.APPLITOOLS_API_KEY,
   logger,
-}: ProxyServerOptions = {}): Promise<{url: string; port: number; server: Server}> {
+}: ServerOptions = {}): Promise<{url: string; port: number; server: Server}> {
   logger = logger ? logger.extend({label: 'eg-client'}) : makeLogger({label: 'eg-client', colors: true})
 
   const sessions = new Map()
@@ -108,6 +108,8 @@ export function makeServer({
       'applitools:eyesServerUrl': session.serverUrl,
       'applitools:apiKey': session.apiKey,
       'applitools:x-tunnel-id-0': session.tunnelId,
+      'applitools:timeout': process.env.APPLITOOLS_EG_TIMEOUT,
+      'applitools:inactivityTimeout': process.env.APPLITOOLS_EG_INACTIVITY_TIMEOUT,
     }
 
     if (requestBody.capabilities?.alwaysMatch || requestBody.capabilities?.firstMatch) {
