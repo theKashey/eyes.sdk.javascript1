@@ -4,7 +4,7 @@ export type Queue = {
   run<TResult>(task: () => Promise<TResult>): Promise<TResult>
 }
 
-export function makeQueue({logger}: {logger: Logger}): Queue {
+export function makeQueue({_logger}: {_logger: Logger}): Queue {
   const queue = []
 
   return {run}
