@@ -9,9 +9,9 @@ module.exports = {
       : []),
     {
       'check region by selector with vg classic': {},
-      'check window with default fully with vg classic': {},
+      'check window with default fully with vg classic': {skipEmit: true},
       'check frame after manual switch to frame with vg classic': {},
-      'check frame after manual switch to frame with vg classic (@webdriver)': {},
+      'check frame after manual switch to frame with vg classic (@webdriver)': {skipEmit: true},
       // 'check region by selector within shadow dom with vg': {skipEmit: true},
       'check region by element within shadow dom with vg': {skipEmit: true},
     },
