@@ -82,6 +82,7 @@
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/test-server": "1.0.8",
     "@applitools/test-utils": "1.0.12",
+    "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
     "eslint": "^7.9.0",
