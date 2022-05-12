@@ -4,6 +4,13 @@
 
 
 
+
+## 2.5.6 - 2022/5/12
+
+### Features
+- Replace `--eg` flag with `eg-client` command
+### Bug fixes
+
 ## 2.5.5 - 2022/5/10
 
 ### Features
