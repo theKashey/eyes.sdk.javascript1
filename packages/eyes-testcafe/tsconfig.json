@@ -10,7 +10,7 @@
 
     "module": "commonjs",
     "target": "es2017",
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "noImplicitAny": true,
     "downlevelIteration": true,
     "removeComments": true,
