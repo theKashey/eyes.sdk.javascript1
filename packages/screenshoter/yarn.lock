@@ -16,14 +16,14 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.7.1.tgz#fcccc8b0915b0e37d0f2582dd233231d778a7983"
-  integrity sha512-Dvn0RAQpEMILWVdR05GkY+FH61HGFZyKsKnMkKsY+daA//3qXAZApXQRqJmma92kxI6qckGWPl9vx6D+k7WL8w==
+"@applitools/driver@1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.2.tgz#5582db9b0746fb68543d964be81a80a331d9a7b6"
+  integrity sha512-NmKUuC+TyCEaPVlkLn7w2k7VJO4ADu3VaMDcbrBF6CIHU/C9mmGZHGuMEa8+4c4+FFQFxQ+ptit5YHAnvTtaaw==
   dependencies:
     "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.3.1"
-    "@applitools/utils" "1.2.14"
+    "@applitools/types" "1.4.2"
+    "@applitools/utils" "1.3.0"
 
 "@applitools/scripts@1.1.0":
   version "1.1.0"
@@ -40,13 +40,13 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.2.3.tgz#60157639d3e6e4983178ca2422dee533f71d589b"
   integrity sha512-R2fxDEeZ4STKIj6kz5W41qkGdgqKlISaGe4CZ9AC7qNRx+fzwTX4Pg8FIBg20U1eJwf0EwNnBBZvoOZM6ufnEw==
 
-"@applitools/spec-driver-webdriverio@1.2.8":
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.8.tgz#feafc6a24d05a0a38f9c1b9dee6980009dc76a52"
-  integrity sha512-QIDMx3pCoLziiGg3zsNWERNOfZJTKTl7+ycKy21fOcYSnG1KVN/0d/ITU1J+fwRASCBuBECk6MtagTi24VJEow==
+"@applitools/spec-driver-webdriverio@1.2.9":
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.9.tgz#8e47222469da239e215dc09fd3787a64238d951c"
+  integrity sha512-j1jWV/9qswYc/lY9CL1uiUpomzJQOnBGan9Og/J0MH0V+1zcp62z/gWdHPCN46wkhKB1ZYvHVMeWgjuxqmKaow==
   dependencies:
-    "@applitools/types" "1.2.2"
-    "@applitools/utils" "1.2.13"
+    "@applitools/types" "1.4.0"
+    "@applitools/utils" "1.2.14"
 
 "@applitools/test-utils@1.0.10":
   version "1.0.10"
@@ -56,33 +56,33 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.1.tgz#ac014aaf71abf829dd5ec7dfac3ffdb709490a25"
-  integrity sha512-HgVsvVmk3G9VCysOmpd/20IIZ8opbT/fADbkvBhD/MWydbtXV0XUuzfcNZTumvfcaNDHeRsZEt09AC3kM17GDg==
+"@applitools/test-utils@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.2.tgz#42af7c2be07d58a67076189741ea1c995d0f14f1"
+  integrity sha512-UrZFungxZ02rss/f3NaYS6coxEof65kdUnuI0psHeDCwGOogsoHzPDKmqxhDJaRNni8L4+Mhh/AKUFwn0H0zJg==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.2.2.tgz#2a7f018871617111782772f1ccff5b5e004ee83f"
-  integrity sha512-oGUT71HgPqHrBqRZr/hhBoPNxVDdHFK8JSzUlXKY8aTnJq6kHakzvlWC/gLrqDn5IChbwApIeGDHL1x8MyqaxQ==
+"@applitools/types@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.0.tgz#9de5fcfa59c3e2b14bc5560da8bd92afd3078513"
+  integrity sha512-oyoAYJyW7C8YNhGKcoCWD67EtOtl3+DZJxe4fr93C/WDnwDE6c4I8u1e15tsGWb3ho79GM0AyoEvejDOVbvr8g==
 
-"@applitools/types@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.3.1.tgz#70fc861dbdcc1d477013e5a57527881da8f3896d"
-  integrity sha512-cUxsZYNTFIwrfgPCJ6DlNyExKwZtb27f6gBxUBHDE8qxmLa1HJma/8nIgX49rJtmQtDVo5fPXXw7yUgPMfwy+Q==
-
-"@applitools/utils@1.2.13":
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.13.tgz#8c00475dc02dd2708fdef84b929e79a3a8f0385b"
-  integrity sha512-yZ333Y/bAH/A05UMBllEdqBAwkFQknih2arIRSfN+QBpiFrfuLtQEdCwXAdnvU/MbAzZ/Tje7iv93FMzs5gFZA==
+"@applitools/types@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.2.tgz#b6c5c4678bb49d8625b3fb897cfbba962a72a9af"
+  integrity sha512-q0snFPtSQFH+0FhLNMXDbBsBeHQqOjuQEZPwlYb00KkrBHEwjq+DZ8zt14i/fISLBb/6cXzKkcMKkyWv2l6CMQ==
 
 "@applitools/utils@1.2.14":
   version "1.2.14"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.14.tgz#9e6b3a2b992e7c6e1a9f4447f8ac2b48b6037a2e"
   integrity sha512-pnul7WuGuVScqm8jyHJQgBP3QcApzWC4u/RjZkWxFSFVVapVJsnuBENbs0aAOMeYtxqRvUWDG5MyyjMZIpEDxw==
+
+"@applitools/utils@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.0.tgz#9220935483ac5c8c85a66b0abe1a3956b4694acc"
+  integrity sha512-CfWFAEZCcbjLSVu8/bTUxFwRL+Z+bsIfgQZ0l4XYBJkbeuVVxAk0u2QdXBC14LI+zTpRZNw0R/PSZ/NrfIe6uw==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"
