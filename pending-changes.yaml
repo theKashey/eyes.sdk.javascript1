@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Handle network errors in EG client
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |

@@ -5,6 +5,12 @@
 
 
 
+## 2.5.7 - 2022/5/12
+
+### Features
+### Bug fixes
+- Handle network errors in EG client
+
 ## 2.5.6 - 2022/5/12
 
 ### Features
