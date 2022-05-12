@@ -49,10 +49,10 @@ export function makeServer({
         return await handleStopSession({request, response, logger: requestLogger})
       } else {
         requestLogger.log('Passthrough request')
-        return await proxy(request, response, {target: forwardingUrl})
+        return await proxy({request, response, options: {target: forwardingUrl}, logger: requestLogger})
       }
     } catch (err) {
-      logger.error(`Error during processing request:`, err)
+      requestLogger.error(`Error during processing request:`, err)
       response
         .writeHead(500)
         .end(JSON.stringify({value: {error: 'internal proxy server error', message: err.message, stacktrace: ''}}))
@@ -90,29 +90,22 @@ export function makeServer({
     logger.log(`Request was intercepted with body:`, requestBody)
 
     const session = {} as any
-    session.serverUrl =
-      requestBody.capabilities?.alwaysMatch?.['applitools:eyesServerUrl'] ??
-      requestBody.desiredCapabilities?.['applitools:eyesServerUrl'] ??
-      serverUrl
-    session.apiKey =
-      requestBody.capabilities?.alwaysMatch?.['applitools:apiKey'] ??
-      requestBody.desiredCapabilities?.['applitools:apiKey'] ??
-      apiKey
-    session.tunnelId =
-      requestBody.capabilities?.alwaysMatch?.['applitools:tunnel'] ||
-      requestBody.desiredCapabilities?.['applitools:tunnel']
-        ? await createTunnel(session)
-        : undefined
+    session.serverUrl = extractCapability(requestBody, 'applitools:eyesServerUrl') ?? serverUrl
+    session.apiKey = extractCapability(requestBody, 'applitools:apiKey') ?? apiKey
+    session.tunnelId = extractCapability(requestBody, 'applitools:tunnel') ? await createTunnel(session) : undefined
+    const timeout = extractCapability(requestBody, 'applitools:timeout') ?? process.env.APPLITOOLS_EG_TIMEOUT
+    const inactivityTimeout =
+      extractCapability(requestBody, 'applitools:inactivityTimeout') ?? process.env.APPLITOOLS_EG_INACTIVITY_TIMEOUT
 
     const applitoolsCapabilities = {
       'applitools:eyesServerUrl': session.serverUrl,
       'applitools:apiKey': session.apiKey,
       'applitools:x-tunnel-id-0': session.tunnelId,
-      'applitools:timeout': process.env.APPLITOOLS_EG_TIMEOUT,
-      'applitools:inactivityTimeout': process.env.APPLITOOLS_EG_INACTIVITY_TIMEOUT,
+      'applitools:timeout': timeout,
+      'applitools:inactivityTimeout': inactivityTimeout,
     }
 
-    if (requestBody.capabilities?.alwaysMatch || requestBody.capabilities?.firstMatch) {
+    if (requestBody.capabilities) {
       requestBody.capabilities.alwaysMatch = {...requestBody.capabilities?.alwaysMatch, ...applitoolsCapabilities}
     }
     if (requestBody.desiredCapabilities) {
@@ -121,11 +114,42 @@ export function makeServer({
 
     logger.log('Request body has modified:', requestBody)
 
+    // const queue = queues.get(`${session.serverUrl}:${session.apiKey}`) ?? []
+    // queue.push({request, response, requestBody})
+    // if (queue.length === 1) {
+    //   queues.set(`${session.serverUrl}:${session.apiKey}`, queue)
+    //   return
+    // }
+
+    return proxyNewSession({session, requestBody, request, response, logger})
+  }
+
+  async function proxyNewSession({
+    session,
+    requestBody,
+    request,
+    response,
+    logger,
+  }: {
+    session: any
+    requestBody: Record<string, any>
+    request: IncomingMessage
+    response: ServerResponse
+    logger: Logger
+  }) {
     let attempt = 0
     while (true) {
-      const proxyResponse = await proxy(request, response, {target: forwardingUrl, body: requestBody, handle: true})
+      const proxyResponse = await proxy({
+        request,
+        response,
+        options: {target: forwardingUrl, body: requestBody, handle: true},
+        logger,
+      })
 
-      const responseBody = await parseBody(proxyResponse, 'utf-8').then(body => (body ? JSON.parse(body) : undefined))
+      const responseBody =
+        // @ts-ignore
+        proxyResponse.body ??
+        (await parseBody(proxyResponse, 'utf-8').then(body => (body ? JSON.parse(body) : undefined)))
 
       if (!responseBody) {
         response.writeHead(proxyResponse.statusCode, proxyResponse.headers).end()
@@ -158,7 +182,7 @@ export function makeServer({
     const sessionId = request.url.split('/').pop()
     logger.log(`Request was intercepted with sessionId:`, sessionId)
 
-    await proxy(request, response, {target: forwardingUrl})
+    await proxy({request, response, options: {target: forwardingUrl}, logger})
 
     const session = sessions.get(sessionId)
     if (session.tunnelId) {
@@ -166,5 +190,15 @@ export function makeServer({
       logger.log(`Tunnel with id ${session.tunnelId} was deleted for session with id ${sessionId}`)
     }
     sessions.delete(sessionId)
+  }
+
+  function extractCapability(
+    data: {
+      desiredCapabilities?: Record<string, any>
+      capabilities?: {alwaysMatch?: Record<string, any>; firstMatch?: Record<string, any>[]}
+    },
+    capabilityName: string,
+  ): any {
+    return data.capabilities?.alwaysMatch?.[capabilityName] ?? data.desiredCapabilities?.[capabilityName]
   }
 }
