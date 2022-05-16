@@ -5,6 +5,14 @@
 
 
 
+## 2.5.8 - 2022/5/16
+
+### Features
+- Improve EG client performance
+- Add proxy support to EG client
+### Bug fixes
+- Fix request issues with EG client
+
 ## 2.5.7 - 2022/5/12
 
 ### Features
