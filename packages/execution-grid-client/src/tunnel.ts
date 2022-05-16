@@ -10,15 +10,15 @@ const RETRY_BACKOFF = [].concat(
   10000, // all next tries with delay 10s
 )
 
-export function makeTunnelManager({tunnelUrl, logger}: {tunnelUrl?: string; logger: Logger}) {
+export function makeTunnelManager({egTunnelUrl, logger}: {egTunnelUrl?: string; logger: Logger}) {
   return {createTunnel, deleteTunnel}
 
-  async function createTunnel({apiKey, serverUrl}: {apiKey: string; serverUrl?: string}): Promise<string> {
-    const request = new Request(`${tunnelUrl}/tunnels`, {
+  async function createTunnel({eyesServerUrl, apiKey}: {eyesServerUrl?: string; apiKey: string}): Promise<string> {
+    const request = new Request(`${egTunnelUrl}/tunnels`, {
       method: 'POST',
       headers: new Headers({
         'x-eyes-api-key': apiKey,
-        ...(serverUrl ? {'x-eyes-server-url': serverUrl} : {}),
+        ...(eyesServerUrl ? {'x-eyes-server-url': eyesServerUrl} : {}),
       }),
     })
     let attempt = 0
@@ -43,18 +43,18 @@ export function makeTunnelManager({tunnelUrl, logger}: {tunnelUrl?: string; logg
 
   async function deleteTunnel({
     tunnelId,
+    eyesServerUrl,
     apiKey,
-    serverUrl,
   }: {
     tunnelId: string
+    eyesServerUrl?: string
     apiKey: string
-    serverUrl?: string
   }): Promise<void> {
-    const request = new Request(`${tunnelUrl}/tunnels/${tunnelId}`, {
+    const request = new Request(`${egTunnelUrl}/tunnels/${tunnelId}`, {
       method: 'DELETE',
       headers: new Headers({
         'x-eyes-api-key': apiKey,
-        ...(serverUrl ? {'x-eyes-server-url': serverUrl} : {}),
+        ...(eyesServerUrl ? {'x-eyes-server-url': eyesServerUrl} : {}),
       }),
     })
     const response = await fetch(request)

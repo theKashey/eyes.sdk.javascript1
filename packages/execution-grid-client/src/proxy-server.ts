@@ -1,18 +1,24 @@
 import {type AddressInfo} from 'net'
 import {type IncomingMessage, type ServerResponse, type Server, createServer} from 'http'
-import {proxy} from './proxy'
-import {makeTunnelManager} from './tunnel'
-import parseBody from 'raw-body'
+import {type AbortSignal} from 'abort-controller'
 import {type Logger, makeLogger} from '@applitools/logger'
+import {makeQueue, type Queue} from './queue'
+import {makeTunnelManager} from './tunnel'
+import {makeProxy} from './proxy'
+import {parseBody} from './parse-body'
 import * as utils from '@applitools/utils'
 
 export type ServerOptions = {
-  port?: number
-  forwardingUrl?: string
-  tunnelUrl?: string
-  serverUrl?: string
+  egServerUrl?: string
+  egTunnelUrl?: string
+  egTimeout?: number | string
+  egInactivityTimeout?: number | string
+  proxyUrl?: string
+  eyesServerUrl?: string
   apiKey?: string
-  logger?: Logger & any
+  port?: number
+  resolveUrls?: boolean
+  logger?: Logger
 }
 
 const RETRY_BACKOFF = [].concat(
@@ -24,34 +30,51 @@ const RETRY_BACKOFF = [].concat(
 const RETRY_ERROR_CODES = ['CONCURRENCY_LIMIT_REACHED', 'NO_AVAILABLE_DRIVER_POD']
 
 export function makeServer({
-  port = 0,
-  forwardingUrl = 'https://exec-wus.applitools.com',
-  tunnelUrl = process.env.APPLITOOLS_EG_TUNNEL_URL,
-  serverUrl = process.env.APPLITOOLS_SERVER_URL,
+  egServerUrl = 'https://exec-wus.applitools.com',
+  egTunnelUrl = process.env.APPLITOOLS_EG_TUNNEL_URL,
+  egTimeout = process.env.APPLITOOLS_EG_TIMEOUT,
+  egInactivityTimeout = process.env.APPLITOOLS_EG_INACTIVITY_TIMEOUT,
+  proxyUrl = process.env.APPLITOOLS_PROXY,
+  eyesServerUrl = process.env.APPLITOOLS_SERVER_URL,
   apiKey = process.env.APPLITOOLS_API_KEY,
+  port = 0,
+  resolveUrls = true,
   logger,
 }: ServerOptions = {}): Promise<{url: string; port: number; server: Server}> {
   logger = logger ? logger.extend({label: 'eg-client'}) : makeLogger({label: 'eg-client', colors: true})
 
-  const sessions = new Map()
+  const proxyRequest = makeProxy({
+    url: egServerUrl,
+    resolveUrls,
+    proxy: proxyUrl,
+    shouldRetry: async proxyResponse => {
+      if (proxyResponse.statusCode <= 400) return false
+      //@ts-ignore
+      proxyResponse.body = await parseBody(proxyResponse)
+      return !(proxyResponse as any).body?.value
+    },
+  })
+  const {createTunnel, deleteTunnel} = makeTunnelManager({egTunnelUrl, logger})
 
-  const {createTunnel, deleteTunnel} = makeTunnelManager({tunnelUrl, logger})
+  const sessions = new Map()
+  const queues = new Map<string, Queue>()
 
   const server = createServer(async (request, response) => {
     const requestLogger = logger.extend({
-      tags: {signature: `[${request.method}]${request.url}`, requestId: utils.general.guid()},
+      tags: {request: `[${request.method}] ${request.url}`, requestId: utils.general.guid()},
     })
 
     try {
       if (request.method === 'POST' && /^\/session\/?$/.test(request.url)) {
-        return await handleNewSession({request, response, logger: requestLogger})
+        return await createSession({request, response, logger: requestLogger})
       } else if (request.method === 'DELETE' && /^\/session\/[^\/]+\/?$/.test(request.url)) {
-        return await handleStopSession({request, response, logger: requestLogger})
+        return await deleteSession({request, response, logger: requestLogger})
       } else {
         requestLogger.log('Passthrough request')
-        return await proxy({request, response, options: {target: forwardingUrl}, logger: requestLogger})
+        return await proxyRequest({request, response, logger: requestLogger})
       }
     } catch (err) {
+      // console.error(err)
       requestLogger.error(`Error during processing request:`, err)
       response
         .writeHead(500)
@@ -61,7 +84,7 @@ export function makeServer({
     }
   })
 
-  server.listen(port, 'localhost')
+  server.listen(port)
 
   return new Promise<{url: string; port: number; server: Server}>((resolve, reject) => {
     server.on('listening', () => {
@@ -75,7 +98,7 @@ export function makeServer({
     })
   })
 
-  async function handleNewSession({
+  async function createSession({
     request,
     response,
     logger,
@@ -84,25 +107,22 @@ export function makeServer({
     response: ServerResponse
     logger: Logger
   }): Promise<void> {
-    const requestBody = await parseBody(request, 'utf-8').then(body => (body ? JSON.parse(body) : undefined))
-    if (!requestBody) return logger.log(`Request has no body`)
+    const requestBody = await parseBody(request)
 
     logger.log(`Request was intercepted with body:`, requestBody)
 
     const session = {} as any
-    session.serverUrl = extractCapability(requestBody, 'applitools:eyesServerUrl') ?? serverUrl
+    session.eyesServerUrl = extractCapability(requestBody, 'applitools:eyesServerUrl') ?? eyesServerUrl
     session.apiKey = extractCapability(requestBody, 'applitools:apiKey') ?? apiKey
     session.tunnelId = extractCapability(requestBody, 'applitools:tunnel') ? await createTunnel(session) : undefined
-    const timeout = extractCapability(requestBody, 'applitools:timeout') ?? process.env.APPLITOOLS_EG_TIMEOUT
-    const inactivityTimeout =
-      extractCapability(requestBody, 'applitools:inactivityTimeout') ?? process.env.APPLITOOLS_EG_INACTIVITY_TIMEOUT
 
     const applitoolsCapabilities = {
-      'applitools:eyesServerUrl': session.serverUrl,
+      'applitools:eyesServerUrl': session.eyesServerUrl,
       'applitools:apiKey': session.apiKey,
       'applitools:x-tunnel-id-0': session.tunnelId,
-      'applitools:timeout': timeout,
-      'applitools:inactivityTimeout': inactivityTimeout,
+      'applitools:timeout': extractCapability(requestBody, 'applitools:timeout') ?? egTimeout,
+      'applitools:inactivityTimeout':
+        extractCapability(requestBody, 'applitools:inactivityTimeout') ?? egInactivityTimeout,
     }
 
     if (requestBody.capabilities) {
@@ -114,63 +134,49 @@ export function makeServer({
 
     logger.log('Request body has modified:', requestBody)
 
-    // const queue = queues.get(`${session.serverUrl}:${session.apiKey}`) ?? []
-    // queue.push({request, response, requestBody})
-    // if (queue.length === 1) {
-    //   queues.set(`${session.serverUrl}:${session.apiKey}`, queue)
-    //   return
-    // }
+    let queue = queues.get(`${session.eyesServerUrl}:${session.apiKey}`)
+    if (!queue) {
+      queue = makeQueue({logger})
+      queues.set(`${session.eyesServerUrl}:${session.apiKey}`, queue)
+    }
 
-    return proxyNewSession({session, requestBody, request, response, logger})
-  }
+    request.socket.on('close', () => queue.cancel(task))
 
-  async function proxyNewSession({
-    session,
-    requestBody,
-    request,
-    response,
-    logger,
-  }: {
-    session: any
-    requestBody: Record<string, any>
-    request: IncomingMessage
-    response: ServerResponse
-    logger: Logger
-  }) {
-    let attempt = 0
-    while (true) {
-      const proxyResponse = await proxy({
+    await queue.run(task)
+
+    async function task(signal: AbortSignal, attempt = 0): Promise<void> {
+      // do not start the task if it is already aborted
+      if (signal.aborted) return
+
+      const proxyResponse = await proxyRequest({
         request,
         response,
-        options: {target: forwardingUrl, body: requestBody, handle: true},
+        options: {body: JSON.stringify(requestBody), handle: false, signal},
         logger,
       })
 
-      const responseBody =
-        // @ts-ignore
-        proxyResponse.body ??
-        (await parseBody(proxyResponse, 'utf-8').then(body => (body ? JSON.parse(body) : undefined)))
-
-      if (!responseBody) {
-        response.writeHead(proxyResponse.statusCode, proxyResponse.headers).end()
-        return logger.log(`Response has no body`)
-      }
+      // to decide if we get an expected response we might already parse the body
+      const responseBody = (proxyResponse as any).body ?? (await parseBody(proxyResponse))
 
       logger.log(`Response was intercepted with body:`, responseBody)
 
-      if (!RETRY_ERROR_CODES.includes(responseBody.value?.data?.appliErrorCode)) {
+      if (RETRY_ERROR_CODES.includes(responseBody.value?.data?.appliErrorCode)) {
+        queue.cork()
+        // after query is corked the task might be aborted
+        if (signal.aborted) return
+        await utils.general.sleep(RETRY_BACKOFF[Math.min(attempt, RETRY_BACKOFF.length - 1)])
+        logger.log(`Retrying sending the request (attempt ${attempt})`)
+        return task(signal, attempt + 1)
+      } else {
+        queue.uncork()
         if (responseBody.value?.sessionId) sessions.set(responseBody.value.sessionId, session)
-        response.writeHead(proxyResponse.statusCode, proxyResponse.headers).end(JSON.stringify(responseBody))
+        response.end(JSON.stringify(responseBody))
         return
       }
-      await utils.general.sleep(RETRY_BACKOFF[Math.min(attempt, RETRY_BACKOFF.length - 1)])
-      attempt += 1
-      request.removeAllListeners()
-      logger.log(`Retrying sending the request (attempt ${attempt})`)
     }
   }
 
-  async function handleStopSession({
+  async function deleteSession({
     request,
     response,
     logger,
@@ -182,7 +188,7 @@ export function makeServer({
     const sessionId = request.url.split('/').pop()
     logger.log(`Request was intercepted with sessionId:`, sessionId)
 
-    await proxy({request, response, options: {target: forwardingUrl}, logger})
+    await proxyRequest({request, response, logger})
 
     const session = sessions.get(sessionId)
     if (session.tunnelId) {

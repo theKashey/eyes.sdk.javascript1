@@ -10,7 +10,7 @@ describe('proxy-server', () => {
   })
 
   it('works with real server', async () => {
-    proxy = await makeServer({serverUrl: 'https://eyes.applitools.com', apiKey: process.env.APPLITOOLS_API_KEY})
+    proxy = await makeServer({eyesServerUrl: 'https://eyes.applitools.com', apiKey: process.env.APPLITOOLS_API_KEY})
     const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
 
     await driver.get('https://demo.applitools.com')
@@ -33,8 +33,8 @@ describe('proxy-server', () => {
     // Then you specify the tunnelUrl either in makeServer (with tunnelUrl0 or through the APPLITOOLS_EG_TUNNEL_URL env var
 
     proxy = await makeServer({
-      tunnelUrl: 'http://localhost:12345',
-      serverUrl: 'https://eyes.applitools.com',
+      egTunnelUrl: 'http://localhost:12345',
+      eyesServerUrl: 'https://eyes.applitools.com',
       apiKey: process.env.APPLITOOLS_API_KEY,
     })
 

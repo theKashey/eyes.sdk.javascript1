@@ -1,7 +1,10 @@
 import assert from 'assert'
 import nock from 'nock'
+import fetch from 'node-fetch'
+import {AbortController} from 'abort-controller'
 import {Builder} from 'selenium-webdriver'
 import {makeServer} from '../../src/proxy-server'
+import * as utils from '@applitools/utils'
 
 describe('proxy-server', () => {
   let proxy
@@ -12,7 +15,7 @@ describe('proxy-server', () => {
   })
 
   it('proxies webdriver requests', async () => {
-    proxy = await makeServer()
+    proxy = await makeServer({resolveUrls: false})
 
     nock('https://exec-wus.applitools.com')
       .persist()
@@ -55,7 +58,7 @@ describe('proxy-server', () => {
   })
 
   it('adds `applitools:` capabilities from properties', async () => {
-    proxy = await makeServer({apiKey: 'api-key', serverUrl: 'http://server.url'})
+    proxy = await makeServer({apiKey: 'api-key', eyesServerUrl: 'http://server.url', resolveUrls: false})
 
     nock('https://exec-wus.applitools.com')
       .persist()
@@ -88,7 +91,7 @@ describe('proxy-server', () => {
   it('adds `applitools:` capabilities from env variables', async () => {
     process.env.APPLITOOLS_API_KEY = 'env-api-key'
     process.env.APPLITOOLS_SERVER_URL = 'http://env-server.url'
-    proxy = await makeServer()
+    proxy = await makeServer({resolveUrls: false})
     nock('https://exec-wus.applitools.com')
       .persist()
       .post('/session')
@@ -118,7 +121,7 @@ describe('proxy-server', () => {
   })
 
   it('creates new tunnel when session is successfully created', async () => {
-    proxy = await makeServer({tunnelUrl: 'http://eg-tunnel'})
+    proxy = await makeServer({egTunnelUrl: 'http://eg-tunnel', resolveUrls: false})
 
     nock('https://exec-wus.applitools.com')
       .persist()
@@ -143,7 +146,7 @@ describe('proxy-server', () => {
   })
 
   it('fails if new tunnel was not created', async () => {
-    proxy = await makeServer({tunnelUrl: 'http://eg-tunnel'})
+    proxy = await makeServer({egTunnelUrl: 'http://eg-tunnel', resolveUrls: false})
 
     nock('https://exec-wus.applitools.com')
       .persist()
@@ -161,7 +164,7 @@ describe('proxy-server', () => {
   })
 
   it('deletes tunnel when session is successfully deleted', async () => {
-    proxy = await makeServer({tunnelUrl: 'http://eg-tunnel'})
+    proxy = await makeServer({egTunnelUrl: 'http://eg-tunnel', resolveUrls: false})
 
     nock('https://exec-wus.applitools.com')
       .persist()
@@ -189,5 +192,43 @@ describe('proxy-server', () => {
     await driver.quit()
 
     assert.strictEqual(isTunnelDeleted, true)
+  })
+
+  it('aborts proxy request if incoming request was aborted', async () => {
+    proxy = await makeServer({resolveUrls: false})
+
+    let count = 0
+    nock('https://exec-wus.applitools.com')
+      .persist()
+      .post('/session')
+      .reply(() => {
+        count += 1
+        return [
+          500,
+          {
+            value: {
+              error: 'session not created',
+              message: 'Session not created',
+              stacktrace: '',
+              data: {appliErrorCode: 'NO_AVAILABLE_DRIVER_POD'},
+            },
+          },
+        ]
+      })
+
+    try {
+      const controller = new AbortController()
+      fetch(`${proxy.url}/session`, {
+        method: 'post',
+        body: JSON.stringify({capabilities: {alwaysMatch: {browserName: 'chrome'}}}),
+        signal: controller.signal,
+      })
+      setTimeout(() => controller.abort(), 1000)
+    } catch (err) {
+      if (err.name !== 'AbortError') throw err
+    }
+    await utils.general.sleep(3000)
+
+    assert.strictEqual(count, 1)
   })
 })

@@ -9,7 +9,7 @@ describe('tunnel', () => {
   })
 
   it('creates new tunnel', async () => {
-    const {createTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {createTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel').persist().post('/tunnels').reply(201, '"tunnel-id"')
 
@@ -19,7 +19,7 @@ describe('tunnel', () => {
   })
 
   it('creates new tunnel with retries', async () => {
-    const {createTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {createTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     let retries = 0
     nock('http://eg-tunnel')
@@ -42,7 +42,7 @@ describe('tunnel', () => {
   })
 
   it('creates new tunnel with api key and server url', async () => {
-    const {createTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {createTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel')
       .persist()
@@ -60,13 +60,13 @@ describe('tunnel', () => {
 
     assert.strictEqual(tunnelIdFirst, 'tunnel-id-1')
 
-    const tunnelIdSecond = await createTunnel({apiKey: 'api-key', serverUrl: 'http://server.url'})
+    const tunnelIdSecond = await createTunnel({apiKey: 'api-key', eyesServerUrl: 'http://server.url'})
 
     assert.strictEqual(tunnelIdSecond, 'tunnel-id-2')
   })
 
   it('throws when tunnel was not created', async () => {
-    const {createTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {createTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel').persist().post('/tunnels').reply(401, {message: 'UNAUTHORIZED'})
 
@@ -74,7 +74,7 @@ describe('tunnel', () => {
   })
 
   it('deletes tunnel', async () => {
-    const {deleteTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {deleteTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel').persist().delete('/tunnels/tunnel-id').reply(200)
 
@@ -82,15 +82,15 @@ describe('tunnel', () => {
   })
 
   it('deletes tunnel with api key and server url', async () => {
-    const {deleteTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {deleteTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel')
       .persist()
       .delete('/tunnels/tunnel-id')
       .reply(function () {
         const apiKeyHeader = this.req.headers['x-eyes-api-key'][0]
-        const serverUrlHeader = this.req.headers['x-eyes-server-url']?.[0]
-        if (apiKeyHeader === 'api-key' && (!serverUrlHeader || serverUrlHeader === 'http://server.url')) {
+        const eyesServerUrlHeader = this.req.headers['x-eyes-server-url']?.[0]
+        if (apiKeyHeader === 'api-key' && (!eyesServerUrlHeader || eyesServerUrlHeader === 'http://server.url')) {
           return [200]
         }
         return [401, {message: 'UNAUTHORIZED'}]
@@ -101,12 +101,12 @@ describe('tunnel', () => {
     await deleteTunnel({
       tunnelId: 'tunnel-id',
       apiKey: 'api-key',
-      serverUrl: 'http://server.url',
+      eyesServerUrl: 'http://server.url',
     })
   })
 
   it('throws when tunnel was not deleted', async () => {
-    const {deleteTunnel} = await makeTunnelManager({tunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
+    const {deleteTunnel} = await makeTunnelManager({egTunnelUrl: 'http://eg-tunnel', logger: makeLogger()})
 
     nock('http://eg-tunnel').persist().post('/tunnels/tunnel-id').reply(404, {message: 'TUNNEL_NOT_FOUND'})
 
