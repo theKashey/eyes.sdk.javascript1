@@ -12,7 +12,7 @@ describe('works', () => {
     return new Promise<void>((resolve, reject) => {
       server.on('error', reject)
 
-      const timeout = setTimeout(() => reject(new Error('No output from the server for 10 seconds')), 10000)
+      const timeout = setTimeout(() => reject(new Error('No output from the server for 20 seconds')), 20000)
       server.stdout.once('data', data => {
         clearTimeout(timeout)
         const [firstLine] = String(data).split('\n', 1)
@@ -30,7 +30,7 @@ describe('works', () => {
     return new Promise<void>((resolve, reject) => {
       server.on('error', reject)
 
-      const timeout = setTimeout(() => reject(new Error('No output from the server for 10 seconds')), 10000)
+      const timeout = setTimeout(() => reject(new Error('No output from the server for 20 seconds')), 20000)
       server.on('message', (data: any) => {
         clearTimeout(timeout)
         if (data.name === 'port' && Number.isInteger(data.payload.port)) {
