@@ -97,8 +97,14 @@
   "pkg": {
     "scripts": "./dist/cli.js",
     "outputPath": "./bin",
-    "assets": ["./node_modules/vm2/lib/setup-sandbox.js"],
-    "targets": ["node14-linux-x64", "node14-macos-x64", "node14-win-x64"],
+    "assets": [
+      "./node_modules/vm2/lib/setup-sandbox.js"
+    ],
+    "targets": [
+      "node14-linux-x64",
+      "node14-macos-x64",
+      "node14-win-x64"
+    ],
     "compress": "GZip"
   }
 }
