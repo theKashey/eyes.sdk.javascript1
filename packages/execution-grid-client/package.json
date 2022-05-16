@@ -1,6 +1,6 @@
 {
   "name": "@applitools/execution-grid-client",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "",
   "license": "SEE LICENSE IN LICENSE",
   "author": {
@@ -26,8 +26,12 @@
   },
   "typesVersions": {
     "*": {
-      "cli": ["./types/cli.d.ts"],
-      "dist/*": ["./types/*.d.ts"]
+      "cli": [
+        "./types/cli.d.ts"
+      ],
+      "dist/*": [
+        "./types/*.d.ts"
+      ]
     }
   },
   "files": [
