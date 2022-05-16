@@ -26,9 +26,8 @@
   },
   "typesVersions": {
     "*": {
-      "cli": [
-        "./types/cli.d.ts"
-      ]
+      "cli": ["./types/cli.d.ts"],
+      "dist/*": ["./types/*.d.ts"]
     }
   },
   "files": [

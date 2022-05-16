@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import yargs from 'yargs'
-import {cli as egCli} from '@applitools/execution-grid-client'
 import {makeServerProcess} from './universal-server-process'
 import {makeServer} from './universal-server'
+import * as egCli from '@applitools/execution-grid-client/dist/cli'
 
 yargs
   .example([
