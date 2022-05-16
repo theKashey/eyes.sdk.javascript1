@@ -10,9 +10,10 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Improve EG client performance
+    - Add proxy support to EG client
   bug-fix:
-    - 
+    - Fix request issues with EG client
 "@applitools/eyes-selenium":
   feature:
     - |
