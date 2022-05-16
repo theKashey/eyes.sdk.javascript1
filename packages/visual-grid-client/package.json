@@ -32,7 +32,7 @@
     "index.d.ts"
   ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "13.6.10",
+    "@applitools/eyes-sdk-core": "13.6.11",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.5",
     "@applitools/isomorphic-fetch": "3.0.0",
