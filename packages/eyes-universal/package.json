@@ -41,7 +41,7 @@
     "lint": "eslint '**/*.ts'",
     "build": "yarn build:dist && yarn build:bin",
     "build:dist": "tsc",
-    "build:bin": "pkg ./dist/cli.js --out-path ./bin --compress GZip --targets node14-linux-x64,node14-macos-x64,node14-win-x64 && mv ./bin/cli-macos ./bin/eyes-universal-macos && mv ./bin/cli-linux ./bin/eyes-universal-linux && mv ./bin/cli-win.exe ./bin/eyes-universal-win.exe",
+    "build:bin": "pkg .",
     "build:zip": "zip -j ./bin/eyes-universal.zip ./bin/eyes-universal-linux ./bin/eyes-universal-macos ./bin/eyes-universal-win.exe",
     "build:tgz": "tar -czf ./bin/eyes-universal.tar.gz -C ./bin ./eyes-universal-linux ./eyes-universal-macos ./eyes-universal-win.exe",
     "test": "yarn test:it && yarn test:e2e",
@@ -93,5 +93,12 @@
     "hooks": {
       "pre-push": "yarn bongo lint"
     }
+  },
+  "pkg": {
+    "scripts": "./dist/cli.js",
+    "outputPath": "./bin",
+    "assets": ["./node_modules/vm2/lib/setup-sandbox.js"],
+    "targets": ["node14-linux-x64", "node14-macos-x64", "node14-win-x64"],
+    "compress": "GZip"
   }
 }
