@@ -53,12 +53,12 @@
     "@applitools/types" "1.4.2"
     "@applitools/utils" "1.3.0"
 
-"@applitools/execution-grid-client@1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.9.tgz#f9a9977035511ebfa2a77f1176cbfe7d6b9b8e37"
-  integrity sha512-UcqSdkYZio9i1fZvGtt7tmSQhL1ZYSbPpaaAIeoulIO7LDa/fU1s4IaxyD8vjq1jVn9k8b1niBAMWYKjd+2ZyA==
+"@applitools/execution-grid-client@1.1.11":
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.11.tgz#5b2a42eb63236ea6610c640820bdbd0f5791d6c6"
+  integrity sha512-J6DI3YJ2v2gNvNQ+BIMQJbgcxSffeO0ek20V+1zdCnllqFA4r/n9/FN0katuNYdlwxfMKQsOrEodZEvin6drqA==
   dependencies:
-    "@applitools/logger" "1.1.3"
+    "@applitools/logger" "1.1.4"
     "@applitools/utils" "1.3.0"
     abort-controller "3.0.0"
     node-fetch "2.6.7"
@@ -66,17 +66,17 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.6.11":
-  version "13.6.11"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.11.tgz#7ecaeec7bdbf816dc66809f4ad0d5d27019dabcb"
-  integrity sha512-lOmELbnLy75/s080nVRkeJaPOeSo6OfX7XZM65qiP9treMpBMheAVsHXe8hgFp8PyMHg7fNIN5C1wBQ8Zs14cg==
+"@applitools/eyes-sdk-core@13.6.12":
+  version "13.6.12"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.12.tgz#e8d9b5c11c732679b9cbfbe353b0d60424159d09"
+  integrity sha512-IoLPm/EhLYl5DvEVCD72ccs50JvyQKH8I43jRAZX01hsGPqSrdIYcvbxTSceo8kOziRASgWNrGhpAAMeOK9lAg==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
     "@applitools/driver" "1.8.2"
-    "@applitools/execution-grid-client" "1.1.9"
+    "@applitools/execution-grid-client" "1.1.11"
     "@applitools/isomorphic-fetch" "3.0.0"
-    "@applitools/logger" "1.1.3"
+    "@applitools/logger" "1.1.4"
     "@applitools/screenshoter" "3.3.18"
     "@applitools/snippets" "2.2.3"
     "@applitools/types" "1.4.2"
@@ -148,10 +148,10 @@
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
 
-"@applitools/logger@1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.3.tgz#aff69f72e8e3f0daabb1a519b3f14fea55d9dcac"
-  integrity sha512-P/x6i/dKh01JuXN02PN4DkrGb3oy1I/JWesrcYRAhyqoVsVke49zMRCZzowsV2RZz5eM9s0whed75BQbjsfh1A==
+"@applitools/logger@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.4.tgz#8e3033fee2d5da4e64d34690c90193f8a1a24947"
+  integrity sha512-sE02RVwOI/CIbfpqFJ1chWeIejWOAMaSMyfmJ5Ay24eZ012o0veT311lqfw26MH4VFBQpzuFoS8e8Ya/25elow==
   dependencies:
     "@applitools/utils" "1.3.0"
     chalk "4.1.2"
