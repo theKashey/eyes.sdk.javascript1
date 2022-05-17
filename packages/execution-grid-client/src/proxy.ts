@@ -46,15 +46,13 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
         : new URL(`.${request.url}` /* relative path */, await resolveUrl(options.url, {logger})),
       method: options.method ?? request.method,
       headers: {...request.headers, ...options.headers} as Record<string, string | string[]>,
-      body: options.body,
+      body: options.body ?? request,
       proxy: options.proxy,
       signal: options.signal,
     }
     requestOptions.headers.host = new URL(isProxyRequest ? request.url : options.url).host
-    if (requestOptions.body && !utils.types.isFunction(requestOptions.body, 'pipe')) {
+    if (!utils.types.isFunction(requestOptions.body, 'pipe')) {
       requestOptions.headers['Content-Length'] = Buffer.byteLength(requestOptions.body).toString()
-    } else {
-      requestOptions.body = request
     }
     const modifiedRequestOptions = (await options.modifyRequest?.(requestOptions)) ?? requestOptions
 
@@ -70,7 +68,7 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
       } catch (error) {
         if (utils.types.instanceOf(error, 'AbortError')) throw error
         logger.error(`Attempt (${attempt}) to proxy request failed with error`, error)
-        if (attempt + 1 <= 10) throw error
+        if (attempt + 1 >= 10) throw error
       }
     }
 
@@ -99,7 +97,15 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
         request.on('response', resolve)
 
         if (requestOptions.body && utils.types.isFunction(requestOptions.body, 'pipe')) {
-          requestOptions.body.pipe(request)
+          const chunks = [] as Buffer[]
+          requestOptions.body.on('data', chunk => {
+            chunks.push(chunk)
+            request.write(chunk)
+          })
+          requestOptions.body.on('end', () => {
+            requestOptions.body = Buffer.concat(chunks)
+            request.end()
+          })
         } else {
           request.write(requestOptions.body)
           request.end()
