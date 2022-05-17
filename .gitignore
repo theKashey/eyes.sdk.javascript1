@@ -41,6 +41,5 @@ eyes-testcafe-bak
 # generated
 dist
 doc
-**/types/**/*
 !packages/types
 .history/
