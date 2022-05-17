@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed retry mechanism in EG client
 "@applitools/eyes-selenium":
   feature:
     - |
