@@ -40,7 +40,6 @@ eyes-testcafe-bak
 
 # generated
 dist
-docs
 doc
 **/types/**/*
 !packages/types
