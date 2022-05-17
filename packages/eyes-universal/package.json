@@ -55,11 +55,11 @@
     "postversion": "bongo postversion"
   },
   "dependencies": {
-    "@applitools/execution-grid-client": "1.1.9",
-    "@applitools/eyes-sdk-core": "13.6.11",
-    "@applitools/logger": "1.1.3",
+    "@applitools/execution-grid-client": "1.1.11",
+    "@applitools/eyes-sdk-core": "13.6.12",
+    "@applitools/logger": "1.1.4",
     "@applitools/utils": "1.3.0",
-    "@applitools/visual-grid-client": "15.12.23",
+    "@applitools/visual-grid-client": "15.12.24",
     "webdriver": "7.16.11",
     "ws": "7.4.6",
     "yargs": "17.4.1"

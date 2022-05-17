@@ -3,7 +3,7 @@ import {spawn, fork} from 'child_process'
 describe('works', () => {
   const suffixes = {darwin: 'macos', linux: 'linux', win32: 'win'}
 
-  it.skip('works with stdout', async () => {
+  it('works with stdout', async () => {
     const server = spawn(`./bin/eyes-universal-${suffixes[process.platform]}`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/bash',
