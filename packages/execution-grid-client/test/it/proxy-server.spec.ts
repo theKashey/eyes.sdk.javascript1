@@ -29,7 +29,7 @@ describe('proxy-server', () => {
   })
 
   it('performs retries on concurrency and availability errors', async () => {
-    proxy = await makeServer()
+    proxy = await makeServer({resolveUrls: false})
 
     let retries = 0
     nock('https://exec-wus.applitools.com')

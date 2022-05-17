@@ -1,6 +1,7 @@
 import assert from 'assert'
 import {createServer as createHttpServer, Server as HttpServer} from 'http'
 import fetch from 'node-fetch'
+import getRawBody from 'raw-body'
 import {makeLogger} from '@applitools/logger'
 import {makeProxy} from '../../src/proxy'
 
@@ -118,6 +119,46 @@ describe('proxy', () => {
         server.close()
         proxyServer.close()
         secondProxyServer.close()
+      }
+    })
+  })
+
+  it('retries with body', async () => {
+    return new Promise<void>(async (resolve, reject) => {
+      const proxyRequest = makeProxy({shouldRetry: response => response.statusCode >= 400, retryTimeout: 0})
+      const server = await createServer({port: 3000})
+      const proxyServer = await createServer({port: 4000})
+      try {
+        let requestCount = 0
+        server.on('request', async (request, response) => {
+          if (requestCount < 5) {
+            requestCount += 1
+            response.writeHead(500).end()
+          } else {
+            response.writeHead(200, {'Content-Type': request.headers['content-type']}).end(await getRawBody(request))
+          }
+        })
+
+        proxyServer.on('request', async (request, response) => {
+          try {
+            await proxyRequest({request, response, options: {url: 'http://localhost:3000'}, logger})
+          } catch (err) {
+            reject(err)
+          }
+        })
+
+        const body = {value: true}
+
+        const response = await fetch('http://localhost:4000/path', {method: 'post', body: JSON.stringify(body)})
+
+        assert.strictEqual(response.status, 200)
+        assert.deepStrictEqual(await response.json(), body)
+        resolve()
+      } catch (err) {
+        reject(err)
+      } finally {
+        server.close()
+        proxyServer.close()
       }
     })
   })

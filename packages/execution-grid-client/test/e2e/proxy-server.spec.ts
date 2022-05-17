@@ -10,7 +10,7 @@ describe('proxy-server', () => {
   })
 
   it('works with real server', async () => {
-    proxy = await makeServer({eyesServerUrl: 'https://eyes.applitools.com', apiKey: process.env.APPLITOOLS_API_KEY})
+    proxy = await makeServer({eyesServerUrl: process.env.APPLITOOLS_SERVER_URL, apiKey: process.env.APPLITOOLS_API_KEY})
     const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
 
     await driver.get('https://demo.applitools.com')

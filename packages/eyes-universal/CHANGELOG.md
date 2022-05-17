@@ -5,6 +5,12 @@
 
 
 
+## 2.5.10 - 2022/5/17
+
+### Features
+### Bug fixes
+- Fixed retry mechanism in EG client
+
 ## 2.5.9 - 2022/5/16
 
 ### Features
