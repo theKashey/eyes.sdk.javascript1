@@ -3,6 +3,24 @@
 ## Unreleased
 
 
+
+
+
+
+
+## 1.16.0 - 2022/5/17
+
+### Features
+- Support UFG for native mobile
+- `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+- Support `failTestcafeOnDiff` as environment variable `APPLITOOLS_FAIL_TESTCAFE_ON_DIFF`
+- Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+### Bug fixes
+- `runner.getAllTestResults` now aborts unclosed tests
+- `runner.getAllTestResults` now returns all results, including aborted tests
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- Support data urls in iframes
+
 ## 1.15.5 - 2022/2/22
 
 - add support for configuring notifyOnCompletion through an environment variable ([Trello](https://trello.com/c/WWdwQvpv))
