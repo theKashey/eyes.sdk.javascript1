@@ -69,7 +69,7 @@ describe('Eyes', () => {
 
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
-      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig}}}],
+      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig, keepPlatformNameAsIs: true}}}],
     )
   })
 
@@ -92,7 +92,7 @@ describe('Eyes', () => {
     await eyes.open(driver, openConfig.appName, openConfig.testName, openConfig.viewportSize, openConfig.sessionType)
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
-      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig}}}],
+      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig, keepPlatformNameAsIs: true}}}],
     )
   })
 
