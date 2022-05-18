@@ -19,7 +19,7 @@ function startFakeEyesServer({
   logger = console,
   hangUp,
   key,
-  cert
+  cert,
 } = {}) {
   const runningSessions = {}
   let serverUrl
