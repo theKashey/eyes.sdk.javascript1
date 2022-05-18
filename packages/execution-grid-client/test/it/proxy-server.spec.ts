@@ -231,4 +231,37 @@ describe('proxy-server', () => {
 
     assert.strictEqual(count, 1)
   })
+
+  it.skip('queue create session requests if they need retry', async () => {
+    proxy = await makeServer({resolveUrls: false})
+
+    let runningCount = 0
+    nock('https://exec-wus.applitools.com')
+      .persist()
+      .post('/session')
+      .reply(() => {
+        if (runningCount < 2) {
+          runningCount += 1
+          setTimeout(() => (runningCount -= 1), 10000)
+          return [200, {value: {capabilities: {}, sessionId: 'session-guid'}}]
+        }
+        return [
+          500,
+          {
+            value: {
+              error: 'session not created',
+              message: 'Session not created',
+              stacktrace: '',
+              data: {appliErrorCode: 'NO_AVAILABLE_DRIVER_POD'},
+            },
+          },
+        ]
+      })
+
+    await Promise.all(
+      Array.from({length: 10}).map(async (_, _index) => {
+        await new Builder().withCapabilities({browserName: 'chrome'}).usingServer(proxy.url).build()
+      }),
+    )
+  })
 })

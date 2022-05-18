@@ -167,4 +167,38 @@ describe('proxy', () => {
       }
     })
   })
+
+  it('respond on failed requests with body', async () => {
+    return new Promise<void>(async (resolve, reject) => {
+      const proxyRequest = makeProxy({
+        shouldRetry: async response => response.statusCode >= 400 && (await response.json())?.error,
+        retryTimeout: 0,
+      })
+      const server = await createServer({port: 3000})
+      const proxyServer = await createServer({port: 4000})
+      try {
+        server.on('request', async (_, response) => response.writeHead(404).end(JSON.stringify({error: 'blabla'})))
+
+        proxyServer.on('request', async (message, response) => {
+          const request = modifyIncomingMessage(message)
+          try {
+            await proxyRequest({request, response, options: {url: 'http://localhost:3000'}, logger})
+          } catch (err) {
+            reject(err)
+          }
+        })
+
+        const response = await fetch('http://localhost:4000/path')
+
+        assert.strictEqual(response.status, 404)
+        assert.deepStrictEqual(await response.json(), {error: 'blabla'})
+        resolve()
+      } catch (err) {
+        reject(err)
+      } finally {
+        server.close()
+        proxyServer.close()
+      }
+    })
+  })
 })

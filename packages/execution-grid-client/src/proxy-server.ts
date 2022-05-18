@@ -48,8 +48,7 @@ export function makeServer({
     resolveUrls,
     proxy: proxyUrl,
     shouldRetry: async proxyResponse => {
-      if (proxyResponse.statusCode <= 500) return false
-      return !utils.types.has(await proxyResponse.json(), 'value')
+      return proxyResponse.statusCode >= 500 && !utils.types.has(await proxyResponse.json(), 'value')
     },
   })
   const {createTunnel, deleteTunnel} = makeTunnelManager({egTunnelUrl, logger})
@@ -114,6 +113,7 @@ export function makeServer({
     session.eyesServerUrl = extractCapability(requestBody, 'applitools:eyesServerUrl') ?? eyesServerUrl
     session.apiKey = extractCapability(requestBody, 'applitools:apiKey') ?? apiKey
     session.tunnelId = extractCapability(requestBody, 'applitools:tunnel') ? await createTunnel(session) : undefined
+    session.key = `${session.eyesServerUrl ?? 'default'}:${session.apiKey}`
 
     const applitoolsCapabilities = {
       'applitools:eyesServerUrl': session.eyesServerUrl,
@@ -133,19 +133,17 @@ export function makeServer({
 
     logger.log('Request body has modified:', requestBody)
 
-    let queue = queues.get(`${session.eyesServerUrl}:${session.apiKey}`)
+    let queue = queues.get(session.key)
     if (!queue) {
-      queue = makeQueue({
-        logger: logger.extend({tags: {queue: `${session.eyesServerUrl}:${session.apiKey}`, requestId: undefined}}),
-      })
-      queues.set(`${session.eyesServerUrl}:${session.apiKey}`, queue)
+      queue = makeQueue({logger: logger.extend({tags: {queue: session.key}})})
+      queues.set(session.key, queue)
     }
 
     request.socket.on('close', () => queue.cancel(task))
 
     await queue.run(task)
 
-    async function task(signal: AbortSignal, attempt = 0): Promise<void> {
+    async function task(signal: AbortSignal, attempt = 1): Promise<void> {
       // do not start the task if it is already aborted
       if (signal.aborted) return
 
@@ -165,12 +163,15 @@ export function makeServer({
         // after query is corked the task might be aborted
         if (signal.aborted) return
         await utils.general.sleep(RETRY_BACKOFF[Math.min(attempt, RETRY_BACKOFF.length - 1)])
-        logger.log(`Retrying sending the request (attempt ${attempt})`)
+        logger.log(
+          `Attempt (${attempt}) to create session was failed with applitools status code:`,
+          responseBody.value.data.appliErrorCode,
+        )
         return task(signal, attempt + 1)
       } else {
         queue.uncork()
         if (responseBody.value?.sessionId) sessions.set(responseBody.value.sessionId, session)
-        response.end(JSON.stringify(responseBody))
+        proxyResponse.pipe(response)
         return
       }
     }
