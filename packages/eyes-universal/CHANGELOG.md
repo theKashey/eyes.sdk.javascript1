@@ -5,6 +5,12 @@
 
 
 
+## 2.5.12 - 2022/5/18
+
+### Features
+### Bug fixes
+- Improved body processing in EG client
+
 ## 2.5.11 - 2022/5/18
 
 ### Features
