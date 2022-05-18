@@ -2,3 +2,4 @@
 test/fixtures/**
 test/coverage/generic/cypress/support/
 test/coverage/generic/cypress/integration/generic
+test/e2e/ts/cypress/support/

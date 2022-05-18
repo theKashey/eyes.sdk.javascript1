@@ -7,7 +7,6 @@ const path = require('path');
 const pexec = p(exec);
 const fs = require('fs');
 const {presult} = require('@applitools/functional-commons');
-const applitoolsConfig = require('../fixtures/testApp/applitools.config.js');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
 const targetTestAppPath = path.resolve(
