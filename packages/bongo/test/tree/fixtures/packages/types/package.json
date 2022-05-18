@@ -1,0 +1,66 @@
+{
+  "name": "@applitools/types",
+  "version": "1.4.2",
+  "keywords": [
+    "applitools",
+    "eyes",
+    "eyes-sdk",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests"
+  ],
+  "homepage": "https://applitools.com",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/types"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "types": "./types/index.d.ts",
+  "directories": {
+    "test": "./test",
+    "src": "./src"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "lint": "eslint \"**/*.ts\"",
+    "build": "tsc",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion && yarn build",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@applitools/bongo": "^2.0.3",
+    "@types/node": "^14.14.7",
+    "@typescript-eslint/eslint-plugin": "^4.7.0",
+    "@typescript-eslint/parser": "^4.7.0",
+    "eslint": "^7.13.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.8",
+    "prettier": "^2.1.2",
+    "typescript": "^4.5.2"
+  },
+  "engines": {
+    "node": ">= 8.9.0"
+  }
+}
