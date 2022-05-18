@@ -63,7 +63,7 @@
     "ws": "8.5.0"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.0.3",
+    "@applitools/bongo": "^2.1.0",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.18",
     "@applitools/snaptdout": "1.0.1",

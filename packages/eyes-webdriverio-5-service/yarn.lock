@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.0.3.tgz#bed4f6db83201bb229db7fd8d0133f4b630512af"
-  integrity sha512-a3Hl+Liblxh+Cmaw90DTLQ0D8Qs7yLY69mZ5rj/T41O5Ztb7kdil+IJSJonUu4iISW9zLfptcXOcPk8JmKrbCA==
+"@applitools/bongo@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.0.tgz#ef36efe1fa3cc13b403342beae2e840c36f7bac4"
+  integrity sha512-GX0TjrU4v6pk0OyLd5fC3IOEHwgb+reUsNXnMmQeyudElC3hOvz7kVNEjJ81FkXBqiSS8zloFoDtuDBm/mr4mA==
   dependencies:
-    "@applitools/utils" "1.2.14"
+    "@applitools/utils" "1.3.0"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -192,15 +192,15 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.0.15.tgz#f60b3f844ee649a2fb82e37fdea23be92aa3c204"
   integrity sha512-14NqC8IrHLsl4najKJLuKcswHyKT0mIWIUiVwlv0MldItBPc2ylyYnxM6UDoRX9UGNcaPdx1GyWUdq8YpLrUJw==
 
-"@applitools/utils@1.2.14":
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.14.tgz#9e6b3a2b992e7c6e1a9f4447f8ac2b48b6037a2e"
-  integrity sha512-pnul7WuGuVScqm8jyHJQgBP3QcApzWC4u/RjZkWxFSFVVapVJsnuBENbs0aAOMeYtxqRvUWDG5MyyjMZIpEDxw==
-
 "@applitools/utils@1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.3.tgz#fdb25d3b7fc453563bacb94a281b843b21316f73"
   integrity sha512-MZXsrzeHTvjFLzpfyKRDUmZWzNxH3gWd3reqYf+1kYimALKB3CO82VDNmkaGJykrRbxEP03Yqha7fHJj9eKslQ==
+
+"@applitools/utils@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/@applitools/utils/-/utils-1.3.0.tgz#9220935483ac5c8c85a66b0abe1a3956b4694acc"
+  integrity sha512-CfWFAEZCcbjLSVu8/bTUxFwRL+Z+bsIfgQZ0l4XYBJkbeuVVxAk0u2QdXBC14LI+zTpRZNw0R/PSZ/NrfIe6uw==
 
 "@applitools/visual-grid-client@15.8.35":
   version "15.8.35"
