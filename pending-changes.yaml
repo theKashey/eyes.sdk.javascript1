@@ -95,7 +95,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Support `cy.eyesGetAllTestResults` in TypeScript 
 "@applitools/eyes-storybook":
   feature:
     - 

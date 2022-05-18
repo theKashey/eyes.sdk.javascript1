@@ -1,7 +1,9 @@
 /// <reference types="Cypress" />
 /// <reference types="@applitools/visual-grid-client" />
+import {TestResultsSummary} from '@applitools/eyes-api';
 
-declare namespace Cypress {
+declare global {
+  namespace Cypress {
     interface Chainable {
       /**
        * Create an Applitools test.
@@ -30,5 +32,17 @@ declare namespace Cypress {
        * @example cy.eyesClose()
       */
       eyesClose(): null
+
+      /**
+       * Returns an object with the applitools test results from a given test / test file. This should be called after close.
+       * @example
+       * after(() => {
+       *  cy.eyesGetAllTestResults().then(summary => {
+       *    console.log(summary)
+       *  })
+       * })
+       */
+      eyesGetAllTestResults(): Chainable<TestResultsSummary>
     }
   }
+}
