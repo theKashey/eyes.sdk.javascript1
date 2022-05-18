@@ -1,0 +1,69 @@
+{
+  "name": "@applitools/eyes-sdk-core-legacy",
+  "version": "1.0.1",
+  "description": "Applitools Eyes SDK For JavaScript",
+  "keywords": [
+    "eyes-sdk-core-legacy",
+    "eyes.sdk",
+    "applitools",
+    "eyes",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests"
+  ],
+  "homepage": "https://applitools.com",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com",
+    "url": "https://applitools.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-sdk-core-legacy"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "directories": {
+    "lib": "./src",
+    "test": "./test"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "index.js",
+    "src/",
+    "typings/"
+  ],
+  "main": "./index.js",
+  "types": "./typings/index.d.ts",
+  "dependencies": {
+    "@applitools/eyes-common-legacy": "1.0.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "@applitools/bongo": "^2.0.3",
+    "@types/node": "*",
+    "mocha": "^6.2.2",
+    "typescript": "^3.6.4"
+  },
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
+    "typings": "tsc --declaration",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification",
+    "prepublish:setup": "echo 'no setup'"
+  },
+  "browser": {
+    "./src/FileLogHandler": false
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}

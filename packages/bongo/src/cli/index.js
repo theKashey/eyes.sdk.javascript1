@@ -21,9 +21,40 @@ const {yarnInstall, yarnUpgrade, verifyUnfixedDeps} = require('../yarn')
 const pendingChangesFilePath = path.join(process.cwd(), '..', '..', 'pending-changes.yaml')
 const log = require('../log')
 const released = require('../released')
+const {makeDependencyTree, filterDependencyTreeByPackageName} = require('../../src/tree')
+const {makePackagesList} = require('../../src/versions/versions-utils')
 
 yargs
   .config({cwd: process.cwd()})
+  .command(
+    ['tree'],
+    'Show the publishing order of packages',
+    {
+      packageName: {alias: 'p', type: 'string'},
+      all: {type: 'boolean', default: false},
+      debug: {type: 'boolean', default: false},
+    },
+    args => {
+      const {cwd, packageName, all, debug} = args
+      const {tree, packages} = makeDependencyTree(makePackagesList())
+      console.log('bongo tree')
+      if (all) {
+        console.log('showing publishing order for all packages')
+        console.log(tree)
+      } else if (packageName) {
+        console.log(`showing publishing order for package ${packageName}`)
+        console.log(filterDependencyTreeByPackageName(packageName, {tree, packages}))
+      } else {
+        const {name} = require(path.join(cwd, 'package.json'))
+        console.log(`showing publishing order for package ${name}`)
+        console.log(filterDependencyTreeByPackageName(name, {tree, packages}))
+      }
+      if (debug) {
+        console.log('showing debug output for all packages')
+        console.log(packages)
+      }
+    },
+  )
   .command(
     ['released', 'release'],
     'Show which SDK versions contain a given package version or commit',

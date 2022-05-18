@@ -1,0 +1,58 @@
+{
+  "name": "@applitools/scripts",
+  "version": "1.1.0",
+  "description": "Helper CLI scripts for development and testing purposes",
+  "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/scripts"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Applitools team <team@applitools.com>",
+  "bin": {
+    "render": "./cli/render.js",
+    "link": "./cli/link.js",
+    "up": "./cli/up.js"
+  },
+  "files": [
+    "cli",
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "test": "mocha --no-timeouts 'test/**/*.spec.js'",
+    "preversion": "bongo preversion",
+    "deps": "bongo deps",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {
+    "@applitools/test-utils": "1.0.10",
+    "chalk": "3.0.0",
+    "cli-table3": "0.6.0",
+    "yargs": "15.3.1"
+  },
+  "devDependencies": {
+    "@applitools/bongo": "^2.0.3",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "mocha": "^8.1.3",
+    "prettier": "^2.5.1"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "name": "@applitools/eyes-testcafe",
+  "version": "1.15.5",
+  "description": "Applitools Eyes SDK for TestCafe",
+  "keywords": [
+    "eyes-testcafe",
+    "eyes-rendering",
+    "eyes-visual-grid",
+    "applitools",
+    "eyes",
+    "test automation",
+    "visual regression",
+    "automation",
+    "testing",
+    "tests",
+    "testcafe"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-testcafe"
+  },
+  "main": "./dist/index-legacy.js",
+  "types": "./types/index-legacy.d.ts",
+  "scripts": {
+    "perf": "testcafe chrome:headless test/perf/perf.spec.js",
+    "perf:full": "yarn perf && yarn perf -c 5",
+    "perf:lite": "testcafe chrome:headless test/perf/perf-lite.spec.js",
+    "perf:lite:full": "yarn perf:lite && yarn perf:lite -c 5",
+    "run:testcafe:10": "./node_modules/testcafe-10/bin/testcafe-with-v8-flag-filter.js",
+    "run:testcafe:9": "./node_modules/testcafe-9/bin/testcafe-with-v8-flag-filter.js",
+    "run:testcafe:8": "./node_modules/testcafe-8/bin/testcafe-with-v8-flag-filter.js",
+    "run:testcafe:7": "./node_modules/testcafe-7/bin/testcafe-with-v8-flag-filter.js",
+    "lint": "eslint '**/*.ts' '**/*.js'",
+    "build": "ttsc",
+    "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-testcafe'",
+    "test": "yarn test:it && yarn test:coverage",
+    "test:unit": "mocha --no-timeouts ./test/unit/*.spec.js",
+    "test:it": "testcafe chrome:headless test/it && yarn test:it:firefox:headless",
+    "test:it:chrome": "testcafe chrome test/it/spec-driver.spec.js",
+    "test:it:firefox": "testcafe firefox test/it/spec-driver.spec.js",
+    "test:it:firefox:headless": "testcafe firefox:headless test/it/spec-driver.spec.js",
+    "test:it:full": "testcafe chrome:headless test/it && yarn test:it:chrome && yarn test:it:firefox:headless && yarn test:it:firefox",
+    "test:spec": "testcafe chrome:headless ./test/it/spec-driver.spec.js",
+    "test:api": "testcafe chrome:headless ./test/it/legacy-api.spec.js",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/generic/*WithVg* test/custom --reporter spec,xunit:coverage-test-report.xml",
+    "test:coverage:generic": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/generic/*WithVg* --reporter spec,xunit:coverage-test-report.xml",
+    "test:coverage:custom": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe (custom)' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/custom --reporter spec,xunit:coverage-test-report.xml",
+    "report": "coverage-tests report ./test/coverage/config.js --name 'eyes-testcafe'",
+    "deps": "bongo deps",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client' -f linking-depth=3",
+    "gh:publish": "gh workflow run publish-testcafe.yml --ref $(git rev-parse --abbrev-ref HEAD)",
+    "preversion": "yarn deps && bongo preversion --verifyPendingChanges && yarn build",
+    "version": "bongo version --withPendingChanges",
+    "postversion": "bongo postversion"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
+  "dependencies": {
+    "@applitools/eyes-api": "1.1.8",
+    "@applitools/eyes-sdk-core": "13.0.6",
+    "@applitools/utils": "1.2.13",
+    "@applitools/visual-grid-client": "15.9.0"
+  },
+  "devDependencies": {
+    "@applitools/api-extractor": "1.2.7",
+    "@applitools/bongo": "^2.0.3",
+    "@applitools/scripts": "1.1.0",
+    "@applitools/sdk-coverage-tests": "^2.3.18",
+    "@applitools/sdk-shared": "0.9.11",
+    "@applitools/test-server": "1.0.8",
+    "@applitools/test-utils": "1.0.12",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-testcafe": "0.2.1",
+    "husky": "^4.3.8",
+    "mocha": "^8.0.1",
+    "prettier": "^2.1.2",
+    "testcafe": "^1.18.1",
+    "testcafe-10": "npm:testcafe@^1.10.0",
+    "testcafe-7": "npm:testcafe@1.7.1",
+    "testcafe-8": "npm:testcafe@1.8.8",
+    "testcafe-9": "npm:testcafe@1.9.4",
+    "testcafe-browser-provider-browserstack": "^1.13.2-alpha.1",
+    "ts-node": "^10.4.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.4"
+  },
+  "peerDependencies": {
+    "testcafe": "^1.7.1"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}

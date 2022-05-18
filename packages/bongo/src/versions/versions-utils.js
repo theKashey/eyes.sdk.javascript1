@@ -15,8 +15,7 @@ function _isWorkspacePackage({pkgs, pkgName}) {
   return pkgs.find(({name}) => name === pkgName)
 }
 
-function makePackagesList() {
-  const pkgsPath = path.join(cwd, '..')
+function makePackagesList(pkgsPath = path.join(cwd, '..')) {
   const packages = fs.readdirSync(pkgsPath)
   return packages
     .filter(pkgName => fs.existsSync(path.join(pkgsPath, pkgName, 'package.json')))

@@ -1,0 +1,30 @@
+{
+  "name": "@applitools/fancy",
+  "version": "1.3.1",
+  "description": "pretty fancy string output",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/"
+  },
+  "keywords": [],
+  "homepage": "https://applitools.com",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes-webdriverio5-service.git",
+    "directory": "packages/fancy"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/fancy/issues"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "@applitools/bongo": "^2.0.3",
+    "@applitools/snaptdout": "^1.5.4",
+    "@applitools/visual-grid-client": "^15.8.2",
+    "mocha": "^8.3.2"
+  }
+}

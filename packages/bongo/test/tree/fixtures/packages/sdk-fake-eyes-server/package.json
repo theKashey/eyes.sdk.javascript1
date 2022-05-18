@@ -1,0 +1,67 @@
+{
+  "name": "@applitools/sdk-fake-eyes-server",
+  "version": "2.1.1",
+  "description": "Fake eyes server",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
+  "homepage": "https://github.com/applitools/eyes.sdk.javascript1",
+  "license": "SEE LICENSE IN LICENSE",
+  "bin": {
+    "fake-eyes-server": "./scripts/run-fake-eyes-server.js"
+  },
+  "main": "sdk-fake-eyes-server.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "files": [
+    "scripts",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/sdk-fake-eyes-server"
+  },
+  "scripts": {
+    "start": "node ./scripts/run-fake-eyes-server.js",
+    "lint": "eslint . --ext .js",
+    "test": "mocha --no-timeouts \"test/**/*.test.js\"",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification",
+    "deps": "bongo deps",
+    "prepublish:setup": "echo 'no setup'"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "filenamify": "4.1.0",
+    "node-fetch": "2.6.1",
+    "ua-parser-js": "0.7.24",
+    "uuid": "3.3.3"
+  },
+  "devDependencies": {
+    "@applitools/bongo": "^2.0.3",
+    "chai": "^4.2.0",
+    "eslint": "^7.9.0",
+    "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.7",
+    "mocha": "^7.0.0",
+    "prettier": "1.19.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  }
+}
