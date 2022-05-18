@@ -769,7 +769,7 @@ describe('ServerConnector', () => {
     }
   })
 
-  it('outputs correct error message for bad requests to Eyes server', async () => {
+  it.only('outputs correct error message for bad requests to Eyes server', async () => {
     const serverConnector = getServerConnector()
     const [err] = await presult(
       serverConnector.startSession(
@@ -788,7 +788,8 @@ describe('ServerConnector', () => {
     assert.deepStrictEqual(
       err,
       new Error(`Error in request startSession: Request failed with status code 400 (Bad Request)
-'startInfo' is null\r
+Value cannot be null.\r
+Parameter name: 'startInfo' is null\r
 Parameter name: startInfo`),
     )
   })
