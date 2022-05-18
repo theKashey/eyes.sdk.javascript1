@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Added support for node versions >= 12.x
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
@@ -95,7 +95,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Support `cy.eyesGetAllTestResults` in TypeScript 
+    - Support `cy.eyesGetAllTestResults` in TypeScript
 "@applitools/eyes-storybook":
   feature:
     - 

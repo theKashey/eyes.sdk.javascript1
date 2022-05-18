@@ -5,6 +5,12 @@
 
 
 
+## 2.5.13 - 2022/5/18
+
+### Features
+### Bug fixes
+- Added support for node versions >= 12.x
+
 ## 2.5.12 - 2022/5/18
 
 ### Features
