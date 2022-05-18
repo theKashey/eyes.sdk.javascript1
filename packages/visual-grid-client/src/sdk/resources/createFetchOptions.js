@@ -2,6 +2,7 @@
 const {URL} = require('url')
 const {getTunnelAgentFromProxy} = require('@applitools/eyes-sdk-core/shared')
 const createResourceCookieHeader = require('./createResourceCookieHeader')
+const https = require('https')
 
 function createFetchOptions(resource, {referer, userAgent, proxy, autProxy, cookies}) {
   const fetchOptions = {headers: {}}
@@ -20,6 +21,12 @@ function createFetchOptions(resource, {referer, userAgent, proxy, autProxy, cook
 
   if (cookies) {
     fetchOptions.headers['Cookie'] = createResourceCookieHeader(resource.url, cookies)
+  }
+
+  if (resource && /^https/.test(resource.url)) {
+    fetchOptions.agent = new https.Agent({
+      rejectUnauthorized: false,
+    })
   }
 
   return fetchOptions

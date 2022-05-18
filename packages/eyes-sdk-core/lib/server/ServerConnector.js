@@ -1,5 +1,6 @@
 'use strict'
 const Axios = require('axios')
+const https = require('https')
 const zlib = require('zlib')
 const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
@@ -107,6 +108,9 @@ class ServerConnector {
       timeout: DEFAULT_TIMEOUT_MS,
       responseType: 'json',
       maxBodyLength: 200 * 1024 * 1024, // 200 MB
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false,
+      }),
     })
 
     this._axios.interceptors.request.use(async config => {

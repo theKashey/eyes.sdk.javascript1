@@ -8,7 +8,8 @@ const path = require('path')
 const filenamify = require('filenamify')
 const uuid = require('uuid/v4')
 const fetch = require('node-fetch')
-const {json} = require('express')
+const http = require('http')
+const https = require('https')
 
 function startFakeEyesServer({
   matchMode = 'fair', // fair|always|never
@@ -17,6 +18,8 @@ function startFakeEyesServer({
   port,
   logger = console,
   hangUp,
+  key,
+  cert
 } = {}) {
   const runningSessions = {}
   let serverUrl
@@ -440,7 +443,8 @@ function startFakeEyesServer({
   }
 
   return new Promise(resolve => {
-    const server = app.listen(port || 0, () => {
+    const server = cert && key ? https.createServer({key, cert}, app) : http.createServer(app)
+    server.listen(port || 0, () => {
       const serverPort = server.address().port
       logger.log('fake eyes server listening on port', serverPort)
       const close = promisify(server.close.bind(server))
