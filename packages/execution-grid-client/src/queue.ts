@@ -22,7 +22,7 @@ type Handle = {
   controller: AbortController
 }
 
-export function makeQueue(_options: {logger: Logger}): Queue {
+export function makeQueue({logger}: {logger: Logger}): Queue {
   const pool = [] as Handle[]
   const map = new Map<Task<any>, Handle>()
   let corked = false
@@ -47,6 +47,7 @@ export function makeQueue(_options: {logger: Logger}): Queue {
       try {
         const result = await task(handle.controller.signal)
         if (handle.running) {
+          map.delete(task)
           pool.splice(pool.indexOf(handle), 1)
           handle.resolve(result)
         }
@@ -69,6 +70,8 @@ export function makeQueue(_options: {logger: Logger}): Queue {
     pool.push(handle)
     map.set(task, handle)
 
+    logger.log('Task was added to the queue')
+
     if (!corked) handle.start()
 
     return handle.promise
@@ -76,21 +79,24 @@ export function makeQueue(_options: {logger: Logger}): Queue {
 
   function cancel(task: (signal: AbortSignal) => Promise<any>): void {
     const handle = map.get(task)
-    if (!handle) return
+    if (!handle?.running) return
     handle.abort()
     map.delete(task)
     pool.splice(pool.indexOf(handle), 1)
+    logger.log('Task was cancelled')
   }
 
   function cork() {
     if (corked) return
     corked = true
     pool.slice(1).forEach(handle => handle.abort())
+    logger.log('Queue was corked')
   }
 
   function uncork() {
     if (!corked) return
     corked = false
     pool.forEach(handle => handle.start())
+    logger.log('Queue was uncorked')
   }
 }

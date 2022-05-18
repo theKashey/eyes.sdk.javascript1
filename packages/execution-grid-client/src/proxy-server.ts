@@ -1,11 +1,11 @@
 import {type AddressInfo} from 'net'
-import {type IncomingMessage, type ServerResponse, type Server, createServer} from 'http'
 import {type AbortSignal} from 'abort-controller'
-import {type Logger, makeLogger} from '@applitools/logger'
+import {createServer, type ServerResponse, type Server} from 'http'
+import {makeLogger, type Logger} from '@applitools/logger'
 import {makeQueue, type Queue} from './queue'
 import {makeTunnelManager} from './tunnel'
 import {makeProxy} from './proxy'
-import {parseBody} from './parse-body'
+import {modifyIncomingMessage, type ModifiedIncomingMessage} from './incoming-message'
 import * as utils from '@applitools/utils'
 
 export type ServerOptions = {
@@ -48,10 +48,8 @@ export function makeServer({
     resolveUrls,
     proxy: proxyUrl,
     shouldRetry: async proxyResponse => {
-      if (proxyResponse.statusCode <= 400) return false
-      //@ts-ignore
-      proxyResponse.body = await parseBody(proxyResponse)
-      return !(proxyResponse as any).body?.value
+      if (proxyResponse.statusCode <= 500) return false
+      return !utils.types.has(await proxyResponse.json(), 'value')
     },
   })
   const {createTunnel, deleteTunnel} = makeTunnelManager({egTunnelUrl, logger})
@@ -59,7 +57,8 @@ export function makeServer({
   const sessions = new Map()
   const queues = new Map<string, Queue>()
 
-  const server = createServer(async (request, response) => {
+  const server = createServer(async (message, response) => {
+    const request = modifyIncomingMessage(message)
     const requestLogger = logger.extend({
       tags: {request: `[${request.method}] ${request.url}`, requestId: utils.general.guid()},
     })
@@ -103,11 +102,11 @@ export function makeServer({
     response,
     logger,
   }: {
-    request: IncomingMessage
+    request: ModifiedIncomingMessage
     response: ServerResponse
     logger: Logger
   }): Promise<void> {
-    const requestBody = await parseBody(request)
+    const requestBody = await request.json()
 
     logger.log(`Request was intercepted with body:`, requestBody)
 
@@ -136,7 +135,9 @@ export function makeServer({
 
     let queue = queues.get(`${session.eyesServerUrl}:${session.apiKey}`)
     if (!queue) {
-      queue = makeQueue({logger})
+      queue = makeQueue({
+        logger: logger.extend({tags: {queue: `${session.eyesServerUrl}:${session.apiKey}`, requestId: undefined}}),
+      })
       queues.set(`${session.eyesServerUrl}:${session.apiKey}`, queue)
     }
 
@@ -155,8 +156,7 @@ export function makeServer({
         logger,
       })
 
-      // to decide if we get an expected response we might already parse the body
-      const responseBody = (proxyResponse as any).body ?? (await parseBody(proxyResponse))
+      const responseBody = await proxyResponse.json()
 
       logger.log(`Response was intercepted with body:`, responseBody)
 
@@ -181,7 +181,7 @@ export function makeServer({
     response,
     logger,
   }: {
-    request: IncomingMessage
+    request: ModifiedIncomingMessage
     response: ServerResponse
     logger: Logger
   }): Promise<void> {

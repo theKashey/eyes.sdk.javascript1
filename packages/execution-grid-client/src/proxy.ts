@@ -1,7 +1,8 @@
 import {type Readable} from 'stream'
 import {type AbortSignal} from 'abort-controller'
 import {type Logger} from '@applitools/logger'
-import {request as sendHttp, type IncomingMessage, type ServerResponse} from 'http'
+import {modifyIncomingMessage, type ModifiedIncomingMessage} from './incoming-message'
+import {request as sendHttp, type ServerResponse} from 'http'
 import {request as sendHttps} from 'https'
 import {resolve as resolveDns} from 'dns'
 import ProxyAgent from 'proxy-agent'
@@ -19,7 +20,7 @@ type RequestOptions = {
 type ProxyOptions = Partial<RequestOptions> & {
   handle?: boolean
   modifyRequest?: (options: RequestOptions) => Promise<RequestOptions> | RequestOptions
-  shouldRetry?: (proxyResponse: IncomingMessage) => Promise<boolean> | boolean
+  shouldRetry?: (proxyResponse: ModifiedIncomingMessage) => Promise<boolean> | boolean
   retryTimeout?: number
 }
 
@@ -32,11 +33,11 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
     options,
     logger,
   }: {
-    request: IncomingMessage
+    request: ModifiedIncomingMessage
     response: ServerResponse
     options?: ProxyOptions
     logger: Logger
-  }): Promise<IncomingMessage> {
+  }): Promise<ModifiedIncomingMessage> {
     options = {...defaultOptions, ...options}
 
     const isProxyRequest = !options.url && /^http/.test(request.url)
@@ -56,7 +57,7 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
     }
     const modifiedRequestOptions = (await options.modifyRequest?.(requestOptions)) ?? requestOptions
 
-    let proxyResponse: IncomingMessage
+    let proxyResponse: ModifiedIncomingMessage
     for (let attempt = 1; attempt <= 10; ++attempt) {
       try {
         proxyResponse = await send(modifiedRequestOptions)
@@ -85,27 +86,19 @@ export function makeProxy(defaultOptions?: Partial<ProxyOptions> & {resolveUrls?
 
     return proxyResponse
 
-    async function send(requestOptions: RequestOptions): Promise<IncomingMessage> {
+    async function send(requestOptions: RequestOptions): Promise<ModifiedIncomingMessage> {
       const sendRequest = new URL(requestOptions.url).protocol === 'https:' ? sendHttps : sendHttp
-      return new Promise<IncomingMessage>((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const request = sendRequest(requestOptions.url, {
           ...requestOptions,
           agent: new ProxyAgent(requestOptions.proxy),
         })
 
         request.on('error', reject)
-        request.on('response', resolve)
+        request.on('response', response => resolve(modifyIncomingMessage(response)))
 
         if (requestOptions.body && utils.types.isFunction(requestOptions.body, 'pipe')) {
-          const chunks = [] as Buffer[]
-          requestOptions.body.on('data', chunk => {
-            chunks.push(chunk)
-            request.write(chunk)
-          })
-          requestOptions.body.on('end', () => {
-            requestOptions.body = Buffer.concat(chunks)
-            request.end()
-          })
+          requestOptions.body.pipe(request)
         } else {
           request.write(requestOptions.body)
           request.end()

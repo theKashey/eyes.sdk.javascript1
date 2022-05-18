@@ -1,8 +1,8 @@
 import assert from 'assert'
 import {createServer as createHttpServer, Server as HttpServer} from 'http'
 import fetch from 'node-fetch'
-import getRawBody from 'raw-body'
 import {makeLogger} from '@applitools/logger'
+import {modifyIncomingMessage, type ModifiedIncomingMessage} from '../../src/incoming-message'
 import {makeProxy} from '../../src/proxy'
 
 describe('proxy', () => {
@@ -36,7 +36,8 @@ describe('proxy', () => {
           }
         })
 
-        proxyServer.on('request', async (request, response) => {
+        proxyServer.on('request', async (message: ModifiedIncomingMessage, response) => {
+          const request = modifyIncomingMessage(message)
           try {
             headers.original = request.headers
             await proxyRequest({request, response, options: {url: 'http://localhost:3000'}, logger})
@@ -82,7 +83,8 @@ describe('proxy', () => {
           }
         })
 
-        secondProxyServer.on('request', async (request, response) => {
+        secondProxyServer.on('request', async (message: ModifiedIncomingMessage, response) => {
+          const request = modifyIncomingMessage(message)
           try {
             headers.proxied = request.headers
             await proxyRequest({request, response, logger})
@@ -91,7 +93,8 @@ describe('proxy', () => {
           }
         })
 
-        proxyServer.on('request', async (request, response) => {
+        proxyServer.on('request', async (message, response) => {
+          const request = modifyIncomingMessage(message)
           try {
             headers.original = request.headers
             await proxyRequest({
@@ -130,16 +133,18 @@ describe('proxy', () => {
       const proxyServer = await createServer({port: 4000})
       try {
         let requestCount = 0
-        server.on('request', async (request, response) => {
+        server.on('request', async (message, response) => {
+          const request = modifyIncomingMessage(message)
           if (requestCount < 5) {
             requestCount += 1
             response.writeHead(500).end()
           } else {
-            response.writeHead(200, {'Content-Type': request.headers['content-type']}).end(await getRawBody(request))
+            response.writeHead(200, {'Content-Type': request.headers['content-type']}).end(await request.body())
           }
         })
 
-        proxyServer.on('request', async (request, response) => {
+        proxyServer.on('request', async (message, response) => {
+          const request = modifyIncomingMessage(message)
           try {
             await proxyRequest({request, response, options: {url: 'http://localhost:3000'}, logger})
           } catch (err) {

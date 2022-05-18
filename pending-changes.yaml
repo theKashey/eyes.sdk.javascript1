@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Improved body processing in EG client
 "@applitools/eyes-selenium":
   feature:
     - |
