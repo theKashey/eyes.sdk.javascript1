@@ -769,7 +769,7 @@ describe('ServerConnector', () => {
     }
   })
 
-  it.only('outputs correct error message for bad requests to Eyes server', async () => {
+  it('outputs correct error message for bad requests to Eyes server', async () => {
     const serverConnector = getServerConnector()
     const [err] = await presult(
       serverConnector.startSession(
