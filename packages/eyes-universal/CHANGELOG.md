@@ -5,6 +5,12 @@
 
 
 
+## 2.5.11 - 2022/5/18
+
+### Features
+### Bug fixes
+- Allow running with self-signed certificates
+
 ## 2.5.10 - 2022/5/17
 
 ### Features
