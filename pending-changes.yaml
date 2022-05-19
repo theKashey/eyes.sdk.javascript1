@@ -82,11 +82,9 @@ Apollo SDK:
     - Allow running with self-signed certificates
 "@applitools/eyes-testcafe":
   feature:
-    - |
-      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+    - 
   bug-fix:
-    - |
-      Fixed the error with importing `testcafe` module
+    - 
 "@applitools/eyes-nightwatch":
   feature:
     - Support UFG for native mobile
