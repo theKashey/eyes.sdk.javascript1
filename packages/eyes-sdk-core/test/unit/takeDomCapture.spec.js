@@ -55,7 +55,7 @@ describe('takeDomCapture', () => {
         children: [{selector: 'frame2-2', frame: true, isCORS: true}],
       },
     ])
-    driver = new Driver({logger, spec, driver: mock})
+    driver = new Driver({spec, driver: mock})
     await driver.init()
   })
 
