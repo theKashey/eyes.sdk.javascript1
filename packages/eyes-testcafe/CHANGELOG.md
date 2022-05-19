@@ -8,6 +8,15 @@
 
 
 
+
+
+## 1.16.1 - 2022/5/19
+
+### Features
+- Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+### Bug fixes
+- Fixed the error with importing `testcafe` module
+
 ## 1.16.0 - 2022/5/17
 
 ### Features
