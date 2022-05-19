@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.1.0":
+"@applitools/bongo@^2.0.3":
   version "2.1.0"
-  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.0.tgz#ef36efe1fa3cc13b403342beae2e840c36f7bac4"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.1.0.tgz#ef36efe1fa3cc13b403342beae2e840c36f7bac4"
   integrity sha512-GX0TjrU4v6pk0OyLd5fC3IOEHwgb+reUsNXnMmQeyudElC3hOvz7kVNEjJ81FkXBqiSS8zloFoDtuDBm/mr4mA==
   dependencies:
     "@applitools/utils" "1.3.0"
@@ -16,21 +16,22 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@1.8.1":
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.1.tgz#9cae926ec67a8a9584bfb5667ef39894051b1a9a"
-  integrity sha512-q8VLCdRwXqae7hElL+XEiIJSIJMfa8kcgfr+lDATm/FEYxe8jFLG2FWkNLrmo+piuAtI0fZGSExlLk0B1TYgKA==
+"@applitools/driver@^1.8.1":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.3.tgz#280ebf1a525910d98d9fe7261072f7aa152d00e1"
+  integrity sha512-gR0a0Pecc4XdCfbfAEyw3keEDuSPwHF/yCotbZGvlgjYU34oLOSRCjcl1mHUFABJoyF2slmo7GmrTz+aOAFPpg==
   dependencies:
+    "@applitools/logger" "1.1.4"
     "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.4.0"
-    "@applitools/utils" "1.2.14"
+    "@applitools/types" "1.4.2"
+    "@applitools/utils" "1.3.0"
 
-"@applitools/logger@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.2.tgz#d7712df8a258434fa5af757bd9698dcf95de31ad"
-  integrity sha512-oi2QrXaIIz6qadXHOLBE0oGa8KdUQnzY+BY78QbNBkbgKuvgg3YW9ii+E5CWo3BScdZvzU4Obowv+3GR6gEM0w==
+"@applitools/logger@1.1.4", "@applitools/logger@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.4.tgz#8e3033fee2d5da4e64d34690c90193f8a1a24947"
+  integrity sha512-sE02RVwOI/CIbfpqFJ1chWeIejWOAMaSMyfmJ5Ay24eZ012o0veT311lqfw26MH4VFBQpzuFoS8e8Ya/25elow==
   dependencies:
-    "@applitools/utils" "1.2.14"
+    "@applitools/utils" "1.3.0"
     chalk "4.1.2"
 
 "@applitools/scripts@1.1.0":
@@ -76,6 +77,11 @@
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.0.tgz#9de5fcfa59c3e2b14bc5560da8bd92afd3078513"
   integrity sha512-oyoAYJyW7C8YNhGKcoCWD67EtOtl3+DZJxe4fr93C/WDnwDE6c4I8u1e15tsGWb3ho79GM0AyoEvejDOVbvr8g==
+
+"@applitools/types@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.2.tgz#b6c5c4678bb49d8625b3fb897cfbba962a72a9af"
+  integrity sha512-q0snFPtSQFH+0FhLNMXDbBsBeHQqOjuQEZPwlYb00KkrBHEwjq+DZ8zt14i/fISLBb/6cXzKkcMKkyWv2l6CMQ==
 
 "@applitools/utils@1.2.14":
   version "1.2.14"
