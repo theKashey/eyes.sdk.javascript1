@@ -101,7 +101,7 @@ eyes.check({settings: {target: {width: 200, height: 80, top: 20, left: 10}}})
 
 #### eyes.close
 
-This function should be called to close the Eyes session. It receives no input, and returns a JSON object of the type [TestResult](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205).
+This function should be called to close the Eyes session. It receives no input, and returns an array with JSON objects of the type [TestResult](https://github.com/applitools/eyes.sdk.javascript1/blob/0eec1b760d07489f62d95b9441d0ee5c560c24a1/packages/types/src/data.ts#L205). The length of the array is determined by the UFG browser/device configurations that were provided in `__applitools.openEyes`. In the case of classic mode, the length of the array is 1.
 
 Example:
 
