@@ -3,7 +3,7 @@ import path from 'path'
 
 export function makeServerProcess(config: any): Promise<{port: number; close: () => void}> {
   return new Promise((resolve, reject) => {
-    const server = fork(path.resolve(__dirname, '../dist/cli.js'), ['--config', JSON.stringify(config)], {
+    const server = fork(path.resolve(__dirname, '../dist/cli.js'), [`--config ${JSON.stringify(config)}`], {
       detached: true,
       stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
     })
