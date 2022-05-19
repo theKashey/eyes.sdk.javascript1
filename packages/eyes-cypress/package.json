@@ -14,7 +14,7 @@
     "test:e2e": "mkdir -p test/fixtures/testAppCopies && mocha --no-timeouts 'test/e2e/**/*.test.js'",
     "test:ts:compile": "tsc --project test/e2e/ts/cypress",
     "test:ts:run": "cypress run --config-file test/e2e/ts/cypress-ts.json",
-    "test:ts": "yarn ts:compile && yarn ts:run",
+    "test:ts": "yarn test:ts:compile && yarn test:ts:run",
     "lint": "eslint \"**/*.js\"",
     "test": "yarn test:unit && yarn test:it && yarn test:e2e && yarn test:ts && yarn test:coverage",
     "cypress": "cypress open --config-file test/fixtures/cypress-play.json",
