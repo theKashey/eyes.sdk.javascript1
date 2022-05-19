@@ -5,6 +5,12 @@
 
 
 
+## 2.5.15 - 2022/5/19
+
+### Features
+### Bug fixes
+- revert back to sending the config as a string to cli from universal-server-process
+
 ## 2.5.14 - 2022/5/19
 
 ### Features

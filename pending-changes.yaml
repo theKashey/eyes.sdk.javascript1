@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - revert back to sending the config as a string to cli from universal-server-process
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
@@ -108,7 +108,7 @@ Apollo SDK:
 "@applitools/eyes-cypress":
   feature:
     - |
-     `cy.eyesCheckWindow` now supports passing DOM elements and jQuery object for target and regions.
+      `cy.eyesCheckWindow` now supports passing DOM elements and jQuery object for target and regions.
   bug-fix:
     - Support `cy.eyesGetAllTestResults` in TypeScript
 "@applitools/eyes-storybook":
