@@ -7,6 +7,14 @@
 
 
 
+
+## 3.26.0 - 2022/5/19
+
+### Features
+- `cy.eyesCheckWindow` now supports passing DOM elements and jQuery object for target and regions.
+### Bug fixes
+- Support `cy.eyesGetAllTestResults` in TypeScript
+
 ## 3.25.7 - 2022/5/6
 
 ### Features

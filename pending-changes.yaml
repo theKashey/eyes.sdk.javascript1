@@ -107,10 +107,9 @@ Apollo SDK:
     - Allow running with self-signed certificates
 "@applitools/eyes-cypress":
   feature:
-    - |
-      `cy.eyesCheckWindow` now supports passing DOM elements and jQuery object for target and regions.
+    - 
   bug-fix:
-    - Support `cy.eyesGetAllTestResults` in TypeScript
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 
