@@ -17,6 +17,8 @@ Apollo SDK:
   feature:
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - Fixed check region fully in classic execution when using CSS stitching
     - Fixed handling of navigation bar size on various devices
@@ -24,16 +26,19 @@ Apollo SDK:
   feature:
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
-    - Allow running with self-signed certificates
     - Fixed handling of navigation bar size on various devices
+    - Allow running with self-signed certificates
 "@applitools/eyes-playwright":
   feature:
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
-    - Allow running with self-signed certificates
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
-    - 
+    - Allow running with self-signed certificates
 "@applitools/eyes-protractor":
   feature:
     - Support UFG for native mobile
@@ -41,6 +46,8 @@ Apollo SDK:
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -51,8 +58,8 @@ Apollo SDK:
     - accept ios and android lowercase as driver platformName capability when using custom grid
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
-    - Allow running with self-signed certificates
     - Fixed handling of navigation bar size on various devices
+    - Allow running with self-signed certificates
 "@applitools/eyes-puppeteer":
   feature:
     - Support UFG for native mobile
@@ -60,6 +67,8 @@ Apollo SDK:
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -73,7 +82,8 @@ Apollo SDK:
     - Allow running with self-signed certificates
 "@applitools/eyes-testcafe":
   feature:
-    - 
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - |
       Fixed the error with importing `testcafe` module
@@ -84,6 +94,8 @@ Apollo SDK:
       `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+    - |
+      Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
