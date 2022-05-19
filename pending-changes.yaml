@@ -75,7 +75,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Fixed the error with importing `testcafe` module
 "@applitools/eyes-nightwatch":
   feature:
     - Support UFG for native mobile

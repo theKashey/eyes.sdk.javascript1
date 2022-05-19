@@ -3,7 +3,47 @@ import {inspect} from 'util'
 import chalk from 'chalk'
 import {type LogLevelName} from './log-level'
 
-type Style = typeof chalk.ForegroundColor | typeof chalk.BackgroundColor
+type ForegroundColor =
+  | 'black'
+  | 'red'
+  | 'green'
+  | 'yellow'
+  | 'blue'
+  | 'magenta'
+  | 'cyan'
+  | 'white'
+  | 'gray'
+  | 'grey'
+  | 'blackBright'
+  | 'redBright'
+  | 'greenBright'
+  | 'yellowBright'
+  | 'blueBright'
+  | 'magentaBright'
+  | 'cyanBright'
+  | 'whiteBright'
+
+type BackgroundColor =
+  | 'bgBlack'
+  | 'bgRed'
+  | 'bgGreen'
+  | 'bgYellow'
+  | 'bgBlue'
+  | 'bgMagenta'
+  | 'bgCyan'
+  | 'bgWhite'
+  | 'bgGray'
+  | 'bgGrey'
+  | 'bgBlackBright'
+  | 'bgRedBright'
+  | 'bgGreenBright'
+  | 'bgYellowBright'
+  | 'bgBlueBright'
+  | 'bgMagentaBright'
+  | 'bgCyanBright'
+  | 'bgWhiteBright'
+
+type Style = ForegroundColor | BackgroundColor
 
 export type ColoringOptions = {
   timestamp?: Style | Style[]
