@@ -11,7 +11,7 @@ describe('screenshoter android app', () => {
     await destroyDriver()
   })
 
-  it('take viewport screenshot', async () => {
+  it('take viewport screenshot with status bar', async () => {
     await test({
       type: 'android',
       tag: 'app',

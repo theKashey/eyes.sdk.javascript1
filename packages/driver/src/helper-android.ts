@@ -1,4 +1,5 @@
 import type * as types from '@applitools/types'
+import {type Logger} from '@applitools/logger'
 import type {Driver} from './driver'
 import type {Element} from './element'
 
@@ -6,7 +7,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector>
-    logger: any
+    logger: Logger
   }): Promise<HelperAndroid<TDriver, TContext, TElement, TSelector> | null> {
     const {spec, driver, logger} = options
     let legacy = false
@@ -27,7 +28,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
   private readonly _element: Element<TDriver, TContext, TElement, TSelector>
   private readonly _legacy: boolean
-  private _logger: any
+  private _logger: Logger
 
   constructor(options: {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>

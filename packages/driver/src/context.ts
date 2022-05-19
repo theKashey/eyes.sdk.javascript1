@@ -1,5 +1,6 @@
 import type * as types from '@applitools/types'
-import type {Driver} from './driver'
+import {type Logger} from '@applitools/logger'
+import {type Driver} from './driver'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
 import {Element} from './element'
@@ -38,7 +39,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   private _reference: ContextReference<TDriver, TContext, TElement, TSelector>
   private _scrollingElement: Element<TDriver, TContext, TElement, TSelector>
   private _state: ContextState = {}
-  private _logger: any
+  private _logger: Logger
 
   private _isReference(reference: any): reference is ContextReference<TDriver, TContext, TElement, TSelector> {
     return (
@@ -61,7 +62,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     reference?: ContextReference<TDriver, TContext, TElement, TSelector>
     element?: Element<TDriver, TContext, TElement, TSelector>
     scrollingElement?: Element<TDriver, TContext, TElement, TSelector>
-    logger?: any
+    logger?: Logger
   }) {
     if (options.context instanceof Context) return options.context
 
@@ -296,6 +297,9 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       if (this.isRef) {
         return new Element({spec: this._spec, context: this, selector: elementOrSelector, logger: this._logger})
       }
+
+      this._logger.log('Finding element by selector: ', elementOrSelector)
+
       const root = await this.root(elementOrSelector)
       if (!root) return null
 
@@ -323,6 +327,9 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       if (this.isRef) {
         return [new Element({spec: this._spec, context: this, selector: elementOrSelector, logger: this._logger})]
       }
+
+      this._logger.log('Finding elements by selector: ', elementOrSelector)
+
       const root = await this.root(elementOrSelector)
       if (!root) return []
 

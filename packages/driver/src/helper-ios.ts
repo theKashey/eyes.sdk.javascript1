@@ -1,4 +1,5 @@
 import type * as types from '@applitools/types'
+import {type Logger} from '@applitools/logger'
 import type {Driver} from './driver'
 import type {Element} from './element'
 
@@ -6,7 +7,7 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector>
-    logger: any
+    logger: Logger
   }): Promise<HelperIOS<TDriver, TContext, TElement, TSelector> | null> {
     const {spec, driver, logger} = options
     const element = await driver.element({type: 'name', selector: 'applitools_grab_scrollable_data_button'})
@@ -16,13 +17,13 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
   private readonly _driver: Driver<TDriver, TContext, TElement, TSelector>
   private readonly _element: Element<TDriver, TContext, TElement, TSelector>
   private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
-  private _logger: any
+  private _logger: Logger
 
   constructor(options: {
     driver: Driver<TDriver, TContext, TElement, TSelector>
     element: Element<TDriver, TContext, TElement, TSelector>
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
-    logger?: any
+    logger?: Logger
   }) {
     this._driver = options.driver
     this._element = options.element

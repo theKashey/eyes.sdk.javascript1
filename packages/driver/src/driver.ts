@@ -1,4 +1,5 @@
 import type * as types from '@applitools/types'
+import {type Logger, makeLogger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
 import {Context, ContextReference} from './context'
@@ -17,7 +18,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _mainContext: Context<TDriver, TContext, TElement, TSelector>
   private _currentContext: Context<TDriver, TContext, TElement, TSelector>
   private _driverInfo: types.DriverInfo
-  private _logger: any
+  private _logger: Logger
   private _customConfig: types.CustomDriverConfig
   private _helper?:
     | HelperAndroid<TDriver, TContext, TElement, TSelector>
@@ -28,15 +29,16 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   constructor(options: {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector> | TDriver
-    logger?: any
+    logger?: Logger
     customConfig?: types.CustomDriverConfig
   }) {
     if (options.driver instanceof Driver) return options.driver
 
+    this._customConfig = options.customConfig ?? {}
+
     this._spec = options.spec
 
-    this._customConfig = options.customConfig || {}
-    if (options.logger) this._logger = options.logger
+    this._logger = options.logger?.extend({label: 'driver'}) ?? makeLogger({label: 'driver'})
 
     if (this._spec.isDriver(options.driver)) {
       this._target = this._spec.transformDriver?.(options.driver) ?? options.driver
@@ -129,8 +131,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async init(): Promise<this> {
     const capabilities = await this._spec.getCapabilities?.(this.target)
-
     this._logger.log('Driver capabilities', capabilities)
+
     const capabilitiesInfo = capabilities ? parseCapabilities(capabilities, this._customConfig) : undefined
     const driverInfo = await this._spec.getDriverInfo?.(this.target)
 
@@ -157,31 +159,43 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._driverInfo.features.allCookies ??=
         /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
     } else {
-      const barsHeight = await this._spec.getBarsSize?.(this.target).catch(() => undefined as never)
       const displaySize = await this.getDisplaySize()
+      const orientation = await this.getOrientation()
+
       // calculate status and navigation bars sizes
-      if (barsHeight) {
-        const orientation = await this.getOrientation()
-        // when status bar is overlapping content on android it returns status bar height equal to viewport height
-        if (this.isAndroid && barsHeight.statusBarHeight / this.pixelRatio < displaySize.height) {
-          this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsHeight.statusBarHeight)
-        }
-        // android witches the width and height only for the navigationBar in landscape mode.
-        this._driverInfo.navigationBarHeight = Math.max(
-          this._driverInfo.navigationBarHeight ?? 0,
-          orientation === 'landscape' ? barsHeight.navigationBarWidth : barsHeight.navigationBarHeight,
-        )
-      }
       if (this.isAndroid) {
-        this._driverInfo.statusBarHeight /= this.pixelRatio
-        this._driverInfo.navigationBarHeight /= this.pixelRatio
+        // bar sizes could be extracted only on android
+        const barsSize = await this._spec.getBarsSize?.(this.target).catch(() => undefined as never)
+        if (barsSize) {
+          this._logger.log('Driver bars size', barsSize)
+
+          // navigation bar height is replaced with the width in landscape orientation on android (due to the bug in appium)
+          if (orientation === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
+
+          // when status bar is overlapping content on android it returns status bar height equal to viewport height
+          if (barsSize.statusBarHeight / this.pixelRatio < displaySize.height) {
+            this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsSize.statusBarHeight)
+          }
+
+          // when navigation bar is invisible on android it returns navigation bar height equal to viewport height
+          if (barsSize.navigationBarHeight / this.pixelRatio < displaySize.height) {
+            this._driverInfo.navigationBarHeight = Math.max(
+              this._driverInfo.navigationBarHeight ?? 0,
+              barsSize.navigationBarHeight,
+            )
+          }
+
+          // bar heights have to be scaled on android
+          this._driverInfo.statusBarHeight &&= this._driverInfo.statusBarHeight / this.pixelRatio
+          this._driverInfo.navigationBarHeight &&= this._driverInfo.navigationBarHeight / this.pixelRatio
+        }
       }
 
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
         this._driverInfo.viewportSize = {
           width: displaySize.width,
-          height: displaySize.height - this._driverInfo.statusBarHeight,
+          height: displaySize.height - this.statusBarHeight,
         }
       }
 
@@ -212,6 +226,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isMobile) {
       this._driverInfo.orientation ??= await this.getOrientation().catch(() => undefined)
     }
+
     this._logger.log('Combined driver info', this._driverInfo)
 
     return this
@@ -446,8 +461,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     let size
     if (this.isNative) {
       if (this._driverInfo?.viewportSize) {
+        this._logger.log('Extracting viewport size from native driver using cached value')
         size = this._driverInfo.viewportSize
       } else {
+        this._logger.log('Extracting viewport size from native driver')
         size = await this.getDisplaySize()
         if (size.height > size.width) {
           const orientation = await this.getOrientation()
@@ -455,17 +472,14 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
             size = {width: size.height, height: size.width}
           }
         }
+        size.height -= this.statusBarHeight
       }
+      this._logger.log(`Rounding viewport size using`, this._customConfig.useCeilForViewportSize ? 'ceil' : 'round')
       if (this._customConfig.useCeilForViewportSize) {
         size = utils.geometry.ceil(size)
       } else {
         size = utils.geometry.round(size)
       }
-      this._logger.log(
-        `Extracting viewport size from native driver using '${
-          this._customConfig.useCeilForViewportSize ? 'ceil' : 'round'
-        }' method`,
-      )
     } else if (this._spec.getViewportSize) {
       this._logger.log('Extracting viewport size from web driver using spec method')
       size = await this._spec.getViewportSize(this.target)
@@ -521,20 +535,22 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   async getDisplaySize(): Promise<types.Size> {
     if (this.isWeb && !this.isMobile) return
     const size = await this._spec.getWindowSize(this.target)
-    return this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
+    const normalizedSize = this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
+    this._logger.log('Extracted and normalized display size:', normalizedSize)
+    return normalizedSize
   }
 
   async getOrientation(): Promise<'portrait' | 'landscape'> {
     if (this.isWeb && !this.isMobile) return
-    const orientation = this._spec.getOrientation(this.target)
+    const orientation = await this._spec.getOrientation(this.target)
     this._logger.log('Extracted device orientation:', orientation)
     return orientation
   }
 
-  async setOrientation(orientation: types.ScreenOrientation): Promise<void> {
+  async setOrientation(orientation: 'portrait' | 'landscape'): Promise<void> {
     if (this.isWeb && !this.isMobile) return
+    this._logger.log('Set device orientation:', orientation)
     await this._spec.setOrientation(this.target, orientation)
-    this._logger.log('set device orientation:', orientation)
   }
 
   async getCookies(): Promise<types.Cookie[]> {
@@ -556,7 +572,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async getUrl(): Promise<string> {
     if (this.isNative) return null
-    const url = this._spec.getUrl(this.target)
+    const url = await this._spec.getUrl(this.target)
     this._logger.log('Extracted url:', url)
     return url
   }

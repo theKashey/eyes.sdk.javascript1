@@ -1,8 +1,9 @@
 import assert from 'assert'
+import {makeLogger} from '@applitools/logger'
 import {MockDriver, spec} from '../../src/fake/index'
 import {Driver} from '../../src/index'
 
-const logger = {log: () => null as any, warn: () => null as any, error: () => null as any}
+const logger = makeLogger()
 
 describe('driver', () => {
   let mock: spec.Driver, driver: Driver<spec.Driver, spec.Driver, spec.Element, spec.Selector>
@@ -329,13 +330,6 @@ describe('driver native', () => {
     await driver.init()
   })
 
-  it('skip unnecessary method calls on native mode', async () => {
-    const title = await driver.getTitle()
-    const url = await driver.getUrl()
-    assert.strictEqual(title, null)
-    assert.strictEqual(url, null)
-  })
-
   describe('from driver info', () => {
     let driver: Driver<any, any, any, any>
 
@@ -401,6 +395,17 @@ describe('driver native', () => {
     it('returns browser version', () => {
       assert.strictEqual(driver.browserVersion, null)
     })
+  })
+
+  it('skip unnecessary method calls on native mode', async () => {
+    const title = await driver.getTitle()
+    const url = await driver.getUrl()
+    assert.strictEqual(title, null)
+    assert.strictEqual(url, null)
+  })
+
+  it('should return correct viewport size', async () => {
+    assert.deepStrictEqual(await driver.getViewportSize(), {width: 1000, height: 1000})
   })
 })
 

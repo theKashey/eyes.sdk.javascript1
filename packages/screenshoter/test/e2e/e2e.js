@@ -3,13 +3,12 @@ const webdriverio = require('webdriverio')
 const pixelmatch = require('pixelmatch')
 const utils = require('@applitools/utils')
 const spec = require('@applitools/spec-driver-webdriverio')
+const {makeLogger} = require('@applitools/logger')
 const {Driver} = require('@applitools/driver')
 const makeImage = require('../../src/image')
 const takeScreenshot = require('../../src/take-screenshot')
 
-exports.logger = process.env.APPLITOOLS_SHOW_LOGS
-  ? {log: console.log, warn: console.log, error: console.log, verbose: console.log}
-  : {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
+exports.logger = makeLogger()
 
 async function sanitizeAndroidStatusBar(image) {
   const leftPatchImage = makeImage({
@@ -103,7 +102,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         username: process.env.SAUCE_USERNAME,
         accessKey: process.env.SAUCE_ACCESS_KEY,
         browserName: app === 'chrome' ? app : '',
-        app: apps[app || type],
+        app: apps[app || type] || app,
         deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
         platformName: 'Android',
         platformVersion: '10.0',

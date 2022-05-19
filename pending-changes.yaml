@@ -12,19 +12,21 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed handling of navigation bar size on various devices
 "@applitools/eyes-selenium":
   feature:
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
   bug-fix:
     - Fixed check region fully in classic execution when using CSS stitching
+    - Fixed handling of navigation bar size on various devices
 "@applitools/eyes-webdriverio":
   feature:
     - |
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
   bug-fix:
     - Allow running with self-signed certificates
+    - Fixed handling of navigation bar size on various devices
 "@applitools/eyes-playwright":
   feature:
     - |
@@ -50,6 +52,7 @@ Apollo SDK:
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
     - Allow running with self-signed certificates
+    - Fixed handling of navigation bar size on various devices
 "@applitools/eyes-puppeteer":
   feature:
     - Support UFG for native mobile
@@ -111,6 +114,7 @@ Apollo SDK:
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
     - Allow running with self-signed certificates
+    - Fixed handling of navigation bar size on various devices
 eyes-browser-extension:
   feature:
     - 

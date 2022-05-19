@@ -1,12 +1,14 @@
 import assert from 'assert'
+import {makeLogger} from '@applitools/logger'
 import {Driver, Context} from '../../src/index'
 import {MockDriver, spec} from '../../src/fake/index'
+
+const logger = makeLogger()
 
 describe('context', () => {
   let mock: MockDriver,
     driver: Driver<spec.Driver, spec.Driver, spec.Element, spec.Selector>,
     context: Context<spec.Driver, spec.Driver, spec.Element, spec.Selector>
-  const logger = {log: () => null as any, warn: () => null as any, error: () => null as any}
 
   beforeEach(() => {
     mock = new MockDriver()

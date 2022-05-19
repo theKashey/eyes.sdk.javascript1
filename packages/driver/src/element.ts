@@ -1,5 +1,6 @@
 import type * as types from '@applitools/types'
-import type {Context} from './context'
+import {type Logger} from '@applitools/logger'
+import {type Context} from './context'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
 
@@ -20,7 +21,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   private _state: ElementState = {}
   private _originalOverflow: any
   private _touchPadding: number
-  private _logger: any
+  private _logger: Logger
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -30,7 +31,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     context?: Context<TDriver, TContext, TElement, TSelector>
     selector?: types.Selector<TSelector>
     index?: number
-    logger?: any
+    logger?: Logger
     root?: TElement
   }) {
     if (options.element instanceof Element) return options.element
