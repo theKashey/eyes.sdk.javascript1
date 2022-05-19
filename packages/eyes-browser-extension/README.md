@@ -129,15 +129,15 @@ await __applitools.eyes.close()
 In JavaScript Selenium this would look similar to the following:
 
 ```js
-await driver.exectueAsyncScript(`return __applitools.openEyes({
+await driver.executeAsyncScript(`return __applitools.openEyes({
   type: 'vg',
   concurrency: 10,
   config: {appName: 'My App', testName: 'My test', apiKey: '<your API key>'}
 }).then(arguments[arguments.length-1])`)
 
-await driver.exectueAsyncScript(`return __applitools.eyes.check({}).then(arguments[arguments.length-1])`)
+await driver.executeAsyncScript(`return __applitools.eyes.check({}).then(arguments[arguments.length-1])`)
 
-await driver.exectueAsyncScript(`return __applitools.eyes.close().then(arguments[arguments.length-1])`)
+await driver.executeAsyncScript(`return __applitools.eyes.close().then(arguments[arguments.length-1])`)
 ```
 
 ### Script timeout and polling
