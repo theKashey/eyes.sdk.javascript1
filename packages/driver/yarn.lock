@@ -16,12 +16,12 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/logger@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.1.tgz#28262ad525c5f7896e43788302acb8e6ffdab2b7"
-  integrity sha512-4jtQB8kv+pe3SDPWp614oSw9y5HlEWVHfCqks3HhntvbhuCvjnHOVUiGUTSl9DuroMKQozmpfgxQi0i/f+OrPQ==
+"@applitools/logger@1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.4.tgz#8e3033fee2d5da4e64d34690c90193f8a1a24947"
+  integrity sha512-sE02RVwOI/CIbfpqFJ1chWeIejWOAMaSMyfmJ5Ay24eZ012o0veT311lqfw26MH4VFBQpzuFoS8e8Ya/25elow==
   dependencies:
-    "@applitools/utils" "1.2.14"
+    "@applitools/utils" "1.3.0"
     chalk "4.1.2"
 
 "@applitools/snippets@2.2.3":
