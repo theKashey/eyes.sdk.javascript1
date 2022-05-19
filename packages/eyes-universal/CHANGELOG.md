@@ -5,6 +5,12 @@
 
 
 
+## 2.5.14 - 2022/5/19
+
+### Features
+### Bug fixes
+- Fixed handling of navigation bar size on various devices
+
 ## 2.5.13 - 2022/5/18
 
 ### Features

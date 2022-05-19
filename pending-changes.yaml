@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed handling of navigation bar size on various devices
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
