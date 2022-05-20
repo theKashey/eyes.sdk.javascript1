@@ -120,10 +120,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         // if element is a child of scrolling element, then region location should be adjusted
         const scrollingElement = await this.context.getScrollingElement()
         if (scrollingElement) {
-          console.log('scrollingElement')
           const scrollingRegion = await this._spec.getElementRegion(this.driver.target, scrollingElement.target)
           if (utils.geometry.contains(scrollingRegion, region) && !this.equals(scrollingElement)) {
-            console.log('contains')
             return utils.geometry.offset(normalizedRegion, await scrollingElement.getScrollOffset())
           }
         }
