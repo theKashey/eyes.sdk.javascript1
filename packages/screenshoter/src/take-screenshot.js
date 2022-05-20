@@ -21,6 +21,9 @@ async function takeScreenshot({
   debug,
   logger,
 }) {
+  debug =
+    debug ||
+    (process.env.APPLITOOLS_DEBUG_SCREENSHOTS_DIR ? {path: process.env.APPLITOOLS_DEBUG_SCREENSHOTS_DIR} : debug)
   logger = logger ? logger.extend({label: 'screenshoter'}) : makeLogger({label: 'screenshoter'})
   // screenshot of a window/app was requested (fully or viewport)
   const window = !region && (!frames || frames.length === 0)

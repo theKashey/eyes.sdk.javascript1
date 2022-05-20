@@ -121,7 +121,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         const scrollingElement = await this.context.getScrollingElement()
         if (scrollingElement) {
           const scrollingRegion = await this._spec.getElementRegion(this.driver.target, scrollingElement.target)
-          if (utils.geometry.contains(scrollingRegion, region) && !this.equals(scrollingElement)) {
+          if (utils.geometry.contains(scrollingRegion, region) && !(await this.equals(scrollingElement))) {
             return utils.geometry.offset(normalizedRegion, await scrollingElement.getScrollOffset())
           }
         }

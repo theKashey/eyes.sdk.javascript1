@@ -49,11 +49,12 @@ async function takeStitchedScreenshot({
   const targetRegion = region
     ? utils.geometry.intersect(utils.geometry.region(postMoveOffset, scrollerRegion), region)
     : scrollerRegion
+  logger.log('Target region calculated: ', targetRegion)
 
   const cropRegion = await driver.getRegionInViewport(context, targetRegion)
+  logger.log('Crop region calculated: ', cropRegion)
   if (utils.geometry.isEmpty(cropRegion)) throw new Error('Screenshot region is out of viewport')
 
-  logger.verbose('cropping... cropRegion is', cropRegion)
   image.crop(withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion)
   await image.debug({...debug, name: 'initial', suffix: 'region'})
 

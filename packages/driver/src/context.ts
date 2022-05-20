@@ -560,6 +560,8 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   async getRegionInViewport(region: types.Region): Promise<types.Region> {
     let currentContext = this as Context<TDriver, TContext, TElement, TSelector>
 
+    this._logger.log('Converting context region to viewport region', region)
+
     if (region) region = utils.geometry.offsetNegative(region, await currentContext.getInnerOffset())
     else region = {x: 0, y: 0, width: Infinity, height: Infinity}
 
@@ -568,10 +570,13 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       // const contextScrollingRegion = await currentContext.getScrollingRegion()
       const parentContextInnerOffset = (await currentContext.parent?.getInnerOffset()) ?? {x: 0, y: 0}
 
-      region = utils.geometry.intersect(contextRegion, utils.geometry.offset(region, contextRegion))
-      // region = utils.geometry.intersect(contextScrollingRegion, region)
-      region = utils.geometry.offsetNegative(region, parentContextInnerOffset)
+      if (utils.geometry.contains(contextRegion, region) && !utils.geometry.equals(contextRegion, region)) {
+        this._logger.log('Intersecting context region', region, 'with context region', contextRegion)
 
+        region = utils.geometry.intersect(contextRegion, utils.geometry.offset(region, contextRegion))
+        // region = utils.geometry.intersect(contextScrollingRegion, region)
+        region = utils.geometry.offsetNegative(region, parentContextInnerOffset)
+      }
       currentContext = currentContext.parent
     }
     return region

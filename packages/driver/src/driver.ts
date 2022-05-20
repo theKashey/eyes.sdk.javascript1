@@ -183,6 +183,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
               this._driverInfo.navigationBarHeight ?? 0,
               barsSize.navigationBarHeight,
             )
+          } else {
+            // if navigation bar height is bigger then display height he can use it to reset display height
+            displaySize.height = barsSize.navigationBarHeight / this.pixelRatio
           }
 
           // bar heights have to be scaled on android
