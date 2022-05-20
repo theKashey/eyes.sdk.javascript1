@@ -13,6 +13,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-selenium":
   feature:
     - |
@@ -23,6 +24,7 @@ Apollo SDK:
     - Fixed check region fully in classic execution when using CSS stitching
     - Fixed handling of navigation bar size on various devices
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-webdriverio":
   feature:
     - |
@@ -33,6 +35,7 @@ Apollo SDK:
     - Fixed handling of navigation bar size on various devices
     - Allow running with self-signed certificates
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-playwright":
   feature:
     - |
@@ -63,6 +66,7 @@ Apollo SDK:
     - Fixed handling of navigation bar size on various devices
     - Allow running with self-signed certificates
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-puppeteer":
   feature:
     - Support UFG for native mobile
@@ -109,6 +113,7 @@ Apollo SDK:
     - Support data urls in iframes
     - Allow running with self-signed certificates
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-cypress":
   feature:
     - 
@@ -130,6 +135,7 @@ Apollo SDK:
     - Support data urls in iframes
     - Allow running with self-signed certificates
     - Fixed handling of navigation bar size on various devices
+    - Fixed bug when navigation bar was presented in screenshot on Android 12
 eyes-browser-extension:
   feature:
     - 

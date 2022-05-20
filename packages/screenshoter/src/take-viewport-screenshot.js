@@ -161,21 +161,18 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
       const viewportSize = await driver.getViewportSize()
-      const cropRegion = withStatusBar
-        ? {x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight}
-        : {
-            top: driver.statusBarHeight,
-            bottom: driver.orientation === 'landscape' ? 0 : driver.navigationBarHeight,
-            left:
-              driver.isAndroid && driver.orientation === 'landscape' && driver.platformVersion > 7
-                ? driver.navigationBarHeight
-                : 0,
-            right:
-              driver.isAndroid && driver.orientation === 'landscape' && driver.platformVersion < 8
-                ? driver.navigationBarHeight
-                : 0,
-          }
-      image.crop(cropRegion)
+      if (withStatusBar) {
+        image.crop({x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight})
+      } else if (driver.isAndroid && driver.orientation === 'landscape') {
+        image.crop({
+          top: driver.statusBarHeight,
+          bottom: driver.orientation === 'landscape' ? 0 : driver.navigationBarHeight,
+          left: driver.platformVersion > 7 ? driver.navigationBarHeight : 0,
+          right: driver.platformVersion < 8 ? driver.navigationBarHeight : 0,
+        })
+      } else {
+        image.crop({x: 0, y: driver.statusBarHeight, width: viewportSize.width, height: viewportSize.height})
+      }
     }
 
     await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
