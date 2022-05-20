@@ -1,6 +1,6 @@
+const {makeLogger} = require('@applitools/logger')
+const getTarget = require('./get-target')
 const scrollIntoViewport = require('./scroll-into-viewport')
-const getTarget = require('./getTarget')
-const makeScroller = require('./scroller')
 const takeStitchedScreenshot = require('./take-stitched-screenshot')
 const takeSimpleScreenshot = require('./take-simple-screenshot')
 
@@ -21,6 +21,7 @@ async function takeScreenshot({
   debug,
   logger,
 }) {
+  logger = logger ? logger.extend({label: 'screenshoter'}) : makeLogger({label: 'screenshoter'})
   // screenshot of a window/app was requested (fully or viewport)
   const window = !region && (!frames || frames.length === 0)
   // framed screenshots could be taken only when screenshot of window/app fully was requested
@@ -48,27 +49,22 @@ async function takeScreenshot({
   // blur active element in target context
   const activeElement = driver.isWeb && hideCaret ? await context.blurElement() : null
 
-  const target = await getTarget({window, context, region, fully, scrollingMode})
-  // in some cases getTarget logic manipulates the 'scrollingMode'
-  scrollingMode = target.scrollingMode || scrollingMode
+  const target = await getTarget({window, context, region, fully, scrollingMode, logger})
 
-  const scroller = target.scrollingElement
-    ? makeScroller({element: target.scrollingElement, scrollingMode, logger})
-    : null
-
-  if (scroller) {
-    await scroller.preserveState()
-    if (driver.isWeb && hideScrollbars) await scroller.hideScrollbars()
+  if (target.scroller) {
+    await target.scroller.preserveState()
+    if (driver.isWeb && hideScrollbars) await target.scroller.hideScrollbars()
   }
 
   try {
-    if (!window) await scrollIntoViewport({context: target.context, region: target.region, scroller, logger})
+    if (!window && !driver.isNative) {
+      await scrollIntoViewport({context: target.context, region: target.region, scroller: target.scroller, logger})
+    }
 
     const screenshot =
-      fully && scroller
+      fully && target.scroller
         ? await takeStitchedScreenshot({
             ...target,
-            scroller,
             withStatusBar,
             overlap,
             framed,
@@ -77,19 +73,19 @@ async function takeScreenshot({
             debug,
             logger,
           })
-        : await takeSimpleScreenshot({...target, scroller, withStatusBar, wait, stabilization, debug, logger})
+        : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 
     screenshot.image.scale(driver.viewportScale)
 
     if (hooks && hooks.afterScreenshot) {
-      await hooks.afterScreenshot({driver, scroller, screenshot})
+      await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
     }
 
     return screenshot
   } finally {
-    if (scroller) {
-      await scroller.restoreScrollbars()
-      await scroller.restoreState()
+    if (target.scroller) {
+      await target.scroller.restoreScrollbars()
+      await target.scroller.restoreState()
     }
 
     // if there was active element and we have blurred it, then restore focus

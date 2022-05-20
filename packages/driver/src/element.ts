@@ -115,7 +115,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         this._logger.log('Extracting region of native element with selector', this.selector)
         const region = await this._spec.getElementRegion(this.driver.target, this.target)
         this._logger.log('Extracted native region', region)
-        return this.driver.normalizeRegion(region)
+        const normalizedRegion = await this.driver.normalizeRegion(region)
+        const contextScrollingElement = await this.context.getScrollingElement()
+        return utils.geometry.offset(normalizedRegion, await contextScrollingElement.getScrollOffset())
       }
     })
     this._logger.log('Extracted region', region)

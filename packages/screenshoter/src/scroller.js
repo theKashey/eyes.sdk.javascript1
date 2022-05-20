@@ -1,6 +1,8 @@
 const utils = require('@applitools/utils')
 
 function makeScroller({logger, element, scrollingMode = 'mixed'}) {
+  if (!element) return null
+
   const defaultElement = element
 
   return {

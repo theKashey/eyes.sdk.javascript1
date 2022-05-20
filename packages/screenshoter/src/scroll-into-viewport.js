@@ -1,10 +1,6 @@
 const utils = require('@applitools/utils')
 
 async function scrollIntoViewport({context, scroller, region, logger}) {
-  if (context.driver.isNative) {
-    logger.verbose(`NATIVE context identified, skipping 'ensure element visible'`)
-    return
-  }
   const elementContextRegion = region ? {...region} : await scroller.getClientRegion()
   const contextViewportLocation = await context.getLocationInViewport()
   const elementViewportRegion = utils.geometry.offset(elementContextRegion, contextViewportLocation)

@@ -1,28 +1,38 @@
 const utils = require('@applitools/utils')
+const makeScroller = require('./scroller')
 
-async function getTarget({window, context, region, fully, scrollingMode}) {
+async function getTarget({window, context, region, fully, scrollingMode, logger}) {
   if (window) {
     // window/app
+    logger.log('Window screenshot target detected')
     const scrollingElement = await context.main.getScrollingElement()
     return {
       context: context.main,
-      scrollingElement,
+      scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
     }
   } else if (region) {
     if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
       // region by coordinates
+      logger.log('Region screenshot target detected with static region:', region)
       const scrollingElement = await context.getScrollingElement()
       return {
         context,
         region,
-        scrollingElement,
+        scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
       }
     } else {
       // region by element or selector
+      logger.log('Region screenshot target detected with element:', region)
       const element = await context.element(region)
       if (!element) throw new Error('Element not found!')
 
       const elementContext = element.context
+
+      if (element.driver.isNative) {
+        // if element is in a native context, then scroll it to the top, otherwise, it will be not possible to get all of its size
+        const scrollingElement = await elementContext.getScrollingElement()
+        await scrollingElement.scrollTo(await element.getRegion())
+      }
 
       if (fully) {
         const isScrollable = await element.isScrollable()
@@ -34,25 +44,25 @@ async function getTarget({window, context, region, fully, scrollingMode}) {
         return {
           context: elementContext,
           region,
-          scrollingMode,
-          scrollingElement,
+          scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
         }
       } else {
         const scrollingElement = await context.getScrollingElement()
         return {
           context: elementContext,
           region: await element.getRegion(),
-          scrollingElement,
+          scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
         }
       }
     }
   } else if (!context.isMain) {
     // context
+    logger.log('Context screenshot target detected')
     if (fully) {
       const scrollingElement = await context.getScrollingElement()
       return {
         context,
-        scrollingElement,
+        scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
       }
     } else {
       const scrollingElement = await context.parent.getScrollingElement()
@@ -60,9 +70,10 @@ async function getTarget({window, context, region, fully, scrollingMode}) {
       return {
         context: context.parent,
         region: await element.getRegion(), // IMHO we should use CLIENT (without borders) region here
-        scrollingElement,
+        scroller: makeScroller({element: scrollingElement, scrollingMode, logger}),
       }
     }
   }
 }
+
 module.exports = getTarget
