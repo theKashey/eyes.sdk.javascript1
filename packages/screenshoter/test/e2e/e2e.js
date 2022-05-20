@@ -161,7 +161,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
 
   const driver = await new Driver({driver: browser, spec, logger}).init()
   if (process.env.APPLITOOLS_TEST_REMOTE === 'sauce')
-    console.log(`Running on Sauce Labs at: https://app.saucelabs.com/tests/${driver._target.sessionId}`)
+    console.log(`Running on Sauce Labs at: https://app.saucelabs.com/tests/${driver.target.sessionId}`)
   return [
     driver,
     async () => {
