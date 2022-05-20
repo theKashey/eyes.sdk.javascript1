@@ -1,6 +1,6 @@
 const utils = require('@applitools/utils')
 
-async function scrollIntoViewport({context, scroller, region, logger}) {
+async function scrollIntoViewport({context, scroller, region}) {
   const elementContextRegion = region ? {...region} : await scroller.getClientRegion()
   const contextViewportLocation = await context.getLocationInViewport()
   const elementViewportRegion = utils.geometry.offset(elementContextRegion, contextViewportLocation)
