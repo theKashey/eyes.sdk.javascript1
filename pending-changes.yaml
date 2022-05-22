@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
-    - Fixed bug when navigation bar was presented in screenshot on Android 12
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |

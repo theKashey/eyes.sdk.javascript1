@@ -5,6 +5,13 @@
 
 
 
+## 2.5.16 - 2022/5/22
+
+### Features
+### Bug fixes
+- Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+- Fixed bug when navigation bar was presented in screenshot on Android 12
+
 ## 2.5.15 - 2022/5/19
 
 ### Features
