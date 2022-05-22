@@ -570,7 +570,11 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       // const contextScrollingRegion = await currentContext.getScrollingRegion()
       const parentContextInnerOffset = (await currentContext.parent?.getInnerOffset()) ?? {x: 0, y: 0}
 
-      if (utils.geometry.contains(contextRegion, region) && !utils.geometry.equals(contextRegion, region)) {
+      // TODO revisit
+      if (
+        (utils.geometry.contains(contextRegion, region) || !currentContext.isMain) &&
+        !utils.geometry.equals(contextRegion, region)
+      ) {
         this._logger.log('Intersecting context region', region, 'with context region', contextRegion)
 
         region = utils.geometry.intersect(contextRegion, utils.geometry.offset(region, contextRegion))

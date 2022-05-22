@@ -31,7 +31,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       if (element.driver.isNative) {
         // if element is in a native context, then scroll it to the top, otherwise, it will be not possible to get all of its size
         const scrollingElement = await elementContext.getScrollingElement()
-        await scrollingElement.scrollTo(await element.getRegion())
+        if (scrollingElement) await scrollingElement.scrollTo(await element.getRegion())
       }
 
       if (fully) {

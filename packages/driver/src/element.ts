@@ -93,6 +93,25 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
+  async contains(innerElement: Element<TDriver, TContext, TElement, TSelector> | TElement): Promise<boolean> {
+    const contains = await this.withRefresh(async () => {
+      innerElement = innerElement instanceof Element ? innerElement.target : innerElement
+      if (this.driver.isWeb) {
+        this._logger.log('Checking if web element with selector', this.selector, 'contains element', innerElement)
+        return false // TODO implement a s snipped for web
+      } else {
+        this._logger.log('Checking if native element with selector', this.selector, 'contains element', innerElement)
+        // appium doesn't have a way to check if an element is contained in another element, so juristic applied
+        if (await this.equals(innerElement)) return false
+        // if inner element region is located contained in the this element region, then it is contained
+        const region = await this._spec.getElementRegion(this.driver.target, this.target)
+        const innerRegion = await this._spec.getElementRegion(this.driver.target, innerElement)
+        return utils.geometry.contains(region, innerRegion)
+      }
+    })
+    return contains
+  }
+
   async init(context: Context<TDriver, TContext, TElement, TSelector>): Promise<this> {
     this._context = context
     this._logger = (context as any)._logger
@@ -119,14 +138,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
         // if element is a child of scrolling element, then region location should be adjusted
         const scrollingElement = await this.context.getScrollingElement()
-        if (scrollingElement) {
-          const scrollingRegion = await this._spec.getElementRegion(this.driver.target, scrollingElement.target)
-          if (utils.geometry.contains(scrollingRegion, region) && !(await this.equals(scrollingElement))) {
-            return utils.geometry.offset(normalizedRegion, await scrollingElement.getScrollOffset())
-          }
-        }
-
-        return normalizedRegion
+        return (await scrollingElement?.contains(this))
+          ? utils.geometry.offset(normalizedRegion, await scrollingElement.getScrollOffset())
+          : normalizedRegion
       }
     })
     this._logger.log('Extracted region', region)

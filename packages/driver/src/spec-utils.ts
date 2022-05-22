@@ -73,3 +73,25 @@ export function splitSelector<TSelector>(
 
   return {contextSelectors, elementSelector}
 }
+
+export function withFastCache<TSpecDriver extends types.SpecDriver<unknown, unknown, unknown, unknown>>(
+  spec: TSpecDriver,
+): TSpecDriver {
+  const cache = new Map<(...args: any[]) => any, {args: any[]; result: Promise<any>}>()
+  return Object.entries(spec).reduce((spec, [name, command]) => {
+    spec[name] = (...args: any[]) => {
+      const value = cache.get(command)
+      if (value?.args.length === args.length && value.args.every((arg, index) => arg === args[index])) {
+        return value.result
+      } else {
+        cache.delete(command)
+      }
+
+      const result = command(...args)
+      if (!(result instanceof Promise)) return result
+      cache.set(command, {args, result})
+      return result.finally(() => setImmediate(() => cache.delete(command)))
+    }
+    return spec
+  }, {} as any)
+}

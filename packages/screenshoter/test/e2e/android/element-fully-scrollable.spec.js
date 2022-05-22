@@ -20,7 +20,7 @@ describe('screenshoter androidx app', () => {
 
     return test({
       type: 'android',
-      tag: 'element-fully',
+      tag: 'element-fully-scrollable',
       region: {type: 'id', selector: 'recyclerView'},
       fully: true,
       scrollingMode: 'scroll',
