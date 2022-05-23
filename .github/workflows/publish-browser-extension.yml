@@ -58,6 +58,7 @@ jobs:
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+          npx bongo verify-changelog
       - name: Prepare environments
         id: prepare
         shell: bash

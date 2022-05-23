@@ -53,6 +53,7 @@ jobs:
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
+          npx bongo verify-changelog
   test:
     needs: [verify]
     strategy:
