@@ -5,6 +5,12 @@
 
 
 
+## 2.5.17 - 2022/5/23
+
+### Features
+### Bug fixes
+- Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+
 ## 2.5.16 - 2022/5/22
 
 ### Features

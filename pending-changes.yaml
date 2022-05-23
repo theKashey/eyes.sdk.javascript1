@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
