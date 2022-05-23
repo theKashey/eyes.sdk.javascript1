@@ -575,7 +575,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
         (utils.geometry.contains(contextRegion, region) || !currentContext.isMain) &&
         !utils.geometry.equals(contextRegion, region)
       ) {
-        this._logger.log('Intersecting context region', region, 'with context region', contextRegion)
+        this._logger.log('Intersecting context region', contextRegion, 'with context region', region)
 
         region = utils.geometry.intersect(contextRegion, utils.geometry.offset(region, contextRegion))
         // region = utils.geometry.intersect(contextScrollingRegion, region)

@@ -98,7 +98,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       innerElement = innerElement instanceof Element ? innerElement.target : innerElement
       if (this.driver.isWeb) {
         this._logger.log('Checking if web element with selector', this.selector, 'contains element', innerElement)
-        return false // TODO implement a s snipped for web
+        return false // TODO implement a snipped for web
       } else {
         this._logger.log('Checking if native element with selector', this.selector, 'contains element', innerElement)
         // appium doesn't have a way to check if an element is contained in another element, so juristic applied
@@ -109,6 +109,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         return utils.geometry.contains(region, innerRegion)
       }
     })
+    this._logger.log('Element with selector', this.selector, contains ? 'contains' : `doesn't contain`, innerElement)
     return contains
   }
 
@@ -309,7 +310,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
   async scrollTo(offset: types.Location): Promise<types.Location> {
     return this.withRefresh(async () => {
-      offset = utils.geometry.round(offset)
+      offset = utils.geometry.round({x: Math.max(offset.x, 0), y: Math.max(offset.y, 0)})
       if (this.driver.isWeb) {
         let actualOffset = await this.context.execute(snippets.scrollTo, [this, offset])
         // iOS has an issue when scroll offset is read immediately after it is been set it will always return the exact value that was set
