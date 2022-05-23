@@ -572,8 +572,8 @@ export class Context<TDriver, TContext, TElement, TSelector> {
 
       // TODO revisit
       if (
-        (utils.geometry.contains(contextRegion, region) || !currentContext.isMain) &&
-        !utils.geometry.equals(contextRegion, region)
+        this.driver.isWeb ||
+        (!utils.geometry.equals(contextRegion, region) && utils.geometry.contains(contextRegion, region))
       ) {
         this._logger.log('Intersecting context region', contextRegion, 'with context region', region)
 
