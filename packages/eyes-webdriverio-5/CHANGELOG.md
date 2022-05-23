@@ -6,6 +6,19 @@
 
 
 
+
+
+## 5.34.15 - 2022/5/23
+
+### Features
+- Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+- Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+### Bug fixes
+- Fixed handling of navigation bar size on various devices
+- Allow running with self-signed certificates
+- Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+- Fixed bug when navigation bar was presented in screenshot on Android 12
+
 ## 5.34.14 - 2022/5/5
 
 ### Features
