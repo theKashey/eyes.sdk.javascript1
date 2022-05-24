@@ -10,9 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Added support for running server with SSL certificates
+    - 
   bug-fix:
-    - Added retry mechanism for tunnel operations in EG client
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
