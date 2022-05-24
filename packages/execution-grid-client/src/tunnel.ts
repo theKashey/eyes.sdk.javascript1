@@ -21,16 +21,18 @@ export function makeTunnelManager({egTunnelUrl, logger}: {egTunnelUrl?: string; 
         ...(eyesServerUrl ? {'x-eyes-server-url': eyesServerUrl} : {}),
       }),
     })
-    let attempt = 0
 
+    let attempt = 0
     while (true) {
       const response = await fetch(request)
-      const body: any = await response.json()
 
+      const body: any = await response.json().catch(() => null)
       if (response.status === 201) return body
 
-      if (!RETRY_ERROR_CODES.includes(body?.message)) {
-        logger.error(`Failed to create tunnel with code ${body?.message ?? 'UNKNOWN_ERROR'}`)
+      if (!RETRY_ERROR_CODES.includes(body?.message) || (response.status >= 400 && response.status < 500)) {
+        logger.error(
+          `Failed to create tunnel with status ${response.status} and code ${body?.message ?? 'UNKNOWN_ERROR'}`,
+        )
         throw new Error(`Failed to create tunnel with code ${body?.message ?? 'UNKNOWN_ERROR'}`)
       }
 
@@ -57,12 +59,22 @@ export function makeTunnelManager({egTunnelUrl, logger}: {egTunnelUrl?: string; 
         ...(eyesServerUrl ? {'x-eyes-server-url': eyesServerUrl} : {}),
       }),
     })
-    const response = await fetch(request)
 
-    if (response.status !== 200) {
-      const body: any = await response.json()
-      logger.error(`Failed to delete tunnel with code ${body?.message ?? 'UNKNOWN_ERROR'}`)
-      throw new Error(`Failed to delete tunnel with code ${body?.message ?? 'UNKNOWN_ERROR'}`)
+    let attempt = 0
+    while (true) {
+      const response = await fetch(request)
+
+      if (response.status === 200) return
+
+      if (response.status >= 400 && response.status < 500) {
+        const body: any = await response.json().catch(() => null)
+        logger.error(
+          `Failed to delete tunnel with status ${response.status} and code ${body?.message ?? 'UNKNOWN_ERROR'}`,
+        )
+        throw new Error(`Failed to delete tunnel with code ${body?.message ?? 'UNKNOWN_ERROR'}`)
+      }
+      await utils.general.sleep(RETRY_BACKOFF[Math.min(attempt, RETRY_BACKOFF.length - 1)])
+      attempt += 1
     }
   }
 }
