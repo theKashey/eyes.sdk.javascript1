@@ -5,6 +5,13 @@
 
 
 
+
+## 2.5.19 - 2022/5/24
+
+### Features
+### Bug fixes
+- exception in TestResultsSummary now should be accepted properly by universal clients, and we now also map `reason` when emitting an error for Eyes exceptions.
+
 ## 2.5.18 - 2022/5/24
 
 ### Features
