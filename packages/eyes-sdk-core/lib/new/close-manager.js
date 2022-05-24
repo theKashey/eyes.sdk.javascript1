@@ -2,6 +2,7 @@ const DiffsFoundError = require('../errors/DiffsFoundError')
 const NewTestError = require('../errors/NewTestError')
 const TestFailedError = require('../errors/TestFailedError')
 const TestResultsStatuses = require('../TestResultsStatus')
+const SerializedError = require('../errors/SerializedError')
 
 function makeCloseManager({runner}) {
   return async function closeManager({throwErr = false} = {}) {
@@ -18,28 +19,33 @@ function makeCloseManager({runner}) {
       matches: 0,
     }
 
-    for (const {testResults, exception} of testResultContainers) {
-      if (throwErr) {
-        if (exception) throw exception
-
-        if (testResults.status === TestResultsStatuses.Unresolved) {
-          if (testResults.isNew) throw new NewTestError(testResults)
-          else throw new DiffsFoundError(testResults)
-        } else if (testResults.status === TestResultsStatuses.Failed) {
-          throw new TestFailedError(testResults)
+    for (const container of testResultContainers) {
+      if (container.testResults) {
+        if (container.testResults.status === TestResultsStatuses.Unresolved) {
+          if (container.testResults.isNew) container.exception = new NewTestError(container.testResults)
+          else container.exception = new DiffsFoundError(container.testResults)
+        } else if (container.testResults.status === TestResultsStatuses.Failed) {
+          container.exception = new TestFailedError(container.testResults)
         }
+      } else if (container.exception) {
+        container.exception = new SerializedError(container.exception)
+      }
+      if (throwErr && container.exception) {
+        throw container.exception
       }
 
-      if (exception) summary.exceptions += 1
+      if (container.exception) {
+        summary.exceptions += 1
+      }
 
-      if (testResults) {
-        if (testResults.status === TestResultsStatuses.Failed) summary.failed += 1
-        else if (testResults.status === TestResultsStatuses.Passed) summary.passed += 1
-        else if (testResults.status === TestResultsStatuses.Unresolved) summary.unresolved += 1
+      if (container.testResults) {
+        if (container.testResults.status === TestResultsStatuses.Failed) summary.failed += 1
+        else if (container.testResults.status === TestResultsStatuses.Passed) summary.passed += 1
+        else if (container.testResults.status === TestResultsStatuses.Unresolved) summary.unresolved += 1
 
-        summary.matches += testResults.matches
-        summary.missing += testResults.missing
-        summary.mismatches += testResults.mismatches
+        summary.matches += container.testResults.matches
+        summary.missing += container.testResults.missing
+        summary.mismatches += container.testResults.mismatches
       }
     }
 

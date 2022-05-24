@@ -15,6 +15,9 @@ class EyesError extends Error {
       this.stack = error.stack
     }
   }
+  toJSON() {
+    return {message: this.message, stack: this.stack, reason: this.reason, info: this.info}
+  }
 }
 
 module.exports = EyesError

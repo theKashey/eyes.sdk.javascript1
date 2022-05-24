@@ -133,7 +133,7 @@ export function makeSocket(ws: WebSocket): Socket {
         const result = await fn(payload)
         emit({name, key}, {result})
       } catch (error) {
-        emit({name, key}, {error: {message: error.message, stack: error.stack}})
+        emit({name, key}, {error: {message: error.message, stack: error.stack, reason: error.reason}})
       }
     })
   }

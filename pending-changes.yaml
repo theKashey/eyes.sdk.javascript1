@@ -12,7 +12,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+     exception in TestResultsSummary now should be accepted properly by universal clients, and we now also map `reason` when emitting an error for Eyes exceptions.
 "@applitools/eyes-selenium":
   feature:
     - |

@@ -25,4 +25,27 @@ describe('Core e2e - closeManager', () => {
     assert.ok(summary.results.length === 1)
     assert.ok(summary.results[0].testResults.isAborted)
   })
+
+  it('should set NewTestError to TestResultContainer Exception', async () => {
+    const sdk = getSDK()
+    const driver = getDriver()
+    const manager = await sdk.makeManager()
+
+    await driver.get('https://applitools.com/helloworld')
+
+    const eyes = await manager.openEyes({
+      driver,
+      config: {
+        appName: 'core e2e',
+        testName: 'should set NewTestError to TestResultContainer Exception',
+        matchTimeout: 0,
+        logs: process.env.APPLITOOLS_SHOW_LOGS ? {type: 'console'} : undefined,
+      },
+    })
+
+    await eyes.check({fully: false})
+    const summary = await manager.closeManager()
+    assert.equal(summary.results[0].exception.name, 'NewTestError')
+    assert.equal(summary.results[0].exception.reason, 'test new')
+  })
 })
