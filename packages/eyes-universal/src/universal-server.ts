@@ -1,5 +1,4 @@
 import type * as types from '@applitools/types'
-import type {Socket} from './socket'
 import type {
   Driver as CustomDriver,
   Context as CustomContext,
@@ -11,8 +10,8 @@ import os from 'os'
 import path from 'path'
 import {makeSDK, checkSpecDriver} from '@applitools/eyes-sdk-core'
 import {makeLogger} from '@applitools/logger'
-import {makeHandler} from './handler'
-import {makeSocket} from './socket'
+import {makeHandler, type HandlerOptions} from './handler'
+import {makeSocket, type Socket} from './socket'
 import {makeRefer} from './refer'
 import {withTracker} from './debug/tracker'
 import {makeSpec} from './spec-driver/custom'
@@ -22,23 +21,39 @@ import {abort} from './universal-server-eyes-commands'
 const IDLE_TIMEOUT = 900000 // 15min
 const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-logs`)
 
-export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...serverConfig} = {}) {
-  const {server, port} = await makeHandler(serverConfig)
+export type ServerOptions = HandlerOptions & {
+  debug?: boolean
+  idleTimeout?: number
+}
+
+export async function makeServer({
+  debug = false,
+  idleTimeout = IDLE_TIMEOUT,
+  ...handlerOptions
+}: ServerOptions = {}): Promise<{port: number; close: () => void}> {
+  const {server, port} = await makeHandler({...handlerOptions, debug})
   console.log(port) // NOTE: this is a part of the generic protocol
   process.send?.({name: 'port', payload: {port}}) // NOTE: this is a part of the js specific protocol
   if (!server) {
-    return console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
+    console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
+    return
   }
 
   console.log(`Logs saved in: ${LOG_DIRNAME}`)
-
-  let idle = setTimeout(() => server.close(), idleTimeout)
 
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},
     label: 'eyes',
     level: 'info',
     colors: false,
+  })
+
+  let idle = setTimeout(() => server.close(), idleTimeout)
+  let serverClosed = false
+
+  server.on('close', () => {
+    clearTimeout(idle)
+    serverClosed = true
   })
 
   server.on('connection', client => {
@@ -51,7 +66,7 @@ export async function makeServer({debug = false, idleTimeout = IDLE_TIMEOUT, ...
 
     clearTimeout(idle)
     socket.on('close', () => {
-      if (server.clients.size > 0) return
+      if (server.clients.size > 0 || serverClosed) return
       idle = setTimeout(() => server.close(), idleTimeout)
     })
 

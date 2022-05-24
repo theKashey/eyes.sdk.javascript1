@@ -42,6 +42,23 @@ yargs
           type: 'boolean',
           default: false,
         },
+        debug: {
+          description: 'runs server in a debug mode.',
+          type: 'boolean',
+          default: false,
+        },
+        cert: {
+          description: 'path to the certificate file.',
+          alias: 'cert-path',
+          type: 'string',
+          implies: 'key',
+        },
+        key: {
+          description: 'path to the key file.',
+          alias: 'key-path',
+          type: 'string',
+          implies: 'cert',
+        },
         'idle-timeout': {
           description: 'time in minutes for server to stay responsible in case of idle.',
           type: 'number',

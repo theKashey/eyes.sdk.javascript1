@@ -1,19 +1,39 @@
-import {Server as HTTPServer, request} from 'http'
-import {Server as WSServer} from 'ws'
+import {Server as HttpServer, request as httpRequest} from 'http'
+import {Server as HttpsServer, request as httpsRequest} from 'https'
+import {Server as WsServer} from 'ws'
+import fs from 'fs'
 
 const {name, version} = require('../package.json')
 const TOKEN_HEADER = 'x-eyes-universal-token'
 const TOKEN = `${name}@${version}`
 
-export async function makeHandler({port = 21077, singleton = true, lazy = false} = {}): Promise<{
-  server?: WSServer
-  port: number
-}> {
-  const http = new HTTPServer()
+export type HandlerOptions = {
+  port?: number
+  singleton?: boolean
+  lazy?: boolean
+  debug?: boolean
+  key?: string | Buffer
+  cert?: string | Buffer
+}
+
+export async function makeHandler({
+  port = 21077,
+  singleton = true,
+  lazy = false,
+  debug = false,
+  cert,
+  key,
+}: HandlerOptions = {}): Promise<{server?: WsServer; port: number}> {
+  if (cert) cert = fs.readFileSync(cert)
+  if (key) key = fs.readFileSync(key)
+  const secure = Boolean(cert && key)
+
+  const http = secure ? new HttpsServer({cert, key}) : new HttpServer()
   http.on('request', (request, response) => {
     if (request.url === '/handshake') {
-      if (request.headers[TOKEN_HEADER] === TOKEN) {
-        response.writeHead(200, {[TOKEN_HEADER]: TOKEN})
+      const token = debug ? request.headers[TOKEN_HEADER] : TOKEN
+      if (request.headers[TOKEN_HEADER] === token) {
+        response.writeHead(200, {[TOKEN_HEADER]: token})
       } else {
         response.writeHead(400)
       }
@@ -25,14 +45,14 @@ export async function makeHandler({port = 21077, singleton = true, lazy = false}
 
   return new Promise((resolve, reject) => {
     http.on('listening', () => {
-      const ws = new WSServer({server: http, path: '/eyes'})
+      const ws = new WsServer({server: http, path: '/eyes'})
       ws.on('close', () => http.close())
       resolve({server: ws, port})
     })
 
     http.on('error', async (err: Error & {code: string}) => {
       if (!lazy && err.code === 'EADDRINUSE') {
-        if (singleton && (await isHandshakable(port))) {
+        if (singleton && (await isHandshakable({port, secure}))) {
           return resolve({port})
         } else {
           return resolve(await makeHandler({port: port + 1, singleton}))
@@ -43,9 +63,10 @@ export async function makeHandler({port = 21077, singleton = true, lazy = false}
   })
 }
 
-async function isHandshakable(port: number) {
+async function isHandshakable({port, secure}: {port: number; secure?: boolean}): Promise<boolean> {
+  const request = secure ? httpsRequest : httpRequest
   return new Promise(resolve => {
-    const handshake = request(`http://localhost:${port}/handshake`, {
+    const handshake = request(`${secure ? 'https' : 'http'}://localhost:${port}/handshake`, {
       headers: {[TOKEN_HEADER]: TOKEN},
     })
     handshake.on('response', ({statusCode, headers}) => {
