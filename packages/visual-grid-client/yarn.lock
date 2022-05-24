@@ -67,10 +67,10 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.6.20":
-  version "13.6.20"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.20.tgz#47571dab22d3c6db6017cf24c86a63ab12847fa2"
-  integrity sha512-CYQ333iShmdb/XtK0P0RSV2LgZkPRYx7npPM7qJAkyKBH4k55UlPNg50d0a8B0FlQEVmTHBd8uu0IXxgjzChdg==
+"@applitools/eyes-sdk-core@13.6.21":
+  version "13.6.21"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.21.tgz#a1981774ca01eb8f26452fe34f1d18c4a4b81e31"
+  integrity sha512-CO4aqU9gmSQlLB4CRSijymn7mnhIaN2dt3pTpOSeb8cKQa9BdC3osRsGFUjX6pJuRxdn55dfBkqhyyOKqkPvtw==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
