@@ -32,7 +32,7 @@ jobs:
         id: prepare
         shell: bash
         run: | 
-          echo "::set-output name=versions::[{\"storybook-version\":5.0.0}, {\"storybook-version\":6.0.0}]"
+          echo "::set-output name=versions::[{\"storybook-version\":\"5.0.0\"}, {\"storybook-version\":\"6.0.0\"}]"
   test:
     needs: setup
     strategy:
