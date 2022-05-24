@@ -29,7 +29,7 @@ export function makeTunnelManager({egTunnelUrl, logger}: {egTunnelUrl?: string; 
       const body: any = await response.json().catch(() => null)
       if (response.status === 201) return body
 
-      if (!RETRY_ERROR_CODES.includes(body?.message) || (response.status >= 400 && response.status < 500)) {
+      if (!RETRY_ERROR_CODES.includes(body?.message) && response.status >= 400 && response.status < 500) {
         logger.error(
           `Failed to create tunnel with status ${response.status} and code ${body?.message ?? 'UNKNOWN_ERROR'}`,
         )
