@@ -5,6 +5,13 @@
 
 
 
+## 2.5.18 - 2022/5/24
+
+### Features
+- Added support for running server with SSL certificates
+### Bug fixes
+- Added retry mechanism for tunnel operations in EG client
+
 ## 2.5.17 - 2022/5/23
 
 ### Features
