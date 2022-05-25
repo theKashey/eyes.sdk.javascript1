@@ -4,8 +4,15 @@ const pixelmatch = require('pixelmatch')
 const makeImage = require('../../src/image')
 
 describe('image', () => {
-  it('should provide access to image width/height before it parsed', async () => {
+  it('should provide access to png image width/height before it parsed', async () => {
     const buffer = fs.readFileSync('./test/fixtures/image/house.png')
+    const image = makeImage(buffer)
+    assert.strictEqual(image.width, 612)
+    assert.strictEqual(image.height, 512)
+  })
+
+  it('should provide access to jpeg image width/height before it parsed', async () => {
+    const buffer = fs.readFileSync('./test/fixtures/image/house.jpeg')
     const image = makeImage(buffer)
     assert.strictEqual(image.width, 612)
     assert.strictEqual(image.height, 512)

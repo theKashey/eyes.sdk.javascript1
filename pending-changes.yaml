@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Added support for drivers that return screenshots in jpeg format
   bug-fix:
     - 
 "@applitools/eyes-selenium":
@@ -19,6 +19,7 @@ Apollo SDK:
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+    - Added support for drivers that return screenshots in jpeg format
   bug-fix:
     - Fixed check region fully in classic execution when using CSS stitching
     - Fixed handling of navigation bar size on various devices
@@ -26,7 +27,7 @@ Apollo SDK:
     - Fixed bug when navigation bar was presented in screenshot on Android 12
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Added support for drivers that return screenshots in jpeg format
   bug-fix:
     - 
 "@applitools/eyes-playwright":
@@ -46,6 +47,7 @@ Apollo SDK:
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+    - Added support for drivers that return screenshots in jpeg format
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -94,6 +96,7 @@ Apollo SDK:
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+    - Added support for drivers that return screenshots in jpeg format
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -129,6 +132,7 @@ Apollo SDK:
     - Allow running with self-signed certificates
     - Fixed handling of navigation bar size on various devices
     - Fixed bug when navigation bar was presented in screenshot on Android 12
+    - Added support for drivers that return screenshots in jpeg format
 eyes-browser-extension:
   feature:
     - 

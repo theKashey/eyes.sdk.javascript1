@@ -2,6 +2,7 @@ const fs = require('fs')
 const stream = require('stream')
 const path = require('path')
 const png = require('png-async')
+const jpeg = require('jpeg-js')
 const utils = require('@applitools/utils')
 
 function makeImage(data) {
@@ -9,16 +10,19 @@ function makeImage(data) {
   let transforms = {rotate: 0, scale: 1, crop: null, modifiers: []}
 
   if (utils.types.isBase64(data)) {
-    const buffer = Buffer.from(data, 'base64')
-    image = fromBuffer(buffer)
-    size = extractPngSize(buffer)
+    return makeImage(Buffer.from(data, 'base64'))
   } else if (utils.types.isString(data)) {
-    const buffer = fs.readFileSync(data)
-    image = fromBuffer(buffer)
-    size = extractPngSize(buffer)
+    return makeImage(fs.readFileSync(data))
   } else if (Buffer.isBuffer(data)) {
-    image = fromBuffer(data)
-    size = extractPngSize(data)
+    if (isPngBuffer(data)) {
+      image = fromPngBuffer(data)
+      size = extractPngSize(data)
+    } else if (isJpegBuffer(data)) {
+      image = fromJpegBuffer(data)
+      size = extractJpegSize(data)
+    } else {
+      throw new Error('Unable to create an image abstraction from buffer with unknown data')
+    }
   } else if (data.isImage) {
     transforms = data.transforms
     image = data.toRaw()
@@ -158,17 +162,39 @@ function makeImage(data) {
   }
 }
 
-function extractPngSize(buffer) {
+function isPngBuffer(buffer) {
   return buffer.slice(12, 16).toString('ascii') === 'IHDR'
-    ? {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
-    : {width: 0, height: 0}
+}
+
+function isJpegBuffer(buffer) {
+  return buffer.slice(6, 10).toString('ascii') === 'JFIF'
+}
+
+function extractPngSize(buffer) {
+  return {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
+}
+
+function extractJpegSize(buffer) {
+  // skip file signature
+  let offset = 4
+  while (buffer.length > offset) {
+    // extract length of the block
+    offset += buffer.readUInt16BE(offset)
+    // if next segment is SOF extract size
+    if (buffer[offset + 1] === 0xc0) {
+      return {width: buffer.readUInt16BE(offset + 7), height: buffer.readUInt16BE(offset + 5)}
+    } else {
+      // skip block signature
+      offset += 2
+    }
+  }
 }
 
 function fromSize(size) {
   return new png.Image({width: size.width, height: size.height})
 }
 
-async function fromBuffer(buffer) {
+async function fromPngBuffer(buffer) {
   return new Promise((resolve, reject) => {
     const image = new png.Image()
 
@@ -177,6 +203,10 @@ async function fromBuffer(buffer) {
       resolve(image)
     })
   })
+}
+
+async function fromJpegBuffer(buffer) {
+  return jpeg.decode(buffer, {tolerantDecoding: true, formatAsRGBA: true})
 }
 
 async function toPng(image) {
