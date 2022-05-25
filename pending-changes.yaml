@@ -25,6 +25,7 @@ Apollo SDK:
     - Fixed handling of navigation bar size on various devices
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
     - Fixed bug when navigation bar was presented in screenshot on Android 12
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-webdriverio":
   feature:
     - Added support for drivers that return screenshots in jpeg format
@@ -38,6 +39,7 @@ Apollo SDK:
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
   bug-fix:
     - Allow running with self-signed certificates
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-protractor":
   feature:
     - Support UFG for native mobile
@@ -62,6 +64,7 @@ Apollo SDK:
     - Allow running with self-signed certificates
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
     - Fixed bug when navigation bar was presented in screenshot on Android 12
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-puppeteer":
   feature:
     - Support UFG for native mobile
@@ -82,11 +85,12 @@ Apollo SDK:
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
     - Allow running with self-signed certificates
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-testcafe":
   feature:
     - 
   bug-fix:
-    - 
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-nightwatch":
   feature:
     - Support UFG for native mobile
@@ -110,11 +114,12 @@ Apollo SDK:
     - Allow running with self-signed certificates
     - Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
     - Fixed bug when navigation bar was presented in screenshot on Android 12
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
-    - 
+    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
 "@applitools/eyes-storybook":
   feature:
     - 
