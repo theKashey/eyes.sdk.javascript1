@@ -215,6 +215,7 @@ export type TestCafeConfiguration = {
   concurrency?: number
   failTestcafeOnDiff?: boolean
   tapDirPath?: string
+  showLogs?: boolean
 }
 
 export function transformConfig<TElement, TSelector>(
@@ -245,6 +246,7 @@ export function transformConfig<TElement, TSelector>(
     }
   }
   if (utils.types.isString(options.proxy)) config.proxy = {url: options.proxy}
+  if (options.showLogs) config.logs = {type: 'console'}
   return config
 }
 

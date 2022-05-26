@@ -92,6 +92,8 @@ Apollo SDK:
     - 
   bug-fix:
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - |
+      Returned support of `showLogs` in configuration file and object
 "@applitools/eyes-nightwatch":
   feature:
     - Support UFG for native mobile
