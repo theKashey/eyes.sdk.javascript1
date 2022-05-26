@@ -119,7 +119,7 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
