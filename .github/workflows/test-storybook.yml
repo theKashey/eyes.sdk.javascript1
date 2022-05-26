@@ -1,31 +1,13 @@
-name: Test - sdk storybook
+name: Test - storybook CSF and version
 
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: version type
+      for_versions:
+        description: Storybook version
         type: choice
-        options: [patch, minor, major]
-        default: patch
-      multienv:
-        description: test on multiple environments
-        type: boolean
-        default: true
-  workflow_call:
-    inputs:
-      version:
-        description: version type
-        type: string
-        default: minor
-    secrets:
-      NPM_TOKEN:
-        required: true
-      APPLITOOLS_API_KEY:
-        required: true
-      APPLITOOLS_API_KEY_SDK:
-        required: true
-      APPLITOOLS_API_KEY_READ:
+        options: ["all", "5.0.0", "5.3.21", "6.3.12", "latest", "next"]
+        default: "all"
         required: true
 env:
   PACKAGE_DIR: eyes-storybook
@@ -36,8 +18,8 @@ env:
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
 jobs:
-  verify:
-    name: Verification
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       versions: ${{steps.prepare.outputs.versions}}
@@ -45,15 +27,20 @@ jobs:
       - name: Prepare versions
         id: prepare
         shell: bash
-        run: | 
-          echo "::set-output name=versions::[{\"storybook-version\":5.0.0}, {\"storybook-version\":6.0.0}]"
+        run: |
+          if [ ${{inputs.for_versions || github.event.inputs.for_versions}} = "all" ]
+          then
+            echo "::set-output name=versions::[{\"storybook-version\":\"5.0.0\"}, {\"storybook-version\":\"5.3.21\"}, {\"storybook-version\":\"6.3.12\"}, {\"storybook-version\":\"latest\"}, {\"storybook-version\":\"next\"}]"
+          else
+            echo "::set-output name=versions::[{\"storybook-version\": \"${{inputs.for_versions || github.event.inputs.for_versions}}\" }]"
+          fi
   test:
-    needs: [verify]
+    needs: setup
     strategy:
-      max-parallel: 3
+      max-parallel: 5
       matrix:
-        include: ${{fromJSON(needs.verify.outputs.versions)}}
-    name: 'Test (storybook: ${{matrix.storybook-version}})'
+        include: ${{fromJSON(needs.setup.outputs.versions)}}
+    name: 'Test (Storybook version: ${{matrix.storybook-version}})'
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -61,11 +48,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 16
           registry-url: https://registry.npmjs.org
-        env:
-          STORYBOOK_VERSION: ${{matrix.storybook-version}}
       - name: Run tests
         uses: ./.github/actions/tests
         with:
           package: ${{env.PACKAGE_DIR}}
+          test-type: versions
+        env:
+          STORYBOOK_VERSION: ${{matrix.storybook-version}}

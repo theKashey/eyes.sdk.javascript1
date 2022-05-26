@@ -6,5 +6,8 @@ eyes.tap
 .history
 .vscode/
 test/fixtures/images/
+test/fixtures/storybook-versions/*/.storybook/
+test/fixtures/storybook-versions/*/stories/
+test/fixtures/storybookCSF/.storybook-temp/
 /logs/
 !/dist

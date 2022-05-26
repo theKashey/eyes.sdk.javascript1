@@ -1,0 +1,34 @@
+{
+  "name": "storybook-next-config",
+  "version": "next",
+  "private": true,
+  "scripts": {
+    "build": "react-scripts build",
+    "build-storybook": "build-storybook",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "storybook": "STORYBOOK_VERSION=next start-storybook -p 9010 --no-manager-cache",
+    "test": "npx eyes-storybook"
+  },
+  "dependencies": {
+    "global": "^4.4.0",
+    "prop-types": "^15.7.2",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-lifecycles-compat": "^3.0.4",
+    "react-scripts": "^5.0.0"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
+    "@storybook/addon-actions": "latest",
+    "@storybook/addon-storyshots": "latest",
+    "@storybook/addons": "latest",
+    "@storybook/builder-webpack4": "latest",
+    "@storybook/preset-create-react-app": "latest",
+    "@storybook/react": "latest",
+    "webpack": "4"
+  },
+  "snaptdout": {
+    "snapshotsPrefix": "v_next_"
+  }
+}

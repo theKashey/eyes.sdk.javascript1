@@ -7,7 +7,7 @@ on:
         description: version type
         type: choice
         options: [patch, minor, major]
-        default: patch
+        default: minor
       multienv:
         description: test on multiple environments
         type: boolean
@@ -17,7 +17,7 @@ on:
       version:
         description: version type
         type: string
-        default: patch
+        default: minor
       multienv:
         description: test on multiple environments
         type: boolean
@@ -90,8 +90,31 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{env.PACKAGE_DIR}}
+  test-versions:
+    needs: [verify]
+    strategy:
+      max-parallel: 5
+      matrix:
+        storybook-version: ["5.0.0", "5.3.21", "6.3.12", "latest", "next"]
+    name: 'Test (Storybook version: ${{matrix.storybook-version}})'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          test-type: versions
+        env:
+          STORYBOOK_VERSION: ${{matrix.storybook-version}}        
   publish:
-    needs: [test]
+    needs: [test, test-versions]
     name: Publish
     runs-on: ubuntu-latest
     steps:

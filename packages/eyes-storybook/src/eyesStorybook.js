@@ -65,7 +65,7 @@ async function eyesStorybook({
   } = makeVisualGridClient({
     userAgent,
     ...config,
-    logger: logger.extend('vgc'),
+    logger: logger.extend({label: 'vgc'}),
   });
 
   const initPage = makeInitPage({
@@ -130,7 +130,7 @@ async function eyesStorybook({
     });
 
     const renderStory = makeRenderStory({
-      logger: logger.extend('renderStory'),
+      logger: logger.extend({label: 'renderStory'}),
       testWindow,
       performance,
       timeItAsync,

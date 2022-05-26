@@ -39,6 +39,7 @@ describe('getStories', () => {
           {
             name: 'background color',
             kind: 'Button',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               __id: 'button--background-color',
@@ -49,6 +50,7 @@ describe('getStories', () => {
           {
             name: 'with text',
             kind: 'Button',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               __id: 'button--with-text',
@@ -60,11 +62,13 @@ describe('getStories', () => {
           {
             name: 'with some emoji',
             kind: 'Button',
+            hasPlayFunction: false,
             error: `Ignoring parameters for story: "with some emoji Button" since they are not serilizable. Error: "Converting circular structure to JSON\n    --> starting at object with constructor 'Object'\n    --- property 'inner' closes the circle"`,
           },
           {
             name: 'image',
             kind: 'Image',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               __id: 'image--image',
@@ -74,6 +78,7 @@ describe('getStories', () => {
           {
             name: 'story 1',
             kind: 'Nested',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-3',
@@ -83,6 +88,7 @@ describe('getStories', () => {
           {
             name: 'story 1.1',
             kind: 'Nested/Component',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-4',
@@ -92,6 +98,7 @@ describe('getStories', () => {
           {
             name: 'story 1.2',
             kind: 'Nested/Component',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-4',
@@ -101,6 +108,7 @@ describe('getStories', () => {
           {
             name: 'a yes-a b',
             kind: 'Button with-space yes-indeed',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-5',
@@ -110,6 +118,7 @@ describe('getStories', () => {
           {
             name: 'b yes-a b',
             kind: 'Button with-space yes-indeed/nested with-space yes',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-6',
@@ -119,6 +128,7 @@ describe('getStories', () => {
           {
             name: 'c yes-a b',
             kind: 'Button with-space yes-indeed/nested with-space yes/nested again-yes a',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-7',
@@ -129,6 +139,7 @@ describe('getStories', () => {
           {
             name: 'story 1.1',
             kind: 'SOME section|Nested/Component',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-8',
@@ -138,6 +149,7 @@ describe('getStories', () => {
           {
             name: 'story 1.2',
             kind: 'SOME section|Nested/Component',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-8',
@@ -147,6 +159,7 @@ describe('getStories', () => {
           {
             name: 'c yes-a b',
             kind: 'Wow|one with-space yes-indeed/nested with-space yes/nested again-yes a',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-9',
@@ -157,6 +170,7 @@ describe('getStories', () => {
           {
             name: 'should also do RTL',
             kind: 'RTL',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-10',
@@ -166,6 +180,7 @@ describe('getStories', () => {
           {
             name: 'local RTL config',
             kind: 'RTL',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-10',
@@ -176,6 +191,7 @@ describe('getStories', () => {
           {
             name: 'local theme config',
             kind: 'Theme',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-11',
@@ -189,6 +205,7 @@ describe('getStories', () => {
             name:
               'this story should not be checked visually by eyes-storybook because of local parameter',
             kind: 'skipped tests',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-12',
@@ -201,6 +218,7 @@ describe('getStories', () => {
             name:
               '[SKIP] this story should not be checked visually by eyes-storybook because of global config',
             kind: 'skipped tests',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-12',
@@ -211,10 +229,12 @@ describe('getStories', () => {
           {
             name: 'testing circular parameters',
             kind: 'skipped tests',
+            hasPlayFunction: false,
             parameters: {eyes: {include: false}}, // note that fileName and framework parameters are not present here because of the circular reference
           },
           {
             kind: 'Text',
+            hasPlayFunction: false,
             name: 'appears after a delay',
             parameters: {
               ...parameters,
@@ -228,6 +248,7 @@ describe('getStories', () => {
           {
             name: 'Popover',
             kind: 'Interaction',
+            hasPlayFunction: false,
             parameters: {
               ...parameters,
               fileName: './test/fixtures/appWithStorybook/index.js-14',
@@ -238,6 +259,7 @@ describe('getStories', () => {
           },
           {
             kind: 'Responsive UI',
+            hasPlayFunction: false,
             name: 'Red/green',
             parameters: {
               ...parameters,
@@ -248,6 +270,7 @@ describe('getStories', () => {
         ].map((story, index) => {
           return {
             ...story,
+            hasPlayFunction: false,
             index,
             isApi: true,
           };

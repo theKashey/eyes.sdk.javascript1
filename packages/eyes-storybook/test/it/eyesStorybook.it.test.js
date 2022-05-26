@@ -140,7 +140,6 @@ describe('eyesStorybook', () => {
 
     expect(results.some(x => x instanceof Error)).to.be.false;
     expect(results).to.have.length(expectedResults.length);
-
     for (const testResults of results) {
       const sessionUrl = `${serverUrl}/api/sessions/batches/${encodeURIComponent(
         testResults.getBatchId(),

@@ -1,0 +1,35 @@
+{
+  "name": "storybook-5.3.21-config",
+  "version": "5.3.21",
+  "private": true,
+  "scripts": {
+    "build": "react-scripts build",
+    "build-storybook": "build-storybook",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "storybook": "STORYBOOK_VERSION=5.3.21 start-storybook -p 9010",
+    "test": "npx eyes-storybook"
+  },
+  "dependencies": {
+    "global": "^4.3.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-lifecycles-compat": "^3.0.4"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@storybook/addon-actions": "5.3.21",
+    "@storybook/addon-storyshots": "5.3.21",
+    "@storybook/addons": "5.3.21",
+    "@storybook/preset-create-react-app": "^3.1.6",
+    "@storybook/react": "5.3.21",
+    "react-scripts": "^3.0.1",
+    "@storybook/testing-library": "^0.0.9",
+    "@storybook/addon-interactions": "^6.4.0",
+    "webpack": "4"
+  },
+  "snaptdout": {
+    "snapshotsPrefix": "v_5.3.21_"
+  }
+}

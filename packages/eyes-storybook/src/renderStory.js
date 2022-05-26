@@ -5,7 +5,7 @@ const {deprecationWarning} = require('@applitools/eyes-sdk-core').GeneralUtils;
 
 function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
   return function renderStory({config, story, snapshot, url}) {
-    const {name, kind, parameters} = story;
+    const {name, kind, parameters, hasPlayFunction} = story;
     const baselineName = getStoryBaselineName({name, kind, parameters});
     const title = getStoryTitle({name, kind, parameters});
     const eyesParameters = (parameters && parameters.eyes) || {};
@@ -55,6 +55,9 @@ function makeRenderStory({logger, testWindow, performance, timeItAsync}) {
       {name: 'State', value: name},
       ...(properties || []),
     ];
+    if (hasPlayFunction) {
+      storyProperties.push({name: 'Storybook play function', value: 'true'});
+    }
 
     const openParams = {
       testName: baselineName,

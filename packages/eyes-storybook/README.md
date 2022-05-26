@@ -49,6 +49,7 @@ Applitools Eyes SDK for [Storybook](http://storybook.js.org).
     - [`layoutBreakpoints`](#layoutbreakpoints)
   - [Running Eyes-Storybook in Docker](#running-eyes-storybook-in-docker)
   - [Dealing with dynamic data](#dealing-with-dynamic-data)
+  - [Storybook interactions Play functionality](#storybook-interactions-play-functionality)
 
 ## Installation
 
@@ -848,3 +849,11 @@ const date = new Date(isBeingTested ? SOME_FIXED_DATE : undefined)
 
 storiesOf('Some kind', module).add('Date', () => <div>{date}</div>)
 ```
+
+## Storybook interactions Play functionality
+
+Since version 3.27.7, there is a support for Storybooks' Interactions Play functionality: Stories who use 'Play', screenshot will be taken _automatically_ after the 'Play' flow is done.
+This will replace the existing point of taking screenshots, it should not affect any new or existing Stories which are **not** using the 'Play' functionality.
+Tests that use the _`waitBeforeCapture`_ property, the wait period will begin **after** the 'Play' flow is done.
+You can read more at Storybook interactions documentation:
+https://storybook.js.org/docs/react/essentials/interactions
