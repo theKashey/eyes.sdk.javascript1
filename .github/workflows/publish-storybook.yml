@@ -7,7 +7,7 @@ on:
         description: version type
         type: choice
         options: [patch, minor, major]
-        default: minor
+        default: patch
       multienv:
         description: test on multiple environments
         type: boolean
@@ -17,7 +17,7 @@ on:
       version:
         description: version type
         type: string
-        default: minor
+        default: patch
       multienv:
         description: test on multiple environments
         type: boolean

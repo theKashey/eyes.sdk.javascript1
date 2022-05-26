@@ -852,7 +852,7 @@ storiesOf('Some kind', module).add('Date', () => <div>{date}</div>)
 
 ## Storybook interactions Play functionality
 
-Since version 3.27.7, there is a support for Storybooks' Interactions Play functionality: Stories who use 'Play', screenshot will be taken _automatically_ after the 'Play' flow is done.
+Since version 3.28.0, there is a support for Storybooks' Interactions Play functionality: Stories who use 'Play', screenshot will be taken _automatically_ after the 'Play' flow is done.
 This will replace the existing point of taking screenshots, it should not affect any new or existing Stories which are **not** using the 'Play' functionality.
 Tests that use the _`waitBeforeCapture`_ property, the wait period will begin **after** the 'Play' flow is done.
 You can read more at Storybook interactions documentation:
