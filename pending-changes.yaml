@@ -11,6 +11,7 @@ Apollo SDK:
 "@applitools/eyes-universal":
   feature:
     - Added support for drivers that return screenshots in jpeg format
+    - Increased max payload size from 100Mb to 254Mb
   bug-fix:
     - 
 "@applitools/eyes-selenium":

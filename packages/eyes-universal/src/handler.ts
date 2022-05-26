@@ -45,7 +45,7 @@ export async function makeHandler({
 
   return new Promise((resolve, reject) => {
     http.on('listening', () => {
-      const ws = new WsServer({server: http, path: '/eyes'})
+      const ws = new WsServer({server: http, path: '/eyes', maxPayload: 254 * 1024 * 1024})
       ws.on('close', () => http.close())
       resolve({server: ws, port})
     })
