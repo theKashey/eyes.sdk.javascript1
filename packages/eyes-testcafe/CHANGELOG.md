@@ -10,6 +10,16 @@
 
 
 
+
+## 1.16.2 - 2022/5/27
+
+### Features
+### Bug fixes
+- Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+- Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+- Returned support of `showLogs` in configuration file and object
+- Improve error message when failed to set viewport size
+
 ## 1.16.1 - 2022/5/19
 
 ### Features
