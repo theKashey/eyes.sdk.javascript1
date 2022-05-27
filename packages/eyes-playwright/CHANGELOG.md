@@ -7,6 +7,19 @@
 
 
 
+
+
+## 1.11.4 - 2022/5/27
+
+### Features
+- Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+- Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+### Bug fixes
+- Allow running with self-signed certificates
+- Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+- Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+- Improve error message when failed to set viewport size
+
 ## 1.11.3 - 2022/5/2
 
 ### Features
