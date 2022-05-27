@@ -130,7 +130,7 @@
     "@wdio/dot-reporter": "^7.16.4",
     "@wdio/local-runner": "^7.16.5",
     "@wdio/mocha-framework": "^7.16.4",
-    "chromedriver": "^95.0.0",
+    "chromedriver": "^101.0.0",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

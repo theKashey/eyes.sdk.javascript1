@@ -8,11 +8,11 @@ const Region = require('../geometry/Region')
 const Location = require('../geometry/Location')
 const RectangleSize = require('../geometry/RectangleSize')
 const ReadOnlyPropertyHandler = require('../handler/ReadOnlyPropertyHandler')
-const TestFailedError = require('../errors/TestFailedError')
 const EyesBase = require('./EyesBase')
 const GeneralUtils = require('../utils/GeneralUtils')
 const TypeUtils = require('../utils/TypeUtils')
 const takeDomCapture = require('../utils/takeDomCapture')
+const EyesError = require('../errors/EyesError')
 
 class EyesCore extends EyesBase {
   constructor(serverUrl, isDisabled) {
@@ -240,7 +240,8 @@ class EyesCore extends EyesBase {
         this._viewportSizeHandler.set(
           new RectangleSize(utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale))),
         )
-        throw new TestFailedError('Failed to set the viewport size', e)
+        this._logger.error('Failed to set the viewport size', e)
+        throw new EyesError('Failed to set the viewport size', e)
       }
     }
 

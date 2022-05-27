@@ -28,11 +28,12 @@ Apollo SDK:
     - Fixed bug when navigation bar was presented in screenshot on Android 12
     - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-webdriverio":
   feature:
     - Added support for drivers that return screenshots in jpeg format
   bug-fix:
-    - 
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-playwright":
   feature:
     - |
@@ -43,6 +44,7 @@ Apollo SDK:
     - Allow running with self-signed certificates
     - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-protractor":
   feature:
     - Support UFG for native mobile
@@ -69,6 +71,7 @@ Apollo SDK:
     - Fixed bug when navigation bar was presented in screenshot on Android 12
     - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-puppeteer":
   feature:
     - Support UFG for native mobile
@@ -91,6 +94,7 @@ Apollo SDK:
     - Allow running with self-signed certificates
     - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-testcafe":
   feature:
     - 
@@ -99,6 +103,7 @@ Apollo SDK:
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
     - |
       Returned support of `showLogs` in configuration file and object
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-nightwatch":
   feature:
     - Support UFG for native mobile
@@ -124,11 +129,13 @@ Apollo SDK:
     - Fixed bug when navigation bar was presented in screenshot on Android 12
     - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+    - Improve error message when failed to set viewport size
 "@applitools/eyes-storybook":
   feature:
     - 
@@ -154,6 +161,7 @@ eyes-browser-extension:
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
     - Fixed check region fully in classic execution when using CSS stitching
     - Support data urls in iframes
+    - Improve error message when failed to set viewport size
 applitools-for-selenium-ide:
   feature:
     - 
