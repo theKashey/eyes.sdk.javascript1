@@ -562,7 +562,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: lts/*
+          node-version: 12 # this package testable only on node version 12
       - name: Run tests
         uses: ./.github/actions/tests
         with:

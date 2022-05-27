@@ -1,5 +1,3 @@
-'use strict'
-
 exports.default = require('@applitools/eyes-webdriverio/dist/service')
 exports.EyesService = require('@applitools/eyes-webdriverio/dist/service')
 exports.By = require('@applitools/eyes-webdriverio').By

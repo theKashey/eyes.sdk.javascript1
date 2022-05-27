@@ -21,7 +21,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@applitools/eyes-webdriverio": "5.32.10"
+    "@applitools/eyes-webdriverio": "5.34.16"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.0",
