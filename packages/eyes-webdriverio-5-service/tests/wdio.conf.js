@@ -1,4 +1,5 @@
 const path = require('path')
+const {mochaHooks} = require('@applitools/test-utils/mocha-hooks/docker.js')
 const {EyesService} = require('../index')
 
 exports.config = {
@@ -21,6 +22,7 @@ exports.config = {
   mochaOpts: {
     ui: 'bdd',
     timeout: 120000,
-    require: ['@applitools/test-utils/mocha-hooks/docker.js'],
+    require: [],
   },
+  onPrepare: () => mochaHooks.beforeAll(),
 }

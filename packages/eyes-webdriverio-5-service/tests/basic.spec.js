@@ -1,10 +1,10 @@
 /* global browser */
-'use strict'
-const {Target} = require('@applitools/eyes-webdriverio')
+
+const {Target} = require('../index')
 
 describe('EyesServiceTest', () => {
-  it('checkWindow', () => {
-    browser.url('https://applitools.github.io/demo/TestPages/FramesTestPage/index.html')
-    browser.eyesCheck('', Target.window())
+  it('checkWindow', async () => {
+    await browser.url('https://applitools.github.io/demo/TestPages/FramesTestPage/index.html')
+    await browser.eyesCheck('', Target.window())
   })
 })
