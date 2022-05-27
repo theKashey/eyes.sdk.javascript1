@@ -6,6 +6,14 @@
 
 
 
+## 2.5.20 - 2022/5/27
+
+### Features
+- Added support for drivers that return screenshots in jpeg format
+- Increased max payload size from 100Mb to 254Mb
+### Bug fixes
+- Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+
 ## 2.5.19 - 2022/5/24
 
 ### Features

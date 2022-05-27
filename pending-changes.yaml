@@ -10,10 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Added support for drivers that return screenshots in jpeg format
-    - Increased max payload size from 100Mb to 254Mb
+    - 
   bug-fix:
-    - Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+    - 
 "@applitools/eyes-selenium":
   feature:
     - |
