@@ -235,18 +235,20 @@ const eyesConfig = {
       'comma-separated list of chrome-emulation devices to render in vg mode (e.g. "Pixel 4:portrait", "Nexus 7")',
     type: 'string',
     coerce(str) {
-      // const {DeviceName, ScreenOrientation, MatchLevel} = require(cwd)
-      // const deviceNames = Object.values(DeviceName)
-      // const orientations = Object.values(ScreenOrientation)
       return utils.parseList(str).map(deviceStr => {
         const deviceInfo = utils.parseSequence(['deviceName', 'screenOrientation'], ':')(deviceStr)
-        // if (!deviceNames.includes(deviceInfo.deviceName)) {
-        //   throw new Error(`invalid device name. Supports only ${deviceNames.join(', ')}`)
-        // }
-        // if (deviceInfo.screenOrientation && !orientations.includes(deviceInfo.screenOrientation)) {
-        //   throw new Error(`invalid screen orientation. Supports only ${orientations.join(', ')}`)
-        // }
         return {chromeEmulationInfo: deviceInfo}
+      })
+    },
+  },
+  renderIosDevices: {
+    describe:
+      'comma-separated list of ios devices devices to render in vg mode (e.g. "iPhone X:portrait", "iPhone 12")',
+    type: 'string',
+    coerce(str) {
+      return utils.parseList(str).map(deviceStr => {
+        const deviceInfo = utils.parseSequence(['deviceName', 'screenOrientation'], ':')(deviceStr)
+        return {iosDeviceInfo: deviceInfo}
       })
     },
   },
@@ -419,7 +421,7 @@ function argsToEyesConfig(args) {
     apiKey: args.apiKey,
     serverUrl: args.serverUrl,
     viewportSize: args.viewportSize || (!args.device ? {width: 1024, height: 768} : undefined),
-    browsersInfo: [...(args.renderBrowsers || []), ...(args.renderEmulations || [])],
+    browsersInfo: [...(args.renderBrowsers || []), ...(args.renderEmulations || []), ...(args.renderIosDevices || [])],
     proxy: args.proxy,
     accessibilityValidation: args.accessibilityValidation,
     matchLevel: args.matchLevel,
