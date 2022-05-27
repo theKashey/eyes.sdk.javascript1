@@ -8,6 +8,13 @@
 
 
 
+## 5.34.16 - 2022/5/27
+
+### Features
+- Added support for drivers that return screenshots in jpeg format
+### Bug fixes
+- Improve error message when failed to set viewport size
+
 ## 5.34.15 - 2022/5/23
 
 ### Features
