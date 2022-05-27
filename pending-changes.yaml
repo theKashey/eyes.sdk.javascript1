@@ -20,9 +20,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-webdriverio":
   feature:
-    - Added support for drivers that return screenshots in jpeg format
+    - 
   bug-fix:
-    - Improve error message when failed to set viewport size
+    - 
 "@applitools/eyes-playwright":
   feature:
     - |
