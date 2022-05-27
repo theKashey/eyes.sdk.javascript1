@@ -6,6 +6,12 @@
 
 
 
+## 2.5.21 - 2022/5/27
+
+### Features
+### Bug fixes
+- Fix issue with unexpected full-page screenshots
+
 ## 2.5.20 - 2022/5/27
 
 ### Features
