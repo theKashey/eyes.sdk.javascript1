@@ -4,6 +4,23 @@
 
 
 
+
+
+## 4.58.5 - 2022/5/27
+
+### Features
+- Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+- Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+- Added support for drivers that return screenshots in jpeg format
+### Bug fixes
+- Fixed check region fully in classic execution when using CSS stitching
+- Fixed handling of navigation bar size on various devices
+- Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+- Fixed bug when navigation bar was presented in screenshot on Android 12
+- Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+- Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+- Improve error message when failed to set viewport size
+
 ## 4.58.4 - 2022/4/14
 
 ### Features
