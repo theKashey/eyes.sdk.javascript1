@@ -1,6 +1,6 @@
 {
   "name": "@applitools/driver",
-  "version": "1.8.12",
+  "version": "1.8.13",
   "description": "Applitools universal framework wrapper",
   "keywords": [
     "applitools",
