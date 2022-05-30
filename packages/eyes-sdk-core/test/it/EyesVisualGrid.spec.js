@@ -3,7 +3,7 @@ const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-ser
 const {MockDriver} = require('@applitools/driver/fake')
 const {makeLogger} = require('@applitools/logger')
 const {EyesVisualGrid} = require('../utils/FakeSDK')
-const {MatchLevel, ServerConnector} = require('../../index')
+const {ServerConnector} = require('../../index')
 const {generateDomSnapshot} = require('../utils/FakeDomSnapshot')
 const TestResults = require('../../lib/TestResults')
 
@@ -39,7 +39,7 @@ describe('EyesVisualGrid', async () => {
 
   it('should use specified match level', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    await eyes.check({matchLevel: MatchLevel.Layout})
+    await eyes.check({matchLevel: 'Layout'})
     const [results] = await eyes.close()
     const {matchLevel} = await extractMatchSettings(results)
     expect(matchLevel).to.be.eql('Layout')
@@ -50,7 +50,7 @@ describe('EyesVisualGrid', async () => {
     config.addBrowser({width: 888, height: 777, name: 'firefox'})
     eyes.setConfiguration(config)
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    await eyes.check({matchLevel: MatchLevel.Layout})
+    await eyes.check({matchLevel: 'Layout'})
     const [results] = await eyes.close()
     const {startInfo} = await getSession(new TestResults(results), serverUrl)
     const {
@@ -72,7 +72,7 @@ describe('EyesVisualGrid', async () => {
     eyes.setConfiguration(conf)
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     expect(startSessionCalled).to.be.undefined
-    await eyes.check({matchLevel: MatchLevel.Layout})
+    await eyes.check({matchLevel: 'Layout'})
     const err = await eyes.close().catch(err => err)
     ServerConnector.prototype.startSession = origStartSession
     expect(err.message).to.contain('failed to render screenshot')

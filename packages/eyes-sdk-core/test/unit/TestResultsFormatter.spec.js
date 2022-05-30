@@ -1,7 +1,6 @@
 const TestResultsFormatter = require('../../lib/TestResultsFormatter')
 const TestResults = require('../../lib/TestResults')
 const TestResultsError = require('../../lib/TestResultsError')
-const TestResultsStatuses = require('../../lib/TestResultsStatus')
 const assert = require('assert')
 
 describe('TestResultsFormatter', () => {
@@ -33,12 +32,12 @@ describe('TestResultsFormatter', () => {
     it('works with 1 diff', () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
-          status: TestResultsStatuses.Unresolved,
+          status: 'Unresolved',
           isDifferent: true,
           name: 'My Component | Button1',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -61,13 +60,13 @@ Difference found. See https://eyes.com/results for details.
     it('works with multiple diffs', () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Unresolved,
+          status: 'Unresolved',
           isDifferent: true,
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
-          status: TestResultsStatuses.Unresolved,
+          status: 'Unresolved',
           isDifferent: true,
           name: 'My Component | Button1',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -93,7 +92,7 @@ Difference found. See https://eyes.com/results for details.
     it('works with 1 error', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -120,7 +119,7 @@ some error message
     it('works with multiple errors', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -156,7 +155,7 @@ some error message
     it('works with diffs and errors', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Unresolved,
+          status: 'Unresolved',
           isDifferent: true,
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -195,7 +194,7 @@ some error message
     it('works with no diifs and no errors', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button2',
           appUrls: {batch: 'https://eyes.com/results'},
@@ -231,7 +230,7 @@ some error message
     it('displays duration if provided', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button2',
           duration: 10,
@@ -258,7 +257,7 @@ some error message
     it('display properties if provided', async () => {
       const testResults = [
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button3',
           hostApp: 'Chrome',
@@ -266,7 +265,7 @@ some error message
           appUrls: {batch: 'https://eyes.com/results'},
         }),
         new TestResults({
-          status: TestResultsStatuses.Passed,
+          status: 'Passed',
           isDifferent: false,
           name: 'My Component | Button2',
           hostOS: 'Linux',

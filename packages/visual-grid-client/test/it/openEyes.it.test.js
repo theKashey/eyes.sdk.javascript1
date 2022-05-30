@@ -12,7 +12,7 @@ const {promisify: p} = require('util')
 const nock = require('nock')
 const psetTimeout = p(setTimeout)
 const {presult} = require('@applitools/functional-commons')
-const {RenderStatus, RenderStatusResults, TestResults} = require('@applitools/eyes-sdk-core/shared')
+const {RenderStatusResults, TestResults} = require('@applitools/eyes-sdk-core')
 const {
   apiKeyFailMsg,
   authorizationErrMsg,
@@ -776,12 +776,12 @@ Received: 'firefox-1'.`,
       wrapper.renderBatch = async () => {
         await psetTimeout(50)
         counters.render++
-        return [new FakeRunningRender(`renderId${counters.render}`, RenderStatus.RENDERING)]
+        return [new FakeRunningRender(`renderId${counters.render}`, 'rendering')]
       }
 
       wrapper.getRenderStatus = async () => {
         await psetTimeout(0)
-        return [new RenderStatusResults({status: RenderStatus.RENDERED})]
+        return [new RenderStatusResults({status: 'rendered'})]
       }
 
       wrapper.ensureRunningSession = async () => {
@@ -861,7 +861,7 @@ Received: 'firefox-1'.`,
       const renderBatch = wrapper.renderBatch
       wrapper.renderBatch = function(renderRequests) {
         renderCount += renderRequests.length
-        runningStatuses = runningStatuses.concat(renderRequests.map(() => RenderStatus.RENDERING))
+        runningStatuses = runningStatuses.concat(renderRequests.map(() => 'rendering'))
         return renderBatch.apply(this, arguments)
       }
       wrapper.getRenderStatus = async renderIds => {
@@ -875,9 +875,7 @@ Received: 'firefox-1'.`,
                 imageLocation: JSON.stringify({isGood: true}),
               }),
           )
-        runningStatuses = runningStatuses.map(status =>
-          status === RenderStatus.RENDERED ? false : status,
-        )
+        runningStatuses = runningStatuses.map(status => (status === 'rendered' ? false : status))
 
         expect(renderIds.length).to.equal(statuses.length)
 
@@ -925,17 +923,17 @@ Received: 'firefox-1'.`,
       expect(renderCount).to.equal(1)
       expect(renderStatusCount).to.equal(1)
 
-      runningStatuses[0] = RenderStatus.RENDERED
+      runningStatuses[0] = 'rendered'
       await psetTimeout(600)
       expect(renderCount).to.equal(2)
       expect(renderStatusCount).to.equal(2)
 
-      runningStatuses[1] = RenderStatus.RENDERED
+      runningStatuses[1] = 'rendered'
       await psetTimeout(500)
       expect(renderCount).to.equal(3)
       expect(renderStatusCount).to.equal(3)
 
-      runningStatuses[2] = RenderStatus.RENDERED
+      runningStatuses[2] = 'rendered'
       await close()
     })
 
@@ -955,16 +953,16 @@ Received: 'firefox-1'.`,
       await psetTimeout(300)
       expect(renderCount).to.equal(2)
 
-      runningStatuses[0] = RenderStatus.RENDERED
+      runningStatuses[0] = 'rendered'
       await psetTimeout(500)
       expect(renderCount).to.equal(3)
 
-      runningStatuses[1] = RenderStatus.RENDERED
+      runningStatuses[1] = 'rendered'
       await psetTimeout(500)
       expect(renderCount).to.equal(4)
 
-      runningStatuses[2] = RenderStatus.RENDERED
-      runningStatuses[3] = RenderStatus.RENDERED
+      runningStatuses[2] = 'rendered'
+      runningStatuses[3] = 'rendered'
       await close()
     })
 
@@ -993,13 +991,13 @@ Received: 'firefox-1'.`,
       await psetTimeout(0)
 
       const expected1 = renderCount
-      runningStatuses[0] = RenderStatus.RENDERED
+      runningStatuses[0] = 'rendered'
       await psetTimeout(600)
 
       const expected2 = renderCount
-      runningStatuses[1] = RenderStatus.RENDERED
-      runningStatuses[2] = RenderStatus.RENDERED
-      runningStatuses[3] = RenderStatus.RENDERED
+      runningStatuses[1] = 'rendered'
+      runningStatuses[2] = 'rendered'
+      runningStatuses[3] = 'rendered'
 
       await close()
       await close2()
@@ -1037,7 +1035,7 @@ Received: 'firefox-1'.`,
       expect(renderCount).to.equal(1)
       expect(renderStatusCount).to.equal(1)
 
-      runningStatuses[0] = RenderStatus.ERROR
+      runningStatuses[0] = 'error'
       await psetTimeout(600)
       expect(renderCount).to.equal(2)
       expect(renderStatusCount).to.equal(2)
@@ -1055,7 +1053,7 @@ Received: 'firefox-1'.`,
   it('handles render status timeout when second checkWindow starts AFTER timeout of previous checkWindow', async () => {
     wrapper.getRenderStatus = async renderIds => {
       await psetTimeout(0)
-      return renderIds.map(_renderId => new RenderStatusResults({status: RenderStatus.RENDERING}))
+      return renderIds.map(_renderId => new RenderStatusResults({status: 'rendering'}))
     }
 
     openEyes = makeRenderingGridClient({
@@ -1082,7 +1080,7 @@ Received: 'firefox-1'.`,
   it('handles render status timeout when second checkWindow starts BEFORE timeout of previous checkWindow', async () => {
     wrapper.getRenderStatus = async renderIds => {
       await psetTimeout(0)
-      return renderIds.map(_renderId => new RenderStatusResults({status: RenderStatus.RENDERING}))
+      return renderIds.map(_renderId => new RenderStatusResults({status: 'rendering'}))
     }
 
     openEyes = makeRenderingGridClient({
@@ -2360,7 +2358,7 @@ Received: 'firefox-1'.`,
     wrapper.getRenderStatus = async () => {
       return [
         new RenderStatusResults({
-          status: RenderStatus.ERROR,
+          status: 'error',
           error: 'renderStatusError',
           userAgent: 'some ua',
         }),
@@ -2392,7 +2390,7 @@ Received: 'firefox-1'.`,
     wrapper.getRenderStatus = async () => {
       return [
         new RenderStatusResults({
-          status: RenderStatus.ERROR,
+          status: 'error',
           error: 'renderStatusError',
           userAgent: 'some ua',
         }),

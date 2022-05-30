@@ -1,12 +1,16 @@
-'use strict'
-const {AccessibilityRegionType, TypeUtils} = require('@applitools/eyes-sdk-core/shared')
-
 function isInvalidAccessibility(accessibility = []) {
+  const accessibilityTypes = [
+    'IgnoreContrast',
+    'RegularText',
+    'LargeText',
+    'BoldText',
+    'GraphicalObject',
+  ]
   const accObjects = [].concat(accessibility)
   const err = []
-  const typeMsg = `Valid accessibilityType values are: ${Object.values(AccessibilityRegionType)}`
+  const typeMsg = `Valid accessibilityType values are: ${accessibilityTypes.join(', ')}`
   for (const acc of accObjects) {
-    if (acc.accessibilityType && !TypeUtils.has(AccessibilityRegionType, acc.accessibilityType)) {
+    if (!accessibilityTypes.includes(acc.accessibilityType)) {
       err.push(
         `The region ${JSON.stringify(acc)} has an invalid accessibilityType of: ${
           acc.accessibilityType

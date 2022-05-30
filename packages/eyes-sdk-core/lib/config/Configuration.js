@@ -2,9 +2,6 @@
 const BatchInfo = require('./BatchInfo')
 const PropertyData = require('./PropertyData')
 const ProxySettings = require('./ProxySettings')
-const BrowserType = require('./BrowserType')
-const StitchModes = require('./StitchMode')
-const ScreenOrientation = require('./ScreenOrientation')
 const ImageMatchSettings = require('./ImageMatchSettings')
 const RectangleSize = require('../geometry/RectangleSize')
 const ArgumentGuard = require('../utils/ArgumentGuard')
@@ -57,7 +54,7 @@ const DEFAULT_VALUES = {
 
   // classic (selenium)
   waitBeforeScreenshots: 100, // ms
-  stitchMode: StitchModes.SCROLL,
+  stitchMode: 'Scroll',
   hideScrollbars: true,
   hideCaret: true,
   stitchOverlap: 50, // px
@@ -1325,7 +1322,7 @@ class Configuration {
    * @param {BrowserType} [browserType]
    * @return {this}
    */
-  addBrowser(widthOrBrowserInfo, height, browserType = BrowserType.CHROME) {
+  addBrowser(widthOrBrowserInfo, height, browserType = 'chrome') {
     if (arguments.length === 1) {
       this.addBrowsers(widthOrBrowserInfo)
     } else {
@@ -1340,7 +1337,7 @@ class Configuration {
    * @param {ScreenOrientation} [screenOrientation=ScreenOrientation.PORTRAIT]
    * @return {this}
    */
-  addDeviceEmulation(deviceName, screenOrientation = ScreenOrientation.PORTRAIT) {
+  addDeviceEmulation(deviceName, screenOrientation = 'portrait') {
     const deviceInfo = {
       deviceName,
       screenOrientation,

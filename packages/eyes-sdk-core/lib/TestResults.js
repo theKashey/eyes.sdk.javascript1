@@ -2,7 +2,6 @@
 const GeneralUtils = require('./utils/GeneralUtils')
 const DateTimeUtils = require('./utils/DateTimeUtils')
 const RectangleSize = require('./geometry/RectangleSize')
-const TestResultsStatuses = require('./TestResultsStatus')
 
 /**
  * @typedef {import('./TestResultsStatus').TestResultsStatus} TestResultsStatus
@@ -890,7 +889,7 @@ class TestResults {
    * @return {boolean} - Whether or not this test passed.
    */
   isPassed() {
-    return this._status === TestResultsStatuses.Passed
+    return this._status === 'Passed'
   }
 
   /**

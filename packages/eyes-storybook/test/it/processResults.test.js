@@ -1,7 +1,7 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const processResults = require('../../src/processResults');
-const {TestResultsStatus, TestResults} = require('@applitools/eyes-sdk-core');
+const {TestResults} = require('@applitools/eyes-sdk-core');
 const snap = require('@applitools/snaptdout');
 process.env.FORCE_COLOR = 2;
 
@@ -64,7 +64,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Passed,
+            status: 'Passed',
             name: 'My Component | Button2',
             hostApp: 'Chrome',
             hostDisplaySize: {width: 10, height: 20},
@@ -76,7 +76,7 @@ describe('processResults', () => {
         title: 'My Component | Button1',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             isDifferent: true,
             name: 'My Component | Button1',
             hostApp: 'Firefox',
@@ -100,7 +100,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             isDifferent: true,
             name: 'My Component | Button2',
             hostApp: 'Chrome',
@@ -113,7 +113,7 @@ describe('processResults', () => {
         title: 'My Component | Button1',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             isDifferent: true,
             name: 'My Component | Button1',
             hostApp: 'Firefox',
@@ -137,7 +137,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Passed,
+            status: 'Passed',
             isDifferent: false,
             name: 'My Component | Button2',
             hostApp: 'Chrome',
@@ -162,7 +162,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Passed,
+            status: 'Passed',
             isDifferent: false,
             name: 'My Component | Button2',
             hostApp: 'Chrome',
@@ -188,7 +188,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             isDifferent: true,
             name: 'My Component | Button2',
             hostApp: 'Chrome',
@@ -220,7 +220,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Passed,
+            status: 'Passed',
             isDifferent: false,
             name: 'My Component | Button2',
             hostApp: 'Chrome',
@@ -281,7 +281,7 @@ describe('processResults', () => {
         title: 'My Component | Button1',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             name: 'My Component | Button1',
             hostApp: 'Chrome',
             isNew: true,
@@ -307,7 +307,7 @@ describe('processResults', () => {
         title: 'My Component | Button1',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             name: 'My Component | Button1',
             hostApp: 'Chrome',
             isNew: true,
@@ -320,7 +320,7 @@ describe('processResults', () => {
         title: 'My Component | Button2',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             name: 'My Component | Button2',
             hostApp: 'Chrome',
             isNew: true,
@@ -344,7 +344,7 @@ describe('processResults', () => {
         title: 'My Component | Button1',
         resultsOrErr: [
           new TestResults({
-            status: TestResultsStatus.Unresolved,
+            status: 'Unresolved',
             name: 'My Component | Button1',
             hostApp: 'Chrome',
             isNew: true,

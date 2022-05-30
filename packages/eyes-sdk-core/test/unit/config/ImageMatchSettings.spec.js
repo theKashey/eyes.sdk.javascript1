@@ -1,13 +1,6 @@
 const assert = require('assert')
 
-const {
-  MatchLevel,
-  AccessibilityLevel,
-  AccessibilityGuidelinesVersion,
-  Region,
-  ImageMatchSettings,
-  ExactMatchSettings,
-} = require('../../../index')
+const {Region, ImageMatchSettings, ExactMatchSettings} = require('../../../index')
 
 describe('ImageMatchSettings', () => {
   describe('toJSON()', () => {
@@ -21,10 +14,10 @@ describe('ImageMatchSettings', () => {
 
     it('with modified exact and ignore caret', () => {
       const ims = new ImageMatchSettings({
-        matchLevel: MatchLevel.Content,
+        matchLevel: 'Content',
         accessibilitySettings: {
-          level: AccessibilityLevel.AA,
-          guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
+          level: 'AA',
+          guidelinesVersion: 'WCAG_2_0',
         },
         exact: new ExactMatchSettings(),
         ignoreCaret: true,
@@ -66,8 +59,8 @@ describe('ImageMatchSettings', () => {
 
     it('copy ctor', () => {
       const accessibilitySettings = {
-        level: AccessibilityLevel.AAA,
-        guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
+        level: 'AAA',
+        guidelinesVersion: 'WCAG_2_0',
       }
       const ims = new ImageMatchSettings({
         ignoreDisplacements: true,

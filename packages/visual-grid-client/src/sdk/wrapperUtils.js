@@ -1,6 +1,6 @@
 'use strict'
 const EyesWrapper = require('./EyesWrapper')
-const {RectangleSize, TypeUtils} = require('@applitools/eyes-sdk-core/shared')
+const {RectangleSize, TypeUtils} = require('@applitools/eyes-sdk-core')
 const getDeviceInfoFromBrowserConfig = require('./getDeviceInfoFromBrowserConfig')
 
 function initWrappers({count, apiKey, logger, getBatchInfoWithCache}) {

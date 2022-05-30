@@ -1,5 +1,4 @@
 'use strict'
-const {RenderStatus} = require('@applitools/eyes-sdk-core/shared')
 const {presult} = require('@applitools/functional-commons')
 
 const psetTimeout = t =>
@@ -41,9 +40,9 @@ function makeWaitForRenderedStatus({timeout = 3600000, logger, getRenderStatus})
         log(`render status result for ${renderId}: ${rs}`)
 
         const status = rs.getStatus()
-        if (status === RenderStatus.ERROR) {
+        if (status === 'error') {
           return reject(new Error(failMsg(renderId, rs.getError())))
-        } else if (status === RenderStatus.RENDERED) {
+        } else if (status === 'rendered') {
           return resolve(rs.toJSON())
         }
 

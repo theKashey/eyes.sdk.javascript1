@@ -1,6 +1,6 @@
 'use strict'
 const {URL} = require('url')
-const {getTunnelAgentFromProxy} = require('@applitools/eyes-sdk-core/shared')
+const {getTunnelAgentFromProxy} = require('@applitools/eyes-sdk-core')
 const createResourceCookieHeader = require('./createResourceCookieHeader')
 const https = require('https')
 

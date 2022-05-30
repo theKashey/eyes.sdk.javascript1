@@ -1,6 +1,6 @@
 'use strict'
 const makeRenderingGridClient = require('../src/sdk/renderingGridClient')
-const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
+const {deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const fs = require('fs')
 const path = require('path')
 

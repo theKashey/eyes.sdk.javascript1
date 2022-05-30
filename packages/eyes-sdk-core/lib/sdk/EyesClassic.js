@@ -4,7 +4,6 @@ const {Driver} = require('@applitools/driver')
 const TypeUtils = require('../utils/TypeUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const Location = require('../geometry/Location')
-const FailureReports = require('../FailureReports')
 const ClassicRunner = require('../runner/ClassicRunner')
 const takeDomCapture = require('../utils/takeDomCapture')
 const EyesCore = require('./EyesCore')
@@ -245,9 +244,9 @@ class EyesClassic extends EyesCore {
   }
 
   setFailureReport(mode) {
-    if (mode === FailureReports.IMMEDIATE) {
+    if (mode === 'IMMEDIATE') {
       this._failureReportOverridden = true
-      mode = FailureReports.ON_CLOSE
+      mode = 'ON_CLOSE'
     }
 
     EyesCore.prototype.setFailureReport.call(this, mode)

@@ -3,7 +3,6 @@ const {describe, it, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const {promisify: p} = require('util')
 const makeRender = require('../../../src/sdk/render')
-const {RenderStatus} = require('@applitools/eyes-sdk-core/shared')
 const FakeRunningRender = require('../../util/FakeRunningRender')
 const FakeRenderRequest = require('../../util/FakeRenderRequest')
 const testLogger = require('../../util/testLogger')
@@ -84,9 +83,7 @@ describe('render', () => {
       resourceCache,
       fetchCache,
       logger: testLogger,
-      doRenderBatch: async () => [
-        new FakeRunningRender('some id', RenderStatus.NEED_MORE_RESOURCES),
-      ],
+      doRenderBatch: async () => [new FakeRunningRender('some id', 'need-more-resources')],
     })
     const error = await render(new FakeRenderRequest('some dom')).then(
       x => x,
@@ -103,9 +100,7 @@ describe('render', () => {
       logger: testLogger,
       doRenderBatch: async renderRequests => {
         renderCalls.push(renderRequests)
-        return renderRequests.map(
-          (_, index) => new FakeRunningRender(`id${index + 1}`, RenderStatus.RENDERED),
-        )
+        return renderRequests.map((_, index) => new FakeRunningRender(`id${index + 1}`, 'rendered'))
       },
     })
 

@@ -4,7 +4,7 @@ const assert = require('assert')
 const chai = require('chai')
 chai.use(require('chai-uuid'))
 const {expect} = chai
-const {GeneralUtils, MatchLevel} = require('../..')
+const {GeneralUtils} = require('../..')
 const {EyesBaseImpl} = require('../testUtils')
 const {EyesBase, Configuration, RunningSession, BatchInfo} = require('../../index')
 
@@ -148,7 +148,7 @@ describe('EyesBase', () => {
         hostOSInfo: 'hostOSInfo',
         viewportSize: {width: 1, height: 2},
         defaultMatchSettings: {
-          matchLevel: MatchLevel.Exact,
+          matchLevel: 'Exact',
           // exact: {
           //   minDiffIntensity: 1,
           //   minDiffWidth: 2,
@@ -212,7 +212,7 @@ describe('EyesBase', () => {
           inferred: 'impl-inferred-environment',
         },
         defaultMatchSettings: {
-          matchLevel: MatchLevel.Exact,
+          matchLevel: 'Exact',
           // exact: {
           //   minDiffIntensity: 1,
           //   minDiffWidth: 2,

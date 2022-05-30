@@ -3,11 +3,10 @@ const {
   MatchResult,
   TestResults,
   RenderStatusResults,
-  RenderStatus,
   Location,
   Region,
   BatchInfo,
-} = require('@applitools/eyes-sdk-core/shared')
+} = require('@applitools/eyes-sdk-core')
 const crypto = require('crypto')
 const {URL} = require('url')
 const {loadFixtureBuffer} = require('./loadFixture')
@@ -142,7 +141,7 @@ class FakeEyesWrapper extends EventEmitter {
       salt: salt++,
     })
 
-    return new FakeRunningRender(renderId, RenderStatus.RENDERED)
+    return new FakeRunningRender(renderId, 'rendered')
   }
 
   async getRenderStatus(renderIds) {
@@ -172,7 +171,7 @@ class FakeEyesWrapper extends EventEmitter {
       }
 
       return new RenderStatusResults({
-        status: RenderStatus.RENDERED,
+        status: 'rendered',
         imageLocation: renderId,
         userAgent: browserName,
         deviceSize: deviceName && devices[deviceName],

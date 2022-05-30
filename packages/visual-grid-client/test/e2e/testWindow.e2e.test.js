@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer')
 const makeRenderingGridClient = require('../../src/sdk/renderingGridClient')
 const {testServerInProcess} = require('@applitools/test-server')
 const {presult} = require('@applitools/functional-commons')
-const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core/shared')
+const {DiffsFoundError, deserializeDomSnapshotResult} = require('@applitools/eyes-sdk-core')
 const {getProcessPageAndSerialize} = require('@applitools/dom-snapshot')
 const testLogger = require('../util/testLogger')
 

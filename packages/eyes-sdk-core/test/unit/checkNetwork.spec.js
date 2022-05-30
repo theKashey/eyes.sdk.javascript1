@@ -78,8 +78,8 @@ describe('checkNetwork', () => {
   })
 
   const sanitize = () => {
-    output[0] = output[0].replace(/{"apiKey":".+"}/, '{"apiKey":"someKey"}')
     output = output.map(line => line.replace(/\u001b\[\d+m/g, ''))
+    output[0] = output[0].replace(process.env.APPLITOOLS_API_KEY, 'someKey')
   }
 
   beforeEach(() => {
@@ -91,7 +91,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "7eMlvN103YkxFK9Os4e7bz8mzofaDK110NSzFQrl3l62ZgY110"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
+      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "someKey"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ OK ]  +0 \n',
@@ -123,7 +123,7 @@ describe('checkNetwork', () => {
     await checkNetwork()
     sanitize()
     assert.deepStrictEqual(output, [
-      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "7eMlvN103YkxFK9Os4e7bz8mzofaDK110NSzFQrl3l62ZgY110"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
+      'Eyes Check Network. Running with:\n\n---\n\nUser config: {\n  "apiKey": "someKey"\n}\nHTTP_PROXY=""\nHTTPS_PROXY=""\n\n---\n\n',
       '[1] Checking eyes API https://eyes.com \n',
       '[eyes] cURL                    [ ?  ]',
       '[eyes] cURL                    [ X  ]  +0 eyes:Curl \n',

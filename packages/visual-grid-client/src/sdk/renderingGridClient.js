@@ -5,7 +5,7 @@ const {
   BatchInfo,
   GeneralUtils: {backwardCompatible, deprecationWarning, getEnvValue},
   RunnerStartedEvent,
-} = require('@applitools/eyes-sdk-core/shared')
+} = require('@applitools/eyes-sdk-core')
 const {makeLogger} = require('@applitools/logger')
 const {ptimeoutWithError, presult} = require('@applitools/functional-commons')
 const makeFetchResource = require('./resources/fetchResource')

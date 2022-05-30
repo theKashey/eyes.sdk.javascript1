@@ -3,8 +3,7 @@
 const {
   BatchInfo,
   GeneralUtils: {backwardCompatible, cachify},
-  BrowserType,
-} = require('@applitools/eyes-sdk-core/shared')
+} = require('@applitools/eyes-sdk-core')
 const makeCheckWindow = require('./checkWindow')
 const makeAbort = require('./makeAbort')
 const makeClose = require('./makeClose')
@@ -127,7 +126,7 @@ function makeOpenEyes({
     const supportedBrowsers = getSupportedBrowsers()
     const supportedBrowserKeys = Object.keys(supportedBrowsers)
     const supportedBrowserKeysStr = `\n* ${supportedBrowserKeys
-      .filter(x => x !== BrowserType.EDGE)
+      .filter(x => x !== 'edge')
       .join('\n* ')}\n`
 
     let browsersArray = Array.isArray(browser) ? browser : [browser]
@@ -342,7 +341,7 @@ function makeOpenEyes({
     }
 
     function showBrowserWarning(browsersArr) {
-      if (browsersArr.some(({name}) => name === BrowserType.EDGE)) {
+      if (browsersArr.some(({name}) => name === 'edge')) {
         console.log(
           chalk.yellow(
             `The 'edge' option that is being used in your browsers' configuration will soon be deprecated. Please change it to either 'edgelegacy' for the legacy version or to 'edgechromium' for the new Chromium-based version. Please note, when using the built-in BrowserType enum, then the values are BrowserType.EDGE_LEGACY and BrowserType.EDGE_CHROMIUM, respectively.`,

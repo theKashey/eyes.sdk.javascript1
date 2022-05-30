@@ -1,5 +1,5 @@
 'use strict'
-const {EyesBase, Location, ImageMatchSettings} = require('@applitools/eyes-sdk-core/shared')
+const {EyesBase, Location, ImageMatchSettings} = require('@applitools/eyes-sdk-core')
 const {presult} = require('@applitools/functional-commons')
 const VERSION = require('../../package.json').version
 

@@ -3,6 +3,12 @@ const spec = require('@applitools/spec-driver-selenium')
 const {testServerInProcess} = require('@applitools/test-server')
 const {makeSDK} = require('../../../index')
 
+function adjustUrlToDocker(url, {platform = process.platform} = {}) {
+  if (!!process.env.CVG_TESTS_REMOTE && platform === 'darwin')
+    return url.replace(/:\/\/localhost/, '://host.docker.internal')
+  return url
+}
+
 function setupTests({before, after, beforeEach, afterEach, env = {browser: 'chrome'}}) {
   let driver, destroyDriver, sdk, testServer
 
@@ -32,7 +38,7 @@ function setupTests({before, after, beforeEach, afterEach, env = {browser: 'chro
   return {
     getDriver: () => driver,
     getSDK: () => sdk,
-    getBaseUrl: () => `http://localhost:${testServer.port}`,
+    getBaseUrl: () => adjustUrlToDocker(`http://localhost:${testServer.port}`),
   }
 }
 

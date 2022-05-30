@@ -76,5 +76,4 @@ exports.SessionType = core.SessionType
 exports.FailureReports = core.FailureReports
 exports.TestResults = core.TestResults
 exports.TestResultsFormatter = core.TestResultsFormatter
-exports.TestResultsStatus = core.TestResultsStatus
 exports.BatchClose = core.BatchClose

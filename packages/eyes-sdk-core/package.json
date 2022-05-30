@@ -13,6 +13,7 @@
     "testing",
     "tests"
   ],
+  "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://applitools.com",
   "author": {
     "name": "Applitools Team",
@@ -32,7 +33,35 @@
     "test": "./test"
   },
   "main": "./index.js",
-  "typings": "./typings/index.d.ts",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "browser": "./browser.js",
+      "default": "./index.js"
+    }
+  },
+  "browser": {
+   ".": "./browser.js",
+   "tunnel": false
+  },
+  "bin": {
+    "eyes-check-network": "./bin/runCheckNetwork.js"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
+    "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
+    "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
+    "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
+    "setup": "yarn docker:setup",
+    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
+    "docker:teardown": "docker-compose down",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion --skip-verify-installed-versions",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
   "dependencies": {
     "@applitools/dom-capture": "11.1.0",
     "@applitools/dom-snapshot": "4.5.12",
@@ -75,27 +104,6 @@
     "prettier": "1.19.0",
     "selenium-webdriver": "^4.0.0-rc-2"
   },
-  "browser": {
-    "tunnel": false
-  },
-  "scripts": {
-    "lint": "eslint . --ext .js",
-    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
-    "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
-    "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
-    "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.spec.js\"",
-    "setup": "yarn docker:setup",
-    "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
-    "docker:teardown": "docker-compose down",
-    "deps": "bongo deps",
-    "preversion": "bongo preversion --skip-verify-installed-versions",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification"
-  },
-  "bin": {
-    "eyes-check-network": "./bin/runCheckNetwork.js"
-  },
-  "license": "SEE LICENSE IN LICENSE",
   "engines": {
     "node": ">= 8.9.0"
   },

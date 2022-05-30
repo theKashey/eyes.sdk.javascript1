@@ -1,24 +1,16 @@
 'use strict'
 const {makeLogger} = require('@applitools/logger')
 const EyesError = require('../errors/EyesError')
-const Region = require('../geometry/Region')
-const Location = require('../geometry/Location')
 const RectangleSize = require('../geometry/RectangleSize')
-const CoordinatesType = require('../geometry/CoordinatesType')
 
 const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 
-const ImageDeltaCompressor = require('../images/ImageDeltaCompressor')
 const SimplePropertyHandler = require('../handler/SimplePropertyHandler')
 const ReadOnlyPropertyHandler = require('../handler/ReadOnlyPropertyHandler')
-const SessionType = require('../config/SessionType')
 const Configuration = require('../config/Configuration')
 
 const AppOutput = require('../match/AppOutput')
-
-const TextTrigger = require('../triggers/TextTrigger')
-const MouseTrigger = require('../triggers/MouseTrigger')
 
 const MatchResult = require('../match/MatchResult')
 const MatchWindowData = require('../match/MatchWindowData')
@@ -32,11 +24,9 @@ const ValidationResult = require('../events/ValidationResult')
 const SessionEventHandlers = require('../events/SessionEventHandlers')
 
 const SessionStartInfo = require('../server/SessionStartInfo')
-const TestResultsStatus = require('../TestResultsStatus')
 const TestResults = require('../TestResults')
 const ServerConnector = require('../server/ServerConnector')
 
-const FailureReports = require('../FailureReports')
 const AppEnvironment = require('../AppEnvironment')
 const MatchWindowTask = require('../MatchWindowTask')
 const MatchWindowAndCloseTask = require('../MatchWindowAndCloseTask')
@@ -77,7 +67,7 @@ class EyesBase {
     this._initProviders()
 
     /** @type {FailureReports} */
-    this._failureReports = FailureReports.ON_CLOSE
+    this._failureReports = 'ON_CLOSE'
 
     /** @type {number} */
     this._validationId = -1
@@ -93,8 +83,6 @@ class EyesBase {
 
     /** @type {boolean} */ this._isOpen = false
     /** @type {boolean} */ this._isVisualGrid = false
-
-    /** @type {boolean} */ this._useImageDeltaCompression = true
 
     /**
      * Will be set for separately for each test.
@@ -905,7 +893,6 @@ class EyesBase {
    * @param {FailureReports} failureReports - Use one of the values in FailureReports.
    */
   setFailureReports(failureReports) {
-    ArgumentGuard.isValidEnumValue(failureReports, FailureReports)
     this._failureReports = failureReports
   }
 
@@ -987,9 +974,9 @@ class EyesBase {
       // for backwards compatibility with outdated servers
       if (!results.getStatus()) {
         if (results.getMissing() === 0 && results.getMismatches() === 0) {
-          results.setStatus(TestResultsStatus.Passed)
+          results.setStatus('Passed')
         } else {
-          results.setStatus(TestResultsStatus.Unresolved)
+          results.setStatus('Unresolved')
         }
       }
 
@@ -998,7 +985,7 @@ class EyesBase {
       const status = results.getStatus()
       await this._sessionEventHandlers.testEnded(await this.getAUTSessionId(), results)
 
-      if (status === TestResultsStatus.Unresolved) {
+      if (status === 'Unresolved') {
         if (results.getIsNew()) {
           this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
@@ -1010,7 +997,7 @@ class EyesBase {
             throw new DiffsFoundError(results.toJSON())
           }
         }
-      } else if (status === TestResultsStatus.Failed) {
+      } else if (status === 'Failed') {
         this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
         if (throwEx) {
           throw new TestFailedError(results.toJSON())
@@ -1257,9 +1244,9 @@ class EyesBase {
       // for backwards compatibility with outdated servers
       if (!results.getStatus()) {
         if (results.getMissing() === 0 && results.getMismatches() === 0) {
-          results.setStatus(TestResultsStatus.Passed)
+          results.setStatus('Passed')
         } else {
-          results.setStatus(TestResultsStatus.Unresolved)
+          results.setStatus('Unresolved')
         }
       }
 
@@ -1268,7 +1255,7 @@ class EyesBase {
       const status = results.getStatus()
       await this._sessionEventHandlers.testEnded(await this.getAUTSessionId(), results)
 
-      if (status === TestResultsStatus.Unresolved) {
+      if (status === 'Unresolved') {
         if (results.getIsNew()) {
           this._logger.log(`--- New test ended. Please approve the new baseline at ${sessionResultsUrl}`)
           if (throwEx) {
@@ -1280,7 +1267,7 @@ class EyesBase {
             throw new DiffsFoundError(results.toJSON())
           }
         }
-      } else if (status === TestResultsStatus.Failed) {
+      } else if (status === 'Failed') {
         this._logger.log(`--- Failed test ended. See details at ${sessionResultsUrl}`)
         if (throwEx) {
           throw new TestFailedError(results.toJSON())
@@ -1379,7 +1366,7 @@ class EyesBase {
       this._logger.log(`Mismatch! (${tag})`)
     }
 
-    if (this.getFailureReports() === FailureReports.IMMEDIATE) {
+    if (this.getFailureReports() === 'IMMEDIATE') {
       throw new TestFailedError(
         null,
         `Mismatch found in '${this._sessionStartInfo.getScenarioIdOrName()}' of '${this._sessionStartInfo.getAppIdOrName()}'`,
@@ -1400,7 +1387,7 @@ class EyesBase {
    * @param {skipStartingSession} [skipStartingSession=false] - If {@code true} skip starting the session.
    * @return {Promise}
    */
-  async openBase(appName, testName, viewportSize, sessionType = SessionType.SEQUENTIAL, skipStartingSession = false) {
+  async openBase(appName, testName, viewportSize, sessionType = 'SEQUENTIAL', skipStartingSession = false) {
     if (viewportSize) this._configuration.setViewportSize(viewportSize)
 
     try {
@@ -1539,111 +1526,6 @@ class EyesBase {
     this._viewportSizeHandler = new ReadOnlyPropertyHandler(this._logger, new RectangleSize(explicitViewportSize))
     this._configuration.setViewportSize(explicitViewportSize)
     this._isViewportSizeSet = true
-  }
-
-  /**
-   * Adds a trigger to the current list of user inputs.
-   *
-   * @protected
-   * @param {Trigger} trigger - The trigger to add to the user inputs list.
-   */
-  addUserInput(trigger) {
-    if (this._configuration.getIsDisabled()) {
-      return
-    }
-
-    ArgumentGuard.notNull(trigger, 'trigger')
-    this._userInputs.push(trigger)
-  }
-
-  /**
-   * Adds a text trigger.
-   *
-   * @protected
-   * @param {Region} control - The control's position relative to the window.
-   * @param {string} text - The trigger's text.
-   */
-  addTextTriggerBase(control, text) {
-    if (this._configuration.getIsDisabled()) {
-      this._logger.log(`Ignoring '${text}' (disabled)`)
-      return
-    }
-
-    ArgumentGuard.notNull(control, 'control')
-    ArgumentGuard.notNull(text, 'text')
-
-    // We don't want to change the objects we received.
-    let newControl = new Region(control)
-
-    if (!this._matchWindowTask || !this._matchWindowTask.getLastScreenshot()) {
-      this._logger.log(`Ignoring '${text}' (no screenshot)`)
-      return
-    }
-
-    newControl = this._matchWindowTask
-      .getLastScreenshot()
-      .getIntersectedRegion(newControl, CoordinatesType.SCREENSHOT_AS_IS)
-    if (newControl.isSizeEmpty()) {
-      this._logger.log(`Ignoring '${text}' (out of bounds)`)
-      return
-    }
-
-    const trigger = new TextTrigger(newControl, text)
-    this._userInputs.push(trigger)
-
-    this._logger.log(`Added ${trigger}`)
-  }
-
-  /**
-   * Adds a mouse trigger.
-   *
-   * @protected
-   * @param {MouseTrigger.MouseAction} action - Mouse action.
-   * @param {Region} control - The control on which the trigger is activated (location is relative to the window).
-   * @param {Location} cursor - The cursor's position relative to the control.
-   */
-  addMouseTriggerBase(action, control, cursor) {
-    if (this._configuration.getIsDisabled()) {
-      this._logger.log(`Ignoring ${action} (disabled)`)
-      return
-    }
-
-    ArgumentGuard.notNull(action, 'action')
-    ArgumentGuard.notNull(control, 'control')
-    ArgumentGuard.notNull(cursor, 'cursor')
-
-    // Triggers are actually performed on the previous window.
-    if (!this._matchWindowTask || !this._matchWindowTask.getLastScreenshot()) {
-      this._logger.log(`Ignoring ${action} (no screenshot)`)
-      return
-    }
-
-    // We don't want to change the objects we received.
-    const newControl = new Region(control)
-    // Getting the location of the cursor in the screenshot
-    let cursorInScreenshot = new Location(cursor)
-    // First we need to getting the cursor's coordinates relative to the context (and not to the control).
-    cursorInScreenshot.offsetByLocation(newControl.getLocation())
-    try {
-      cursorInScreenshot = this._matchWindowTask
-        .getLastScreenshot()
-        .getLocationInScreenshot(cursorInScreenshot, CoordinatesType.CONTEXT_RELATIVE)
-    } catch (err) {
-      throw err
-    }
-
-    const controlScreenshotIntersect = this._matchWindowTask
-      .getLastScreenshot()
-      .getIntersectedRegion(newControl, CoordinatesType.SCREENSHOT_AS_IS)
-
-    // If the region is NOT empty, we'll give the coordinates relative to the control.
-    if (!controlScreenshotIntersect.isSizeEmpty()) {
-      const l = controlScreenshotIntersect.getLocation()
-      cursorInScreenshot.offset(-l.getX(), -l.getY())
-    }
-
-    const trigger = new MouseTrigger(action, controlScreenshotIntersect, cursorInScreenshot)
-    this._userInputs.push(trigger)
   }
 
   setAppEnvironment(hostOS, hostApp) {
@@ -1845,7 +1727,7 @@ class EyesBase {
    * @param {CheckSettings} checkSettings - The check settings object of the current test.
    * @return {Promise<AppOutputWithScreenshot>} - The updated app output and screenshot.
    */
-  async _getAppOutputWithScreenshot({lastScreenshot}) {
+  async _getAppOutputWithScreenshot() {
     this._logger.log('getting screenshot...')
 
     // Getting the screenshot (abstract function implemented by each SDK).
@@ -1856,25 +1738,6 @@ class EyesBase {
     if (screenshot) {
       const targetBuffer = await screenshot.image.toPng()
       let screenshotBuffer = targetBuffer
-
-      if (this._useImageDeltaCompression && lastScreenshot) {
-        try {
-          this._logger.log('Compressing screenshot...')
-          const sourceData = await lastScreenshot.image.toObject()
-          const targetData = await screenshot.image.toObject()
-
-          screenshotBuffer = ImageDeltaCompressor.compressByRawBlocks(targetData, targetBuffer, sourceData)
-          const savedSize = targetBuffer.length - screenshotBuffer.length
-          if (savedSize === 0) {
-            this._logger.log('Compression skipped, because of significant difference.')
-          } else {
-            this._logger.log(`Compression finished, saved size is ${savedSize}.`)
-          }
-        } catch (err) {
-          this._logger.error('Failed to compress screenshot!', err)
-        }
-      }
-
       await this._renderingInfoPromise
       screenshotUrl = await this._serverConnector.uploadScreenshot(GeneralUtils.guid(), screenshotBuffer)
       this._logger.log('Done uploading screenshot!')

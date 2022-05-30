@@ -2,7 +2,7 @@
 const {describe, it, beforeEach} = require('mocha')
 const {expect} = require('chai')
 const makeGetRenderStatus = require('../../../src/sdk/getRenderStatus')
-const {RenderStatusResults} = require('@applitools/eyes-sdk-core/shared')
+const {RenderStatusResults} = require('@applitools/eyes-sdk-core')
 const testLogger = require('../../util/testLogger')
 const psetTimeout = require('util').promisify(setTimeout)
 const {presult} = require('@applitools/functional-commons')

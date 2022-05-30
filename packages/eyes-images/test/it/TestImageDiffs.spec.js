@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const {Eyes, ConsoleLogHandler, TestResultsStatus, GeneralUtils} = require('../../index')
+const {Eyes, ConsoleLogHandler, GeneralUtils} = require('../../index')
 
 let /** @type {Eyes} */ eyes
 describe('EyesImages.TestImageDiffs', function() {
@@ -26,6 +26,6 @@ describe('EyesImages.TestImageDiffs', function() {
     await eyes.checkImage(image2)
     const results = await eyes.close(false)
 
-    assert.strictEqual(results.getStatus(), TestResultsStatus.Unresolved)
+    assert.strictEqual(results.getStatus(), 'Unresolved')
   })
 })

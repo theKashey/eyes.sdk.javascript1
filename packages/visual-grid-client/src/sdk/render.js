@@ -1,7 +1,3 @@
-'use strict'
-
-const {RenderStatus} = require('@applitools/eyes-sdk-core/shared')
-
 function makeRender({logger, doRenderBatch, timeout = 300}) {
   let pendingRequests = new Map()
   let throttleTimer = false
@@ -27,7 +23,7 @@ function makeRender({logger, doRenderBatch, timeout = 300}) {
 
       runningRenders.forEach((runningRender, index) => {
         const {resolve, reject} = pendingRequests.get(renderRequests[index])
-        if (runningRender.getRenderStatus() === RenderStatus.NEED_MORE_RESOURCES) {
+        if (runningRender.getRenderStatus() === 'need-more-resources') {
           logger.log('unexpectedly got "need more resources" on second render request')
           reject(new Error('Unexpected error while taking screenshot'))
         } else {

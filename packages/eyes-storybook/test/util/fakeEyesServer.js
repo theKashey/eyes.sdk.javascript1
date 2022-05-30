@@ -6,7 +6,6 @@ const UAParser = require('ua-parser-js');
 const fs = require('fs');
 const path = require('path');
 const filenamify = require('filenamify');
-const {TestResultsStatus} = require('@applitools/eyes-sdk-core');
 
 function fakeEyesServer({
   expectedFolder,
@@ -255,9 +254,7 @@ function fakeEyesServer({
   });
 
   function createTestResultFromRunningSession(runningSession) {
-    const status = runningSession.steps.every(x => !!x.asExpected)
-      ? TestResultsStatus.Passed
-      : TestResultsStatus.Failed; // TODO TestResultsStatus.Unresolved
+    const status = runningSession.steps.every(x => !!x.asExpected) ? 'Passed' : 'Failed'; // TODO 'Unresolved'
 
     const stepsInfo = runningSession.steps;
     return {

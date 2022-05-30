@@ -6,16 +6,11 @@ const {getResourceAsText} = require('../../testUtils')
 const {
   AppEnvironment,
   BatchInfo,
-  SessionType,
   PropertyData,
   SessionStartInfo,
   ImageMatchSettings,
-  MatchLevel,
   RectangleSize,
   FloatingMatchSettings,
-  AccessibilityLevel,
-  AccessibilityGuidelinesVersion,
-  AccessibilityRegionType,
   AccessibilityMatchSettings,
 } = require('../../../index')
 
@@ -40,14 +35,14 @@ describe('SessionStartInfo', () => {
       }),
       environmentName: 'some environment',
       defaultMatchSettings: new ImageMatchSettings({
-        matchLevel: MatchLevel.Strict,
+        matchLevel: 'Strict',
         accessibility: [
           new AccessibilityMatchSettings({
             left: 10,
             top: 20,
             width: 30,
             height: 40,
-            type: AccessibilityRegionType.GraphicalObject,
+            type: 'GraphicalObject',
           }),
         ],
         floating: [
@@ -63,14 +58,14 @@ describe('SessionStartInfo', () => {
           }),
         ],
         accessibilitySettings: {
-          level: AccessibilityLevel.AA,
-          guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
+          level: 'AA',
+          guidelinesVersion: 'WCAG_2_0',
         },
       }),
       branchName: 'some branch',
       parentBranchName: 'parent branch',
       baselineBranchName: 'baseline branch',
-      sessionType: SessionType.SEQUENTIAL,
+      sessionType: 'SEQUENTIAL',
       displayName: 'display name',
       compareWithParentBranch: false,
       ignoreBaseline: false,

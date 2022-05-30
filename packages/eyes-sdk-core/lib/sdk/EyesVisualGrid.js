@@ -1,13 +1,11 @@
 const utils = require('@applitools/utils')
 const {Driver} = require('@applitools/driver')
-const BrowserType = require('../config/BrowserType')
 const Configuration = require('../config/Configuration')
 const TypeUtils = require('../utils/TypeUtils')
 const GeneralUtils = require('../utils/GeneralUtils')
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const TestResultsFormatter = require('../TestResultsFormatter')
 const CorsIframeHandler = require('../capture/CorsIframeHandler')
-const CorsIframeHandles = require('../capture/CorsIframeHandles')
 const VisualGridRunner = require('../runner/VisualGridRunner')
 const takeDomSnapshots = require('../utils/takeDomSnapshots')
 const takeVHSes = require('../utils/takeVHSes')
@@ -47,7 +45,7 @@ class EyesVisualGrid extends EyesCore {
     /** @private @type {boolean} */
     this._isVisualGrid = true
     /** @private @type {CorsIframeHandle} */
-    this._corsIframeHandle = CorsIframeHandles.BLANK
+    this._corsIframeHandle = 'BLANK'
 
     /** @private */
     this._checkWindowCommand = undefined
@@ -95,7 +93,7 @@ class EyesVisualGrid extends EyesCore {
 
     if (!browsersInfo || browsersInfo.length === 0) {
       const vs = this._configuration.getViewportSize()
-      this._configuration.addBrowser(vs.getWidth(), vs.getHeight(), BrowserType.CHROME)
+      this._configuration.addBrowser(vs.getWidth(), vs.getHeight(), 'chrome')
     }
 
     const {
@@ -180,7 +178,7 @@ class EyesVisualGrid extends EyesCore {
           })
 
           const [{url}] = snapshots
-          if (this.getCorsIframeHandle() === CorsIframeHandles.BLANK) {
+          if (this.getCorsIframeHandle() === 'BLANK') {
             snapshots.forEach(CorsIframeHandler.blankCorsIframeSrcOfCdt)
           }
           snapshotArgs.url = url

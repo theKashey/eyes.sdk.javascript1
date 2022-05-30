@@ -2,13 +2,7 @@
 
 const assert = require('assert')
 
-const {
-  TestResults,
-  AccessibilityLevel,
-  AccessibilityGuidelinesVersion,
-  AccessibilityStatus,
-  TestResultsStatus,
-} = require('../../index')
+const {TestResults} = require('../../index')
 
 describe('TestResults', () => {
   it('empty constructor', () => {
@@ -57,11 +51,11 @@ describe('TestResults', () => {
     tr.setSteps(8)
     tr.setStrictMatches(9)
     // tr.New = 10;
-    tr.setStatus(TestResultsStatus.Failed)
+    tr.setStatus('Failed')
     tr.setAccessibilityStatus({
-      level: AccessibilityLevel.AAA,
-      version: AccessibilityGuidelinesVersion.WCAG_2_1,
-      status: AccessibilityStatus.Passed,
+      level: 'AAA',
+      version: 'WCAG_2_1',
+      status: 'Passed',
     })
 
     assert.strictEqual(1, tr.getContentMatches())
@@ -74,11 +68,11 @@ describe('TestResults', () => {
     assert.strictEqual(8, tr.getSteps())
     assert.strictEqual(9, tr.getStrictMatches())
     // assert.strictEqual(10, tr.New);
-    assert.strictEqual(TestResultsStatus.Failed, tr.getStatus())
+    assert.strictEqual('Failed', tr.getStatus())
 
     assert.ok(tr.getAccessibilityStatus())
-    assert.strictEqual(AccessibilityLevel.AAA, tr.getAccessibilityStatus().level)
-    assert.strictEqual(AccessibilityStatus.Passed, tr.getAccessibilityStatus().status)
+    assert.strictEqual('AAA', tr.getAccessibilityStatus().level)
+    assert.strictEqual('Passed', tr.getAccessibilityStatus().status)
   })
 
   it('constructor with object', () => {
@@ -111,8 +105,8 @@ describe('TestResults', () => {
       defaultMatchSettings: {
         matchLevel: 'Strict',
         accessibilitySettings: {
-          level: AccessibilityLevel.AA,
-          version: AccessibilityGuidelinesVersion.WCAG_2_0,
+          level: 'AA',
+          version: 'WCAG_2_0',
         },
         ignore: [],
         strict: [],

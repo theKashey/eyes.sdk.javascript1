@@ -1,6 +1,6 @@
 'use strict'
 
-const {Region} = require('@applitools/eyes-sdk-core/shared')
+const {Region} = require('@applitools/eyes-sdk-core')
 
 function selectorObject({selector, type}) {
   return type === 'xpath' || type === 'css' ? {type, selector} : selector

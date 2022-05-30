@@ -1,7 +1,5 @@
 'use strict'
-const AccessibilityRegionTypes = require('./AccessibilityRegionType')
 const GeneralUtils = require('../utils/GeneralUtils')
-const ArgumentGuard = require('../utils/ArgumentGuard')
 const Region = require('../geometry/Region')
 
 /**
@@ -24,7 +22,6 @@ class AccessibilityMatchSettings {
     if (arguments.length > 1) {
       throw new TypeError('Please, use object as a parameter to the constructor!')
     }
-    ArgumentGuard.isValidEnumValue(type, AccessibilityRegionTypes, false)
 
     this._left = left
     this._top = top
@@ -100,7 +97,6 @@ class AccessibilityMatchSettings {
    * @param {AccessibilityRegionType} value
    */
   setType(value) {
-    ArgumentGuard.isValidEnumValue(value, AccessibilityRegionTypes)
     this._type = value
   }
 

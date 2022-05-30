@@ -1,6 +1,5 @@
 'use strict'
 const Configuration = require('../config/Configuration')
-const CorsIframeHandles = require('../capture/CorsIframeHandles')
 const EyesRunner = require('../runner/EyesRunner')
 const ClassicRunner = require('../runner/ClassicRunner')
 const VisualGridRunner = require('../runner/VisualGridRunner')
@@ -110,7 +109,7 @@ class EyesFactory {
       eyes = new this.EyesClassic(serverUrl, isDisabled)
     }
 
-    eyes._corsIframeHandle = CorsIframeHandles.BLANK
+    eyes._corsIframeHandle = 'BLANK'
 
     return eyes
   }

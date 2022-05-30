@@ -6,7 +6,6 @@ const {
   EyesClassic,
   EyesVisualGrid,
   Configuration,
-  StitchMode,
   RectangleSize,
   ProxySettings,
   BatchInfo,
@@ -82,7 +81,7 @@ describe('EyesFactory', function() {
     assert.ok(configuration instanceof Configuration)
     assert.strictEqual(configuration.getApiKey(), 'sameApiKey')
     assert.strictEqual(configuration.getForceFullPageScreenshot(), true)
-    assert.strictEqual(configuration.getStitchMode(), StitchMode.SCROLL)
+    assert.strictEqual(configuration.getStitchMode(), 'Scroll')
     assert.strictEqual(configuration.getBrowsersInfo().length, 2)
     assert.deepStrictEqual(configuration.getBrowsersInfo()[0], {
       width: 800,

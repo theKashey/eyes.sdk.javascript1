@@ -3,7 +3,7 @@ const fetch = require('node-fetch')
 const {expect} = require('chai')
 const makeRenderer = require('../../src/sdk/renderer')
 const {createRenderRequest} = require('../../src/sdk/render/createRenderRequest')
-const {RenderingInfo} = require('@applitools/eyes-sdk-core/shared')
+const {RenderingInfo} = require('@applitools/eyes-sdk-core')
 
 describe('render e2e', () => {
   let renderingInfo

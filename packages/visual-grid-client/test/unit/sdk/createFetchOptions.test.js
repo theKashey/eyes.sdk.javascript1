@@ -1,5 +1,5 @@
 const {expect} = require('chai')
-const {ProxySettings} = require('@applitools/eyes-sdk-core/shared')
+const {ProxySettings} = require('@applitools/eyes-sdk-core')
 const createFetchOptions = require('../../../src/sdk/resources/createFetchOptions')
 
 describe('createFetchOptions', () => {

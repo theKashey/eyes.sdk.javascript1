@@ -2,13 +2,13 @@
 
 const assert = require('assert')
 const axios = require('axios')
-const {AccessibilityLevel, AccessibilityGuidelinesVersion, VisualGridRunner, ClassicRunner} = require('../../../index')
+const {VisualGridRunner, ClassicRunner} = require('../../../index')
 const {EyesFactory} = require('../../utils/FakeSDK')
 
 async function runTest(driver, useVisualGrid) {
   const accessibilitySettings = {
-    level: AccessibilityLevel.AA,
-    guidelinesVersion: AccessibilityGuidelinesVersion.WCAG_2_0,
+    level: 'AA',
+    guidelinesVersion: 'WCAG_2_0',
   }
 
   const runner = useVisualGrid ? new VisualGridRunner(10) : new ClassicRunner()

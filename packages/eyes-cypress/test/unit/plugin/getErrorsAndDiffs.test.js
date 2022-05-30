@@ -3,7 +3,7 @@
 const {describe, it} = require('mocha');
 const {expect} = require('chai');
 const getErrorsAndDiffs = require('../../../src/plugin/getErrorsAndDiffs');
-const {TestResults, TestResultsStatus} = require('@applitools/visual-grid-client');
+const {TestResults} = require('@applitools/visual-grid-client');
 
 describe('getErrorAndDiffs', () => {
   it('works', () => {
@@ -11,51 +11,51 @@ describe('getErrorAndDiffs', () => {
       name: 'test1',
       hostDisplaySize: {width: 1, height: 2},
       url: 'url1',
-      status: TestResultsStatus.Passed,
+      status: 'Passed',
     });
     const passed2 = new TestResults({
       name: 'test2',
       hostDisplaySize: {width: 3, height: 4},
       url: 'url2',
-      status: TestResultsStatus.Passed,
+      status: 'Passed',
     });
     const failed1 = new TestResults({
       name: 'test3',
       hostDisplaySize: {width: 5, height: 6},
       url: 'url3',
-      status: TestResultsStatus.Failed,
+      status: 'Failed',
     });
     const failed2 = new TestResults({
       name: 'test4',
       hostDisplaySize: {width: 7, height: 8},
       url: 'url4',
-      status: TestResultsStatus.Failed,
+      status: 'Failed',
     });
     const unresolved = new TestResults({
       name: 'test5',
       hostDisplaySize: {width: 9, height: 10},
       url: 'url5',
-      status: TestResultsStatus.Unresolved,
+      status: 'Unresolved',
     });
     const unresolvedNew = new TestResults({
       name: 'test6',
       hostDisplaySize: {width: 11, height: 12},
       url: 'url6',
-      status: TestResultsStatus.Unresolved,
+      status: 'Unresolved',
       isNew: true,
     });
     const err1 = new TestResults({
       name: 'test2',
       hostDisplaySize: {width: 13, height: 14},
       url: 'url2',
-      status: TestResultsStatus.Passed,
+      status: 'Passed',
     });
     err1.error = new Error('bla');
     const err2 = new TestResults({
       name: 'test2',
       hostDisplaySize: {width: 15, height: 16},
       url: 'url2',
-      status: TestResultsStatus.Passed,
+      status: 'Passed',
     });
     err2.error = new Error('bloo');
     const err3 = new Error('kuku');

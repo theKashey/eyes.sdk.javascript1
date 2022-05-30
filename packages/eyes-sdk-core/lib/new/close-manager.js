@@ -1,7 +1,6 @@
 const DiffsFoundError = require('../errors/DiffsFoundError')
 const NewTestError = require('../errors/NewTestError')
 const TestFailedError = require('../errors/TestFailedError')
-const TestResultsStatuses = require('../TestResultsStatus')
 const SerializedError = require('../errors/SerializedError')
 
 function makeCloseManager({runner}) {
@@ -21,10 +20,10 @@ function makeCloseManager({runner}) {
 
     for (const container of testResultContainers) {
       if (container.testResults) {
-        if (container.testResults.status === TestResultsStatuses.Unresolved) {
+        if (container.testResults.status === 'Unresolved') {
           if (container.testResults.isNew) container.exception = new NewTestError(container.testResults)
           else container.exception = new DiffsFoundError(container.testResults)
-        } else if (container.testResults.status === TestResultsStatuses.Failed) {
+        } else if (container.testResults.status === 'Failed') {
           container.exception = new TestFailedError(container.testResults)
         }
       } else if (container.exception) {
@@ -39,9 +38,9 @@ function makeCloseManager({runner}) {
       }
 
       if (container.testResults) {
-        if (container.testResults.status === TestResultsStatuses.Failed) summary.failed += 1
-        else if (container.testResults.status === TestResultsStatuses.Passed) summary.passed += 1
-        else if (container.testResults.status === TestResultsStatuses.Unresolved) summary.unresolved += 1
+        if (container.testResults.status === 'Failed') summary.failed += 1
+        else if (container.testResults.status === 'Passed') summary.passed += 1
+        else if (container.testResults.status === 'Unresolved') summary.unresolved += 1
 
         summary.matches += container.testResults.matches
         summary.missing += container.testResults.missing

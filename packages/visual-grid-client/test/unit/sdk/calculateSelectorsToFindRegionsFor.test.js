@@ -3,7 +3,7 @@
 const {describe, it} = require('mocha')
 const {expect} = require('chai')
 const calculateSelectorsToFindRegionsFor = require('../../../src/sdk/calculateSelectorsToFindRegionsFor')
-const {Region} = require('@applitools/eyes-sdk-core/shared')
+const {Region} = require('@applitools/eyes-sdk-core')
 
 describe('calculateSelectorsToFindRegionsFor Tests', () => {
   describe('calculateSelectorsToFindRegionsFor', () => {

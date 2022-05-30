@@ -4,15 +4,6 @@ const ArgumentGuard = require('../utils/ArgumentGuard')
 const TypeUtils = require('../utils/TypeUtils')
 const RectangleSize = require('./RectangleSize')
 const Location = require('./Location')
-const CoordinatesTypes = require('./CoordinatesType')
-
-/**
- * @typedef {import('./CoordinatesType').CoordinatesType} CoordinatesType
- */
-
-/**
- * @typedef {{left: number, top: number, width: number, height: number, coordinatesType: CoordinatesType|undefined}} RegionObject
- */
 
 /**
  * @private
@@ -123,11 +114,10 @@ class Region {
    * Creates a Region instance.
    * @param {Region|RegionObject|Location|number} varArg1 - The Region (or object) to clone from, the Location of new region or the left offset of new region.
    * @param {RectangleSize|number} [varArg2] - The Region size or the top offset of new region.
-   * @param {CoordinatesType|number} [varArg3] - The width of new region.
+   * @param {number} [varArg3] - The width of new region.
    * @param {number} [varArg4] - The height of new region.
-   * @param {CoordinatesType} [varArg5] - The coordinatesType of new region (protected argument).
    */
-  constructor(varArg1, varArg2, varArg3, varArg4, varArg5) {
+  constructor(varArg1, varArg2, varArg3, varArg4) {
     if (arguments.length === 2 || arguments.length === 3) {
       // eslint-disable-next-line max-len
       return new Region({
@@ -135,7 +125,6 @@ class Region {
         top: varArg1.getY(),
         width: varArg2.getWidth(),
         height: varArg2.getHeight(),
-        coordinatesType: varArg3,
       })
     }
 
@@ -146,7 +135,6 @@ class Region {
         top: varArg2,
         width: varArg3,
         height: varArg4,
-        coordinatesType: varArg5,
       })
     }
 
@@ -157,11 +145,10 @@ class Region {
         top: varArg1.getTop(),
         width: varArg1.getWidth(),
         height: varArg1.getHeight(),
-        coordinatesType: varArg1.getCoordinatesType(),
       })
     }
 
-    const {left = varArg1.x, top = varArg1.y, width, height, coordinatesType, error} = varArg1
+    const {left = varArg1.x, top = varArg1.y, width, height, error} = varArg1
 
     if (error) {
       this._error = error
@@ -175,7 +162,6 @@ class Region {
       this._top = top
       this._width = width
       this._height = height
-      this._coordinatesType = coordinatesType || CoordinatesTypes.SCREENSHOT_AS_IS
     }
   }
 
@@ -262,20 +248,6 @@ class Region {
    */
   setHeight(value) {
     this._height = value
-  }
-
-  /**
-   * @return {CoordinatesType} - The region's coordinatesType.
-   */
-  getCoordinatesType() {
-    return this._coordinatesType
-  }
-
-  /**
-   * @param {CoordinatesType} value
-   */
-  setCoordinatesType(value) {
-    this._coordinatesType = value
   }
 
   /**
@@ -374,7 +346,7 @@ class Region {
    * @return {Region} - A region with an offset location.
    */
   offset(dx, dy) {
-    return new Region(this.getLocation().offset(dx, dy), this.getSize(), this.getCoordinatesType())
+    return new Region(this.getLocation().offset(dx, dy), this.getSize())
   }
 
   /**
@@ -395,7 +367,7 @@ class Region {
    * @return {Region} - A new region which is a scaled version of the current region.
    */
   scale(scaleRatio) {
-    return new Region(this.getLocation().scale(scaleRatio), this.getSize().scale(scaleRatio), this.getCoordinatesType())
+    return new Region(this.getLocation().scale(scaleRatio), this.getSize().scale(scaleRatio))
   }
 
   /**
@@ -510,7 +482,6 @@ class Region {
     this._top = Region.EMPTY.getTop()
     this._width = Region.EMPTY.getWidth()
     this._height = Region.EMPTY.getHeight()
-    this._coordinatesType = Region.EMPTY.getCoordinatesType()
   }
 
   /**
@@ -528,7 +499,6 @@ class Region {
       top: this._top,
       width: this._width,
       height: this._height,
-      // coordinatesType: this._coordinatesType,
     }
   }
 

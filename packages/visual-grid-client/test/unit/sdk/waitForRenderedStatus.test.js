@@ -3,14 +3,14 @@ const {describe, it} = require('mocha')
 const {expect} = require('chai')
 const makeWaitForRenderedStatus = require('../../../src/sdk/waitForRenderedStatus')
 const {failMsg} = makeWaitForRenderedStatus
-const {RenderStatus, RenderStatusResults} = require('@applitools/eyes-sdk-core/shared')
+const {RenderStatusResults} = require('@applitools/eyes-sdk-core')
 const testLogger = require('../../util/testLogger')
 const psetTimeout = require('util').promisify(setTimeout)
 const {presult} = require('@applitools/functional-commons')
 
 describe('waitForRenderedStatus', () => {
   it('returns rendered result', async () => {
-    const expectedStatus = new RenderStatusResults({status: RenderStatus.RENDERED})
+    const expectedStatus = new RenderStatusResults({status: 'rendered'})
     const waitForRenderedStatus = makeWaitForRenderedStatus({
       logger: testLogger,
       getRenderStatus: async () => expectedStatus,
@@ -28,9 +28,9 @@ describe('waitForRenderedStatus', () => {
         counter++
         await psetTimeout(100)
         if (counter < 3) {
-          return new RenderStatusResults({status: RenderStatus.RENDERING})
+          return new RenderStatusResults({status: 'rendering'})
         } else {
-          return new RenderStatusResults({status: RenderStatus.RENDERED})
+          return new RenderStatusResults({status: 'rendered'})
         }
       },
     })
@@ -38,7 +38,7 @@ describe('waitForRenderedStatus', () => {
     const notYetPromise = Promise.race([
       presult(
         waitForRenderedStatus('render1').then(status => {
-          expect(status).to.eql(new RenderStatusResults({status: RenderStatus.RENDERED}))
+          expect(status).to.eql(new RenderStatusResults({status: 'rendered'}))
         }),
       ),
       psetTimeout(150).then(() => 'not yet'),
@@ -54,7 +54,7 @@ describe('waitForRenderedStatus', () => {
   it('stops polling when stop condition is met', async () => {
     let stop = false
     psetTimeout(50).then(() => (stop = true))
-    const expectedStatus = new RenderStatusResults({status: RenderStatus.RENDERING}) // this is important, because of the stop condition we will get a result of RENDERING
+    const expectedStatus = new RenderStatusResults({status: 'rendering'}) // this is important, because of the stop condition we will get a result of RENDERING
     const waitForRenderedStatus = makeWaitForRenderedStatus({
       logger: testLogger,
       getRenderStatus: async () => {
@@ -68,7 +68,7 @@ describe('waitForRenderedStatus', () => {
   })
 
   it("throws error if there's an error in render", async () => {
-    const expectedStatus = new RenderStatusResults({status: RenderStatus.ERROR, error: 'bla'})
+    const expectedStatus = new RenderStatusResults({status: 'error', error: 'bla'})
     const waitForRenderedStatus = makeWaitForRenderedStatus({
       logger: testLogger,
       getRenderStatus: async () => expectedStatus,
@@ -98,7 +98,7 @@ describe('waitForRenderedStatus', () => {
   })
 
   it('throws error on timeout', async () => {
-    const expectedStatus = new RenderStatusResults({status: RenderStatus.RENDERING})
+    const expectedStatus = new RenderStatusResults({status: 'rendering'})
     const waitForRenderedStatus = makeWaitForRenderedStatus({
       logger: testLogger,
       timeout: 200,
@@ -123,7 +123,7 @@ describe('waitForRenderedStatus', () => {
         if (counter < 3) {
           return new RenderStatusResults()
         } else {
-          return new RenderStatusResults({status: RenderStatus.RENDERED})
+          return new RenderStatusResults({status: 'rendered'})
         }
       },
     })
@@ -131,7 +131,7 @@ describe('waitForRenderedStatus', () => {
     const notYetPromise = Promise.race([
       presult(
         waitForRenderedStatus('render1').then(status => {
-          expect(status).to.eql(new RenderStatusResults({status: RenderStatus.RENDERED}))
+          expect(status).to.eql(new RenderStatusResults({status: 'rendered'}))
         }),
       ),
       psetTimeout(150).then(() => 'not yet'),

@@ -3,16 +3,13 @@
 const ArgumentGuard = require('../utils/ArgumentGuard')
 const GeneralUtils = require('../utils/GeneralUtils')
 const TypeUtils = require('../utils/TypeUtils')
-const MatchLevel = require('./MatchLevel')
-const AccessibilityLevel = require('./AccessibilityLevel')
-const AccessibilityGuidelinesVersions = require('./AccessibilityGuidelinesVersion')
 const ExactMatchSettings = require('./ExactMatchSettings')
 const AccessibilityMatchSettings = require('./AccessibilityMatchSettings')
 const FloatingMatchSettings = require('./FloatingMatchSettings')
 const Region = require('../geometry/Region')
 
 const DEFAULT_VALUES = {
-  matchLevel: MatchLevel.Strict,
+  matchLevel: 'Strict',
   ignoreCaret: true,
   useDom: false,
   enablePatterns: false,
@@ -63,7 +60,6 @@ class ImageMatchSettings {
       accessibilitySettings,
     } = imageMatchSettings || {}
 
-    ArgumentGuard.isValidEnumValue(matchLevel, MatchLevel, false)
     ArgumentGuard.isBoolean(ignoreCaret, 'ignoreCaret', false)
     ArgumentGuard.isBoolean(useDom, 'useDom', false)
     ArgumentGuard.isBoolean(enablePatterns, 'enablePatterns', false)
@@ -116,7 +112,6 @@ class ImageMatchSettings {
    * @param {MatchLevel} value - The match level to use.
    */
   setMatchLevel(value) {
-    ArgumentGuard.isValidEnumValue(value, MatchLevel)
     this._matchLevel = value
   }
 
@@ -133,8 +128,6 @@ class ImageMatchSettings {
   setAccessibilitySettings(value) {
     if (value) {
       ArgumentGuard.hasProperties(value, ['level', 'guidelinesVersion'], 'accessibilitySettings')
-      ArgumentGuard.isValidEnumValue(value.level, AccessibilityLevel)
-      ArgumentGuard.isValidEnumValue(value.guidelinesVersion, AccessibilityGuidelinesVersions)
     }
     this._accessibilitySettings = value
   }
