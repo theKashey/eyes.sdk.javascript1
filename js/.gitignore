@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+
+# Generated
+dist
+doc
+types
+!packages/types
+.history/
+
+# Docker
+docker-compose.yaml
+
+# Yarn
+.yarn
+
+# Dependency directory
+node_modules
+
+# Bongo
+.bongo
+
+# Coverage tests
+**/test/generic/
+coverage-test-report.xml
+coverage-tests-metadata.json
+
+# Other
+.idea
+.DS_Store
+.eslintcache
+*.swp
+*~
+.tmp-changelogs.html
+tmp
+.env
+.vscode
+tags
+tags.*
+eyes-testcafe-bak
