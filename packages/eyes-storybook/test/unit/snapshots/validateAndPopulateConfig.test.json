@@ -1,5 +1,5 @@
 {
   "warning message fakeIE": [
-    "⚠ fakeIE flag was set, but no IE browsers were found in the configuration"
+    "\u001b[33m⚠ fakeIE flag was set, but no IE browsers were found in the configuration\u001b[39m"
   ]
 }

@@ -7,8 +7,12 @@ on:
         description: package names (aliases and variations)
         type: string
         required: true
-      type:
+      test-type:
         description: testing type (unit, it, e2e, coverage)
+        type: string
+        required: false
+      setup-type:
+        description: setup type
         type: string
         required: false
       remote:
@@ -31,7 +35,6 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
   DISPLAY: ':99'
-  STDOUT_LEVEL: 1
   FORCE_COLOR: 3
 jobs:
   setup:
@@ -41,7 +44,7 @@ jobs:
       packages: ${{steps.setup.outputs.packages}}
     steps:
       - name: Check-out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup
         uses: ./.github/actions/parser
         id: setup
@@ -59,7 +62,7 @@ jobs:
     env: ${{matrix.env}}
     steps:
       - name: Check-out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -73,7 +76,8 @@ jobs:
         uses: ./.github/actions/tests
         with:
           package: ${{matrix.dirname}}
-          type: ${{github.event.inputs.type}}
+          test-type: ${{github.event.inputs.test-type}}
+          setup-type: ${{github.event.inputs.setup-type}}
           remote: ${{github.event.inputs.remote}}
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs.linking-depth}}
