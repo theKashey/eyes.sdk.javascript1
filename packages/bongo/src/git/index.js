@@ -52,7 +52,7 @@ async function expandAutoCommitLogEntry(logEntry) {
   for (const dep of internalDeps) {
     let results = await gitLog(dep)
     // expand auto-commits
-    if (results.find(entry => isAutoCommit(entry))) {
+    if (results && results.find(entry => isAutoCommit(entry))) {
       const autoCommits = results.filter(entry => isAutoCommit(entry))
       for (const commit of autoCommits) {
         const moreResults = await expandAutoCommitLogEntry(commit)
