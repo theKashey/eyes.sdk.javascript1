@@ -47,7 +47,7 @@
     "@applitools/jsdom": false
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.0",
+    "@applitools/bongo": "^2.1.1",
     "@applitools/dom-snapshot": "4.5.12",
     "@applitools/test-server": "1.0.9",
     "@applitools/test-utils": "1.3.2",

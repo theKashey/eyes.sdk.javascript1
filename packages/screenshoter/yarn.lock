@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.0.3":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.1.0.tgz#ef36efe1fa3cc13b403342beae2e840c36f7bac4"
-  integrity sha512-GX0TjrU4v6pk0OyLd5fC3IOEHwgb+reUsNXnMmQeyudElC3hOvz7kVNEjJ81FkXBqiSS8zloFoDtuDBm/mr4mA==
+"@applitools/bongo@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.1.tgz#d2262e76f9128a6cf43a42877dcbfbef04f8f9fe"
+  integrity sha512-otu6SQ/BT8vAU3U930PVYsk3t0ivM8rULiLPF4ujn2SlGZGR64IoTU1dvGqshT38NhaoHZz6nFT3xYKKVWchTQ==
   dependencies:
     "@applitools/utils" "1.3.0"
     chalk "3.0.0"

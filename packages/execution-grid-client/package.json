@@ -63,7 +63,7 @@
     "yargs": "17.4.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.0",
+    "@applitools/bongo": "^2.1.1",
     "@types/mocha": "^9.1.1",
     "@types/node": "^17.0.31",
     "@types/node-fetch": "^2.6.1",
