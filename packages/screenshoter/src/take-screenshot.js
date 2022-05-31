@@ -63,7 +63,9 @@ async function takeScreenshot({
     if (!window && !driver.isNative) {
       await scrollIntoViewport({context: target.context, region: target.region, scroller: target.scroller, logger})
     }
-
+    if (fully && !target.region && target.scroller) {
+      await target.scroller.moveTo({x: 0, y: 0})
+    }
     const screenshot =
       fully && target.scroller
         ? await takeStitchedScreenshot({
