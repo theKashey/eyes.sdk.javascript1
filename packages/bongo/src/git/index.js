@@ -114,7 +114,13 @@ async function gitLog({
   const pkgName = packageName || require(path.join(cwd, 'package.json')).name
   const packagePath = getPackagePath(pkgName)
   const exclusions = `":(exclude,icase)../*/changelog.md" ":!../*/test/*"`
-  const command = `git log --oneline --grep ${pkgName}@${upperVersion} --invert-grep ${pkgName}@${lowerVersion}..${pkgName}@${upperVersion} -- ${packagePath} ${exclusions}`
+  const command = `git log --oneline --grep ${pkgName}@${upperVersion.replace(
+    /^\^/,
+    '',
+  )} --invert-grep ${pkgName}@${lowerVersion.replace(/^\^/, '')}..${pkgName}@${upperVersion.replace(
+    /^\^/,
+    '',
+  )} -- ${packagePath} ${exclusions}`
   const {stdout} = await pexec(command)
   const entries = stdout && stdout.split('\n').filter(entry => entry)
   if (!expandAutoCommitLogEntries) return entries

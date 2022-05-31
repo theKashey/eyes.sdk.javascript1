@@ -63,6 +63,17 @@ describe('git', () => {
     })
   })
   describe('log', () => {
+    it('should trim out carrot prefixes from version numbers', async () => {
+      const result = await gitLog({
+        packageName: '@applitools/types',
+        lowerVersion: '^1.0.23',
+        upperVersion: '^1.0.24',
+      })
+      assert.deepStrictEqual(result, [
+        '0767609bd [auto commit] @applitools/types: upgrade deps',
+        '35aa793f9 [api, types] add new ufg devices',
+      ])
+    })
     it('should get filtered commits for a package by a range of version numbers', async () => {
       const result = await gitLog({
         packageName: '@applitools/types',
