@@ -6,6 +6,12 @@
 
 
 
+## 2.5.22 - 2022/6/1
+
+### Features
+### Bug fixes
+- Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+
 ## 2.5.21 - 2022/5/27
 
 ### Features
