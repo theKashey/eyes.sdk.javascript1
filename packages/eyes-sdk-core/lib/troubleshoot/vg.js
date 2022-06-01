@@ -45,10 +45,7 @@ const getResource = () => {
     }),
   )
 
-  const sha256Hash = crypto
-    .createHash('sha256')
-    .update(content)
-    .digest('hex')
+  const sha256Hash = crypto.createHash('sha256').update(content).digest('hex')
 
   return {
     getSha256Hash: () => sha256Hash,

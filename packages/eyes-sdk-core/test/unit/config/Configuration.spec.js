@@ -499,12 +499,12 @@ describe('Configuration', () => {
     assert.strictEqual(config.getWaitBeforeScreenshots(), 24062019)
   })
 
-  it('Server url by default', async function() {
+  it('Server url by default', async function () {
     const configuration = new Configuration()
     assert.strictEqual(configuration.getServerUrl(), 'https://eyesapi.applitools.com')
   })
 
-  it('Bamboo env variables', async function() {
+  it('Bamboo env variables', async function () {
     process.env.bamboo_APPLITOOLS_API_KEY = 'test_APPLITOOLS_API_KEY'
     process.env.bamboo_APPLITOOLS_SERVER_URL = 'test_APPLITOOLS_SERVER_URL'
     process.env.bamboo_APPLITOOLS_BATCH_ID = 'test_APPLITOOLS_BATCH_ID'

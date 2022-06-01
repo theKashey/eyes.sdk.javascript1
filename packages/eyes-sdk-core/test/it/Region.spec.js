@@ -3,7 +3,7 @@
 const assert = require('assert')
 const {Region} = require('../../index')
 
-describe('Region', function() {
+describe('Region', function () {
   let driver
   before(() => {
     driver = {
@@ -12,7 +12,7 @@ describe('Region', function() {
     }
   })
 
-  it('toPersistedRegions', async function() {
+  it('toPersistedRegions', async function () {
     const region = new Region({left: 1, top: 2, width: 3, height: 4})
     const [{left, top, width, height}] = await region.toPersistedRegions(driver)
     assert.deepStrictEqual({left, top, width, height}, {left: 1, top: 2, width: 3, height: 4})

@@ -178,10 +178,14 @@ describe('transformer', () => {
         config: {rootFile: 'index.ts'},
         input: {
           'index.ts': `
-          class C1<T> {
-            constructor(arg: T) {}
-            prop1: T
-            method1(arg: T): void {}
+          class C1<T, U = bigint> {
+            constructor(arg: T)
+            constructor(arg: U)
+            constructor(arg: T | U) {}
+            prop1: T | U
+            method1(arg: T): void
+            method1(arg: U): void
+            method1(arg: T | U): void {}
           }
           export class C2 extends C1<boolean> {
             constructor(arg: number) {
@@ -226,10 +230,14 @@ describe('transformer', () => {
         config: {rootFile: 'index.ts'},
         input: {
           'index.ts': `
-          export class C1<T> {
-            constructor(arg: T) {}
-            prop1: T
-            method1(arg: T): void {}
+          export class C1<T, U = bigint> {
+            constructor(arg: T)
+            constructor(arg: U)
+            constructor(arg: T | U) {}
+            prop1: T | U
+            method1(arg: T): void
+            method1(arg: U): void
+            method1(arg: T | U): void {}
           }
           export class C2 extends C1<boolean> {
             constructor(arg: number) {

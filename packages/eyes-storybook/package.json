@@ -2,18 +2,34 @@
   "name": "@applitools/eyes-storybook",
   "version": "3.28.0",
   "description": "",
-  "engines": {
-    "node": ">=8.6.0"
+  "keywords": [
+    "applitools",
+    "testing",
+    "browser",
+    "grid",
+    "visual-testing",
+    "nodejs",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/eyes-storybook"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Applitools Team <team@applitools.com>",
+  "bin": {
+    "eyes-storybook": "./bin/eyes-storybook.js"
   },
   "files": [
     "src",
     "bin",
     "dist"
   ],
-  "bin": {
-    "eyes-storybook": "./bin/eyes-storybook.js"
-  },
   "scripts": {
+    "lint": "eslint '**/*.js'",
+    "build": "rollup -c rollup.config.js",
+    "build:heavy": "node scripts/bitmap.js",
     "test": "yarn build && yarn test:mocha && yarn lint",
     "test:versions": "yarn build && yarn test:e2e:versions && yarn lint",
     "test:mocha": "yarn test:unit && yarn test:it && yarn test:e2e",
@@ -22,9 +38,6 @@
     "test:e2e": "mocha --no-timeouts --trace-warnings 'test/e2e/*.e2e.test.js'",
     "test:e2e:versions": "npx mocha --no-timeouts --trace-warnings --require test/fixtures/storybook-versions/mochaHooks.js test/e2e/*.e2e.versions.test.js",
     "test:e2e:versions_local": "STORYBOOK_VERSION=latest npx mocha --no-timeouts --trace-warnings --require test/fixtures/storybook-versions/mochaHooks.js test/e2e/*.e2e.versions.test.js",
-    "build": "rollup -c rollup.config.js",
-    "build:heavy": "node scripts/bitmap.js",
-    "lint": "eslint '**/*.js'",
     "storybook": "start-storybook -c test/fixtures/appWithStorybook -p 9001 -s test/fixtures",
     "storybook:jslayout": "start-storybook -c test/fixtures/jsLayoutStorybookLocal -p 9001 -s test/fixtures",
     "storybook:csf": "yarn storybook:csf-service && start-storybook -c test/fixtures/storybookCSF/.storybook-temp -p 9001",
@@ -40,28 +53,17 @@
     "changelog:init": "git config changelog.format \"* %s [[%h]($(echo $npm_package_repository_url|cut -d+ -f2|cut -d. -f1-2)/commit/%H)]\"",
     "changelog:install": "sudo apt-get install git-extras",
     "gh:publish": "gh workflow run publish-storybook.yml --ref $(git rev-parse --abbrev-ref HEAD)",
+    "prepublish:setup": "echo 'setup is a no-op. Move along, nothing to see here.'",
+    "deps": "bongo deps",
     "postinstall": "node src/postinstall",
     "preversion": "bongo preversion --verifyPendingChanges",
     "version": "bongo version --withPendingChanges",
-    "postversion": "bongo postversion --skip-release-notification",
-    "deps": "bongo deps",
-    "prepublish:setup": "echo 'setup is a no-op. Move along, nothing to see here.'"
+    "postversion": "bongo postversion --skip-release-notification"
   },
-  "keywords": [
-    "applitools",
-    "testing",
-    "browser",
-    "grid",
-    "visual-testing",
-    "nodejs",
-    "javascript"
-  ],
-  "author": "Applitools Team <team@applitools.com>",
-  "license": "SEE LICENSE IN LICENSE",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
-    "directory": "packages/eyes-storybook"
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
   },
   "dependencies": {
     "@applitools/driver": "1.8.12",
@@ -115,9 +117,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "ua-parser-js": "^0.7.21"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
+  "engines": {
+    "node": ">=12.13.0"
   }
 }

@@ -68,7 +68,7 @@ describe('BatchInfo', () => {
     assert.deepStrictEqual(anotherBatch.getProperties(), properties)
   })
 
-  it('should use APPLITOOLS_BATCH_NOTIFY env variable', async function() {
+  it('should use APPLITOOLS_BATCH_NOTIFY env variable', async function () {
     process.env.APPLITOOLS_BATCH_NOTIFY = 'true'
     let batchInfo = new BatchInfo()
     assert.strictEqual(batchInfo.getNotifyOnCompletion(), true)

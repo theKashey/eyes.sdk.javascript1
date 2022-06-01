@@ -9,8 +9,8 @@
     "allowJs": true,
 
     "module": "commonjs",
-    "target": "es2017",
-    "noImplicitAny": true,
+    "target": "es2019",
+    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
     "preserveConstEnums": true,
     "downlevelIteration": true,
     "esModuleInterop": true,

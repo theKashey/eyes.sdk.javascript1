@@ -13,41 +13,45 @@
     "testing",
     "tests"
   ],
-  "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://applitools.com",
-  "author": {
-    "name": "Applitools Team",
-    "email": "team@applitools.com"
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
     "directory": "packages/eyes-sdk-core"
   },
-  "bugs": {
-    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
   },
-  "directories": {
-    "lib": "./lib",
-    "common": "./common",
-    "test": "./test"
-  },
-  "main": "./index.js",
-  "types": "./index.d.ts",
   "exports": {
     ".": {
       "types": "./index.d.ts",
       "browser": "./browser.js",
       "default": "./index.js"
-    }
+    },
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
   },
+  "main": "./index.js",
   "browser": {
     ".": "./browser.js",
     "tunnel": false
   },
+  "types": "./index.d.ts",
   "bin": {
     "eyes-check-network": "./bin/runCheckNetwork.js"
   },
+  "files": [
+    "bin",
+    "lib",
+    "index.js",
+    "browser.js",
+    "index.d.ts"
+  ],
   "scripts": {
     "lint": "eslint . --ext .js",
     "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
@@ -61,6 +65,11 @@
     "preversion": "bongo preversion --skip-verify-installed-versions",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
   },
   "dependencies": {
     "@applitools/dom-capture": "11.1.0",
@@ -86,27 +95,20 @@
     "@applitools/test-server": "^1.0.9",
     "@applitools/test-utils": "1.3.2",
     "@applitools/visual-grid-client": "15.12.34",
-    "assert-rejects": "1.0.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
-    "eslint": "^8.2.0",
+    "eslint": "^8.16.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^4.3.8",
-    "mocha": "^8.0.1",
-    "ncp": "^2.0.0",
+    "mocha": "^10.0.0",
     "nock": "^13.0.4",
     "png-async": "^0.9.4",
-    "prettier": "1.19.0",
-    "selenium-webdriver": "^4.0.0-rc-2"
+    "prettier": "2.6.2",
+    "selenium-webdriver": "^4.2.0"
   },
   "engines": {
-    "node": ">= 8.9.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
+    "node": ">=12.13.0"
   }
 }

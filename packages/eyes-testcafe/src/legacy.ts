@@ -35,7 +35,8 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
 ): LegacyTestCafeEyesConstructor<TDriver, TElement, TSelector> {
   return class TestCafeEyes
     extends Eyes<TDriver, TElement, TSelector>
-    implements LegacyTestCafeEyes<TDriver, TSelector> {
+    implements LegacyTestCafeEyes<TDriver, TSelector>
+  {
     private _testcafeConfig: TestCafeConfiguration
 
     constructor(runner?: api.EyesRunner, config?: api.ConfigurationPlain<TElement, TSelector>)

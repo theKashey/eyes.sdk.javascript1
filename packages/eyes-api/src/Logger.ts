@@ -101,6 +101,7 @@ export class Logger implements logger.Logger {
     this._logger.tag(name, value)
   }
 
+  /** @internal */
   extend(options?: logger.ExtendOptions): Logger
   extend(label?: string): Logger
   extend(optionsOrLabel?: logger.ExtendOptions | string): Logger {

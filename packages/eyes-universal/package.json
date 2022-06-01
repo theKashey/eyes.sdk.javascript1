@@ -25,14 +25,16 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "exports": {
+    ".": {
+      "default": "./dist/index.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
+  },
   "main": "./dist/index.js",
   "bin": {
     "eyes-universal": "./dist/cli.js"
-  },
-  "directories": {
-    "lib": "./src",
-    "example": "./example",
-    "test": "./test"
   },
   "files": [
     "dist"
@@ -53,6 +55,11 @@
     "preversion": "bongo preversion --verifyPendingChanges && yarn build && yarn build:zip && yarn build:tgz",
     "version": "yarn build && bongo version --withPendingChanges",
     "postversion": "bongo postversion"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
   },
   "dependencies": {
     "@applitools/execution-grid-client": "1.1.14",
@@ -88,24 +95,15 @@
     "typescript": "^4.6.4"
   },
   "engines": {
-    "node": ">=12.x"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
+    "node": ">=12.13.0"
   },
   "pkg": {
     "scripts": "./dist/cli.js",
     "outputPath": "./bin",
+    "targets": ["node14-linux-x64",  "node14-macos-x64", "node14-win-x64"],
+    "compress": "GZip",
     "assets": [
       "./node_modules/vm2/lib/setup-sandbox.js"
-    ],
-    "targets": [
-      "node14-linux-x64",
-      "node14-macos-x64",
-      "node14-win-x64"
-    ],
-    "compress": "GZip"
+    ]
   }
 }

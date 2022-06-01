@@ -142,7 +142,7 @@ export async function getCapabilities(driver: Driver): Promise<Record<string, an
     const getSessionDetailsCommand = new Protractor.Command('getSessionDetails')
     return await driver.schedule(getSessionDetailsCommand, '')
   } catch {
-    const capabilities = ((await driver.getCapabilities()) as any) as Map<string, any>
+    const capabilities = (await driver.getCapabilities()) as any as Map<string, any>
     return Array.from(capabilities.keys()).reduce((obj, key) => Object.assign(obj, {key: capabilities.get(key)}), {})
   }
 }

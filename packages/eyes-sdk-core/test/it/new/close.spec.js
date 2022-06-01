@@ -1,5 +1,4 @@
 const assert = require('assert')
-const assertRejects = require('assert-rejects')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {MockDriver, spec} = require('@applitools/driver/fake')
 const {generateScreenshot} = require('../../utils/FakeScreenshot')
@@ -39,6 +38,6 @@ describe('close', async () => {
   it('should throw on close', async () => {
     const eyes = await manager.openEyes({driver, config: {appName: 'App', testName: 'Test', serverUrl}})
     await eyes.check()
-    await assertRejects(eyes.close({throwErr: true}))
+    await assert.rejects(eyes.close({throwErr: true}))
   })
 })

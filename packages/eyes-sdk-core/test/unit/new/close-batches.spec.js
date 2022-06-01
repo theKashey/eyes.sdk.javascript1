@@ -24,10 +24,7 @@ describe('closeBatches', () => {
     const apiKey = '12345'
     const message = 'something went wrong'
 
-    const success = nock(serverUrl)
-      .delete(`/api/sessions/batches/888/close/bypointerid`)
-      .query({apiKey})
-      .reply(200)
+    const success = nock(serverUrl).delete(`/api/sessions/batches/888/close/bypointerid`).query({apiKey}).reply(200)
     const failed = nock(serverUrl)
       .delete(`/api/sessions/batches/999/close/bypointerid`)
       .query({apiKey})
@@ -50,10 +47,7 @@ describe('closeBatches', () => {
     const batchIds = ['123', '456']
 
     const scopes = batchIds.map(batchId => {
-      return nock(serverUrl)
-        .delete(`/api/sessions/batches/${batchId}/close/bypointerid`)
-        .query({apiKey})
-        .reply(200)
+      return nock(serverUrl).delete(`/api/sessions/batches/${batchId}/close/bypointerid`).query({apiKey}).reply(200)
     })
 
     await closeBatches({settings: {batchIds, serverUrl, apiKey}})

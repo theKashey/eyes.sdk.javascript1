@@ -1,4 +1,11 @@
 {
+  "root": true,
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "screenshots/",
+    "logs"
+  ],
   "env": {
     "commonjs": true,
     "es6": true,
@@ -6,22 +13,12 @@
     "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "extends": ["plugin:node/recommended"],
-  "plugins": ["prettier", "mocha-no-only", "node"],
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    "screenshots/",
-    "applitools.config.js",
-    "logs",
-    "tmp/",
-    "**/test/coverage/generic/"
-  ],
+  "plugins": ["prettier", "node", "mocha-no-only"],
   "rules": {
-    "prettier/prettier": ["error", {"allowParens": "avoid", "printWidth": 120}],
+    "prettier/prettier": ["error", {"arrowParens": "avoid", "printWidth": 120}],
     "no-process-exit": "off",
     "no-const-assign": "error",
     "no-this-before-super": "error",

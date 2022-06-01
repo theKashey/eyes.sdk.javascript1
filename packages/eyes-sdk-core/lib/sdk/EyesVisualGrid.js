@@ -96,22 +96,18 @@ class EyesVisualGrid extends EyesCore {
       this._configuration.addBrowser(vs.getWidth(), vs.getHeight(), 'chrome')
     }
 
-    const {
-      openEyes,
-      getResourceUrlsInCache,
-      getIosDevicesSizes,
-      getEmulatedDevicesSizes,
-    } = await this._runner.getVisualGridClientWithCache({
-      logger: this._logger,
-      agentId: this.getFullAgentId(),
-      apiKey: this._configuration.getApiKey(),
-      showLogs: this._configuration.getShowLogs(),
-      proxy: this._configuration.getProxy(),
-      autProxy: this._configuration.getAutProxy(),
-      serverUrl: this._configuration.getServerUrl(),
-      concurrency: this._runner.legacyConcurrency || this._configuration.getConcurrentSessions(),
-      testConcurrency: this._runner.testConcurrency,
-    })
+    const {openEyes, getResourceUrlsInCache, getIosDevicesSizes, getEmulatedDevicesSizes} =
+      await this._runner.getVisualGridClientWithCache({
+        logger: this._logger,
+        agentId: this.getFullAgentId(),
+        apiKey: this._configuration.getApiKey(),
+        showLogs: this._configuration.getShowLogs(),
+        proxy: this._configuration.getProxy(),
+        autProxy: this._configuration.getAutProxy(),
+        serverUrl: this._configuration.getServerUrl(),
+        concurrency: this._runner.legacyConcurrency || this._configuration.getConcurrentSessions(),
+        testConcurrency: this._runner.testConcurrency,
+      })
 
     if (this._configuration.getViewportSize()) {
       const vs = this._configuration.getViewportSize()

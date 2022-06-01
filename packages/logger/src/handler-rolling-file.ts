@@ -31,6 +31,7 @@ export function makeRollingFileHandler({
     logFiles.push(filepath)
     if (logFiles.length > maxFileNumber) {
       try {
+        // @ts-ignore - fs.rmSync is not available in node <= 14.14
         fs.rmSync(logFiles.shift(), {maxRetries: 3, retryDelay: 300})
       } catch (err) {}
     }

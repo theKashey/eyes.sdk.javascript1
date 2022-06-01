@@ -4,20 +4,20 @@ const assert = require('assert')
 
 const {PerformanceUtils} = require('../../../index')
 
-describe('PerformanceUtils', function() {
-  it('should stop timer and should return execution time', function() {
+describe('PerformanceUtils', function () {
+  it('should stop timer and should return execution time', function () {
     PerformanceUtils.start('test')
     const result = PerformanceUtils.end('test')
     assert.ok(result.time > 0)
   })
 
-  it('should stop timer and return execution time without name', function() {
+  it('should stop timer and return execution time without name', function () {
     const time = PerformanceUtils.start()
     const result = time.end()
     assert.ok(result.time > 0)
   })
 
-  it('should return execution time', function() {
+  it('should return execution time', function () {
     PerformanceUtils.start('test3')
     PerformanceUtils.end('test3')
 

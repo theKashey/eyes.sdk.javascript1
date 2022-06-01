@@ -15,22 +15,22 @@
     "tests",
     "testcafe"
   ],
-  "license": "SEE LICENSE IN LICENSE",
-  "author": {
-    "name": "Applitools Team",
-    "email": "team@applitools.com"
-  },
-  "files": [
-    "dist",
-    "types"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
     "directory": "packages/eyes-testcafe"
   },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com"
+  },
   "main": "./dist/index-legacy.js",
   "types": "./types/index-legacy.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "perf": "testcafe chrome:headless test/perf/perf.spec.js",
     "perf:full": "yarn perf && yarn perf -c 5",
@@ -82,32 +82,32 @@
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/test-server": "1.0.9",
     "@applitools/test-utils": "1.3.2",
-    "@types/yargs": "^17.0.10",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
-    "eslint": "^7.9.0",
-    "eslint-config-prettier": "^7.2.0",
+    "@types/node": "12",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-testcafe": "0.2.1",
     "husky": "^4.3.8",
-    "mocha": "^8.0.1",
-    "prettier": "^2.1.2",
-    "testcafe": "^1.18.1",
+    "mocha": "^10.0.0",
+    "prettier": "^2.6.2",
+    "testcafe": "^1.19.0",
     "testcafe-10": "npm:testcafe@^1.10.0",
     "testcafe-7": "npm:testcafe@1.7.1",
     "testcafe-8": "npm:testcafe@1.8.8",
     "testcafe-9": "npm:testcafe@1.9.4",
     "testcafe-browser-provider-browserstack": "^1.13.2-alpha.1",
-    "ts-node": "^10.4.0",
-    "ttypescript": "^1.5.12",
-    "typescript": "^4.5.4"
+    "ts-node": "^10.8.0",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.7.2"
   },
   "peerDependencies": {
     "testcafe": "^1.7.1"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=12.13.0"
   }
 }

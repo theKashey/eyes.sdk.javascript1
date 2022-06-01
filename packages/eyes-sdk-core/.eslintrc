@@ -1,4 +1,12 @@
 {
+  "root": true,
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "screenshots/",
+    "logs",
+    "tmp/"
+  ],
   "env": {
     "commonjs": true,
     "es6": true,
@@ -11,17 +19,8 @@
   },
   "extends": ["plugin:node/recommended"],
   "plugins": ["prettier", "mocha-no-only", "node"],
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    "screenshots/",
-    "applitools.config.js",
-    "logs",
-    "tmp/",
-    "**/test/coverage/generic/"
-  ],
   "rules": {
-    "prettier/prettier": ["error", {"allowParens": "avoid", "printWidth": 120}],
+    "prettier/prettier": ["error", {"arrowParens": "avoid", "printWidth": 120}],
     "no-process-exit": "off",
     "no-const-assign": "error",
     "no-this-before-super": "error",

@@ -103,7 +103,7 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
 export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element | null> {
   try {
     const root = parent ? transformShadowRoot(driver, parent) : driver
-    return await root.findElement(selector)
+    return await root.findElement(selector as Selenium.Locator)
   } catch (err) {
     if (err.name === 'NoSuchElementError') return null
     else throw err
@@ -111,7 +111,7 @@ export async function findElement(driver: Driver, selector: Selector, parent?: E
 }
 export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
   const root = parent ? transformShadowRoot(driver, parent) : driver
-  return root.findElements(selector)
+  return root.findElements(selector as Selenium.Locator)
 }
 export async function waitForSelector(
   driver: Driver,
@@ -120,7 +120,7 @@ export async function waitForSelector(
   options?: WaitOptions,
 ): Promise<Element | null> {
   if ((options?.state ?? 'exists') === 'exist') {
-    return driver.wait(Selenium.until.elementLocated(selector), options?.timeout)
+    return driver.wait(Selenium.until.elementLocated(selector as Selenium.Locator), options?.timeout)
   } else if (options?.state === 'visible') {
     const element = await findElement(driver, selector)
     return driver.wait(Selenium.until.elementIsVisible(element), options?.timeout)

@@ -459,9 +459,9 @@ function pexec(...args) {
 }
 
 function cachify(getterFunction, cacheRegardlessOfArgs = false) {
-  const cachedGetter = (function() {
+  const cachedGetter = (function () {
     const cache = {}
-    return function(...args) {
+    return function (...args) {
       let cacheKey = 'default'
       if (!cacheRegardlessOfArgs) {
         const [key] = args

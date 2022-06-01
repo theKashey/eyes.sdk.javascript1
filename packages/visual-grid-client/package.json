@@ -12,25 +12,46 @@
     "javascript"
   ],
   "homepage": "https://applitools.com",
-  "author": "Amit Zur <amit.zur@applitools.com>",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/applitools/eyes.sdk.javascript1.git",
     "directory": "packages/visual-grid-client"
   },
-  "bugs": {
-    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
-  },
-  "directories": {
-    "lib": "./src",
-    "test": "./test"
-  },
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Amit Zur <amit.zur@applitools.com>",
   "main": "src/visual-grid-client.js",
+  "browser": {
+    "@applitools/jsdom": false
+  },
   "files": [
     "src",
     "browser.js",
     "index.d.ts"
   ],
+  "scripts": {
+    "lint": "eslint . --ext .js",
+    "render": "node example/render.js",
+    "build:browser": "cd test/fixtures/test-app && yarn install --focused && yarn build",
+    "test": "yarn build:browser && yarn test:mocha",
+    "test:mocha": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.test.js\"",
+    "test:sanity": "mocha --no-timeouts 'test/!(browser||e2e)/**/*.test.js'",
+    "test:unit": "mocha --no-timeouts \"test/unit/**/*.test.js\"",
+    "test:it": "mocha --no-timeouts \"test/it/**/*.test.js\"",
+    "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
+    "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
+    "deps": "bongo deps",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
+  },
   "dependencies": {
     "@applitools/eyes-sdk-core": "13.6.23",
     "@applitools/functional-commons": "1.6.0",
@@ -42,9 +63,6 @@
     "chalk": "3.0.0",
     "postcss-value-parser": "4.1.0",
     "throat": "5.0.0"
-  },
-  "browser": {
-    "@applitools/jsdom": false
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.1",
@@ -73,29 +91,7 @@
     "typescript": "^3.9.2",
     "ua-parser-js": "^0.7.20"
   },
-  "scripts": {
-    "lint": "eslint . --ext .js",
-    "render": "node example/render.js",
-    "build:browser": "cd test/fixtures/test-app && yarn install --focused && yarn build",
-    "test": "yarn build:browser && yarn test:mocha",
-    "test:mocha": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.test.js\"",
-    "test:sanity": "mocha --no-timeouts 'test/!(browser||e2e)/**/*.test.js'",
-    "test:unit": "mocha --no-timeouts \"test/unit/**/*.test.js\"",
-    "test:it": "mocha --no-timeouts \"test/it/**/*.test.js\"",
-    "test:e2e": "mocha --no-timeouts \"test/e2e/**/*.test.js\"",
-    "test:browser": "mocha --no-timeouts 'test/browser/**/*.test.js'",
-    "deps": "bongo deps",
-    "preversion": "bongo preversion",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification"
-  },
-  "license": "SEE LICENSE IN LICENSE",
   "engines": {
-    "node": ">=8.9.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
+    "node": ">=12.13.0"
   }
 }

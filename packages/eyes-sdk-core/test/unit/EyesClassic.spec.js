@@ -1,7 +1,6 @@
 'use strict'
 
 const assert = require('assert')
-const assertRejects = require('assert-rejects')
 const {startFakeEyesServer} = require('@applitools/sdk-fake-eyes-server')
 const {MockDriver} = require('@applitools/driver/fake')
 const {EyesClassic} = require('../utils/FakeSDK')
@@ -29,7 +28,7 @@ describe('EyesClassic', () => {
       eyes.setMatchTimeout(0)
       await eyes.open(driver, 'FakeApp', 'FakeTest')
       await eyes.check()
-      await assertRejects(eyes.close(false), /^some error$/)
+      await assert.rejects(eyes.close(false), /^some error$/)
     })
   })
 

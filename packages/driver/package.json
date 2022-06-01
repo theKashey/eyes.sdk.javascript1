@@ -24,26 +24,26 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/index.js",
-      "types": "./types/index.d.ts"
+      "types": "./types/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./fake": {
-      "default": "./dist/fake/index.js",
-      "types": "./types/fake/index.d.ts"
+      "types": "./types/fake/index.d.ts",
+      "default": "./dist/fake/index.js"
     },
     "./debug": {
-      "default": "./dist/debug/index.js",
-      "types": "./types/debug/index.d.ts"
+      "types": "./types/debug/index.d.ts",
+      "default": "./dist/debug/index.js"
     },
     "./dist/*": "./dist/*.js",
     "./dist/fake": "./dist/fake/index.js",
     "./dist/debug": "./dist/debug/index.js",
     "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "typesVersions": {
     "*": {
       "fake": [
@@ -96,6 +96,6 @@
     "typescript": "^4.6.4"
   },
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">=12.13.0"
   }
 }

@@ -10,22 +10,22 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-playwright":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-protractor":
@@ -38,6 +38,7 @@ Apollo SDK:
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
     - Added support for drivers that return screenshots in jpeg format
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -65,6 +66,7 @@ Apollo SDK:
       Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -82,7 +84,7 @@ Apollo SDK:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-testcafe":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-nightwatch":
@@ -95,6 +97,7 @@ Apollo SDK:
     - |
       Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
     - Added support for drivers that return screenshots in jpeg format
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - |
       `runner.getAllTestResults` now aborts unclosed tests
@@ -114,7 +117,7 @@ Apollo SDK:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - Support `cy.eyesGetAllTestResults` in TypeScript
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
@@ -122,12 +125,13 @@ Apollo SDK:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-storybook":
   feature:
-    - 
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - 
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
+    - Dorp support for Node.js versions <=12
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates

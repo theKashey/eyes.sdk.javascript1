@@ -13,14 +13,14 @@ const {
 } = require('../../index')
 const {EyesFactory} = require('../utils/FakeSDK')
 
-describe('EyesFactory', function() {
-  it('should create EyesClassic by default', async function() {
+describe('EyesFactory', function () {
+  it('should create EyesClassic by default', async function () {
     const eyes = new EyesFactory()
     assert.ok(!eyes.isVisualGrid())
     assert.ok(eyes instanceof EyesClassic)
   })
 
-  it('should create EyesVisualGrid with VisualGridRunner', async function() {
+  it('should create EyesVisualGrid with VisualGridRunner', async function () {
     const eyes = new EyesFactory(new VisualGridRunner())
     assert.ok(eyes.isVisualGrid())
     assert.ok(eyes instanceof EyesVisualGrid)
@@ -38,7 +38,7 @@ describe('EyesFactory', function() {
     assert.ok(eyes instanceof EyesVisualGrid)
   })
 
-  it('set configuration from object', async function() {
+  it('set configuration from object', async function () {
     const eyes = new EyesFactory(new VisualGridRunner())
     const date = new Date()
     eyes.setConfiguration({

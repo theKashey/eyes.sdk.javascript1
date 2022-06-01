@@ -56,7 +56,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     await server.close()
   })
 
-  it('CheckWindow_UnwrappedDriver', async function() {
+  it('CheckWindow_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
 
@@ -69,7 +69,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckNestedFrame_UnwrappedDriver', async function() {
+  it('CheckNestedFrame_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
 
@@ -82,7 +82,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckRegionInsideFrameBySelector_UnwrappedDriver', async function() {
+  it('CheckRegionInsideFrameBySelector_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
     await driver.switchToFrame('frame1-2')
@@ -97,7 +97,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckRegionInsideFrameByElement_UnwrappedDriver', async function() {
+  it('CheckRegionInsideFrameByElement_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
     await driver.switchToFrame('frame1-2')
@@ -114,7 +114,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckFrameFully_UnwrappedDriver', async function() {
+  it('CheckFrameFully_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
     await driver.switchToFrame('frame1-2')
@@ -128,7 +128,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckCORSFrameRegionBySelector_UnwrappedDriver', async function() {
+  it('CheckCORSFrameRegionBySelector_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
     await driver.switchToFrame('frame1-cors')
@@ -142,7 +142,7 @@ describe('PreserveCheckSettingsFrameAfterCheck', () => {
     return eyes.close()
   })
 
-  it('CheckCORSFrameRegionByElement_UnwrappedDriver', async function() {
+  it('CheckCORSFrameRegionByElement_UnwrappedDriver', async function () {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     await driver.switchToFrame('frame1')
     await driver.switchToFrame('frame1-cors')

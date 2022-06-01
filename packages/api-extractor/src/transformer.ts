@@ -518,7 +518,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
         (isExtended && symbol.parent !== type.symbol) || // avoid re-declaration of properties from extended type
         symbol.getName() === 'prototype' ||
         isStripedBrandProperty(symbol.getName()) ||
-        isStripedDeclaration(symbol.declarations?.[symbol.declarations.length - 1])
+        (!(symbol.flags & ts.SymbolFlags.Method) && isStripedDeclaration(symbol.declarations?.[symbol.declarations.length - 1])) // method could have multiple overloads
       ) {
         continue
       }
@@ -562,10 +562,13 @@ export default function transformer(program: ts.Program, config: TransformerConf
 
   function createParameterDeclaration(options: {symbol: ts.Symbol; node?: ts.Node}): ts.ParameterDeclaration {
     const {symbol, node} = options
+
     const type = checker.getTypeOfSymbolAtLocation(
-      symbol.target && checker.getTypeOfSymbolAtLocation(symbol.target, node).default ? symbol.target : symbol,
+      // if symbol is generic and the declaration of the generic is a descendant of the current node, then get generic type, otherwise calculated type in context
+      symbol.target && ts.findAncestor(symbol.target.valueDeclaration, ancestorNode => ancestorNode === node) ? symbol.target : symbol,
       node,
     )
+
     const name = symbol.getName()
     const declaration = symbol.valueDeclaration as ts.ParameterDeclaration
 
@@ -676,7 +679,8 @@ export default function transformer(program: ts.Program, config: TransformerConf
     const propertyName = getPropertyName(symbol)
     const optionalToken = isOptional(symbol) ? ts.factory.createToken(ts.SyntaxKind.QuestionToken) : undefined
     const type = checker.getTypeOfSymbolAtLocation(
-      symbol.target && checker.getTypeOfSymbolAtLocation(symbol.target, node).default ? symbol.target : symbol,
+      // if symbol is generic and the declaration of the generic is a descendant of the current node, then get generic type, otherwise calculated type in context
+      symbol.target && ts.findAncestor(symbol.target.valueDeclaration, ancestorNode => ancestorNode === node) ? symbol.target : symbol,
       node,
     )
     const typeNode = createTypeNode({type, node})
@@ -757,6 +761,8 @@ export default function transformer(program: ts.Program, config: TransformerConf
     const optionalToken = isOptional(symbol) ? ts.factory.createToken(ts.SyntaxKind.QuestionToken) : undefined
 
     return signatures.flatMap<ts.MethodSignature | ts.MethodDeclaration>(signature => {
+      // skip striped overloads
+      if (isStripedDeclaration(signature.declaration)) return []
       const typeParameters = signature.getTypeParameters()?.map(typeParameter => createTypeParameterDeclaration({typeParameter, node}))
       const parameters = config.generateSyntheticOverloads
         ? createSyntheticParameterDeclarations({signature, node})

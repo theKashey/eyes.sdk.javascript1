@@ -32,11 +32,6 @@
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
-  "directories": {
-    "lib": "./lib",
-    "example": "./example",
-    "test": "./test"
-  },
   "files": [
     "dist",
     "commands",
@@ -69,11 +64,11 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.2.0",
-    "@applitools/eyes-sdk-core": "13.1.1",
-    "@applitools/types": "1.2.2",
-    "@applitools/utils": "1.2.13",
-    "@applitools/visual-grid-client": "15.10.1"
+    "@applitools/eyes-api": "1.4.1",
+    "@applitools/eyes-sdk-core": "13.6.23",
+    "@applitools/types": "1.4.3",
+    "@applitools/utils": "1.3.0",
+    "@applitools/visual-grid-client": "15.12.35"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.7",
@@ -81,32 +76,33 @@
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "2.3.18",
     "@applitools/sdk-shared": "0.9.11",
-    "@applitools/test-utils": "1.1.5",
+    "@applitools/test-utils": "1.3.2",
     "@types/nightwatch": "^1.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
-    "chromedriver": "^86.0.0",
-    "cucumber": "6.0.5",
-    "eslint": "^7.9.0",
-    "eslint-config-prettier": "^7.2.0",
+    "@types/node": "12",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "chromedriver": "^101.0.0",
+    "cucumber": "6.0.7",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "geckodriver": "^1.20.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "geckodriver": "^3.0.1",
     "husky": "^4.3.8",
-    "mocha": "^9.1.3",
+    "mocha": "^10.0.0",
     "nightwatch": "1.7.13",
     "nightwatch-api": "^3.0.2",
-    "prettier": "^2.1.2",
+    "prettier": "^2.6.2",
     "spec-xunit-file": "0.0.1-3",
-    "ts-node": "^10.4.0",
-    "ttypescript": "^1.5.12",
-    "typescript": "^4.5.1-rc"
+    "ts-node": "^10.8.0",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.7.2"
   },
   "peerDependencies": {
     "nightwatch": ">=1.3.4"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=12.13.0"
   }
 }

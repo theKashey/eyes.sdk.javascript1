@@ -8,8 +8,8 @@
   ],
   "scripts": {
     "lint": "eslint '**/*.js'",
-    "build": "node ./rollup/cli bundle --format json --format snippet",
-    "build:watch": "node ./rollup/cli watch --format json --format snippet",
+    "build": "node ./rollup/cli bundle --format snippet",
+    "build:watch": "node ./rollup/cli watch --format snippet",
     "test": "mocha --no-timeouts --require test/util/hook.js ./test/*.spec.js",
     "test:chrome": "mocha --no-timeouts --require test/util/hook.js --grep chrome ./test/*.spec.js",
     "test:ie": "mocha --no-timeouts --require test/util/hook.js --grep 'internet explorer' ./test/*.spec.js",
@@ -52,7 +52,7 @@
     "yargs": "^16.0.3"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=12.13.0"
   },
   "resolutions": {
     "chromedriver": "^98.0.0"

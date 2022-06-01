@@ -25,11 +25,16 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "exports": {
+    ".": {
+      "main": "./dist/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./dist/*": "./dist/*.js",
+    "./package.json": "./package.json"
+  },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
-  "directories": {
-    "lib": "./src"
-  },
   "files": [
     "dist",
     "types"
@@ -52,7 +57,7 @@
   "devDependencies": {
     "@applitools/bongo": "^2.1.1",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.7.8",
+    "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",
     "eslint": "^7.25.0",
@@ -67,6 +72,6 @@
     "typescript": "^4.6.4"
   },
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">=12.13.0"
   }
 }

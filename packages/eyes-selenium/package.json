@@ -33,11 +33,6 @@
   },
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
-  "directories": {
-    "lib": "./lib",
-    "example": "./example",
-    "test": "./test"
-  },
   "files": [
     "dist",
     "types"
@@ -78,27 +73,28 @@
     "@applitools/sdk-coverage-tests": "2.3.18",
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/test-utils": "1.3.2",
-    "@types/selenium-webdriver": "^4.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@types/node": "12",
+    "@types/selenium-webdriver": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "chromedriver": "^87.0.4",
-    "eslint": "^7.9.0",
-    "eslint-config-prettier": "^7.2.0",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^4.3.8",
-    "mocha": "^9.1.2",
-    "prettier": "^2.1.2",
-    "selenium-webdriver": "^4.1.1",
+    "mocha": "^10.0.0",
+    "prettier": "^2.6.2",
+    "selenium-webdriver": "^4.2.0",
     "spec-xunit-file": "0.0.1-3",
-    "ttypescript": "^1.5.12",
-    "typescript": "^4.5.4"
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.7.2"
   },
   "peerDependencies": {
     "selenium-webdriver": ">=3.6.0"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=12.13.0"
   }
 }

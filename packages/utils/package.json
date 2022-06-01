@@ -25,16 +25,18 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "main": "./dist/index.js",
-  "browser": "./dist/browser.js",
-  "types": "./types/index.d.ts",
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
       "browser": "./dist/browser.js",
       "default": "./dist/index.js"
-    }
+    },
+    "./dist/*": "./dist/*.js",
+    "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "browser": "./dist/browser.js",
+  "types": "./types/index.d.ts",
   "files": [
     "dist",
     "types"
