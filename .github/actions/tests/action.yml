@@ -50,7 +50,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
-        yarn install
+        yarn install --ignore-engines
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm run deps --if-present --script-shell $COMSPEC
