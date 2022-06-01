@@ -128,7 +128,7 @@ export function makeSocket(ws: WebSocket): Socket {
 
   function command(name: string, fn: (payload?: any) => any): () => void {
     return on(name, async (payload, key) => {
-      console.log('[COMMAND]', name, payload)
+      console.log('[COMMAND]', name, JSON.stringify(payload, null, 4))
       try {
         const result = await fn(payload)
         emit({name, key}, {result})
