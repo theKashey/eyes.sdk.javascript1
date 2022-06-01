@@ -12,7 +12,6 @@ export function makeSDK<TDriver, TContext, TElement, TSelector>(options: {
 export {Core} from '@applitools/types'
 
 export const TestResultsFormatter: any
-export const ConfigUtils: any
 
 export function checkSpecDriver<TDriver, TContext, TElement, TSelector>(options: {
   spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>,

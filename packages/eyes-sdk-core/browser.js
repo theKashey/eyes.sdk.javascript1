@@ -32,7 +32,6 @@ exports.SimplePropertyHandler = require('./lib/handler/SimplePropertyHandler')
 
 // utils
 exports.ArgumentGuard = require('./lib/utils/ArgumentGuard')
-exports.ConfigUtils = require('./lib/utils/ConfigUtils')
 exports.DateTimeUtils = require('./lib/utils/DateTimeUtils')
 exports.GeneralUtils = require('./lib/utils/GeneralUtils')
 exports.TypeUtils = require('./lib/utils/TypeUtils')

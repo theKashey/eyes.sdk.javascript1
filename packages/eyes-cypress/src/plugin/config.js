@@ -1,11 +1,12 @@
 'use strict';
-const {configParams, ConfigUtils, TypeUtils} = require('@applitools/visual-grid-client');
+const utils = require('@applitools/utils');
+const {configParams, TypeUtils} = require('@applitools/visual-grid-client');
 const DEFAULT_TEST_CONCURRENCY = 5;
 const uuid = require('uuid');
 
 function makeConfig() {
-  const config = ConfigUtils.getConfig({
-    configParams: [
+  const config = utils.getConfig({
+    params: [
       ...configParams,
       'failCypressOnDiff',
       'tapDirPath',

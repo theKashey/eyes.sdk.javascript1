@@ -26,10 +26,14 @@
     "email": "team@applitools.com"
   },
   "main": "./dist/index.js",
+  "browser": "./dist/browser.js",
   "types": "./types/index.d.ts",
-  "directories": {
-    "test": "./test",
-    "src": "./src"
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "browser": "./dist/browser.js",
+      "default": "./dist/index.js"
+    }
   },
   "files": [
     "dist",
@@ -38,6 +42,7 @@
   "scripts": {
     "lint": "eslint '**/*.ts'",
     "build": "tsc",
+    "test": "mocha ./test/**/*.spec.ts --no-timeouts -r ts-node/register",
     "deps": "bongo deps",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",
@@ -50,18 +55,21 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/bongo": "^2.1.1",
-    "@types/node": "^14.14.7",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "eslint": "^7.13.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "@applitools/bongo": "^2.1.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "12",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^4.3.8",
+    "mocha": "^10.0.0",
     "prettier": "^2.1.2",
-    "typescript": "^4.0.5"
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
   },
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">=12.13.0"
   }
 }

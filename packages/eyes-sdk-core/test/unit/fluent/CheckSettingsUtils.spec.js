@@ -1,5 +1,6 @@
 const assert = require('assert')
 const utils = require('@applitools/utils')
+const {makeLogger} = require('@applitools/logger')
 const {Driver} = require('@applitools/driver')
 const {MockDriver, spec} = require('@applitools/driver/fake')
 const {Configuration} = require('../../../index')
@@ -434,7 +435,7 @@ describe('CheckSettingsUtils', () => {
       mockDriver = new MockDriver()
       mockDriver.mockElement('custom selector', {rect: region1})
       mockDriver.mockElement('custom selector', {rect: region2})
-      driver = await new Driver({spec, driver: mockDriver}).init()
+      driver = await new Driver({spec, driver: mockDriver, logger: makeLogger()}).init()
     })
 
     it('handle region by coordinates', async () => {

@@ -1,6 +1,7 @@
 'use strict';
 const pick = require('lodash.pick');
-const {ConfigUtils, GeneralUtils} = require('@applitools/eyes-sdk-core');
+const utils = require('@applitools/utils');
+const {GeneralUtils} = require('@applitools/eyes-sdk-core');
 const {resolve} = require('path');
 const {deprecationWarning} = GeneralUtils;
 const uniq = require('./uniq');
@@ -9,7 +10,7 @@ function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = [
   const configPath = argv.conf ? resolve(process.cwd(), argv.conf) : undefined;
   const defaultConfigParams = Object.keys(defaultConfig);
   const configParams = uniq(defaultConfigParams.concat(externalConfigParams));
-  const config = ConfigUtils.getConfig({configPath, configParams});
+  const config = utils.config.getConfig({path: configPath, params: configParams, strict: true});
   const argvConfig = pick(argv, configParams);
   const result = Object.assign({}, defaultConfig, config, argvConfig);
 

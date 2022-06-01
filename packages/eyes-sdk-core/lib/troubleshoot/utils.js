@@ -5,10 +5,10 @@
 const {URL} = require('url')
 const {exec} = require('child_process')
 const {promisify: p} = require('util')
-const {ServerConnector} = require('../../index')
-const {ConfigUtils, Configuration} = require('../../index')
+const {ServerConnector, Configuration} = require('../../index')
+const utils = require('@applitools/utils')
 
-const _userConfig = ConfigUtils.getConfig({configParams: ['apiKey', 'serverUrl', 'proxy']})
+const _userConfig = utils.config.getConfig({params: ['apiKey', 'serverUrl', 'proxy']})
 const _configuration = new Configuration(_userConfig)
 
 const Utils = {

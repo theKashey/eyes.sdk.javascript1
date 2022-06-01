@@ -4,6 +4,7 @@ const Axios = require('axios')
 const {Driver} = require('@applitools/driver')
 const {MockDriver, spec} = require('@applitools/driver/fake')
 const takeDomCapture = require('../../lib/utils/takeDomCapture')
+const {makeLogger} = require('@applitools/logger')
 
 describe('takeDomCapture', () => {
   let logger = {log: () => {}, warn: () => {}, error: () => {}, verbose: () => {}}
@@ -55,7 +56,7 @@ describe('takeDomCapture', () => {
         children: [{selector: 'frame2-2', frame: true, isCORS: true}],
       },
     ])
-    driver = new Driver({spec, driver: mock})
+    driver = new Driver({spec, driver: mock, logger: makeLogger()})
     await driver.init()
   })
 

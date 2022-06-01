@@ -4,7 +4,7 @@ import * as api from '@applitools/eyes-api'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as spec from './spec-driver'
-import {ConfigUtils, TestResultsFormatter} from '@applitools/eyes-sdk-core'
+import {TestResultsFormatter} from '@applitools/eyes-sdk-core'
 
 export interface LegacyTestCafeEyes<TDriver, TSelector> {
   open(options: {t: TDriver} & TestCafeConfiguration): Promise<TDriver>
@@ -49,7 +49,10 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
       configOrRunner?: api.ConfigurationPlain<TElement, TSelector> | api.EyesRunner,
     ) {
       if (utils.types.isNull(runnerOrConfigOrOptions) || utils.types.has(runnerOrConfigOrOptions, 'configPath')) {
-        const testcafeConfig = ConfigUtils.getConfig({configPath: runnerOrConfigOrOptions?.configPath})
+        const testcafeConfig = utils.config.getConfig({
+          paths: runnerOrConfigOrOptions?.configPath && [runnerOrConfigOrOptions.configPath],
+          params: ['failTestcafeOnDiff'],
+        })
         const runner =
           runnerOrConfigOrOptions?.runner ??
           new api.VisualGridRunner({testConcurrency: testcafeConfig.concurrency ?? testcafeConfig.testConcurrency ?? 1})
@@ -112,13 +115,11 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
     }
 
     async close(throwErr = true): Promise<api.TestResults> {
-      return super.close(throwErr && getFailTestcafeOnDiff(this._testcafeConfig))
+      return super.close(throwErr && this._testcafeConfig.failTestcafeOnDiff)
     }
 
     async waitForResults(throwErr = true) {
-      const resultsSummary = await this.runner.getAllTestResults(
-        throwErr && getFailTestcafeOnDiff(this._testcafeConfig),
-      )
+      const resultsSummary = await this.runner.getAllTestResults(throwErr && this._testcafeConfig.failTestcafeOnDiff)
       if (this._testcafeConfig?.tapDirPath) {
         const results = resultsSummary.getAllResults().map(r => r.getTestResults())
         const includeSubTests = false
@@ -129,23 +130,6 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
       return resultsSummary
     }
   }
-}
-
-function getFailTestcafeOnDiff(_testcafeConfig?: TestCafeConfiguration): boolean {
-  // NOTE for 'failTestcafeOnDiff':
-  // There are two optional ways to determine the value of 'failTestcafeOnDiff'
-  // 1. via config file (or path)
-  // 2. via env variable
-  if (utils.general.isDefined(process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF)) {
-    // verifying it's not null or undefined and use it as boolean
-    return String(process.env.APPLITOOLS_FAIL_TESTCAFE_ON_DIFF).toLowerCase() === 'true'
-  }
-  if (_testcafeConfig && utils.general.isDefined(_testcafeConfig.failTestcafeOnDiff)) {
-    // verifying it's not null or undefined and use it as boolean
-    return String(_testcafeConfig.failTestcafeOnDiff).toLowerCase() === 'true'
-  }
-  // The default value of 'failTestcafeOnDiff' should be true, so in case value was not set at all...
-  return true
 }
 
 type RegionReference<TSelector> = api.RegionPlain | TSelector | {selector: TSelector}

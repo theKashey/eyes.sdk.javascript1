@@ -1,5 +1,19 @@
 /* eslint {"@typescript-eslint/ban-types": ["error", {"types": {"Function": false}}]} */
 
+export function isNotDefined(value: any) {
+  return (
+    isNull(value) ||
+    !isString(value) ||
+    value === '' ||
+    value.toLowerCase() === 'null' ||
+    value.toLowerCase() === 'undefined'
+  )
+}
+
+export function isDefined(value: any) {
+  return !isNotDefined(value)
+}
+
 export function isNull(value: any): value is null | undefined {
   return value == null
 }
