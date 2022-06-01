@@ -47,10 +47,11 @@ runs:
         echo "registry=https://registry.npmjs.org/" >> .npmrc
         echo "always-auth=true" >> .npmrc
         if [ "${{runner.os}}" = "Windows" ]; then npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"; fi
+        yarn config set ignore-engines true
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
-        yarn install --ignore-engines
+        yarn install
         npm run upgrade:framework --if-present
         if [ "${{runner.os}}" = "Windows" ]
         then

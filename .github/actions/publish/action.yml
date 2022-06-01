@@ -38,7 +38,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Installing and updating dependencies"
-        yarn install --ignore-engines
+        yarn install
         npm run deps --if-present -- --commit
         echo "::endgroup::"
 
