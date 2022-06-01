@@ -10,7 +10,7 @@
 
 ### Features
 ### Bug fixes
-- Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+- Improve request logging for commands to STDOUT, so the full object depth is visible
 
 ## 2.5.21 - 2022/5/27
 
