@@ -116,11 +116,13 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
     }
 
     async close(throwErr = true): Promise<api.TestResults> {
-      return super.close(throwErr && this._testcafeConfig.failTestcafeOnDiff)
+      return super.close(throwErr && (this._testcafeConfig?.failTestcafeOnDiff ?? true))
     }
 
     async waitForResults(throwErr = true) {
-      const resultsSummary = await this.runner.getAllTestResults(throwErr && this._testcafeConfig.failTestcafeOnDiff)
+      const resultsSummary = await this.runner.getAllTestResults(
+        throwErr && (this._testcafeConfig?.failTestcafeOnDiff ?? true),
+      )
       if (this._testcafeConfig?.tapDirPath) {
         const results = resultsSummary.getAllResults().map(r => r.getTestResults())
         const includeSubTests = false
