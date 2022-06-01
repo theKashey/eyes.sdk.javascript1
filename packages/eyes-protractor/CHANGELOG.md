@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+
+
+
+
+
+
+## 1.20.0 - 2022/6/1
+
+### Features
+- Support UFG for native mobile
+- `runner.getAllTestResults` returns the corresponding UFG browser/device configuration for each test. This is available as `runner.getAllTestResults()[i].browserInfo`.
+- Support iPhone SE `IosDeviceName.iPhone_SE` and iPhone 8 Plus `IosDeviceName.iPhone_8_Plus` iOS devices
+- Support Galaxy S22 `DeviceName.Galaxy_S22` emulation device
+- Added support for drivers that return screenshots in jpeg format
+- Dorp support for Node.js versions <=12
+### Bug fixes
+- `runner.getAllTestResults` now aborts unclosed tests
+- `runner.getAllTestResults` now returns all results, including aborted tests
+- `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
+- accept ios and android lowercase as driver platformName capability when using custom grid
+- Fixed check region fully in classic execution when using CSS stitching
+- Support data urls in iframes
+- Fixed handling of navigation bar size on various devices
+- Allow running with self-signed certificates
+- Fixed bug in native apps when screenshot of the element was taken only for the small visible part of the element
+- Fixed bug when navigation bar was presented in screenshot on Android 12
+- Fixed `CheckSetting`'s `fully` being overridden by `Configuration`'s `forceFullPageScreenshot`
+- Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+- Improve error message when failed to set viewport size
+- Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+
 ## 1.19.2 - 2021/12/23
 
 - updated to @applitools/eyes-sdk-core@12.24.9 (from 12.24.6)
