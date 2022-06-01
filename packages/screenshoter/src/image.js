@@ -45,12 +45,12 @@ function makeImage(data) {
       const croppedSize = utils.geometry.size(transforms.crop || size)
       const scaledSize = utils.geometry.scale(croppedSize, transforms.scale)
       const rotatedSize = utils.geometry.rotate(scaledSize, transforms.rotate)
-      return utils.geometry.round(rotatedSize)
+      return utils.geometry.ceil(rotatedSize)
     },
     get unscaledSize() {
       const croppedSize = utils.geometry.size(transforms.crop || size)
       const rotatedSize = utils.geometry.rotate(croppedSize, transforms.rotate)
-      return utils.geometry.round(rotatedSize)
+      return utils.geometry.ceil(rotatedSize)
     },
     get rawSize() {
       return size

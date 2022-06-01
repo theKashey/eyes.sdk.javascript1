@@ -40,6 +40,7 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
       else if (type === 'ios') await sanitizeIOSStatusBar(screenshot.image)
     }
     const actual = await screenshot.image.toObject()
+
     const expected = await makeImage(`./test/fixtures/${type}/${tag}.png`).toObject()
     assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
   } catch (err) {
@@ -51,7 +52,7 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
   }
 }
 
-exports.makeDriver = async function makeDriver({type, app, orientation, logger}) {
+exports.makeDriver = async function makeDriver({type, app, orientation, logger, deviceName, platformVersion}) {
   const workerId = process.env.MOCHA_WORKER_ID ? Number(process.env.MOCHA_WORKER_ID) : 0
   console.log(`makeDriver called for worker #${process.env.MOCHA_WORKER_ID}`, workerId)
   const androidEmulatorIds = process.env.ANDROID_EMULATOR_UDID
@@ -87,25 +88,26 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         isHeadless: true,
         browserName: app === 'chrome' ? app : '',
         app: apps[app || type],
-        deviceName: 'Google Pixel 3a XL',
+        deviceName: deviceName || 'Google Pixel 3a XL',
         platformName: 'Android',
-        platformVersion: '10.0',
+        platformVersion: platformVersion || '10.0',
         automationName: 'uiautomator2',
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
     'android-sauce': {
-      url: 'https://ondemand.saucelabs.com:443/wd/hub',
+      url: 'https://ondemand.us-west-1.saucelabs.com/wd/hub',
       capabilities: {
         name: 'Android screenshoter',
         appiumVersion: '1.20.2',
         username: process.env.SAUCE_USERNAME,
         accessKey: process.env.SAUCE_ACCESS_KEY,
         browserName: app === 'chrome' ? app : '',
-        app: apps[app || type] || app,
-        deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+        app: app === 'chrome' ? undefined : apps[app || type] || app,
+        deviceName: deviceName || 'Google Pixel 3a XL GoogleAPI Emulator',
         platformName: 'Android',
-        platformVersion: '10.0',
+        platformVersion: platformVersion || '10.0',
+        extendedDebugging: true,
         deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
@@ -123,9 +125,9 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         isHeadless: true,
         browserName: app === 'safari' ? app : '',
         app: apps[app || type] || (app !== 'safari' ? app : undefined),
-        deviceName: 'iPhone 12',
+        deviceName: deviceName || 'iPhone 12',
         platformName: 'iOS',
-        platformVersion: '14.5',
+        platformVersion: platformVersion || '14.5',
         automationName: 'XCUITest',
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
@@ -139,9 +141,9 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger})
         accessKey: process.env.SAUCE_ACCESS_KEY,
         browserName: app === 'safari' ? app : '',
         app: apps[app || type] || (app !== 'safari' ? app : undefined),
-        deviceName: 'iPhone 12 Simulator',
+        deviceName: deviceName || 'iPhone 12 Simulator',
         platformName: 'iOS',
-        platformVersion: '14.5',
+        platformVersion: platformVersion || '14.5',
         deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },

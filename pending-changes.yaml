@@ -12,32 +12,32 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-playwright":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-protractor":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-puppeteer":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-testcafe":
   feature:
     - 
@@ -47,7 +47,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-cypress":
   feature:
     - Dorp support for Node.js versions <=12
@@ -55,7 +55,6 @@ Apollo SDK:
     - Support `cy.eyesGetAllTestResults` in TypeScript
     - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
     - Improve error message when failed to set viewport size
-    - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
 "@applitools/eyes-storybook":
   feature:
     - Dorp support for Node.js versions <=12
@@ -75,6 +74,7 @@ Apollo SDK:
     - Fixed bug when navigation bar was presented in screenshot on Android 12
     - Added support for drivers that return screenshots in jpeg format
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+    - Fix rounding error of image size when scaling introduces fractions
 eyes-browser-extension:
   feature:
     - 
