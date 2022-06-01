@@ -11,6 +11,13 @@
 
 
 
+## 1.17.0 - 2022/6/1
+
+### Features
+- Dorp support for Node.js versions <=12
+### Bug fixes
+- Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+
 ## 1.16.2 - 2022/5/27
 
 ### Features
