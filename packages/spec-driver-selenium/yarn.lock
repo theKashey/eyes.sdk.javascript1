@@ -39,28 +39,28 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.1.tgz#ac014aaf71abf829dd5ec7dfac3ffdb709490a25"
-  integrity sha512-HgVsvVmk3G9VCysOmpd/20IIZ8opbT/fADbkvBhD/MWydbtXV0XUuzfcNZTumvfcaNDHeRsZEt09AC3kM17GDg==
+"@applitools/test-utils@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.2.tgz#42af7c2be07d58a67076189741ea1c995d0f14f1"
+  integrity sha512-UrZFungxZ02rss/f3NaYS6coxEof65kdUnuI0psHeDCwGOogsoHzPDKmqxhDJaRNni8L4+Mhh/AKUFwn0H0zJg==
   dependencies:
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.3.2.tgz#f5eda3cf879d30013b7bdbfd66137dc906ebdc5d"
-  integrity sha512-nfLjrkSRSqx890SIktXVaRhviWNDj64OdT757XxDjtqMmY9FiTJtTR52USsct8WbYXjM9PugSWDwT2fFSm63yg==
-
-"@applitools/utils@1.2.14":
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.14.tgz#9e6b3a2b992e7c6e1a9f4447f8ac2b48b6037a2e"
-  integrity sha512-pnul7WuGuVScqm8jyHJQgBP3QcApzWC4u/RjZkWxFSFVVapVJsnuBENbs0aAOMeYtxqRvUWDG5MyyjMZIpEDxw==
+"@applitools/types@1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.4.tgz#3accb0e0f9d5fc4dd7401a4c7e4559f7e9724b3a"
+  integrity sha512-c7/7AExJwPZBHEnaMk3+vA+b7V+m5pQjIe1r4sMr1BFDOlFZMWr2bG9bLV9bNDkfGkV3hD3S5k/Nh+BMJ2YvOA==
 
 "@applitools/utils@1.3.0":
   version "1.3.0"
   resolved "https://registry.npmjs.org/@applitools/utils/-/utils-1.3.0.tgz#9220935483ac5c8c85a66b0abe1a3956b4694acc"
   integrity sha512-CfWFAEZCcbjLSVu8/bTUxFwRL+Z+bsIfgQZ0l4XYBJkbeuVVxAk0u2QdXBC14LI+zTpRZNw0R/PSZ/NrfIe6uw==
+
+"@applitools/utils@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.1.tgz#cc0e0572295f1d72e0721d4a460f29d89f4b15c3"
+  integrity sha512-5WtACfROmwnfFbLrhXy2Ff/7NFc9wfi6tchPrdCJ8jIHerIh3+w6Gwe/LechQuEyFjxFU55AKJ+/QEkpQ8ie/A==
 
 "@babel/code-frame@^7.0.0":
   version "7.16.0"
