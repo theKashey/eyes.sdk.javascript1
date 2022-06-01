@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-sdk-core",
-  "version": "13.6.24",
+  "version": "13.6.25",
   "description": "The core components of Eyes JavaScript SDK",
   "keywords": [
     "applitools",
@@ -75,7 +75,7 @@
     "@applitools/dom-capture": "11.1.0",
     "@applitools/dom-snapshot": "4.5.12",
     "@applitools/driver": "1.8.14",
-    "@applitools/execution-grid-client": "1.1.14",
+    "@applitools/execution-grid-client": "1.1.15",
     "@applitools/isomorphic-fetch": "3.0.0",
     "@applitools/logger": "1.1.6",
     "@applitools/screenshoter": "3.3.24",

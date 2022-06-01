@@ -6,6 +6,13 @@
 
 
 
+## 4.59.0 - 2022/6/1
+
+### Features
+- Dorp support for Node.js versions <=12
+### Bug fixes
+- Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+
 ## 4.58.5 - 2022/5/27
 
 ### Features
