@@ -49,13 +49,13 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.2.3.tgz#60157639d3e6e4983178ca2422dee533f71d589b"
   integrity sha512-R2fxDEeZ4STKIj6kz5W41qkGdgqKlISaGe4CZ9AC7qNRx+fzwTX4Pg8FIBg20U1eJwf0EwNnBBZvoOZM6ufnEw==
 
-"@applitools/spec-driver-webdriverio@1.2.9":
-  version "1.2.9"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.9.tgz#8e47222469da239e215dc09fd3787a64238d951c"
-  integrity sha512-j1jWV/9qswYc/lY9CL1uiUpomzJQOnBGan9Og/J0MH0V+1zcp62z/gWdHPCN46wkhKB1ZYvHVMeWgjuxqmKaow==
+"@applitools/spec-driver-webdriverio@1.2.10":
+  version "1.2.10"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.10.tgz#273618769bdfff71535866bfc68fe2261f3e3fc1"
+  integrity sha512-NY6GCFUbnRzpqkSxgLOL7qNtM3xlWYPKQaJx+wziHm4ppXKdPMDqjMZdrnv4upOqzMJpifwPovx30RlManXueA==
   dependencies:
-    "@applitools/types" "1.4.0"
-    "@applitools/utils" "1.2.14"
+    "@applitools/types" "1.4.4"
+    "@applitools/utils" "1.3.1"
 
 "@applitools/test-utils@1.0.10":
   version "1.0.10"
@@ -73,20 +73,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.0.tgz#9de5fcfa59c3e2b14bc5560da8bd92afd3078513"
-  integrity sha512-oyoAYJyW7C8YNhGKcoCWD67EtOtl3+DZJxe4fr93C/WDnwDE6c4I8u1e15tsGWb3ho79GM0AyoEvejDOVbvr8g==
-
 "@applitools/types@1.4.4":
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.4.tgz#3accb0e0f9d5fc4dd7401a4c7e4559f7e9724b3a"
   integrity sha512-c7/7AExJwPZBHEnaMk3+vA+b7V+m5pQjIe1r4sMr1BFDOlFZMWr2bG9bLV9bNDkfGkV3hD3S5k/Nh+BMJ2YvOA==
-
-"@applitools/utils@1.2.14":
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.2.14.tgz#9e6b3a2b992e7c6e1a9f4447f8ac2b48b6037a2e"
-  integrity sha512-pnul7WuGuVScqm8jyHJQgBP3QcApzWC4u/RjZkWxFSFVVapVJsnuBENbs0aAOMeYtxqRvUWDG5MyyjMZIpEDxw==
 
 "@applitools/utils@1.3.0":
   version "1.3.0"
