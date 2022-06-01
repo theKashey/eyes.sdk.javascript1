@@ -144,7 +144,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     let symbol = type.aliasSymbol ?? type.symbol
     if (!symbol) return false
     while (symbol.parent) symbol = symbol.parent
-    if (symbol.getName() === '__global') {
+    if (symbol.getName() === '__global' || symbol.getName() === 'Buffer') {
       return true
     } else if (symbol.flags & ts.SymbolFlags.ValueModule) {
       const namespaceName = symbol.getName()
