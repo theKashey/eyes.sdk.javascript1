@@ -52,13 +52,13 @@ runs:
 
         echo "::group::Installing and updating dependencies"
         yarn install
-        npm run upgrade:framework --if-present
         if [ "${{runner.os}}" = "Windows" ]
         then
           npm run deps --if-present --script-shell $COMSPEC
         else
           npm run deps --if-present
         fi
+        npm run upgrade:framework --if-present
         echo "::endgroup::"
 
         if [ ! -z "${{inputs.links}}" ]
