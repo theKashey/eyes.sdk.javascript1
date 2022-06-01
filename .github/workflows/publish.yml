@@ -178,7 +178,7 @@ jobs:
       SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
       SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   driver:
-    needs: [setup, types, utils, snippets]
+    needs: [setup, types, utils, logger, snippets]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
