@@ -37,6 +37,7 @@
     "test": "mocha ./test/**/*.spec.ts --no-timeouts -r ts-node/register",
     "setup": "yarn playwright:setup",
     "playwright:setup": "sudo npx playwright install-deps",
+    "upgrade:framework": "if [ ! -z $APPLITOOLS_PLAYWRIGHT_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile playwright@$APPLITOOLS_PLAYWRIGHT_VERSION; echo \"$packagejson\" > package.json; fi",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='spec-playwright' -f links='types utils test-utils'",
     "gh:publish": "gh workflow run publish-spec-playwright.yml --ref $(git rev-parse --abbrev-ref HEAD)",

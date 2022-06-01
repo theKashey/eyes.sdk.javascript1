@@ -45,9 +45,15 @@ jobs:
     needs: [verify]
     strategy:
       matrix:
-        node-version: [12, 14, 16]
+        include: 
+          - node-version: 12
+            framework-version: 13.7
+          - node-version: 14
+          - node-version: 16
     name: 'Test (node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
+    env:
+      APPLITOOLS_PUPPETEER_VERSION: ${{matrix.framework-version}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
