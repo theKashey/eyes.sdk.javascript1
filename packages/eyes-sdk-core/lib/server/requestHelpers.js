@@ -1,6 +1,5 @@
 const getTunnelAgentFromProxy = require('./getTunnelAgentFromProxy')
 
-const DateTimeUtils = require('../utils/DateTimeUtils')
 const TypeUtils = require('../utils/TypeUtils')
 const GeneralUtils = require('../utils/GeneralUtils')
 const EyesError = require('../errors/EyesError')
@@ -87,7 +86,7 @@ function configureAxios({axiosConfig, configuration, agentId, logger}) {
   if (!axiosConfig.isPollingRequest) {
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT_VERSION] = '2'
     axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_EXPECT] = '202+location'
-    axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_DATE] = DateTimeUtils.toRfc1123DateTime(axiosConfig.timestamp)
+    axiosConfig.headers[CUSTOM_HEADER_NAMES.EYES_DATE] = new Date(axiosConfig.timestamp).toUTCString()
   }
   // ---
 }
@@ -169,7 +168,7 @@ async function startPollingRequest({url, delay, originalConfig, axios}) {
         method: 'DELETE', // TODO should be changed to GET when Eyes server will be updated to 10.9
         url: response.headers.location,
         headers: {
-          [CUSTOM_HEADER_NAMES.EYES_DATE]: DateTimeUtils.toRfc1123DateTime(),
+          [CUSTOM_HEADER_NAMES.EYES_DATE]: new Date().toUTCString(),
         },
         originalRequestConfig: originalConfig,
       }

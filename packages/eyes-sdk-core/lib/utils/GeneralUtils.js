@@ -1,10 +1,6 @@
-'use strict'
-
-const merge = require('deepmerge')
 const {exec} = require('child_process')
 const {promisify} = require('util')
 const TypeUtils = require('./TypeUtils')
-const DateTimeUtils = require('./DateTimeUtils')
 const chalk = require('chalk')
 const {URL} = require('url')
 
@@ -167,22 +163,6 @@ function toPlain(object, exclude = [], rename = {}) {
 }
 
 /**
- * Merge two objects x and y deeply, returning a new merged object with the elements from both x and y.
- * If an element at the same key is present for both x and y, the value from y will appear in the result.
- * Merging creates a new object, so that neither x or y are be modified.
- * @see package 'deepmerge'
- *
- * @template TFirst
- * @template TSecond
- * @param {TFirst} target
- * @param {TSecond} source
- * @return {TFirst|TSecond}
- */
-function mergeDeep(target, source) {
-  return merge(target, source, {isMergeableObject: TypeUtils.isPlainObject})
-}
-
-/**
  * Generate GUID
  *
  * @return {string}
@@ -222,48 +202,6 @@ function sleep(ms) {
 }
 
 /**
- * Convert a Date object to a ISO-8601 date string
- *
- * @deprecated Use {@link DateTimeUtils.toISO8601DateTime} instead
- * @param {Date} [date] - Date which will be converted
- * @return {string} - string formatted as ISO-8601 (yyyy-MM-dd'T'HH:mm:ss'Z')
- */
-function toISO8601DateTime(date) {
-  return DateTimeUtils.toISO8601DateTime(date)
-}
-
-/**
- * Convert a Date object to a RFC-1123 date string
- *
- * @deprecated Use {@link DateTimeUtils.toRfc1123DateTime} instead
- * @param {Date} [date] - Date which will be converted
- * @return {string} - string formatted as RFC-1123 (E, dd MMM yyyy HH:mm:ss 'GMT')
- */
-function toRfc1123DateTime(date) {
-  return DateTimeUtils.toRfc1123DateTime(date)
-}
-
-/**
- * @deprecated Use {@link DateTimeUtils.toLogFileDateTime} instead
- * @param {Date} [date] - Date which will be converted
- * @return {string} - string formatted as RFC-1123 (yyyy_mm_dd__HH_MM_ss_l)
- */
-function toLogFileDateTime(date) {
-  return DateTimeUtils.toLogFileDateTime(date)
-}
-
-/**
- * Creates {@link Date} instance from an ISO 8601 formatted string.
- *
- * @deprecated Use {@link DateTimeUtils.fromISO8601DateTime} instead
- * @param {string} dateTime - An ISO 8601 formatted string.
- * @return {Date} - A {@link Date} instance representing the given date and time.
- */
-function fromISO8601DateTime(dateTime) {
-  return DateTimeUtils.fromISO8601DateTime(dateTime)
-}
-
-/**
  * Simple method that decode JSON Web Tokens
  *
  * @param {string} token
@@ -274,46 +212,6 @@ function jwtDecode(token) {
   payloadSeg += new Array(5 - (payloadSeg.length % 4)).join('=')
   payloadSeg = payloadSeg.replace(/-/g, '+').replace(/_/g, '/')
   return JSON.parse(Buffer.from(payloadSeg, 'base64').toString())
-}
-
-/**
- * Cartesian product of arrays
- *
- * @param {...([]|Object)} arrays - Variable number of arrays of n elements
- * @return {Array<Array<[]>>} - Product of arrays as an array of X arrays of N elements,
- *   where X is the product of the input arrays' lengths
- */
-function cartesianProduct(...arrays) {
-  const getArrayOf = a => (Array.isArray(a) ? a : [a])
-  const prod2 = (a, b) =>
-    getArrayOf(b)
-      .map(e1 => a.map(e2 => [e1, ...e2]))
-      .reduce((arr, e) => arr.concat(e), [])
-  const prod = (a, ...rest) => (rest.length > 0 ? prod(prod2(a, rest.pop()), ...rest) : a)
-  return prod([[]], ...arrays)
-}
-
-/**
- * Get a property of the object by a path string
- *
- * @param {object} object - The object to query.
- * @param {string} path - The path of a property (example: "foo.bar.baz" ).
- * @return {*|undefined} - The value of the given property or `undefined` if the property is not exists.
- */
-function getPropertyByPath(object, path) {
-  if (!object || !/^([a-zA-Z0-9-_.]+\.)*[a-zA-Z0-9-_.]+$/.test(path)) {
-    return undefined // TODO: may be we can throw an error if path is given in wrong format
-  }
-
-  let val = object
-  for (const key of path.split('.')) {
-    val = typeof val === 'object' ? val[key] : undefined
-    if (val === undefined) {
-      return undefined
-    }
-  }
-
-  return val
 }
 
 /**
@@ -421,19 +319,6 @@ function cleanStringForJSON(str) {
   return sb
 }
 
-function isFeatureFlagOn(featureName) {
-  const envValue = getEnvValue(featureName)
-  return (
-    envValue === '1' ||
-    envValue === 'true' ||
-    (envValue && envValue !== '0' && envValue !== 'false' && envValue !== 'undefined')
-  )
-}
-
-function isFeatureFlagOff(featureName) {
-  return !isFeatureFlagOn(featureName)
-}
-
 /**
  * @template T
  * @param {PromiseLike<T>} promise
@@ -501,22 +386,13 @@ module.exports = {
   stringifySingle,
   toString,
   toPlain,
-  mergeDeep,
   guid,
   randomAlphanumeric,
   sleep,
-  toISO8601DateTime,
-  toRfc1123DateTime,
-  toLogFileDateTime,
-  fromISO8601DateTime,
   jwtDecode,
-  cartesianProduct,
-  getPropertyByPath,
   getEnvValue,
   backwardCompatible,
   cleanStringForJSON,
-  isFeatureFlagOn,
-  isFeatureFlagOff,
   presult,
   pexec,
   cachify,

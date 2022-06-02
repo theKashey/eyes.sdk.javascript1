@@ -1,7 +1,6 @@
 'use strict'
 
 const GeneralUtils = require('../utils/GeneralUtils')
-const DateTimeUtils = require('../utils/DateTimeUtils')
 
 const Annotations = require('./Annotations')
 const Image = require('./Image')
@@ -29,7 +28,7 @@ class ExpectedAppOutput {
     }
 
     if (occurredAt && !(occurredAt instanceof Date)) {
-      occurredAt = DateTimeUtils.fromISO8601DateTime(occurredAt)
+      occurredAt = new Date(occurredAt)
     }
 
     this._tag = tag

@@ -32,7 +32,11 @@
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
-  "browser": "./dist/browser.js",
+  "browser": {
+    ".": "./dist/browser.js",
+    "./dist/handler-file.js": false,
+    "./dist/handler-rolling-file.js": false
+  },
   "types": "./types/index.d.ts",
   "files": [
     "dist",

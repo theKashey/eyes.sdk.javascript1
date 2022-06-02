@@ -1,7 +1,6 @@
 'use strict'
 
 const GeneralUtils = require('../utils/GeneralUtils')
-const DateTimeUtils = require('../utils/DateTimeUtils')
 
 const ImageMatchSettings = require('./ImageMatchSettings')
 const Image = require('./Image')
@@ -47,7 +46,7 @@ class ActualAppOutput {
     }
 
     if (occurredAt && !(occurredAt instanceof Date)) {
-      occurredAt = DateTimeUtils.fromISO8601DateTime(occurredAt)
+      occurredAt = new Date(occurredAt)
     }
 
     this._image = image

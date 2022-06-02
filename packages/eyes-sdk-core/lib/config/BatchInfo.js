@@ -1,7 +1,6 @@
 const utils = require('@applitools/utils')
 const GeneralUtils = require('../utils/GeneralUtils')
 const TypeUtils = require('../utils/TypeUtils')
-const DateTimeUtils = require('../utils/DateTimeUtils')
 
 /**
  * @typedef BatchInfoObject
@@ -68,7 +67,7 @@ class BatchInfo {
 
     if (startedAt && !(startedAt instanceof Date)) {
       utils.guard.isString(startedAt, {name: 'startedAt', strict: false})
-      startedAt = DateTimeUtils.fromISO8601DateTime(startedAt)
+      startedAt = new Date(startedAt)
     }
 
     this._id = id || GeneralUtils.getEnvValue('BATCH_ID')

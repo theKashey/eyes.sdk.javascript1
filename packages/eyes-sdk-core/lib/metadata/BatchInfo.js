@@ -1,7 +1,6 @@
 'use strict'
 
 const GeneralUtils = require('../utils/GeneralUtils')
-const DateTimeUtils = require('../utils/DateTimeUtils')
 
 class BatchInfo {
   /**
@@ -13,7 +12,7 @@ class BatchInfo {
    */
   constructor({id, name, startedAt, properties} = {}) {
     if (startedAt && !(startedAt instanceof Date)) {
-      startedAt = DateTimeUtils.fromISO8601DateTime(startedAt)
+      startedAt = new Date(startedAt)
     }
 
     this._id = id

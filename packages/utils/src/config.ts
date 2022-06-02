@@ -41,7 +41,7 @@ export function getConfig({
   params.forEach(param => {
     const value = general.getEnvValue(param.replace(/(.)([A-Z])/g, '$1_$2').toUpperCase())
     if (!types.isNotDefined(value)) {
-      config[param] = Number(value) || value === 'true' ? true : value === 'false' ? false : value
+      config[param] = Number(value) || (value === 'true' ? true : value === 'false' ? false : value)
     }
   })
 
