@@ -6,6 +6,12 @@
 
 
 
+## 2.6.1 - 2022/6/2
+
+### Features
+### Bug fixes
+- Fix rounding error of image size when scaling introduces fractions
+
 ## 2.6.0 - 2022/6/1
 
 ### Features

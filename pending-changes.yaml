@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fix rounding error of image size when scaling introduces fractions
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
