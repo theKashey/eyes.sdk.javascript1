@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 3.29.0 - 2022/6/2
+
+### Features
+- Dorp support for Node.js versions <=12
+### Bug fixes
+
 ## 3.28.0 - 2022/5/26
 
 ### Features
