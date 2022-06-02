@@ -8,7 +8,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "main": "index.js",
-  "types": "./eyes-index.d.ts",
+  "types": "./index.d.ts",
   "bin": {
     "eyes-setup": "./bin/eyes-setup.js"
   },
@@ -18,7 +18,7 @@
     "bin",
     "index.js",
     "commands.js",
-    "eyes-index.d.ts"
+    "index.d.ts"
   ],
   "scripts": {
     "lint": "eslint \"**/*.js\"",

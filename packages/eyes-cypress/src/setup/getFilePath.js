@@ -6,12 +6,12 @@ function getFilePath(type, cypressConfig, cwd) {
   let filePath = {
     plugins: join('cypress', 'plugins', 'index.js'),
     support: join('cypress', 'support', 'index.js'),
-    typeScript: join('cypress', 'support', 'eyes-index.d.ts'),
+    typeScript: join('cypress', 'support', 'index.d.ts'),
   }[type];
 
   if (type === 'typeScript' && cypressConfig && cypressConfig[`supportFile`]) {
     const supportDir = dirname(cypressConfig[`supportFile`]);
-    filePath = resolve(supportDir, 'eyes-index.d.ts');
+    filePath = resolve(supportDir, 'index.d.ts');
   }
 
   filePath = (cypressConfig && cypressConfig[`${type}File`]) || filePath;

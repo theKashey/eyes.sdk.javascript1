@@ -74,7 +74,7 @@ describe('tap file', () => {
     const packageJsonPath = path.resolve(targetTestAppPath, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
     process.chdir(cwd);
-    const latestCypressVersion = (await pexec('npm view cypress version')).stdout.trim();
+    const latestCypressVersion = '9.7.0'; //(await pexec('npm view cypress version')).stdout.trim();
     packageJson.devDependencies['cypress'] = latestCypressVersion;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     process.chdir(targetTestAppPath);

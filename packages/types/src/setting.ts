@@ -74,6 +74,7 @@ export type CheckSettings<TElement, TSelector> = MatchSettings<RegionReference<T
     hooks?: {beforeCaptureScreenshot: string}
     renderId?: string
     variationGroupId?: string
+    waitBeforeCapture?: number
     timeout?: number
   }
 

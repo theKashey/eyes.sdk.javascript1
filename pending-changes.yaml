@@ -50,6 +50,7 @@ Apollo SDK:
     - Fix rounding error of image size when scaling introduces fractions
 "@applitools/eyes-cypress":
   feature:
+    - Improve type definitions
     - Dorp support for Node.js versions <=12
   bug-fix:
     - Support `cy.eyesGetAllTestResults` in TypeScript

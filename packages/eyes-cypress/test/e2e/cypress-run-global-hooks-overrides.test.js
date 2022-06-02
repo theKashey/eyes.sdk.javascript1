@@ -35,8 +35,10 @@ describe('global hooks override', () => {
     const packageJsonPath = path.resolve(targetTestAppPath, 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
     process.chdir(cwd);
-    const latestCypressVersion = (await pexec('npm view cypress version')).stdout.trim();
-    packageJson.devDependencies['cypress'] = latestCypressVersion;
+    // const latestCypressVersion = (await pexec('npm view cypress version')).stdout.trim();
+
+    //cypress 10.0 intruduced a few changes, therefore, we currently use major version 9
+    packageJson.devDependencies['cypress'] = '9.7.0';
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     process.chdir(targetTestAppPath);
     await pexec(`npm install`, {

@@ -1,11 +1,12 @@
 {
+  "include": ["integration/typescript.spec.ts"],
   "compilerOptions": {
     "target": "es6",
+    "moduleResolution": "node",
     "lib": ["es6", "dom"],
     "types": ["cypress", "../../../.."],
     "noImplicitAny": true,
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["integration/typescript.spec.ts"]
 }

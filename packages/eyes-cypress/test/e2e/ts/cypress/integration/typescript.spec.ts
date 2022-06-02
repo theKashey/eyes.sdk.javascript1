@@ -1,9 +1,8 @@
-type Url = string
-const testName: string = 'Cypress typescript test'
-describe(testName, () => {
+const testName = 'Cypress typescript test'
 
+describe(testName, () => {
   beforeEach(() => {
-    const url: Url = 'https://applitools.com/helloworld'
+    const url = 'https://applitools.com/helloworld'
     cy.visit(url)
   })
 

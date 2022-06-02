@@ -17,7 +17,7 @@ describe('eyes-setup script', () => {
   const supportFilePath = resolve(fixturesPath, 'cypress/support/index-bla-commands.js');
   const origSupportFileContent = readFileSync(supportFilePath).toString();
 
-  const typescriptFilePath = resolve(fixturesPath, 'cypress/support/eyes-index.d.ts');
+  const typescriptFilePath = resolve(fixturesPath, 'cypress/support/index.d.ts');
 
   before(() => {
     cwd = process.cwd();

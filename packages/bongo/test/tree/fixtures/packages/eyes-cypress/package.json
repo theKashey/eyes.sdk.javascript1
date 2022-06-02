@@ -33,9 +33,9 @@
     "bin",
     "index.js",
     "commands.js",
-    "eyes-index.d.ts"
+    "index.d.ts"
   ],
-  "types": "./eyes-index.d.ts",
+  "types": "./index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },

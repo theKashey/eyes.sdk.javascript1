@@ -42,7 +42,7 @@ describe('handle batchId property', () => {
   });
 
   it('works with batchId from env var with global hooks', async () => {
-    await pexec(`npm install cypress@latest`);
+    await pexec(`npm install cypress@9`);
     process.env.APPLITOOLS_BATCH_ID = 'batchId1234';
     try {
       await pexec(
@@ -59,7 +59,7 @@ describe('handle batchId property', () => {
     }
   });
   it('works with batchId from config file with global hooks', async () => {
-    await pexec(`npm install cypress@latest`);
+    await pexec(`npm install cypress@9`);
     const config = {...applitoolsConfig, batchId: 'batchId123456'};
     fs.writeFileSync(
       `${targetTestAppPath}/applitools.config.js`,
