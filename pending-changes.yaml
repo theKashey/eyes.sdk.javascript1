@@ -58,7 +58,7 @@ Apollo SDK:
     - Improve error message when failed to set viewport size
 "@applitools/eyes-storybook":
   feature:
-    - Dorp support for Node.js versions <=12
+    - 
   bug-fix:
     - 
 "@applitools/eyes-webdriverio5-service":
