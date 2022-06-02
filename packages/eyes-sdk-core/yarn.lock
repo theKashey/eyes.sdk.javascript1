@@ -77,6 +77,19 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
+"@applitools/execution-grid-client@1.1.16":
+  version "1.1.16"
+  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.16.tgz#c10acc00b332ed9ac20b565974e7bd0cce0905f3"
+  integrity sha512-tsOkox3L7BSTSpZG8ywIwAjvPWDHvvVA7SBDq6Oswq11fydNxwhus0kxncWswXBbaaiAwlUTQ5y2TG0ViVEQeA==
+  dependencies:
+    "@applitools/logger" "1.1.8"
+    "@applitools/utils" "1.3.3"
+    abort-controller "3.0.0"
+    node-fetch "2.6.7"
+    proxy-agent "5.0.0"
+    raw-body "2.5.1"
+    yargs "17.4.1"
+
 "@applitools/eyes-sdk-core@13.6.25":
   version "13.6.25"
   resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.25.tgz#9e628a54d3b324fed6c8cd2faa7e3604a9e4067e"
