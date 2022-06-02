@@ -9,6 +9,12 @@
 
 
 
+## 1.11.1 - 2022/6/2
+
+### Features
+### Bug fixes
+- Fix rounding error of image size when scaling introduces fractions
+
 ## 1.11.0 - 2022/6/1
 
 ### Features

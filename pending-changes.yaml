@@ -47,7 +47,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fix rounding error of image size when scaling introduces fractions
+    - 
 "@applitools/eyes-cypress":
   feature:
     - Improve type definitions
