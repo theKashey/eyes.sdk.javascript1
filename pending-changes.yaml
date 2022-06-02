@@ -50,12 +50,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-cypress":
   feature:
-    - Improve type definitions
-    - Dorp support for Node.js versions <=12
+    - 
   bug-fix:
-    - Support `cy.eyesGetAllTestResults` in TypeScript
-    - Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
-    - Improve error message when failed to set viewport size
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 

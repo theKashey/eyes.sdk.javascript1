@@ -8,6 +8,16 @@
 
 
 
+## 3.26.1 - 2022/6/2
+
+### Features
+- Improve type definitions
+- Dorp support for Node.js versions <=12
+### Bug fixes
+- Support `cy.eyesGetAllTestResults` in TypeScript
+- Set EyesExceptions (such as new test, diffs exception and failed test exception) to exception property in TestResultsSummary
+- Improve error message when failed to set viewport size
+
 ## 3.26.0 - 2022/5/19
 
 ### Features
