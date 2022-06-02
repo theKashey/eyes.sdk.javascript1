@@ -44,14 +44,14 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.8.15":
-  version "1.8.15"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.15.tgz#dfdd1b3395b8ad06347feb13667fa362d3baa076"
-  integrity sha512-uTKmj/YoHUNJXim9wC+FBBiMwtwk4972ZkDJ3cnZE8ItkwkFWtItDp7qXfSEwycfDGIIwseBAA+NbwWCqviQbg==
+"@applitools/driver@1.8.16":
+  version "1.8.16"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.8.16.tgz#9295f645304bfb66d9afed1ebfb05d9fe1aedc20"
+  integrity sha512-gEB6eFFBeLBvBL/sylX5uN1qNa9Fr43CoDPawQwH8dTYdTHlDlR62qnW9vJxaqu7pk2fMuy0GOj/LNF4OXsXVA==
   dependencies:
     "@applitools/logger" "1.1.8"
     "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.4.4"
+    "@applitools/types" "1.4.5"
     "@applitools/utils" "1.3.3"
 
 "@applitools/execution-grid-client@1.1.16":
@@ -67,20 +67,20 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.6.28":
-  version "13.6.28"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.28.tgz#d22a83deabb3b158e350e674550b5b6e71ccffb4"
-  integrity sha512-baTxI09LwDW66umRKgDz2XQFC1COSAMAtfja0+fiwJ/7WwOEPve7le2LqAU4Hf0P6EMBQeIm9n/xj9++c6/OIA==
+"@applitools/eyes-sdk-core@13.6.29":
+  version "13.6.29"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.29.tgz#6b4aceb17123a7b7238f1f798be6a72d008eccbd"
+  integrity sha512-mP2uyRtITaklfwd+8y/8Ag5Ruc1epVEp3a0MRToQKS4izhmFrzeDyVWbO2MIdfRb+VnBbQsREdkomh8jg1tQXw==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.5.12"
-    "@applitools/driver" "1.8.15"
+    "@applitools/driver" "1.8.16"
     "@applitools/execution-grid-client" "1.1.16"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.1.8"
     "@applitools/screenshoter" "3.3.26"
     "@applitools/snippets" "2.2.3"
-    "@applitools/types" "1.4.4"
+    "@applitools/types" "1.4.5"
     "@applitools/utils" "1.3.3"
     axios "0.26.0"
     chalk "3.0.0"
@@ -175,12 +175,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.2.3.tgz#60157639d3e6e4983178ca2422dee533f71d589b"
   integrity sha512-R2fxDEeZ4STKIj6kz5W41qkGdgqKlISaGe4CZ9AC7qNRx+fzwTX4Pg8FIBg20U1eJwf0EwNnBBZvoOZM6ufnEw==
 
-"@applitools/test-server@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.9.tgz#6ded0141cc398de5e96ec484aee86b64b697a023"
-  integrity sha512-pFMGqif/5hNOzRqQBKQXK+/0823wWKhVCPndf1PLYPijob2wg/SMYNLB0XNzR9mJaTQx0rc7MNm+ic0mGBDbYA==
+"@applitools/test-server@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.0.10.tgz#b7050312a994dd75c17e9136e83194644e99b4e6"
+  integrity sha512-Qiw4ZJtXyigwO9zvRzTIXtSjV5OcShUS75sLseIzORVbdtiQ2wLufvnbc2rWbwjx/TEsYNtxIYEQinJWD3r1mA==
   dependencies:
-    "@applitools/utils" "1.3.0"
+    "@applitools/utils" "1.3.3"
     chalk "3.0.0"
     cookie-parser "1.4.5"
     cors "2.8.5"
@@ -197,10 +197,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.4.4":
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.4.tgz#3accb0e0f9d5fc4dd7401a4c7e4559f7e9724b3a"
-  integrity sha512-c7/7AExJwPZBHEnaMk3+vA+b7V+m5pQjIe1r4sMr1BFDOlFZMWr2bG9bLV9bNDkfGkV3hD3S5k/Nh+BMJ2YvOA==
+"@applitools/types@1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.4.5.tgz#a59dcf8ed3ba494dfba4927fc51db3c1c9930da9"
+  integrity sha512-uZ6/fj+Y9BpmOIdfQcy49d2yu1Yhnbv7tz08+wkUErboTY0vZ81yWmMf6tfWp2OPe2KrFVuenZLX1zIxs6fKDg==
 
 "@applitools/utils@1.3.0":
   version "1.3.0"
