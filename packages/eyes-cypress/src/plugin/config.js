@@ -5,7 +5,7 @@ const DEFAULT_TEST_CONCURRENCY = 5;
 const uuid = require('uuid');
 
 function makeConfig() {
-  const config = utils.getConfig({
+  const config = utils.config.getConfig({
     params: [
       ...configParams,
       'failCypressOnDiff',

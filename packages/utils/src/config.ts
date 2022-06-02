@@ -28,7 +28,10 @@ export function getConfig({
   let config: Record<string, any> = {}
   if (priorityPath) {
     try {
-      config = require(priorityPath)
+      const moduleCache = require.cache[priorityPath]
+      delete require.cache[priorityPath]
+      config = {...config, ...require(priorityPath)}
+      require.cache[priorityPath] = moduleCache
     } catch (error) {
       logger.error(`An error occurred while loading configuration file (${priorityPath}):`, error)
       if (strict) throw error
