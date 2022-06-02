@@ -8,6 +8,12 @@
 
 
 
+## 5.35.1 - 2022/6/2
+
+### Features
+### Bug fixes
+- Fix rounding error of image size when scaling introduces fractions
+
 ## 5.35.0 - 2022/6/1
 
 ### Features
