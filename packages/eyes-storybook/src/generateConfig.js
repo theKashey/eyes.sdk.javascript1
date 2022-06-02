@@ -7,10 +7,10 @@ const {deprecationWarning} = GeneralUtils;
 const uniq = require('./uniq');
 
 function generateConfig({argv = {}, defaultConfig = {}, externalConfigParams = []}) {
-  const configPath = argv.conf ? resolve(process.cwd(), argv.conf) : undefined;
   const defaultConfigParams = Object.keys(defaultConfig);
+  const configPaths = argv.conf ? [resolve(process.cwd(), argv.conf)] : undefined;
   const configParams = uniq(defaultConfigParams.concat(externalConfigParams));
-  const config = utils.config.getConfig({path: configPath, params: configParams, strict: true});
+  const config = utils.config.getConfig({paths: configPaths, params: configParams});
   const argvConfig = pick(argv, configParams);
   const result = Object.assign({}, defaultConfig, config, argvConfig);
 

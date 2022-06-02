@@ -10,7 +10,7 @@ function isInvalidAccessibility(accessibility = []) {
   const err = []
   const typeMsg = `Valid accessibilityType values are: ${accessibilityTypes.join(', ')}`
   for (const acc of accObjects) {
-    if (!accessibilityTypes.includes(acc.accessibilityType)) {
+    if (acc.accessibilityType && !accessibilityTypes.includes(acc.accessibilityType)) {
       err.push(
         `The region ${JSON.stringify(acc)} has an invalid accessibilityType of: ${
           acc.accessibilityType
