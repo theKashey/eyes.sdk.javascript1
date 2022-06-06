@@ -1,6 +1,6 @@
 {
   "name": "@applitools/utils",
-  "version": "1.3.3",
+  "version": "1.3.5",
   "keywords": [
     "applitools",
     "eyes",
@@ -57,7 +57,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/bongo": "^2.1.0",
+    "@applitools/bongo": "^2.1.3",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^5.27.0",

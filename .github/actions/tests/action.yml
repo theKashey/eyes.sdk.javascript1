@@ -32,10 +32,14 @@ inputs:
     description: report level
     type: string
     default: sandbox
+  shell:
+    description: shell to use
+    type: string
+    default: bash
 runs:
   using: composite
   steps:
-    - shell: bash
+    - shell: ${{inputs.shell}}
       working-directory: ./packages/${{inputs.package}}
       env:
         APPLITOOLS_TEST_REMOTE: ${{inputs.remote}}

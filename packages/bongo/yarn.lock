@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.1.tgz#d2262e76f9128a6cf43a42877dcbfbef04f8f9fe"
-  integrity sha512-otu6SQ/BT8vAU3U930PVYsk3t0ivM8rULiLPF4ujn2SlGZGR64IoTU1dvGqshT38NhaoHZz6nFT3xYKKVWchTQ==
+"@applitools/bongo@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.1.3.tgz#7f3a61f4697a4a3e076ee323875e4c1f9a578750"
+  integrity sha512-XWH9JuFDFE8VF8WGzxXTUyukpBeYyOGwFHv+ov3LWMl4KwL3yiQ8ynTPOX+5iIGIyc00P2V7OM5gyO3guYLQ+g==
   dependencies:
-    "@applitools/utils" "1.3.0"
+    "@applitools/utils" "1.3.4"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -16,10 +16,15 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/utils@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@applitools/utils/-/utils-1.3.0.tgz#9220935483ac5c8c85a66b0abe1a3956b4694acc"
-  integrity sha512-CfWFAEZCcbjLSVu8/bTUxFwRL+Z+bsIfgQZ0l4XYBJkbeuVVxAk0u2QdXBC14LI+zTpRZNw0R/PSZ/NrfIe6uw==
+"@applitools/utils@1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.4.tgz#c485349d0399d3b7cb8e2cd0476f782b4b9be7a5"
+  integrity sha512-TkRDyF/8f8gRxqeNWoXLqkzp+m3yrAAgcDKWpyH115jFzBJ17Aif0o8IqdoHu8zLVo0cnZbskuBfaXteKkSSBw==
+
+"@applitools/utils@1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
+  integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"

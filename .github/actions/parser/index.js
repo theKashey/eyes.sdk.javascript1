@@ -13,7 +13,7 @@ const PACKAGES = [
 
   // #region TOOLING
   {name: 'scripts', dirname: 'scripts', aliases: ['@applitools/scripts'], dependencies: ['utils', 'test-utils']},
-  {name: 'bongo', dirname: 'sdk-release-kit', aliases: ['@applitools/sdk-release-kit'], dependencies: ['utils']},
+  {name: 'bongo', dirname: 'bongo', aliases: ['@applitools/bongo'], dependencies: ['utils']},
   // #endregion
 
   // #region MODULES

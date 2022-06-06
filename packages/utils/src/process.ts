@@ -1,4 +1,5 @@
 import {spawn, SpawnOptions} from 'child_process'
+import {existsSync} from 'fs'
 
 function makeError(error: string | Error, properties: Record<string, any>) {
   if (typeof error === 'string') {
@@ -73,11 +74,19 @@ export async function executeProcess(
 }
 
 export async function sh(command: string, options?: {spawnOptions?: SpawnOptions; timeout?: number}) {
+  let shell
+  if (process.platform === 'win32') {
+    shell = 'C:\\Program Files\\Git\\bin\\bash.exe'
+  } else if (existsSync('/bin/bash')) {
+    shell = '/bin/bash'
+  } else {
+    shell = '/bin/sh'
+  }
   return await executeProcess(command, [], {
     ...options,
     spawnOptions: {
       stdio: 'inherit',
-      shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/bash',
+      shell,
       ...options?.spawnOptions,
     },
   })

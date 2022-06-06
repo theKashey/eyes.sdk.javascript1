@@ -1,12 +1,23 @@
 import {spawn, fork} from 'child_process'
+import fs from 'fs'
 
 describe('works', () => {
-  const suffixes = {darwin: 'macos', linux: 'linux', win32: 'win'}
-
   it('works with stdout', async () => {
-    const server = spawn(`./bin/eyes-universal-${suffixes[process.platform]}`, {
+    let platform
+    if (process.platform === 'darwin') {
+      platform = 'macos'
+    } else if (process.platform === 'win32') {
+      platform = 'win'
+    } else if (process.platform === 'linux') {
+      if (fs.existsSync('/etc/alpine-release')) {
+        platform = 'alpine'
+      } else {
+        platform = 'linux'
+      }
+    }
+    const server = spawn(`./bin/eyes-universal-${platform}`, {
       detached: true,
-      shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/bash',
+      shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/sh',
       stdio: ['ignore', 'pipe', 'ignore'],
     })
     return new Promise<void>((resolve, reject) => {

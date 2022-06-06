@@ -58,9 +58,23 @@ jobs:
     needs: [verify]
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    name: 'Test (os: ${{matrix.os}})'
+        include:
+          - name: alpine
+            os: ubuntu-latest
+            container: node:lts-alpine # not just "alpine" because it is not possible to setup nodejs in a regular way
+            shell: ash -eo pipefail {0}
+          - name: ubuntu
+            os: ubuntu-latest
+            shell: bash
+          - name: windows
+            os: windows-latest
+            shell: bash
+          - name: macos
+            os: macos-latest
+            shell: bash
+    name: 'Test (os: ${{matrix.name}})'
     runs-on: ubuntu-latest
+    container: ${{matrix.container}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
@@ -74,6 +88,7 @@ jobs:
         with:
           package: ${{env.PACKAGE_DIR}}
           test-type: e2e
+          shell: ${{matrix.shell}}
   publish:
     needs: [test]
     name: Publish
@@ -98,6 +113,7 @@ jobs:
           tag_name: ${{steps.publish.outputs.tag}}
           name: ${{steps.publish.outputs.tag}}
           files: |
+            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-alpine
             packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-linux
             packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-macos
             packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-win.exe
