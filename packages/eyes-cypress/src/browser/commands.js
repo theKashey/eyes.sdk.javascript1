@@ -110,7 +110,7 @@ Cypress.Commands.add('eyesOpen', function(args = {}) {
     const driver = refer.ref(cy.state('window').document);
 
     if (!connectedToUniversal) {
-      socket.connect(`ws://localhost:${Cypress.config('eyesPort')}/eyes`);
+      socket.connect(`wss://localhost:${Cypress.config('eyesPort')}/eyes`);
       connectedToUniversal = true;
       socket.emit('Core.makeSDK', {
         name: 'eyes.cypress',

@@ -1,21 +1,44 @@
 'use strict';
-const {makeHandler} = require('../../dist/plugin/handler');
 const connectSocket = require('./webSocket');
 const {makeServerProcess} = require('@applitools/eyes-universal');
 const {TestResults} = require('@applitools/visual-grid-client');
 const handleTestResults = require('./handleTestResults');
+const path = require('path');
+const fs = require('fs');
+const {Server: HttpsServer} = require('https');
+const {Server: WSServer} = require('ws');
 
 function makeStartServer({logger}) {
   return async function startServer() {
-    const {server, port} = await makeHandler({singleton: false});
+    const key = fs.readFileSync(path.resolve(__dirname, '../pem/server.key'));
+    const cert = fs.readFileSync(path.resolve(__dirname, '../pem/server.cert'));
+    let port;
 
-    const {port: universalPort, close: closeUniversalServer} = await makeServerProcess();
+    const https = new HttpsServer({
+      key,
+      cert,
+    });
+    await https.listen(0, err => {
+      if (err) {
+        logger.log('error starting plugin server', err);
+      } else {
+        logger.log(`plugin server running at port: ${https.address().port}`);
+        port = https.address().port;
+      }
+    });
+
+    const wss = new WSServer({server: https, path: '/eyes', maxPayload: 254 * 1024 * 1024});
+
+    const {port: universalPort, close: closeUniversalServer} = await makeServerProcess({
+      key: path.resolve(__dirname, '../pem/server.key'),
+      cert: path.resolve(__dirname, '../pem/server.cert'),
+    });
 
     const managers = [];
     let socketWithUniversal;
 
-    server.on('connection', socketWithClient => {
-      socketWithUniversal = connectSocket(`ws://localhost:${universalPort}/eyes`);
+    wss.on('connection', socketWithClient => {
+      socketWithUniversal = connectSocket(`wss://localhost:${universalPort}/eyes`);
 
       socketWithUniversal.setPassthroughListener(message => {
         logger.log('<== ', message.toString().slice(0, 1000));
@@ -69,7 +92,7 @@ function makeStartServer({logger}) {
     });
 
     return {
-      server,
+      server: wss,
       port,
       closeManager,
       closeBatches,

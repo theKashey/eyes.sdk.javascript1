@@ -16,6 +16,7 @@ Apollo SDK:
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fix how we send parameters to the cli from makeServerProcess
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - |
       Fixed `forceFullPageScreenshot` option behavior
@@ -85,6 +86,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-cypress":
   feature:
+    - add support for secure websocket
     - Allowed `null` values in custom properties
   bug-fix:
     - Fix incorrect test results when dealing with a page that contains CORS iframes
