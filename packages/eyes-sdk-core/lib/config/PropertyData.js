@@ -34,7 +34,6 @@ class PropertyData {
 
     const {name, value} = varArg1
     ArgumentGuard.isString(name, 'name')
-    ArgumentGuard.notNull(value, 'value')
 
     /** @type {string} */
     this._name = name

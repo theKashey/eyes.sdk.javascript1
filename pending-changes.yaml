@@ -11,66 +11,68 @@ Apollo SDK:
 "@applitools/eyes-universal":
   feature:
     - Added Alpine Linux binaries
+    - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-playwright":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-protractor":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-puppeteer":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-testcafe":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-nightwatch":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-storybook":
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
-    - Fixed broken links to enums implmentation in the README.md
+    - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
     - Dorp support for Node.js versions <=12
+    - Allowed `null` values in custom properties
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
@@ -86,7 +88,7 @@ Apollo SDK:
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 eyes-browser-extension:
   feature:
-    - 
+    - Allowed `null` values in custom properties
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
