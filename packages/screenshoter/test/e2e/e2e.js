@@ -61,7 +61,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
   const iosSimulatorIds = process.env.IOS_SIMULATOR_UDID ? process.env.IOS_SIMULATOR_UDID.split(',') : []
   const apps = {
     android: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
-    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.4/app_androidx.apk',
+    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.5/app_androidx.apk',
     ios: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
   }
 
@@ -87,7 +87,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         skipUnlock: true,
         isHeadless: true,
         browserName: app === 'chrome' ? app : '',
-        app: apps[app || type],
+        app: app === 'chrome' ? undefined : apps[app || type] || app,
         deviceName: deviceName || 'Google Pixel 3a XL',
         platformName: 'Android',
         platformVersion: platformVersion || '10.0',

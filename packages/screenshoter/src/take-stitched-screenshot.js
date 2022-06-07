@@ -17,6 +17,8 @@ async function takeStitchedScreenshot({
 }) {
   logger.verbose('Taking full image of...')
 
+  if (await scroller.element.isPager()) overlap = {top: 0, bottom: 0}
+
   const driver = context.driver
   const takeViewportScreenshot = makeTakeViewportScreenshot({logger, driver, stabilization, debug})
   const scrollerState = await scroller.preserveState()

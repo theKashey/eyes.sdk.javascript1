@@ -243,8 +243,22 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return size
   }
 
+  async isPager(): Promise<boolean> {
+    this._logger.log('Check if element with selector', this.selector, 'is scrollable by pages')
+    const isPager = await this.withRefresh(async () => {
+      if (this.driver.isAndroid) {
+        const className = await this.getAttribute('className')
+        return ['androidx.viewpager.widget.ViewPager'].includes(className)
+      } else {
+        return false
+      }
+    })
+    this._logger.log('Element scrollable by pages', isPager)
+    return isPager
+  }
+
   async isScrollable(): Promise<boolean> {
-    this._logger.log('Check is element with selector', this.selector, 'is scrollable')
+    this._logger.log('Check if element with selector', this.selector, 'is scrollable')
     const isScrollable = await this.withRefresh(async () => {
       if (this.driver.isWeb) {
         return this.context.execute(snippets.isElementScrollable, [this])
@@ -356,72 +370,108 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         const contentSize = await this.getContentSize()
         const scrollableRegion = await this.getClientRegion()
 
-        const effectiveRegion = this.driver.isAndroid
-          ? utils.geometry.scale(scrollableRegion, this.driver.pixelRatio)
-          : scrollableRegion
         const maxOffset = {
           x: Math.round(scrollableRegion.width * (contentSize.width / scrollableRegion.width - 1)),
           y: Math.round(scrollableRegion.height * (contentSize.height / scrollableRegion.height - 1)),
         }
         const requiredOffset = {x: Math.min(offset.x, maxOffset.x), y: Math.min(offset.y, maxOffset.y)}
+
+        let effectiveRegion = scrollableRegion
         let remainingOffset = utils.geometry.equals(requiredOffset, {x: 0, y: 0})
           ? {x: -maxOffset.x, y: -maxOffset.y} // if it has to be scrolled to the very beginning, then scroll maximum amount of pixels
           : utils.geometry.offsetNegative(requiredOffset, currentScrollOffset)
 
         if (this.driver.isAndroid) {
           remainingOffset = utils.geometry.scale(remainingOffset, this.driver.pixelRatio)
+          effectiveRegion = utils.geometry.scale(scrollableRegion, this.driver.pixelRatio)
         }
 
         const actions = []
 
         const touchPadding = await this.getTouchPadding()
+        const isPager = await this.isPager()
 
-        const xPadding = Math.max(Math.floor(effectiveRegion.width * 0.1), touchPadding)
+        const xPadding = Math.max(Math.floor(effectiveRegion.width * 0.07), touchPadding)
         const yTrack = Math.floor(effectiveRegion.y + effectiveRegion.height / 2) // center
         const xLeft = effectiveRegion.y + xPadding
-        const xDirection = remainingOffset.y > 0 ? 'right' : 'left'
+        const xDirection = remainingOffset.x > 0 ? 'right' : 'left'
         const xGap = xDirection === 'right' ? -touchPadding : touchPadding
         let xRemaining = Math.abs(remainingOffset.x)
+        if (isPager) {
+          const xPages = Math.floor(xRemaining / effectiveRegion.width)
+          xRemaining = (effectiveRegion.width - xPadding * 2) * xPages
+        }
         while (xRemaining > 0) {
           const xRight = effectiveRegion.x + Math.min(xRemaining + xPadding, effectiveRegion.width - xPadding)
           const [xStart, xEnd] = xDirection === 'right' ? [xRight, xLeft] : [xLeft, xRight]
-          actions.push([
-            {action: 'press', y: yTrack, x: xStart},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', y: yTrack, x: xStart + xGap},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', y: yTrack, x: xEnd + xGap},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', y: yTrack + 1, x: xEnd + xGap},
-            {action: 'release'},
-          ])
+          if (isPager) {
+            actions.push([
+              {action: 'press', y: yTrack, x: xStart},
+              // scroll through the page
+              {action: 'wait', ms: 170},
+              {action: 'moveTo', y: yTrack, x: xEnd},
+              {action: 'release'},
+            ])
+          } else {
+            actions.push([
+              {action: 'press', y: yTrack, x: xStart},
+              // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack, x: xStart + xGap},
+              // perform actual scrolling
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack, x: xEnd + xGap},
+              // prevent inertial scrolling after release
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack + 1, x: xEnd + xGap},
+              {action: 'release'},
+            ])
+          }
           xRemaining -= xRight - xLeft
         }
 
-        const yPadding = Math.max(Math.floor(effectiveRegion.height * 0.1), touchPadding)
+        const yPadding = Math.max(Math.floor(effectiveRegion.height * 0.07), touchPadding)
         const xTrack = Math.floor(effectiveRegion.x + 5) // a little bit off left border
         const yBottom = effectiveRegion.y + effectiveRegion.height - yPadding
         const yDirection = remainingOffset.y > 0 ? 'down' : 'up'
         const yGap = yDirection === 'down' ? -touchPadding : touchPadding
         let yRemaining = Math.abs(remainingOffset.y)
+        if (isPager) {
+          const yPages = Math.floor(yRemaining / effectiveRegion.height)
+          yRemaining = (effectiveRegion.height - yPadding * 2) * yPages
+        }
         while (yRemaining > 0) {
           const yTop = Math.max(yBottom - yRemaining, effectiveRegion.y + yPadding)
           const [yStart, yEnd] = yDirection === 'down' ? [yBottom, yTop] : [yTop, yBottom]
-          actions.push([
-            {action: 'press', x: xTrack, y: yStart},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', x: xTrack, y: yStart + yGap},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', x: xTrack, y: yEnd + yGap},
-            {action: 'wait', ms: 100},
-            {action: 'moveTo', x: xTrack + 1, y: yEnd + yGap},
-            {action: 'release'},
-          ])
+          if (isPager) {
+            actions.push([
+              {action: 'press', x: xTrack, y: yStart},
+              // scroll through the page
+              {action: 'wait', ms: 170},
+              {action: 'moveTo', x: xTrack, y: yEnd},
+              {action: 'release'},
+            ])
+          } else {
+            actions.push([
+              {action: 'press', x: xTrack, y: yStart},
+              // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack, y: yStart + yGap},
+              // perform actual scrolling
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack, y: yEnd + yGap},
+              // prevent inertial scrolling after release
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack + 1, y: yEnd + yGap},
+              {action: 'release'},
+            ])
+          }
           yRemaining -= yBottom - yTop
         }
 
         // ios actions should be executed one-by-one sequentially, otherwise the result isn't stable
-        if (this.driver.isIOS) {
+        // pages should be scrolled one-by-one as well
+        if (isPager || this.driver.isIOS) {
           for (const action of actions) {
             await this._spec.performAction(this.driver.target, action)
           }

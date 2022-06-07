@@ -12,6 +12,7 @@ Apollo SDK:
   feature:
     - Add the option to send driver to check method
     - Added Alpine Linux binaries
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
@@ -20,6 +21,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-selenium":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
@@ -29,6 +31,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-webdriverio":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
@@ -38,6 +41,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-playwright":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
@@ -45,6 +49,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-protractor":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
@@ -54,6 +59,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-puppeteer":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
@@ -61,6 +67,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-testcafe":
   feature:
+    -
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
@@ -68,6 +75,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-nightwatch":
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
@@ -90,6 +98,7 @@ Apollo SDK:
   feature:
     - Support UFG for native mobile
     - Dorp support for Node.js versions <=12
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - |
@@ -108,6 +117,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 eyes-browser-extension:
   feature:
+    - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `null` values in custom properties
   bug-fix:
     - |
