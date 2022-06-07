@@ -115,7 +115,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
               x: contentSize.left,
               y: contentSize.top,
               width: contentSize.width,
-              height: (this.driver.isAndroid ? contentSize.height : 0) + contentSize.scrollableOffset,
+              height: this.driver.isIOS
+                ? Math.max(contentSize.height, contentSize.scrollableOffset)
+                : contentSize.height + contentSize.scrollableOffset,
             }
           })
           .catch(() => this._spec.getElementRegion(this.driver.target, this.target))
@@ -203,7 +205,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
                 x: contentSize.left,
                 y: contentSize.top,
                 width: contentSize.width,
-                height: (this.driver.isAndroid ? contentSize.height : 0) + contentSize.scrollableOffset,
+                height: this.driver.isIOS
+                  ? Math.max(contentSize.height, contentSize.scrollableOffset)
+                  : contentSize.height + contentSize.scrollableOffset,
               }
             })
             .catch(err => {
@@ -292,7 +296,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       else if (this.driver.isIOS) this._state.touchPadding = 10
       else if (this.driver.isAndroid) {
         const touchPadding = await this.getAttribute('contentSize')
-          .then(value => JSON.parse(value).touchPadding)
+          .then(data => JSON.parse(data).touchPadding)
           .catch(err => {
             this._logger.warn(
               `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
