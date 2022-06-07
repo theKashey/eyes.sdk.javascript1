@@ -21,6 +21,7 @@ describe('requestHelpers', () => {
       url: 'http://some.proxy.url:3000',
       username: 'username',
       password: 'password',
+      isHttpOnly: false,
     })
     const axiosConfig = {
       withApiKey: true,
@@ -64,7 +65,7 @@ describe('requestHelpers', () => {
   })
 
   it('configAxiosProxy works with https proxy', () => {
-    const proxy = new ProxySettings('https://some.url:2323', 'daniel', '1234')
+    const proxy = new ProxySettings('https://some.url:2323', 'daniel', '1234', false)
     const axiosConfig = {}
     configAxiosProxy({axiosConfig, proxy, logger})
 

@@ -29,12 +29,12 @@ describe('ProxySettings', () => {
     assert.strictEqual(proxyObject.port, '1234')
     assert.strictEqual(proxyObject.auth.username, 'username')
     assert.strictEqual(proxyObject.auth.password, 'password')
-    assert.strictEqual(proxyObject.isHttpOnly, false)
+    assert.strictEqual(proxyObject.isHttpOnly, true)
   })
 
-  it('should use isHttpOnly with default value of false', () => {
+  it('should use isHttpOnly with default value of true', () => {
     const proxy = new ProxySettings('http://username:password@localhost:1234/')
     const proxyObject = proxy.toProxyObject()
-    assert.strictEqual(proxyObject.isHttpOnly, false)
+    assert.strictEqual(proxyObject.isHttpOnly, true)
   })
 })
