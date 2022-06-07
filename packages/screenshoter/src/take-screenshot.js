@@ -45,6 +45,8 @@ async function takeScreenshot({
     // unlike web apps, native apps do not always have scrolling element
     if (scrollingElement) {
       if (driver.isWeb && hideScrollbars) await scrollingElement.hideScrollbars()
+      // this is unwanted but necessary side effect, because it is not possible to extract initial scroll position
+      if (driver.isNative && !window) await scrollingElement.scrollTo({x: 0, y: 0}, {force: true})
       await scrollingElement.preserveState()
     }
   }

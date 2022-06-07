@@ -111,6 +111,23 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
+    'android-bs': {
+      url: 'https://hub.browserstack.com/wd/hub',
+      capabilities: {
+        'bstack:options': {
+          realMobile: 'true',
+          appiumVersion: '1.20.2',
+          deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+          userName: process.env.BROWSERSTACK_USERNAME,
+          accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+        },
+        browserName: app === 'chrome' ? app : '',
+        platformName: 'Android',
+        'appium:platformVersion': platformVersion || '9.0',
+        'appium:deviceName': deviceName || 'Google Pixel 3a XL',
+        'appium:app': app === 'chrome' ? undefined : apps[app || type] || app,
+      },
+    },
     ios: {
       url: 'http://0.0.0.0:4723/wd/hub',
       capabilities: {

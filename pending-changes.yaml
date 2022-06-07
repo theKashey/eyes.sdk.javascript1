@@ -13,16 +13,19 @@ Apollo SDK:
     - Added Alpine Linux binaries
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-playwright":
   feature:
     - 
@@ -33,6 +36,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-puppeteer":
   feature:
     - 
@@ -48,6 +52,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 "@applitools/eyes-cypress":
   feature:
     - 
@@ -74,6 +79,7 @@ Apollo SDK:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
     - Fix rounding error of image size when scaling introduces fractions
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
 eyes-browser-extension:
   feature:
     - 
