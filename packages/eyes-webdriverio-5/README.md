@@ -1116,7 +1116,7 @@ configuration.addBrowser({
 eyes.setConfiguration(configuration)
 ```
 
-The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-api/src/enums/IosDeviceName.ts
 
 Possible values for `iosVersion` are:
 

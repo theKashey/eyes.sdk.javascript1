@@ -173,43 +173,66 @@ Applitools will take screenshots and perform the visual comparisons in the backg
 <br/>
 
 ### Index
-- [Commands](#Commands)
-  - [Open](#Open)
-  - [CheckWindow](#Check-window)
-    - [tag](#tag)
-    - [target](#target)
-    - [fully](#fully)
-    - [selector](#selector)
-    - [region](#region)
-    - [ignore](#ignore)
-    - [floating](#floating)
-    - [layout](#layout)
-    - [strict](#strict)
-    - [content](#content)
-    - [accessibility](#accessibility)
-    - [region in shadow DOM](#region-in-shadow-dom)
-    - [scriptHooks](#scriptHooks)
-    - [layoutBreakpoints](#layoutBreakpoints)
-    - [sendDom](#sendDom)
-    - [variationGroupId](#variationGroupId)
-    - [waitBeforeCapture](#waitBeforeCapture)
-  - [Close](#Close)
-  - [GetAllTestResults](#GetAllTestResults)
-  - [deletTestResults](#deleteTestResults)
-- [Concurrency](#Concurrency)
-- [Advanced configuration](#Advanced-configuration)
-  - [Scoped configuration](#Here-are-the-available-configuration-properties)
-  - [Global configuration](#global-configuration-properties)
-  - [Examples](#Method-1-Arguments-for-cyeyesOpen)
-    - [Arguments for `cy.eyesOpen`](#Method-1-Arguments-for-cyeyesOpen)
-    - [Environment variables](#Method-2-Environment-variables)
-    - [The `applitools.config.js` file](#Method-3-The-applitoolsconfigjs-file)
-- [Configuring the browser](#Configuring-the-browser)
-  - [Device emulation](#Device-emulation)
-- [IDE Code Completion](#Intelligent-Code-Completion)
-  - [Triple slash directives](#1-Triple-slash-directives)
-  - [Reference type declarations via `tsconfig`](#2-Reference-type-declarations-via-tsconfig)
-- [Troubleshooting](#Troubleshooting)
+- [Eyes-Cypress](#eyes-cypress)
+  - [Installation](#installation)
+    - [Install npm package](#install-npm-package)
+    - [Configure plugin and commands](#configure-plugin-and-commands)
+      - [Automatic configuration](#automatic-configuration)
+      - [Manual configuration](#manual-configuration)
+        - [1. Configure Eyes-Cypress plugin](#1-configure-eyes-cypress-plugin)
+        - [2. Configure custom commands](#2-configure-custom-commands)
+        - [3. (Optional) TypeScript configuration](#3-optional-typescript-configuration)
+    - [Applitools API key](#applitools-api-key)
+    - [Eyes server URL (optional)](#eyes-server-url-optional)
+  - [Usage](#usage)
+    - [Example](#example)
+    - [Best practice for using the SDK](#best-practice-for-using-the-sdk)
+    - [Index](#index)
+    - [Commands](#commands)
+      - [Open](#open)
+      - [Check window](#check-window)
+        - [Arguments to `cy.eyesCheckWindow`](#arguments-to-cyeyescheckwindow)
+        - [`tag`](#tag)
+        - [`target`](#target)
+        - [`fully`](#fully)
+        - [`selector`](#selector)
+        - [`region`](#region)
+        - [`element`](#element)
+        - [`ignore`](#ignore)
+        - [`floating`](#floating)
+        - [`layout`](#layout)
+        - [`strict`](#strict)
+        - [`content`](#content)
+        - [`accessibility`](#accessibility)
+        - [`region in shadow DOM`](#region-in-shadow-dom)
+        - [`scriptHooks`](#scripthooks)
+        - [`layoutBreakpoints`](#layoutbreakpoints)
+        - [`sendDom`](#senddom)
+        - [`variationGroupId`](#variationgroupid)
+        - [`waitBeforeCapture`](#waitbeforecapture)
+        - [`useDom`](#usedom)
+        - [`enablePatterns`](#enablepatterns)
+        - [`matchLevel`](#matchlevel)
+        - [`visualGridOptions`](#visualgridoptions)
+      - [Close](#close)
+      - [GetAllTestResults](#getalltestresults)
+      - [deleteTestResults](#deletetestresults)
+  - [Concurrency](#concurrency)
+  - [Advanced configuration](#advanced-configuration)
+    - [Here are the available configuration properties:](#here-are-the-available-configuration-properties)
+    - [Global configuration properties:](#global-configuration-properties)
+    - [Method 1: Arguments for `cy.eyesOpen`](#method-1-arguments-for-cyeyesopen)
+    - [Method 2: Environment variables](#method-2-environment-variables)
+    - [Method 3: The `applitools.config.js` file](#method-3-the-applitoolsconfigjs-file)
+  - [Configuring the browser](#configuring-the-browser)
+    - [Previous browser versions](#previous-browser-versions)
+    - [Getting a screenshot of multiple browsers in parallel](#getting-a-screenshot-of-multiple-browsers-in-parallel)
+    - [Device emulation](#device-emulation)
+    - [iOS device](#ios-device)
+  - [Intelligent Code Completion](#intelligent-code-completion)
+      - [There are two ways you can add Eyes-Cypress intelliSense to your tests:](#there-are-two-ways-you-can-add-eyes-cypress-intellisense-to-your-tests)
+    - [1. Triple slash directives](#1-triple-slash-directives)
+    - [2. Reference type declarations via `tsconfig`](#2-reference-type-declarations-via-tsconfig)
 
 <br/><hr/><br/>
 
@@ -827,7 +850,7 @@ cy.eyesOpen({
 
 Possible values for screen orientation are `landscape` and `portrait`, and if no value is specified, the default is `portrait`.
 
-The list of device names is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/DeviceName.js
+The list of device names is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-api/src/enums/DeviceName.ts
 
 In addition, it's possible to use chrome's device emulation with custom viewport sizes, pixel density and mobile mode, by passing `deviceScaleFactor` and `mobile` in addition to `width` and `height`. For example:
 
@@ -859,7 +882,7 @@ cy.eyesOpen({
 })
 ```
 
-The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-sdk-core/lib/config/IosDeviceName.js
+The list of devices is available at https://github.com/applitools/eyes.sdk.javascript1/blob/master/packages/eyes-api/src/enums/IosDeviceName.ts
 
 Possible values for `iosVersion` are:
 
