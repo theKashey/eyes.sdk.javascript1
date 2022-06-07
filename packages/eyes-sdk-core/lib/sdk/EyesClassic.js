@@ -76,8 +76,15 @@ class EyesClassic extends EyesCore {
   }
 
   // set waitBeofreCpature from checkSettings in configuration.
-  async _check(checkSettings = {}, closeAfterMatch = false, throwEx = true) {
+  async _check(checkSettings = {}, driver, closeAfterMatch = false, throwEx = true) {
+    if (driver) {
+      const useCeilForViewportSize = this._configuration.getUseCeilForViewportSize()
+      const keepPlatformNameAsIs = this._configuration.getKeepPlatformNameAsIs()
+      const customConfig = {useCeilForViewportSize, keepPlatformNameAsIs}
+      this._driver = new Driver({spec: this.spec, driver, logger: this._logger, customConfig})
+    }
     await this._driver.init()
+    
     this._context = await this._driver.refreshContexts()
     await this._context.main.setScrollingElement(this._scrollRootElement)
     await this._context.setScrollingElement(checkSettings.scrollRootElement)

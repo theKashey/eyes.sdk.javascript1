@@ -152,6 +152,7 @@ Cypress.Commands.add('eyesCheckWindow', (args = {}) =>
     if (isCurrentTestDisabled) return;
 
     setRootContext();
+    const driver = refer.ref(cy.state('window').document);
 
     Cypress.log({name: 'Eyes: check window'});
 
@@ -160,6 +161,7 @@ Cypress.Commands.add('eyesCheckWindow', (args = {}) =>
     return socket.request('Eyes.check', {
       eyes,
       settings: checkSettings,
+      driver,
     });
   }),
 );

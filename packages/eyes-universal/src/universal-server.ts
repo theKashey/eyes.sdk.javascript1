@@ -129,8 +129,8 @@ export async function makeServer({
       return refer.deref(manager).closeManager({throwErr})
     })
 
-    socket.command('Eyes.check', async ({eyes, settings, config}) => {
-      return refer.deref(eyes).check({settings, config})
+    socket.command('Eyes.check', async ({eyes, settings, config, driver}) => {
+      return refer.deref(eyes).check({settings, config, driver})
     })
     socket.command('Eyes.locate', async ({eyes, settings, config}) => {
       return refer.deref(eyes).locate({settings, config})

@@ -10,6 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
+    - Add the option to send driver to check method
     - Added Alpine Linux binaries
     - Allowed `null` values in custom properties
   bug-fix:
@@ -78,6 +79,7 @@ Apollo SDK:
   feature:
     - Allowed `null` values in custom properties
   bug-fix:
+    - Fix incorrect test results when dealing with a page that contains CORS iframes
     - Fixed broken links to enums implementation in the README.md
 "@applitools/eyes-storybook":
   feature:

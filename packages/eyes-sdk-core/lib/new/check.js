@@ -2,7 +2,7 @@ const utils = require('@applitools/utils')
 const MatchResult = require('../match/MatchResult')
 
 function makeCheck({eyes}) {
-  return async function check({settings, config} = {}) {
+  return async function check({settings, config, driver} = {}) {
     if (config) {
       if (config.cut) {
         eyes.setCut(config.cut)
@@ -15,8 +15,7 @@ function makeCheck({eyes}) {
     if (utils.types.isNull(eyes._configuration.getForceFullPageScreenshot())) {
       eyes._configuration.setForceFullPageScreenshot(isCheckWindow)
     }
-
-    const result = await eyes.check(settings)
+    const result = await eyes.check(settings, driver)
     return result ? result.toJSON() : new MatchResult().toJSON()
   }
 }

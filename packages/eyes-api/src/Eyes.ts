@@ -40,7 +40,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   private _config: ConfigurationData<TElement, TSelector>
   private _runner: EyesRunner
   private _driver: TDriver
-  private _eyes: types.Eyes<TElement, TSelector>
+  private _eyes: types.Eyes<TDriver, TElement, TSelector>
   private _events: Map<string, Set<(...args: any[]) => any>> = new Map()
   private _handlers: SessionEventHandlers = new SessionEventHandlers()
 

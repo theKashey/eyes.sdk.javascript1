@@ -67,7 +67,7 @@ export type Refify<TValue> = TValue extends string | number | boolean | null | u
 export type ClientSocket<TDriver, TContext, TElement, TSelector> = unknown &
   Request<Omit<Core<TDriver, TElement, TSelector>, 'isDriver' | 'isElement' | 'isSelector'>, 'Core'> &
   Request<EyesManager<TDriver, TElement, TSelector>, 'EyesManager', 'manager'> &
-  Request<Eyes<TElement, TSelector>, 'Eyes', 'eyes'> &
+  Request<Eyes<TDriver, TElement, TSelector>, 'Eyes', 'eyes'> &
   Request<Server, 'Server'> &
   Request<Debug<TDriver, TContext, TElement, TSelector>, 'Debug'> &
   Command<UniversalSpecDriver<TDriver, TContext, TElement, TSelector>, 'Driver'>
@@ -75,7 +75,7 @@ export type ClientSocket<TDriver, TContext, TElement, TSelector> = unknown &
 export type ServerSocket<TDriver, TContext, TElement, TSelector> = unknown &
   Command<Omit<Core<TDriver, TElement, TSelector>, 'isDriver' | 'isElement' | 'isSelector'>, 'Core'> &
   Command<EyesManager<TDriver, TElement, TSelector>, 'EyesManager', 'manager'> &
-  Command<Eyes<TElement, TSelector>, 'Eyes', 'eyes'> &
+  Command<Eyes<TDriver, TElement, TSelector>, 'Eyes', 'eyes'> &
   Command<Server, 'Server'> &
   Command<Debug<TDriver, TContext, TElement, TSelector>, 'Debug'> &
   Request<UniversalSpecDriver<TDriver, TContext, TElement, TSelector>, 'Driver'>

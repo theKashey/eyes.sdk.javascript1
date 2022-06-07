@@ -7,9 +7,9 @@ const pexec = p(exec);
 const fs = require('fs');
 
 const sourceTestAppPath = path.resolve(__dirname, '../fixtures/testApp');
-const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-helloworld');
+const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/testApp-cors-iframe');
 
-describe('hello world', () => {
+describe('CORS iframe', () => {
   before(async () => {
     if (fs.existsSync(targetTestAppPath)) {
       fs.rmdirSync(targetTestAppPath, {recursive: true});
@@ -30,11 +30,10 @@ describe('hello world', () => {
     fs.rmdirSync(targetTestAppPath, {recursive: true});
   });
 
-  it('works for helloworld.js', async () => {
+  it('works for CORS iframe', async () => {
     try {
-      //testFiles=helloworld.js,
       await pexec(
-        './node_modules/.bin/cypress run --headless --config testFiles=helloworld.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+        './node_modules/.bin/cypress run --headless --config testFiles=CORSiframe.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
         {
           maxBuffer: 10000000,
         },

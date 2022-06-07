@@ -4,7 +4,6 @@ export type Context = Document & {__applitoolsBrand?: never};
 export type Element = HTMLElement & {__applitoolsBrand?: never};
 
 export function executeScript(context: Context, script: string, arg: any): any {     
-  context = refreshContext(context)
 
       let scriptToExecute;
       if (
@@ -28,13 +27,20 @@ export function mainContext(): Context {
 }
 
 export function parentContext(context: Context): Context {
-  if (!context) return; // because Cypress doesn't support cross origin iframe, then childContext might return null, and then the input to parentContext might be null
+  // because Cypress doesn't support cross origin iframe, then childContext might return null, and then the input to parentContext might be null
+  if (!context) {
+    throw new Error('Context is not accessible')
+  }; 
   
   return context === mainContext() ? context : context.defaultView.frameElement.ownerDocument
 }
 
 export function childContext(_context: Context, element: HTMLIFrameElement): Context {
-  return element.contentDocument // null in case of cross origin iframe
+  if(element.contentDocument)
+    return element.contentDocument
+  else {
+    throw new Error('Context is not accessible')
+  }
 }
 
 export function getViewportSize(): Object {
@@ -60,7 +66,6 @@ export function transformSelector(selector: Selector): Selector {
 }
 
 export function findElement(context: Context, selector: Selector, parent?: Element) {
-  context = refreshContext(context)
   const eyesSelector = (selector as EyesSelector)
   const root = parent ?? context
   const sel = typeof selector === 'string' ? selector : eyesSelector.selector
@@ -72,7 +77,6 @@ export function findElement(context: Context, selector: Selector, parent?: Eleme
 }
 
 export function findElements(context: Context, selector: Selector, parent: Element){
-  context = refreshContext(context)
   const eyesSelector = (selector as EyesSelector)
   const root = parent ?? context
   const sel = typeof selector === 'string' ? selector : eyesSelector.selector
@@ -91,12 +95,10 @@ export function findElements(context: Context, selector: Selector, parent: Eleme
 }
 
 export function getTitle(context: Context): string {
-  context = refreshContext(context)
   return context.title
 }
 
 export function getUrl(context: Context): string {
-  context = refreshContext(context)
   return context.location.href
 }
 
@@ -105,11 +107,6 @@ export function getCookies(): Array<any> {
   return Cypress.automation('get:cookies', {})
 }
 
-// we need to method to reset the context in case the user called open before visit
-function refreshContext(context: Context) {
-  //@ts-ignore
-  return (context && context.defaultView) ? context : cy.state('window').document
-}
 
 // export function takeScreenshot(page: Driver): Promise<Buffer>;
 

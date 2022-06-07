@@ -27,14 +27,15 @@ export interface EyesManager<TDriver, TElement, TSelector> {
     config?: EyesConfig<TElement, TSelector>
     logger?: Logger
     on?: (event: string, data?: Record<string, any>) => void
-  }): Promise<Eyes<TElement, TSelector>>
+  }): Promise<Eyes<TDriver, TElement, TSelector>>
   closeManager: (options?: {throwErr: boolean}) => Promise<TestResultSummary>
 }
 
-export interface Eyes<TElement, TSelector> {
+export interface Eyes<TDriver, TElement, TSelector> {
   check(options: {
     settings?: CheckSettings<TElement, TSelector>
     config?: EyesConfig<TElement, TSelector>
+    driver?: TDriver
   }): Promise<MatchResult>
   locate<TLocator extends string>(options: {
     settings: LocateSettings<TLocator>

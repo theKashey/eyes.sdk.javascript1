@@ -129,10 +129,16 @@ class EyesVisualGrid extends EyesCore {
     this._getEmulatedDevicesSizes = getEmulatedDevicesSizes
   }
 
-  async _check(checkSettings, closeAfterMatch = false, throwEx = true) {
+  async _check(checkSettings, driver, closeAfterMatch = false, throwEx = true) {
     this._logger.log(`check started with tag "${checkSettings.name}" for test "${this._configuration.getTestName()}"`)
-
-    await this._driver.init()
+    if (driver) {
+      const useCeilForViewportSize = this._configuration.getUseCeilForViewportSize()
+      const keepPlatformNameAsIs = this._configuration.getKeepPlatformNameAsIs()
+      const customConfig = {useCeilForViewportSize, keepPlatformNameAsIs}
+      this._driver = await new Driver({spec: this.spec, driver, logger: this._logger, customConfig}).init()
+    } else {
+      await this._driver.init()
+    }
 
     return this._checkPrepare(checkSettings, async () => {
       const {persistedCheckSettings, cleanupPersistance} = await CheckSettingsUtils.toPersistedCheckSettings({

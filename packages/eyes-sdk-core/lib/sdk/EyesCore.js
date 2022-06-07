@@ -26,13 +26,13 @@ class EyesCore extends EyesBase {
     this._rotation = undefined
   }
 
-  async check(checkSettings = {}) {
-    return this._check(checkSettings)
+  async check(checkSettings = {}, driver) {
+    return this._check(checkSettings, driver)
   }
 
   async checkAndClose(checkSettings, throwEx) {
     this._logger.log(`checkAndClose(checkSettings) - begin`)
-    return this._check(checkSettings, true, throwEx)
+    return this._check(checkSettings, undefined, true, throwEx)
   }
 
   async locate(visualLocatorSettings) {
