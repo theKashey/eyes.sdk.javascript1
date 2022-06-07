@@ -159,10 +159,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       this._driverInfo.features.allCookies ??=
         /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
     } else {
-      const displaySize = await this.getDisplaySize()
-      const orientation = await this.getOrientation()
+      // this value always excludes the height of the navigation bar, and sometimes it also excludes the height of the status bar
+      let windowSize = await this._spec.getWindowSize(this.target)
+      this._driverInfo.displaySize ??= windowSize
 
-      // calculate status and navigation bars sizes
       if (this.isAndroid) {
         // bar sizes could be extracted only on android
         const barsSize = await this._spec.getBarsSize?.(this.target).catch(() => undefined as never)
@@ -170,41 +170,48 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           this._logger.log('Driver bars size', barsSize)
 
           // navigation bar height is replaced with the width in landscape orientation on android (due to the bug in appium)
-          if (orientation === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
+          if ((await this.getOrientation()) === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
 
           // when status bar is overlapping content on android it returns status bar height equal to viewport height
-          if (barsSize.statusBarHeight / this.pixelRatio < displaySize.height) {
+          if (barsSize.statusBarHeight < this._driverInfo.displaySize.height) {
             this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsSize.statusBarHeight)
           }
 
           // when navigation bar is invisible on android it returns navigation bar height equal to viewport height
-          if (barsSize.navigationBarHeight / this.pixelRatio < displaySize.height) {
+          if (barsSize.navigationBarHeight < this._driverInfo.displaySize.height) {
             this._driverInfo.navigationBarHeight = Math.max(
               this._driverInfo.navigationBarHeight ?? 0,
               barsSize.navigationBarHeight,
             )
-          } else {
-            // if navigation bar height is bigger then display height he can use it to reset display height
-            displaySize.height = barsSize.navigationBarHeight / this.pixelRatio
           }
 
           // bar heights have to be scaled on android
           this._driverInfo.statusBarHeight &&= this._driverInfo.statusBarHeight / this.pixelRatio
           this._driverInfo.navigationBarHeight &&= this._driverInfo.navigationBarHeight / this.pixelRatio
         }
+
+        windowSize = utils.geometry.scale(this._driverInfo.displaySize, 1 / this.pixelRatio)
+        this._driverInfo.displaySize &&= utils.geometry.scale(this._driverInfo.displaySize, 1 / this.pixelRatio)
       }
 
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
-        this._driverInfo.viewportSize = {
-          width: displaySize.width,
-          height: displaySize.height - this.statusBarHeight,
+        if (this.navigationBarHeight > 1) {
+          this._driverInfo.viewportSize = {
+            width: this._driverInfo.displaySize.width,
+            height: this._driverInfo.displaySize.height - this.statusBarHeight - this.navigationBarHeight,
+          }
+        } else {
+          this._driverInfo.viewportSize = {
+            width: windowSize.width,
+            height: windowSize.height - this.statusBarHeight,
+          }
         }
       }
 
       // calculate safe area
       if (this.isIOS && !this._driverInfo.safeArea) {
-        this._driverInfo.safeArea = {x: 0, y: 0, ...displaySize}
+        this._driverInfo.safeArea = {x: 0, y: 0, ...this._driverInfo.displaySize}
         const topElement = await this.element({type: '-ios class chain', selector: '**/XCUIElementTypeNavigationBar'})
         if (topElement) {
           const topRegion = await this._spec.getElementRegion(this.target, topElement.target)
@@ -539,6 +546,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async getDisplaySize(): Promise<types.Size> {
     if (this.isWeb && !this.isMobile) return
+    if (this._driverInfo?.viewportSize) {
+      this._logger.log('Extracting display size from native driver using cached value')
+      return this._driverInfo.displaySize
+    }
     const size = await this._spec.getWindowSize(this.target)
     const normalizedSize = this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
     this._logger.log('Extracted and normalized display size:', normalizedSize)

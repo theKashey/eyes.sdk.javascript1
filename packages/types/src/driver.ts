@@ -9,6 +9,7 @@ export type DriverInfo = {
   deviceName?: string
   userAgent?: string
   viewportSize?: Size
+  displaySize?: Size
   orientation?: 'portrait' | 'landscape'
   pixelRatio?: number
   viewportScale?: number

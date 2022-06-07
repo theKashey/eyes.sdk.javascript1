@@ -1,7 +1,7 @@
 import assert from 'assert'
 import {parseCapabilities} from '../../src/capabilities'
 
-describe('user agent', () => {
+describe('capabilities', () => {
   it('should work with Chrome on Docker Container using W3C', () => {
     const driverInfo = parseCapabilities({
       acceptInsecureCerts: false,
@@ -1046,6 +1046,7 @@ describe('user agent', () => {
       platformName: 'android', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
       platformVersion: '7.0',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
+      displaySize: {height: 2220, width: 1080},
       orientation: 'portrait',
       statusBarHeight: 72,
       pixelRatio: 3,
@@ -1127,6 +1128,7 @@ describe('user agent', () => {
       platformName: 'Android', // THIS IS THE IMPORTANT PART (it was capitalized because keepPlatformNameAsIs was not set)
       platformVersion: '7.0',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
+      displaySize: {height: 2220, width: 1080},
       orientation: 'portrait',
       statusBarHeight: 72,
       pixelRatio: 3,
@@ -1155,6 +1157,7 @@ describe('user agent', () => {
       deviceName: 'iPhone 8',
       platformName: 'ios', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
       platformVersion: '11.0',
+      displaySize: undefined,
       orientation: 'portrait',
       statusBarHeight: undefined,
       pixelRatio: 2,
@@ -1180,6 +1183,7 @@ describe('user agent', () => {
       deviceName: 'iPhone 8',
       platformName: 'iOS', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
       platformVersion: '11.0',
+      displaySize: undefined,
       orientation: 'portrait',
       statusBarHeight: undefined,
       pixelRatio: 2,
@@ -1584,6 +1588,7 @@ describe('user agent', () => {
       platformName: 'iOS',
       platformVersion: '13.4',
       deviceName: 'iPhone 11 Pro',
+      displaySize: undefined,
       orientation: 'portrait',
       pixelRatio: undefined,
       statusBarHeight: undefined,
@@ -1648,6 +1653,7 @@ describe('user agent', () => {
       platformName: 'iOS',
       platformVersion: '13.0',
       deviceName: 'iPhone XS',
+      displaySize: undefined,
       orientation: 'portrait',
       pixelRatio: 3,
       statusBarHeight: 44,

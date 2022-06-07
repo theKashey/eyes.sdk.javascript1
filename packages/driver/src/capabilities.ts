@@ -44,6 +44,7 @@ export function parseCapabilities(
   if (info.isNative) {
     info.pixelRatio = capabilities.pixelRatio
     info.statusBarHeight = capabilities.statBarHeight
+    info.displaySize = extractDisplaySize(capabilities)
   }
 
   return info
@@ -86,4 +87,11 @@ function isIOS(capabilities: Capabilities) {
 
 function isAndroid(capabilities: Capabilities) {
   return /Android/i.test(capabilities.platformName) || /Android/i.test(capabilities.browserName)
+}
+
+function extractDisplaySize(capabilities: Capabilities): types.Size {
+  if (!capabilities.deviceScreenSize) return undefined
+  const [width, height] = capabilities.deviceScreenSize.split('x')
+  if (Number.isNaN(Number(width)) || Number.isNaN(Number(height))) return undefined
+  return {width: Number(width), height: Number(height)}
 }
