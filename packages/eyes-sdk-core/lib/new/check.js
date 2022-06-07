@@ -9,11 +9,13 @@ function makeCheck({eyes}) {
       }
       eyes._configuration.mergeConfig(config)
     }
+
     const isCheckWindow = !settings || (!settings.region && (!settings.frames || settings.frames.length === 0))
     // if it checks window and no DEFAULT value set in config, set fully true
-    if (isCheckWindow && utils.types.isNull(eyes._configuration.getForceFullPageScreenshot())) {
-      settings = {fully: true, ...settings}
+    if (utils.types.isNull(eyes._configuration.getForceFullPageScreenshot())) {
+      eyes._configuration.setForceFullPageScreenshot(isCheckWindow)
     }
+
     const result = await eyes.check(settings)
     return result ? result.toJSON() : new MatchResult().toJSON()
   }

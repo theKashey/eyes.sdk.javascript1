@@ -122,9 +122,7 @@ class EyesClassic extends EyesCore {
           scrollingElement: frame.scrollRootElement,
         })),
       region: this._checkSettings.region,
-      fully: !utils.types.isNull(this._checkSettings.fully)
-        ? this._checkSettings.fully
-        : this._configuration.getForceFullPageScreenshot(),
+      fully: TypeUtils.getOrDefault(this._checkSettings.fully, this._configuration.getForceFullPageScreenshot()),
       framed: this._driver.isNative,
       hideScrollbars: this._configuration.getHideScrollbars(),
       hideCaret: this._configuration.getHideCaret(),

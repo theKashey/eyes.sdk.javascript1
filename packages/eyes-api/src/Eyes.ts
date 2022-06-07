@@ -269,12 +269,11 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
         : {...checkSettingsOrName}
     }
 
-    // TODO remove when major version of sdk should be released
-    settings.fully ??= false
-
     const config = this._config.toJSON()
     // TODO remove when major version of sdk should be released
     if (config.proxy) config.proxy.isHttpOnly ??= false
+    // TODO remove when major version of sdk should be released
+    config.forceFullPageScreenshot ??= false
 
     const result = await this._eyes.check({settings, config})
 

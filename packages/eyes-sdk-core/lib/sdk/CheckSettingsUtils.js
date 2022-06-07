@@ -81,7 +81,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 }
 
 function toCheckWindowConfiguration({checkSettings, configuration}) {
-  const fully = configuration.getForceFullPageScreenshot() || checkSettings.fully || false
+  const fully = TypeUtils.getOrDefault(checkSettings.fully, configuration.getForceFullPageScreenshot())
   const config = {
     ignore: transformRegions(checkSettings.ignoreRegions),
     floating: transformRegions(checkSettings.floatingRegions),

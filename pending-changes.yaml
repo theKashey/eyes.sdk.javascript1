@@ -15,6 +15,8 @@ Apollo SDK:
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-selenium":
   feature:
     - Allowed `null` values in custom properties
@@ -22,6 +24,8 @@ Apollo SDK:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-webdriverio":
   feature:
     - Allowed `null` values in custom properties
@@ -29,11 +33,15 @@ Apollo SDK:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-playwright":
   feature:
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-protractor":
   feature:
     - Allowed `null` values in custom properties
@@ -41,16 +49,22 @@ Apollo SDK:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-puppeteer":
   feature:
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-testcafe":
   feature:
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-nightwatch":
   feature:
     - Allowed `null` values in custom properties
@@ -58,6 +72,8 @@ Apollo SDK:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-cypress":
   feature:
     - Allowed `null` values in custom properties
@@ -86,6 +102,8 @@ Apollo SDK:
     - Fix rounding error of image size when scaling introduces fractions
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 eyes-browser-extension:
   feature:
     - Allowed `null` values in custom properties
@@ -96,6 +114,8 @@ eyes-browser-extension:
     - Support data urls in iframes
     - Improve error message when failed to set viewport size
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
+    - |
+      Fixed `forceFullPageScreenshot` option behavior
 applitools-for-selenium-ide:
   feature:
     - 
