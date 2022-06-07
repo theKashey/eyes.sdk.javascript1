@@ -187,8 +187,11 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (utils.types.has(viewportSize, ['width', 'height'])) config.viewportSize = viewportSize
     if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.sessionType = sessionType
 
-    // while using JS we want to keep the platformName as is: no first letter uppercase
+    // TODO remove when major version of sdk should be released
     config.keepPlatformNameAsIs = true
+    // TODO remove when major version of sdk should be released
+    if (config.proxy) config.proxy.isHttpOnly ??= false
+
     this._eyes = await this._runner.openEyes({
       driver,
       config,
@@ -269,7 +272,11 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     // TODO remove when major version of sdk should be released
     settings.fully ??= false
 
-    const result = await this._eyes.check({settings, config: this._config.toJSON()})
+    const config = this._config.toJSON()
+    // TODO remove when major version of sdk should be released
+    if (config.proxy) config.proxy.isHttpOnly ??= false
+
+    const result = await this._eyes.check({settings, config})
 
     return new MatchResultData(result)
   }
@@ -280,7 +287,11 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._eyes.locate({settings, config: this._config.toJSON()})
+    const config = this._config.toJSON()
+    // TODO remove when major version of sdk should be released
+    if (config.proxy) config.proxy.isHttpOnly ??= false
+
+    return this._eyes.locate({settings, config})
   }
 
   async extractTextRegions<TPattern extends string>(
@@ -289,14 +300,22 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._eyes.extractTextRegions({settings, config: this._config.toJSON()})
+    const config = this._config.toJSON()
+    // TODO remove when major version of sdk should be released
+    if (config.proxy) config.proxy.isHttpOnly ??= false
+
+    return this._eyes.extractTextRegions({settings, config})
   }
 
   async extractText(regions: OCRRegion<TElement, TSelector>[]): Promise<string[]> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    return this._eyes.extractText({regions, config: this._config.toJSON()})
+    const config = this._config.toJSON()
+    // TODO remove when major version of sdk should be released
+    if (config.proxy) config.proxy.isHttpOnly ??= false
+
+    return this._eyes.extractText({regions, config})
   }
 
   async close(throwErr = true): Promise<TestResultsData> {

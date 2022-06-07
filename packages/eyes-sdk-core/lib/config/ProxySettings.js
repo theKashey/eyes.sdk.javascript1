@@ -29,7 +29,7 @@ class ProxySettings {
    * @param {string} [password] - The password to be sent to the proxy.
    * @param {boolean} [isHttpOnly] - If the Proxy is an HTTP only and requires https over http tunneling.
    */
-  constructor(uri, username, password, isHttpOnly) {
+  constructor(uri, username, password, isHttpOnly = true) {
     ArgumentGuard.notNull(uri, 'uri')
 
     if (uri === false) {
