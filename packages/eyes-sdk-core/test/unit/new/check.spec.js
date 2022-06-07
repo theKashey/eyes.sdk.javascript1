@@ -13,7 +13,7 @@ function createEyesMock() {
     },
     _configuration: {
       mergeConfig: () => {},
-      getForceFullPageScreenshot: () => {},
+      getForceFullPageScreenshot: () => false,
     },
   }
 }

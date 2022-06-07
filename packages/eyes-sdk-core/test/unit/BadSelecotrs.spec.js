@@ -35,7 +35,7 @@ describe('Bad Selectors', () => {
 
   it('test check region with bad ignore selector', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
-    await eyes.check('', {ignoreRegions: ['element that does not exist']})
+    await eyes.check({ignoreRegions: ['element that does not exist']})
     await eyes.close()
   })
 })
