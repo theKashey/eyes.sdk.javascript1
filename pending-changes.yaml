@@ -68,7 +68,6 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-testcafe":
   feature:
-    -
     - Allowed `null` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md

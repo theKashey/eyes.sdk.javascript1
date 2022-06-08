@@ -11,7 +11,7 @@ describe('screenshoter ios app', () => {
     await destroyDriver()
   })
 
-  it('take element out of viewport screenshot', async () => {
+  it('take element screenshot after manual scroll', async () => {
     const button = await driver.element({type: 'accessibility id', selector: 'Scroll view'})
     await button.click()
     await sleep(3000)
