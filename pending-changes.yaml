@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - |
-      Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

@@ -7,6 +7,13 @@
 
 
 
+
+## 2.7.1 - 2022/6/8
+
+### Features
+### Bug fixes
+- Fix calling `waitBeforeCapture` when failed to set required viewport size
+
 ## 2.7.0 - 2022/6/8
 
 ### Features
