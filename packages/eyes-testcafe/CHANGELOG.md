@@ -11,6 +11,15 @@
 
 
 
+
+## 1.17.2 - 2022/6/8
+
+### Features
+- Allowed `` values in custom properties
+### Bug fixes
+- Fixed broken links to enums implementation in the README.md
+- Fixed `forceFullPageScreenshot` option behavior
+
 ## 1.17.1 - 2022/6/2
 
 ### Features
