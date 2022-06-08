@@ -8,6 +8,18 @@
 
 
 
+
+## 5.35.2 - 2022/6/8
+
+### Features
+- Added support for taking full screenshots of elements that are scroll by pages only
+- Allowed `` values in custom properties
+### Bug fixes
+- Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+- Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
+- Fixed broken links to enums implementation in the README.md
+- Fixed `forceFullPageScreenshot` option behavior
+
 ## 5.35.1 - 2022/6/2
 
 ### Features
