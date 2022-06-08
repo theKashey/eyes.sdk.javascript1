@@ -6,6 +6,20 @@
 
 
 
+
+## 2.7.0 - 2022/6/8
+
+### Features
+- Add the option to send driver to check method
+- Added Alpine Linux binaries
+- Added support for taking full screenshots of elements that are scroll by pages only
+- Allowed `` values in custom properties
+### Bug fixes
+- Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
+- Fix how we send parameters to the cli from makeServerProcess
+- Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
+- Fixed `forceFullPageScreenshot` option behavior
+
 ## 2.6.1 - 2022/6/2
 
 ### Features

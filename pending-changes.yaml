@@ -10,16 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Add the option to send driver to check method
-    - Added Alpine Linux binaries
-    - Added support for taking full screenshots of elements that are scroll by pages only
-    - Allowed `` values in custom properties
+    - 
   bug-fix:
-    - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
-    - Fix how we send parameters to the cli from makeServerProcess
-    - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
-    - |
-      Fixed `forceFullPageScreenshot` option behavior
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
