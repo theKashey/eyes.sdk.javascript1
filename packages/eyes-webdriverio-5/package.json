@@ -111,14 +111,14 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-api": "1.5.1",
-    "@applitools/eyes-sdk-core": "13.6.28",
+    "@applitools/eyes-api": "1.5.4",
+    "@applitools/eyes-sdk-core": "13.6.31",
     "@applitools/spec-driver-webdriverio": "1.2.10",
-    "@applitools/visual-grid-client": "15.12.37"
+    "@applitools/visual-grid-client": "15.12.39"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.8",
-    "@applitools/bongo": "^2.1.1",
+    "@applitools/bongo": "^2.1.4",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.18",
     "@applitools/sdk-shared": "0.9.11",

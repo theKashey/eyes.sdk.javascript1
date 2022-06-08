@@ -167,7 +167,7 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
         image.crop({
           top: driver.statusBarHeight,
           bottom: driver.orientation === 'landscape' ? 0 : driver.navigationBarHeight,
-          left: driver.platformVersion > 7 ? driver.navigationBarHeight : 0,
+          left: driver.platformVersion >= 8 ? driver.navigationBarHeight : 0,
           right: driver.platformVersion < 8 ? driver.navigationBarHeight : 0,
         })
       } else {

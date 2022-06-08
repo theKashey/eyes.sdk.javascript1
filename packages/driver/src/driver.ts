@@ -163,6 +163,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       let windowSize = await this._spec.getWindowSize(this.target)
       this._driverInfo.displaySize ??= windowSize
 
+      const orientation = await this.getOrientation()
+
       if (this.isAndroid) {
         // bar sizes could be extracted only on android
         const barsSize = await this._spec.getBarsSize?.(this.target).catch(() => undefined as never)
@@ -170,7 +172,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           this._logger.log('Driver bars size', barsSize)
 
           // navigation bar height is replaced with the width in landscape orientation on android (due to the bug in appium)
-          if ((await this.getOrientation()) === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
+          if (orientation === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
 
           // when status bar is overlapping content on android it returns status bar height equal to viewport height
           if (barsSize.statusBarHeight < this._driverInfo.displaySize.height) {
@@ -197,9 +199,16 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
         if (this.navigationBarHeight > 1) {
-          this._driverInfo.viewportSize = {
-            width: this._driverInfo.displaySize.width,
-            height: this._driverInfo.displaySize.height - this.statusBarHeight - this.navigationBarHeight,
+          if (orientation === 'landscape') {
+            this._driverInfo.viewportSize = {
+              width: this._driverInfo.displaySize.height - this.navigationBarHeight,
+              height: this._driverInfo.displaySize.width - this.statusBarHeight,
+            }
+          } else {
+            this._driverInfo.viewportSize = {
+              width: this._driverInfo.displaySize.width,
+              height: this._driverInfo.displaySize.height - this.statusBarHeight - this.navigationBarHeight,
+            }
           }
         } else {
           this._driverInfo.viewportSize = {
@@ -478,12 +487,6 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       } else {
         this._logger.log('Extracting viewport size from native driver')
         size = await this.getDisplaySize()
-        if (size.height > size.width) {
-          const orientation = await this.getOrientation()
-          if (orientation === 'landscape') {
-            size = {width: size.height, height: size.width}
-          }
-        }
         size.height -= this.statusBarHeight
       }
       this._logger.log(`Rounding viewport size using`, this._customConfig.useCeilForViewportSize ? 'ceil' : 'round')
@@ -546,11 +549,14 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   async getDisplaySize(): Promise<types.Size> {
     if (this.isWeb && !this.isMobile) return
-    if (this._driverInfo?.viewportSize) {
+    if (this._driverInfo?.displaySize) {
       this._logger.log('Extracting display size from native driver using cached value')
       return this._driverInfo.displaySize
     }
-    const size = await this._spec.getWindowSize(this.target)
+    let size = await this._spec.getWindowSize(this.target)
+    if ((await this.getOrientation()) === 'landscape' && size.height > size.width) {
+      size = {width: size.height, height: size.width}
+    }
     const normalizedSize = this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
     this._logger.log('Extracted and normalized display size:', normalizedSize)
     return normalizedSize
