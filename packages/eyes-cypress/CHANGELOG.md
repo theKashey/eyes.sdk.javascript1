@@ -8,6 +8,17 @@
 
 
 
+
+## 3.26.2 - 2022/6/8
+
+### Features
+- add support for secure websocket
+- Allowed `` values in custom properties
+### Bug fixes
+- Fix incorrect test results when dealing with a page that contains CORS iframes
+- Fixed broken links to enums implementation in the README.md
+- Fix calling `waitBeforeCapture` when failed to set required viewport size
+
 ## 3.26.1 - 2022/6/2
 
 ### Features

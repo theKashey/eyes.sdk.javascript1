@@ -83,13 +83,9 @@ Apollo SDK:
       Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-cypress":
   feature:
-    - add support for secure websocket
-    - Allowed `` values in custom properties
+    - 
   bug-fix:
-    - Fix incorrect test results when dealing with a page that contains CORS iframes
-    - Fixed broken links to enums implementation in the README.md
-    - |
-      Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Allowed `` values in custom properties
