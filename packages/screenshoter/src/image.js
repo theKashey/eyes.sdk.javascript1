@@ -228,10 +228,11 @@ async function toPng(image) {
   })
 }
 
-async function toFile(image, path) {
+async function toFile(image, filepath) {
   const buffer = await toPng(image)
   return new Promise((resolve, reject) => {
-    fs.writeFile(path, buffer, err => (err ? reject(err) : resolve()))
+    fs.mkdirSync(path.dirname(filepath), {recursive: true})
+    fs.writeFile(filepath, buffer, err => (err ? reject(err) : resolve()))
   })
 }
 
