@@ -12,7 +12,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-selenium":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -23,11 +24,14 @@ Apollo SDK:
     - Fixed broken links to enums implementation in the README.md
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -36,6 +40,8 @@ Apollo SDK:
     - Fixed broken links to enums implementation in the README.md
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-protractor":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -46,6 +52,8 @@ Apollo SDK:
     - Fixed broken links to enums implementation in the README.md
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -54,11 +62,14 @@ Apollo SDK:
     - Fixed broken links to enums implementation in the README.md
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-testcafe":
   feature:
     - 
   bug-fix:
-    - 
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-nightwatch":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -69,6 +80,8 @@ Apollo SDK:
     - Fixed broken links to enums implementation in the README.md
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-cypress":
   feature:
     - add support for secure websocket
@@ -76,6 +89,8 @@ Apollo SDK:
   bug-fix:
     - Fix incorrect test results when dealing with a page that contains CORS iframes
     - Fixed broken links to enums implementation in the README.md
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 "@applitools/eyes-storybook":
   feature:
     - Allowed `` values in custom properties
@@ -102,6 +117,8 @@ Apollo SDK:
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
     - |
       Fixed `forceFullPageScreenshot` option behavior
+    - |
+      Fix calling `waitBeforeCapture` when failed to set required viewport size
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
