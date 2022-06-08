@@ -29,6 +29,8 @@ function makeStartServer({logger}) {
 
     const wss = new WSServer({server: https, path: '/eyes', maxPayload: 254 * 1024 * 1024});
 
+    wss.on('close', () => https.close());
+
     const {port: universalPort, close: closeUniversalServer} = await makeServerProcess({
       key: path.resolve(__dirname, '../pem/server.key'),
       cert: path.resolve(__dirname, '../pem/server.cert'),
