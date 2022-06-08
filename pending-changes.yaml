@@ -56,11 +56,9 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
 "@applitools/eyes-testcafe":
   feature:
-    - Allowed `` values in custom properties
+    - 
   bug-fix:
-    - Fixed broken links to enums implementation in the README.md
-    - |
-      Fixed `forceFullPageScreenshot` option behavior
+    - 
 "@applitools/eyes-nightwatch":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
