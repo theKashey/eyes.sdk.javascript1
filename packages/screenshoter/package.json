@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.4",
-    "@applitools/driver": "^1.9.1",
+    "@applitools/driver": "^1.9.2",
     "@applitools/scripts": "1.1.0",
     "@applitools/spec-driver-webdriverio": "1.2.10",
     "@applitools/test-utils": "1.3.2",

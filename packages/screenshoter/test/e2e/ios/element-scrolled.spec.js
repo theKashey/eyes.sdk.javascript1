@@ -18,12 +18,14 @@ describe('screenshoter ios app', () => {
 
     await driver.init()
 
-    const scrollingElement = await driver.mainContext.getScrollingElement()
-    await driver.execute('mobile:swipe', {
-      elementId: scrollingElement.target['element-6066-11e4-a52e-4f735466cecf'],
-      direction: 'up',
-      velocity: 10,
-    })
+    await driver.target.touchAction([
+      {action: 'press', y: 500, x: 50},
+      {action: 'wait', ms: 100},
+      {action: 'moveTo', y: 100, x: 50},
+      {action: 'wait', ms: 100},
+      {action: 'moveTo', y: 100, x: 51},
+      {action: 'release'},
+    ])
     await sleep(3000)
 
     await test({

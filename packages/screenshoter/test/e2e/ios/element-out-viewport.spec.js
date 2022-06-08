@@ -23,7 +23,6 @@ describe('screenshoter ios app', () => {
       tag: 'element-out-viewport',
       region: {type: 'xpath', selector: '//*[@name="33"]'},
       scrollingMode: 'scroll',
-      debug: {path: './logs'},
       driver,
       logger,
     })
