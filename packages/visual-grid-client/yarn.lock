@@ -34,10 +34,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/dom-shared/-/dom-shared-1.0.8.tgz#6e9ad9071aeb4d248b1314b7c8c1d43af34b5809"
   integrity sha512-HQtYfFvtlPuE9ZShBamtW1LGW2Qq4HxjQx5nF7KiNvrRTlf5/e+AWpZhXCTVEhVkAcSNs/7xR2WvumOUd+usxg==
 
-"@applitools/dom-snapshot@4.5.12":
-  version "4.5.12"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.12.tgz#910f3fe24876f156c4322fe12631349913eb9b17"
-  integrity sha512-YeuAOQ0+AB7HCMPAHqpnOq5xCOXfIyC/2/h3XurOuzE+qFekK9SPMBRaJn4jDYyAFK/Eeu4v7CGW+LPAUGiZfA==
+"@applitools/dom-snapshot@4.5.13":
+  version "4.5.13"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-4.5.13.tgz#a60dae66ff1b0237a0cc202715d23652ac5294b6"
+  integrity sha512-17xYQQly8Rv1XaZgxhXhld8SFtB6AhL3TzFkF3Jwuv4MynzEe/lPX7dKm0gza8FmnavHqBHInMij6LWq2KDwew==
   dependencies:
     "@applitools/dom-shared" "1.0.8"
     "@applitools/functional-commons" "1.6.0"
@@ -67,13 +67,13 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.6.32":
-  version "13.6.32"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.32.tgz#b8cb672de1145eb0970138cb88d5f6b471b17270"
-  integrity sha512-4X/KPRo556FO33jXuoSlBFWc/kwKl7AVDPO6rDSJEjdZqXubQeS6lCg3MGZYdrjCLxAaiIQaWjRvyArGW6T6Lw==
+"@applitools/eyes-sdk-core@13.6.33":
+  version "13.6.33"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.6.33.tgz#1051afc8f95671cedf3659bb60dd4e4eeae2ffc9"
+  integrity sha512-/gduwQHWAYdVVS0t8gk2rtWExxIYs3Dv+pydjS3O5mz5+Gqtngau9RSqMKKbBba1JbdChhGj3/03vuiF3cOCng==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
-    "@applitools/dom-snapshot" "4.5.12"
+    "@applitools/dom-snapshot" "4.5.13"
     "@applitools/driver" "1.9.2"
     "@applitools/execution-grid-client" "1.1.17"
     "@applitools/isomorphic-fetch" "3.0.0"
