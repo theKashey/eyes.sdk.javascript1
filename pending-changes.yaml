@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rendering issues with Salesforce Lightning design system
 "@applitools/eyes-selenium":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -25,12 +25,14 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -41,6 +43,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-protractor":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -53,6 +56,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -63,12 +67,14 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-testcafe":
   feature:
     - 
   bug-fix:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-nightwatch":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -81,16 +87,18 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix rendering issues with Salesforce Lightning design system
 "@applitools/eyes-storybook":
   feature:
     - Allowed `` values in custom properties
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
+    - Fix rendering issues with Salesforce Lightning design system
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
@@ -114,6 +122,7 @@ Apollo SDK:
       Fixed `forceFullPageScreenshot` option behavior
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
+    - Fix rendering issues with Salesforce Lightning design system  
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
