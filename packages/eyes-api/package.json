@@ -55,7 +55,7 @@
     "@applitools/utils": "1.3.6"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.4",
+    "@applitools/bongo": "^2.1.5",
     "@types/mocha": "^9.0.0",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^4.7.0",

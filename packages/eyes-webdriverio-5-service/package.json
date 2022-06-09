@@ -24,7 +24,7 @@
     "@applitools/eyes-webdriverio": "5.34.16"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.1",
+    "@applitools/bongo": "^2.1.5",
     "@applitools/test-utils": "^1.3.2",
     "@wdio/cli": "7.19.7",
     "@wdio/dot-reporter": "7.19.7",

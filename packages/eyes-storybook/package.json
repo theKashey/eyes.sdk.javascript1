@@ -86,7 +86,7 @@
     "yargs": "15.4.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.1",
+    "@applitools/bongo": "^2.1.5",
     "@applitools/scripts": "^1.1.0",
     "@applitools/sdk-shared": "0.9.11",
     "@applitools/snaptdout": "^1.0.1",
