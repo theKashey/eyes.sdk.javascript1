@@ -1,0 +1,16 @@
+name: Run workflow
+
+inputs:
+  workflow:
+    description: workflow name
+    type: string
+    required: true
+  ref:
+    description: branch or tag name
+    type: string
+    default: ${{github.ref}}
+runs:
+  using: node16
+  main: index.js
+
+# gh workflow run publish-universal.yml --ref $(git rev-parse --abbrev-ref HEAD)

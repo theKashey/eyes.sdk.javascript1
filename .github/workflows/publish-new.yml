@@ -1,0 +1,530 @@
+name: Publish (do not use)
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: package names (aliases)
+        required: true
+      version:
+        description: version type
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+        required: false
+      allow-cascading:
+        description: allow cascading
+        type: boolean
+        default: true
+        required: false
+env:
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  FORCE_COLOR: 3
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{steps.setup.outputs.packages}}
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup
+        uses: ./.github/actions/parser
+        id: setup
+        with:
+          packages: ${{github.event.inputs.packages}}
+          allow-cascading: ${{github.event.inputs.allow-cascading}}
+          release-version: ${{github.event.inputs.version}}
+
+  # INTERNAL
+  types:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).types}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).types.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).types.releaseVersion}}
+  utils:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).utils.releaseVersion}}
+  logger:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).logger}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
+  snippets:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).snippets}}
+    name: snippets
+    uses: ./.github/workflows/publish-snippets.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  screenshoter:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).screenshoter}}
+    name: screenshoter
+    uses: ./.github/workflows/publish-screenshoter.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  driver:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).driver}}
+    name: driver
+    uses: ./.github/workflows/publish-driver.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).driver.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  # CORE
+  core:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).core}}
+    name: core
+    uses: ./.github/workflows/publish-core.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).core.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      BROWSERSTACK_USERNAME: ${{secrets.BROWSERSTACK_USERNAME}}
+      BROWSERSTACK_ACCESS_KEY: ${{secrets.BROWSERSTACK_ACCESS_KEY}}
+  vgc:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).universal}}
+    name: universal
+    uses: ./.github/workflows/publish-universal.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).universal.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  api:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).api}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).api.releaseVersion}}
+  universal:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).universal}}
+    name: universal
+    uses: ./.github/workflows/publish-universal.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).universal.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      UNIVERSAL_SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
+
+  # SPEC DRIVERS
+  spec-playwright:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-playwright}}
+    name: spec-playwright
+    uses: ./.github/workflows/publish-spec-playwright.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+  spec-puppeteer:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer}}
+    name: spec-puppeteer
+    uses: ./.github/workflows/publish-spec-puppeteer.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+  spec-selenium:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium}}
+    name: spec-selenium
+    uses: ./.github/workflows/publish-spec-selenium.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-selenium.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+  spec-webdriverio:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio}}
+    name: spec-webdriverio
+    uses: ./.github/workflows/publish-spec-webdriverio.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+
+  # SDKS
+  playwright:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).playwright}}
+    name: playwright
+    uses: ./.github/workflows/publish-playwright.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  puppeteer:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).puppeteer}}
+    name: puppeteer
+    uses: ./.github/workflows/publish-puppeteer.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  webdriverio:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio}}
+    name: webdriverio
+    uses: ./.github/workflows/publish-webdriverio.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  selenium:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).selenium}}
+    name: selenium
+    uses: ./.github/workflows/publish-selenium.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).selenium.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  protractor:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).protractor}}
+    name: protractor
+    uses: ./.github/workflows/publish-protractor.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).protractor.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  nightwatch:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).nightwatch}}
+    name: nightwatch
+    uses: ./.github/workflows/publish-nightwatch.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  testcafe:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).testcafe}}
+    name: testcafe
+    uses: ./.github/workflows/publish-testcafe.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).testcafe.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+  browser-extension:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).browser-extension}}
+    name: browser-extension
+    uses: ./.github/workflows/publish-browser-extension.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).browser-extension.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  cypress:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).cypress}}
+    name: cypress
+    uses: ./.github/workflows/publish-cypress.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).cypress.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  storybook:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).storybook}}
+    name: storybook
+    uses: ./.github/workflows/publish-storybook.yml
+    with:
+      version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
+    secrets:
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+
+  # LEGACY SDKS
+  webdriverio-legacy:
+    needs: [setup, types, utils, api, core, vgc, test-utils]
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.env}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.releaseVersion}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-webdriverio-legacy
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}/coverage-test-report.xml
+
+  # SDK WRAPPERS
+  webdriverio-service:
+    needs: [setup, webdriverio]
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}
+          report: prod
+        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.env}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.releaseVersion}}
+      - name: Save release and testing artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-tests-report-webdriverio-service
+          retention-days: 30
+          path: |
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}/coverage-tests-metadata.json
+            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}/coverage-test-report.xml
+
+
+  # TESTING BASE
+  test-utils:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-utils.releaseVersion}}
+  test-server:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).test-server.releaseVersion}}
+
+  # TOOLING
+  bongo:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).bongo}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).bongo.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).bongo.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).bongo.releaseVersion}}
+  scripts:
+    needs: setup
+    if: ${{fromJSON(needs.setup.outputs.packages).scripts}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).scripts.dirname}}
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{fromJSON(needs.setup.outputs.packages).scripts.dirname}}
+          version: ${{fromJSON(needs.setup.outputs.packages).scripts.releaseVersion}}
