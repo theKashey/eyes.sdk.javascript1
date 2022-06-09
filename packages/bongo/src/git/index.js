@@ -121,17 +121,24 @@ async function gitLog({
     /^\^/,
     '',
   )} -- ${packagePath} ${exclusions}`
-  const {stdout} = await pexec(command)
-  const entries = stdout && stdout.split('\n').filter(entry => entry)
-  if (!expandAutoCommitLogEntries) return entries
-  let results = []
-  for (const entry of entries) {
-    isAutoCommit(entry)
-      ? results.push(...(await expandAutoCommitLogEntry(entry)))
-      : results.push(entry)
+  try {
+    const {stdout} = await pexec(command)
+    const entries = stdout && stdout.split('\n').filter(entry => entry)
+    if (!expandAutoCommitLogEntries) return entries
+    let results = []
+    for (const entry of entries) {
+      isAutoCommit(entry)
+        ? results.push(...(await expandAutoCommitLogEntry(entry)))
+        : results.push(entry)
+    }
+    // remove release commits & duplicates
+    return [...new Set(results.filter(entry => !isReleaseCommit(entry)))]
+  } catch (error) {
+    // It is possible for an invalid release version to be used even though it is not
+    // included in the tagged versions list. So skip on error.
+    if (/bad revision/.test(error.message)) return []
+    throw error
   }
-  // remove release commits & duplicates
-  return [...new Set(results.filter(entry => !isReleaseCommit(entry)))]
 }
 
 async function gitPullWithRebase() {

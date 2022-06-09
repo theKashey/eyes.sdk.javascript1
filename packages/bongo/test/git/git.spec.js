@@ -63,6 +63,14 @@ describe('git', () => {
     })
   })
   describe('log', () => {
+    it('should skip bad revisions', async () => {
+      const result = await gitLog({
+        packageName: '@applitools/utils',
+        lowerVersion: '1.3.5',
+        upperVersion: '1.3.6',
+      })
+      assert.ok(result)
+    })
     it('should trim out carrot prefixes from version numbers', async () => {
       const result = await gitLog({
         packageName: '@applitools/types',
