@@ -13,11 +13,12 @@ Apollo SDK:
     - 
   bug-fix:
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-webdriverio":
   feature:
     - 
@@ -25,6 +26,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -36,6 +38,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-protractor":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -49,6 +52,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -60,6 +64,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-testcafe":
   feature:
     - 
@@ -67,6 +72,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-nightwatch":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -80,11 +86,13 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-storybook":
   feature:
     - Allowed `` values in custom properties
@@ -115,6 +123,7 @@ Apollo SDK:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
+    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

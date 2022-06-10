@@ -16,6 +16,7 @@ const {
 } = require('../../../')
 const {presult} = require('../../../lib/troubleshoot/utils')
 const logger = new makeLogger()
+const startProxyServer = require('../../utils/proxyServer')
 
 // #region temporary
 function createDomResource({cdt, resources}) {
@@ -816,28 +817,47 @@ render height & width are required when deviceEmulationInfo is not provided, req
     assert.ok(renderErr.message.includes(`Error: combination of url, dom, resources is invalid`))
   })
 
-  it('works with self signed certificates', async () => {
-    const {port, close} = await startFakeEyesServer({
-      cert: fs.readFileSync('./test/fixtures/certificate.pem'),
-      key: fs.readFileSync('./test/fixtures/key.pem'),
-      logger,
-    })
-    const serverUrl = `https://localhost:${port}`
-    const serverConnector = getServerConnector({serverUrl})
-
-    try {
-      await serverConnector.startSession(
-        new SessionStartInfo({
-          appIdOrName: 'app id or name',
-          scenarioIdOrName: 'scenario id or name',
-          agentId: 'agent id',
-          batchInfo: {name: 'batch name'},
-          environment: {os: 'os', hostingApp: 'hosting app', displaySize: {width: 1.5, height: 1.5}},
-          defaultMatchSettings: {},
-        }),
-      )
-    } finally {
-      await close()
+  describe('self-signed certificates', () => {
+    let serverClose, serverUrl
+    const sessionInfo = {
+      appIdOrName: 'app id or name',
+      scenarioIdOrName: 'scenario id or name',
+      agentId: 'agent id',
+      batchInfo: {name: 'batch name'},
+      environment: {os: 'os', hostingApp: 'hosting app', displaySize: {width: 1.5, height: 1.5}},
+      defaultMatchSettings: {},
     }
+
+    before(async () => {
+      const {port, close} = await startFakeEyesServer({
+        cert: fs.readFileSync('./test/fixtures/certificate.pem'),
+        key: fs.readFileSync('./test/fixtures/key.pem'),
+        logger,
+      })
+      serverUrl = `https://localhost:${port}`
+      serverClose = close
+    })
+
+    after(async () => {
+      await serverClose()
+    })
+
+    it('works', async () => {
+      const serverConnector = getServerConnector({serverUrl})
+      await serverConnector.startSession(new SessionStartInfo(sessionInfo))
+    })
+
+    it('works with with proxy with isHttpOnly', async () => {
+      const {port, close} = await startProxyServer()
+      try {
+        const serverConnector = getServerConnector({
+          serverUrl,
+          proxy: {url: `http://localhost:${port}`, isHttpOnly: true},
+        })
+        await serverConnector.startSession(new SessionStartInfo(sessionInfo))
+      } finally {
+        await close()
+      }
+    })
   })
 })
