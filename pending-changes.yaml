@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fix rendering issues with Salesforce Lightning design system
-    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

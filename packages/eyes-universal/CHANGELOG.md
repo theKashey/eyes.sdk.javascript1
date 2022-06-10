@@ -8,6 +8,13 @@
 
 
 
+## 2.7.2 - 2022/6/10
+
+### Features
+### Bug fixes
+- Fix rendering issues with Salesforce Lightning design system
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+
 ## 2.7.1 - 2022/6/8
 
 ### Features
