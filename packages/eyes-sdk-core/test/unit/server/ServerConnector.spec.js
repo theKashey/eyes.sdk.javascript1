@@ -848,15 +848,17 @@ render height & width are required when deviceEmulationInfo is not provided, req
     })
 
     it('works with with proxy with isHttpOnly', async () => {
-      const {port, close} = await startProxyServer()
+      let closeProxy
       try {
+        const {port, close} = await startProxyServer()
+        closeProxy = close
         const serverConnector = getServerConnector({
           serverUrl,
           proxy: {url: `http://localhost:${port}`, isHttpOnly: true},
         })
         await serverConnector.startSession(new SessionStartInfo(sessionInfo))
       } finally {
-        await close()
+        await closeProxy()
       }
     })
   })
