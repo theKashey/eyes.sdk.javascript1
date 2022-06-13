@@ -1,7 +1,13 @@
 {
   "name": "@applitools/snippets",
   "version": "2.2.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/snippets"
+  },
   "license": "SEE LICENSE IN LICENSE",
+  "aliases": ["snippets"],
   "main": "./dist/index.js",
   "files": [
     "dist"
@@ -18,16 +24,6 @@
     "preversion": "yarn build && bongo preversion",
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/applitools/eyes.sdk.javascript1.git",
-    "directory": "packages/snippets"
   },
   "dependencies": {},
   "devDependencies": {
@@ -51,10 +47,15 @@
     "webdriverio": "^6.1.24",
     "yargs": "^16.0.3"
   },
+  "resolutions": {
+    "chromedriver": "^98.0.0"
+  },
   "engines": {
     "node": ">=12.13.0"
   },
-  "resolutions": {
-    "chromedriver": "^98.0.0"
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
   }
 }

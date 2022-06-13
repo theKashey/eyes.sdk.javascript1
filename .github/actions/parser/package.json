@@ -1,8 +1,14 @@
 {
-  "name": "@applitools/parser",
+  "name": "@applitools/action-parser",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "ncc build ./main.js --out dist"
+  },
   "dependencies": {
     "@actions/core": "^1.1.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0"
   }
 }

@@ -1,0 +1,5 @@
+name: Update publish workflow dependencies
+
+runs:
+  using: node16
+  main: dist/index.js

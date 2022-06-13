@@ -27,6 +27,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["webdriverio", "wdio"],
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "exports": {

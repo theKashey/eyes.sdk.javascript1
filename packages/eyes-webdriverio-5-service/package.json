@@ -19,6 +19,7 @@
   "bugs": {
     "url": "https://github.com/applitools/eyes-webdriverio5-service/issues"
   },
+  "aliases": ["webdriverio-service", "wdio-service"],
   "main": "index.js",
   "dependencies": {
     "@applitools/eyes-webdriverio": "5.34.16"

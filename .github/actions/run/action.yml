@@ -8,9 +8,11 @@ inputs:
   ref:
     description: branch or tag name
     type: string
-    default: ${{github.ref}}
+    default: ${{github.ref_name}}
+  inputs:
+    description: workflow inputs
+    type: string
 runs:
   using: node16
-  main: index.js
-
-# gh workflow run publish-universal.yml --ref $(git rev-parse --abbrev-ref HEAD)
+  main: dist/main/index.js
+  post: dist/post/index.js

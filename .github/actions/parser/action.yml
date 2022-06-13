@@ -13,6 +13,10 @@ inputs:
     description: whether including of not listed packages should be allowed
     type: boolean
     default: false
+  only-changed:
+    description: whether including of not changed since last release packages should be allowed
+    type: boolean
+    default: false
   release-version:
     description: default release version type (major, minor, patch)
     type: string
@@ -21,4 +25,4 @@ outputs:
     description: map or array of each package or variation respectively
 runs:
   using: node16
-  main: index.js
+  main: dist/index.js
