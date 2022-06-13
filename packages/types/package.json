@@ -25,6 +25,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["types"],
   "exports": {
     ".": {
       "types": "./types/index.d.ts"
@@ -44,11 +45,6 @@
     "version": "bongo version",
     "postversion": "bongo postversion --skip-release-notification"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn bongo lint"
-    }
-  },
   "dependencies": {},
   "devDependencies": {
     "@applitools/bongo": "^2.1.5",
@@ -64,5 +60,10 @@
   },
   "engines": {
     "node": ">=12.13.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn bongo lint"
+    }
   }
 }

@@ -18,6 +18,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools Team <team@applitools.com>",
+  "aliases": ["storybook"],
   "bin": {
     "eyes-storybook": "./bin/eyes-storybook.js"
   },

@@ -27,6 +27,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["playwright"],
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "files": [

@@ -1,0 +1,60 @@
+name: Publish - api
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: version type
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+  workflow_call:
+    inputs:
+      version:
+        description: version type
+        type: string
+        default: patch
+    secrets:
+      NPM_TOKEN:
+        required: true
+defaults:
+  run:
+    working-directory: ./packages/logger
+env:
+  PACKAGE_DIR: eyes-api
+  FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+jobs:
+  test:
+    strategy:
+      matrix:
+        node-version: ['12', '14', '16', '18']
+    name: 'Test (node: ${{matrix.node-version}})'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+  publish:
+    needs: [test]
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Publish to NPM
+        uses: ./.github/actions/publish
+        with:
+          package: ${{env.PACKAGE_DIR}}
+          version: ${{inputs.version || github.event.inputs.version}}

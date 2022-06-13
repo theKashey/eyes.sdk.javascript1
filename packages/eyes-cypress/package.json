@@ -7,6 +7,7 @@
     "directory": "packages/eyes-cypress"
   },
   "license": "SEE LICENSE IN LICENSE",
+  "aliases": ["cypress", "cy"],
   "main": "index.js",
   "types": "./index.d.ts",
   "bin": {

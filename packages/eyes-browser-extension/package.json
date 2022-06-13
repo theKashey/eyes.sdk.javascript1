@@ -1,5 +1,5 @@
 {
-  "name": "eyes-browser-extension",
+  "name": "@applitools/eyes-browser-extension",
   "version": "0.2.0",
   "repository": {
     "type": "git",
@@ -11,6 +11,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["browser-extension", "extension"],
   "scripts": {
     "lint": "eslint '**/*.js'",
     "build": "yarn build:dist && yarn build:zip",

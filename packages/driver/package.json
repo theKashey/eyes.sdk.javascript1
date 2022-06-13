@@ -24,6 +24,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["driver"],
   "exports": {
     ".": {
       "types": "./types/index.d.ts",

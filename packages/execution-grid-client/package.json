@@ -1,12 +1,21 @@
 {
   "name": "@applitools/execution-grid-client",
   "version": "1.1.17",
-  "description": "",
+  "homepage": "https://applitools.com",
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:applitools/eyes.sdk.javascript1.git",
+    "directory": "packages/execution-grid-client"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "author": {
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["eg-client", "egc"],
   "exports": {
     ".": {
       "types": "./types/index.d.ts",

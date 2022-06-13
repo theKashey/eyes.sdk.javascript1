@@ -25,6 +25,7 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
+  "aliases": ["testcafe"],
   "main": "./dist/index-legacy.js",
   "types": "./types/index-legacy.d.ts",
   "files": [

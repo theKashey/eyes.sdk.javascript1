@@ -22,6 +22,7 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Amit Zur <amit.zur@applitools.com>",
+  "aliases": ["ufg-client", "ufgc", "vg-client", "vgc"],
   "main": "src/visual-grid-client.js",
   "browser": {
     "@applitools/jsdom": false
