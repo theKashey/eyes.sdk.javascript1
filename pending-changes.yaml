@@ -10,17 +10,17 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Add special attribute for pseudo elements
   bug-fix:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Add special attribute for pseudo elements
   bug-fix:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
@@ -30,6 +30,7 @@ Apollo SDK:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -42,6 +43,7 @@ Apollo SDK:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -56,6 +58,7 @@ Apollo SDK:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -76,6 +79,7 @@ Apollo SDK:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -88,13 +92,14 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-storybook":
   feature:
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - Fix rendering issues with Salesforce Lightning design system
@@ -104,6 +109,7 @@ Apollo SDK:
     - Dorp support for Node.js versions <=12
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
+    - Add special attribute for pseudo elements
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
