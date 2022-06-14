@@ -8,6 +8,13 @@
 
 
 
+## 2.8.0 - 2022/6/14
+
+### Features
+- Add special attribute for pseudo elements
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+### Bug fixes
+
 ## 2.7.2 - 2022/6/10
 
 ### Features

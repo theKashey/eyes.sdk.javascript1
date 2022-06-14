@@ -10,8 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Add special attribute for pseudo elements
-    - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
