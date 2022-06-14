@@ -3,6 +3,13 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import {execSync} from 'child_process'
 
+const TOOL_PACKAGES = [
+  '@applitools/bongo',
+  '@applitools/scripts',
+  '@applitools/sdk-coverage-tests',
+  '@applitools/api-extractor',
+]
+
 const OS = {
   linux: 'ubuntu-latest',
   ubuntu: 'ubuntu-latest',
@@ -26,15 +33,16 @@ const packages = await packageDirs.reduce(async (packages, packageDir) => {
   const packageManifestPath = path.resolve(packagesPath, packageDir, 'package.json')
   if (await fs.stat(packageManifestPath).catch(() => false)) {
     const manifest = JSON.parse(await fs.readFile(packageManifestPath, {encoding: 'utf8'}))
-    const jobName = manifest.aliases?.[0] ?? packageDir
-    packages = await packages
-    packages[manifest.name] = {
-      name: manifest.name,
-      jobName,
-      dirname: packageDir,
-      aliases: manifest.aliases,
-      framework: Object.keys(manifest.peerDependencies ?? {})[0],
-      dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
+    if (!TOOL_PACKAGES.includes(manifest.name)) {
+      packages = await packages
+      packages[manifest.name] = {
+        name: manifest.name,
+        jobName: manifest.aliases?.[0] ?? packageDir,
+        dirname: packageDir,
+        aliases: manifest.aliases,
+        framework: Object.keys(manifest.peerDependencies ?? {})[0],
+        dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
+      }
     }
   }
   return packages
