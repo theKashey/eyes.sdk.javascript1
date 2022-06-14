@@ -59,43 +59,23 @@ exports.mochaHooks = {
           await driver.setWindowSize(816, 686)
           drivers.set('internet explorer', {driver, cleanup: () => driver.deleteSession()})
         } else if (name === 'ios safari') {
-          let options
-          if (process.env.APPLITOOLS_TEST_REMOTE === 'local') {
-            options = {
-              protocol: 'http',
-              hostname: '0.0.0.0',
-              path: '/wd/hub',
-              port: 4723,
-              logLevel: 'silent',
-              capabilities: {
-                name: 'Snippets tests',
-                browserName: 'Safari',
-                deviceName: 'iPhone XS',
-                deviceOrientation: 'portrait',
-                platformVersion: '15.4',
-                platformName: 'iOS',
-              },
-              connectionRetryCount: 0,
-            }
-          } else {
-            options = {
-              protocol: 'https',
-              hostname: 'ondemand.saucelabs.com',
-              path: '/wd/hub',
-              port: 443,
-              logLevel: 'silent',
-              capabilities: {
-                name: 'Snippets tests',
-                browserName: 'Safari',
-                deviceName: 'iPhone XS Simulator',
-                deviceOrientation: 'portrait',
-                platformVersion: '15.4',
-                platformName: 'iOS',
-                username: process.env.SAUCE_USERNAME,
-                accessKey: process.env.SAUCE_ACCESS_KEY,
-              },
-              connectionRetryCount: 0,
-            }
+          const options = {
+            protocol: 'https',
+            hostname: 'ondemand.saucelabs.com',
+            path: '/wd/hub',
+            port: 443,
+            logLevel: 'silent',
+            capabilities: {
+              name: 'Snippets tests',
+              browserName: 'Safari',
+              deviceName: 'iPhone XS Simulator',
+              deviceOrientation: 'portrait',
+              platformVersion: '15.4',
+              platformName: 'iOS',
+              username: process.env.SAUCE_USERNAME,
+              accessKey: process.env.SAUCE_ACCESS_KEY,
+            },
+            connectionRetryCount: 0,
           }
           driver = await remote(options)
           drivers.set('ios safari', {driver, cleanup: () => driver.deleteSession()})
