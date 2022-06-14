@@ -3,6 +3,7 @@ import * as utils from '@applitools/utils'
 import {AccessibilityRegionType, AccessibilityRegionTypeEnum} from '../enums/AccessibilityRegionType'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
 import {Region, LegacyRegion} from './Region'
+import {LazyLoadOptions} from './LazyLoadOptions'
 
 type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
 
@@ -62,6 +63,7 @@ export type CheckSettings<TElement, TSelector> = {
   variationGroupId?: string
   timeout?: number
   waitBeforeCapture?: number
+  lazyLoad?: LazyLoadOptions
 }
 
 export type Target<TElement, TSelector> = {
@@ -601,6 +603,11 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   waitBeforeCapture(waitBeforeCapture: number): this {
     utils.guard.isNumber(waitBeforeCapture, {name: 'waitBeforeCapture'})
     this._settings.waitBeforeCapture = waitBeforeCapture
+    return this
+  }
+
+  lazyLoad(options: LazyLoadOptions): this {
+    this._settings.lazyLoad = options ?? true
     return this
   }
 

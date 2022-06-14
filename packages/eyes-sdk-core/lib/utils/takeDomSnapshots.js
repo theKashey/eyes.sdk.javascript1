@@ -15,9 +15,11 @@ async function takeDomSnapshots({
   getEmulatedDevicesSizes,
   getIosDevicesSizes,
   waitBeforeCapture,
+  lazyLoadBeforeCapture,
 }) {
   const cookieJar = driver.features.allCookies ? await driver.getCookies().catch(() => []) : []
   const currentContext = driver.currentContext
+  if (lazyLoadBeforeCapture) await lazyLoadBeforeCapture()
 
   if (!breakpoints) {
     logger.log(`taking single dom snapshot`)
@@ -65,6 +67,7 @@ async function takeDomSnapshots({
     try {
       await driver.setViewportSize({width: requiredWidth, height: viewportSize.height})
     } catch (err) {
+      logger.log(err)
       const actualViewportSize = await driver.getViewportSize()
       if (isStrictBreakpoints) {
         const failedBrowsers = browsersInfo.map(({name, width}) => `(${name}, ${width})`).join(', ')

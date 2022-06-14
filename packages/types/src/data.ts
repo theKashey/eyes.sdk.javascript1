@@ -308,6 +308,12 @@ export type SessionUrls = {
   readonly session?: string
 }
 
+export type LazyLoadOptions = {
+  scrollLength?: number
+  waitingTime?: number
+  maxAmountToScroll?: number
+}
+
 export type TestResultContainer = {
   readonly exception?: Error
   readonly testResults?: TestResult

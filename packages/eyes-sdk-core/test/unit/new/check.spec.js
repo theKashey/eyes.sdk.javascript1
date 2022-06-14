@@ -1,5 +1,6 @@
 'use strict'
 const {expect} = require('chai')
+const assert = require('assert')
 const makeCheck = require('../../../lib/new/check')
 
 function createEyesMock() {
@@ -36,5 +37,17 @@ describe('New eyes.check function', async () => {
     await check()
     const result = eyes.getCut()
     expect(result).to.eql(cut)
+  })
+
+  it('validates lazy load options', async () => {
+    const eyes = createEyesMock()
+    eyes.setCut(cut)
+    const check = makeCheck({eyes})
+    await assert.rejects(async () => {
+      return await check({settings: {lazyLoad: 7}})
+    })
+    await assert.doesNotReject(async () => {
+      return await check({settings: {}})
+    })
   })
 })

@@ -8,6 +8,9 @@ const ClassicRunner = require('../runner/ClassicRunner')
 const takeDomCapture = require('../utils/takeDomCapture')
 const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('./CheckSettingsUtils')
+const EyesUtils = require('./EyesUtils')
+const {lazyLoad} = require('@applitools/snippets')
+const makeLazyLoadOptions = require('../config/lazyLoadOptions')
 
 class EyesClassic extends EyesCore {
   static specialize({agentId, cwd, spec}) {
@@ -142,6 +145,24 @@ class EyesClassic extends EyesCore {
         rotation: this.getRotation(),
       },
     }
+
+    const lazyLoadOptions = makeLazyLoadOptions(this._checkSettings.lazyLoad)
+
+    if (lazyLoadOptions) {
+      this._logger.log('lazy loading the page before capturing a screenshot')
+      const scripts = {
+        main: {
+          script: lazyLoad,
+          args: [[lazyLoadOptions]],
+        },
+        poll: {
+          script: lazyLoad,
+          args: [[]],
+        },
+      }
+      await EyesUtils.executePollScript(this._logger, this._driver, scripts, {pollTimeout: lazyLoadOptions.waitingTime})
+    }
+
     let dom
     let afterScreenShotScrollingOffeset = null
     const screenshot = await takeScreenshot({

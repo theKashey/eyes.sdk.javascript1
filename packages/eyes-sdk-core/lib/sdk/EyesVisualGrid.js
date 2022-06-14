@@ -11,6 +11,9 @@ const takeDomSnapshots = require('../utils/takeDomSnapshots')
 const takeVHSes = require('../utils/takeVHSes')
 const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('../sdk/CheckSettingsUtils')
+const EyesUtils = require('./EyesUtils')
+const {lazyLoad} = require('@applitools/snippets')
+const makeLazyLoadOptions = require('../config/lazyLoadOptions')
 
 class EyesVisualGrid extends EyesCore {
   static specialize({agentId, spec, cwd, VisualGridClient}) {
@@ -161,6 +164,7 @@ class EyesVisualGrid extends EyesCore {
           checkSettings.waitBeforeCapture,
           this._configuration.getWaitBeforeCapture(),
         )
+        const lazyLoadOptions = makeLazyLoadOptions(checkSettings.lazyLoad)
         const showLogs = this._configuration.getShowLogs()
 
         const snapshotArgs = {}
@@ -177,6 +181,24 @@ class EyesVisualGrid extends EyesCore {
             getIosDevicesSizes: this._getIosDevicesSizes,
             showLogs,
             waitBeforeCapture: () => utils.general.sleep(waitBeforeCapture),
+            lazyLoadBeforeCapture: async () => {
+              if (lazyLoadOptions) {
+                this._logger.log('lazy loading the page before capturing snapshots')
+                const scripts = {
+                  main: {
+                    script: lazyLoad,
+                    args: [[lazyLoadOptions]],
+                  },
+                  poll: {
+                    script: lazyLoad,
+                    args: [[]],
+                  },
+                }
+                await EyesUtils.executePollScript(this._logger, this._driver, scripts, {
+                  pollTimeout: lazyLoadOptions.waitingTime,
+                })
+              }
+            },
           })
 
           const [{url}] = snapshots

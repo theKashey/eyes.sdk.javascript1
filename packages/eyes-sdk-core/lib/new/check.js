@@ -1,5 +1,6 @@
 const utils = require('@applitools/utils')
 const MatchResult = require('../match/MatchResult')
+const validateLazyLoadOptions = require('../config/lazyLoadOptions')
 
 function makeCheck({eyes}) {
   return async function check({settings, config, driver} = {}) {
@@ -15,6 +16,7 @@ function makeCheck({eyes}) {
     if (utils.types.isNull(eyes._configuration.getForceFullPageScreenshot())) {
       eyes._configuration.setForceFullPageScreenshot(isCheckWindow)
     }
+    validateLazyLoadOptions(settings && settings.lazyLoad)
     const result = await eyes.check(settings, driver)
     return result ? result.toJSON() : new MatchResult().toJSON()
   }

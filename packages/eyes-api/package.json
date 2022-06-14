@@ -45,6 +45,7 @@
     "build": "tsc",
     "test": "yarn test:unit",
     "test:unit": "mocha --no-timeouts -r ts-node/register './test/unit/*.spec.ts'",
+    "test:watch": "yarn test:unit --watch --extension ts",
     "deps": "bongo deps",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",

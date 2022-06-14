@@ -36,4 +36,23 @@ describe('CheckSettings', () => {
     const checkSettings = new CheckSettings().waitBeforeCapture(1000)
     assert.equal(checkSettings.toJSON().waitBeforeCapture, 1000)
   })
+
+  describe('lazyLoad', () => {
+    it('set lazyLoad with options object', () => {
+      const expected = {
+        scrollLength: 1,
+        waitingTime: 2,
+        maxAmountToScroll: 3,
+      }
+      const checkSettings = new CheckSettings().lazyLoad(expected)
+      const actual = checkSettings.toJSON().lazyLoad
+      assert.deepStrictEqual(actual, expected)
+    })
+    it('set lazyLoad with no value', () => {
+      const expected = true
+      const checkSettings = new CheckSettings().lazyLoad()
+      const actual = checkSettings.toJSON().lazyLoad
+      assert.deepStrictEqual(actual, expected)
+    })
+  })
 })
