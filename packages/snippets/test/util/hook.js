@@ -17,7 +17,7 @@ exports.mochaHooks = {
         } else if (name === 'firefox') {
           driver = await remote({
             protocol: 'https',
-            hostname: 'ondemand.saucelabs.com',
+            hostname: 'ondemand.us-west-1.saucelabs.com',
             path: '/wd/hub',
             port: 443,
             logLevel: 'silent',
@@ -39,7 +39,7 @@ exports.mochaHooks = {
         } else if (name === 'internet explorer') {
           driver = await remote({
             protocol: 'https',
-            hostname: 'ondemand.saucelabs.com',
+            hostname: 'ondemand.us-west-1.saucelabs.com',
             path: '/wd/hub',
             port: 443,
             logLevel: 'silent',
@@ -61,7 +61,7 @@ exports.mochaHooks = {
         } else if (name === 'ios safari') {
           const options = {
             protocol: 'https',
-            hostname: 'ondemand.saucelabs.com',
+            hostname: 'ondemand.us-west-1.saucelabs.com',
             path: '/wd/hub',
             port: 443,
             logLevel: 'silent',
