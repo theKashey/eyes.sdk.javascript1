@@ -7,7 +7,9 @@
     "directory": "packages/snippets"
   },
   "license": "SEE LICENSE IN LICENSE",
-  "aliases": ["snippets"],
+  "aliases": [
+    "snippets"
+  ],
   "main": "./dist/index.js",
   "files": [
     "dist"
