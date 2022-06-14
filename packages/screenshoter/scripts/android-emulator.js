@@ -42,9 +42,7 @@ async function runEmulator({device, apiLevel, port, index}) {
 
   console.log(`Running emulator with name "${avdName}"...`)
   await utils.process.sh(
-    `emulator -noaudio -no-window -no-boot-anim -gpu swiftshader_indirect -ports ${adbPort},${
-      adbPort + 1
-    } -avd ${avdName} &`,
+    `emulator -noaudio -no-boot-anim -gpu swiftshader_indirect -ports ${adbPort},${adbPort + 1} -avd ${avdName} &`,
     {spawnOptions: {detached: true, stdio: 'ignore'}},
   )
 

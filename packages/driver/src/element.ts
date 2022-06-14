@@ -10,7 +10,7 @@ export type ElementState<TElement> = {
   contentSize?: types.Size
   scrollOffset?: types.Location
   transforms?: any
-  attributes?: Record<string, string>
+  attributes?: Record<string, string | Error>
   touchPadding?: number
   containedElements?: Map<TElement, boolean>
 }
@@ -302,7 +302,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
               `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
             )
           })
-        this._state.touchPadding = touchPadding ?? 20
+        this._state.touchPadding = touchPadding ?? 21
         this._logger.log('Touch padding set:', this._state.touchPadding)
       }
     }
@@ -324,7 +324,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
   async getAttribute(name: string): Promise<string> {
     // we assumes that attributes are not changed during the session
-    if (this._state.attributes?.[name]) return this._state.attributes[name]
+    if (this._state.attributes?.[name]) {
+      if (this._state.attributes[name] instanceof Error) throw this._state.attributes[name]
+      return this._state.attributes[name] as any
+    }
 
     const value = await this.withRefresh(async () => {
       if (this.driver.isWeb) {
@@ -332,19 +335,22 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         return properties[name]
       } else {
         this._logger.log(`Extracting "${name}" attribute of native element with selector`, this.selector)
-        const value = await this._spec.getElementAttribute(this.driver.target, this.target, name)
         this._state.attributes ??= {}
-        this._state.attributes[name] = value
-
-        if (this.driver.isAndroid && name === 'contentSize') {
-          // android has a bug when after extracting 'contentSize' attribute the element is being scrolled by undetermined number of pixels
-          this._logger.log('Stabilizing android scroll offset')
-          const originalScrollOffset = await this.getScrollOffset()
-          await this.scrollTo({x: 0, y: 0}, {force: true})
-          await this.scrollTo(originalScrollOffset)
+        try {
+          this._state.attributes[name] = await this._spec.getElementAttribute(this.driver.target, this.target, name)
+          return this._state.attributes[name]
+        } catch (err) {
+          this._state.attributes[name] = err
+          throw err
+        } finally {
+          if (this.driver.isAndroid && name === 'contentSize') {
+            // android has a bug when after extracting 'contentSize' attribute the element is being scrolled by undetermined number of pixels
+            this._logger.log('Stabilizing android scroll offset')
+            const originalScrollOffset = await this.getScrollOffset()
+            await this.scrollTo({x: 0, y: 0}, {force: true})
+            await this.scrollTo(originalScrollOffset)
+          }
         }
-
-        return value
       }
     })
 
@@ -387,7 +393,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
         if (this.driver.isAndroid) {
           remainingOffset = utils.geometry.scale(remainingOffset, this.driver.pixelRatio)
-          effectiveRegion = utils.geometry.scale(scrollableRegion, this.driver.pixelRatio)
+          effectiveRegion = utils.geometry.scale(effectiveRegion, this.driver.pixelRatio)
         }
 
         const actions = []
@@ -484,10 +490,12 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         }
 
         const actualScrollableRegion = await this.getClientRegion()
-        this._state.scrollOffset = utils.geometry.offsetNegative(requiredOffset, {
-          x: scrollableRegion.x - actualScrollableRegion.x,
-          y: scrollableRegion.y - actualScrollableRegion.y,
-        })
+        this._state.scrollOffset = utils.geometry.round(
+          utils.geometry.offsetNegative(requiredOffset, {
+            x: scrollableRegion.x - actualScrollableRegion.x,
+            y: scrollableRegion.y - actualScrollableRegion.y,
+          }),
+        )
 
         return this._state.scrollOffset
       }

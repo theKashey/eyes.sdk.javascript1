@@ -96,7 +96,11 @@ async function takeStitchedScreenshot({
     const partName = `${partRegion.x}_${partRegion.y}_${partRegion.width}x${partRegion.height}`
     logger.verbose(`Processing part ${partName}`)
 
-    const compensateOffset = {x: 0, y: initialRegion.y !== partRegion.y ? overlap.top : 0}
+    // compensate scroller region being shifted and top overlap
+    const compensateOffset = {
+      x: scrollerRegionShift.x + 0,
+      y: scrollerRegionShift.y + (initialRegion.y !== partRegion.y ? overlap.top : 0),
+    }
     const requiredOffset = utils.geometry.offsetNegative(utils.geometry.location(partRegion), compensateOffset)
 
     logger.verbose('Move to', requiredOffset)
