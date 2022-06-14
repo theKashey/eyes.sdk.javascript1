@@ -9,6 +9,18 @@
 
 
 
+
+## 5.35.3 - 2022/6/14
+
+### Features
+- Add special attribute for pseudo elements
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+### Bug fixes
+- Fix calling `waitBeforeCapture` when failed to set required viewport size
+- Fix rendering issues with Salesforce Lightning design system
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+- Fixed native screenshots of the elements under large collapsing areas
+
 ## 5.35.2 - 2022/6/8
 
 ### Features

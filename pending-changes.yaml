@@ -21,14 +21,9 @@ Apollo SDK:
     - Fixed native screenshots of the elements under large collapsing areas
 "@applitools/eyes-webdriverio":
   feature:
-    - Add special attribute for pseudo elements
-    - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - 
   bug-fix:
-    - |
-      Fix calling `waitBeforeCapture` when failed to set required viewport size
-    - Fix rendering issues with Salesforce Lightning design system
-    - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
-    - Fixed native screenshots of the elements under large collapsing areas
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
