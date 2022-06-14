@@ -22,7 +22,12 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Amit Zur <amit.zur@applitools.com>",
-  "aliases": ["ufg-client", "ufgc", "vg-client", "vgc"],
+  "aliases": [
+    "ufg-client",
+    "ufgc",
+    "vg-client",
+    "vgc"
+  ],
   "main": "src/visual-grid-client.js",
   "browser": {
     "@applitools/jsdom": false
@@ -54,7 +59,7 @@
     }
   },
   "dependencies": {
-    "@applitools/eyes-sdk-core": "13.7.0",
+    "@applitools/eyes-sdk-core": "13.8.0",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/http-commons": "2.4.7",
     "@applitools/isomorphic-fetch": "3.0.0",
