@@ -1,6 +1,6 @@
 {
   "name": "@applitools/utils",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "keywords": [
     "applitools",
     "eyes",
@@ -25,7 +25,9 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "aliases": ["utils"],
+  "aliases": [
+    "utils"
+  ],
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
