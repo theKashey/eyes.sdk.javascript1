@@ -1,6 +1,6 @@
 const utils = require('@applitools/utils')
 const MatchResult = require('../match/MatchResult')
-const validateLazyLoadOptions = require('../config/lazyLoadOptions')
+const validateLazyLoadOptions = require('../config/LazyLoadOptions')
 
 function makeCheck({eyes}) {
   return async function check({settings, config, driver} = {}) {
