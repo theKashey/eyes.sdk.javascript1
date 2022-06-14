@@ -1,6 +1,6 @@
 {
   "name": "@applitools/test-utils",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
@@ -12,7 +12,9 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools team <team@applitools.com>",
-  "aliases": ["test-utils"],
+  "aliases": [
+    "test-utils"
+  ],
   "files": [
     "src",
     "mocha-hooks",
