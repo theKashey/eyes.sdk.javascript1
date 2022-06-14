@@ -72,7 +72,7 @@ exports.mochaHooks = {
                 browserName: 'Safari',
                 deviceName: 'iPhone XS',
                 deviceOrientation: 'portrait',
-                platformVersion: '15.4',
+                platformVersion: '15.5',
                 platformName: 'iOS',
               },
               connectionRetryCount: 0,
