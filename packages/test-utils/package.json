@@ -12,7 +12,9 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools team <team@applitools.com>",
-  "aliases": ["test-utils"],
+  "aliases": [
+    "test-utils"
+  ],
   "files": [
     "src",
     "mocha-hooks",
