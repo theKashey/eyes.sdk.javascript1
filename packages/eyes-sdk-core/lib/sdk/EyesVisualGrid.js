@@ -13,7 +13,7 @@ const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('../sdk/CheckSettingsUtils')
 const EyesUtils = require('./EyesUtils')
 const {lazyLoad} = require('@applitools/snippets')
-const makeLazyLoadOptions = require('../config/lazyLoadOptions')
+const makeLazyLoadOptions = require('../config/LazyLoadOptions')
 
 class EyesVisualGrid extends EyesCore {
   static specialize({agentId, spec, cwd, VisualGridClient}) {

@@ -10,7 +10,7 @@ const EyesCore = require('./EyesCore')
 const CheckSettingsUtils = require('./CheckSettingsUtils')
 const EyesUtils = require('./EyesUtils')
 const {lazyLoad} = require('@applitools/snippets')
-const makeLazyLoadOptions = require('../config/lazyLoadOptions')
+const makeLazyLoadOptions = require('../config/LazyLoadOptions')
 
 class EyesClassic extends EyesCore {
   static specialize({agentId, cwd, spec}) {
