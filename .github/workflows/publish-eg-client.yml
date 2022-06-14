@@ -1,4 +1,4 @@
-name: Publish - eg-client
+name: Publish - eg client
 
 on:
   workflow_dispatch:

@@ -46,7 +46,7 @@
     "prettier": "1.19.0",
     "rollup": "^2.26.11",
     "rollup-plugin-terser": "^7.0.2",
-    "webdriverio": "^6.1.24",
+    "webdriverio": "^7.20.2",
     "yargs": "^16.0.3"
   },
   "resolutions": {

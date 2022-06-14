@@ -1,4 +1,4 @@
-name: Publish - ufg client
+name: Publish - test server
 
 on:
   workflow_dispatch:
@@ -8,50 +8,25 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
     secrets:
       NPM_TOKEN:
         required: true
-      APPLITOOLS_API_KEY:
-        required: true
-      APPLITOOLS_API_KEY_SDK:
-        required: true
-      APPLITOOLS_API_KEY_READ:
-        required: true
+defaults:
+  run:
+    working-directory: ./packages/test-server
 env:
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  PACKAGE_DIR: test-server
   FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 jobs:
   test:
-    strategy:
-      matrix:
-        node-version: ['12', '14', '16']
-    name: 'Test (node: ${{matrix.node-version}})'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{matrix.node-version}}
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: visual-grid-client
-  publish:
-    needs: [test]
-    name: Publish
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -60,8 +35,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          package: ${{env.PACKAGE_DIR}}
+  publish:
+    name: Publish
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: visual-grid-client
+          package: ${{env.PACKAGE_DIR}}
           version: ${{inputs.version || github.event.inputs.version}}

@@ -1,4 +1,4 @@
-name: Publish - test-test-utils
+name: Publish - test utils
 
 on:
   workflow_dispatch:

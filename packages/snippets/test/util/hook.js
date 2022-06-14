@@ -85,14 +85,16 @@ exports.mochaHooks = {
               port: 443,
               logLevel: 'silent',
               capabilities: {
-                name: 'Snippets tests',
                 browserName: 'Safari',
-                deviceName: 'iPhone XS Simulator',
-                deviceOrientation: 'portrait',
-                platformVersion: '15.4',
                 platformName: 'iOS',
-                username: process.env.SAUCE_USERNAME,
-                accessKey: process.env.SAUCE_ACCESS_KEY,
+                'appium:platformVersion': '15.4',
+                'appium:deviceName': 'iPhone XS Simulator',
+                'sauce:options': {
+                  name: 'Snippets tests',
+                  deviceOrientation: 'portrait',
+                  username: process.env.SAUCE_USERNAME,
+                  accessKey: process.env.SAUCE_ACCESS_KEY,
+                },
               },
               connectionRetryCount: 0,
             }
