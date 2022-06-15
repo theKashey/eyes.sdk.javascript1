@@ -18,7 +18,7 @@ describe('universal-server', () => {
     }
   })
 
-  it('accepts payload of 254mb', async () => {
+  it('accepts payload of 256mb', async () => {
     const server = await makeServer()
     const ws = new WebSocket(`ws://localhost:${server.port}/eyes`)
 
@@ -26,7 +26,7 @@ describe('universal-server', () => {
       await new Promise<void>((resolve, reject) => {
         ws.on('open', () => {
           const event = {name: 'Server.getInfo', key: 'uuid', payload: ''}
-          event.payload = Buffer.alloc(254 * 1024 * 1024 - JSON.stringify(event).length)
+          event.payload = Buffer.alloc(256 * 1024 * 1024 - JSON.stringify(event).length)
             .fill(107)
             .toString('utf8')
           ws.send(JSON.stringify(event))
