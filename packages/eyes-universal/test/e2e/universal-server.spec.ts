@@ -26,9 +26,11 @@ describe('universal-server', () => {
       await new Promise<void>((resolve, reject) => {
         ws.on('open', () => {
           const event = {name: 'Server.getInfo', key: 'uuid', payload: ''}
-          event.payload = Buffer.alloc(254 * 1024 * 1024 - JSON.stringify(event).length).fill(107).toString('utf8')
+          event.payload = Buffer.alloc(254 * 1024 * 1024 - JSON.stringify(event).length)
+            .fill(107)
+            .toString('utf8')
           ws.send(JSON.stringify(event))
-          ws.on('message', (data) => {
+          ws.on('message', data => {
             if (JSON.parse(data.toString('utf8')).key === event.key) resolve()
           })
         })
