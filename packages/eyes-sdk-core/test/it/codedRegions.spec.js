@@ -45,7 +45,7 @@ describe('codedRegions', async () => {
       layoutRegions: [layout],
     })
     const [results] = await eyes.close()
-    const regions = await extractRegions(results)
+    const regions = (await extractRegions(results))[0]
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
     expect(regions.floating).to.be.deep.equal([floatingRegion(floating.rect, 4, 3, 2, 1)])
     expect(regions.accessibility).to.be.deep.equal([
@@ -57,7 +57,6 @@ describe('codedRegions', async () => {
       layoutRegion(await driver.findElement(layout).then(element => element.rect)),
     ])
   })
-
   it('check region', async () => {
     await eyes.open(driver, 'FakeApp', 'FakeTest')
     const region = await driver.findElement('element0')
@@ -77,7 +76,7 @@ describe('codedRegions', async () => {
       layoutRegions: [layout],
     })
     const [results] = await eyes.close()
-    const regions = await extractRegions(results)
+    const regions = (await extractRegions(results))[0]
     expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
     expect(regions.floating).to.be.deep.equal([relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1), region.rect)])
     expect(regions.accessibility).to.be.deep.equal([
@@ -92,18 +91,58 @@ describe('codedRegions', async () => {
       relatedRegion(layoutRegion(await driver.findElement(layout).then(element => element.rect)), region.rect),
     ])
   })
-
+  it('check region with padding', async () => {
+    await eyes.open(driver, 'FakeApp', 'FakeTest')
+    const region = await driver.findElement('element0')
+    const ignore = await driver.findElement('element3')
+    const ignoreAreaPadding = {left: 10, top: 10}
+    const layout = 'element4'
+    const layoutOriginalRect = layoutRegion(await driver.findElement(layout).then(element => element.rect))
+    const layoutAreaPadding = 15
+    await eyes.check({
+      region,
+      ignoreRegions: [ignore],
+      layoutRegions: [{region: layout}],
+    })
+    await eyes.check({
+      region,
+      ignoreRegions: [{region: ignore, padding: ignoreAreaPadding}],
+      layoutRegions: [{region: layout, padding: layoutAreaPadding}],
+    })
+    const [results] = await eyes.close()
+    const regions = await extractRegions(results)
+    const firstResult = regions[0]
+    const secondResult = regions[1]
+    expect(secondResult.ignore[0]).to.be.deep.equal(getRectWithPadding(firstResult.ignore[0], ignoreAreaPadding))
+    expect(secondResult.layout[0]).to.be.deep.equal(getRectWithPadding(firstResult.layout[0], layoutAreaPadding))
+    const layoutResultRect = layoutRegion(await driver.findElement(layout).then(element => element.rect))
+    expect(layoutResultRect).to.be.deep.equal(getRectWithPadding(layoutOriginalRect, layoutAreaPadding))
+  })
+  function getRectWithPadding(rect, padding) {
+    if (!padding) {
+      return rect
+    }
+    const setToAll = typeof padding !== 'object'
+    return {
+      x: rect.x - (setToAll ? padding : padding.left || 0),
+      y: rect.y - (setToAll ? padding : padding.top || 0),
+      width: rect.width + (setToAll ? padding * 2 : (padding.left || 0) + (padding.right || 0)),
+      height: rect.height + (setToAll ? padding * 2 : (padding.top || 0) + (padding.bottom || 0)),
+    }
+  }
   async function extractRegions(results) {
     const session = await getSession(new TestResults(results), serverUrl)
-    const imageMatchSettings = session.steps[0].matchWindowData.options.imageMatchSettings
-    return {
-      ignore: imageMatchSettings.ignore.map(ignoreRegion),
-      floating: imageMatchSettings.floating.map(floatingRegion),
-      accessibility: imageMatchSettings.accessibility.map(accessibilityRegion),
-      strict: imageMatchSettings.strict.map(strictRegion),
-      content: imageMatchSettings.content.map(contentRegion),
-      layout: imageMatchSettings.layout.map(layoutRegion),
-    }
+    return session.steps.map(step => {
+      const imageMatchSettings = step.matchWindowData.options.imageMatchSettings
+      return {
+        ignore: imageMatchSettings.ignore.map(ignoreRegion),
+        floating: imageMatchSettings.floating.map(floatingRegion),
+        accessibility: imageMatchSettings.accessibility.map(accessibilityRegion),
+        strict: imageMatchSettings.strict.map(strictRegion),
+        content: imageMatchSettings.content.map(contentRegion),
+        layout: imageMatchSettings.layout.map(layoutRegion),
+      }
+    })
   }
 
   function ignoreRegion(region) {

@@ -2,6 +2,7 @@ import {Selector} from './driver'
 import {
   MatchLevel,
   Region,
+  OffsetRect,
   AccessibilityRegionType,
   AccessibilityGuidelinesVersion,
   AccessibilityLevel,
@@ -33,6 +34,11 @@ type AccessibilityRegion<TRegion> = {
   type?: AccessibilityRegionType
 }
 
+type PaddedRegion<TRegion> = {
+  region: TRegion
+  padding?: number | OffsetRect
+}
+
 export type MatchSettings<TRegion> = {
   exact?: {
     minDiffIntensity: number
@@ -50,10 +56,10 @@ export type MatchSettings<TRegion> = {
     level?: AccessibilityLevel
     guidelinesVersion?: AccessibilityGuidelinesVersion
   }
-  ignoreRegions?: TRegion[]
-  layoutRegions?: TRegion[]
-  strictRegions?: TRegion[]
-  contentRegions?: TRegion[]
+  ignoreRegions?: (TRegion | PaddedRegion<TRegion>)[]
+  layoutRegions?: (TRegion | PaddedRegion<TRegion>)[]
+  strictRegions?: (TRegion | PaddedRegion<TRegion>)[]
+  contentRegions?: (TRegion | PaddedRegion<TRegion>)[]
   floatingRegions?: (TRegion | FloatingRegion<TRegion>)[]
   accessibilityRegions?: (TRegion | AccessibilityRegion<TRegion>)[]
   pageId?: string

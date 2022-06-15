@@ -247,3 +247,23 @@ export function divide(region: Region, size: RectangleSize, padding: {top?: numb
   }
   return subRegions
 }
+export function withPadding(
+  region: Region,
+  padding: number | {top?: number; right?: number; bottom?: number; left?: number},
+): Region {
+  if (types.isNumber(padding)) {
+    padding = {left: padding, right: padding, top: padding, bottom: padding}
+  } else {
+    padding = {
+      left: padding?.left ?? 0,
+      right: padding?.right ?? 0,
+      top: padding?.top ?? 0,
+      bottom: padding?.bottom ?? 0,
+    }
+  }
+  region.x -= padding.left
+  region.width += padding.left + padding.right
+  region.y -= padding.top
+  region.height += padding.top + padding.bottom
+  return region
+}

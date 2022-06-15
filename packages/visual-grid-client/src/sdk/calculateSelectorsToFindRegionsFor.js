@@ -1,9 +1,21 @@
 'use strict'
 
 const {Region} = require('@applitools/eyes-sdk-core')
+const utils = require('@applitools/utils')
 
 function selectorObject({selector, type}) {
   return type === 'xpath' || type === 'css' ? {type, selector} : selector
+}
+function tempProxyToGeometryWithPadding(regionObject, padding) {
+  const {width, height, left: x, top: y} = regionObject
+  const tempRegionObject = {width, height, x, y}
+  const res = utils.geometry.withPadding(tempRegionObject, padding)
+  return {
+    width: res.width,
+    height: res.height,
+    left: res.x,
+    top: res.y,
+  }
 }
 
 function calculateSelectorsToFindRegionsFor({
@@ -55,7 +67,8 @@ function calculateSelectorsToFindRegionsFor({
               regionObject.left = Math.max(0, regionObject.left - imageLocation.x)
               regionObject.top = Math.max(0, regionObject.top - imageLocation.y)
             }
-            regions.push(regionWithUserInput({regionObject, userRegion, regionName}))
+            const padding = userRegion.padding
+            regions.push(regionWithUserInput({regionObject, userRegion, regionName, padding}))
           })
         }
 
@@ -77,7 +90,7 @@ function regionify({region}) {
   }
 }
 
-function regionWithUserInput({regionObject, userRegion, regionName}) {
+function regionWithUserInput({regionObject, userRegion, regionName, padding}) {
   // accesibility regions
   if (regionName === 'accessibility') {
     Object.assign(regionObject, {
@@ -93,8 +106,7 @@ function regionWithUserInput({regionObject, userRegion, regionName}) {
       maxRightOffset: userRegion.maxRightOffset,
     })
   }
-
-  return regionObject
+  return tempProxyToGeometryWithPadding(regionObject, padding)
 }
 
 module.exports = calculateSelectorsToFindRegionsFor

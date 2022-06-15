@@ -7,6 +7,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
   const mapping = {
     ids: [],
     elements: [],
+    paddings: [],
     resolvers: [],
   }
 
@@ -32,6 +33,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
     for (const reference of references) {
       if (!reference) continue
       const referenceRegion = reference.region || reference
+
       if (utils.types.has(referenceRegion, ['width', 'height'])) {
         const persistedRegion = utils.types.has(referenceRegion, ['x', 'y'])
           ? persistReference(reference, referenceRegion)
@@ -47,6 +49,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
         for (const element of elements) {
           mapping.ids.push(utils.general.guid())
           mapping.elements.push(element)
+          mapping.paddings.push(reference.padding)
           mapping.resolvers.push(selector => persistedRegions.push(persistReference(reference, selector)))
         }
       }
@@ -63,9 +66,11 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
     const selectors = await context.execute(snippets.addElementIds, [mapping.elements, mapping.ids])
     selectors.forEach((selectors, index) => {
       const resolver = mapping.resolvers[index]
+      const padding = mapping.paddings[index]
       const persistedSelector = selectors.map((selector, index) => ({
         type: 'css',
         selector,
+        padding,
         nodeType: index < selectors.length - 1 ? 'shadow-root' : 'element',
       }))
       resolver(persistedSelector.length === 1 ? persistedSelector[0] : persistedSelector)
@@ -82,6 +87,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 
 function toCheckWindowConfiguration({checkSettings, configuration}) {
   const fully = TypeUtils.getOrDefault(checkSettings.fully, configuration.getForceFullPageScreenshot())
+
   const config = {
     ignore: transformRegions(checkSettings.ignoreRegions),
     floating: transformRegions(checkSettings.floatingRegions),
@@ -211,7 +217,8 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
         if (elements.length > 0) {
           const contextLocationInViewport = await elements[0].context.getLocationInViewport()
           for (const element of elements) {
-            const region = utils.geometry.offset(await element.getRegion(), contextLocationInViewport)
+            const elementRegion = utils.geometry.withPadding(await element.getRegion(), reference.padding)
+            const region = utils.geometry.offset(elementRegion, contextLocationInViewport)
             referenceRegions.push(
               utils.geometry.scale(
                 {
@@ -231,7 +238,6 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
     return regions
   }
 }
-
 module.exports = {
   toPersistedCheckSettings,
   toCheckWindowConfiguration,

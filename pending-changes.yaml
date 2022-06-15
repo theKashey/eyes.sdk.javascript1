@@ -10,12 +10,13 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed native screenshots of the elements under large collapsing areas
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
@@ -30,6 +31,7 @@ Apollo SDK:
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -44,6 +46,7 @@ Apollo SDK:
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -61,6 +64,7 @@ Apollo SDK:
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -73,6 +77,7 @@ Apollo SDK:
 "@applitools/eyes-testcafe":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
@@ -84,6 +89,7 @@ Apollo SDK:
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -99,6 +105,7 @@ Apollo SDK:
   feature:
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
@@ -106,6 +113,7 @@ Apollo SDK:
   feature:
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
+    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - Fix rendering issues with Salesforce Lightning design system

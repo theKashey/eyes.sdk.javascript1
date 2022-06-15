@@ -31,6 +31,11 @@ type AccessibilityRegionReference<TElement, TSelector> = {
   type?: AccessibilityRegionType
 }
 
+type PaddedRegionReference<TElement, TSelector> = {
+  region: RegionReference<TElement, TSelector>
+  padding?: number | types.OffsetRect
+}
+
 type CheckSettingsSpec<TElement = unknown, TSelector = unknown> = {
   isElement(value: any): value is TElement
   isSelector(value: any): value is TSelector
@@ -48,10 +53,10 @@ export type CheckSettings<TElement, TSelector> = {
   enablePatterns?: boolean
   ignoreDisplacements?: boolean
   ignoreCaret?: boolean
-  ignoreRegions?: RegionReference<TElement, TSelector>[]
-  layoutRegions?: RegionReference<TElement, TSelector>[]
-  strictRegions?: RegionReference<TElement, TSelector>[]
-  contentRegions?: RegionReference<TElement, TSelector>[]
+  ignoreRegions?: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector>)[]
+  layoutRegions?: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector>)[]
+  strictRegions?: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector>)[]
+  contentRegions?: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector>)[]
   floatingRegions?: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
   accessibilityRegions?: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
   disableBrowserFetching?: boolean
@@ -255,7 +260,9 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return this
   }
 
-  ignoreRegion(region: RegionReference<TElement, TSelector> | LegacyRegion): this {
+  ignoreRegion(
+    region: RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion,
+  ): this {
     if (!this._settings.ignoreRegions) this._settings.ignoreRegions = []
     if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
       region = {x: region.left, y: region.top, width: region.width, height: region.height}
@@ -263,7 +270,9 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     this._settings.ignoreRegions.push(region)
     return this
   }
-  ignoreRegions(...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this {
+  ignoreRegions(
+    ...regions: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion)[]
+  ): this {
     regions.forEach(region => this.ignoreRegion(region))
     return this
   }
@@ -276,7 +285,9 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return this.ignoreRegions(...regions)
   }
 
-  layoutRegion(region: RegionReference<TElement, TSelector> | LegacyRegion): this {
+  layoutRegion(
+    region: RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion,
+  ): this {
     if (!this._settings.layoutRegions) this._settings.layoutRegions = []
     if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
       region = {x: region.left, y: region.top, width: region.width, height: region.height}
@@ -284,12 +295,16 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     this._settings.layoutRegions.push(region)
     return this
   }
-  layoutRegions(...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this {
+  layoutRegions(
+    ...regions: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion)[]
+  ): this {
     regions.forEach(region => this.layoutRegion(region))
     return this
   }
 
-  strictRegion(region: RegionReference<TElement, TSelector> | LegacyRegion): this {
+  strictRegion(
+    region: RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion,
+  ): this {
     if (!this._settings.strictRegions) this._settings.strictRegions = []
     if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
       region = {x: region.left, y: region.top, width: region.width, height: region.height}
@@ -297,12 +312,16 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     this._settings.strictRegions.push(region)
     return this
   }
-  strictRegions(...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this {
+  strictRegions(
+    ...regions: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion)[]
+  ): this {
     regions.forEach(region => this.strictRegion(region))
     return this
   }
 
-  contentRegion(region: RegionReference<TElement, TSelector> | LegacyRegion): this {
+  contentRegion(
+    region: RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion,
+  ): this {
     if (!this._settings.contentRegions) this._settings.contentRegions = []
     if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
       region = {x: region.left, y: region.top, width: region.width, height: region.height}
@@ -310,7 +329,9 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     this._settings.contentRegions.push(region)
     return this
   }
-  contentRegions(...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this {
+  contentRegions(
+    ...regions: (RegionReference<TElement, TSelector> | PaddedRegionReference<TElement, TSelector> | LegacyRegion)[]
+  ): this {
     regions.forEach(region => this.contentRegion(region))
     return this
   }

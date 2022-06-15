@@ -594,4 +594,46 @@ describe('CheckSettingsUtils', () => {
       })
     })
   })
+  it('toCheckWindowConfiguration handles regions padding', async () => {
+    const mockDriver = new MockDriver()
+    mockDriver.mockElements([
+      {selector: 'element0', rect: {x: 1, y: 2, width: 500, height: 501}},
+      {selector: 'element1', rect: {x: 10, y: 11, width: 101, height: 102}},
+      {selector: 'element2', rect: {x: 20, y: 21, width: 201, height: 202}},
+      {selector: 'element3', rect: {x: 30, y: 31, width: 301, height: 302}},
+      {selector: 'element4', rect: {x: 40, y: 41, width: 401, height: 402}},
+    ])
+    const driver = new Driver({spec, driver: mockDriver})
+    const checkSettings = {
+      ignoreRegions: [
+        await mockDriver.findElement('element0'),
+        {region: 'element1', padding: {top: 10, right: 20}},
+        {region: 'element2', padding: 12},
+        {region: 'element3', padding: {top: 15, right: 15, bottom: 15, left: 15}},
+        {region: 'element4', padding: 15},
+      ],
+    }
+
+    const {persistedCheckSettings} = await CheckSettingsUtils.toPersistedCheckSettings({
+      checkSettings,
+      context: driver,
+      logger,
+    })
+
+    const checkWindowConfiguration = CheckSettingsUtils.toCheckWindowConfiguration({
+      checkSettings: persistedCheckSettings,
+      configuration: new Configuration(),
+    })
+    const resultRegionsPadding = persistedCheckSettings.ignoreRegions.map(eltConfig =>
+      eltConfig.region ? eltConfig.region.padding : eltConfig.padding,
+    )
+    // expect that padding as an 'Object' and padding as a Number will have equal result
+    assert.deepStrictEqual(resultRegionsPadding[1].bottom, 0)
+    assert.deepStrictEqual(resultRegionsPadding[1].left, 0)
+    assert.deepStrictEqual(resultRegionsPadding[3], resultRegionsPadding[4])
+    assert.deepStrictEqual(
+      checkWindowConfiguration.ignore,
+      persistedCheckSettings.ignoreRegions.map(({region, ...offsets}) => ({...transformRegion(region), ...offsets})),
+    )
+  })
 })

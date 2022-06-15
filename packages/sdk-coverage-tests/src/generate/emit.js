@@ -26,6 +26,7 @@ function emitTest(test, {makeSpecEmitter, makeFile}) {
     throw new Error(`Missing implementation for test ${test.name}`)
   }
   test.config.baselineName = test.config.baselineName || test.key
+  test.config.visualgrid = test.vg || false
   test.meta = {features: test.features}
   if (test.env) {
     test.meta.browser = test.env.browser

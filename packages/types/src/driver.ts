@@ -55,7 +55,12 @@ export type WaitOptions = {
 export type Selector<TSelector = never> =
   | TSelector
   | string
-  | {selector: TSelector | string; type?: string; shadow?: Selector<TSelector>; frame?: Selector<TSelector>}
+  | {
+      selector: TSelector | string
+      type?: string
+      shadow?: Selector<TSelector>
+      frame?: Selector<TSelector>
+    }
 
 export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   // #region UTILITY
