@@ -6,16 +6,29 @@ const utils = require('@applitools/utils')
 function selectorObject({selector, type}) {
   return type === 'xpath' || type === 'css' ? {type, selector} : selector
 }
+
 function tempProxyToGeometryWithPadding(regionObject, padding) {
   const {width, height, left: x, top: y} = regionObject
   const tempRegionObject = {width, height, x, y}
   const res = utils.geometry.withPadding(tempRegionObject, padding)
-  return {
+  const result = {
     width: res.width,
     height: res.height,
     left: res.x,
     top: res.y,
   }
+  if (
+    regionObject.maxUpOffset ||
+    regionObject.maxDownOffset ||
+    regionObject.maxLeftOffest ||
+    regionObject.maxRightOffset
+  ) {
+    result.maxUpOffset = regionObject.maxUpOffset
+    result.maxDownOffset = regionObject.maxDownOffset
+    result.maxLeftOffset = regionObject.maxLeftOffset
+    result.maxRightOffset = regionObject.maxRightOffset
+  }
+  return result
 }
 
 function calculateSelectorsToFindRegionsFor({
