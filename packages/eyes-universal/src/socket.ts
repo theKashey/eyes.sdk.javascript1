@@ -1,3 +1,4 @@
+import {type Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 import WebSocket from 'ws'
 
@@ -15,7 +16,7 @@ export interface Socket {
   unref(): () => void
 }
 
-export function makeSocket(ws: WebSocket): Socket {
+export function makeSocket(ws: WebSocket, {logger}: {logger?: Logger} = {}): Socket {
   let socket: WebSocket = null
   const listeners = new Map<string, Set<(...args: any[]) => any>>()
   const queue = new Set<() => any>()
@@ -128,7 +129,7 @@ export function makeSocket(ws: WebSocket): Socket {
 
   function command(name: string, fn: (payload?: any) => any): () => void {
     return on(name, async (payload, key) => {
-      console.log('[COMMAND]', name, JSON.stringify(payload, null, 4))
+      logger?.log('[COMMAND]', name, JSON.stringify(payload, null, 4))
       try {
         const result = await fn(payload)
         emit({name, key}, {result})

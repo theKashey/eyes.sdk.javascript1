@@ -17,4 +17,27 @@ describe('universal-server', () => {
       server.close()
     }
   })
+
+  it('accepts payload of 254mb', async () => {
+    const server = await makeServer()
+    const ws = new WebSocket(`ws://localhost:${server.port}/eyes`)
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        ws.on('open', () => {
+          const event = {name: 'Server.getInfo', key: 'uuid', payload: ''}
+          event.payload = Buffer.alloc(254 * 1024 * 1024 - JSON.stringify(event).length).fill(107).toString('utf8')
+          ws.send(JSON.stringify(event))
+          ws.on('message', (data) => {
+            if (JSON.parse(data.toString('utf8')).key === event.key) resolve()
+          })
+        })
+        ws.on('close', reject)
+        ws.on('error', reject)
+      })
+    } finally {
+      ws.close()
+      server.close()
+    }
+  })
 })

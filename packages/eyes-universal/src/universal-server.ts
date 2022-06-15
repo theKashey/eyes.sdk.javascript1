@@ -19,7 +19,7 @@ import * as webdriverSpec from './spec-driver/webdriver'
 import {abort} from './universal-server-eyes-commands'
 
 const IDLE_TIMEOUT = 900000 // 15min
-const LOG_DIRNAME = path.resolve(os.tmpdir(), `applitools-logs`)
+const LOG_DIRNAME = process.env.APPLITOOLS_LOG_DIR ?? path.resolve(os.tmpdir(), `applitools-logs`)
 
 export type ServerOptions = HandlerOptions & {
   debug?: boolean
@@ -39,14 +39,15 @@ export async function makeServer({
     return
   }
 
-  console.log(`Logs saved in: ${LOG_DIRNAME}`)
-
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},
     label: 'eyes',
     level: 'info',
     colors: false,
   })
+
+  console.log(`Logs saved in: ${LOG_DIRNAME}`)
+  baseLogger.log('Server is started')
 
   let idle = setTimeout(() => server.close(), idleTimeout)
   let serverClosed = false
@@ -60,7 +61,12 @@ export async function makeServer({
     const refer = makeRefer()
     const socket = withTracker({
       debug,
-      socket: makeSocket(client) as types.ServerSocket<CustomDriver, CustomContext, CustomElement, CustomSelector> &
+      socket: makeSocket(client, {logger: baseLogger}) as types.ServerSocket<
+        CustomDriver,
+        CustomContext,
+        CustomElement,
+        CustomSelector
+      > &
         Omit<Socket, 'command' | 'request'>,
     })
 
@@ -78,6 +84,9 @@ export async function makeServer({
         fatal: (message: string) => socket.emit('Server.log', {level: 'fatal', message}),
       },
     })
+
+    logger.console.log(`Logs saved in: ${LOG_DIRNAME}`)
+
     socket.command('Server.getInfo', async () => {
       return {logsDir: LOG_DIRNAME}
     })
