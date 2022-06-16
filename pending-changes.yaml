@@ -13,6 +13,7 @@ Apollo SDK:
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
   bug-fix:
     - Fixed native screenshots of the elements under large collapsing areas
+    - Fixed scrolling on some android devices
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
@@ -20,11 +21,12 @@ Apollo SDK:
   bug-fix:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
+    - Fixed scrolling on some android devices
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed scrolling on some android devices
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -58,6 +60,7 @@ Apollo SDK:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
+    - Fixed scrolling on some android devices
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -101,6 +104,7 @@ Apollo SDK:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
+    - Fixed scrolling on some android devices
 "@applitools/eyes-cypress":
   feature:
     - Add special attribute for pseudo elements
@@ -145,6 +149,7 @@ Apollo SDK:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
+    - Fixed scrolling on some android devices
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

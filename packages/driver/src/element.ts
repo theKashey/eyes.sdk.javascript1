@@ -295,14 +295,18 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       if (this.driver.isWeb) this._state.touchPadding = 0
       else if (this.driver.isIOS) this._state.touchPadding = 10
       else if (this.driver.isAndroid) {
-        const touchPadding = await this.getAttribute('contentSize')
-          .then(data => JSON.parse(data).touchPadding)
-          .catch(err => {
-            this._logger.warn(
-              `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
-            )
-          })
-        this._state.touchPadding = touchPadding ?? 21
+        if (this.driver.helper?.name === 'android') {
+          this._state.touchPadding = await this.driver.helper?.getTouchPadding()
+        } else {
+          const touchPadding = await this.getAttribute('contentSize')
+            .then(data => JSON.parse(data).touchPadding)
+            .catch(err => {
+              this._logger.warn(
+                `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
+              )
+            })
+          this._state.touchPadding = touchPadding ?? 20
+        }
         this._logger.log('Touch padding set:', this._state.touchPadding)
       }
     }
@@ -386,21 +390,29 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         }
         const requiredOffset = {x: Math.min(offset.x, maxOffset.x), y: Math.min(offset.y, maxOffset.y)}
 
+        if (this.driver.helper?.name === 'android' && utils.geometry.equals(requiredOffset, {x: 0, y: 0})) {
+          await this.driver.helper.scrollToTop(this)
+          this._state.scrollOffset = requiredOffset
+          return this._state.scrollOffset
+        }
+
         let effectiveRegion = scrollableRegion
         let remainingOffset = utils.geometry.equals(requiredOffset, {x: 0, y: 0})
           ? {x: -maxOffset.x, y: -maxOffset.y} // if it has to be scrolled to the very beginning, then scroll maximum amount of pixels
           : utils.geometry.offsetNegative(requiredOffset, currentScrollOffset)
 
         if (this.driver.isAndroid) {
-          remainingOffset = utils.geometry.scale(remainingOffset, this.driver.pixelRatio)
+          remainingOffset = utils.geometry.round(utils.geometry.scale(remainingOffset, this.driver.pixelRatio))
           effectiveRegion = utils.geometry.scale(effectiveRegion, this.driver.pixelRatio)
         }
 
         const actions = []
 
-        const touchPadding = await this.getTouchPadding()
         const isPager = await this.isPager()
 
+        const touchPadding = await this.getTouchPadding()
+
+        // horizontal scrolling
         const xPadding = Math.max(Math.floor(effectiveRegion.width * 0.07), touchPadding)
         const yTrack = Math.floor(effectiveRegion.y + effectiveRegion.height / 2) // center
         const xLeft = effectiveRegion.y + xPadding
@@ -440,6 +452,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           xRemaining -= xRight - xLeft
         }
 
+        // vertical scrolling
         const yPadding = Math.max(Math.floor(effectiveRegion.height * 0.07), touchPadding)
         const xTrack = Math.floor(effectiveRegion.x + 5) // a little bit off left border
         const yBottom = effectiveRegion.y + effectiveRegion.height - yPadding

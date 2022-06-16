@@ -4,7 +4,7 @@ describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'android', app: 'latest.apk', logger})
+    ;[driver, destroyDriver] = await makeDriver({type: 'android', app: '/Users/kyrylo/Downloads/latest.apk', logger})
   })
 
   after(async () => {
@@ -20,7 +20,7 @@ describe('screenshoter android app', () => {
 
     await driver.init()
 
-    await driver.mainContext.setScrollingElement({type: 'id', selector: 'content_list'})
+    // await driver.mainContext.setScrollingElement({type: 'id', selector: 'content_list'})
 
     await test({
       type: 'android',

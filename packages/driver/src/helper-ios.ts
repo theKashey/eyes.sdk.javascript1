@@ -19,6 +19,8 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
   private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
   private _logger: Logger
 
+  readonly name: 'ios'
+
   constructor(options: {
     driver: Driver<TDriver, TContext, TElement, TSelector>
     element: Element<TDriver, TContext, TElement, TSelector>
@@ -29,6 +31,7 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
     this._element = options.element
     this._spec = options.spec
     this._logger = options.logger
+    this.name = 'ios'
   }
 
   async getContentSize(_element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {

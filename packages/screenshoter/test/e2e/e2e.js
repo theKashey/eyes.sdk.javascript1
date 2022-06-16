@@ -61,7 +61,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
   const iosSimulatorIds = process.env.IOS_SIMULATOR_UDID ? process.env.IOS_SIMULATOR_UDID.split(',') : []
   const apps = {
     android: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
-    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.5/app_androidx.apk',
+    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.6/app_androidx.apk',
     ios: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
   }
 
