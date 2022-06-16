@@ -115,13 +115,9 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
 "@applitools/eyes-storybook":
   feature:
-    - Allowed `` values in custom properties
-    - Add special attribute for pseudo elements
-    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+    - 
   bug-fix:
-    - Fixed broken links to enums implementation in the README.md
-    - Fix rendering issues with Salesforce Lightning design system
-    - Add timeout when attempting to get data for a story
+    - 
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile

@@ -3,6 +3,17 @@
 ## Unreleased
 
 
+## 3.29.1 - 2022/6/16
+
+### Features
+- Allowed `` values in custom properties
+- Add special attribute for pseudo elements
+- Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+### Bug fixes
+- Fixed broken links to enums implementation in the README.md
+- Fix rendering issues with Salesforce Lightning design system
+- Add timeout when attempting to get data for a story
+
 ## 3.29.0 - 2022/6/2
 
 ### Features
