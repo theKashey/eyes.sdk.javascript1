@@ -115,7 +115,6 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     await this._element.click()
     const touchPaddingString = await this._element.getText()
     await this._element.type('')
-    console.log(touchPaddingString)
     return Number(touchPaddingString)
   }
 }
