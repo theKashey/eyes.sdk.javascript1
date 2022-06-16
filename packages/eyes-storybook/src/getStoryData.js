@@ -1,5 +1,5 @@
 'use strict';
-const {presult} = require('@applitools/functional-commons');
+const {presult, ptimeoutWithError} = require('@applitools/functional-commons');
 const {ArgumentGuard} = require('@applitools/eyes-sdk-core');
 const renderStoryWithClientAPI = require('../dist/renderStoryWithClientAPI');
 const runRunBeforeScript = require('../dist/runRunBeforeScript');
@@ -7,6 +7,7 @@ const getStoryBaselineName = require('./getStoryBaselineName');
 const {URL} = require('url');
 const runRunAfterScript = require('../dist/runRunAfterScript');
 const waitFor = require('./waitFor');
+const PAGE_EVALUATE_TIMEOUT = 120000
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, browser, waitBeforeStory}) {
@@ -18,8 +19,13 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
       const currentUrl = page.url();
       const expectedQueryParams = eyesParameters ? eyesParameters.queryParams : undefined;
       if (urlQueryParamsEquals(currentUrl, expectedQueryParams)) {
-        const err = await page.evaluate(renderStoryWithClientAPI, story.index);
+        try {
+        const err = await ptimeoutWithError(page.evaluate(renderStoryWithClientAPI, story.index), PAGE_EVALUATE_TIMEOUT, 'page evaluate timed out!');
+        logger.log(`[story data] done with page evaluate for story index: ${story.index}`)
         err && handleRenderStoryError(err);
+        } catch (ex){
+          handleRenderStoryError(ex)
+        }
       } else {
         await renderStoryLegacy();
       }

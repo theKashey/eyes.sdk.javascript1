@@ -121,6 +121,7 @@ Apollo SDK:
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - Fix rendering issues with Salesforce Lightning design system
+    - Add timeout when attempting to get data for a story
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
