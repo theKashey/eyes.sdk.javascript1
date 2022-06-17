@@ -8,6 +8,13 @@
 
 
 
+## 2.9.1 - 2022/6/17
+
+### Features
+### Bug fixes
+- Support self signed certificates in webdriver proxy
+- Remove tunnel proxy since this functionality is already handled by default proxy
+
 ## 2.9.0 - 2022/6/17
 
 ### Features
