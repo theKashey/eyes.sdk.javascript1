@@ -13,6 +13,7 @@ export type StaticDriver = {
   sessionId: string
   serverUrl: string
   proxyUrl?: string
+  proxy?: {url: string}
   capabilities?: Record<string, any>
 }
 export type StaticElement = {elementId: string}
@@ -99,8 +100,8 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     ...environment,
   }
 
-  if (driver.proxyUrl) {
-    const proxy = {...parseUrl(driver.proxyUrl), rejectUnauthorized: false}
+  if (driver.proxyUrl || driver.proxy?.url) {
+    const proxy = {...parseUrl(driver.proxyUrl ?? driver.proxy.url), rejectUnauthorized: false}
     const agent = new ProxyAgent(proxy as any)
     options.agent = {http: agent, https: agent}
   }
