@@ -16,7 +16,8 @@
     "test-server"
   ],
   "bin": {
-    "test-server": "./cli/test-server.js"
+    "test-server": "./cli/test-server.js",
+    "proxy-server": "./cli/proxy-server.js"
   },
   "files": [
     "src",
@@ -37,6 +38,7 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "handlebars": "4.7.7",
+    "http-proxy": "^1.18.1",
     "morgan": "1.10.0",
     "yargs": "17.0.1"
   },
