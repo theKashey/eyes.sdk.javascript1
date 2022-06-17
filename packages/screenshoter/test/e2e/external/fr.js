@@ -4,7 +4,13 @@ describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'android', app: '/Users/kyrylo/Downloads/latest.apk', logger})
+    ;[driver, destroyDriver] = await makeDriver({
+      type: 'android-sauce',
+      deviceName: 'Samsung Galaxy S20 WQHD GoogleAPI Emulator',
+      platformVersion: '11.0',
+      app: 'storage:filename=InstrumentedApk_#26906.apk',
+      logger,
+    })
   })
 
   after(async () => {
@@ -12,11 +18,14 @@ describe('screenshoter android app', () => {
   })
 
   it('take full app screenshot on screen with scroll view', async () => {
-    // const button = await driver.element({type: 'id', selector: 'btn_scroll_view_footer_header'})
-    // await button.click()
-    await sleep(30000)
-
     await driver.target.updateSettings({allowInvisibleElements: true})
+    await sleep(10000)
+    const nextButton = await driver.element({type: 'id', selector: 'next_button'})
+    await nextButton.click()
+    await sleep(5000)
+    const memberButton = await driver.element({type: 'id', selector: 'navigation_member'})
+    await memberButton.click()
+    await sleep(10000)
 
     await driver.init()
 

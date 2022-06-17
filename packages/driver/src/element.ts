@@ -403,7 +403,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
         if (this.driver.isAndroid) {
           remainingOffset = utils.geometry.round(utils.geometry.scale(remainingOffset, this.driver.pixelRatio))
-          effectiveRegion = utils.geometry.scale(effectiveRegion, this.driver.pixelRatio)
+          effectiveRegion = utils.geometry.round(utils.geometry.scale(effectiveRegion, this.driver.pixelRatio))
         }
 
         const actions = []
