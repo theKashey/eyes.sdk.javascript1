@@ -624,13 +624,8 @@ describe('CheckSettingsUtils', () => {
       checkSettings: persistedCheckSettings,
       configuration: new Configuration(),
     })
-    const resultRegionsPadding = persistedCheckSettings.ignoreRegions.map(eltConfig =>
-      eltConfig.region ? eltConfig.region.padding : eltConfig.padding,
-    )
+
     // expect that padding as an 'Object' and padding as a Number will have equal result
-    assert.deepStrictEqual(resultRegionsPadding[1].bottom, 0)
-    assert.deepStrictEqual(resultRegionsPadding[1].left, 0)
-    assert.deepStrictEqual(resultRegionsPadding[3], resultRegionsPadding[4])
     assert.deepStrictEqual(
       checkWindowConfiguration.ignore,
       persistedCheckSettings.ignoreRegions.map(({region, ...offsets}) => ({...transformRegion(region), ...offsets})),
