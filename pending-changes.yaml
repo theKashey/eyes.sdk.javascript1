@@ -25,7 +25,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed scrolling on some android devices
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

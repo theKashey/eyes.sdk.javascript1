@@ -10,6 +10,12 @@
 
 
 
+## 5.35.4 - 2022/6/17
+
+### Features
+### Bug fixes
+- Fixed scrolling on some android devices
+
 ## 5.35.3 - 2022/6/14
 
 ### Features
