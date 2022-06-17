@@ -54,17 +54,17 @@ Object.values(packages).forEach(packageInfo => {
 
 let jobs = createJobs(input)
 
-if (onlyChanged) {
-  jobs = filterInsignificantJobs(jobs)
-}
+core.info(`Requested jobs: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 
 if (allowCascading) {
   const additionalJobs = createDependencyJobs(jobs)
   jobs = {...jobs, ...additionalJobs}
+  core.info(`Requested and dependant jobs: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 }
 
 if (onlyChanged) {
   jobs = filterInsignificantJobs(jobs)
+  core.info(`Filtered jobs: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 }
 
 console.log(jobs)
@@ -115,7 +115,8 @@ function createJobs(input) {
         [`APPLITOOLS_${packageInfo.jobName.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
         [`APPLITOOLS_${packageInfo.jobName.toUpperCase()}_VERSION`]: frameworkVersion,
         [`APPLITOOLS_${packageInfo.jobName.toUpperCase()}_PROTOCOL`]: frameworkProtocol
-      }
+      },
+      requested: true
     }
   
     jobs[allowVariations ? job.displayName : job.name] = job
