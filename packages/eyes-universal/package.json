@@ -50,7 +50,6 @@
     "build:bin": "pkg .",
     "build:zip": "zip -j ./bin/eyes-universal.zip ./bin/eyes-universal-alpine ./bin/eyes-universal-linux ./bin/eyes-universal-macos ./bin/eyes-universal-win.exe",
     "build:tgz": "tar -czf ./bin/eyes-universal.tar.gz -C ./bin ./eyes-universal-alpine ./eyes-universal-linux ./eyes-universal-macos ./eyes-universal-win.exe",
-    "setup": "yarn docker:setup",
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "test": "yarn test:it && yarn test:e2e",
