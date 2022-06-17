@@ -9,6 +9,17 @@
 
 
 
+## 3.26.3 - 2022/6/17
+
+### Features
+- Add special attribute for pseudo elements
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+- Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+- Allow configuration file to be loaded from ancestor directories
+### Bug fixes
+- Fix rendering issues with Salesforce Lightning design system
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+
 ## 3.26.2 - 2022/6/8
 
 ### Features
