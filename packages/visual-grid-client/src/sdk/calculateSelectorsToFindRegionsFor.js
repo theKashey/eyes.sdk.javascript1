@@ -8,7 +8,7 @@ function selectorObject({selector, type}) {
 }
 
 function tempProxyToGeometryWithPadding(regionObject, padding) {
-  const {width, height, left: x, top: y} = regionObject
+  const {width, height, left: x, top: y, ...rest} = regionObject
   const tempRegionObject = {width, height, x, y}
   const res = utils.geometry.withPadding(tempRegionObject, padding)
   const result = {
@@ -28,7 +28,7 @@ function tempProxyToGeometryWithPadding(regionObject, padding) {
     result.maxLeftOffset = regionObject.maxLeftOffset
     result.maxRightOffset = regionObject.maxRightOffset
   }
-  return result
+  return {...result, ...rest}
 }
 
 function calculateSelectorsToFindRegionsFor({
