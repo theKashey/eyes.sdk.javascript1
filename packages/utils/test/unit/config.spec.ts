@@ -5,7 +5,7 @@ import {getConfig} from '../../src/config'
 describe('config', () => {
   const originalEnv = process.env
   const originalCwd = process.cwd()
-  const configDir = path.resolve(process.cwd(), './test/fixtures')
+  const configDir = path.resolve(process.cwd(), './test/fixtures/config')
 
   beforeEach(() => {
     process.env = {}
@@ -19,27 +19,49 @@ describe('config', () => {
   it('loads config from default file', () => {
     process.chdir(configDir)
     const config = getConfig()
-    const expectedConfig = {bla: 'kuku', it: 'works'}
-    assert.deepStrictEqual(config, expectedConfig)
-  })
-
-  it('loads config with file path set by env variable', () => {
-    process.env.APPLITOOLS_CONFIG_PATH = path.join(configDir, 'bla.config.js')
-    const config = getConfig()
-    const expectedConfig = {bla: 'bla', it: 'works bla'}
-    assert.deepStrictEqual(config, expectedConfig)
-  })
-
-  it('loads config with dir path set by env variable', () => {
-    process.env.APPLITOOLS_CONFIG_PATH = path.join(configDir)
-    const config = getConfig()
-    const expectedConfig = {bla: 'kuku', it: 'works'}
+    const expectedConfig = {name: 'applitools.config.js', it: 'works'}
     assert.deepStrictEqual(config, expectedConfig)
   })
 
   it('loads config with file in json format', () => {
-    const config = getConfig({paths: [path.join(configDir, 'eyes.json')]})
-    const expectedConfig = {bla: 'json', it: 'works json'}
+    process.chdir(path.join(configDir, 'json-project'))
+    const config = getConfig()
+    const expectedConfig = {name: 'eyes.json', it: 'works'}
+    assert.deepStrictEqual(config, expectedConfig)
+  })
+
+  it('loads config with file in cjs format', () => {
+    process.chdir(path.join(configDir, 'cjs-project'))
+    const config = getConfig()
+    const expectedConfig = {name: 'applitools.config.cjs', it: 'works'}
+    assert.deepStrictEqual(config, expectedConfig)
+  })
+
+  it('loads config file from parent dir', () => {
+    process.chdir(path.join(configDir, 'empty-project', 'empty-subproject'))
+    const config = getConfig()
+    const expectedConfig = {name: 'applitools.config.js', it: 'works'}
+    assert.deepStrictEqual(config, expectedConfig)
+  })
+
+  it('loads config with file path set by options', () => {
+    process.chdir(configDir)
+    const config = getConfig({paths: ['custom.config.js']})
+    const expectedConfig = {name: 'custom.config.js', it: 'works'}
+    assert.deepStrictEqual(config, expectedConfig)
+  })
+
+  it('loads config with file path set by env variable', () => {
+    process.env.APPLITOOLS_CONFIG_PATH = path.join(configDir, 'custom.config.js')
+    const config = getConfig()
+    const expectedConfig = {name: 'custom.config.js', it: 'works'}
+    assert.deepStrictEqual(config, expectedConfig)
+  })
+
+  it('loads config with dir path set by env variable', () => {
+    process.env.APPLITOOLS_CONFIG_PATH = configDir
+    const config = getConfig()
+    const expectedConfig = {name: 'applitools.config.js', it: 'works'}
     assert.deepStrictEqual(config, expectedConfig)
   })
 
@@ -53,9 +75,9 @@ describe('config', () => {
   })
 
   it('loads config with env variables overrides', () => {
-    process.env.APPLITOOLS_BLA = 'env kuku'
-    const config = getConfig({paths: [path.join(configDir, 'eyes.config.js')], params: ['bla']})
-    const expectedConfig = {bla: 'env kuku', it: 'works eyes'}
+    process.env.APPLITOOLS_IT = 'works from env'
+    const config = getConfig({paths: [path.join(configDir, 'applitools.config.js')], params: ['it']})
+    const expectedConfig = {name: 'applitools.config.js', it: 'works from env'}
     assert.deepStrictEqual(config, expectedConfig)
   })
 
@@ -69,8 +91,8 @@ describe('config', () => {
 
   it('throws if config is broken in strict mode', () => {
     assert.throws(
-      () => getConfig({paths: [path.join(configDir, 'broken.config.js')], params: ['bla'], strict: true}),
-      err => err.message.startsWith('Invalid or unexpected token'),
+      () => getConfig({paths: [path.join(configDir, 'broken.config.js')], strict: true}),
+      err => err.message.startsWith('Unexpected identifier'),
     )
   })
 

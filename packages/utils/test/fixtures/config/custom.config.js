@@ -1,4 +1,4 @@
 module.exports = {
-  bla: 'kuku',
+  name: 'custom.config.js',
   it: 'works',
 }
