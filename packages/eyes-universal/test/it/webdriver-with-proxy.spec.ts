@@ -22,17 +22,7 @@ describe('webdriver with proxy', () => {
     const proxifiedDriver = spec.transformDriver({
       sessionId: driver.sessionId,
       serverUrl,
-      proxy: {url: `http://localhost:${proxy.port}`, tunnel: false},
-      capabilities: driver.capabilities,
-    })
-    assert.strictEqual(await proxifiedDriver.getUrl(), pageUrl)
-  })
-
-  it('works with tunnel', async () => {
-    const proxifiedDriver = spec.transformDriver({
-      sessionId: driver.sessionId,
-      serverUrl,
-      proxy: {url: `http://localhost:${proxy.port}`, tunnel: true},
+      proxyUrl: `http://localhost:${proxy.port}`,
       capabilities: driver.capabilities,
     })
     assert.strictEqual(await proxifiedDriver.getUrl(), pageUrl)

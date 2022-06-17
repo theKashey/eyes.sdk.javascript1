@@ -1,9 +1,9 @@
 import type {Size, Region, Cookie, DriverInfo} from '@applitools/types'
 import type * as WD from 'webdriver'
 import * as utils from '@applitools/utils'
+import {parse as parseUrl} from 'url'
 import WebDriver, {command} from 'webdriver'
 import ProxyAgent from 'proxy-agent'
-import {httpsOverHttp} from 'tunnel'
 
 export type Driver = WD.Client
 export type Element = {'element-6066-11e4-a52e-4f735466cecf': string} | {ELEMENT: string}
@@ -12,7 +12,7 @@ export type Selector = {using: string; value: string}
 export type StaticDriver = {
   sessionId: string
   serverUrl: string
-  proxy?: {url: string; tunnel?: boolean}
+  proxyUrl?: string
   capabilities?: Record<string, any>
 }
 export type StaticElement = {elementId: string}
@@ -67,25 +67,6 @@ function extractEnvironment(capabilities: Record<string, any>) {
     isW3C,
   }
 }
-function createProxyAgent(proxy: {url: string; tunnel?: boolean}): any {
-  if (proxy.tunnel) {
-    const url = new URL(proxy.url)
-
-    console.log('tunnel')
-
-    return httpsOverHttp({
-      proxy: {
-        host: url.hostname,
-        port: url.port && Number(url.port),
-        proxyAuth: url.username && url.password && `${url.username}:${url.password}`,
-      },
-      // @ts-expect-error
-      rejectUnauthorized: false,
-    })
-  }
-  return new ProxyAgent(proxy.url)
-}
-
 // #endregion
 
 // #region UTILITY
@@ -105,7 +86,6 @@ export function isSelector(selector: any): selector is Selector {
 export function transformDriver(driver: Driver | StaticDriver): Driver {
   if (!utils.types.has(driver, ['sessionId', 'serverUrl'])) return driver
   const url = new URL(driver.serverUrl)
-  const agent = driver.proxy && createProxyAgent(driver.proxy)
   const environment = extractEnvironment(driver.capabilities)
   console.log('transformDriver extracted environment', environment)
   const options: WD.AttachOptions = {
@@ -116,9 +96,15 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     path: url.pathname,
     capabilities: driver.capabilities,
     logLevel: 'silent',
-    agent: agent && {http: agent, https: agent},
     ...environment,
   }
+
+  if (driver.proxyUrl) {
+    const proxy = {...parseUrl(driver.proxyUrl), rejectUnauthorized: false}
+    const agent = new ProxyAgent(proxy as any)
+    options.agent = {http: agent, https: agent}
+  }
+
   if (!options.port) {
     if (options.protocol === 'http') options.port = 80
     if (options.protocol === 'https') options.port = 443
@@ -161,7 +147,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
   if (environment.isAndroid) {
     modifiedDriver?.updateSettings({allowInvisibleElements: true})
   }
-  console.log('transformDriver attach completed, returning modified driver', modifiedDriver)
+  // console.log('transformDriver attach completed, returning modified driver', modifiedDriver)
   return modifiedDriver
 }
 export function transformElement(element: Element | StaticElement): Element {

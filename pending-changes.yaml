@@ -12,7 +12,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Support self signed certificates in webdriver proxy
+    - Remove tunnel proxy since this functionality is already handled by default proxy
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
