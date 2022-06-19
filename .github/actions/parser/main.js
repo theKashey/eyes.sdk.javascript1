@@ -8,6 +8,8 @@ const TOOL_PACKAGES = [
   '@applitools/scripts',
   '@applitools/sdk-coverage-tests',
   '@applitools/api-extractor',
+  '@applitools/sdk-fake-eyes-server',
+  '@applitools/sdk-shared'
 ]
 
 const OS = {
@@ -148,13 +150,15 @@ function createDependencyJobs(jobs) {
 
 function filterInsignificantJobs(jobs) {
   const filteredJobs = Object.entries(jobs).reduce((filteredJobs, [jobName, job]) => {
-    let tag
-    try { 
-      tag = execSync(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf-8'})
-    } catch {}
-    if (tag) {
-      const commits = execSync(`git log ${tag.trim()}..HEAD --oneline -- ${path.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
-      if (!commits) return filteredJobs
+    if (!job.requested) {
+      let tag
+      try { 
+        tag = execSync(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf-8'})
+      } catch {}
+      if (tag) {
+        const commits = execSync(`git log ${tag.trim()}..HEAD --oneline -- ${path.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
+        if (!commits) return filteredJobs
+      }
     }
     filteredJobs[jobName] = job
     return filteredJobs
