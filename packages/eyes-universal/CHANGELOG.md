@@ -8,6 +8,12 @@
 
 
 
+## 2.9.2 - 2022/6/21
+
+### Features
+- Fixed webdriver proxy with self-signed certificates
+### Bug fixes
+
 ## 2.9.1 - 2022/6/17
 
 ### Features

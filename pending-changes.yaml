@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Fixed webdriver proxy with self-signed certificates
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
@@ -24,7 +24,7 @@ Apollo SDK:
     - Fixed scrolling on some android devices
 "@applitools/eyes-webdriverio":
   feature:
-    - Support `addMobileDevice` in user API for NMG 
+    - Support `addMobileDevice` in user API for NMG
   bug-fix:
     - 
 "@applitools/eyes-playwright":
