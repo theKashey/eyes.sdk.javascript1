@@ -74,6 +74,7 @@ function testServer(argv = {}) {
             log('error starting test server', err)
             reject(err)
           } else {
+            const port = server.address().port
             const close = server.close.bind(server)
             log(`test server running at port: ${port}`)
             resolve({port, close})
@@ -85,10 +86,10 @@ function testServer(argv = {}) {
           log('error starting test server', err)
           reject(err)
         } else {
-          const serverPort = server.address().port
+          const port = server.address().port
           const close = server.close.bind(server)
-          log(`test server running at port: ${serverPort}`)
-          resolve({port: serverPort, close})
+          log(`test server running at port: ${port}`)
+          resolve({port: port, close})
         }
       })
     }

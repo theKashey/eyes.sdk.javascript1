@@ -101,8 +101,14 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
   }
 
   if (driver.proxyUrl || driver.proxy?.url) {
-    const proxy = {...parseUrl(driver.proxyUrl ?? driver.proxy.url), rejectUnauthorized: false}
-    const agent = new ProxyAgent(proxy as any)
+    const agent = new ProxyAgent(<any>{
+      ...parseUrl(driver.proxyUrl ?? driver.proxy.url),
+      rejectUnauthorized: false,
+    })
+    const originalCallback = agent.callback.bind(agent)
+    agent.callback = (request, options, callback?: any) => {
+      return originalCallback(request, {...options, rejectUnauthorized: false}, callback)
+    }
     options.agent = {http: agent, https: agent}
   }
 
@@ -363,6 +369,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
       noProxy: proxy.bypass.join(','),
     }
   }
+  options.agent = {https: require('https').Agent({rejectUnauthorized: false})}
   const driver = await WebDriver.newSession(options)
   return [driver, () => driver.deleteSession()]
 }

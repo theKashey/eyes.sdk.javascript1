@@ -1,9 +1,8 @@
 const http = require('http')
 const net = require('net')
 const httpProxy = require('http-proxy')
-const {promisify} = require('util')
 
-function startProxyServer(port = 12345) {
+function startProxyServer({port = 0} = {}) {
   const proxy = httpProxy.createServer()
 
   const server = http.createServer(function (req, res) {
@@ -31,8 +30,9 @@ function startProxyServer(port = 12345) {
 
   return new Promise(resolve => {
     server.listen(port, () => {
+      const port = server.address().port
       console.log('[proxy server] listening on port', port)
-      const close = promisify(server.close.bind(server))
+      const close = server.close.bind(server)
       resolve({port, close})
     })
   })
