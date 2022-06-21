@@ -5,9 +5,19 @@ import {StitchMode, StitchModeEnum} from '../enums/StitchMode'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
 import {BrowserType, BrowserTypeEnum} from '../enums/BrowserType'
 import {DeviceName} from '../enums/DeviceName'
+import {AndroidDeviceName} from '../enums/AndroidDeviceName'
+import {AndroidVersion} from '../enums/AndroidVersion'
+import {IosDeviceName, IosDeviceNameEnum} from '../enums/IosDeviceName'
+import {IosVersion} from '../enums/IosVersion'
 import {ScreenOrientation, ScreenOrientationEnum} from '../enums/ScreenOrientation'
 import {AccessibilitySettings} from './AccessibilitySettings'
-import {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo, ChromeEmulationInfoLegacy} from './RenderInfo'
+import {
+  DesktopBrowserInfo,
+  ChromeEmulationInfo,
+  IOSDeviceInfo,
+  AndroidDeviceInfo,
+  ChromeEmulationInfoLegacy,
+} from './RenderInfo'
 import {CutProvider} from './CutProvider'
 import {LogHandler} from './LogHandler'
 import {DebugScreenshotProvider} from './DebugScreenshotProvider'
@@ -18,7 +28,12 @@ import {BatchInfo, BatchInfoData} from './BatchInfo'
 import {PropertyData, PropertyDataData} from './PropertyData'
 import {ImageMatchSettings, ImageMatchSettingsData} from './ImageMatchSettings'
 
-type RenderInfo = DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo | ChromeEmulationInfoLegacy
+type RenderInfo =
+  | DesktopBrowserInfo
+  | ChromeEmulationInfo
+  | IOSDeviceInfo
+  | AndroidDeviceInfo
+  | ChromeEmulationInfoLegacy
 
 type ConfigurationSpec<TElement = unknown, TSelector = unknown> = {
   isElement(element: any): element is TElement
@@ -95,7 +110,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
 export type VGConfiguration = {
   /** @undocumented */
   concurrentSessions?: number
-  browsersInfo?: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[]
+  browsersInfo?: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo | AndroidDeviceInfo)[]
   visualGridOptions?: Record<string, any>
   layoutBreakpoints?: boolean | number[]
   disableBrowserFetching?: boolean
@@ -992,10 +1007,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get browsersInfo(): (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[] {
+  get browsersInfo(): (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo | AndroidDeviceInfo)[] {
     return this._config.browsersInfo
   }
-  set browsersInfo(browsersInfo: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo)[]) {
+  set browsersInfo(browsersInfo: (DesktopBrowserInfo | ChromeEmulationInfo | IOSDeviceInfo | AndroidDeviceInfo)[]) {
     utils.guard.isArray(browsersInfo, {name: 'browsersInfo'})
     this._config.browsersInfo = browsersInfo
   }
@@ -1029,6 +1044,34 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   addDeviceEmulation(deviceName: DeviceName, screenOrientation: ScreenOrientation = ScreenOrientationEnum.PORTRAIT) {
     if (!this.browsersInfo) this.browsersInfo = []
     this.browsersInfo.push({chromeEmulationInfo: {deviceName, screenOrientation}})
+    return this
+  }
+  addMobileDevice(deviceName: AndroidDeviceName, screenOrientation: ScreenOrientation, version?: AndroidVersion): this
+  addMobileDevice(deviceName: IosDeviceName, screenOrientation: ScreenOrientation, version?: IosVersion): this
+  addMobileDevice(
+    deviceName: IosDeviceName | AndroidDeviceName,
+    screenOrientation?: ScreenOrientation,
+    version?: AndroidVersion | IosVersion,
+  ) {
+    if (!this.browsersInfo) this.browsersInfo = []
+
+    if (utils.types.isEnumValue(deviceName, IosDeviceNameEnum)) {
+      this.browsersInfo.push({
+        iosDeviceInfo: {
+          deviceName: deviceName as IosDeviceName,
+          screenOrientation,
+          iosVersion: version as IosVersion,
+        },
+      })
+    } else {
+      this.browsersInfo.push({
+        androidDeviceInfo: {
+          deviceName: deviceName as AndroidDeviceName,
+          screenOrientation,
+          version: version as AndroidVersion,
+        },
+      })
+    }
     return this
   }
 

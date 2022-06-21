@@ -24,6 +24,11 @@ export {DeviceName as DeviceNamePlain, DeviceNameEnum as DeviceName} from './enu
 export {FailureReport as FailureReportPlain, FailureReportEnum as FailureReport} from './enums/FailureReport'
 export {IosDeviceName as IosDeviceNamePlain, IosDeviceNameEnum as IosDeviceName} from './enums/IosDeviceName'
 export {IosVersion as IosVersionPlain, IosVersionEnum as IosVersion} from './enums/IosVersion'
+export {
+  AndroidDeviceName as AndroidDeviceNamePlain,
+  AndroidDeviceNameEnum as AndroidDeviceName,
+} from './enums/AndroidDeviceName'
+export {AndroidVersion as AndroidVersionPlain, AndroidVersionEnum as AndroidVersion} from './enums/AndroidVersion'
 export {MatchLevel as MatchLevelPlain, MatchLevelEnum as MatchLevel} from './enums/MatchLevel'
 export {
   ScreenOrientation as ScreenOrientationPlain,
@@ -89,7 +94,7 @@ export {PropertyData as PropertyDataPlain, PropertyDataData as PropertyData} fro
 export {ProxySettings as ProxySettingsPlain, ProxySettingsData as ProxySettings} from './input/ProxySettings'
 export {RectangleSize as RectangleSizePlain, RectangleSizeData as RectangleSize} from './input/RectangleSize'
 export {Region as RegionPlain, LegacyRegion as LegacyRegionPlain, RegionData as Region} from './input/Region'
-export {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo} from './input/RenderInfo'
+export {DesktopBrowserInfo, ChromeEmulationInfo, IOSDeviceInfo, AndroidDeviceInfo} from './input/RenderInfo'
 export {
   RunnerOptions as RunnerOptionsPlain,
   RunnerOptionsFluent,

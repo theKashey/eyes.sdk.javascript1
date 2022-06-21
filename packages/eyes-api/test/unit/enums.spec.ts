@@ -1,6 +1,6 @@
 import {strict as assert} from 'assert'
 import fetch from 'node-fetch'
-import {DeviceName, IosDeviceName} from '../../src'
+import {DeviceName, IosDeviceName, AndroidDeviceName} from '../../src'
 
 describe('enums', () => {
   describe('DeviceName', () => {
@@ -27,6 +27,19 @@ describe('enums', () => {
 
     it('should consists of allowed values', async () => {
       assert.deepEqual(Object.values(IosDeviceName).sort(), expectedDeviceNames.sort())
+    })
+  })
+
+  describe('AndroidDeviceName', () => {
+    const url = 'https://render-wus.applitools.com/public/android-devices'
+    let expectedDeviceNames: string[]
+    before(async () => {
+      const devices = await fetch(url).then(response => response.json())
+      expectedDeviceNames = Object.keys(devices)
+    })
+
+    it('should consists of allowed values', async () => {
+      assert.deepEqual(Object.values(AndroidDeviceName).sort(), expectedDeviceNames.sort())
     })
   })
 })

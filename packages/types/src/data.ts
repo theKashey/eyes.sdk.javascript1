@@ -238,7 +238,11 @@ export type AndroidDeviceRenderer = {
     screenOrientation?: ScreenOrientation
   }
 }
-export type BrowserInfoRenderer = DesktopBrowserRenderer | ChromeEmulationDeviceRenderer | IOSDeviceRenderer
+export type BrowserInfoRenderer =
+  | DesktopBrowserRenderer
+  | ChromeEmulationDeviceRenderer
+  | IOSDeviceRenderer
+  | AndroidDeviceRenderer
 
 export type MatchResult = {
   readonly asExpected?: boolean
