@@ -185,6 +185,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
               this._driverInfo.navigationBarHeight ?? 0,
               barsSize.navigationBarHeight,
             )
+          } else {
+            this._driverInfo.navigationBarHeight = 0
           }
 
           // bar heights have to be scaled on android

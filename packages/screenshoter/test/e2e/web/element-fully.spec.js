@@ -36,20 +36,4 @@ describe('screenshoter web', () => {
       logger,
     })
   })
-
-  it('take full element screenshot with "css" scrolling of an element with a position coordinate ending in .5px', async () => {
-    await driver.visit(
-      'data:text/html,<div style="position:absolute;left:50.5;top:12.80;width:942.98;height:3284.36;">blah</div>',
-    )
-    await driver.setViewportSize({width: 1200, height: 800})
-    await test({
-      type: 'web',
-      tag: 'element-fully-half-px',
-      region: 'div',
-      fully: true,
-      scrollingMode: 'css',
-      driver,
-      logger,
-    })
-  })
 })
