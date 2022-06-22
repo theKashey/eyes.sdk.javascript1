@@ -10,6 +10,14 @@
 
 
 
+## 5.35.5 - 2022/6/22
+
+### Features
+- Support `addMobileDevice` in user API for NMG
+### Bug fixes
+- Improved handling of touch padding related issues in native apps
+- Prevented navbar from appearing on Android 12 screenshots
+
 ## 5.35.4 - 2022/6/17
 
 ### Features

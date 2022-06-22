@@ -27,10 +27,9 @@ Apollo SDK:
     - Prevented navbar from appearing on Android 12 screenshots
 "@applitools/eyes-webdriverio":
   feature:
-    - Support `addMobileDevice` in user API for NMG
+    - 
   bug-fix:
-    - Improved handling of touch padding related issues in native apps
-    - Prevented navbar from appearing on Android 12 screenshots
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
