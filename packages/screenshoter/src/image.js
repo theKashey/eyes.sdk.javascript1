@@ -372,7 +372,9 @@ async function copy(dstImage, srcImage, offset) {
   for (let chunk = 0; chunk < srcHeight; ++chunk) {
     const srcOffset = chunk * srcImage.width * 4
     const dstOffset = ((dstY + chunk) * dstImage.width + dstX) * 4
-    dstImage.data.set(srcImage.data.subarray(srcOffset, srcOffset + chunkLength), dstOffset)
+    if (dstOffset >= 0) {
+      dstImage.data.set(srcImage.data.subarray(srcOffset, srcOffset + chunkLength), dstOffset)
+    }
   }
 
   return dstImage

@@ -45,9 +45,11 @@ export function parseCapabilities(
     info.displaySize = extractDisplaySize(capabilities)
     info.pixelRatio = capabilities.pixelRatio
     info.statusBarHeight = capabilities.statBarHeight
-    if (info.displaySize && capabilities.viewportRect) {
+    if (info.displaySize && info.orientation && capabilities.viewportRect) {
       info.navigationBarHeight =
-        info.displaySize.height - (capabilities.viewportRect.top + capabilities.viewportRect.height)
+        info.orientation === 'landscape'
+          ? info.displaySize.width - (capabilities.viewportRect.left + capabilities.viewportRect.width)
+          : info.displaySize.height - (capabilities.viewportRect.top + capabilities.viewportRect.height)
     }
   }
 
