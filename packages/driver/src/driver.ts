@@ -174,12 +174,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           // navigation bar height is replaced with the width in landscape orientation on android (due to the bug in appium)
           if (orientation === 'landscape') barsSize.navigationBarHeight = barsSize.navigationBarWidth
 
-          // when status bar is overlapping content on android it returns status bar height equal to viewport height
+          // when status bar is overlapping content on android it returns status bar height equal to display height
           if (barsSize.statusBarHeight < this._driverInfo.displaySize.height) {
             this._driverInfo.statusBarHeight = Math.max(this._driverInfo.statusBarHeight ?? 0, barsSize.statusBarHeight)
           }
 
-          // when navigation bar is invisible on android it returns navigation bar height equal to viewport height
+          // when navigation bar is invisible on android it returns navigation bar height equal to display height
           if (barsSize.navigationBarHeight < this._driverInfo.displaySize.height) {
             this._driverInfo.navigationBarHeight = Math.max(
               this._driverInfo.navigationBarHeight ?? 0,

@@ -42,9 +42,13 @@ export function parseCapabilities(
   }
 
   if (info.isNative) {
+    info.displaySize = extractDisplaySize(capabilities)
     info.pixelRatio = capabilities.pixelRatio
     info.statusBarHeight = capabilities.statBarHeight
-    info.displaySize = extractDisplaySize(capabilities)
+    if (info.displaySize && capabilities.viewportRect) {
+      info.navigationBarHeight =
+        info.displaySize.height - (capabilities.viewportRect.top + capabilities.viewportRect.height)
+    }
   }
 
   return info
