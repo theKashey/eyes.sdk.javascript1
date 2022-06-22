@@ -33,6 +33,7 @@ exports.mochaHooks = {
               },
             },
             connectionRetryCount: 0,
+            connectionRetryTimeout: 240000,
           })
           await driver.setWindowSize(816, 686)
           drivers.set('firefox', {driver, cleanup: () => driver.deleteSession()})
@@ -55,6 +56,7 @@ exports.mochaHooks = {
               },
             },
             connectionRetryCount: 0,
+            connectionRetryTimeout: 240000,
           })
           await driver.setWindowSize(816, 686)
           drivers.set('internet explorer', {driver, cleanup: () => driver.deleteSession()})
@@ -97,6 +99,7 @@ exports.mochaHooks = {
                 },
               },
               connectionRetryCount: 0,
+              connectionRetryTimeout: 240000,
             }
           }
           driver = await remote(options)
