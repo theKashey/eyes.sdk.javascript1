@@ -2,6 +2,7 @@ import type * as types from '@applitools/types'
 import {type Logger} from '@applitools/logger'
 import type {Driver} from './driver'
 import type {Element} from './element'
+import * as utils from '@applitools/utils'
 
 export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
@@ -52,22 +53,25 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   }
 
   async getContentSize(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {
-    let contentHeight
+    let contentHeightString
     if (this._legacy) {
       await this._element.click()
-      contentHeight = await this._element.getText()
+      contentHeightString = await this._element.getText()
     } else {
       const elementId = await this._getElementId(element)
       if (!elementId) return null
       await this._element.type(`offset;${elementId};0;0;0`)
       await this._element.click()
-      contentHeight = await this._element.getText()
+      contentHeightString = await this._element.getText()
       await this._element.type('')
     }
 
     const region = await this._spec.getElementRegion(this._element.driver.target, element.target)
+    const contentHeight = Number(contentHeightString)
 
-    return {width: region.width, height: Number(contentHeight)}
+    if (Number.isNaN(contentHeight)) return utils.geometry.size(region)
+
+    return {width: region.width, height: contentHeight}
   }
 
   async getRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
@@ -93,7 +97,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._element.type(`moveToTop;${elementId};0;0`)
+    await this._element.type(`moveToTop;${elementId};0;-1`)
     await this._element.click()
     await this._element.type('')
   }
@@ -115,6 +119,11 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     await this._element.click()
     const touchPaddingString = await this._element.getText()
     await this._element.type('')
-    return Number(touchPaddingString)
+
+    const touchPadding = Number(touchPaddingString)
+
+    if (Number.isNaN(touchPadding)) return null
+
+    return touchPadding
   }
 }

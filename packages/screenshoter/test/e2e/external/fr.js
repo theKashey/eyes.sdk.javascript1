@@ -4,28 +4,68 @@ describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   before(async () => {
+    // ;[driver, destroyDriver] = await makeDriver({
+    //   type: 'android',
+    //   app: '/Users/kyrylo/Downloads/InstrumentedApk_#26906.apk',
+    //   logger,
+    // })
+
     ;[driver, destroyDriver] = await makeDriver({
-      type: 'android-sauce',
-      deviceName: 'Samsung Galaxy S20 WQHD GoogleAPI Emulator',
-      platformVersion: '11.0',
-      app: 'storage:filename=InstrumentedApk_#26906.apk',
+      type: 'android-bs',
+      deviceName: 'Samsung Galaxy S20 Plus',
+      platformVersion: '10.0',
+      app: 'bs://3ceeb401138a13ae150e312ad9a0be4640f113e2',
       logger,
     })
+
+    await driver.target.updateSettings({allowInvisibleElements: true})
   })
 
   after(async () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot on screen with scroll view', async () => {
+  it('take full app screenshot on buggy screen with collapsable view', async () => {
     await driver.target.updateSettings({allowInvisibleElements: true})
-    await sleep(10000)
+    await sleep(3000)
     const nextButton = await driver.element({type: 'id', selector: 'next_button'})
     await nextButton.click()
-    await sleep(5000)
+    await sleep(2000)
     const memberButton = await driver.element({type: 'id', selector: 'navigation_member'})
     await memberButton.click()
-    await sleep(10000)
+    await sleep(2000)
+
+    await driver.init()
+
+    await test({
+      type: 'android',
+      tag: 'app-fully-fr',
+      fully: true,
+      framed: true,
+      wait: 1500,
+      scrollingMode: 'scroll',
+      driver,
+      logger,
+    })
+  })
+
+  it('take full app screenshot', async () => {
+    await sleep(3000)
+    const nextButton = await driver.element({type: 'id', selector: 'next_button'})
+    await nextButton.click()
+    await sleep(2000)
+    let searchField = await driver.element({type: 'id', selector: 'search_view'})
+    await searchField.click()
+    await sleep(2000)
+    searchField = await driver.element({type: 'id', selector: 'search_edit_text'})
+    await searchField.type('red')
+    await driver.target.pressKeyCode(66)
+    await sleep(4000)
+    const productView = await driver.elements({type: 'id', selector: 'product_imageView'})
+    await productView[1].click()
+    await sleep(5000)
+
+    await driver.target.updateSettings({allowInvisibleElements: true})
 
     await driver.init()
 
@@ -33,7 +73,7 @@ describe('screenshoter android app', () => {
 
     await test({
       type: 'android',
-      tag: 'app-fully-scroll',
+      tag: 'app-fully-fr2',
       fully: true,
       framed: true,
       wait: 1500,

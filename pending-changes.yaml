@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Improved handling of touch padding related issues in native apps
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
@@ -22,11 +22,12 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
     - Fixed scrolling on some android devices
+    - Improved handling of touch padding related issues in native apps
 "@applitools/eyes-webdriverio":
   feature:
     - Support `addMobileDevice` in user API for NMG
   bug-fix:
-    - 
+    - Improved handling of touch padding related issues in native apps
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -63,6 +64,7 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
     - Fixed scrolling on some android devices
+    - Improved handling of touch padding related issues in native apps
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -109,6 +111,7 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
     - Fixed scrolling on some android devices
+    - Improved handling of touch padding related issues in native apps
 "@applitools/eyes-cypress":
   feature:
     - 
@@ -149,6 +152,7 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
     - Fixed scrolling on some android devices
+    - Improved handling of touch padding related issues in native apps
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

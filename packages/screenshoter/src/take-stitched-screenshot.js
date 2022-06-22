@@ -53,7 +53,7 @@ async function takeStitchedScreenshot({
     : scrollerRegion
   logger.log('Target region calculated: ', targetRegion)
 
-  const cropRegion = await driver.getRegionInViewport(context, targetRegion)
+  const cropRegion = utils.geometry.round(await driver.getRegionInViewport(context, targetRegion))
   logger.log('Crop region calculated: ', cropRegion)
   if (utils.geometry.isEmpty(cropRegion)) throw new Error('Screenshot region is out of viewport')
 
@@ -77,7 +77,7 @@ async function takeStitchedScreenshot({
     region.width += expectedRemainingOffset.x
     logger.verbose('region after compensation', region)
   }
-  region = utils.geometry.round(region)
+  region = utils.geometry.floor(region)
 
   const [initialRegion, ...partRegions] = utils.geometry.divide(region, image.size, overlap)
   logger.verbose('Part regions', partRegions)

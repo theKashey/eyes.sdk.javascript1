@@ -1,6 +1,6 @@
 const {makeDriver, test, logger} = require('../e2e')
 
-describe('page fully fractional', () => {
+describe('screenshoter android web', () => {
   let driver, destroyDriver
 
   before(async () => {

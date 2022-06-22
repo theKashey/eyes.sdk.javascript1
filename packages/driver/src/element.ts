@@ -297,7 +297,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       else if (this.driver.isAndroid) {
         if (this.driver.helper?.name === 'android') {
           this._state.touchPadding = await this.driver.helper?.getTouchPadding()
-        } else {
+        }
+        if (!this._state.touchPadding) {
           const touchPadding = await this.getAttribute('contentSize')
             .then(data => JSON.parse(data).touchPadding)
             .catch(err => {
@@ -406,18 +407,17 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           effectiveRegion = utils.geometry.round(utils.geometry.scale(effectiveRegion, this.driver.pixelRatio))
         }
 
-        const actions = []
-
         const isPager = await this.isPager()
-
         const touchPadding = await this.getTouchPadding()
 
+        const actions = []
         // horizontal scrolling
-        const xPadding = Math.max(Math.floor(effectiveRegion.width * 0.07), touchPadding)
+        const xPadding = touchPadding + 3
         const yTrack = Math.floor(effectiveRegion.y + effectiveRegion.height / 2) // center
         const xLeft = effectiveRegion.y + xPadding
         const xDirection = remainingOffset.x > 0 ? 'right' : 'left'
         const xGap = xDirection === 'right' ? -touchPadding : touchPadding
+        const xCompensation = xDirection === 'right' ? -1 : 1
         let xRemaining = Math.abs(remainingOffset.x)
         if (isPager) {
           const xPages = Math.floor(xRemaining / effectiveRegion.width)
@@ -434,18 +434,31 @@ export class Element<TDriver, TContext, TElement, TSelector> {
               {action: 'moveTo', y: yTrack, x: xEnd},
               {action: 'release'},
             ])
-          } else {
+          } else if (this.driver.isAndroid) {
             actions.push([
-              {action: 'press', y: yTrack, x: xStart},
               // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'press', y: yTrack, x: xStart - xGap},
               {action: 'wait', ms: 100},
-              {action: 'moveTo', y: yTrack, x: xStart + xGap},
+              {action: 'moveTo', y: yTrack, x: xStart + xCompensation},
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack, x: xStart},
               // perform actual scrolling
               {action: 'wait', ms: 100},
-              {action: 'moveTo', y: yTrack, x: xEnd + xGap},
+              {action: 'moveTo', y: yTrack, x: xEnd},
+              {action: 'release'},
+            ])
+          } else if (this.driver.isIOS) {
+            actions.push([
+              // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'press', y: yTrack, x: xStart - xGap},
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack, x: xStart},
+              // perform actual scrolling
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', y: yTrack, x: xEnd},
               // prevent inertial scrolling after release
               {action: 'wait', ms: 100},
-              {action: 'moveTo', y: yTrack + 1, x: xEnd + xGap},
+              {action: 'moveTo', y: yTrack + 1, x: xEnd},
               {action: 'release'},
             ])
           }
@@ -453,11 +466,12 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         }
 
         // vertical scrolling
-        const yPadding = Math.max(Math.floor(effectiveRegion.height * 0.07), touchPadding)
+        const yPadding = Math.max(Math.floor(effectiveRegion.height * 0.05), touchPadding + 3)
         const xTrack = Math.floor(effectiveRegion.x + 5) // a little bit off left border
         const yBottom = effectiveRegion.y + effectiveRegion.height - yPadding
         const yDirection = remainingOffset.y > 0 ? 'down' : 'up'
         const yGap = yDirection === 'down' ? -touchPadding : touchPadding
+        const yCompensation = yDirection === 'down' ? -1 : 1
         let yRemaining = Math.abs(remainingOffset.y)
         if (isPager) {
           const yPages = Math.floor(yRemaining / effectiveRegion.height)
@@ -474,18 +488,31 @@ export class Element<TDriver, TContext, TElement, TSelector> {
               {action: 'moveTo', x: xTrack, y: yEnd},
               {action: 'release'},
             ])
-          } else {
+          } else if (this.driver.isAndroid) {
             actions.push([
-              {action: 'press', x: xTrack, y: yStart},
               // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'press', x: xTrack, y: yStart - yGap},
               {action: 'wait', ms: 100},
-              {action: 'moveTo', x: xTrack, y: yStart + yGap},
+              {action: 'moveTo', x: xTrack, y: yStart + yCompensation},
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack, y: yStart},
               // perform actual scrolling
               {action: 'wait', ms: 100},
-              {action: 'moveTo', x: xTrack, y: yEnd + yGap},
+              {action: 'moveTo', x: xTrack, y: yEnd},
+              {action: 'release'},
+            ])
+          } else if (this.driver.isIOS) {
+            actions.push([
+              // move through scrolling gap (actual scrolling will be triggered only after that)
+              {action: 'press', x: xTrack, y: yStart - yGap},
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack, y: yStart},
+              // perform actual scrolling
+              {action: 'wait', ms: 100},
+              {action: 'moveTo', x: xTrack, y: yEnd},
               // prevent inertial scrolling after release
               {action: 'wait', ms: 100},
-              {action: 'moveTo', x: xTrack + 1, y: yEnd + yGap},
+              {action: 'moveTo', x: xTrack + 1, y: yEnd},
               {action: 'release'},
             ])
           }
@@ -503,12 +530,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         }
 
         const actualScrollableRegion = await this.getClientRegion()
-        this._state.scrollOffset = utils.geometry.round(
-          utils.geometry.offsetNegative(requiredOffset, {
-            x: scrollableRegion.x - actualScrollableRegion.x,
-            y: scrollableRegion.y - actualScrollableRegion.y,
-          }),
-        )
+        this._state.scrollOffset = utils.geometry.offsetNegative(requiredOffset, {
+          x: scrollableRegion.x - actualScrollableRegion.x,
+          y: scrollableRegion.y - actualScrollableRegion.y,
+        })
 
         return this._state.scrollOffset
       }

@@ -57,6 +57,22 @@ export function ceil(target: Region | RectangleSize | Location): typeof target {
   return result
 }
 
+export function floor(region: Region): Region
+export function floor(region: RectangleSize): RectangleSize
+export function floor(region: Location): Location
+export function floor(target: Region | RectangleSize | Location): typeof target {
+  const result = {...target} as any
+  if (types.has(target, ['x', 'y'])) {
+    result.x = Math.floor(target.x)
+    result.y = Math.floor(target.y)
+  }
+  if (types.has(target, ['width', 'height'])) {
+    result.width = Math.floor(target.width + (types.has(target, 'x') ? target.x - result.x : 0))
+    result.height = Math.floor(target.height + (types.has(target, 'y') ? target.y - result.y : 0))
+  }
+  return result
+}
+
 export function rotate(size: RectangleSize, degrees: number): RectangleSize
 export function rotate(region: Region, degrees: number, size: RectangleSize): Region
 export function rotate(location: Location, degrees: number, size: RectangleSize): RectangleSize
