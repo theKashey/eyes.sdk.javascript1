@@ -11,12 +11,20 @@ describe('screenshoter android app', () => {
     // })
 
     ;[driver, destroyDriver] = await makeDriver({
-      type: 'android-bs',
-      deviceName: 'Samsung Galaxy S20 Plus',
-      platformVersion: '10.0',
-      app: 'bs://3ceeb401138a13ae150e312ad9a0be4640f113e2',
+      type: 'android-sauce',
+      deviceName: 'Google Pixel 3 GoogleAPI Emulator',
+      platformVersion: '11.0',
+      app: 'storage:6f652ae7-53c2-450e-87ff-89b23d4dfe26',
       logger,
     })
+
+    // ;[driver, destroyDriver] = await makeDriver({
+    //   type: 'android-bs',
+    //   deviceName: 'Google Pixel 3',
+    //   platformVersion: '10.0',
+    //   app: 'bs://3ceeb401138a13ae150e312ad9a0be4640f113e2',
+    //   logger,
+    // })
 
     await driver.target.updateSettings({allowInvisibleElements: true})
   })
@@ -49,7 +57,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take full app screenshot', async () => {
+  it.only('take full app screenshot', async () => {
     await sleep(3000)
     const nextButton = await driver.element({type: 'id', selector: 'next_button'})
     await nextButton.click()
@@ -65,7 +73,8 @@ describe('screenshoter android app', () => {
     await productView[1].click()
     await sleep(5000)
 
-    await driver.target.updateSettings({allowInvisibleElements: true})
+    const okButton = await driver.element('android=new UiSelector().text("OK")')
+    await okButton?.click()
 
     await driver.init()
 
