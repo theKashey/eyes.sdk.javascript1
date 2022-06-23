@@ -9,7 +9,7 @@ function generateDockerComposeConfig({saveToDisk, platform = process.platform} =
   // use seleniarm/standalone-chromium for Mac with Apple chip (M1)
   // since selenium/standalone-chrome doesn't support the M1 architecture
   // re: https://github.com/seleniumhq/docker-selenium#experimental-mult-arch-aarch64armhfamd64-images
-  chromeImage = os.cpus()[0].model.includes('M1') ? 'seleniarm/standalone-chromium:4.1.3-20220331' : 'selenium/standalone-chrome:4.1.3-20220327' 
+  chromeImage = os.cpus()[0].model.includes('M1') ? 'seleniarm/standalone-chromium:latest' : 'selenium/standalone-chrome:latest' 
   chromeImage = process.env.CHROME_IMAGE || chromeImage
   const environment = ['SE_NODE_OVERRIDE_MAX_SESSIONS=true', 'SE_NODE_MAX_SESSIONS=30']
   const config = {
