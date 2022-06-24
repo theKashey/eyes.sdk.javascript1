@@ -31,7 +31,7 @@ jobs:
           pip install bump2version
           PACKAGE=${{github.event.inputs.package}}
           eval $(cd $PACKAGE && bumpversion ${{github.event.inputs.version}} --list | grep new_version=)
-          RELEASE_BRANCH=release-$PACKAGE-$new_version
+          RELEASE_BRANCH=release-python-$PACKAGE-$new_version
           git checkout -b $RELEASE_BRANCH
           git push -u origin $RELEASE_BRANCH
           echo "::set-output name=release_branch::$RELEASE_BRANCH"
@@ -62,11 +62,11 @@ jobs:
           PACKAGE=${{github.event.inputs.package}}
           PACKAGE_VERSION=${{needs.make_release_branch.outputs.release_version}}
           RELEASE_BRANCH=${{needs.make_release_branch.outputs.release_branch}}
-          RELEASE_TAG=$PACKAGE-$PACKAGE_VERSION
+          RELEASE_TAG="@applitools/python/$PACKAGE@$PACKAGE_VERSION"
 
           make publish_$PACKAGE -e SDK_VERSION=$PACKAGE_VERSION
-          git tag -am "$PACKAGE v$PACKAGE_VERSION" $RELEASE_TAG origin/$RELEASE_BRANCH
-          git push origin $RELEASE_TAG
+          git tag -am "$PACKAGE v$PACKAGE_VERSION" "$RELEASE_TAG" origin/$RELEASE_BRANCH
+          git push origin "$RELEASE_TAG"
           git merge origin/$RELEASE_BRANCH
           git push origin
           git push origin --delete $RELEASE_BRANCH
