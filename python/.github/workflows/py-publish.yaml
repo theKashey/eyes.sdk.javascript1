@@ -1,0 +1,74 @@
+name: Publish python package
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: package name
+        type: choice
+        options: [eyes_universal, eyes_selenium, eyes_robotframework]
+        required: true
+      version:
+        description: version increment type
+        type: choice
+        options: [patch, minor, major]
+        required: true
+
+jobs:
+  make_release_branch:
+    runs-on: ubuntu-latest
+    outputs:
+      release_branch: ${{steps.create_release_branch.outputs.release_branch}}
+      release_version: ${{steps.create_release_branch.outputs.release_version}}
+    steps:
+      - uses: actions/checkout@v3
+      - id: create_release_branch
+        run: |
+          pip install bump2version
+          PACKAGE=${{github.event.inputs.package}}
+          eval $(cd $PACKAGE && bumpversion ${{github.event.inputs.version}} --list | grep new_version=)
+          RELEASE_BRANCH=release-$PACKAGE-$new_version
+          git checkout -b $RELEASE_BRANCH
+          git push -u origin $RELEASE_BRANCH
+          echo "::set-output name=release_branch::$RELEASE_BRANCH"
+          echo "::set-output name=release_version::$new_version"
+        env:
+          GIT_AUTHOR_NAME: ${{github.actor}}
+          GIT_COMMITTER_NAME: ${{github.actor}}
+          EMAIL: github-actions@github.com
+
+  test:
+    needs: [make_release_branch]
+    uses: applitools/eyes.sdk.python/.github/workflows/py-tests.yaml@develop
+    secrets: inherit
+    with:
+      ref: ${{needs.make_release_branch.outputs.release_branch}}
+
+  upload_to_pypi_merge_and_tag:
+    needs: [make_release_branch, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages
+      - run: |
+          PACKAGE=${{github.event.inputs.package}}
+          PACKAGE_VERSION=${{needs.make_release_branch.outputs.release_version}}
+          RELEASE_BRANCH=${{needs.make_release_branch.outputs.release_branch}}
+          RELEASE_TAG=$PACKAGE-$PACKAGE_VERSION
+
+          make publish_$PACKAGE -e SDK_VERSION=$PACKAGE_VERSION
+          git tag -am "$PACKAGE v$PACKAGE_VERSION" $RELEASE_TAG origin/$RELEASE_BRANCH
+          git push origin $RELEASE_TAG
+          git merge origin/$RELEASE_BRANCH
+          git push origin
+          git push origin --delete $RELEASE_BRANCH
+        env:
+          GIT_AUTHOR_NAME: ${{github.actor}}
+          GIT_COMMITTER_NAME: ${{github.actor}}
+          EMAIL: github-actions@github.com
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}

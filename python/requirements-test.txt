@@ -1,0 +1,8 @@
+pyyaml
+mock
+pytest-venv==0.2.1
+pytest-xdist<3
+pytest<8
+requests
+virtualenv==20.11
+webdriver-manager==3.7.0; python_version>='3'
