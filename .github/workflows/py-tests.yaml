@@ -1,6 +1,7 @@
-name: Test python packages
+name: Build and test python packages
 on:
-  push:
+  pull_request:
+  workflow_dispatch:
   workflow_call:
     inputs:
       ref:
