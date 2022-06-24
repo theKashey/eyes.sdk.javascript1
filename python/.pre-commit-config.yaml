@@ -1,0 +1,46 @@
+repos:
+    - repo: https://github.com/psf/black
+      rev: 22.3.0
+      hooks:
+        - id: black
+
+    - repo: https://github.com/PyCQA/pydocstyle
+      rev: 6.1.1
+      hooks:
+        - id: pydocstyle
+          args:  ['--convention', 'pep257', '--add-ignore', 'D1']
+          exclude: eyes_robotframework/.*|eyes_selenium/.*|coverage-tests/.*
+
+    - repo: https://github.com/PyCQA/flake8
+      rev: 4.0.1
+      hooks:
+          - id: flake8
+            language_version: python3
+            args: ["--select", "C,E,F,W", "--ignore", "E501,W503,F401"]
+            exclude: tests/.*
+
+    - repo: https://github.com/pre-commit/mirrors-isort
+      rev: v5.10.1
+      hooks:
+          - id: isort
+            language_version: python3
+            args: ["--profile", "black", "--project", "applitools", "--project", "EyesLibrary"]
+            entry: isort
+            additional_dependencies: [toml]
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.2.0
+      hooks:
+          - id: trailing-whitespace
+            args: [--markdown-linebreak-ext=md]
+            exclude: setup.cfg|tests/.*
+          - id: end-of-file-fixer
+            exclude: tests/.*
+          - id: debug-statements
+          - id: check-case-conflict
+          - id: check-byte-order-marker
+            exclude: tests/.*
+          - id: mixed-line-ending
+            exclude: tests/.*
+            args:
+                - --fix=lf
