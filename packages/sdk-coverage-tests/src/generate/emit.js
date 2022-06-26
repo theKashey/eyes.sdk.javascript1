@@ -26,7 +26,6 @@ function emitTest(test, {makeSpecEmitter, makeFile}) {
     throw new Error(`Missing implementation for test ${test.name}`)
   }
   test.config.baselineName = test.config.baselineName || test.key
-  test.config.visualgrid = test.vg || false
   test.meta = {features: test.features}
   if (test.env) {
     test.meta.browser = test.env.browser
@@ -45,7 +44,7 @@ function emitTest(test, {makeSpecEmitter, makeFile}) {
   const sdk = makeSpecEmitter(emitter, test)
   test.output = output
   if (test.page) sdk.driver.visit(test.page)
-  test.test.call(utils, {...sdk, config: test.config, env: test.env, meta: test.meta})
+  test.test.call(utils, {...test, ...sdk})
   test.code = makeFile(test)
   return test
 }
