@@ -62,15 +62,28 @@ describe('CheckSettingsUtils', () => {
       configuration: new Configuration(),
     })
 
-    assert.deepStrictEqual(checkWindowConfiguration.ignore, persistedCheckSettings.ignoreRegions.map(transformRegion))
+    assert.deepStrictEqual(
+      checkWindowConfiguration.ignore,
+      persistedCheckSettings.ignoreRegions.map(({region, ...options}) => ({
+        ...transformRegion(region),
+        regionId: undefined,
+        ...options,
+      })),
+    )
     assert.deepStrictEqual(
       checkWindowConfiguration.floating,
-      persistedCheckSettings.floatingRegions.map(({region, ...offsets}) => ({...transformRegion(region), ...offsets})),
+      persistedCheckSettings.floatingRegions.map(({region, ...offsets}) => ({
+        ...transformRegion(region),
+        regionId: undefined,
+        ...offsets,
+      })),
     )
     assert.deepStrictEqual(
       checkWindowConfiguration.accessibility,
-      persistedCheckSettings.accessibilityRegions.map(({region, type}) => ({
+      persistedCheckSettings.accessibilityRegions.map(({region, type, ...options}) => ({
         ...transformRegion(region),
+        regionId: undefined,
+        ...options,
         accessibilityType: type,
       })),
     )
@@ -450,7 +463,7 @@ describe('CheckSettingsUtils', () => {
 
       assert.deepStrictEqual(
         matchSettings.getIgnoreRegions().map(region => region.toJSON()),
-        [{left: 15, top: 16, width: 17, height: 18}],
+        [{left: 15, top: 16, width: 17, height: 18, regionId: undefined}],
       )
     })
 
@@ -468,7 +481,7 @@ describe('CheckSettingsUtils', () => {
 
       assert.deepStrictEqual(
         matchSettings.getAccessibilityRegions().map(region => region.toJSON()),
-        [{left: 15, top: 16, width: 17, height: 18, type: 'RegularText'}],
+        [{left: 15, top: 16, width: 17, height: 18, type: 'RegularText', regionId: undefined}],
       )
     })
 
@@ -489,8 +502,20 @@ describe('CheckSettingsUtils', () => {
       assert.deepStrictEqual(
         matchSettings.getIgnoreRegions().map(region => region.toJSON()),
         [
-          {left: region1.x - 1, top: region1.y - 1, width: region1.width, height: region1.height},
-          {left: region2.x - 1, top: region2.y - 1, width: region2.width, height: region2.height},
+          {
+            left: region1.x - 1,
+            top: region1.y - 1,
+            width: region1.width,
+            height: region1.height,
+            regionId: 'css:custom selector (1)',
+          },
+          {
+            left: region2.x - 1,
+            top: region2.y - 1,
+            width: region2.width,
+            height: region2.height,
+            regionId: 'css:custom selector (2)',
+          },
         ],
       )
     })
@@ -512,8 +537,22 @@ describe('CheckSettingsUtils', () => {
       assert.deepStrictEqual(
         matchSettings.getAccessibilityRegions().map(region => region.toJSON()),
         [
-          {left: region1.x - 1, top: region1.y - 1, width: region1.width, height: region1.height, type: 'RegularText'},
-          {left: region2.x - 1, top: region2.y - 1, width: region2.width, height: region2.height, type: 'RegularText'},
+          {
+            left: region1.x - 1,
+            top: region1.y - 1,
+            width: region1.width,
+            height: region1.height,
+            type: 'RegularText',
+            regionId: 'css:custom selector (1)',
+          },
+          {
+            left: region2.x - 1,
+            top: region2.y - 1,
+            width: region2.width,
+            height: region2.height,
+            type: 'RegularText',
+            regionId: 'css:custom selector (2)',
+          },
         ],
       )
     })
@@ -533,7 +572,15 @@ describe('CheckSettingsUtils', () => {
       })
       assert.deepStrictEqual(
         matchSettings.getIgnoreRegions().map(region => region.toJSON()),
-        [{left: region1.x - 1, top: region1.y - 1, width: region1.width, height: region1.height}],
+        [
+          {
+            left: region1.x - 1,
+            top: region1.y - 1,
+            width: region1.width,
+            height: region1.height,
+            regionId: 'css:custom selector',
+          },
+        ],
       )
     })
     ;[

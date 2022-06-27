@@ -62,7 +62,11 @@ function calculateSelectorsToFindRegionsFor({
 
         return regions
       }, [])
-      allRegions[regionName] = regionValues
+      allRegions[regionName] = regionValues.sort((r1, r2) => {
+        if (r1.top !== r2.top) return r1.top > r2.top ? 1 : -1
+        if (r1.left === r2.left) return 0
+        return r1.left > r2.left ? 1 : -1
+      })
       return allRegions
     }, {})
   }
@@ -79,11 +83,12 @@ function regionify({region}) {
 }
 
 function regionWithUserInput({regionObject, userRegion, regionName}) {
-  // accesibility regions
+  if (userRegion.regionId) {
+    Object.assign(regionObject, {regionId: userRegion.regionId})
+  }
+  // accessibility regions
   if (regionName === 'accessibility') {
-    Object.assign(regionObject, {
-      accessibilityType: userRegion.accessibilityType,
-    })
+    Object.assign(regionObject, {accessibilityType: userRegion.accessibilityType})
   }
   // floating region
   if (regionName === 'floating') {

@@ -5,7 +5,6 @@ const {createRenderRequest, enrichRenderRequest} = require('./render/createRende
 const isInvalidAccessibility = require('./isInvalidAccessibility')
 const calculateSelectorsToFindRegionsFor = require('./calculateSelectorsToFindRegionsFor')
 const makeWaitForTestEnd = require('./makeWaitForTestEnd')
-const amendRegionIdsToCodedRegions = require('./amendRegionIdsToCodedRegions')
 
 function makeCheckWindow({
   globalState,
@@ -260,20 +259,9 @@ function makeCheckWindow({
       }
 
       const regions = getMatchRegions({selectorRegions, imageLocation})
-      const amendedRegions = amendRegionIdsToCodedRegions({
-        source: {
-          ignore,
-          floating,
-          accessibility,
-          strict,
-          content,
-          layout,
-        },
-        destination: regions,
-      })
 
       const checkSettings = {
-        ...amendedRegions,
+        ...regions,
         useDom,
         enablePatterns,
         ignoreDisplacements,

@@ -47,8 +47,24 @@ async function runTest(driver, useVisualGrid) {
 
   const expectedAccessibilityRegions = [
     {type: 'LargeText', isDisabled: false, left: 10, top: 20, width: 30, height: 40},
-    {type: 'IgnoreContrast', isDisabled: false, left: 20, top: 21, width: 201, height: 202},
-    {type: 'IgnoreContrast', isDisabled: false, left: 30, top: 31, width: 301, height: 302},
+    {
+      type: 'IgnoreContrast',
+      isDisabled: false,
+      left: 20,
+      top: 21,
+      width: 201,
+      height: 202,
+      regionId: 'css:element2 (1)',
+    },
+    {
+      type: 'IgnoreContrast',
+      isDisabled: false,
+      left: 30,
+      top: 31,
+      width: 301,
+      height: 302,
+      regionId: 'css:element2 (2)',
+    },
   ]
   const expectedAccessibilitySettings = {
     level: 'AA',

@@ -257,8 +257,8 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
 
       expect(regions.ignore).to.eql([
         {left: 2, top: 1, width: 3, height: 3},
-        {left: 3, top: 4, width: 5, height: 6},
         {left: 3, top: 2, width: 4, height: 4},
+        {left: 3, top: 4, width: 5, height: 6},
       ])
       expect(regions.layout).to.eql([{left: 4, top: 3, width: 5, height: 5}])
     })

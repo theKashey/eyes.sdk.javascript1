@@ -78,7 +78,7 @@ describe('EyesClassic', () => {
         await eyes.check()
       } catch (caught) {
         if (caught === thrownScreenshotDone) {
-          assert(duration >= delay && duration <= delay + 10)
+          assert(duration >= delay && duration <= delay + 50)
         } else {
           assert.fail()
         }

@@ -25,7 +25,7 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 
   await makePersistance()
 
-  persistedCheckSettings.region = persistedCheckSettings.region[0]
+  persistedCheckSettings.region = persistedCheckSettings.region[0] && persistedCheckSettings.region[0].region
 
   persistedCheckSettings.ignoreRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.ignoreRegions)
   persistedCheckSettings.floatingRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.floatingRegions)
@@ -189,6 +189,7 @@ function toMatchSettings({checkSettings = {}, configuration}) {
         })
         .sort((r1, r2) => {
           if (r1.top !== r2.top) return r1.top > r2.top ? 1 : -1
+          if (r1.left === r2.left) return 0
           return r1.left > r2.left ? 1 : -1
         }),
     )

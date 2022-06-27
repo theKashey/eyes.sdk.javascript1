@@ -51,7 +51,7 @@ describe('RenderStatusResults', () => {
     assert.deepStrictEqual(results.getDeviceSize().toJSON(), deviceSize)
     assert.deepStrictEqual(
       results.getSelectorRegions().map(region => region.map(r => r.toJSON())),
-      [[{left: 1, top: 2, width: 3, height: 4}]],
+      [[{left: 1, top: 2, width: 3, height: 4, regionId: undefined}]],
     )
   })
 

@@ -100,10 +100,10 @@ describe('coded regions', () => {
           regionId: 'xpath://div[@class="region one"][5]', // By.xpath
         },
         {left: 40, top: 170, width: 200, height: 200}, // By.js
-        {left: 280, top: 170, width: 200, height: 200, regionId: 'my-custom-id'}, // WebElement with custom id
         {left: 280, top: 170, width: 200, height: 200}, // WebElement
-        {left: 520, top: 170, width: 200, height: 200}, // RelativeBy
+        {left: 280, top: 170, width: 200, height: 200, regionId: 'my-custom-id'}, // WebElement with custom id
         {left: 520, top: 170, width: 200, height: 200, regionId: 'tag name:my-region'}, // By.tagName
+        {left: 520, top: 170, width: 200, height: 200}, // RelativeBy
 
         {left: 250, top: 420, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (1)'}, // string that targets multiple elements
         {left: 550, top: 420, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (2)'}, // string that targets multiple elements

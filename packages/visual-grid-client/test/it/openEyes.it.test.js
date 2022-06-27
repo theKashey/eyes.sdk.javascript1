@@ -1519,13 +1519,13 @@ Received: 'firefox-1'.`,
       },
     ])
     expect(r.__checkSettings.layout).to.eql([
-      layoutRegion,
       {
         left: expectedLayoutSelectorRegion.x - imageOffset.x,
         top: expectedLayoutSelectorRegion.y - imageOffset.y,
         width: expectedLayoutSelectorRegion.width,
         height: expectedLayoutSelectorRegion.height,
       },
+      layoutRegion,
     ])
     expect(r.__checkSettings.content).to.eql([
       contentRegion,
@@ -1537,16 +1537,15 @@ Received: 'firefox-1'.`,
       },
     ])
     expect(r.__checkSettings.strict).to.eql([
-      strictRegion,
       {
         left: expectedStrictSelectorRegion.x - imageOffset.x,
         top: expectedStrictSelectorRegion.y - imageOffset.y,
         width: expectedStrictSelectorRegion.width,
         height: expectedStrictSelectorRegion.height,
       },
+      strictRegion,
     ])
     expect(r.__checkSettings.accessibility).to.eql([
-      {...accessibilityRegion, accessibilityType: 'LargeText'},
       {
         left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
         top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
@@ -1554,6 +1553,7 @@ Received: 'firefox-1'.`,
         height: expectedAccessibilitySelectorRegion.height,
         accessibilityType: 'RegularText',
       },
+      {...accessibilityRegion, accessibilityType: 'LargeText'},
     ])
   })
 
@@ -1636,13 +1636,13 @@ Received: 'firefox-1'.`,
       },
     ])
     expect(r.__checkSettings.layout).to.eql([
-      layoutRegion,
       {
         left: expectedLayoutSelectorRegion.x - imageOffset.x,
         top: expectedLayoutSelectorRegion.y - imageOffset.y,
         width: expectedLayoutSelectorRegion.width,
         height: expectedLayoutSelectorRegion.height,
       },
+      layoutRegion,
     ])
     expect(r.__checkSettings.content).to.eql([
       contentRegion,
@@ -1654,16 +1654,15 @@ Received: 'firefox-1'.`,
       },
     ])
     expect(r.__checkSettings.strict).to.eql([
-      strictRegion,
       {
         left: expectedStrictSelectorRegion.x - imageOffset.x,
         top: expectedStrictSelectorRegion.y - imageOffset.y,
         width: expectedStrictSelectorRegion.width,
         height: expectedStrictSelectorRegion.height,
       },
+      strictRegion,
     ])
     expect(r.__checkSettings.accessibility).to.eql([
-      accessibilityRegion,
       {
         left: expectedAccessibilitySelectorRegion.x - imageOffset.x,
         top: expectedAccessibilitySelectorRegion.y - imageOffset.y,
@@ -1671,6 +1670,7 @@ Received: 'firefox-1'.`,
         height: expectedAccessibilitySelectorRegion.height,
         accessibilityType: accessibilitySelector.accessibilityType,
       },
+      accessibilityRegion,
     ])
 
     expect(r.__checkSettings.floating).to.eql([
