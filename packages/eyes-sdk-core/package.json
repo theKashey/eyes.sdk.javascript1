@@ -97,7 +97,7 @@
     "@applitools/spec-driver-selenium": "1.3.12",
     "@applitools/test-server": "^1.1.3",
     "@applitools/test-utils": "1.3.3",
-    "@applitools/visual-grid-client": "15.12.48",
+    "@applitools/visual-grid-client": "15.13.0",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
     "eslint": "^8.16.0",
