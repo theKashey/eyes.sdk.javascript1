@@ -7,7 +7,7 @@ describe('spec driver', async () => {
   let driver: spec.Driver, destroyDriver: () => void
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
-  describe.only('headless desktop', async () => {
+  describe('headless desktop', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
       driver = spec.transformDriver(driver)
