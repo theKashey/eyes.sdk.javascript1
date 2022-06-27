@@ -10,6 +10,13 @@
 
 
 
+## 5.35.6 - 2022/6/27
+
+### Features
+- Add support for dynamic coded regions
+### Bug fixes
+- Improve the logic that detects the side of native Android navigation bar
+
 ## 5.35.5 - 2022/6/22
 
 ### Features

@@ -30,9 +30,9 @@ Apollo SDK:
     - Improve the logic that detects the side of native Android navigation bar
 "@applitools/eyes-webdriverio":
   feature:
-    - Add support for dynamic coded regions
+    - 
   bug-fix:
-    - Improve the logic that detects the side of native Android navigation bar
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
