@@ -190,12 +190,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           if (navigationBar.x > 0) this._driverInfo.orientation = 'landscape-secondary'
 
           // navigation bar size could be its height or width depending on screen orientation
-          const navigationBarSize = navigationBar[this.orientation.startsWith('landscape') ? 'width' : 'height']
+          const navigationBarSize = navigationBar[this.orientation?.startsWith('landscape') ? 'width' : 'height']
 
           // when navigation bar is invisible on android it returns navigation bar size equal to display size
           if (
             navigationBarSize <
-            this._driverInfo.displaySize[this.orientation.startsWith('landscape') ? 'width' : 'height']
+            this._driverInfo.displaySize[this.orientation?.startsWith('landscape') ? 'width' : 'height']
           ) {
             this._driverInfo.navigationBarSize = Math.max(this._driverInfo.navigationBarSize ?? 0, navigationBarSize)
           } else {
@@ -219,7 +219,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
-        if (this.orientation.startsWith('landscape')) {
+        if (this.orientation?.startsWith('landscape')) {
           this._driverInfo.viewportSize = {
             width: this._driverInfo.displaySize.height - this.navigationBarSize,
             height: this._driverInfo.displaySize.width - this.statusBarSize,
@@ -569,7 +569,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       return this._driverInfo.displaySize
     }
     let size = await this._spec.getWindowSize(this.target)
-    if ((await this.getOrientation()).startsWith('landscape') && size.height > size.width) {
+    if ((await this.getOrientation())?.startsWith('landscape') && size.height > size.width) {
       size = {width: size.height, height: size.width}
     }
     const normalizedSize = this.isAndroid ? utils.geometry.scale(size, 1 / this.pixelRatio) : size
