@@ -14,6 +14,7 @@ Apollo SDK:
   bug-fix:
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
+    - Improve the logic that detects the side of native Android navigation bar
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
@@ -26,11 +27,12 @@ Apollo SDK:
     - Fixed scrolling on some android devices
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
+    - Improve the logic that detects the side of native Android navigation bar
 "@applitools/eyes-webdriverio":
   feature:
     - Add support for dynamic coded regions
   bug-fix:
-    - 
+    - Improve the logic that detects the side of native Android navigation bar
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

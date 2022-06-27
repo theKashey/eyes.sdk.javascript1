@@ -268,22 +268,16 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 // #endregion
 
 // #region MOBILE COMMANDS
-export async function getBarsSize(
-  driver: Driver,
-): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
+export async function getBarsSize(driver: Driver): Promise<{
+  statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
+  navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
+}> {
   const {Command} = require('selenium-webdriver/lib/command')
 
   const getSystemBarsCommand = new Command('getSystemBars')
-  const {statusBar, navigationBar} =
-    process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-      ? await (driver as any).schedule(getSystemBarsCommand)
-      : await driver.execute(getSystemBarsCommand)
-
-  return {
-    statusBarHeight: statusBar.visible ? statusBar.height : 0,
-    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
-    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
-  }
+  return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+    ? await (driver as any).schedule(getSystemBarsCommand)
+    : await driver.execute(getSystemBarsCommand)
 }
 
 export async function setOrientation(driver: Driver, orientation: ScreenOrientation) {

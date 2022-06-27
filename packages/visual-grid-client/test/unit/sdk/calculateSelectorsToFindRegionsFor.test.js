@@ -390,31 +390,50 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
         },
       ])
     })
-
-    it('handles padding on "normal" regions (all but floating and accessibility)', () => {
-      const ignore = [{selector: '.ignore', padding: 10}]
-      const layout = [{selector: '.layout', padding: 10}]
-      const strict = [{selector: '.strict', padding: 10}]
-      const content = [{selector: '.content', padding: 10}]
-
+    it('calculate the right region size for selectors with padding', () => {
+      const ignore = [
+        {selector: 'ignore', padding: 10},
+        {selector: 'ignore1', padding: {left: 20, top: 20}},
+        {selector: 'ignore2', padding: {right: 20}},
+      ]
+      const layout = [
+        {selector: 'layout', padding: 20},
+        {selector: 'layout_no_padd'},
+        {selector: 'layout2', padding: {left: 10}},
+      ]
+      const strict = [
+        {selector: 'strict', padding: 15},
+        {selector: 'strict1', padding: {right: 10}},
+      ]
+      const content = [
+        {selector: 'content', padding: 18},
+        {selector: 'content1', padding: {top: 23}},
+      ]
       const {getMatchRegions} = calculateSelectorsToFindRegionsFor({
         ignore,
         layout,
         strict,
         content,
       })
+      // all selectorRegions are preset to receive same result after padding is added: {width: 100, height: 100, left: 0, top: 0}
       const selectorRegions = [
-        [new Region({left: 1, top: 1, width: 1, height: 1})],
-        [new Region({left: 2, top: 2, width: 2, height: 2})],
-        [new Region({left: 3, top: 3, width: 3, height: 3})],
-        [new Region({left: 4, top: 4, width: 4, height: 4})],
+        [new Region({left: 10, top: 10, width: 80, height: 80})], // ignore
+        [new Region({left: 20, top: 20, width: 80, height: 80})], // ignore
+        [new Region({left: 0, top: 0, width: 80, height: 100})], // ignore
+        [new Region({left: 20, top: 20, width: 60, height: 60})], // layout
+        [new Region({left: 0, top: 0, width: 100, height: 100})], // layout
+        [new Region({left: 10, top: 0, width: 90, height: 100})], // layout
+        [new Region({left: 15, top: 15, width: 70, height: 70})], // strict
+        [new Region({left: 0, top: 0, width: 90, height: 100})], // strict
+        [new Region({left: 18, top: 18, width: 64, height: 64})], // content
+        [new Region({left: 0, top: 23, width: 100, height: 77})], // content
       ]
-
       const regions = getMatchRegions({selectorRegions})
-      expect(regions.ignore).to.eql([{left: -9, top: -9, width: 21, height: 21}])
-      expect(regions.layout).to.eql([{left: -8, top: -8, width: 22, height: 22}])
-      expect(regions.strict).to.eql([{left: -7, top: -7, width: 23, height: 23}])
-      expect(regions.content).to.eql([{left: -6, top: -6, width: 24, height: 24}])
+      Object.values(regions).forEach(region => {
+        region.forEach(rec => {
+          expect(rec).to.eql({width: 100, height: 100, left: 0, top: 0})
+        })
+      })
     })
   })
 })

@@ -121,10 +121,11 @@ export function makeSpec(options: {
     // #endregion
 
     // #region NATIVE COMMANDS
-    async getBarsSize(
-      driver: Driver,
-    ): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
-      return socket.request('Driver.getBarsSize', {driver})
+    async getSystemBars(driver: Driver): Promise<{
+      statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
+      navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
+    }> {
+      return socket.request('Driver.getSystemBars', {driver})
     },
     async getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
       return socket.request('Driver.getOrientation', {driver})

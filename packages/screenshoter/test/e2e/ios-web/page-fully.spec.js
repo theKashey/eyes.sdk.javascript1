@@ -22,7 +22,6 @@ describe('screenshoter ios web', () => {
       fully: true,
       driver,
       logger,
-      // debug: {path: './logs/page-fully-ios-html'},
     })
   })
 })
