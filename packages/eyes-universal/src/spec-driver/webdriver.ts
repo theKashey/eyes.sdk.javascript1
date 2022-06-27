@@ -18,7 +18,7 @@ export type StaticDriver = {
 }
 export type StaticElement = {elementId: string}
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -161,7 +161,7 @@ export function transformElement(element: Element | StaticElement): Element {
   const elementId = extractElementId(element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.isString(selector)) {
     return {using: 'css selector', value: selector}
   } else if (utils.types.has(selector, 'selector')) {
@@ -173,7 +173,7 @@ export function transformSelector(selector: Selector | CommonSelector): Selector
     return selector
   }
 }
-export function untransformSelector(selector: Selector | CommonSelector): CommonSelector {
+export function untransformSelector(selector: Selector): CommonSelector {
   if (utils.types.has(selector, ['using', 'value'])) {
     return {type: selector.using === 'css selector' ? 'css' : selector.using, selector: selector.value}
   }

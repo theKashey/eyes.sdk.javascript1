@@ -8,7 +8,7 @@ export type Selector = types.Selector<types.Ref>
 
 type SpecDriver = Omit<
   types.SpecDriver<Driver, Context, Element, Selector>,
-  'transformDriver' | 'transformElement' | 'transformSelector'
+  'transformDriver' | 'transformElement' | 'transformSelector' | 'untransformSelector'
 >
 
 export function makeSpec(options: {
@@ -127,7 +127,9 @@ export function makeSpec(options: {
     }> {
       return socket.request('Driver.getSystemBars', {driver})
     },
-    async getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
+    async getOrientation(
+      driver: Driver,
+    ): Promise<'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'> {
       return socket.request('Driver.getOrientation', {driver})
     },
     async setOrientation(driver: Driver, orientation: 'portrait' | 'landscape'): Promise<void> {
