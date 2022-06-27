@@ -8,6 +8,15 @@
 
 
 
+## 2.9.3 - 2022/6/27
+
+### Features
+- Add support for dynamic coded regions
+### Bug fixes
+- Improved handling of touch padding related issues in native apps
+- Prevented navbar from appearing on Android 12 screenshots
+- Improve the logic that detects the side of native Android navigation bar
+
 ## 2.9.2 - 2022/6/21
 
 ### Features

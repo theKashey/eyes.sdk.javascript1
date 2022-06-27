@@ -10,11 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Add support for dynamic coded regions
+    - 
   bug-fix:
-    - Improved handling of touch padding related issues in native apps
-    - Prevented navbar from appearing on Android 12 screenshots
-    - Improve the logic that detects the side of native Android navigation bar
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
