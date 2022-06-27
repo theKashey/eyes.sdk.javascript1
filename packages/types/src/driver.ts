@@ -1,4 +1,4 @@
-import {Size, Region, ScreenOrientation} from './data'
+import {Location, Size, Region} from './data'
 
 export type DriverInfo = {
   sessionId?: string
@@ -8,14 +8,15 @@ export type DriverInfo = {
   platformVersion?: string
   deviceName?: string
   userAgent?: string
+  viewportLocation?: Location
   viewportSize?: Size
   displaySize?: Size
-  orientation?: 'portrait' | 'landscape'
+  orientation?: 'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'
   pixelRatio?: number
   viewportScale?: number
   safeArea?: Region
-  statusBarHeight?: number
-  navigationBarHeight?: number
+  statusBarSize?: number
+  navigationBarSize?: number
   isW3C?: boolean
   isMobile?: boolean
   isNative?: boolean
@@ -107,11 +108,15 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   // #endregion
 
   // #region MOBILE COMMANDS
-  getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape'>
-  setOrientation?(driver: TDriver, orientation: ScreenOrientation): Promise<void>
-  getBarsSize?(
+  getOrientation?(driver: TDriver): Promise<'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'>
+  setOrientation?(
     driver: TDriver,
-  ): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}>
+    orientation: 'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary',
+  ): Promise<void>
+  getSystemBars?(driver: TDriver): Promise<{
+    statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
+    navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
+  }>
   getElementRegion?(driver: TDriver, element: TElement): Promise<Region>
   getElementAttribute?(driver: TDriver, element: TElement, attr: string): Promise<string>
   getElementText?(driver: TDriver, element: TElement): Promise<string>
@@ -149,11 +154,17 @@ export interface UniversalSpecDriver<TDriver, TContext, TElement, TSelector> {
   // #endregion
 
   // #region MOBILE COMMANDS
-  getOrientation?(options: {driver: TDriver}): Promise<'portrait' | 'landscape'>
-  setOrientation?(options: {driver: TDriver; orientation: ScreenOrientation}): Promise<void>
-  getBarsSize?(options: {
+  getOrientation?(options: {
     driver: TDriver
-  }): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}>
+  }): Promise<'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'>
+  setOrientation?(options: {
+    driver: TDriver
+    orientation: 'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'
+  }): Promise<void>
+  getSystemBars?(options: {driver: TDriver}): Promise<{
+    statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
+    navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
+  }>
   getElementRegion?(options: {driver: TDriver; element: TElement}): Promise<Region>
   getElementAttribute?(options: {driver: TDriver; element: TElement; attr: string}): Promise<string>
   getElementText?(options: {driver: TDriver; element: TElement}): Promise<string>

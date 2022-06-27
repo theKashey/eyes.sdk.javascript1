@@ -26,7 +26,6 @@ describe('screenshoter ios app', () => {
       scrollingMode: 'scroll',
       wait: 1500,
       overlap: {top: 10, bottom: 50},
-      debug: {path: './logs'},
       driver,
       logger,
     })

@@ -99,7 +99,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     else image.scale(1 / driver.pixelRatio / driver.viewportScale)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
-    else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
+    else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
@@ -126,7 +126,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
       const image = makeImage(await driver.takeScreenshot())
 
       if (stabilization.rotate) image.rotate(stabilization.rotate)
-      else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
+      else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
       await image.debug({...debug, name: 'marker'})
 
@@ -156,26 +156,24 @@ function makeTakeNativeScreenshot({driver, stabilization = {}, debug, logger}) {
     else image.scale(1 / driver.pixelRatio / driver.viewportScale)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
-    else if (driver.orientation === 'landscape' && image.width < image.height) image.rotate(-90)
+    else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
-      const viewportSize = await driver.getViewportSize()
+      const viewportRegion = await driver.getViewportRegion()
+      const cropRegion = {...viewportRegion}
       if (withStatusBar) {
-        image.crop({x: 0, y: 0, width: viewportSize.width, height: viewportSize.height + driver.statusBarHeight})
-      } else if (driver.isAndroid && driver.orientation === 'landscape') {
-        image.crop({
-          top: driver.statusBarHeight,
-          bottom: driver.orientation === 'landscape' ? 0 : driver.navigationBarHeight,
-          left: driver.platformVersion >= 8 ? driver.navigationBarHeight : 0,
-          right: driver.platformVersion < 8 ? driver.navigationBarHeight : 0,
-        })
-      } else {
-        image.crop({x: 0, y: driver.statusBarHeight, width: viewportSize.width, height: viewportSize.height})
+        cropRegion.y = 0
+        cropRegion.height += driver.statusBarSize
       }
+      image.crop(cropRegion)
     }
 
-    await image.debug({...debug, name, suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`})
+    await image.debug({
+      ...debug,
+      name,
+      suffix: `viewport${withStatusBar ? '-with-statusbar' : ''}`,
+    })
 
     return image
   }

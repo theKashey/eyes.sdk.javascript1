@@ -236,8 +236,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
             this._state.contentSize = utils.geometry.scale(this._state.contentSize, 1 / this.driver.pixelRatio)
           }
 
-          if (contentRegion.y < this.driver.statusBarHeight) {
-            this._state.contentSize.height -= this.driver.statusBarHeight - contentRegion.y
+          if (contentRegion.y < this.driver.statusBarSize) {
+            this._state.contentSize.height -= this.driver.statusBarSize - contentRegion.y
           }
 
           return this._state.contentSize

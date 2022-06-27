@@ -57,7 +57,7 @@ async function takeStitchedScreenshot({
   logger.log('Crop region calculated: ', cropRegion)
   if (utils.geometry.isEmpty(cropRegion)) throw new Error('Screenshot region is out of viewport')
 
-  image.crop(withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion)
+  image.crop(withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarSize}) : cropRegion)
   await image.debug({...debug, name: 'initial', suffix: 'region'})
 
   const contentRegion = utils.geometry.region({x: 0, y: 0}, contentSize)
@@ -151,7 +151,7 @@ async function takeStitchedScreenshot({
     stitchedImage.frame(
       firstImage,
       lastImage,
-      withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarHeight}) : cropRegion,
+      withStatusBar ? utils.geometry.offset(cropRegion, {x: 0, y: driver.statusBarSize}) : cropRegion,
     )
     await stitchedImage.debug({...debug, name: 'framed'})
 

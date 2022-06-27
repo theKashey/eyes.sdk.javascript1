@@ -296,15 +296,11 @@ export async function type(driver: Driver, element: Element, value: string): Pro
 
 // #region NATIVE COMMANDS
 
-export async function getBarsSize(
-  browser: Driver,
-): Promise<{statusBarHeight: number; navigationBarHeight: number; navigationBarWidth: number}> {
-  const {statusBar, navigationBar}: any = await browser.getSystemBars()
-  return {
-    statusBarHeight: statusBar.visible ? statusBar.height : 0,
-    navigationBarHeight: navigationBar.visible ? navigationBar.height : 0,
-    navigationBarWidth: navigationBar.visible ? navigationBar.width : 0,
-  }
+export async function getSystemBars(browser: Driver): Promise<{
+  statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
+  navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
+}> {
+  return browser.getSystemBars() as any
 }
 export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
   const orientation = await browser.getOrientation()
