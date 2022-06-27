@@ -24,10 +24,10 @@
     "@applitools/utils" "1.3.9"
     chalk "4.1.2"
 
-"@applitools/types@1.5.4":
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.4.tgz#81b14c7665acfae2bf6eb0c9bb1571241204b689"
-  integrity sha512-QtxM0XOZHwJPzrUfL0RSvBLav4swbLkIfuVDv9xAO//8r0aOwf8+gASmr17KWe48/wV/pJdyBEadDO0zWtkC/w==
+"@applitools/types@1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.5.tgz#11b1dd58d4e7add44e1e0912f615717b901c5fff"
+  integrity sha512-9mpJwth7VMCoZvSZ39GUK0xslqACzexXKCkz+eKKTJz6sFGKo7aLMAx19hnidOzHd8u4MbHFgIL/q5MDzrFYdQ==
 
 "@applitools/utils@1.3.5":
   version "1.3.5"
