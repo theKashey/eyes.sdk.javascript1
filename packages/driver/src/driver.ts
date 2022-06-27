@@ -219,22 +219,15 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
-        if (this.navigationBarSize > 1) {
-          if (this.orientation.startsWith('landscape')) {
-            this._driverInfo.viewportSize = {
-              width: this._driverInfo.displaySize.height - this.navigationBarSize,
-              height: this._driverInfo.displaySize.width - this.statusBarSize,
-            }
-          } else {
-            this._driverInfo.viewportSize = {
-              width: this._driverInfo.displaySize.width,
-              height: this._driverInfo.displaySize.height - this.statusBarSize - this.navigationBarSize,
-            }
+        if (this.orientation.startsWith('landscape')) {
+          this._driverInfo.viewportSize = {
+            width: this._driverInfo.displaySize.height - this.navigationBarSize,
+            height: this._driverInfo.displaySize.width - this.statusBarSize,
           }
         } else {
           this._driverInfo.viewportSize = {
-            width: windowSize.width,
-            height: windowSize.height - this.statusBarSize,
+            width: this._driverInfo.displaySize.width,
+            height: this._driverInfo.displaySize.height - this.statusBarSize - this.navigationBarSize,
           }
         }
       }
