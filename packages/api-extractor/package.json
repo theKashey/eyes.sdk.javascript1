@@ -22,7 +22,9 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "aliases": ["ts-transform-api"],
+  "aliases": [
+    "ts-transform-api"
+  ],
   "main": "./dist/transformer.js",
   "files": [
     "dist"
