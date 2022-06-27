@@ -10,7 +10,7 @@ export type Element = (
 export type Selector = (Applitools.WebdriverIO.Selector | {using: string; value: string}) & {__applitoolsBrand?: never}
 
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -124,7 +124,7 @@ export function transformElement(element: Element): Element {
   const elementId = extractElementId(element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.has(selector, 'selector')) {
     if (!utils.types.has(selector, 'type')) return selector.selector
     if (selector.type === 'css') return `css selector:${selector.selector}`
