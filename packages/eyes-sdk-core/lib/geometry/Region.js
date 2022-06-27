@@ -148,7 +148,7 @@ class Region {
       })
     }
 
-    const {left = varArg1.x, top = varArg1.y, width, height, error} = varArg1
+    const {left = varArg1.x, top = varArg1.y, width, height, regionId, error} = varArg1
 
     if (error) {
       this._error = error
@@ -162,6 +162,7 @@ class Region {
       this._top = top
       this._width = width
       this._height = height
+      this._regionId = regionId
     }
   }
 
@@ -499,6 +500,7 @@ class Region {
       top: this._top,
       width: this._width,
       height: this._height,
+      regionId: this._regionId,
     }
   }
 
@@ -509,6 +511,7 @@ class Region {
         top: this._top,
         width: this._width,
         height: this._height,
+        regionId: this._regionId,
       },
     ]
   }

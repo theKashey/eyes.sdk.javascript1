@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Add support for dynamic coded regions
   bug-fix:
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
@@ -19,6 +19,7 @@ Apollo SDK:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
     - Support `addMobileDevice` in user API for NMG
+    - Add support for dynamic coded regions
   bug-fix:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed native screenshots of the elements under large collapsing areas
@@ -27,7 +28,7 @@ Apollo SDK:
     - Prevented navbar from appearing on Android 12 screenshots
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Add support for dynamic coded regions
   bug-fix:
     - 
 "@applitools/eyes-playwright":
@@ -38,6 +39,7 @@ Apollo SDK:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
     - Support `addMobileDevice` in user API for NMG
+    - Add support for dynamic coded regions
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -54,6 +56,7 @@ Apollo SDK:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
     - Support `addMobileDevice` in user API for NMG
+    - Add support for dynamic coded regions
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -75,6 +78,7 @@ Apollo SDK:
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+    - Add support for dynamic coded regions
   bug-fix:
     - Fixed broken links to enums implementation in the README.md
     - |
@@ -102,6 +106,7 @@ Apollo SDK:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
     - Support `addMobileDevice` in user API for NMG
+    - Add support for dynamic coded regions
   bug-fix:
     - Fixed the "Maximum Call Stack Size Exceeded" error when taking screenshots on iOS Safari
     - Fixed an issue with wrong cropped screenshots of elements out of viewport bounds on native devices
@@ -135,6 +140,7 @@ Apollo SDK:
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Support `addMobileDevice` in user API for NMG
+    - Add support for dynamic coded regions
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates

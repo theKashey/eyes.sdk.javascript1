@@ -1,17 +1,22 @@
+/* eslint @typescript-eslint/ban-types: ["error", {"types": {"Function": false}}] */
 import type {Size, Region, Cookie, DriverInfo, WaitOptions, ScreenOrientation} from '@applitools/types'
 import * as Selenium from 'selenium-webdriver'
 import * as utils from '@applitools/utils'
 
 export type Driver = Selenium.WebDriver & {__applitoolsBrand?: never}
 export type Element = Selenium.WebElement & {__applitoolsBrand?: never}
-export type Selector = (Selenium.Locator | {using: string; value: string}) & {__applitoolsBrand?: never}
+export type Selector = (
+  | Exclude<Selenium.Locator, Function>
+  | ((webdriver: Selenium.WebDriver) => Promise<any>)
+  | {using: string; value: string}
+) & {__applitoolsBrand?: never}
 
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
 type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
-const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
+const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath'] as const
 
 function extractElementId(element: Element | ShadowRoot): Promise<string> | string {
   return isElement(element) ? (element.getId() as Promise<string>) : element['shadow-6066-11e4-a52e-4f735466cecf']
@@ -20,6 +25,9 @@ function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): 
   return utils.types.has(shadowRoot, 'shadow-6066-11e4-a52e-4f735466cecf')
     ? new Selenium.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
     : shadowRoot
+}
+function isByHashSelector(selector: any): selector is Selenium.ByHash {
+  return byHash.includes(Object.keys(selector)[0] as typeof byHash[number])
 }
 
 // #endregion
@@ -34,7 +42,12 @@ export function isElement(element: any): element is Element {
 }
 export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
-  return utils.types.has(selector, ['using', 'value']) || byHash.includes(Object.keys(selector)[0])
+  return (
+    utils.types.has(selector, ['using', 'value']) ||
+    isByHashSelector(selector) ||
+    utils.types.isFunction(selector) ||
+    utils.types.instanceOf<Selenium.RelativeBy>(selector, 'RelativeBy')
+  )
 }
 export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('getSessionDetails', 'GET', '/session/:sessionId')
@@ -52,7 +65,7 @@ export function transformDriver(driver: Driver): Driver {
   }
   return driver
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.isString(selector)) {
     return {css: selector}
   } else if (utils.types.has(selector, 'selector')) {
@@ -60,6 +73,20 @@ export function transformSelector(selector: Selector | CommonSelector): Selector
     if (!utils.types.has(selector, 'type')) return {css: selector.selector}
     if (selector.type === 'css') return {css: selector.selector}
     else return {using: selector.type, value: selector.selector}
+  }
+  return selector
+}
+
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.instanceOf<Selenium.RelativeBy>(selector, 'RelativeBy') || utils.types.isFunction(selector)) {
+    return null
+  } else if (isByHashSelector(selector)) {
+    const [[how, what]] = Object.entries(selector) as [[typeof byHash[number], string]]
+    if (how === 'js') return null
+    selector = Selenium.By[how](what)
+  }
+  if (utils.types.has(selector, ['using', 'value'])) {
+    return {type: selector.using === 'css selector' ? 'css' : selector.using, selector: selector.value}
   }
   return selector
 }
@@ -311,7 +338,8 @@ const browserOptionsNames: Record<string, string> = {
   chrome: 'goog:chromeOptions',
   firefox: 'moz:firefoxOptions',
 }
-export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
+export async function build({selenium, ...env}: any): Promise<[Driver, () => Promise<void>]> {
+  const {Builder} = (selenium ?? require('selenium-webdriver')) as typeof Selenium
   const parseEnv = require('@applitools/test-utils/src/parse-env')
 
   const {
@@ -345,7 +373,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
   if (browser === 'chrome' && process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     desiredCapabilities['goog:chromeOptions'] = {w3c: false}
   }
-  const builder = new Selenium.Builder().withCapabilities(desiredCapabilities)
+  const builder = new Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)
   if (proxy) {
     builder.setProxy({

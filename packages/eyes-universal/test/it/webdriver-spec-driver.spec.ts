@@ -53,6 +53,27 @@ describe('webdriver spec driver', async () => {
     it('transformElement(static-element)', async () => {
       await transformElement({input: {elementId: 'element-guid'}})
     })
+    it('untransformSelector(css-selector)', async () => {
+      await untransformSelector({
+        input: {using: 'css selector', value: '.class'},
+        expected: {type: 'css', selector: '.class'},
+      })
+    })
+    it('untransformSelector(xpath-selector)', async () => {
+      await untransformSelector({
+        input: {using: 'xpath', value: '//html'},
+        expected: {type: 'xpath', selector: '//html'},
+      })
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: '.class', expected: '.class'})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      await untransformSelector({
+        input: {type: 'selector', selector: '.class'},
+        expected: {type: 'selector', selector: '.class'},
+      })
+    })
     it('isEqualElements(element, element)', async () => {
       const element = await driver.findElement('css selector', 'div')
       await isEqualElements({
@@ -237,6 +258,15 @@ describe('webdriver spec driver', async () => {
       ELEMENT: elementId,
       'element-6066-11e4-a52e-4f735466cecf': elementId,
     })
+  }
+  async function untransformSelector({
+    input,
+    expected,
+  }: {
+    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    expected: {type: string; selector: string} | string | null
+  }) {
+    assert.deepStrictEqual(spec.untransformSelector(input), expected)
   }
   async function executeScript() {
     const element = await driver.findElement('css selector', 'html')

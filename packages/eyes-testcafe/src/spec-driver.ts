@@ -134,7 +134,7 @@ export function isSelector(selector: any): selector is Selector {
 export function transformElement(element: Element): TestCafe.Selector {
   return utils.types.isFunction((element as any).selector) ? (element as any).selector : element
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.has(selector, 'selector')) {
     let current = selector
     let transformed =
@@ -195,13 +195,11 @@ export async function childContext(t: Driver, element: Element): Promise<Driver>
   return t
 }
 export async function findElement(t: Driver, selector: Selector): Promise<Element> {
-  const element = await transformSelector(selector).with({boundTestRun: t})()
+  const element = await selector.with({boundTestRun: t})()
   return element ? (element as any).selector : null
 }
 export async function findElements(t: Driver, selector: Selector): Promise<Element[]> {
-  // NOTE:
-  // Adapted from https://testcafe-discuss.devexpress.com/t/how-to-get-a-nodelist-from-selector/778
-  const elements = transformSelector(selector).with({boundTestRun: t})
+  const elements = selector.with({boundTestRun: t})
   return Array.from({length: await elements.count}, (_, index) => elements.nth(index))
 }
 export async function setViewportSize(t: Driver, size: {width: number; height: number}): Promise<void> {
@@ -263,7 +261,7 @@ export async function scrollIntoView(t: Driver, element: Element | Selector, ali
   await scrollIntoView()
 }
 export async function waitUntilDisplayed(t: Driver, selector: Selector): Promise<void> {
-  await transformSelector(selector).with({boundTestRun: t, visibilityCheck: true})
+  await selector.with({boundTestRun: t, visibilityCheck: true})
 }
 
 // #endregion

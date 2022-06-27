@@ -12,17 +12,6 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
       expect(selectorsToFindRegionsFor).to.be.undefined
     })
 
-    it('handles sizeMode without selector or selectors', () => {
-      const {selectorsToFindRegionsFor} = calculateSelectorsToFindRegionsFor({sizeMode: 'bla'})
-      expect(selectorsToFindRegionsFor).to.be.undefined
-    })
-
-    it('handles no sizeMode with selector', () => {
-      const ignore = [{selector: 'bla'}]
-      const {selectorsToFindRegionsFor} = calculateSelectorsToFindRegionsFor({ignore})
-      expect(selectorsToFindRegionsFor).to.eql(['bla'])
-    })
-
     it('handles non-array selectors', () => {
       const layout = {selector: 'bla'}
       const content = {selector: 'bla2'}
@@ -37,13 +26,13 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
       expect(selectorsToFindRegionsFor).to.eql(['bla', 'blu'])
     })
 
-    it('handles non-array differnt index selectors without sizeMode or selector', () => {
+    it('handles non-array differnt index selectors', () => {
       const layout = {selector: 'bla'}
       const {selectorsToFindRegionsFor} = calculateSelectorsToFindRegionsFor({layout})
       expect(selectorsToFindRegionsFor).to.eql(['bla'])
     })
 
-    it('handles array different index selectors without sizeMode or selector', () => {
+    it('handles array different index selectors', () => {
       const layout = [{selector: 'bla'}]
       const {selectorsToFindRegionsFor} = calculateSelectorsToFindRegionsFor({layout})
       expect(selectorsToFindRegionsFor).to.eql(['bla'])
@@ -55,7 +44,7 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
       expect(selectorsToFindRegionsFor).to.eql(['bla', 'kuku'])
     })
 
-    it('handles multiple selector arrays with duplicates and without sizeMode or selector', () => {
+    it('handles multiple selector arrays with duplicates', () => {
       const ignore = [
         {a: 'b'},
         {selector: 'bla'},
@@ -361,11 +350,9 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
       ]
 
       const imageLocation = {x: 8, y: 9}
-      const sizeMode = 'full-selector'
       const {getMatchRegions} = calculateSelectorsToFindRegionsFor({
         accessibility,
         floating,
-        sizeMode,
       })
 
       const selectorRegions = [
@@ -402,6 +389,32 @@ describe('calculateSelectorsToFindRegionsFor Tests', () => {
           maxRightOffset: 11,
         },
       ])
+    })
+
+    it('handles padding on "normal" regions (all but floating and accessibility)', () => {
+      const ignore = [{selector: '.ignore', padding: 10}]
+      const layout = [{selector: '.layout', padding: 10}]
+      const strict = [{selector: '.strict', padding: 10}]
+      const content = [{selector: '.content', padding: 10}]
+
+      const {getMatchRegions} = calculateSelectorsToFindRegionsFor({
+        ignore,
+        layout,
+        strict,
+        content,
+      })
+      const selectorRegions = [
+        [new Region({left: 1, top: 1, width: 1, height: 1})],
+        [new Region({left: 2, top: 2, width: 2, height: 2})],
+        [new Region({left: 3, top: 3, width: 3, height: 3})],
+        [new Region({left: 4, top: 4, width: 4, height: 4})],
+      ]
+
+      const regions = getMatchRegions({selectorRegions})
+      expect(regions.ignore).to.eql([{left: -9, top: -9, width: 21, height: 21}])
+      expect(regions.layout).to.eql([{left: -8, top: -8, width: 22, height: 22}])
+      expect(regions.strict).to.eql([{left: -7, top: -7, width: 23, height: 23}])
+      expect(regions.content).to.eql([{left: -6, top: -6, width: 24, height: 24}])
     })
   })
 })

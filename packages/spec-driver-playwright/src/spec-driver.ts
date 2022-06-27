@@ -51,11 +51,18 @@ export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
   return utils.types.isString(selector) || utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.has(selector, 'selector')) {
     if (!utils.types.has(selector, 'type')) return selector.selector
     else return `${selector.type}=${selector.selector}`
   }
+  return selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) {
+    [, selector] = selector.toString().match(/Locator@(.+)/)
+  }
+  if (utils.types.isString(selector)) return {selector}
   return selector
 }
 export function extractContext(page: Driver | Context): Context {

@@ -20,6 +20,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
   private _context: Context<TDriver, TContext, TElement, TSelector>
   private _selector: types.Selector<TSelector>
+  private _commonSelector?: types.Selector
   private _index: number
   private _state: ElementState<TElement> = {}
   private _originalOverflow: any
@@ -34,7 +35,6 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     selector?: types.Selector<TSelector>
     index?: number
     logger?: Logger
-    root?: TElement
   }) {
     if (options.element instanceof Element) return options.element
 
@@ -44,21 +44,19 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     if (options.logger) this._logger = options.logger
 
     if (this._spec.isElement(options.element)) {
-      let elementToUse = options.element
-      if (options.root) {
-        elementToUse = options.root
-        this._target = elementToUse
-      } else {
-        this._target = this._spec.transformElement?.(elementToUse) ?? elementToUse
-      }
+      this._target = this._spec.transformElement?.(options.element) ?? options.element
 
       // Some frameworks contains information about the selector inside an element
-      this._selector = options.selector ?? this._spec.extractSelector?.(elementToUse)
+      this._selector = options.selector ?? this._spec.extractSelector?.(options.element)
       this._index = options.index
     } else if (specUtils.isSelector(this._spec, options.selector)) {
       this._selector = options.selector
     } else {
       throw new TypeError('Element constructor called with argument of unknown type!')
+    }
+
+    if (this._selector && this._spec.untransformSelector) {
+      this._commonSelector = this._spec.untransformSelector(this._spec.transformSelector(this._selector))
     }
   }
 
@@ -68,6 +66,14 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
   get selector() {
     return this._selector
+  }
+
+  get commonSelector() {
+    return this._commonSelector
+  }
+
+  get index() {
+    return this._index
   }
 
   get context() {
@@ -288,6 +294,11 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         return false
       }
     })
+  }
+
+  async getShadowRoot(): Promise<TElement> {
+    if (!this.driver.isWeb) return null
+    return this._spec.executeScript(this.context.target, snippets.getShadowRoot, [this.target])
   }
 
   async getTouchPadding(): Promise<number> {

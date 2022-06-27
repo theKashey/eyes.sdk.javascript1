@@ -11,6 +11,8 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
+const XPATH_SELECTOR_START = ['/', '(', '../', './', '*/']
+
 async function handleToObject(handle: Puppeteer.JSHandle): Promise<any> {
   const [, type] = handle.toString().split('@')
   if (type === 'array') {
@@ -75,8 +77,8 @@ function scriptRunner(script: string, arg: any, ...elements: HTMLElement[]) {
     }
   }
 }
-function isXpath(selector: Selector): boolean {
-  return selector.startsWith('//') || selector.startsWith('..')
+function isXpathSelector(selector: Selector): boolean {
+  return XPATH_SELECTOR_START.some(start => selector.startsWith(start))
 }
 
 // #endregion
@@ -98,8 +100,14 @@ export function isElement(element: any): element is Element {
 export function isSelector(selector: any): selector is Selector {
   return utils.types.isString(selector)
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.has(selector, 'selector')) return selector.selector
+  return selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.isString(selector)) {
+    return {type: isXpathSelector(selector) ? 'xpath' : 'css', selector}
+  }
   return selector
 }
 export function extractContext(page: Driver | Context): Context {
@@ -139,11 +147,11 @@ export async function childContext(_frame: Context, element: Element): Promise<C
 }
 export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
   const root = parent ?? frame
-  return isXpath(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)
+  return isXpathSelector(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)
 }
 export async function findElements(frame: Context, selector: Selector, parent?: Element): Promise<Element[]> {
   const root = parent ?? frame
-  return isXpath(selector) ? root.$x(selector) : root.$$(selector)
+  return isXpathSelector(selector) ? root.$x(selector) : root.$$(selector)
 }
 export async function getViewportSize(page: Driver): Promise<Size> {
   return page.viewport()

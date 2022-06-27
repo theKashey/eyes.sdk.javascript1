@@ -173,6 +173,12 @@ export function transformSelector(selector: Selector | CommonSelector): Selector
     return selector
   }
 }
+export function untransformSelector(selector: Selector | CommonSelector): CommonSelector {
+  if (utils.types.has(selector, ['using', 'value'])) {
+    return {type: selector.using === 'css selector' ? 'css' : selector.using, selector: selector.value}
+  }
+  return selector
+}
 export function isStaleElementError(error: any): boolean {
   if (!error) return false
   const errOrResult = error.originalError || error

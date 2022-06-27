@@ -4,6 +4,7 @@ import * as utils from '@applitools/utils'
 export type Driver = any
 export type Element = any
 export type Selector = string | {using: string; value: string}
+type CommonSelector = string | {selector: Selector | string; type?: string}
 
 export function isDriver(driver: any): driver is Driver {
   return driver && driver.constructor.name === 'MockDriver'
@@ -16,6 +17,20 @@ export function isSelector(selector: any): selector is Selector {
 }
 export function transformSelector(selector: Selector | {selector: Selector}): Selector {
   return utils.types.has(selector, 'selector') ? selector.selector : selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.isString(selector)) {
+    return {type: 'css', selector: selector}
+  } else if (utils.types.has(selector, ['using', 'value'])) {
+    return {type: selector.using === 'css selector' ? 'css' : selector.using, selector: selector.value}
+  } else if (utils.types.has(selector, ['selector'])) {
+    return selector
+  }
+}
+export function extractSelector(element: Element): any {
+  if (utils.types.has(element, ['selector'])) {
+    return element.selector
+  }
 }
 export function isStaleElementError(): boolean {
   return false

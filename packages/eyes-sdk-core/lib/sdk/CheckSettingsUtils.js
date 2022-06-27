@@ -2,12 +2,13 @@ const TypeUtils = require('../utils/TypeUtils')
 const utils = require('@applitools/utils')
 const snippets = require('@applitools/snippets')
 const ImageMatchSettings = require('../config/ImageMatchSettings')
+const stringifySelector = require('../utils/stringify-selector')
+const {appendIndexToDuplicateRegionIds} = require('../utils/amend-region-ids')
 
 async function toPersistedCheckSettings({checkSettings, context, logger}) {
   const mapping = {
     ids: [],
     elements: [],
-    paddings: [],
     resolvers: [],
   }
 
@@ -26,51 +27,49 @@ async function toPersistedCheckSettings({checkSettings, context, logger}) {
 
   persistedCheckSettings.region = persistedCheckSettings.region[0]
 
+  persistedCheckSettings.ignoreRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.ignoreRegions)
+  persistedCheckSettings.floatingRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.floatingRegions)
+  persistedCheckSettings.strictRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.strictRegions)
+  persistedCheckSettings.layoutRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.layoutRegions)
+  persistedCheckSettings.contentRegions = appendIndexToDuplicateRegionIds(persistedCheckSettings.contentRegions)
+  persistedCheckSettings.accessibilityRegions = appendIndexToDuplicateRegionIds(
+    persistedCheckSettings.accessibilityRegions,
+  )
+
   return {persistedCheckSettings, cleanupPersistance}
 
   async function referencesToPersistedRegions(references = []) {
     const persistedRegions = []
     for (const reference of references) {
       if (!reference) continue
-      const referenceRegion = reference.region || reference
+      const {region, ...options} = reference.region ? reference : {region: reference}
 
-      if (utils.types.has(referenceRegion, ['width', 'height'])) {
-        const persistedRegion = utils.types.has(referenceRegion, ['x', 'y'])
-          ? persistReference(reference, referenceRegion)
-          : persistReference(reference, {
-              x: referenceRegion.left,
-              y: referenceRegion.top,
-              width: referenceRegion.width,
-              height: referenceRegion.height,
-            })
-        persistedRegions.push(persistedRegion)
-      } else if (referenceRegion) {
-        const elements = await context.elements(referenceRegion)
+      if (utils.types.has(region, ['width', 'height'])) {
+        const persistedRegion = utils.types.has(region, ['x', 'y'])
+          ? region
+          : {x: region.left, y: region.top, width: region.width, height: region.height}
+        persistedRegions.push({region: persistedRegion, ...options})
+      } else if (region) {
+        const elements = await context.elements(region)
+        options.regionId = options.regionId || stringifySelector(elements[0])
         for (const element of elements) {
           mapping.ids.push(utils.general.guid())
           mapping.elements.push(element)
-          mapping.paddings.push(reference.padding)
-          mapping.resolvers.push(selector => persistedRegions.push(persistReference(reference, selector)))
+          mapping.resolvers.push(selector => persistedRegions.push({region: selector, ...options}))
         }
       }
     }
     return persistedRegions
-
-    function persistReference(reference, persistedRegion) {
-      return reference.region ? {...reference, region: persistedRegion} : persistedRegion
-    }
   }
 
   async function makePersistance() {
     if (!mapping.elements.length) return
     const selectors = await context.execute(snippets.addElementIds, [mapping.elements, mapping.ids])
-    selectors.forEach((selectors, index) => {
-      const resolver = mapping.resolvers[index]
-      const padding = mapping.paddings[index]
+    selectors.forEach((selectors, selectorIndex) => {
+      const resolver = mapping.resolvers[selectorIndex]
       const persistedSelector = selectors.map((selector, index) => ({
         type: 'css',
         selector,
-        padding,
         nodeType: index < selectors.length - 1 ? 'shadow-root' : 'element',
       }))
       resolver(persistedSelector.length === 1 ? persistedSelector[0] : persistedSelector)
@@ -142,6 +141,7 @@ function toCheckWindowConfiguration({checkSettings, configuration}) {
           top: Math.round(region.y),
           width: Math.round(region.width),
           height: Math.round(region.height),
+          regionId: region.regionId,
           ...options,
         }
       }
@@ -172,19 +172,26 @@ function toMatchSettings({checkSettings = {}, configuration}) {
 
   function transformRegions(regions) {
     if (!regions || regions.length === 0) return regions
-    return regions.map(target => {
-      const {region, ...options} = target.region ? target : {region: target}
-      if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
-        return {
-          left: Math.round(region.x),
-          top: Math.round(region.y),
-          width: Math.round(region.width),
-          height: Math.round(region.height),
-          ...options,
-        }
-      }
-      return region
-    })
+    return appendIndexToDuplicateRegionIds(
+      regions
+        .map(target => {
+          const {region, ...options} = target.region ? target : {region: target}
+          if (utils.types.has(region, ['x', 'y', 'width', 'height'])) {
+            return {
+              left: Math.round(region.x),
+              top: Math.round(region.y),
+              width: Math.round(region.width),
+              height: Math.round(region.height),
+              ...options,
+            }
+          }
+          return region
+        })
+        .sort((r1, r2) => {
+          if (r1.top !== r2.top) return r1.top > r2.top ? 1 : -1
+          return r1.left > r2.left ? 1 : -1
+        }),
+    )
   }
 }
 
@@ -215,29 +222,30 @@ async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
       } else {
         const elements = await context.elements(region)
         if (elements.length > 0) {
+          options.regionId = options.regionId || stringifySelector(elements[0])
           const contextLocationInViewport = await elements[0].context.getLocationInViewport()
           for (const element of elements) {
-            const elementRegion = utils.geometry.withPadding(await element.getRegion(), reference.padding)
+            const elementRegion = utils.geometry.withPadding(await element.getRegion(), options.padding)
             const region = utils.geometry.offset(elementRegion, contextLocationInViewport)
-            referenceRegions.push(
-              utils.geometry.scale(
-                {
-                  x: Math.max(0, region.x - screenshot.region.x),
-                  y: Math.max(0, region.y - screenshot.region.y),
-                  width: region.width,
-                  height: region.height,
-                },
-                context.driver.viewportScale,
-              ),
+            const scaledRegion = utils.geometry.scale(
+              {
+                x: Math.max(0, region.x - screenshot.region.x),
+                y: Math.max(0, region.y - screenshot.region.y),
+                width: region.width,
+                height: region.height,
+              },
+              context.driver.viewportScale,
             )
+            referenceRegions.push(scaledRegion)
           }
         }
       }
-      regions.push(...referenceRegions.map(region => (reference.region ? {region, ...options} : region)))
+      regions.push(...referenceRegions.map(region => ({region, ...options})))
     }
     return regions
   }
 }
+
 module.exports = {
   toPersistedCheckSettings,
   toCheckWindowConfiguration,

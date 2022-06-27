@@ -1,6 +1,6 @@
 import type {Size} from '@applitools/types'
 import assert from 'assert'
-import {By} from 'selenium-webdriver'
+import {By, locateWith} from 'selenium-webdriver'
 import * as spec from '../../src'
 
 describe('spec driver', async () => {
@@ -48,6 +48,31 @@ describe('spec driver', async () => {
     })
     it('transformSelector(common-selector)', async () => {
       await transformSelector({input: {selector: '.element', type: 'css'}, expected: {css: '.element'}})
+    })
+    it('untransformSelector(by-hash)', async () => {
+      await untransformSelector({input: {className: 'a'}, expected: {type: 'css', selector: '.a'}})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: By.css('div'), expected: {type: 'css', selector: 'div'}})
+    })
+    it('untransformSelector(by-js)', async () => {
+      await untransformSelector({input: By.js('document.documentElement'), expected: null})
+    })
+    it('untransformSelector(function)', async () => {
+      await untransformSelector({input: () => Promise.resolve(), expected: null})
+    })
+    it('untransformSelector(relative-by)', async function () {
+      if (Number(process.env.APPlITOOLS_SELENIUM_MAJOR_VERSION) < 4) this.skip()
+      await untransformSelector({input: locateWith(By.css('div')).near(By.css('button')), expected: null})
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: 'div', expected: 'div'})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      await untransformSelector({
+        input: {selector: '.element', type: 'css'},
+        expected: {selector: '.element', type: 'css'},
+      })
     })
     it('isEqualElements(element, element)', async () => {
       const element = await driver.findElement({css: 'div'})
@@ -190,6 +215,15 @@ describe('spec driver', async () => {
     const result = spec.transformSelector(input)
     assert.deepStrictEqual(result, expected || input)
   }
+  async function untransformSelector({
+    input,
+    expected,
+  }: {
+    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    expected: {type: string; selector: string} | string | null
+  }) {
+    assert.deepStrictEqual(spec.untransformSelector(input as spec.Selector), expected)
+  }
   async function isEqualElements({
     input,
     expected,
@@ -261,13 +295,13 @@ describe('spec driver', async () => {
     expected,
   }: {
     input: {selector: spec.Selector; parent?: spec.Element}
-    expected?: spec.Element
+    expected?: spec.Element | null
   }) {
     const root = input.parent ?? driver
-    expected = expected === undefined ? await root.findElement(input.selector) : expected
+    expected = expected === undefined ? await root.findElement(input.selector as any) : expected
     const element = await spec.findElement(driver, input.selector, input.parent)
     if (element !== expected) {
-      assert.ok(await spec.isEqualElements(driver, element, expected))
+      assert.ok(await spec.isEqualElements(driver, element as spec.Element, expected as spec.Element))
     }
   }
   async function findElements({
@@ -278,7 +312,7 @@ describe('spec driver', async () => {
     expected?: spec.Element[]
   }) {
     const root = input.parent ?? driver
-    expected = expected === undefined ? await root.findElements(input.selector) : expected
+    expected = expected === undefined ? await root.findElements(input.selector as any) : expected
     const elements = await spec.findElements(driver, input.selector, input.parent)
     assert.strictEqual(elements.length, expected.length)
     for (const [index, element] of elements.entries()) {

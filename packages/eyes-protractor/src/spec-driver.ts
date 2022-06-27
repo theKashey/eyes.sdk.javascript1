@@ -1,4 +1,5 @@
 import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import * as Selenium from 'selenium-webdriver'
 import * as Protractor from 'protractor'
 import * as utils from '@applitools/utils'
 
@@ -11,7 +12,7 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 
 // #region HELPERS
 
-const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath']
+const byHash = ['className', 'css', 'id', 'js', 'linkText', 'name', 'partialLinkText', 'tagName', 'xpath'] as const
 
 function extractElementId(element: Element | ShadowRoot): Promise<string> | string {
   return isElement(element) ? (element.getId() as Promise<string>) : element['shadow-6066-11e4-a52e-4f735466cecf']
@@ -20,6 +21,9 @@ function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): 
   return isElement(shadowRoot)
     ? shadowRoot
     : new Protractor.WebElement(driver, shadowRoot['shadow-6066-11e4-a52e-4f735466cecf'])
+}
+function isByHashSelector(selector: any): selector is Selenium.ByHash {
+  return byHash.includes(Object.keys(selector)[0] as typeof byHash[number])
 }
 
 // #endregion
@@ -39,7 +43,7 @@ export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
   return (
     utils.types.has(selector, ['using', 'value']) ||
-    Object.keys(selector).some(key => byHash.includes(key)) ||
+    isByHashSelector(selector) ||
     utils.types.isFunction(selector.findElementsOverride)
   )
 }
@@ -51,14 +55,39 @@ export function transformElement(element: Element): Element {
   if (!utils.types.instanceOf<Protractor.ElementFinder>(element, 'ElementFinder')) return element
   return element.getWebElement()
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.isString(selector)) {
     return {css: selector}
   } else if (utils.types.has(selector, 'selector')) {
     if (!utils.types.isString(selector.selector)) return selector.selector
     if (!utils.types.has(selector, 'type')) return {css: selector.selector}
     if (selector.type === 'css') return {css: selector.selector}
-    else return {using: selector.type, value: selector.selector}
+    else {
+      const by = new Protractor.ProtractorBy()
+      return by[selector.type](selector.selector)
+    }
+  }
+  return selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.isFunction(selector)) {
+    return null
+  } else if (isByHashSelector(selector)) {
+    const [[how, what]] = Object.entries(selector) as [[typeof byHash[number], string]]
+    if (how === 'js') return null
+    selector = Protractor.By[how](what)
+  }
+  if (utils.types.has(selector, ['using', 'value']) || utils.types.instanceOf<Selenium.By>(selector, 'By')) {
+    const {using, value} = selector as {using: string; value: string}
+    return {type: using === 'css selector' ? 'css' : using, selector: value}
+  }
+  if (utils.types.isFunction(selector, 'findElementsOverride')) {
+    const match = selector.toString().match(/by.(\w+)\("(.*?)"(?:,\s.*)?\)/)
+    if (!match) return null
+    const [, method, arg] = match
+    const type = method.replace(/[a-z][A-Z]/g, ([lower, upper]: string) => `${lower} ${upper.toLowerCase()}`)
+    if (type === 'css containing text') return null
+    return {type, selector: arg}
   }
   return selector
 }
@@ -93,7 +122,11 @@ export async function childContext(driver: Driver, element: Element): Promise<Dr
   await driver.switchTo().frame(element)
   return driver
 }
-export async function findElement(driver: Driver, selector: Selector, parent?: Element): Promise<Element> {
+export async function findElement(
+  driver: Driver,
+  selector: Selector,
+  parent?: Element,
+): Promise<Protractor.WebElement> {
   try {
     const root = parent ? Protractor.ElementFinder.fromWebElement_(driver, transformShadowRoot(driver, parent)) : driver
     return await root.element(selector).getWebElement()
@@ -102,7 +135,11 @@ export async function findElement(driver: Driver, selector: Selector, parent?: E
     else throw err
   }
 }
-export async function findElements(driver: Driver, selector: Selector, parent?: Element): Promise<Element[]> {
+export async function findElements(
+  driver: Driver,
+  selector: Selector,
+  parent?: Element,
+): Promise<Protractor.WebElement[]> {
   const root = parent
     ? Protractor.ElementFinder.fromWebElement_(driver, transformShadowRoot(driver, parent))
     : driver.element

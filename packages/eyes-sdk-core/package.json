@@ -92,11 +92,12 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.5",
+    "@applitools/scripts": "^1.1.0",
     "@applitools/sdk-fake-eyes-server": "2.1.2",
     "@applitools/spec-driver-selenium": "1.3.11",
     "@applitools/test-server": "^1.1.3",
     "@applitools/test-utils": "1.3.3",
-    "@applitools/visual-grid-client": "15.12.46",
+    "@applitools/visual-grid-client": "15.12.47",
     "chai": "4.2.0",
     "chai-uuid": "1.0.6",
     "eslint": "^8.16.0",

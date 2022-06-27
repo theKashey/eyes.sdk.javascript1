@@ -131,7 +131,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     return Boolean(
       (config.stripPrivate && modifierFlags & ts.ModifierFlags.Private) ||
         (config.stripProtected && modifierFlags & ts.ModifierFlags.Protected) ||
-        (config.stripInternal && jsDocTags?.some(tag => tag.tagName?.getText() === 'internal')),
+        (config.stripInternal && jsDocTags?.some(tag => tag.tagName?.escapedText ?? tag.tagName?.getText() === 'internal')),
     )
   }
 

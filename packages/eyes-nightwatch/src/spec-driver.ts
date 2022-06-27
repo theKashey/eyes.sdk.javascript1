@@ -73,14 +73,24 @@ export function transformElement(element: Element): Element {
   const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.isString(selector)) {
     return {locateStrategy: 'css selector', selector}
-  } else if (utils.types.has(selector, 'selector') && !utils.types.has(selector, 'locateStrategy')) {
+  } else if (utils.types.has(selector, 'selector')) {
+    if (utils.types.has(selector, 'locateStrategy')) return selector as Selector
     if (!utils.types.isString(selector.selector)) return selector.selector
     if (!utils.types.has(selector, 'type')) return {locateStrategy: 'css selector', selector: selector.selector}
     if (selector.type === 'css') return {locateStrategy: 'css selector', selector: selector.selector}
     else return {locateStrategy: selector.type as Nightwatch.LocateStrategy, selector: selector.selector}
+  }
+  return selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.has(selector, ['locateStrategy', 'selector'])) {
+    return {
+      type: selector.locateStrategy === 'css selector' ? 'css' : selector.locateStrategy,
+      selector: selector.selector,
+    }
   }
   return selector
 }

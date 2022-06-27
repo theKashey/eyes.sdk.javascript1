@@ -283,7 +283,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
 
     return {
       context,
-      shadow: root ? new Element({spec: this._spec, context, element, logger: this._logger, root}) : null,
+      shadow: element && new Element({spec: this._spec, context, element, logger: this._logger}),
       selector: currentSelector,
     }
   }
@@ -306,7 +306,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       const element = await this._spec.findElement(
         root.context.target,
         specUtils.transformSelector(this._spec, root.selector, this.driver),
-        root.shadow?.target,
+        root.shadow && (await root.shadow.getShadowRoot()),
       )
 
       // TODO root.selector is not a full selector from context root to an element, but selector inside a shadow
@@ -336,7 +336,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       const elements = await this._spec.findElements(
         root.context.target,
         specUtils.transformSelector(this._spec, root.selector, this.driver),
-        root.shadow?.target,
+        root.shadow && (await root.shadow.getShadowRoot()),
       )
       return elements.map((element, index) => {
         // TODO root.selector is not a full selector from context root to an element, but selector inside a shadow

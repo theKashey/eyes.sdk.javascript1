@@ -1,4 +1,5 @@
 const VisualGridClient = require('@applitools/visual-grid-client')
+const selenium = require('selenium-webdriver')
 const spec = require('@applitools/spec-driver-selenium')
 const {testServerInProcess} = require('@applitools/test-server')
 const {makeSDK} = require('../../../index')
@@ -28,7 +29,7 @@ function setupTests({before, after, beforeEach, afterEach, env = {browser: 'chro
   })
 
   beforeEach(async () => {
-    ;[driver, destroyDriver] = await spec.build(env)
+    ;[driver, destroyDriver] = await spec.build({selenium, ...env})
   })
 
   afterEach(async () => {

@@ -68,6 +68,21 @@ describe('spec driver', async () => {
         expected: {locateStrategy: 'css selector', selector: '.element'},
       })
     })
+    it('untransformSelector({locateStrategy, selector})', async () => {
+      await untransformSelector({
+        input: {locateStrategy: 'css selector', selector: 'div'},
+        expected: {type: 'css', selector: 'div'},
+      })
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: '.element', expected: '.element'})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      await untransformSelector({
+        input: {type: 'css', selector: '.element'},
+        expected: {type: 'css', selector: '.element'},
+      })
+    })
     it('isEqualElements(element, element)', async () => {
       await isEqualElements({
         input: await driver.element('css selector', 'div').then(({value}) => ({element1: value, element2: value})),
@@ -222,6 +237,10 @@ describe('spec driver', async () => {
   }
   async function transformSelector({input, expected}) {
     const result = spec.transformSelector(input)
+    assert.deepStrictEqual(result, expected)
+  }
+  async function untransformSelector({input, expected}) {
+    const result = spec.untransformSelector(input)
     assert.deepStrictEqual(result, expected)
   }
   async function executeScript() {

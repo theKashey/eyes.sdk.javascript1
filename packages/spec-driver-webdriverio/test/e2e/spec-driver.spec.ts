@@ -26,7 +26,7 @@ describe('spec driver', async () => {
 
     after(async () => {
       if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
+      destroyBrowser = null as any
     })
 
     it('isDriver(driver)', async () => {
@@ -78,6 +78,22 @@ describe('spec driver', async () => {
         input: {selector: '.element', type: 'css'},
         expected: 'css selector:.element',
       })
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: '.element', expected: {selector: '.element'}})
+    })
+    it('untransformSelector(direct-string)', async () => {
+      await untransformSelector({input: 'css selector:.element', expected: {type: 'css', selector: '.element'}})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: () => null, expected: null})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: {using: 'xpath', value: '//div'}, expected: {type: 'xpath', selector: '//div'}})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      const selector = {selector: '.element', type: 'css'}
+      await untransformSelector({input: selector, expected: selector})
     })
     it('extractSelector(element)', async () => {
       await extractSelector({
@@ -162,7 +178,7 @@ describe('spec driver', async () => {
 
     after(async () => {
       if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
+      destroyBrowser = null as any
     })
 
     it('isDriver(driver)', async () => {
@@ -214,6 +230,22 @@ describe('spec driver', async () => {
         input: {selector: '.element', type: 'css'},
         expected: 'css selector:.element',
       })
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: '.element', expected: {selector: '.element'}})
+    })
+    it('untransformSelector(direct-string)', async () => {
+      await untransformSelector({input: 'css selector:.element', expected: {type: 'css', selector: '.element'}})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: () => null, expected: null})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: {using: 'xpath', value: '//div'}, expected: {type: 'xpath', selector: '//div'}})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      const selector = {selector: '.element', type: 'css'}
+      await untransformSelector({input: selector, expected: selector})
     })
     it('extractSelector(element)', async () => {
       await extractSelector({
@@ -312,7 +344,7 @@ describe('spec driver', async () => {
 
     after(async () => {
       if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
+      destroyBrowser = null as any
     })
 
     it('getWindowSize()', async () => {
@@ -335,7 +367,7 @@ describe('spec driver', async () => {
 
     after(async () => {
       if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
+      destroyBrowser = null as any
     })
 
     it('getWindowSize()', async () => {
@@ -364,7 +396,7 @@ describe('spec driver', async () => {
 
     after(async () => {
       if (destroyBrowser) await destroyBrowser()
-      destroyBrowser = null
+      destroyBrowser = null as any
     })
 
     it('getWindowSize()', async () => {
@@ -408,6 +440,15 @@ describe('spec driver', async () => {
   async function transformSelector({input, expected}: {input: any; expected: spec.Selector}) {
     const result = spec.transformSelector(input)
     assert.deepStrictEqual(result, expected)
+  }
+  async function untransformSelector({
+    input,
+    expected,
+  }: {
+    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    expected: {type?: string; selector: string} | string | null
+  }) {
+    assert.deepStrictEqual(spec.untransformSelector(input), expected)
   }
   async function extractSelector({input, expected}: {input: spec.Element; expected: spec.Selector}) {
     const selector = spec.extractSelector(input)

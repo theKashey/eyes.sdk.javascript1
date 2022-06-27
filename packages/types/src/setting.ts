@@ -27,16 +27,19 @@ type FloatingRegion<TRegion> = {
   maxDownOffset?: number
   maxLeftOffset?: number
   maxRightOffset?: number
+  regionId?: string
 }
 
 type AccessibilityRegion<TRegion> = {
   region: TRegion
   type?: AccessibilityRegionType
+  regionId?: string
 }
 
-type PaddedRegion<TRegion> = {
+type CodedRegion<TRegion> = {
   region: TRegion
   padding?: number | OffsetRect
+  regionId?: string
 }
 
 export type MatchSettings<TRegion> = {
@@ -56,10 +59,10 @@ export type MatchSettings<TRegion> = {
     level?: AccessibilityLevel
     guidelinesVersion?: AccessibilityGuidelinesVersion
   }
-  ignoreRegions?: (TRegion | PaddedRegion<TRegion>)[]
-  layoutRegions?: (TRegion | PaddedRegion<TRegion>)[]
-  strictRegions?: (TRegion | PaddedRegion<TRegion>)[]
-  contentRegions?: (TRegion | PaddedRegion<TRegion>)[]
+  ignoreRegions?: (TRegion | CodedRegion<TRegion>)[]
+  layoutRegions?: (TRegion | CodedRegion<TRegion>)[]
+  strictRegions?: (TRegion | CodedRegion<TRegion>)[]
+  contentRegions?: (TRegion | CodedRegion<TRegion>)[]
   floatingRegions?: (TRegion | FloatingRegion<TRegion>)[]
   accessibilityRegions?: (TRegion | AccessibilityRegion<TRegion>)[]
   pageId?: string

@@ -28,7 +28,7 @@ describe('spec driver', async () => {
       await isElement({input: await driver.findElement({css: 'div'}), expected: true})
     })
     it('isElement(element-finder)', async () => {
-      await isElement({input: await driver.element({css: 'div'}), expected: true})
+      await isElement({input: driver.element({css: 'div'}), expected: true})
     })
     it('isElement(wrong)', async () => {
       await isElement({input: {} as spec.Element, expected: false})
@@ -51,6 +51,21 @@ describe('spec driver', async () => {
     })
     it('transformSelector(common-selector)', async () => {
       await transformSelector({input: {selector: '.element', type: 'css'}, expected: {css: '.element'}})
+    })
+    it('untransformSelector(by)', async () => {
+      await untransformSelector({input: driver.by.css('div'), expected: {type: 'css', selector: 'div'}})
+    })
+    it('untransformSelector(by-ng)', async () => {
+      await untransformSelector({input: driver.by.model('name'), expected: {type: 'model', selector: 'name'}})
+    })
+    it('untransformSelector(string)', async () => {
+      await untransformSelector({input: '.element', expected: '.element'})
+    })
+    it('untransformSelector(common-selector)', async () => {
+      await untransformSelector({
+        input: {selector: '.element', type: 'css'},
+        expected: {selector: '.element', type: 'css'},
+      })
     })
     it('isEqualElements(element, element)', async () => {
       const element = await driver.findElement({css: 'div'})
@@ -186,7 +201,17 @@ describe('spec driver', async () => {
   }
   async function transformSelector({input, expected}: {input: any; expected: spec.Selector}) {
     const result = spec.transformSelector(input)
-    assert.deepStrictEqual(result, expected || input)
+    assert.deepStrictEqual(result, expected)
+  }
+  async function untransformSelector({
+    input,
+    expected,
+  }: {
+    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    expected: {type: string; selector: string} | string | null
+  }) {
+    const result = spec.untransformSelector(input)
+    assert.deepStrictEqual(result, expected)
   }
   async function isEqualElements({
     input,
@@ -259,13 +284,13 @@ describe('spec driver', async () => {
     expected,
   }: {
     input: {selector: spec.Selector; parent?: spec.Element}
-    expected?: spec.Element
+    expected?: spec.Element | null
   }) {
     const root = input.parent ?? driver
     expected = expected === undefined ? await root.findElement(input.selector as ProtractorBy) : expected
     const element = await spec.findElement(driver, input.selector, input.parent)
     if (element !== expected) {
-      assert.ok(await spec.isEqualElements(driver, element, expected))
+      assert.ok(await spec.isEqualElements(driver, element, expected as spec.Element))
     }
   }
   async function findElements({

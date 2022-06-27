@@ -16,6 +16,8 @@ type CommonSelector = string | {selector: Selector | string; type?: string}
 
 const LEGACY_ELEMENT_ID = 'ELEMENT'
 const ELEMENT_ID = 'element-6066-11e4-a52e-4f735466cecf'
+const DIRECT_SELECTOR_REGEXP =
+  /^(id|css selector|xpath|link text|partial link text|name|tag name|class name|-android uiautomator|-android datamatcher|-android viewmatcher|-android viewtag|-ios uiautomation|-ios predicate string|-ios class chain|accessibility id):(.+)/
 
 function extractElementId(element: Element): string {
   if (utils.types.has(element, 'elementId')) return element.elementId as string
@@ -122,11 +124,24 @@ export function transformElement(element: Element): Element {
   const elementId = extractElementId(element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
-export function transformSelector(selector: Selector | CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector): Selector {
   if (utils.types.has(selector, 'selector')) {
     if (!utils.types.has(selector, 'type')) return selector.selector
     if (selector.type === 'css') return `css selector:${selector.selector}`
     else return `${selector.type}:${selector.selector}`
+  }
+  return selector
+}
+export function untransformSelector(selector: Selector): CommonSelector {
+  if (utils.types.isFunction(selector)) return null
+  else if (utils.types.isString(selector)) {
+    const match = selector.match(DIRECT_SELECTOR_REGEXP)
+    if (!match) return {selector}
+    const [, using, value] = match
+    selector = {using, value}
+  }
+  if (utils.types.has(selector, ['using', 'value'])) {
+    return {type: selector.using === 'css selector' ? 'css' : selector.using, selector: selector.value}
   }
   return selector
 }
