@@ -7,7 +7,7 @@ describe('spec driver', async () => {
   let driver: spec.Driver, destroyDriver: () => void
   const url = 'https://applitools.github.io/demo/TestPages/FramesTestPage/'
 
-  describe('headless desktop', async () => {
+  describe.only('headless desktop', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
       driver = spec.transformDriver(driver)
@@ -62,7 +62,7 @@ describe('spec driver', async () => {
       await untransformSelector({input: () => Promise.resolve(), expected: null})
     })
     it('untransformSelector(relative-by)', async function () {
-      if (Number(process.env.APPlITOOLS_SELENIUM_MAJOR_VERSION) < 4) this.skip()
+      if (Number(process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION) < 4) this.skip()
       await untransformSelector({input: locateWith(By.css('div')).near(By.css('button')), expected: null})
     })
     it('untransformSelector(string)', async () => {
