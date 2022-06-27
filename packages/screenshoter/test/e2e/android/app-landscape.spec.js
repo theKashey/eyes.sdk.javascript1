@@ -1,4 +1,4 @@
-const {makeDriver, test, sleep, logger} = require('../e2e')
+const {makeDriver, test, logger} = require('../e2e')
 
 // appium's set orientation will set non-deterministic landscape mode to either 90° or 270°
 describe('screenshoter android app', () => {

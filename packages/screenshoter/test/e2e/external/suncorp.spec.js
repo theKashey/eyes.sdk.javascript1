@@ -129,7 +129,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it.only('take full app screenshot', async () => {
+  it('take full app screenshot', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})

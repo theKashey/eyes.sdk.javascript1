@@ -57,7 +57,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it.only('take full app screenshot', async () => {
+  it('take full app screenshot', async () => {
     await sleep(3000)
     const nextButton = await driver.element({type: 'id', selector: 'next_button'})
     await nextButton.click()
