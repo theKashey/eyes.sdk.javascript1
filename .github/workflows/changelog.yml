@@ -27,7 +27,7 @@ jobs:
             echo No updates to pending-changes.yaml detected. Add an entry to this file for the relevant SDKs as part of this PR
             exit 1
           fi
-          cd packages/
+          cd js/packages/
           packages=$(git diff HEAD~ --name-only | cut -d "/" -f 2 | uniq)
           for package in $packages; do
             if [[ -f "$package/CHANGELOG.md" ]]; then
