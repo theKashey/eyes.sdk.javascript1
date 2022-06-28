@@ -8,41 +8,22 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
     secrets:
       NPM_TOKEN:
         required: true
+
 env:
-  PACKAGE_DIR: spec-driver-playwright
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
 jobs:
-  verify:
-    name: Verification
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-          registry-url: https://registry.npmjs.org
-      - name: Run pre-publish verifications
-        shell: bash
-        working-directory: ./packages/${{env.PACKAGE_DIR}}
-        run: |
-          yarn install
-          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
   test:
-    needs: [verify]
     strategy:
       matrix:
         include: 
@@ -50,6 +31,7 @@ jobs:
             framework-version: 1.21
           - node-version: 14
           - node-version: 16
+          - node-version: 18
     name: 'Test (node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
@@ -61,11 +43,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node-version}}
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/spec-driver-playwright
   publish:
     needs: [test]
     name: Publish
@@ -77,9 +60,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/spec-driver-playwright
           version: ${{inputs.version || github.event.inputs.version}}

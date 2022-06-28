@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import * as path from 'path'
 import * as fs from 'fs/promises'
 import {execSync} from 'child_process'
@@ -21,7 +22,9 @@ const OS = {
   windows: 'windows-2022',
 }
 
-const input = core.getInput('packages', {required: true})
+const packagesPath = path.resolve(process.cwd(), './js/packages')
+
+const input = github.context.eventName === 'pull_request' ? changedInCurrentBranch() : core.getInput('packages', {required: true}) 
 const allowVariations = core.getBooleanInput('allow-variations')
 const allowCascading = core.getBooleanInput('allow-cascading')
 const onlyChanged = core.getBooleanInput('only-changed')
@@ -29,7 +32,6 @@ const defaultReleaseVersion = core.getInput('release-version')
 
 core.notice(`Input provided: "${input}"`)
 
-const packagesPath = path.resolve(process.cwd(), './packages')
 const packageDirs = await fs.readdir(packagesPath)
 const packages = await packageDirs.reduce(async (packages, packageDir) => {
   const packageManifestPath = path.resolve(packagesPath, packageDir, 'package.json')
@@ -150,19 +152,10 @@ function createDependencyJobs(jobs) {
 
 function filterInsignificantJobs(jobs) {
   const filteredJobs = Object.entries(jobs).reduce((filteredJobs, [jobName, job]) => {
-    if (!job.requested) {
-      let tag
-      try { 
-        tag = execSync(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf-8'})
-      } catch {}
-      if (tag) {
-        const commits = execSync(`git log ${tag.trim()}..HEAD --oneline -- ${path.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
-        if (!commits) return filteredJobs
-      }
-    }
-    filteredJobs[jobName] = job
+    if (job.requested || changedSinceLastTag(job)) filteredJobs[jobName] = job
     return filteredJobs
   }, {})
+
   let more = true
   while (more) {
     more = false
@@ -176,4 +169,29 @@ function filterInsignificantJobs(jobs) {
   }
 
   return filteredJobs
+}
+
+function changedSinceLastTag(job) {
+  let tag
+  try {
+    tag = execSync(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf8'}).trim()
+  } catch {}
+
+  if (!tag) return true
+
+  const commits = execSync(`git log ${tag}..HEAD --oneline -- ${path.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
+  return Boolean(commits)
+}
+
+function changedInCurrentBranch() {
+  const changedFiles = execSync('git --no-pager diff --name-only master', {encoding: 'utf8'})
+  const packageDirs = changedFiles.split('\n').reduce((packageDirs, filePath) => {
+    filePath = path.resolve(process.cwd(), filePath)
+    if (filePath.startsWith(packagesPath)) {
+      const [packageDir] = path.relative(packagesPath, filePath).split('/', 1)
+      packageDirs.add(packageDir)
+    }
+    return packageDirs
+  }, new Set())
+  return Array.from(packageDirs.values()).join(' ')
 }

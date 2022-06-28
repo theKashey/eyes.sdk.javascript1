@@ -1,4 +1,4 @@
-name: Publish (do not use)
+name: Publish
 
 on:
   workflow_dispatch:
@@ -19,17 +19,12 @@ on:
         description: include only packages with new commits
         type: boolean
         default: true
+
 env:
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
   FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
+
 jobs:
   setup:
     name: Setup
@@ -64,8 +59,6 @@ jobs:
         with:
           workflow: publish-types.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).types.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   utils:
     needs: [ setup ]
     if: ${{fromJSON(needs.setup.outputs.packages).utils && !failure() && !cancelled()}}
@@ -79,8 +72,6 @@ jobs:
         with:
           workflow: publish-utils.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).utils.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   logger:
     needs: [ setup, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
@@ -94,8 +85,6 @@ jobs:
         with:
           workflow: publish-logger.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).logger.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   snippets:
     needs: [ setup ]
     if: ${{fromJSON(needs.setup.outputs.packages).snippets && !failure() && !cancelled()}}
@@ -109,8 +98,6 @@ jobs:
         with:
           workflow: publish-snippets.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).snippets.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   screenshoter:
     needs:
       [
@@ -133,8 +120,6 @@ jobs:
         with:
           workflow: publish-screenshoter.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).screenshoter.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   driver:
     needs: [ setup, logger, snippets, types, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
@@ -148,8 +133,6 @@ jobs:
         with:
           workflow: publish-driver.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).driver.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
 
   # CORE
   core:
@@ -178,8 +161,6 @@ jobs:
         with:
           workflow: publish-core.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).core.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   ufg-client:
     needs: [ setup, core, logger, test-server, test-utils, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).ufg-client && !failure() && !cancelled()}}
@@ -193,8 +174,6 @@ jobs:
         with:
           workflow: publish-ufg-client.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).ufg-client.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   eg-client:
     needs: [ setup, logger, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).eg-client && !failure() && !cancelled()}}
@@ -208,8 +187,6 @@ jobs:
         with:
           workflow: publish-eg-client.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).eg-client.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   universal:
     needs:
       [
@@ -233,8 +210,6 @@ jobs:
         with:
           workflow: publish-universal.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   api:
     needs: [ setup, logger, types, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
@@ -248,8 +223,6 @@ jobs:
         with:
           workflow: publish-api.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).api.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
 
   # SPEC DRIVERS
   spec-playwright:
@@ -265,8 +238,6 @@ jobs:
         with:
           workflow: publish-spec-playwright.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-playwright.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   spec-puppeteer:
     needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer && !failure() && !cancelled()}}
@@ -280,8 +251,6 @@ jobs:
         with:
           workflow: publish-spec-puppeteer.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   spec-selenium:
     needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium && !failure() && !cancelled()}}
@@ -295,8 +264,6 @@ jobs:
         with:
           workflow: publish-spec-selenium.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-selenium.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   spec-webdriverio:
     needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio && !failure() && !cancelled()}}
@@ -310,8 +277,6 @@ jobs:
         with:
           workflow: publish-spec-webdriverio.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
 
   # SDKS
   playwright:
@@ -335,8 +300,6 @@ jobs:
         with:
           workflow: publish-playwright.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).playwright.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   puppeteer:
     needs:
       [
@@ -358,8 +321,6 @@ jobs:
         with:
           workflow: publish-puppeteer.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).puppeteer.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   webdriverio:
     needs:
       [
@@ -381,8 +342,6 @@ jobs:
         with:
           workflow: publish-webdriverio.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   selenium:
     needs:
       [
@@ -404,8 +363,6 @@ jobs:
         with:
           workflow: publish-selenium.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).selenium.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   protractor:
     needs:
       [
@@ -428,8 +385,6 @@ jobs:
         with:
           workflow: publish-protractor.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).protractor.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   nightwatch:
     needs:
       [
@@ -452,8 +407,6 @@ jobs:
         with:
           workflow: publish-nightwatch.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).nightwatch.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   testcafe:
     needs:
       [
@@ -476,8 +429,6 @@ jobs:
         with:
           workflow: publish-testcafe.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).testcafe.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   cypress:
     needs:
       [
@@ -502,8 +453,6 @@ jobs:
         with:
           workflow: publish-cypress.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).cypress.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   browser-extension:
     needs:
       [
@@ -525,8 +474,6 @@ jobs:
         with:
           workflow: publish-browser-extension.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).browser-extension.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   storybook:
     needs:
       [
@@ -550,8 +497,6 @@ jobs:
         with:
           workflow: publish-storybook.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).storybook.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
 
   # SDK WRAPPERS
   webdriverio-service:
@@ -567,8 +512,6 @@ jobs:
         with:
           workflow: publish-webdriverio-service.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio-service.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
 
   # TESTING BASE
   test-utils:
@@ -584,8 +527,6 @@ jobs:
         with:
           workflow: publish-test-utils.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-utils.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
   test-server:
     needs: [ setup, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
@@ -599,5 +540,3 @@ jobs:
         with:
           workflow: publish-test-server.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-server.version}}"}'
-        env:
-          GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}

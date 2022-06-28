@@ -2,40 +2,37 @@
 logs
 *.log
 
+# Credentials
+**/.env
+!**/fixtures/**/.env
+
 # Generated
-dist
-doc
-types
-!packages/types
-.history/
-
-# Docker
-docker-compose.yaml
-
-# Yarn
-.yarn
-
-# Dependency directory
-node_modules
-
-# Bongo
-.bongo
+packages/*/doc
+packages/*/bin
+packages/*/dist
+packages/*/types/**/*.d.ts
 
 # Coverage tests
 **/test/generic/
 coverage-test-report.xml
 coverage-tests-metadata.json
 
+# Docker
+docker-compose.yaml
+
+# Dependency directory
+node_modules
+
 # Other
 .idea
+.vscode
+.yarn
+.bongo
 .DS_Store
 .eslintcache
+.history/
 *.swp
 *~
-.tmp-changelogs.html
 tmp
-.env
-.vscode
 tags
 tags.*
-eyes-testcafe-bak

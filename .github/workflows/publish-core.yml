@@ -8,14 +8,12 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
     secrets:
       NPM_TOKEN:
         required: true
@@ -29,17 +27,19 @@ on:
         required: true
       SAUCE_ACCESS_KEY:
         required: true
+
 env:
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   BROWSERSTACK_USERNAME: ${{secrets.BROWSERSTACK_USERNAME}}
   BROWSERSTACK_ACCESS_KEY: ${{secrets.BROWSERSTACK_ACCESS_KEY}}
-  FORCE_COLOR: 3
+
 jobs:
   test:
     strategy:
@@ -54,10 +54,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node-version}}
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: eyes-sdk-core
+          working-directory: ./js/packages/eyes-sdk-core
   publish:
     needs: [test]
     name: Publish
@@ -69,8 +71,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: eyes-sdk-core
+          working-directory: ./js/packages/eyes-sdk-core
           version: ${{inputs.version || github.event.inputs.version}}

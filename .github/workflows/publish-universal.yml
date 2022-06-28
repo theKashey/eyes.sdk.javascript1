@@ -25,14 +25,15 @@ on:
         required: true
       UNIVERSAL_SLACK_WEBHOOK_URL:
         required: true
+
 env:
-  PACKAGE_DIR: eyes-universal
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+
 jobs:
   verify:
     name: Verification
@@ -46,10 +47,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run pre-publish verifications
         shell: bash
-        working-directory: ./packages/${{env.PACKAGE_DIR}}
+        working-directory: ./js/packages/eyes-universal
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
@@ -82,11 +84,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-universal
           test-type: e2e
           shell: ${{matrix.shell}}
   publish:
@@ -100,12 +103,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         id: publish
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-universal
           version: ${{inputs.version || github.event.inputs.version}}
       - name: Publish to GitHub
         uses: softprops/action-gh-release@v1
@@ -113,12 +117,12 @@ jobs:
           tag_name: ${{steps.publish.outputs.tag}}
           name: ${{steps.publish.outputs.tag}}
           files: |
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-alpine
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-linux
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-macos
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal-win.exe
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal.zip
-            packages/${{env.PACKAGE_DIR}}/bin/eyes-universal.tar.gz
+            ./js/packages/eyes-universal/bin/eyes-universal-alpine
+            ./js/packages/eyes-universal/bin/eyes-universal-linux
+            ./js/packages/eyes-universal/bin/eyes-universal-macos
+            ./js/packages/eyes-universal/bin/eyes-universal-win.exe
+            ./js/packages/eyes-universal/bin/eyes-universal.zip
+            ./js/packages/eyes-universal/bin/eyes-universal.tar.gz
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:

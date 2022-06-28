@@ -17,8 +17,6 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-      CVG_TESTS_EG_REMOTE:
-        required: true
       APPLITOOLS_API_KEY:
         required: true
       APPLITOOLS_API_KEY_SDK:
@@ -29,20 +27,16 @@ on:
         required: true
       SAUCE_ACCESS_KEY:
         required: true
-defaults:
-  run:
-    working-directory: ./packages/eyes-webdriverio-5-service
+
 env:
-  PACKAGE_DIR: eyes-webdriverio-5-service
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+
 jobs:
   test:
     name: Test
@@ -54,11 +48,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-webdriverio-5-service
   publish:
     name: Publish
     needs: [test]
@@ -70,9 +65,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-webdriverio-5-service
           version: ${{inputs.version || github.event.inputs.version}}

@@ -17,13 +17,11 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-defaults:
-  run:
-    working-directory: ./packages/logger
+
 env:
-  PACKAGE_DIR: eyes-api
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
 jobs:
   test:
     strategy:
@@ -38,10 +36,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node-version}}
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-api
   publish:
     needs: [test]
     name: Publish
@@ -53,8 +53,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-api
           version: ${{inputs.version || github.event.inputs.version}}

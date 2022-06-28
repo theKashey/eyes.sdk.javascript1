@@ -1,6 +1,7 @@
 name: Test packages
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       packages:
@@ -11,15 +12,13 @@ on:
         description: testing type (unit, it, e2e, coverage)
         type: string
         required: false
+      build-type:
+        description: build type
+        type: string
+        required: false
       setup-type:
         description: setup type
         type: string
-        required: false
-      remote:
-        description: remote type
-        type: choice
-        options: [local, eg]
-        default: local
         required: false
       links:
         description: linked package names
@@ -32,10 +31,9 @@ on:
         description: grep pattern
         required: false
 env:
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
-  DISPLAY: ':99'
   FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  DISPLAY: ':99'
 jobs:
   setup:
     name: Setup
@@ -45,6 +43,8 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup
         uses: ./.github/actions/parser
         id: setup
@@ -54,9 +54,9 @@ jobs:
   test:
     needs: setup
     strategy:
+      fail-fast: false
       matrix: 
         include: ${{fromJSON(needs.setup.outputs.packages)}}
-      fail-fast: false
     runs-on: ${{matrix.os}}
     name: ${{matrix.displayName}}
     env: ${{matrix.env}}
@@ -67,6 +67,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node}}
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Setup xvfb
         if: ${{matrix.xvfb}}
         run: |
@@ -75,26 +77,25 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{matrix.dirname}}
-          test-type: ${{github.event.inputs.test-type}}
+          working-directory: ${{matrix.dirname}}
+          test-type: ${{github.event_name === 'workflow_dispatch' && github.event.inputs.test-type || 'sanity'}}
+          build-type: ${{github.event.inputs.build-type}}
           setup-type: ${{github.event.inputs.setup-type}}
-          remote: ${{github.event.inputs.remote}}
           links: ${{github.event.inputs.links}}
           linking-depth: ${{github.event.inputs.linking-depth}}
           grep: ${{github.event.inputs.grep}}
         env:
-          CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-          CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
           APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
           APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
           APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
           SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
           SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+          AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
       - name: Save testing artifacts
         uses: actions/upload-artifact@v2
         with:
           name: coverage-tests-report-${{matrix.name}}
           retention-days: 2
           path: |
-            packages/${{matrix.dirname}}/coverage-tests-metadata.json
-            packages/${{matrix.dirname}}/coverage-test-report.xml
+            ./js/packages/${{matrix.dirname}}/coverage-tests-metadata.json
+            ./js/packages/${{matrix.dirname}}/coverage-test-report.xml

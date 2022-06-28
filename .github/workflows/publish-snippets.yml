@@ -8,14 +8,12 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
     secrets:
       NPM_TOKEN:
         required: true
@@ -23,12 +21,13 @@ on:
         required: true
       SAUCE_ACCESS_KEY:
         required: true
+
 env:
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
+  FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  FORCE_COLOR: 3
+
 jobs:
   test:
     name: Test
@@ -40,10 +39,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: snippets
+          working-directory: ./js/packages/snippets
   publish:
     needs: [test]
     name: Publish
@@ -55,8 +56,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: snippets
+          working-directory: ./js/packages/snippets
           version: ${{inputs.version || github.event.inputs.version}}

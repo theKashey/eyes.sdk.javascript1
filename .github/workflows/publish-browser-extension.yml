@@ -8,20 +8,12 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-      multienv:
-        description: test on multiple environments
-        type: boolean
-        default: true
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-      multienv:
-        description: test on multiple environments
-        type: boolean
-        default: false
     secrets:
       NPM_TOKEN:
         required: true
@@ -31,19 +23,18 @@ on:
         required: true
       APPLITOOLS_API_KEY_READ:
         required: true
+
 env:
-  PACKAGE_DIR: eyes-browser-extension
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+
 jobs:
   verify:
     name: Verification
     runs-on: ubuntu-latest
-    outputs:
-      environments: ${{steps.prepare.outputs.environments}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
@@ -51,31 +42,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run pre-publish verifications
         shell: bash
-        working-directory: ./packages/${{env.PACKAGE_DIR}}
+        working-directory: ./js/packages/eyes-browser-extension
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
           npx bongo verify-changelog
-      - name: Prepare environments
-        id: prepare
-        shell: bash
-        run: |
-          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
-          then
-            echo "::set-output name=environments::[{\"node-version\":16}, {\"node-version\":14}, {\"node-version\":12}]"
-          else
-            echo "::set-output name=environments::[{\"node-version\":16}]"
-          fi
   test:
     needs: [verify]
-    strategy:
-      max-parallel: 3
-      matrix:
-        include: ${{fromJSON(needs.verify.outputs.environments)}}
-    name: 'Test (node: ${{matrix.node-version}})'
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
@@ -83,8 +61,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{matrix.node-version}}
-          registry-url: https://registry.npmjs.org
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Setup xvfb
         shell: bash
         run: |
@@ -93,7 +72,7 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-browser-extension
   publish:
     needs: [test]
     name: Publish
@@ -105,12 +84,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Update version
         id: version
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-browser
           version: ${{inputs.version || github.event.inputs.version}}
           skip-npm: true
       - name: Publish to GitHub

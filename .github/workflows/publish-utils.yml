@@ -17,13 +17,11 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-defaults:
-  run:
-    working-directory: ./packages/utils
+
 env:
-  PACKAGE_DIR: utils
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
 jobs:
   test:
     name: Test
@@ -35,11 +33,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/utils
   publish:
     name: Publish
     needs: [test]
@@ -51,9 +50,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/utils
           version: ${{inputs.version || github.event.inputs.version}}

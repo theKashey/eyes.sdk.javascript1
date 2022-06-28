@@ -1,18 +1,21 @@
 name: Tests
 description: Run tests for a package
 inputs:
-  package:
-    description: name of the package directory in repository
+  working-directory:
+    description: the path to the directory from repository root
     type: string
     required: true
   test-type:
     description: type of the testing (unit, it, e2e, coverage)
     type: string
+  build-type:
+    description: type of the build script
+    type: string
   setup-type:
     description: type of the setup script
     type: string
   remote:
-    description: remote type (local, eg)
+    description: remote type
     type: string
     default: local
   links:
@@ -40,16 +43,13 @@ runs:
   using: composite
   steps:
     - shell: ${{inputs.shell}}
-      working-directory: ./packages/${{inputs.package}}
+      working-directory: ${{inputs.working-directory}}
       env:
         APPLITOOLS_TEST_REMOTE: ${{inputs.remote}}
         MOCHA_GREP: ${{inputs.grep}}
-        MOCHA_JOBS: ${{inputs.remote == 'eg' && 50 || inputs.jobs}}
+        MOCHA_JOBS: ${{inputs.jobs}}
       run: |
-        echo "::group::Configure NPM"
-        echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-        echo "registry=https://registry.npmjs.org/" >> .npmrc
-        echo "always-auth=true" >> .npmrc
+        echo "::group::Configure NPM and YARN"
         if [ "${{runner.os}}" = "Windows" ]; then npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"; fi
         yarn config set ignore-engines true
         echo "::endgroup::"
@@ -74,7 +74,12 @@ runs:
         fi
 
         echo "::group::Building package"
-        npm run build --if-present
+        if [ ! -z "${{inputs.build-type}}" ]
+        then
+          if [ "${{inputs.build-type}}" != "none" ]; then npm run build:${{inputs.build-type}}; fi
+        else
+          npm run build --if-present
+        fi
         echo "::endgroup::"
 
         echo "::group::Setting up test environment"

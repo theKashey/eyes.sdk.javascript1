@@ -10251,7 +10251,7 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 
 const cwd = process.cwd()
 const workflowFilePath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './.github/workflows/publish-new.yml')
-const packagesPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './packages')
+const packagesPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './js/packages')
 
 const workflow = yaml__WEBPACK_IMPORTED_MODULE_3__.parseDocument(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile(workflowFilePath, {encoding: 'utf8'}))
 
@@ -10282,7 +10282,6 @@ const dependencies = Object.values(packages).reduce((dependencies, manifest) => 
 }, {})
 
 for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
-  console.log(jobName, {deps, devDeps})
   const needs = [
     'setup',
     ...deps,
@@ -10291,7 +10290,7 @@ for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
   workflow.setIn(['jobs', jobName, 'needs'], workflow.createNode(needs, {flow: true}))
 }
 
-await fs_promises__WEBPACK_IMPORTED_MODULE_2__.writeFile(workflowFilePath, yaml__WEBPACK_IMPORTED_MODULE_3__.stringify(workflow))
+await fs_promises__WEBPACK_IMPORTED_MODULE_2__.writeFile(workflowFilePath, yaml__WEBPACK_IMPORTED_MODULE_3__.stringify(workflow, {minContentWidth: 0, lineWidth: 0}))
 __webpack_handle_async_dependencies__();
 }, 1);
 

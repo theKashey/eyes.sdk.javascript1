@@ -5,7 +5,7 @@ import YAML from 'yaml'
 
 const cwd = process.cwd()
 const workflowFilePath = path.resolve(cwd, './.github/workflows/publish-new.yml')
-const packagesPath = path.resolve(cwd, './packages')
+const packagesPath = path.resolve(cwd, './js/packages')
 
 const workflow = YAML.parseDocument(await fs.readFile(workflowFilePath, {encoding: 'utf8'}))
 
@@ -36,7 +36,6 @@ const dependencies = Object.values(packages).reduce((dependencies, manifest) => 
 }, {})
 
 for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
-  console.log(jobName, {deps, devDeps})
   const needs = [
     'setup',
     ...deps,
@@ -45,4 +44,4 @@ for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
   workflow.setIn(['jobs', jobName, 'needs'], workflow.createNode(needs, {flow: true}))
 }
 
-await fs.writeFile(workflowFilePath, YAML.stringify(workflow))
+await fs.writeFile(workflowFilePath, YAML.stringify(workflow, {minContentWidth: 0, lineWidth: 0}))

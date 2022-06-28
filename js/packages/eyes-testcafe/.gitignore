@@ -1,0 +1,4 @@
+screenshots
+test/perf/fixtures
+test/perf/out
+!types/index-legacy.d.ts

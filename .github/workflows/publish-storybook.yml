@@ -18,10 +18,6 @@ on:
         description: version type
         type: string
         default: patch
-      multienv:
-        description: test on multiple environments
-        type: boolean
-        default: false
     secrets:
       NPM_TOKEN:
         required: true
@@ -31,13 +27,14 @@ on:
         required: true
       APPLITOOLS_API_KEY_READ:
         required: true
+
 env:
-  PACKAGE_DIR: eyes-storybook
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+
 jobs:
   verify:
     name: Verification
@@ -51,10 +48,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run pre-publish verifications
         shell: bash
-        working-directory: ./packages/${{env.PACKAGE_DIR}}
+        working-directory: ./js/packages/eyes-storybook
         run: |
           yarn install
           npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
@@ -63,7 +61,7 @@ jobs:
         id: prepare
         shell: bash
         run: |
-          if [ ${{inputs.multienv || github.event.inputs.multienv}} = true ]
+          if [ ${{github.event.inputs.multienv}} = true ]
           then
             echo "::set-output name=environments::[{\"node-version\":16}, {\"node-version\":14}, {\"node-version\":12}]"
           else
@@ -84,19 +82,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node-version}}
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-storybook
   test-versions:
     needs: [verify]
     strategy:
-      max-parallel: 5
       matrix:
         storybook-version: ["5.0.0", "5.3.21", "6.3.12", "latest", "next"]
-    name: 'Test (Storybook version: ${{matrix.storybook-version}})'
+    name: 'Test (storybook: ${{matrix.storybook-version}})'
     runs-on: ubuntu-latest
+    env:
+      STORYBOOK_VERSION: ${{matrix.storybook-version}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
@@ -104,14 +104,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-storybook
           test-type: versions
-        env:
-          STORYBOOK_VERSION: ${{matrix.storybook-version}}        
   publish:
     needs: [test, test-versions]
     name: Publish
@@ -123,9 +122,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-          registry-url: https://registry.npmjs.org
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: ${{env.PACKAGE_DIR}}
+          working-directory: ./js/packages/eyes-storybook
           version: ${{inputs.version || github.event.inputs.version}}

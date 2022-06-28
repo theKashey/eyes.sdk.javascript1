@@ -8,14 +8,12 @@ on:
         type: choice
         options: [patch, minor, major]
         default: patch
-        required: false
   workflow_call:
     inputs:
       version:
         description: version type
         type: string
         default: patch
-        required: false
     secrets:
       NPM_TOKEN:
         required: true
@@ -25,12 +23,14 @@ on:
         required: true
       APPLITOOLS_API_KEY_READ:
         required: true
+
 env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
   APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   FORCE_COLOR: 3
+
 jobs:
   test:
     strategy:
@@ -45,10 +45,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{matrix.node-version}}
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          package: visual-grid-client
+          working-directory: ./js/packages/visual-grid-client
   publish:
     needs: [test]
     name: Publish
@@ -60,8 +62,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          package: visual-grid-client
+          working-directory: ./js/packages/visual-grid-client
           version: ${{inputs.version || github.event.inputs.version}}
