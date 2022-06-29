@@ -17,9 +17,7 @@ on:
     secrets:
       NPM_TOKEN:
         required: true
-      APPLITOOLS_API_KEY:
-        required: true
-      APPLITOOLS_API_KEY_SDK:
+      APPLITOOLS_API_KEY_JSSDK:
         required: true
       APPLITOOLS_API_KEY_READ:
         required: true
@@ -27,8 +25,7 @@ on:
 env:
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_JSSDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
 
 jobs:

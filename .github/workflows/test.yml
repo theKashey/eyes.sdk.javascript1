@@ -23,17 +23,19 @@ on:
       links:
         description: linked package names
         required: false
-      linking-depth:
-        description: linking depth
-        default: '0'
-        required: false
       grep:
         description: grep pattern
         required: false
+
+concurrency: 
+  group: ${{github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   DISPLAY: ':99'
+
 jobs:
   setup:
     name: Setup
@@ -77,16 +79,15 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          working-directory: ${{matrix.dirname}}
-          test-type: ${{github.event_name === 'workflow_dispatch' && github.event.inputs.test-type || 'sanity'}}
+          working-directory: ./js/packages/${{matrix.dirname}}
+          test-type: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.test-type || 'sanity'}}
           build-type: ${{github.event.inputs.build-type}}
           setup-type: ${{github.event.inputs.setup-type}}
-          links: ${{github.event.inputs.links}}
-          linking-depth: ${{github.event.inputs.linking-depth}}
+          links: ${{matrix.links || github.event.inputs.links}}
           grep: ${{github.event.inputs.grep}}
         env:
           APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-          APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+          APPLITOOLS_API_KEY_JSSDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
           APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
           SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
           SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}

@@ -1,6 +1,6 @@
 const waitForDockerBrowsers = require('../src/wait-for-docker-browsers')
 const checkForDockerHostname = require('../src/check-for-docker-hostname')
-const remoteUrl = process.env.CVG_TESTS_REMOTE || 'http://localhost:4444/wd/hub'
+const remoteUrl = 'http://localhost:4444/wd/hub'
 
 exports.mochaHooks = {
   async beforeAll() {

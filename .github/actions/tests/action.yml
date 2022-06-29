@@ -21,10 +21,6 @@ inputs:
   links:
     description: names of package directories to link before testing
     type: string
-  linking-depth:
-    description: linking depth
-    type: string
-    default: 0
   grep:
     description: grep pattern to filter tests
     type: string
@@ -68,8 +64,11 @@ runs:
         if [ ! -z "${{inputs.links}}" ]
         then
           echo "::group::Linking dependencies"
-          npx link --include scripts --install
-          node ./node_modules/.bin/link --include ${{inputs.links}} --build --install --max-depth ${{inputs.linking-depth}}
+          yarn --cwd ../scripts install
+          yarn --cwd ../scripts link
+          yarn link @applitools/scripts
+          npx link "${{inputs.links}}" --build --install
+          ls -F ./node_modules/@applitools
           echo "::endgroup::"
         fi
 

@@ -5,8 +5,7 @@ const {testServerInProcess} = require('@applitools/test-server')
 const {makeSDK} = require('../../../index')
 
 function adjustUrlToDocker(url, {platform = process.platform} = {}) {
-  if (!!process.env.CVG_TESTS_REMOTE && platform === 'darwin')
-    return url.replace(/:\/\/localhost/, '://host.docker.internal')
+  if (platform === 'darwin') return url.replace(/:\/\/localhost/, '://host.docker.internal')
   return url
 }
 

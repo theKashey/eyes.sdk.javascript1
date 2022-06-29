@@ -19,7 +19,7 @@
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-browser-extension' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-browser-extension'",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='browser-extension' -f links='eyes-sdk-core eyes-api types utils driver screenshoter visual-grid-client' -f linking-depth=2",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='browser-extension' -f links='eyes-sdk-core eyes-api types utils driver screenshoter visual-grid-client'",
     "gh:publish": "gh workflow run publish-browser-extension.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion",
     "version": "yarn build && bongo version",

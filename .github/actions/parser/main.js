@@ -24,13 +24,20 @@ const OS = {
 
 const packagesPath = path.resolve(process.cwd(), './js/packages')
 
-const input = github.context.eventName === 'pull_request' ? changedInCurrentBranch() : core.getInput('packages', {required: true}) 
 const allowVariations = core.getBooleanInput('allow-variations')
 const allowCascading = core.getBooleanInput('allow-cascading')
 const onlyChanged = core.getBooleanInput('only-changed')
 const defaultReleaseVersion = core.getInput('release-version')
 
-core.notice(`Input provided: "${input}"`)
+let input
+if (github.context.eventName === 'workflow_dispatch') {
+  input = core.getInput('packages', {required: true}) 
+  core.notice(`Input provided: "${input}"`)
+} else {
+  input = changedInCurrentBranch()
+  core.notice(`Packages with changes: "${input}"`)
+}
+
 
 const packageDirs = await fs.readdir(packagesPath)
 const packages = await packageDirs.reduce(async (packages, packageDir) => {
@@ -76,9 +83,9 @@ core.notice(`Jobs created: "${Object.values(jobs).map(job => job.displayName).jo
 core.setOutput('packages', allowVariations ? Object.values(jobs) : jobs)
 
 function createJobs(input) {
-  return input.split(/[\s,]+/).reduce((jobs, input) => {
-    let [_, packageKey,  releaseVersion, frameworkVersion, frameworkProtocol, nodeVersion, jobOS, shortReleaseVersion, shortFrameworkVersion, shortFrameworkProtocol]
-      = input.match(/^(.*?)(?:\((?:version:(patch|minor|major);?)?(?:framework:([\d.]+);?)?(?:protocol:(.+?);?)?(?:node:([\d.]+);?)?(?:os:(linux|ubuntu|mac|macos|win|windows);?)?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
+  return input.split(/[\s,]+(?=(?:[^()]*\([^())]*\))*[^()]*$)/).reduce((jobs, input) => {
+    let [_, packageKey,  releaseVersion, frameworkVersion, frameworkProtocol, nodeVersion, jobOS, linkPackages, shortReleaseVersion, shortFrameworkVersion, shortFrameworkProtocol]
+      = input.match(/^(.*?)(?:\((?:version:(patch|minor|major);?)?(?:framework:([\d.]+);?)?(?:protocol:(.+?);?)?(?:node:([\d.]+);?)?(?:os:(linux|ubuntu|mac|macos|win|windows);?)?(?:links:(.+?);?)?\))?(?::(patch|minor|major))?(?:@([\d.]+))?(?:\+(.+?))?$/i)
   
     releaseVersion ??= shortReleaseVersion ?? defaultReleaseVersion
     frameworkVersion ??= shortFrameworkVersion
@@ -115,6 +122,7 @@ function createJobs(input) {
       version: releaseVersion,
       os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
+      links: linkPackages,
       env: {
         [`APPLITOOLS_${packageInfo.jobName.toUpperCase()}_MAJOR_VERSION`]: frameworkVersion,
         [`APPLITOOLS_${packageInfo.jobName.toUpperCase()}_VERSION`]: frameworkVersion,
@@ -184,7 +192,7 @@ function changedSinceLastTag(job) {
 }
 
 function changedInCurrentBranch() {
-  const changedFiles = execSync('git --no-pager diff --name-only master', {encoding: 'utf8'})
+  const changedFiles = execSync('git --no-pager diff --name-only origin/master', {encoding: 'utf8'})
   const packageDirs = changedFiles.split('\n').reduce((packageDirs, filePath) => {
     filePath = path.resolve(process.cwd(), filePath)
     if (filePath.startsWith(packagesPath)) {
@@ -193,5 +201,6 @@ function changedInCurrentBranch() {
     }
     return packageDirs
   }, new Set())
-  return Array.from(packageDirs.values()).join(' ')
+  const packageDirsArr = Array.from(packageDirs.values())
+  return packageDirsArr.map(packageDir => `${packageDir}(links:${packageDirsArr.join(',')})`).join(' ')
 }

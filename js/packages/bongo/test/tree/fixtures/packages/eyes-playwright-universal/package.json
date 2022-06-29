@@ -36,7 +36,7 @@
     "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-playwright' APPLITOOLS_BATCH_ID=$(uuidgen) XUNIT_FILE=coverage-test-report.xml mocha --config .mocharc.cvg.js",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-playwright-universal'",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright-universal' -f links='types test-utils sdk-shared eyes-universal eyes-sdk-core visual-grid-client eyes-api spec-driver-playwright utils driver snippets screenshoter' -f linking-depth=2",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright-universal' -f links='types test-utils sdk-shared eyes-universal eyes-sdk-core visual-grid-client eyes-api spec-driver-playwright utils driver snippets screenshoter'",
     "gh:publish": "gh workflow run publish.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='playwright-universal'",
     "preversion": "bongo preversion && yarn build",
     "version": "bongo version",

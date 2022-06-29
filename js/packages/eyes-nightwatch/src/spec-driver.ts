@@ -11,7 +11,7 @@ export type Element = (
 export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string} & {__applitoolsBrand?: never}
 
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -73,7 +73,7 @@ export function transformElement(element: Element): Element {
   const elementId = extractElementId(utils.types.has(element, 'value') ? element.value : element)
   return {[ELEMENT_ID]: elementId, [LEGACY_ELEMENT_ID]: elementId}
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.isString(selector)) {
     return {locateStrategy: 'css selector', selector}
   } else if (utils.types.has(selector, 'selector')) {

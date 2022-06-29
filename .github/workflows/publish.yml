@@ -9,25 +9,22 @@ on:
       version:
         description: version type
         type: choice
-        options: [patch, minor, major]
+        options: [ patch, minor, major ]
         default: patch
-        required: false
       allow-cascading:
-        description: allow cascading
+        description: include dependencies
         type: boolean
         default: true
-        required: false
+      only-changed:
+        description: include only packages with new commits
+        type: boolean
+        default: true
+
 env:
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
-  CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-  APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-  AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
   FORCE_COLOR: 3
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  GITHUB_TOKEN: ${{secrets.RUN_GITHUB_TOKEN}}
+
 jobs:
   setup:
     name: Setup
@@ -37,589 +34,509 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Setup
         uses: ./.github/actions/parser
         id: setup
         with:
           packages: ${{github.event.inputs.packages}}
           allow-cascading: ${{github.event.inputs.allow-cascading}}
+          only-changed: ${{github.event.inputs.only-changed}}
           release-version: ${{github.event.inputs.version}}
 
-  # BASE
+  # INTERNAL
   types:
-    needs: [setup]
-    if: ${{fromJSON(needs.setup.outputs.packages).types}}
+    needs: [ setup ]
+    if: ${{fromJSON(needs.setup.outputs.packages).types && !failure() && !cancelled()}}
+    name: types
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).types.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).types.releaseVersion}}
+          workflow: publish-types.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).types.version}}"}'
   utils:
-    needs: [setup]
-    if: ${{fromJSON(needs.setup.outputs.packages).utils}}
+    needs: [ setup ]
+    if: ${{fromJSON(needs.setup.outputs.packages).utils && !failure() && !cancelled()}}
+    name: utils
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).utils.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).utils.releaseVersion}}
-
-  # TESTING BASE
-  test-utils:
-    needs: [setup]
-    if: ${{fromJSON(needs.setup.outputs.packages).test-utils && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).test-utils.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).test-utils.releaseVersion}}
-  test-server:
-    needs: [setup, utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).test-server.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).test-server.releaseVersion}}
-
-  # MODULES
+          workflow: publish-utils.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).utils.version}}"}'
   logger:
-    needs: [setup, utils]
+    needs: [ setup, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
+    name: logger
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).logger.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).logger.releaseVersion}}
+          workflow: publish-logger.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).logger.version}}"}'
   snippets:
-    needs: [setup]
+    needs: [ setup ]
     if: ${{fromJSON(needs.setup.outputs.packages).snippets && !failure() && !cancelled()}}
+    name: snippets
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).snippets.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).snippets.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).snippets.releaseVersion}}
+          workflow: publish-snippets.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).snippets.version}}"}'
   screenshoter:
-    needs: [setup, utils, driver, snippets, spec-webdriverio]
+    needs:
+      [
+        setup,
+        logger,
+        snippets,
+        utils,
+        driver,
+        spec-webdriverio,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).screenshoter && !failure() && !cancelled()}}
     name: screenshoter
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-screenshoter.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).screenshoter.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  driver:
-    needs: [setup, types, utils, logger, snippets]
-    if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
+          workflow: publish-screenshoter.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).screenshoter.version}}"}'
+  driver:
+    needs: [ setup, logger, snippets, types, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
+    name: driver
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          package: ${{fromJSON(needs.setup.outputs.packages).driver.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).driver.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).driver.releaseVersion}}
+          workflow: publish-driver.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).driver.version}}"}'
 
   # CORE
   core:
-    needs: [setup, types, utils, logger, driver, screenshoter, snippets, test-utils]
+    needs:
+      [
+        setup,
+        driver,
+        eg-client,
+        logger,
+        screenshoter,
+        snippets,
+        types,
+        utils,
+        spec-selenium,
+        test-server,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).core && !failure() && !cancelled()}}
+    name: core
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).core.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).core.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).core.releaseVersion}}
-  vgc:
-    needs: [setup, core]
-    if: ${{fromJSON(needs.setup.outputs.packages).vgc && !failure() && !cancelled()}}
+          workflow: publish-core.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).core.version}}"}'
+  ufg-client:
+    needs: [ setup, core, logger, test-server, test-utils, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).ufg-client && !failure() && !cancelled()}}
+    name: ufg-client
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).vgc.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).vgc.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).vgc.releaseVersion}}
-  api:
-    needs: [setup, types, utils, logger]
-    if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
+          workflow: publish-ufg-client.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).ufg-client.version}}"}'
+  eg-client:
+    needs: [ setup, logger, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).eg-client && !failure() && !cancelled()}}
+    name: eg-client
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).api.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).api.releaseVersion}}
+          workflow: publish-eg-client.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).eg-client.version}}"}'
   universal:
-    needs: [setup, types, utils, logger, core, vgc]
+    needs:
+      [
+        setup,
+        eg-client,
+        core,
+        logger,
+        utils,
+        ufg-client,
+        test-utils,
+        types
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).universal && !failure() && !cancelled()}}
     name: universal
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-universal.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).universal.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      UNIVERSAL_SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-universal.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
+  api:
+    needs: [ setup, logger, types, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
+    name: api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-api.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).api.version}}"}'
 
   # SPEC DRIVERS
   spec-playwright:
-    needs: [setup, types, utils, test-utils]
+    needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-playwright && !failure() && !cancelled()}}
     name: spec-playwright
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-playwright.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).spec-playwright.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-spec-playwright.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-playwright.version}}"}'
   spec-puppeteer:
-    needs: [setup, types, utils, test-utils]
+    needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer && !failure() && !cancelled()}}
     name: spec-puppeteer
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-puppeteer.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-spec-puppeteer.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.version}}"}'
   spec-selenium:
-    needs: [setup, types, utils, test-utils]
+    needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium && !failure() && !cancelled()}}
     name: spec-selenium
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-selenium.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).spec-selenium.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-spec-selenium.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-selenium.version}}"}'
   spec-webdriverio:
-    needs: [setup, types, utils, test-utils]
+    needs: [ setup, types, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio && !failure() && !cancelled()}}
     name: spec-webdriverio
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-spec-webdriverio.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-spec-webdriverio.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.version}}"}'
 
   # SDKS
   playwright:
-    needs: [setup, api, core, vgc, spec-playwright, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        spec-playwright,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
     name: playwright
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-playwright.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).playwright.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-playwright.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).playwright.version}}"}'
   puppeteer:
-    needs: [setup, api, core, vgc, spec-puppeteer, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        spec-puppeteer,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).puppeteer && !failure() && !cancelled()}}
     name: puppeteer
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-puppeteer.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).puppeteer.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-puppeteer.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).puppeteer.version}}"}'
   webdriverio:
-    needs: [setup, api, core, vgc, spec-webdriverio, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        spec-webdriverio,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).webdriverio && !failure() && !cancelled()}}
     name: webdriverio
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-webdriverio.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).webdriverio.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-webdriverio.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio.version}}"}'
   selenium:
-    needs: [setup, api, core, vgc, spec-selenium, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        spec-selenium,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).selenium && !failure() && !cancelled()}}
     name: selenium
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-selenium.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).selenium.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-selenium.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).selenium.version}}"}'
   protractor:
-    needs: [setup, types, utils, api, core, vgc, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        types,
+        utils,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).protractor && !failure() && !cancelled()}}
     name: protractor
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-protractor.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).protractor.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-protractor.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).protractor.version}}"}'
   nightwatch:
-    needs: [setup, types, utils, api, core, vgc, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        types,
+        utils,
+        ufg-client,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).nightwatch && !failure() && !cancelled()}}
     name: nightwatch
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-nightwatch.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).nightwatch.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      CVG_TESTS_EG_REMOTE: ${{secrets.CVG_TESTS_EG_REMOTE}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
-      SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-nightwatch.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).nightwatch.version}}"}'
   testcafe:
-    needs: [setup, types, utils, api, core, vgc, test-utils]
+    needs:
+      [
+        setup,
+        api,
+        core,
+        utils,
+        ufg-client,
+        test-server,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).testcafe && !failure() && !cancelled()}}
     name: testcafe
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-testcafe.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).testcafe.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-      AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
-  browser-extension:
-    needs: [setup, utils, core, vgc, spec-playwright, test-utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).browser-extension && !failure() && !cancelled()}}
-    name: browser-extension
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-browser-extension.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).browser-extension.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-testcafe.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).testcafe.version}}"}'
   cypress:
-    needs: [setup, logger, vgc, test-server]
+    needs:
+      [
+        setup,
+        api,
+        universal,
+        logger,
+        ufg-client,
+        test-server,
+        test-utils,
+        types,
+        utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).cypress && !failure() && !cancelled()}}
     name: cypress
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-cypress.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).cypress.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-cypress.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).cypress.version}}"}'
+  browser-extension:
+    needs:
+      [
+        setup,
+        core,
+        utils,
+        ufg-client,
+        spec-playwright,
+        test-utils
+      ]
+    if: ${{fromJSON(needs.setup.outputs.packages).browser-extension && !failure() && !cancelled()}}
+    name: browser-extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-browser-extension.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).browser-extension.version}}"}'
   storybook:
-    needs: [setup, logger, vgc, test-server]
+    needs:
+      [
+        setup,
+        driver,
+        core,
+        logger,
+        spec-puppeteer,
+        test-server,
+        utils,
+        ufg-client
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).storybook && !failure() && !cancelled()}}
     name: storybook
-    uses: applitools/eyes.sdk.javascript1/.github/workflows/publish-storybook.yml@master
-    with:
-      version: ${{fromJSON(needs.setup.outputs.packages).storybook.releaseVersion}}
-    secrets:
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-      APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
-      APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
-
-  # UNIVERSAL SDKS
-  playwright-universal:
-    needs: [setup, api, universal, spec-playwright, test-utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).playwright-universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.dirname}}
-          report: prod
-        env: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.env}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).playwright-universal.releaseVersion}}
-      - name: Save release and testing artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-tests-report-playwright-universal
-          retention-days: 30
-          path: |
-            packages/${{fromJSON(needs.setup.outputs.packages).playwright-universal.dirname}}/coverage-tests-metadata.json
-            packages/${{fromJSON(needs.setup.outputs.packages).playwright-universal.dirname}}/coverage-test-report.xml
-  selenium-universal:
-    needs: [setup, api, universal, spec-selenium, test-utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).selenium-universal && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.dirname}}
-          report: prod
-        env: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.env}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).selenium-universal.releaseVersion}}
-      - name: Save release and testing artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-tests-report-selenium-universal
-          retention-days: 30
-          path: |
-            packages/${{fromJSON(needs.setup.outputs.packages).selenium-universal.dirname}}/coverage-tests-metadata.json
-            packages/${{fromJSON(needs.setup.outputs.packages).selenium-universal.dirname}}/coverage-test-report.xml
-
-  # LEGACY SDKS
-  webdriverio-legacy:
-    needs: [setup, types, utils, api, core, vgc, test-utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy && !failure() && !cancelled()}}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}
-          report: prod
-        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.env}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.releaseVersion}}
-      - name: Save release and testing artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-tests-report-webdriverio-legacy
-          retention-days: 30
-          path: |
-            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}/coverage-tests-metadata.json
-            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-legacy.dirname}}/coverage-test-report.xml
+          workflow: publish-storybook.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).storybook.version}}"}'
 
   # SDK WRAPPERS
   webdriverio-service:
-    needs: [setup, webdriverio]
+    needs: [ setup, webdriverio, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service && !failure() && !cancelled()}}
+    name: webdriverio-service
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}
-          report: prod
-        env: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.env}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service.releaseVersion}}
-      - name: Save release and testing artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-tests-report-webdriverio-service
-          retention-days: 30
-          path: |
-            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}/coverage-tests-metadata.json
-            packages/${{fromJSON(needs.setup.outputs.packages).webdriverio-service.dirname}}/coverage-test-report.xml
+          workflow: publish-webdriverio-service.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio-service.version}}"}'
 
-  # TOOLING
-  bongo:
-    needs: [setup, utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).bongo && !failure() && !cancelled()}}
+  # TESTING BASE
+  test-utils:
+    needs: [ setup ]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils && !failure() && !cancelled()}}
+    name: test-utils
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).bongo.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).bongo.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).bongo.releaseVersion}}
-  scripts:
-    needs: [setup, utils, test-utils]
-    if: ${{fromJSON(needs.setup.outputs.packages).scripts && !failure() && !cancelled()}}
+          workflow: publish-test-utils.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-utils.version}}"}'
+  test-server:
+    needs: [ setup, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
+    name: test-server
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
         with:
-          node-version: lts/*
-      - name: Run tests
-        uses: ./.github/actions/tests
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).scripts.dirname}}
-      - name: Publish to NPM
-        uses: ./.github/actions/publish
-        with:
-          package: ${{fromJSON(needs.setup.outputs.packages).scripts.dirname}}
-          version: ${{fromJSON(needs.setup.outputs.packages).scripts.releaseVersion}}
+          workflow: publish-test-server.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-server.version}}"}'

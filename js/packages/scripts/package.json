@@ -13,7 +13,9 @@
   },
   "license": "SEE LICENSE IN LICENSE",
   "author": "Applitools team <team@applitools.com>",
-  "aliases": ["scripts"],
+  "aliases": [
+    "scripts"
+  ],
   "bin": {
     "render": "./cli/render.js",
     "link": "./cli/link.js",

@@ -49,7 +49,7 @@
     "docker:rebuild": "docker build --no-cache -t applitools/puppeteer-chrome .",
     "docker:run": "yarn docker:build && docker run -e NODE_AUTH_TOKEN --env APPLITOOLS_API_KEY=$APPLITOOLS_API_KEY_SDK --env APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-puppeteer' --env APPLITOOLS_BATCH_ID=$(uuidgen) --env XUNIT_FILE=coverage-test-report.xml -it --init --rm -v $(pwd):/sandbox applitools/puppeteer-chrome",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-puppeteer utils driver snippets screenshoter' -f linking-depth=3",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='puppeteer' -f links='types test-utils sdk-shared eyes-sdk-core visual-grid-client eyes-api spec-driver-puppeteer utils driver snippets screenshoter'",
     "gh:publish": "gh workflow run publish-puppeteer.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion --verifyPendingChanges && yarn build",
     "version": "bongo version --withPendingChanges",

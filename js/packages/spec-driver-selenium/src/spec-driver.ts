@@ -12,7 +12,7 @@ export type Selector = (
 ) & {__applitoolsBrand?: never}
 
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -65,7 +65,7 @@ export function transformDriver(driver: Driver): Driver {
   }
   return driver
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.isString(selector)) {
     return {css: selector}
   } else if (utils.types.has(selector, 'selector')) {

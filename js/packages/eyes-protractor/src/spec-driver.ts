@@ -8,7 +8,7 @@ export type Element = Protractor.WebElement | Protractor.ElementFinder
 export type Selector = Protractor.Locator | {using: string; value: string}
 
 type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -55,7 +55,7 @@ export function transformElement(element: Element): Element {
   if (!utils.types.instanceOf<Protractor.ElementFinder>(element, 'ElementFinder')) return element
   return element.getWebElement()
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.isString(selector)) {
     return {css: selector}
   } else if (utils.types.has(selector, 'selector')) {

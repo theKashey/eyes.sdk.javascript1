@@ -355,7 +355,7 @@ const BROWSERS = {
   },
   chrome: {
     type: 'local',
-    url: process.env.CVG_TESTS_REMOTE || 'http://localhost:4444/wd/hub',
+    url: 'http://localhost:4444/wd/hub',
     capabilities: {
       browserName: 'chrome',
     },
@@ -584,7 +584,7 @@ function parseEnv(
 ) {
   const env = {browser, device, headless, protocol, ...options}
   if (protocol === 'wd') {
-    env.url = new URL(url || process.env.CVG_TESTS_WD_REMOTE || process.env.CVG_TESTS_REMOTE)
+    env.url = url && new URL(url)
     if (env.desiredCapabilities) env.desiredCapabilities = {...env.desiredCapabilities}
     env.capabilities = {...env.capabilities}
     env.capabilities.browserName = browser || env.capabilities.browserName || ''

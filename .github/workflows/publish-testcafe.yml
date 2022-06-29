@@ -23,8 +23,6 @@ on:
         required: true
       APPLITOOLS_API_KEY:
         required: true
-      APPLITOOLS_API_KEY_SDK:
-        required: true
       APPLITOOLS_API_KEY_READ:
         required: true
       AZURE_STORAGE_CONNECTION_STRING:
@@ -34,7 +32,6 @@ env:
   FORCE_COLOR: 3
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-  APPLITOOLS_API_KEY_SDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
   APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 

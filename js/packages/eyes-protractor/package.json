@@ -53,7 +53,7 @@
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "deps": "bongo deps",
-    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='protractor' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client' -f linking-depth=3",
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='protractor' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client'",
     "gh:publish": "gh workflow run publish-protractor.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion --verifyPendingChanges && yarn build",
     "version": "bongo version --withPendingChanges",

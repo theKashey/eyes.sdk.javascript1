@@ -36,52 +36,21 @@ test('isSelector(Selector)', _driver => {
 test('isSelector(wrong)', _driver => {
   assert.strictEqual(spec.isSelector({}), false)
 })
-test('findElement(string)', async driver => {
-  const element = await spec.findElement(driver, '#overflowing-div')
-  assert.strictEqual(spec.isElement(element), true)
-})
-test('findElement({type: css, selector})', async driver => {
-  const element = await spec.findElement(driver, {type: 'css', selector: 'div'})
-  assert.strictEqual(spec.isElement(element), true)
-})
-test('findElement({type: xpath, selector})', async driver => {
-  const element = await spec.findElement(driver, {type: 'xpath', selector: '//html'})
-  assert.strictEqual(spec.isElement(element), true)
-})
 test('findElement(Selector)', async driver => {
   const element = await spec.findElement(driver, Selector('#overflowing-div'))
   assert.strictEqual(spec.isElement(element), true)
 })
 test('findElement(non-existent)', async driver => {
-  const element = await spec.findElement(driver, 'non-existent')
+  const element = await spec.findElement(driver, Selector('#non-existent'))
   assert.strictEqual(element, null)
-})
-test('findElements(string) - single element returned', async driver => {
-  const elements = await spec.findElements(driver, 'html')
-  assert.strictEqual(elements.length, 1)
-})
-test('findElements(string) - multiple elements returned', async driver => {
-  const elements = await spec.findElements(driver, 'div')
-  assert.ok(elements.length > 1)
-  assert.ok(!(await isEqualElements(driver, elements[0], elements[1])))
 })
 test('findElements(Selector)', async driver => {
   const elements = await spec.findElements(driver, Selector('div'))
   assert.ok(elements.length > 1)
   assert.ok(!(await isEqualElements(driver, elements[0], elements[1])))
 })
-test('findElements({type: css, selector})', async driver => {
-  const elements = await spec.findElements(driver, {type: 'css', selector: 'div'})
-  assert.ok(elements.length > 1)
-  assert(!(await isEqualElements(driver, elements[0], elements[1])))
-})
-test('findElements({type: xpath, selector})', async driver => {
-  const elements = await spec.findElements(driver, {type: 'xpath', selector: '//div'})
-  assert.ok(elements.length > 1)
-  assert(!(await isEqualElements(driver, elements[0], elements[1])))
-})
 test('findElements(non-existent)', async driver => {
-  const elements = await spec.findElements(driver, 'non-existent')
+  const elements = await spec.findElements(driver, Selector('#non-existent'))
   assert.deepStrictEqual(elements, [])
 })
 test('executeScript(string)', async driver => {
