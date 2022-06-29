@@ -15,6 +15,20 @@ const getPackagePath = packageName => {
   if (!pkg) throw new Error('Invalid package name provided')
   return pkg.path
 }
+const getLegacyPackagePath = packagePath => packagePath.replace(/js\/packages/, 'packages')
+
+async function getBeforeAndAfterDeps({sha, targetPath}) {
+  const stdoutCurrent = await gitShow({sha, targetPath})
+  const stdoutLegacy = await gitShow({sha, targetPath: getLegacyPackagePath(targetPath)})
+  const currentDeps = stdoutCurrent.match(/\+ *"(.*)"/g) || []
+  const currentDepsLegacy = stdoutLegacy.match(/\+ *"(.*)"/g) || []
+  const previousDeps = stdoutCurrent.match(/\- *"(.*)"/g) || []
+  const previousDepsLegacy = stdoutLegacy.match(/\- *"(.*)"/g) || []
+  return {
+    currentDeps: currentDeps.concat(currentDepsLegacy),
+    previousDeps: previousDeps.concat(previousDepsLegacy),
+  }
+}
 
 async function expandAutoCommitLogEntry(logEntry) {
   const entry = logEntry.split(' ')
@@ -22,10 +36,10 @@ async function expandAutoCommitLogEntry(logEntry) {
   const packageName = entry[3].slice(0, -1)
   const pkgJsonPath = path.join(getPackagePath(packageName), 'package.json')
   const {dependencies} = require(pkgJsonPath)
-  const stdout = await gitShow({sha, targetPath: pkgJsonPath})
-  const currentDeps = stdout.match(/\+ *"(.*)"/g)
-  const previousDeps = stdout.match(/\- *"(.*)"/g)
-  if (!currentDeps && !previousDeps) return []
+
+  const {currentDeps, previousDeps} = await getBeforeAndAfterDeps({sha, targetPath: pkgJsonPath})
+  if (!currentDeps.length && !previousDeps.length) return []
+
   let deps = currentDeps
     .map(dep => {
       if (isInvalidPackageName(dep) || hasInvalidPackageVersion(dep)) return
@@ -113,6 +127,7 @@ async function gitLog({
 } = {}) {
   const pkgName = packageName || require(path.join(cwd, 'package.json')).name
   const packagePath = getPackagePath(pkgName)
+  const legacyPackagePath = getLegacyPackagePath(packagePath)
   const exclusions = `":(exclude,icase)../*/changelog.md" ":!../*/test/*"`
   const command = `git log --oneline --grep ${pkgName}@${upperVersion.replace(
     /^\^/,
@@ -120,7 +135,7 @@ async function gitLog({
   )} --invert-grep ${pkgName}@${lowerVersion.replace(/^\^/, '')}..${pkgName}@${upperVersion.replace(
     /^\^/,
     '',
-  )} -- ${packagePath} ${exclusions}`
+  )} -- ${packagePath} ${legacyPackagePath} ${exclusions}`
   try {
     const {stdout} = await pexec(command)
     const entries = stdout && stdout.split('\n').filter(entry => entry)
