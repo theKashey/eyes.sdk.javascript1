@@ -13,7 +13,10 @@
     "test": "./test"
   },
   "types": "./src/coverage-tests/index.d.ts",
-  "aliases": ["coverage-tool", "coverage"],
+  "aliases": [
+    "coverage-tool",
+    "coverage"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/applitools/eyes.sdk.javascript1.git",
@@ -44,7 +47,7 @@
     "yargs": "16.0.3"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.5",
+    "@applitools/bongo": "^2.1.6",
     "@typescript-eslint/parser": "4.2.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

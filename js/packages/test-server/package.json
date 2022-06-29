@@ -44,7 +44,7 @@
     "yargs": "17.0.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.5",
+    "@applitools/bongo": "^2.1.6",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",

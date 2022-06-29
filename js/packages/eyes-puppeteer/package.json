@@ -27,7 +27,10 @@
     "name": "Applitools Team",
     "email": "team@applitools.com"
   },
-  "aliases": ["puppeteer", "pptr"],
+  "aliases": [
+    "puppeteer",
+    "pptr"
+  ],
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "files": [
@@ -66,7 +69,7 @@
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.8",
-    "@applitools/bongo": "^2.1.5",
+    "@applitools/bongo": "^2.1.6",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "2.3.18",
     "@applitools/sdk-shared": "0.9.11",

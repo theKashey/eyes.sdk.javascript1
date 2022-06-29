@@ -79,7 +79,7 @@
     "png-async": "0.9.4"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.5",
+    "@applitools/bongo": "^2.1.6",
     "@applitools/driver": "^1.9.9",
     "@applitools/scripts": "1.1.0",
     "@applitools/spec-driver-webdriverio": "1.2.14",

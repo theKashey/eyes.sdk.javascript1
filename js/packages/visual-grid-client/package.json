@@ -71,7 +71,7 @@
     "throat": "5.0.0"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.5",
+    "@applitools/bongo": "^2.1.6",
     "@applitools/dom-snapshot": "4.6.0",
     "@applitools/scripts": "^1.1.0",
     "@applitools/test-server": "1.1.3",
