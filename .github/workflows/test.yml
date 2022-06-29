@@ -2,6 +2,7 @@ name: Test packages
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
     inputs:
       packages:
@@ -39,6 +40,7 @@ env:
 jobs:
   setup:
     name: Setup
+    if: ${{github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[Security]') && !github.event.pull_request.draft}}
     runs-on: ubuntu-latest
     outputs:
       packages: ${{steps.setup.outputs.packages}}
