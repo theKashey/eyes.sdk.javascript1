@@ -33,8 +33,9 @@ export function transformSelector<TSelector>(
 ): TSelector {
   if (environment?.isWeb && isCommonSelector(spec, selector)) {
     if (selector.type === 'id') selector = {type: 'css', selector: `#${selector.selector}`}
-    if (selector.type === 'name') selector = {type: 'css', selector: `[name="${selector.selector}"]`}
-    if (selector.type === 'class name') selector = {type: 'css', selector: `.${selector.selector}`}
+    else if (selector.type === 'name') selector = {type: 'css', selector: `[name="${selector.selector}"]`}
+    else if (selector.type === 'class name') selector = {type: 'css', selector: `.${selector.selector}`}
+    else if (selector.type === 'tag name') selector = {type: 'css', selector: `${selector.selector}`}
   }
   return spec.transformSelector?.(selector) ?? (selector as TSelector)
 }
