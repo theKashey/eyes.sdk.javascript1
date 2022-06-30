@@ -38,6 +38,7 @@ env:
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   BROWSERSTACK_USERNAME: ${{secrets.BROWSERSTACK_USERNAME}}
   BROWSERSTACK_ACCESS_KEY: ${{secrets.BROWSERSTACK_ACCESS_KEY}}
+  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
 
 jobs:
   test:
