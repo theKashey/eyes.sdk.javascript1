@@ -26,11 +26,12 @@ Apollo SDK:
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
     - Improve the logic that detects the side of native Android navigation bar
+    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -71,6 +72,7 @@ Apollo SDK:
     - Fixed scrolling on some android devices
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
+    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
 "@applitools/eyes-puppeteer":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -121,6 +123,7 @@ Apollo SDK:
     - Fixed scrolling on some android devices
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
+    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
 "@applitools/eyes-cypress":
   feature:
     - 
@@ -164,6 +167,7 @@ Apollo SDK:
     - Fixed scrolling on some android devices
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
+    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
