@@ -1,22 +1,27 @@
-name: .changelog
+name: Verify changelog
 
 on: 
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
-  changelog:
+  verify:
     if: ${{!contains(github.event.head_commit.message, '[Security]') && !github.event.pull_request.draft}}
     runs-on: ubuntu-latest
-    name: changelog
+    name: Verify changelog
     steps:
-      - uses: actions/checkout@v3
-        with:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+        with: Setup Node.js
           fetch-depth: 0
-      - uses: actions/setup-node@v1
+      - name:
+        uses: actions/setup-node@v3
         with:
           node-version: 14
-      - run: |
+      - name: Verify changelog
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           if [[ $(git log origin/master... --grep=NO_CHANGELOG | wc -l) -gt 0 ]]; then
             echo NO_CHANGELOG commit tag found. Skipping changelog check.
@@ -43,5 +48,3 @@ jobs:
               cd ../
             fi
           done
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
