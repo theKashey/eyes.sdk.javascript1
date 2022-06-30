@@ -16,15 +16,15 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
+"@applitools/utils@1.3.10":
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.10.tgz#307359d6f668c5fe6b3a7d213405ebe3bf2235b6"
+  integrity sha512-CI/5BLB0D/aZn6uL8JJmsErI+TOHCa4Gz5Wi8sJknuPz/V9Ws6jIh9ZCTzvOCDUIp99qLJwD6TSA2BY9aMhCNw==
+
 "@applitools/utils@1.3.5":
   version "1.3.5"
   resolved "https://registry.npmjs.org/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
   integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
-
-"@applitools/utils@1.3.9":
-  version "1.3.9"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.9.tgz#b4b79e4f8f81fb9d6465b08505932b94bf791894"
-  integrity sha512-j48F61f8RE5OQz+j3aJ84Ba+2JN61JIr+k7Ot+4D+F3ners7xigKi2OzRAzQcCPa35/G5jB8p1BvO4lKDWAFBQ==
 
 "@babel/code-frame@^7.0.0":
   version "7.16.0"
