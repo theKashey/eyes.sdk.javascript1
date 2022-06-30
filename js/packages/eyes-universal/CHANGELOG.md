@@ -8,6 +8,12 @@
 
 
 
+## 2.9.4 - 2022/6/30
+
+### Features
+### Bug fixes
+- Implicitly convert tag to css selector due to removal of tag support from chromedriver
+
 ## 2.9.3 - 2022/6/27
 
 ### Features

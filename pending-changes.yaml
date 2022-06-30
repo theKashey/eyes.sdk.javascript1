@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
