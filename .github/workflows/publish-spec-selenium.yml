@@ -30,7 +30,6 @@ env:
 
 jobs:
   test:
-    needs: [verify]
     strategy:
       matrix:
         framework-version: [3, 4]
