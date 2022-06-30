@@ -12,9 +12,9 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-        with: Setup Node.js
+        with:
           fetch-depth: 0
-      - name:
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 14
