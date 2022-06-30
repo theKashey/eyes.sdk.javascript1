@@ -10,7 +10,7 @@ export type Context = Playwright.Frame & {__applitoolsBrand?: never}
 export type Element = Playwright.ElementHandle & {__applitoolsBrand?: never}
 export type Selector = (string | Playwright.Locator) & {__applitoolsBrand?: never}
 
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -51,7 +51,7 @@ export function isSelector(selector: any): selector is Selector {
   if (!selector) return false
   return utils.types.isString(selector) || utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.has(selector, 'selector')) {
     if (!utils.types.has(selector, 'type')) return selector.selector
     else return `${selector.type}=${selector.selector}`

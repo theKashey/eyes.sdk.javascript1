@@ -7,7 +7,7 @@ export type Context = Puppeteer.Frame & {__applitoolsBrand?: never}
 export type Element = Puppeteer.ElementHandle & {__applitoolsBrand?: never}
 export type Selector = string & {__applitoolsBrand?: never}
 
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
 
@@ -100,7 +100,7 @@ export function isElement(element: any): element is Element {
 export function isSelector(selector: any): selector is Selector {
   return utils.types.isString(selector)
 }
-export function transformSelector(selector: CommonSelector): Selector {
+export function transformSelector(selector: CommonSelector<Selector>): Selector {
   if (utils.types.has(selector, 'selector')) return selector.selector
   return selector
 }
