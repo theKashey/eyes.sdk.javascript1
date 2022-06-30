@@ -6,7 +6,7 @@ import * as utils from '@applitools/utils'
 export type Driver = Selenium.WebDriver & {__applitoolsBrand?: never}
 export type Element = Selenium.WebElement & {__applitoolsBrand?: never}
 export type Selector = (
-  Exclude<Selenium.Locator, Function>
+  | Exclude<Selenium.Locator, Function>
   | ((webdriver: Selenium.WebDriver) => Promise<any>)
   | {using: string; value: string}
 ) & {__applitoolsBrand?: never}
