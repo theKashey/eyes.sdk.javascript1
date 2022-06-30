@@ -34,7 +34,7 @@
     "@applitools/utils" "1.3.9"
     chalk "4.1.2"
 
-"@applitools/scripts@1.1.0":
+"@applitools/scripts@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@applitools/scripts/-/scripts-1.1.0.tgz#cd0c87760f101bb27dfc42c7d07705f0557bca37"
   integrity sha512-wwd53Y6WKVlnsgil8YmOETi95hFP0YX+Fz7yvRk3AKY0NAFFKddFCySFMnkH/lkwTbTzAhy2B/v2jqaY3xsIJg==
@@ -49,10 +49,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.3.tgz#4f214e637c65da2137513835479d9e101200314b"
   integrity sha512-dKe8TnUmj4cPwy6JYTYfuVsw/QHadGAhtweg3v39ePDo8ZzmCtnvmFLVtkdBveNlgJ/CoU/fSmubZ3Wnp2x7Eg==
 
-"@applitools/spec-driver-webdriverio@1.2.14":
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.14.tgz#7dc346d6dde2120286b2cb1efcc60b72eb1caa80"
-  integrity sha512-dmHu4Hsu+7Ra+kUk+Jc23pZn4PgPPGVokORvcRlLt3DHLtHewuF90LJMV8D9Jxm0TMpytjJfmXzRrjUvmuvOCQ==
+"@applitools/spec-driver-webdriverio@^1.2.15":
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.15.tgz#ba185ee0cd96cd6ac93c3e32fce7add8a0873c76"
+  integrity sha512-Dfrs4QWIxvzXPJapakjV804Vn4piUlVn7JlsUWPIZW2vXFcoDzZyGId9IPxs1iP78PIdAV+1Cp/01HZiPTnRqg==
   dependencies:
     "@applitools/types" "1.5.5"
     "@applitools/utils" "1.3.9"
@@ -65,10 +65,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.3.tgz#6544e1338a398a7adde75d1f6f3a7ccc2ac119a6"
-  integrity sha512-lWcfg8NPw4VwqQQ30Jb+JMV7XIqOGLE2xDHCyDlk5YelYv7nB8xt4SwBCNhEDFlm6b9RIJcHE0KbWRRPoqrheA==
+"@applitools/test-utils@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.4.tgz#1e6b7f61dcb67c2e42a450e2ed78b862d11ddcf2"
+  integrity sha512-S1js26uj/EctDTrbxnHT+6C+s8h7RsFs8gFSu5OcpuxgJTVyF9SsdS65zqGWmyLUo2uqzi1b6kN8rsbrG1G1KA==
   dependencies:
     node-fetch "2.6.1"
 

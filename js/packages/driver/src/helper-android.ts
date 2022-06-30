@@ -12,22 +12,22 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   }): Promise<HelperAndroid<TDriver, TContext, TElement, TSelector> | null> {
     const {spec, driver, logger} = options
     let legacy = false
-    let element = await driver.element({
-      type: 'xpath',
-      selector: '//*[@content-desc="EyesAppiumHelperEDT"]',
-    })
-    if (!element) {
+    let input = await driver.element({type: 'xpath', selector: '//*[@content-desc="EyesAppiumHelperEDT"]'})
+    if (!input) {
       legacy = true
-      element = await driver.element({
-        type: '-android uiautomator',
-        selector: 'new UiSelector().description("EyesAppiumHelper")',
-      })
+      input = await driver.element({type: 'xpath', selector: '//*[@content-desc="EyesAppiumHelper"]'})
     }
-    return element ? new HelperAndroid<TDriver, TContext, TElement, TSelector>({spec, element, legacy, logger}) : null
+    const action = !legacy
+      ? await driver.element({type: 'xpath', selector: '//*[@content-desc="EyesAppiumHelper_Action"]'})
+      : null
+    return input
+      ? new HelperAndroid<TDriver, TContext, TElement, TSelector>({spec, input, action, legacy, logger})
+      : null
   }
 
   private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
-  private readonly _element: Element<TDriver, TContext, TElement, TSelector>
+  private readonly _input: Element<TDriver, TContext, TElement, TSelector>
+  private readonly _action?: Element<TDriver, TContext, TElement, TSelector>
   private readonly _legacy: boolean
   private _logger: Logger
 
@@ -35,12 +35,14 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
   constructor(options: {
     spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
-    element: Element<TDriver, TContext, TElement, TSelector>
+    input: Element<TDriver, TContext, TElement, TSelector>
+    action?: Element<TDriver, TContext, TElement, TSelector>
     legacy: boolean
     logger?: any
   }) {
     this._spec = options.spec
-    this._element = options.element
+    this._input = options.input
+    this._action = options.action
     this._legacy = options.legacy
     this._logger = options.logger
     this.name = this._legacy ? 'android-legacy' : 'android'
@@ -53,20 +55,22 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   }
 
   async getContentSize(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {
+    console.log('getContentSize', !!this._action)
     let contentHeightString
     if (this._legacy) {
-      await this._element.click()
-      contentHeightString = await this._element.getText()
+      await this._input.click()
+      contentHeightString = await this._input.getText()
     } else {
       const elementId = await this._getElementId(element)
       if (!elementId) return null
-      await this._element.type(`offset;${elementId};0;0;0`)
-      await this._element.click()
-      contentHeightString = await this._element.getText()
-      await this._element.type('')
+      await this._input.type(`offset;${elementId};0;0;0`)
+      if (this._action) await this._action.type('1')
+      else await this._input.click()
+      contentHeightString = await this._input.getText()
+      await this._input.type('')
     }
 
-    const region = await this._spec.getElementRegion(this._element.driver.target, element.target)
+    const region = await this._spec.getElementRegion(this._input.driver.target, element.target)
     const contentHeight = Number(contentHeightString)
 
     if (Number.isNaN(contentHeight)) return utils.geometry.size(region)
@@ -79,10 +83,11 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._element.type(`getRect;${elementId};0;0`)
-    await this._element.click()
-    const regionString = await this._element.getText()
-    await this._element.type('')
+    await this._input.type(`getRect;${elementId};0;0`)
+    if (this._action) await this._action.type('1')
+    else await this._input.click()
+    const regionString = await this._input.getText()
+    await this._input.type('')
     const [, x, y, height, width] = regionString.match(
       /\[(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?)\]/,
     )
@@ -97,9 +102,10 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._element.type(`moveToTop;${elementId};0;-1`)
-    await this._element.click()
-    await this._element.type('')
+    await this._input.type(`moveToTop;${elementId};0;-1`)
+    if (this._action) await this._action.type('1')
+    else await this._input.click()
+    await this._input.type('')
   }
 
   async scrollBy(element: Element<TDriver, TContext, TElement, TSelector>, offset: types.Location): Promise<void> {
@@ -107,18 +113,20 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._element.type(`scroll;${elementId};${offset.y};0;0`)
-    await this._element.click()
-    await this._element.type('')
+    await this._input.type(`scroll;${elementId};${offset.y};0;0`)
+    if (this._action) await this._action.type('1')
+    else await this._input.click()
+    await this._input.type('')
   }
 
   async getTouchPadding(): Promise<number> {
     if (this._legacy) return null
 
-    await this._element.type(`getTouchPadding;0;0;0;0`)
-    await this._element.click()
-    const touchPaddingString = await this._element.getText()
-    await this._element.type('')
+    await this._input.type(`getTouchPadding;0;0;0;0`)
+    if (this._action) await this._action.type('1')
+    else await this._input.click()
+    const touchPaddingString = await this._input.getText()
+    await this._input.type('')
 
     const touchPadding = Number(touchPaddingString)
 
