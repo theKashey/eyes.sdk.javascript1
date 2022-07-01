@@ -556,7 +556,7 @@ jobs:
 
   # PYTHON
   python-selenium:
-    needs: [ setup, py-eyes-universal ]
+    needs: [ setup, python-universal ]
     if: ${{fromJSON(needs.setup.outputs.packages).python-selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
@@ -568,8 +568,8 @@ jobs:
       #     workflow: publish-universal.yml
       #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
   python-robotframework:
-    needs: [ setup, py-eyes-selenium ]
-    if: ${{fromJSON(needs.setup.outputs.packages).python-selenium && !failure() && !cancelled()}}
+    needs: [ setup, python-selenium ]
+    if: ${{fromJSON(needs.setup.outputs.packages).python-robotframework && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository

@@ -1658,6 +1658,241 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
+/***/ 2291:
+/***/ ((module) => {
+
+const { hasOwnProperty } = Object.prototype
+
+/* istanbul ignore next */
+const eol = typeof process !== 'undefined' &&
+  process.platform === 'win32' ? '\r\n' : '\n'
+
+const encode = (obj, opt) => {
+  const children = []
+  let out = ''
+
+  if (typeof opt === 'string') {
+    opt = {
+      section: opt,
+      whitespace: false,
+    }
+  } else {
+    opt = opt || Object.create(null)
+    opt.whitespace = opt.whitespace === true
+  }
+
+  const separator = opt.whitespace ? ' = ' : '='
+
+  for (const k of Object.keys(obj)) {
+    const val = obj[k]
+    if (val && Array.isArray(val)) {
+      for (const item of val) {
+        out += safe(k + '[]') + separator + safe(item) + eol
+      }
+    } else if (val && typeof val === 'object') {
+      children.push(k)
+    } else {
+      out += safe(k) + separator + safe(val) + eol
+    }
+  }
+
+  if (opt.section && out.length) {
+    out = '[' + safe(opt.section) + ']' + eol + out
+  }
+
+  for (const k of children) {
+    const nk = dotSplit(k).join('\\.')
+    const section = (opt.section ? opt.section + '.' : '') + nk
+    const { whitespace } = opt
+    const child = encode(obj[k], {
+      section,
+      whitespace,
+    })
+    if (out.length && child.length) {
+      out += eol
+    }
+
+    out += child
+  }
+
+  return out
+}
+
+const dotSplit = str =>
+  str.replace(/\1/g, '\u0002LITERAL\\1LITERAL\u0002')
+    .replace(/\\\./g, '\u0001')
+    .split(/\./)
+    .map(part =>
+      part.replace(/\1/g, '\\.')
+        .replace(/\2LITERAL\\1LITERAL\2/g, '\u0001'))
+
+const decode = str => {
+  const out = Object.create(null)
+  let p = out
+  let section = null
+  //          section     |key      = value
+  const re = /^\[([^\]]*)\]$|^([^=]+)(=(.*))?$/i
+  const lines = str.split(/[\r\n]+/g)
+
+  for (const line of lines) {
+    if (!line || line.match(/^\s*[;#]/)) {
+      continue
+    }
+    const match = line.match(re)
+    if (!match) {
+      continue
+    }
+    if (match[1] !== undefined) {
+      section = unsafe(match[1])
+      if (section === '__proto__') {
+        // not allowed
+        // keep parsing the section, but don't attach it.
+        p = Object.create(null)
+        continue
+      }
+      p = out[section] = out[section] || Object.create(null)
+      continue
+    }
+    const keyRaw = unsafe(match[2])
+    const isArray = keyRaw.length > 2 && keyRaw.slice(-2) === '[]'
+    const key = isArray ? keyRaw.slice(0, -2) : keyRaw
+    if (key === '__proto__') {
+      continue
+    }
+    const valueRaw = match[3] ? unsafe(match[4]) : true
+    const value = valueRaw === 'true' ||
+      valueRaw === 'false' ||
+      valueRaw === 'null' ? JSON.parse(valueRaw)
+      : valueRaw
+
+    // Convert keys with '[]' suffix to an array
+    if (isArray) {
+      if (!hasOwnProperty.call(p, key)) {
+        p[key] = []
+      } else if (!Array.isArray(p[key])) {
+        p[key] = [p[key]]
+      }
+    }
+
+    // safeguard against resetting a previously defined
+    // array by accidentally forgetting the brackets
+    if (Array.isArray(p[key])) {
+      p[key].push(value)
+    } else {
+      p[key] = value
+    }
+  }
+
+  // {a:{y:1},"a.b":{x:2}} --> {a:{y:1,b:{x:2}}}
+  // use a filter to return the keys that have to be deleted.
+  const remove = []
+  for (const k of Object.keys(out)) {
+    if (!hasOwnProperty.call(out, k) ||
+        typeof out[k] !== 'object' ||
+        Array.isArray(out[k])) {
+      continue
+    }
+
+    // see if the parent section is also an object.
+    // if so, add it to that, and mark this one for deletion
+    const parts = dotSplit(k)
+    p = out
+    const l = parts.pop()
+    const nl = l.replace(/\\\./g, '.')
+    for (const part of parts) {
+      if (part === '__proto__') {
+        continue
+      }
+      if (!hasOwnProperty.call(p, part) || typeof p[part] !== 'object') {
+        p[part] = Object.create(null)
+      }
+      p = p[part]
+    }
+    if (p === out && nl === l) {
+      continue
+    }
+
+    p[nl] = out[k]
+    remove.push(k)
+  }
+  for (const del of remove) {
+    delete out[del]
+  }
+
+  return out
+}
+
+const isQuoted = val => {
+  return (val.startsWith('"') && val.endsWith('"')) ||
+    (val.startsWith("'") && val.endsWith("'"))
+}
+
+const safe = val => {
+  if (
+    typeof val !== 'string' ||
+    val.match(/[=\r\n]/) ||
+    val.match(/^\[/) ||
+    (val.length > 1 && isQuoted(val)) ||
+    val !== val.trim()
+  ) {
+    return JSON.stringify(val)
+  }
+  return val.split(';').join('\\;').split('#').join('\\#')
+}
+
+const unsafe = (val, doUnesc) => {
+  val = (val || '').trim()
+  if (isQuoted(val)) {
+    // remove the single quotes before calling JSON.parse
+    if (val.charAt(0) === "'") {
+      val = val.slice(1, -1)
+    }
+    try {
+      val = JSON.parse(val)
+    } catch (_) {}
+  } else {
+    // walk the val to find the first not-escaped ; character
+    let esc = false
+    let unesc = ''
+    for (let i = 0, l = val.length; i < l; i++) {
+      const c = val.charAt(i)
+      if (esc) {
+        if ('\\;#'.indexOf(c) !== -1) {
+          unesc += c
+        } else {
+          unesc += '\\' + c
+        }
+
+        esc = false
+      } else if (';#'.indexOf(c) !== -1) {
+        break
+      } else if (c === '\\') {
+        esc = true
+      } else {
+        unesc += c
+      }
+    }
+    if (esc) {
+      unesc += '\\'
+    }
+
+    return unesc.trim()
+  }
+  return val
+}
+
+module.exports = {
+  parse: decode,
+  decode,
+  stringify: encode,
+  encode,
+  safe,
+  unsafe,
+}
+
+
+/***/ }),
+
 /***/ 4294:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -10244,44 +10479,23 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1017);
 /* harmony import */ var fs_promises__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3292);
 /* harmony import */ var yaml__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(4083);
+/* harmony import */ var ini__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2291);
+
 
 
 
 
 
 const cwd = process.cwd()
-const workflowFilePath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './.github/workflows/publish-new.yml')
-const packagesPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './js/packages')
+const workflowFilePath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './.github/workflows/publish.yml')
+const jsPackagesPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './js/packages')
+const pyPackagesPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(cwd, './python')
 
 const workflow = yaml__WEBPACK_IMPORTED_MODULE_3__.parseDocument(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile(workflowFilePath, {encoding: 'utf8'}))
 
-const packageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readdir(packagesPath)
-const packages = await packageDirs.reduce(async (packages, packageDir) => {
-  const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(packagesPath, packageDir, 'package.json')
-  if (await fs_promises__WEBPACK_IMPORTED_MODULE_2__.stat(packageManifestPath).catch(() => false)) {
-    const manifest = JSON.parse(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile(packageManifestPath, {encoding: 'utf8'}))
-    manifest.aliases ??= [packageDir]
-    const [jobName] = manifest.aliases
-    if (workflow.hasIn(['jobs', jobName])) {
-      packages = await packages
-      packages[manifest.name] = manifest
-    } else {
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`There is no job for package "${manifest.name}"`)
-    }
-  }
-  return packages
-}, Promise.resolve({}))
+const dependencies = await getDependencies()
 
-const dependencies = Object.values(packages).reduce((dependencies, manifest) => {
-  const [jobName] = manifest.aliases
-  dependencies[jobName] = {
-    deps: Object.keys(manifest.dependencies ?? {}).reduce((deps, depName) => packages[depName] ? deps.concat(packages[depName].aliases[0]) : deps, []),
-    devDeps: Object.keys(manifest.devDependencies ?? {}).reduce((deps, depName) => packages[depName] ? deps.concat(packages[depName].aliases[0]) : deps, []),
-  }
-  return dependencies
-}, {})
-
-for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
+for (const [jobName, {deps = [], devDeps = []}] of Object.entries(dependencies)) {
   const needs = [
     'setup',
     ...deps,
@@ -10291,6 +10505,75 @@ for (const [jobName, {deps, devDeps}] of Object.entries(dependencies)) {
 }
 
 await fs_promises__WEBPACK_IMPORTED_MODULE_2__.writeFile(workflowFilePath, yaml__WEBPACK_IMPORTED_MODULE_3__.stringify(workflow, {minContentWidth: 0, lineWidth: 0}))
+
+async function getDependencies() {
+  const jsPackageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readdir(jsPackagesPath)
+  const jsPackages = await jsPackageDirs.reduce(async (packages, packageDir) => {
+    const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(jsPackagesPath, packageDir, 'package.json')
+    if (!(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.stat(packageManifestPath).catch(() => false))) return packages
+
+    const manifest = JSON.parse(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile(packageManifestPath, {encoding: 'utf8'}))
+    const [jobName] = manifest.aliases ?? [packageDir]
+    if (workflow.hasIn(['jobs', jobName])) {
+      packages = await packages
+      packages[manifest.name] = {jobName, manifest}
+    } else {
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`There is no job for js package "${manifest.name}"`)
+    }
+    return packages
+  }, Promise.resolve({}))
+  const jsDependencies = Object.values(jsPackages).reduce((dependencies, {jobName, manifest}) => {
+    dependencies[jobName] = {
+      deps: Object.keys(manifest.dependencies ?? {}).reduce((deps, depName) => jsPackages[depName] ? deps.concat(jsPackages[depName].jobName) : deps, []),
+      devDeps: Object.keys(manifest.devDependencies ?? {}).reduce((deps, depName) => jsPackages[depName] ? deps.concat(jsPackages[depName].jobName) : deps, []),
+    }
+    return dependencies
+  }, {})
+
+  const pyPackageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readdir(pyPackagesPath)
+  const pyPackages = await pyPackageDirs.reduce(async (packages, packageDir) => {
+    const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_1__.resolve(pyPackagesPath, packageDir, 'setup.cfg')
+    if (!(await fs_promises__WEBPACK_IMPORTED_MODULE_2__.stat(packageManifestPath).catch(() => false))) return packages
+
+    const {iniString} = await fs_promises__WEBPACK_IMPORTED_MODULE_2__.readFile(packageManifestPath, {encoding: 'utf8'}).then(iniString => {
+      return iniString.split(/[\n\r]+/).reduce(({lastField, iniString}, line) => {
+        const indent = line.slice(0, Array.from(line).findIndex(char => char !== ' ' && char !== '\t'))
+        if (!lastField || indent.length <= lastField.indent.length) {
+          const [key] = line.split(/\s?=/, 1)
+          lastField = {key, indent}
+          iniString += line + '\n'
+        } else {
+          iniString += lastField.indent + `${lastField.key}[]=` + line.trim() + '\n'
+        }
+        return {lastField, iniString}
+      }, {lastField: null, iniString: ''})
+    })
+    const manifest = ini__WEBPACK_IMPORTED_MODULE_4__.parse(iniString)
+    const packageName = manifest.metadata.name.replace('_', '-')
+    const alias = packageName.replace('eyes-', '')
+    const jobName = `python-${alias}`
+    if (workflow.hasIn(['jobs', jobName])) {
+      packages = await packages
+      packages[packageName] = {jobName, manifest}
+    } else {
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__.warning(`There is no job for python package "${manifest.metadata.name}"`)
+    }
+    return packages
+  }, Promise.resolve({}))
+  const pyDependencies = Object.values(pyPackages).reduce((dependencies, {jobName, manifest}) => {
+    dependencies[jobName] = {
+      deps: (manifest.options.install_requires ?? []).reduce((deps, depString) => {
+        let [depName] = depString.split(/[<=>]/, 1)
+        depName = depName.replace('_', '-')
+        return pyPackages[depName] ? deps.concat(pyPackages[depName].jobName) : deps
+      }, []),
+    }
+    return dependencies
+  }, {})
+  pyDependencies['python-universal'].deps.push('universal')
+
+  return {...jsDependencies, ...pyDependencies}
+}
 __webpack_handle_async_dependencies__();
 }, 1);
 

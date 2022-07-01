@@ -4420,6 +4420,241 @@ exports.Deprecation = Deprecation;
 
 /***/ }),
 
+/***/ 45:
+/***/ ((module) => {
+
+const { hasOwnProperty } = Object.prototype
+
+/* istanbul ignore next */
+const eol = typeof process !== 'undefined' &&
+  process.platform === 'win32' ? '\r\n' : '\n'
+
+const encode = (obj, opt) => {
+  const children = []
+  let out = ''
+
+  if (typeof opt === 'string') {
+    opt = {
+      section: opt,
+      whitespace: false,
+    }
+  } else {
+    opt = opt || Object.create(null)
+    opt.whitespace = opt.whitespace === true
+  }
+
+  const separator = opt.whitespace ? ' = ' : '='
+
+  for (const k of Object.keys(obj)) {
+    const val = obj[k]
+    if (val && Array.isArray(val)) {
+      for (const item of val) {
+        out += safe(k + '[]') + separator + safe(item) + eol
+      }
+    } else if (val && typeof val === 'object') {
+      children.push(k)
+    } else {
+      out += safe(k) + separator + safe(val) + eol
+    }
+  }
+
+  if (opt.section && out.length) {
+    out = '[' + safe(opt.section) + ']' + eol + out
+  }
+
+  for (const k of children) {
+    const nk = dotSplit(k).join('\\.')
+    const section = (opt.section ? opt.section + '.' : '') + nk
+    const { whitespace } = opt
+    const child = encode(obj[k], {
+      section,
+      whitespace,
+    })
+    if (out.length && child.length) {
+      out += eol
+    }
+
+    out += child
+  }
+
+  return out
+}
+
+const dotSplit = str =>
+  str.replace(/\1/g, '\u0002LITERAL\\1LITERAL\u0002')
+    .replace(/\\\./g, '\u0001')
+    .split(/\./)
+    .map(part =>
+      part.replace(/\1/g, '\\.')
+        .replace(/\2LITERAL\\1LITERAL\2/g, '\u0001'))
+
+const decode = str => {
+  const out = Object.create(null)
+  let p = out
+  let section = null
+  //          section     |key      = value
+  const re = /^\[([^\]]*)\]$|^([^=]+)(=(.*))?$/i
+  const lines = str.split(/[\r\n]+/g)
+
+  for (const line of lines) {
+    if (!line || line.match(/^\s*[;#]/)) {
+      continue
+    }
+    const match = line.match(re)
+    if (!match) {
+      continue
+    }
+    if (match[1] !== undefined) {
+      section = unsafe(match[1])
+      if (section === '__proto__') {
+        // not allowed
+        // keep parsing the section, but don't attach it.
+        p = Object.create(null)
+        continue
+      }
+      p = out[section] = out[section] || Object.create(null)
+      continue
+    }
+    const keyRaw = unsafe(match[2])
+    const isArray = keyRaw.length > 2 && keyRaw.slice(-2) === '[]'
+    const key = isArray ? keyRaw.slice(0, -2) : keyRaw
+    if (key === '__proto__') {
+      continue
+    }
+    const valueRaw = match[3] ? unsafe(match[4]) : true
+    const value = valueRaw === 'true' ||
+      valueRaw === 'false' ||
+      valueRaw === 'null' ? JSON.parse(valueRaw)
+      : valueRaw
+
+    // Convert keys with '[]' suffix to an array
+    if (isArray) {
+      if (!hasOwnProperty.call(p, key)) {
+        p[key] = []
+      } else if (!Array.isArray(p[key])) {
+        p[key] = [p[key]]
+      }
+    }
+
+    // safeguard against resetting a previously defined
+    // array by accidentally forgetting the brackets
+    if (Array.isArray(p[key])) {
+      p[key].push(value)
+    } else {
+      p[key] = value
+    }
+  }
+
+  // {a:{y:1},"a.b":{x:2}} --> {a:{y:1,b:{x:2}}}
+  // use a filter to return the keys that have to be deleted.
+  const remove = []
+  for (const k of Object.keys(out)) {
+    if (!hasOwnProperty.call(out, k) ||
+        typeof out[k] !== 'object' ||
+        Array.isArray(out[k])) {
+      continue
+    }
+
+    // see if the parent section is also an object.
+    // if so, add it to that, and mark this one for deletion
+    const parts = dotSplit(k)
+    p = out
+    const l = parts.pop()
+    const nl = l.replace(/\\\./g, '.')
+    for (const part of parts) {
+      if (part === '__proto__') {
+        continue
+      }
+      if (!hasOwnProperty.call(p, part) || typeof p[part] !== 'object') {
+        p[part] = Object.create(null)
+      }
+      p = p[part]
+    }
+    if (p === out && nl === l) {
+      continue
+    }
+
+    p[nl] = out[k]
+    remove.push(k)
+  }
+  for (const del of remove) {
+    delete out[del]
+  }
+
+  return out
+}
+
+const isQuoted = val => {
+  return (val.startsWith('"') && val.endsWith('"')) ||
+    (val.startsWith("'") && val.endsWith("'"))
+}
+
+const safe = val => {
+  if (
+    typeof val !== 'string' ||
+    val.match(/[=\r\n]/) ||
+    val.match(/^\[/) ||
+    (val.length > 1 && isQuoted(val)) ||
+    val !== val.trim()
+  ) {
+    return JSON.stringify(val)
+  }
+  return val.split(';').join('\\;').split('#').join('\\#')
+}
+
+const unsafe = (val, doUnesc) => {
+  val = (val || '').trim()
+  if (isQuoted(val)) {
+    // remove the single quotes before calling JSON.parse
+    if (val.charAt(0) === "'") {
+      val = val.slice(1, -1)
+    }
+    try {
+      val = JSON.parse(val)
+    } catch (_) {}
+  } else {
+    // walk the val to find the first not-escaped ; character
+    let esc = false
+    let unesc = ''
+    for (let i = 0, l = val.length; i < l; i++) {
+      const c = val.charAt(i)
+      if (esc) {
+        if ('\\;#'.indexOf(c) !== -1) {
+          unesc += c
+        } else {
+          unesc += '\\' + c
+        }
+
+        esc = false
+      } else if (';#'.indexOf(c) !== -1) {
+        break
+      } else if (c === '\\') {
+        esc = true
+      } else {
+        unesc += c
+      }
+    }
+    if (esc) {
+      unesc += '\\'
+    }
+
+    return unesc.trim()
+  }
+  return val
+}
+
+module.exports = {
+  parse: decode,
+  decode,
+  stringify: encode,
+  encode,
+  safe,
+  unsafe,
+}
+
+
+/***/ }),
+
 /***/ 3287:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -8846,6 +9081,8 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1017);
 /* harmony import */ var fs_promises__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(3292);
 /* harmony import */ var child_process__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(2081);
+/* harmony import */ var ini__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(45);
+
 
 
 
@@ -8870,8 +9107,6 @@ const OS = {
   windows: 'windows-2022',
 }
 
-const packagesPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(process.cwd(), './js/packages')
-
 const allowVariations = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('allow-variations')
 const allowCascading = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('allow-cascading')
 const onlyChanged = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('only-changed')
@@ -8886,30 +9121,7 @@ if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName === 'workflow
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.notice(`Packages with changes: "${input}"`)
 }
 
-
-const packageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readdir(packagesPath)
-const packages = await packageDirs.reduce(async (packages, packageDir) => {
-  const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(packagesPath, packageDir, 'package.json')
-  if (await fs_promises__WEBPACK_IMPORTED_MODULE_3__.stat(packageManifestPath).catch(() => false)) {
-    const manifest = JSON.parse(await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readFile(packageManifestPath, {encoding: 'utf8'}))
-    if (!TOOL_PACKAGES.includes(manifest.name)) {
-      packages = await packages
-      packages[manifest.name] = {
-        name: manifest.name,
-        jobName: manifest.aliases?.[0] ?? packageDir,
-        dirname: packageDir,
-        aliases: manifest.aliases,
-        framework: Object.keys(manifest.peerDependencies ?? {})[0],
-        dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
-      }
-    }
-  }
-  return packages
-}, Promise.resolve({}))
-
-Object.values(packages).forEach(packageInfo => {
-  packageInfo.dependencies = packageInfo.dependencies.filter(depName => packages[depName])
-})
+const packages = await getPackages()
 
 let jobs = createJobs(input)
 
@@ -8926,9 +9138,86 @@ if (onlyChanged) {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Filtered jobs: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 }
 
-console.log(jobs)
 _actions_core__WEBPACK_IMPORTED_MODULE_0__.notice(`Jobs created: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('packages', allowVariations ? Object.values(jobs) : jobs)
+
+async function getPackages() {
+  const jsPackagesPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(process.cwd(), './js/packages')
+  const jsPackageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readdir(jsPackagesPath)
+  const jsPackages = await jsPackageDirs.reduce(async (packages, packageDir) => {
+    const packagePath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(jsPackagesPath, packageDir)
+    const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(packagePath, 'package.json')
+    if (!(await fs_promises__WEBPACK_IMPORTED_MODULE_3__.stat(packageManifestPath).catch(() => false))) return packages
+
+    const manifest = JSON.parse(await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readFile(packageManifestPath, {encoding: 'utf8'}))
+    if (TOOL_PACKAGES.includes(manifest.name)) return packages
+    packages = await packages
+    packages[manifest.name] = {
+      name: manifest.name,
+      jobName: manifest.aliases?.[0] ?? packageDir,
+      aliases: manifest.aliases,
+      dirname: packageDir,
+      path: packagePath,
+      tag: `${manifest.name}@`,
+      framework: Object.keys(manifest.peerDependencies ?? {})[0],
+      dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
+    }
+    return packages
+  }, Promise.resolve({}))
+
+  Object.values(jsPackages).forEach(packageInfo => {
+    packageInfo.dependencies = packageInfo.dependencies.filter(depName => jsPackages[depName])
+  })
+
+  const pyPackagesPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(process.cwd(), './python')
+  const pyPackageDirs = await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readdir(pyPackagesPath)
+  const pyPackages = await pyPackageDirs.reduce(async (packages, packageDir) => {
+    const packagePath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(pyPackagesPath, packageDir)
+    const packageManifestPath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(packagePath, 'setup.cfg')
+    if (!(await fs_promises__WEBPACK_IMPORTED_MODULE_3__.stat(packageManifestPath).catch(() => false))) return packages
+
+    const {iniString} = await fs_promises__WEBPACK_IMPORTED_MODULE_3__.readFile(packageManifestPath, {encoding: 'utf8'}).then(iniString => {
+      return iniString.split(/[\n\r]+/).reduce(({lastField, iniString}, line) => {
+        const indent = line.slice(0, Array.from(line).findIndex(char => char !== ' ' && char !== '\t'))
+        if (!lastField || indent.length <= lastField.indent.length) {
+          const [key] = line.split(/\s?=/, 1)
+          lastField = {key, indent}
+          iniString += line + '\n'
+        } else {
+          iniString += lastField.indent + `${lastField.key}[]=` + line.trim() + '\n'
+        }
+        return {lastField, iniString}
+      }, {lastField: null, iniString: ''})
+    })
+    const manifest = ini__WEBPACK_IMPORTED_MODULE_5__.parse(iniString)
+    const packageName = manifest.metadata.name.replace('_', '-')
+
+    packages = await packages
+    const alias = packageName.replace('eyes-', '')
+    packages[packageName] = {
+      name: packageName,
+      jobName: `python-${alias}`,
+      aliases: [`py-${alias}`, `python-${alias}`],
+      dirname: packageDir,
+      path: packagePath,
+      tag: `@applitools/python/${packageDir}@`,
+      // framework: null,
+      dependencies: manifest.options.install_requires?.map(depString => {
+        const [depName] = depString.split(/[<=>]/, 1)
+        return depName
+      }) ?? []
+    }
+    return packages
+  }, Promise.resolve({}))
+
+  Object.values(pyPackages).forEach(packageInfo => {
+    packageInfo.dependencies = packageInfo.dependencies.filter(depName => pyPackages[depName])
+  })
+
+  pyPackages['eyes-universal'].dependencies.push('@applitools/eyes-universal')
+
+  return {...pyPackages, ...jsPackages}
+}
 
 function createJobs(input) {
   return input.split(/[\s,]+(?=(?:[^()]*\([^())]*\))*[^()]*$)/).reduce((jobs, input) => {
@@ -8967,6 +9256,8 @@ function createJobs(input) {
       packageName: packageInfo.name,
       name: packageInfo.jobName,
       dirname: packageInfo.dirname,
+      path: packageInfo.path,
+      tag: packageInfo.tag,
       version: releaseVersion,
       os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
@@ -8998,7 +9289,6 @@ function createDependencyJobs(jobs) {
         packageName: packages[dependencyName].name,
         name: packages[dependencyName].jobName,
         dirname: packages[dependencyName].dirname,
-        // version: defaultReleaseVersion,
       }
     }
   }
@@ -9030,28 +9320,29 @@ function filterInsignificantJobs(jobs) {
 function changedSinceLastTag(job) {
   let tag
   try {
-    tag = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf8'}).trim()
+    tag = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`git describe --tags --match "${job.tag}*" --abbrev=0`, {encoding: 'utf8'}).trim()
   } catch {}
 
   if (!tag) return true
 
-  const commits = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`git log ${tag}..HEAD --oneline -- ${path__WEBPACK_IMPORTED_MODULE_2__.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
+  const commits = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)(`git log ${tag}..HEAD --oneline -- ${job.path}`, {encoding: 'utf8'})
   return Boolean(commits)
 }
 
 function changedInCurrentBranch() {
   const changedFiles = (0,child_process__WEBPACK_IMPORTED_MODULE_4__.execSync)('git --no-pager diff --name-only origin/master', {encoding: 'utf8'})
-  const packageDirs = changedFiles.split('\n').reduce((packageDirs, filePath) => {
-    filePath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(process.cwd(), filePath)
-    if (filePath.startsWith(packagesPath)) {
-      const [packageDir] = path__WEBPACK_IMPORTED_MODULE_2__.relative(packagesPath, filePath).split('/', 1)
-      packageDirs.add(packageDir)
-    }
-    return packageDirs
+  const changedPackageNames = changedFiles.split('\n').reduce((changedPackageNames, changedFile) => {
+    const changedPackage = Object.values(packages).find(changedPackage => {
+      const changedFilePath = path__WEBPACK_IMPORTED_MODULE_2__.resolve(process.cwd(), changedFile)
+      return changedFilePath.startsWith(changedPackage.path)
+    })
+    if (changedPackage) changedPackageNames.add(changedPackage.jobName)
+    return changedPackageNames
   }, new Set())
-  const packageDirsArr = Array.from(packageDirs.values())
-  return packageDirsArr.map(packageDir => `${packageDir}(links:${packageDirsArr.join(',')})`).join(' ')
+  const packageNames = Array.from(changedPackageNames.values())
+  return packageNames.map(packageName => `${packageName}(links:${packageNames.join(',')})`).join(' ')
 }
+
 __webpack_handle_async_dependencies__();
 }, 1);
 

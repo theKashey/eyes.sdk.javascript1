@@ -81,7 +81,8 @@ async function getDependencies() {
   const pyDependencies = Object.values(pyPackages).reduce((dependencies, {jobName, manifest}) => {
     dependencies[jobName] = {
       deps: (manifest.options.install_requires ?? []).reduce((deps, depString) => {
-        const [depName] = depString.split(/[<=>]/, 1)
+        let [depName] = depString.split(/[<=>]/, 1)
+        depName = depName.replace('_', '-')
         return pyPackages[depName] ? deps.concat(pyPackages[depName].jobName) : deps
       }, []),
     }
