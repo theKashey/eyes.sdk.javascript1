@@ -548,11 +548,11 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      # - name: Run remote workflow
-      #   uses: ./.github/actions/run
-      #   with:
-      #     workflow: publish-universal.yml
-      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: py-publish.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).python-universal.version}}", "package": "${{fromJSON(needs.setup.outputs.packages).python-universal.dirname}}"}'
 
   # PYTHON
   python-selenium:
@@ -562,11 +562,11 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      # - name: Run remote workflow
-      #   uses: ./.github/actions/run
-      #   with:
-      #     workflow: publish-universal.yml
-      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: py-publish.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).python-selenium.version}}", "package": "${{fromJSON(needs.setup.outputs.packages).python-selenium.dirname}}"}'
   python-robotframework:
     needs: [ setup, python-selenium ]
     if: ${{fromJSON(needs.setup.outputs.packages).python-robotframework && !failure() && !cancelled()}}
@@ -574,8 +574,8 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      # - name: Run remote workflow
-      #   uses: ./.github/actions/run
-      #   with:
-      #     workflow: publish-universal.yml
-      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: py-publish.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).python-robotframework.version}}", "package": "${{fromJSON(needs.setup.outputs.packages).python-robotframework.dirname}}"}'
