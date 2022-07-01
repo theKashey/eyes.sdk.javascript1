@@ -40,7 +40,7 @@ env:
 jobs:
   setup:
     name: Setup
-    if: ${{github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[Security]') && !github.event.pull_request.draft}}
+    if: ${{github.event_name == 'workflow_dispatch' || (github.actor != 'dependabot' && !github.event.pull_request.draft)}}
     runs-on: ubuntu-latest
     outputs:
       packages: ${{steps.setup.outputs.packages}}
