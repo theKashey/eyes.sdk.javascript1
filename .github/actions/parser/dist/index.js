@@ -9112,6 +9112,8 @@ const allowCascading = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInpu
 const onlyChanged = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getBooleanInput('only-changed')
 const defaultReleaseVersion = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('release-version')
 
+const packages = await getPackages()
+
 let input
 if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName === 'workflow_dispatch') {
   input = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('packages', {required: true}) 
@@ -9120,8 +9122,6 @@ if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.eventName === 'workflow
   input = changedInCurrentBranch()
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.notice(`Packages with changes: "${input}"`)
 }
-
-const packages = await getPackages()
 
 let jobs = createJobs(input)
 
@@ -9289,6 +9289,8 @@ function createDependencyJobs(jobs) {
         packageName: packages[dependencyName].name,
         name: packages[dependencyName].jobName,
         dirname: packages[dependencyName].dirname,
+        path: packages[dependencyName].path,
+        tag: packages[dependencyName].tag,
       }
     }
   }

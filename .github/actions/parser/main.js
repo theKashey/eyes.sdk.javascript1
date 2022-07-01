@@ -28,6 +28,8 @@ const allowCascading = core.getBooleanInput('allow-cascading')
 const onlyChanged = core.getBooleanInput('only-changed')
 const defaultReleaseVersion = core.getInput('release-version')
 
+const packages = await getPackages()
+
 let input
 if (github.context.eventName === 'workflow_dispatch') {
   input = core.getInput('packages', {required: true}) 
@@ -36,8 +38,6 @@ if (github.context.eventName === 'workflow_dispatch') {
   input = changedInCurrentBranch()
   core.notice(`Packages with changes: "${input}"`)
 }
-
-const packages = await getPackages()
 
 let jobs = createJobs(input)
 
@@ -205,6 +205,8 @@ function createDependencyJobs(jobs) {
         packageName: packages[dependencyName].name,
         name: packages[dependencyName].jobName,
         dirname: packages[dependencyName].dirname,
+        path: packages[dependencyName].path,
+        tag: packages[dependencyName].tag,
       }
     }
   }
