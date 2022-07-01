@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 import * as path from 'path'
 import * as fs from 'fs/promises'
 import {execSync} from 'child_process'
+import INI from 'ini'
 
 const TOOL_PACKAGES = [
   '@applitools/bongo',
@@ -22,8 +23,6 @@ const OS = {
   windows: 'windows-2022',
 }
 
-const packagesPath = path.resolve(process.cwd(), './js/packages')
-
 const allowVariations = core.getBooleanInput('allow-variations')
 const allowCascading = core.getBooleanInput('allow-cascading')
 const onlyChanged = core.getBooleanInput('only-changed')
@@ -38,30 +37,7 @@ if (github.context.eventName === 'workflow_dispatch') {
   core.notice(`Packages with changes: "${input}"`)
 }
 
-
-const packageDirs = await fs.readdir(packagesPath)
-const packages = await packageDirs.reduce(async (packages, packageDir) => {
-  const packageManifestPath = path.resolve(packagesPath, packageDir, 'package.json')
-  if (await fs.stat(packageManifestPath).catch(() => false)) {
-    const manifest = JSON.parse(await fs.readFile(packageManifestPath, {encoding: 'utf8'}))
-    if (!TOOL_PACKAGES.includes(manifest.name)) {
-      packages = await packages
-      packages[manifest.name] = {
-        name: manifest.name,
-        jobName: manifest.aliases?.[0] ?? packageDir,
-        dirname: packageDir,
-        aliases: manifest.aliases,
-        framework: Object.keys(manifest.peerDependencies ?? {})[0],
-        dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
-      }
-    }
-  }
-  return packages
-}, Promise.resolve({}))
-
-Object.values(packages).forEach(packageInfo => {
-  packageInfo.dependencies = packageInfo.dependencies.filter(depName => packages[depName])
-})
+const packages = await getPackages()
 
 let jobs = createJobs(input)
 
@@ -78,9 +54,86 @@ if (onlyChanged) {
   core.info(`Filtered jobs: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 }
 
-console.log(jobs)
 core.notice(`Jobs created: "${Object.values(jobs).map(job => job.displayName).join(', ')}"`)
 core.setOutput('packages', allowVariations ? Object.values(jobs) : jobs)
+
+async function getPackages() {
+  const jsPackagesPath = path.resolve(process.cwd(), './js/packages')
+  const jsPackageDirs = await fs.readdir(jsPackagesPath)
+  const jsPackages = await jsPackageDirs.reduce(async (packages, packageDir) => {
+    const packagePath = path.resolve(jsPackagesPath, packageDir)
+    const packageManifestPath = path.resolve(packagePath, 'package.json')
+    if (!(await fs.stat(packageManifestPath).catch(() => false))) return packages
+
+    const manifest = JSON.parse(await fs.readFile(packageManifestPath, {encoding: 'utf8'}))
+    if (TOOL_PACKAGES.includes(manifest.name)) return packages
+    packages = await packages
+    packages[manifest.name] = {
+      name: manifest.name,
+      jobName: manifest.aliases?.[0] ?? packageDir,
+      aliases: manifest.aliases,
+      dirname: packageDir,
+      path: packagePath,
+      tag: `${manifest.name}@`,
+      framework: Object.keys(manifest.peerDependencies ?? {})[0],
+      dependencies: [...Object.keys(manifest.dependencies ?? {}), ...Object.keys(manifest.devDependencies ?? {})]
+    }
+    return packages
+  }, Promise.resolve({}))
+
+  Object.values(jsPackages).forEach(packageInfo => {
+    packageInfo.dependencies = packageInfo.dependencies.filter(depName => jsPackages[depName])
+  })
+
+  const pyPackagesPath = path.resolve(process.cwd(), './python')
+  const pyPackageDirs = await fs.readdir(pyPackagesPath)
+  const pyPackages = await pyPackageDirs.reduce(async (packages, packageDir) => {
+    const packagePath = path.resolve(pyPackagesPath, packageDir)
+    const packageManifestPath = path.resolve(packagePath, 'setup.cfg')
+    if (!(await fs.stat(packageManifestPath).catch(() => false))) return packages
+
+    const {iniString} = await fs.readFile(packageManifestPath, {encoding: 'utf8'}).then(iniString => {
+      return iniString.split(/[\n\r]+/).reduce(({lastField, iniString}, line) => {
+        const indent = line.slice(0, Array.from(line).findIndex(char => char !== ' ' && char !== '\t'))
+        if (!lastField || indent.length <= lastField.indent.length) {
+          const [key] = line.split(/\s?=/, 1)
+          lastField = {key, indent}
+          iniString += line + '\n'
+        } else {
+          iniString += lastField.indent + `${lastField.key}[]=` + line.trim() + '\n'
+        }
+        return {lastField, iniString}
+      }, {lastField: null, iniString: ''})
+    })
+    const manifest = INI.parse(iniString)
+    const packageName = manifest.metadata.name.replace('_', '-')
+
+    packages = await packages
+    const alias = packageName.replace('eyes-', '')
+    packages[packageName] = {
+      name: packageName,
+      jobName: `python-${alias}`,
+      aliases: [`py-${alias}`, `python-${alias}`],
+      dirname: packageDir,
+      path: packagePath,
+      tag: `@applitools/python/${packageDir}@`,
+      // framework: null,
+      dependencies: manifest.options.install_requires?.map(depString => {
+        const [depName] = depString.split(/[<=>]/, 1)
+        return depName
+      }) ?? []
+    }
+    return packages
+  }, Promise.resolve({}))
+
+  Object.values(pyPackages).forEach(packageInfo => {
+    packageInfo.dependencies = packageInfo.dependencies.filter(depName => pyPackages[depName])
+  })
+
+  pyPackages['eyes-universal'].dependencies.push('@applitools/eyes-universal')
+
+  return {...pyPackages, ...jsPackages}
+}
 
 function createJobs(input) {
   return input.split(/[\s,]+(?=(?:[^()]*\([^())]*\))*[^()]*$)/).reduce((jobs, input) => {
@@ -119,6 +172,8 @@ function createJobs(input) {
       packageName: packageInfo.name,
       name: packageInfo.jobName,
       dirname: packageInfo.dirname,
+      path: packageInfo.path,
+      tag: packageInfo.tag,
       version: releaseVersion,
       os: OS[jobOS ?? 'linux'],
       node: nodeVersion ?? 'lts/*',
@@ -150,7 +205,6 @@ function createDependencyJobs(jobs) {
         packageName: packages[dependencyName].name,
         name: packages[dependencyName].jobName,
         dirname: packages[dependencyName].dirname,
-        // version: defaultReleaseVersion,
       }
     }
   }
@@ -182,25 +236,25 @@ function filterInsignificantJobs(jobs) {
 function changedSinceLastTag(job) {
   let tag
   try {
-    tag = execSync(`git describe --tags --match "${job.packageName}@*" --abbrev=0`, {encoding: 'utf8'}).trim()
+    tag = execSync(`git describe --tags --match "${job.tag}*" --abbrev=0`, {encoding: 'utf8'}).trim()
   } catch {}
 
   if (!tag) return true
 
-  const commits = execSync(`git log ${tag}..HEAD --oneline -- ${path.resolve(packagesPath, job.dirname)}`, {encoding: 'utf8'})
+  const commits = execSync(`git log ${tag}..HEAD --oneline -- ${job.path}`, {encoding: 'utf8'})
   return Boolean(commits)
 }
 
 function changedInCurrentBranch() {
   const changedFiles = execSync('git --no-pager diff --name-only origin/master', {encoding: 'utf8'})
-  const packageDirs = changedFiles.split('\n').reduce((packageDirs, filePath) => {
-    filePath = path.resolve(process.cwd(), filePath)
-    if (filePath.startsWith(packagesPath)) {
-      const [packageDir] = path.relative(packagesPath, filePath).split('/', 1)
-      packageDirs.add(packageDir)
-    }
-    return packageDirs
+  const changedPackageNames = changedFiles.split('\n').reduce((changedPackageNames, changedFile) => {
+    const changedPackage = Object.values(packages).find(changedPackage => {
+      const changedFilePath = path.resolve(process.cwd(), changedFile)
+      return changedFilePath.startsWith(changedPackage.path)
+    })
+    if (changedPackage) changedPackageNames.add(changedPackage.jobName)
+    return changedPackageNames
   }, new Set())
-  const packageDirsArr = Array.from(packageDirs.values())
-  return packageDirsArr.map(packageDir => `${packageDir}(links:${packageDirsArr.join(',')})`).join(' ')
+  const packageNames = Array.from(changedPackageNames.values())
+  return packageNames.map(packageName => `${packageName}(links:${packageNames.join(',')})`).join(' ')
 }

@@ -81,7 +81,7 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          working-directory: ./js/packages/${{matrix.dirname}}
+          working-directory: ${{matrix.path}}
           test-type: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.test-type || 'sanity'}}
           build-type: ${{github.event.inputs.build-type}}
           setup-type: ${{github.event.inputs.setup-type}}
@@ -100,5 +100,5 @@ jobs:
           name: coverage-tests-report-${{matrix.name}}
           retention-days: 2
           path: |
-            ./js/packages/${{matrix.dirname}}/coverage-tests-metadata.json
-            ./js/packages/${{matrix.dirname}}/coverage-test-report.xml
+            ${{matrix.path))/coverage-tests-metadata.json
+            ${{matrix.path))/coverage-test-report.xml

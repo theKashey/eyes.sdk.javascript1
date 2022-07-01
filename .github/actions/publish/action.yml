@@ -26,7 +26,6 @@ runs:
       working-directory: ${{inputs.working-directory}}
       run: |
         echo "::group::Prepare package"
-        if [ ! -z "${{inputs.dirname}}" ]; then cd ${{github.workspace}}/${{inputs.dirname}}; fi
         PACKAGE_NAME="$(node -e "console.log(require('./package.json').name)")"
         echo "::endgroup::"
 

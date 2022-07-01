@@ -134,6 +134,34 @@ jobs:
           workflow: publish-driver.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).driver.version}}"}'
 
+  # TESTING BASE
+  test-utils:
+    needs: [ setup ]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-utils && !failure() && !cancelled()}}
+    name: test-utils
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-test-utils.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-utils.version}}"}'
+  test-server:
+    needs: [ setup, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
+    name: test-server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-test-server.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-server.version}}"}'
+
   # CORE
   core:
     needs:
@@ -196,6 +224,7 @@ jobs:
         logger,
         utils,
         ufg-client,
+        test-server,
         test-utils,
         types
       ]
@@ -278,7 +307,7 @@ jobs:
           workflow: publish-spec-webdriverio.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.version}}"}'
 
-  # SDKS
+  # JS SDKS
   playwright:
     needs:
       [
@@ -342,6 +371,19 @@ jobs:
         with:
           workflow: publish-webdriverio.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio.version}}"}'
+  webdriverio-service:
+    needs: [ setup, webdriverio, test-utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service && !failure() && !cancelled()}}
+    name: webdriverio-service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-webdriverio-service.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio-service.version}}"}'
   selenium:
     needs:
       [
@@ -498,45 +540,42 @@ jobs:
           workflow: publish-storybook.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).storybook.version}}"}'
 
-  # SDK WRAPPERS
-  webdriverio-service:
-    needs: [ setup, webdriverio, test-utils ]
-    if: ${{fromJSON(needs.setup.outputs.packages).webdriverio-service && !failure() && !cancelled()}}
-    name: webdriverio-service
+  # PYTHON BINDING
+  python-universal:
+    needs: [ setup, universal ]
+    if: ${{fromJSON(needs.setup.outputs.packages).python-universal && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Run remote workflow
-        uses: ./.github/actions/run
-        with:
-          workflow: publish-webdriverio-service.yml
-          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio-service.version}}"}'
+      # - name: Run remote workflow
+      #   uses: ./.github/actions/run
+      #   with:
+      #     workflow: publish-universal.yml
+      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
 
-  # TESTING BASE
-  test-utils:
-    needs: [ setup ]
-    if: ${{fromJSON(needs.setup.outputs.packages).test-utils && !failure() && !cancelled()}}
-    name: test-utils
+  # PYTHON
+  python-selenium:
+    needs: [ setup, py-eyes-universal ]
+    if: ${{fromJSON(needs.setup.outputs.packages).python-selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Run remote workflow
-        uses: ./.github/actions/run
-        with:
-          workflow: publish-test-utils.yml
-          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-utils.version}}"}'
-  test-server:
-    needs: [ setup, utils ]
-    if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
-    name: test-server
+      # - name: Run remote workflow
+      #   uses: ./.github/actions/run
+      #   with:
+      #     workflow: publish-universal.yml
+      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
+  python-robotframework:
+    needs: [ setup, py-eyes-selenium ]
+    if: ${{fromJSON(needs.setup.outputs.packages).python-selenium && !failure() && !cancelled()}}
     runs-on: ubuntu-latest
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
-      - name: Run remote workflow
-        uses: ./.github/actions/run
-        with:
-          workflow: publish-test-server.yml
-          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-server.version}}"}'
+      # - name: Run remote workflow
+      #   uses: ./.github/actions/run
+      #   with:
+      #     workflow: publish-universal.yml
+      #     inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
