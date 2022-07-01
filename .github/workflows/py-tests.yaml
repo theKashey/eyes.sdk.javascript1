@@ -1,6 +1,8 @@
 name: Build and test python packages
 on:
   pull_request:
+    paths:
+      - 'python/**'
   workflow_dispatch:
   workflow_call:
     inputs:
