@@ -507,14 +507,14 @@ describe('CheckSettingsUtils', () => {
             top: region1.y - 1,
             width: region1.width,
             height: region1.height,
-            regionId: 'css:custom selector (1)',
+            regionId: 'custom selector (1)',
           },
           {
             left: region2.x - 1,
             top: region2.y - 1,
             width: region2.width,
             height: region2.height,
-            regionId: 'css:custom selector (2)',
+            regionId: 'custom selector (2)',
           },
         ],
       )
@@ -543,7 +543,7 @@ describe('CheckSettingsUtils', () => {
             width: region1.width,
             height: region1.height,
             type: 'RegularText',
-            regionId: 'css:custom selector (1)',
+            regionId: 'custom selector (1)',
           },
           {
             left: region2.x - 1,
@@ -551,7 +551,7 @@ describe('CheckSettingsUtils', () => {
             width: region2.width,
             height: region2.height,
             type: 'RegularText',
-            regionId: 'css:custom selector (2)',
+            regionId: 'custom selector (2)',
           },
         ],
       )
@@ -578,7 +578,7 @@ describe('CheckSettingsUtils', () => {
             top: region1.y - 1,
             width: region1.width,
             height: region1.height,
-            regionId: 'css:custom selector',
+            regionId: 'custom selector',
           },
         ],
       )

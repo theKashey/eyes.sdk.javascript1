@@ -75,26 +75,26 @@ describe('codedRegions', () => {
         const regions = (await extractRegions(results, serverUrl))[0]
         if (name === 'classic') {
           expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
-          expect(regions.floating).to.be.deep.equal([floatingRegion(floating.rect, 4, 3, 2, 1, 'css:element1')])
+          expect(regions.floating).to.be.deep.equal([floatingRegion(floating.rect, 4, 3, 2, 1, 'element1')])
           expect(regions.accessibility).to.be.deep.equal([
-            accessibilityRegion(await driver.findElement(accessibility).then(element => element.rect), 'css:element2'),
+            accessibilityRegion(await driver.findElement(accessibility).then(element => element.rect), 'element2'),
           ])
           expect(regions.strict).to.be.deep.equal([strictRegion(strict)])
-          expect(regions.content).to.be.deep.equal([contentRegion(content.rect, 'css:element3')])
+          expect(regions.content).to.be.deep.equal([contentRegion(content.rect, 'element3')])
           expect(regions.layout).to.be.deep.equal([
-            layoutRegion(await driver.findElement(layout).then(element => element.rect), 'css:element4'),
+            layoutRegion(await driver.findElement(layout).then(element => element.rect), 'element4'),
           ])
         } else if (name === 'vg') {
           expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
           expect(regions.floating).to.be.deep.equal([
-            floatingRegion({x: 1, y: 2, width: 3, height: 4}, 4, 3, 2, 1, 'css:element1'),
+            floatingRegion({x: 1, y: 2, width: 3, height: 4}, 4, 3, 2, 1, 'element1'),
           ])
           expect(regions.accessibility).to.be.deep.equal([
-            accessibilityRegion({x: 1, y: 2, width: 3, height: 4}, 'css:element2'),
+            accessibilityRegion({x: 1, y: 2, width: 3, height: 4}, 'element2'),
           ])
           expect(regions.strict).to.be.deep.equal([strictRegion(strict)])
-          expect(regions.content).to.be.deep.equal([contentRegion({x: 1, y: 2, width: 3, height: 4}, 'css:element3')])
-          expect(regions.layout).to.be.deep.equal([layoutRegion({x: 1, y: 2, width: 3, height: 4}, 'css:element4')])
+          expect(regions.content).to.be.deep.equal([contentRegion({x: 1, y: 2, width: 3, height: 4}, 'element3')])
+          expect(regions.layout).to.be.deep.equal([layoutRegion({x: 1, y: 2, width: 3, height: 4}, 'element4')])
         }
       })
 
@@ -121,41 +121,38 @@ describe('codedRegions', () => {
         if (name === 'classic') {
           expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
           expect(regions.floating).to.be.deep.equal([
-            relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1, 'css:element1'), region.rect),
+            relatedRegion(floatingRegion(floating.rect, 4, 3, 2, 1, 'element1'), region.rect),
           ])
           expect(regions.accessibility).to.be.deep.equal([
             relatedRegion(
-              accessibilityRegion(
-                await driver.findElement(accessibility).then(element => element.rect),
-                'css:element2',
-              ),
+              accessibilityRegion(await driver.findElement(accessibility).then(element => element.rect), 'element2'),
               region.rect,
             ),
           ])
           expect(regions.strict).to.be.deep.equal([strictRegion(strict)])
           expect(regions.content).to.be.deep.equal([
-            relatedRegion(contentRegion(content.rect, 'css:element3'), region.rect),
+            relatedRegion(contentRegion(content.rect, 'element3'), region.rect),
           ])
           expect(regions.layout).to.be.deep.equal([
             relatedRegion(
-              layoutRegion(await driver.findElement(layout).then(element => element.rect), 'css:element4'),
+              layoutRegion(await driver.findElement(layout).then(element => element.rect), 'element4'),
               region.rect,
             ),
           ])
         } else if (name === 'vg') {
           expect(regions.ignore).to.be.deep.equal([ignoreRegion(ignore)])
           expect(regions.floating).to.be.deep.equal([
-            relatedRegion(floatingRegion({x: 2, y: 4, width: 3, height: 4}, 4, 3, 2, 1, 'css:element1'), region.rect),
+            relatedRegion(floatingRegion({x: 2, y: 4, width: 3, height: 4}, 4, 3, 2, 1, 'element1'), region.rect),
           ])
           expect(regions.accessibility).to.be.deep.equal([
-            relatedRegion(accessibilityRegion({x: 2, y: 4, width: 3, height: 4}, 'css:element2'), region.rect),
+            relatedRegion(accessibilityRegion({x: 2, y: 4, width: 3, height: 4}, 'element2'), region.rect),
           ])
           expect(regions.strict).to.be.deep.equal([strictRegion(strict)])
           expect(regions.content).to.be.deep.equal([
-            relatedRegion(contentRegion({x: 2, y: 4, width: 3, height: 4}, 'css:element3'), region.rect),
+            relatedRegion(contentRegion({x: 2, y: 4, width: 3, height: 4}, 'element3'), region.rect),
           ])
           expect(regions.layout).to.be.deep.equal([
-            relatedRegion(layoutRegion({x: 2, y: 4, width: 3, height: 4}, 'css:element4'), region.rect),
+            relatedRegion(layoutRegion({x: 2, y: 4, width: 3, height: 4}, 'element4'), region.rect),
           ])
         }
       })
@@ -183,19 +180,19 @@ describe('codedRegions', () => {
         const firstResult = regions[0]
         const secondResult = regions[1]
         expect(secondResult.ignore[0]).to.be.deep.equal(
-          getRectWithPadding(firstResult.ignore[0], ignoreAreaPadding, 'css:element3'),
+          getRectWithPadding(firstResult.ignore[0], ignoreAreaPadding, 'element3'),
         )
         expect(secondResult.layout[0]).to.be.deep.equal(
-          getRectWithPadding(firstResult.layout[0], layoutAreaPadding, 'css:element4'),
+          getRectWithPadding(firstResult.layout[0], layoutAreaPadding, 'element4'),
         )
         // TODO: fix this assertion for vg execution
         if (name === 'classic') {
           const layoutResultRect = layoutRegion(
             await driver.findElement(layout).then(element => element.rect),
-            'css:element4',
+            'element4',
           )
           expect(layoutResultRect).to.be.deep.equal(
-            getRectWithPadding(layoutOriginalRect, layoutAreaPadding, 'css:element4'),
+            getRectWithPadding(layoutOriginalRect, layoutAreaPadding, 'element4'),
           )
         }
       })

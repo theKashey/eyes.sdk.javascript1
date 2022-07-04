@@ -1,6 +1,7 @@
 function stringifySelector(element) {
-  if (element && element.commonSelector && element.commonSelector.type && element.commonSelector.selector)
-    return `${element.commonSelector.type}:${element.commonSelector.selector}`
+  if (element && element.commonSelector) {
+    return element.commonSelector.selector
+  }
 }
 
 module.exports = stringifySelector

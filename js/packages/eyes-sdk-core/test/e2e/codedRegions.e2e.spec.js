@@ -6,10 +6,9 @@ const assert = require('assert')
 /**
  * The intent behind this test is to verify several behaviors of coded regions with regionId's:
  * 1. Verify that supported selectors/framework locators are passed in `regionId`.
- * 2. Different locator strategies should have the prefix of the strategy name (e.g. `xpath=//div`)
- * 3. All types of regions should be supported (ignore, layout, content, strict). In order to have all the cases for all types of regions, there is an eyes.check command for each type of check, with many cases of regions, all of the same type.
- * 4. Selectors that target multiple elements should create regionId's with indexes
- * 5. The indexes for multiple elements should be sorted from top-left location in reading order (top-down, left to right)
+ * 2. All types of regions should be supported (ignore, layout, content, strict). In order to have all the cases for all types of regions, there is an eyes.check command for each type of check, with many cases of regions, all of the same type.
+ * 3. Selectors that target multiple elements should create regionId's with indexes
+ * 4. The indexes for multiple elements should be sorted from top-left location in reading order (top-down, left to right)
  *
  * In order to test #4, the test page contains rows with reverse order, so that visually the elements are sorted backwards.
  * This creates the situation that if sorting is not correct, the test will fail. See the page's source here:
@@ -64,51 +63,20 @@ describe('coded regions', () => {
       await eyes.check({settings: {fully: false, strictRegions: regions}})
 
       const expectedRegions = [
-        {
-          left: 30,
-          top: 30,
-          width: 100,
-          height: 100,
-          regionId: 'css:.region.one:nth-child(1)', // string
-        },
-        {
-          left: 160,
-          top: 30,
-          width: 100,
-          height: 100,
-          regionId: 'css:.region.one:nth-child(2)', // common selector with type:'css' (default type)
-        },
-        {
-          left: 290,
-          top: 30,
-          width: 100,
-          height: 100,
-          regionId: 'xpath://div[@class="region one"][3]', // common selector with type:'xpath
-        },
-        {
-          left: 420,
-          top: 30,
-          width: 100,
-          height: 100,
-          regionId: 'css:.region.one:nth-child(4)', // By.css
-        },
-        {
-          left: 550,
-          top: 30,
-          width: 100,
-          height: 100,
-          regionId: 'xpath://div[@class="region one"][5]', // By.xpath
-        },
+        {left: 30, top: 30, width: 100, height: 100, regionId: '.region.one:nth-child(1)'}, // string
+        {left: 160, top: 30, width: 100, height: 100, regionId: '.region.one:nth-child(2)'}, // common selector with default type
+        {left: 290, top: 30, width: 100, height: 100, regionId: '//div[@class="region one"][3]'}, // common selector with type xpath
+        {left: 420, top: 30, width: 100, height: 100, regionId: '.region.one:nth-child(4)'}, // By.css
+        {left: 550, top: 30, width: 100, height: 100, regionId: '//div[@class="region one"][5]'}, // By.xpath
         {left: 40, top: 170, width: 200, height: 200}, // By.js
         {left: 280, top: 170, width: 200, height: 200}, // WebElement
         {left: 280, top: 170, width: 200, height: 200, regionId: 'my-custom-id'}, // WebElement with custom id
-        {left: 520, top: 170, width: 200, height: 200, regionId: 'tag name:my-region'}, // By.tagName
+        {left: 520, top: 170, width: 200, height: 200, regionId: 'my-region'}, // By.tagName
         {left: 520, top: 170, width: 200, height: 200}, // RelativeBy
-
-        {left: 250, top: 420, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (1)'}, // string that targets multiple elements
-        {left: 550, top: 420, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (2)'}, // string that targets multiple elements
-        {left: 250, top: 520, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (3)'}, // string that targets multiple elements
-        {left: 550, top: 520, width: 50, height: 50, regionId: 'css:.region.three:nth-child(3n) (4)'}, // string that targets multiple elements
+        {left: 250, top: 420, width: 50, height: 50, regionId: '.region.three:nth-child(3n) (1)'}, // string that targets multiple elements
+        {left: 550, top: 420, width: 50, height: 50, regionId: '.region.three:nth-child(3n) (2)'}, // string that targets multiple elements
+        {left: 250, top: 520, width: 50, height: 50, regionId: '.region.three:nth-child(3n) (3)'}, // string that targets multiple elements
+        {left: 550, top: 520, width: 50, height: 50, regionId: '.region.three:nth-child(3n) (4)'}, // string that targets multiple elements
       ]
 
       const [testResults] = await eyes.close({throwErr: false})

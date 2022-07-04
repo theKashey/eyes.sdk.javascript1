@@ -54,7 +54,7 @@ async function runTest(driver, useVisualGrid) {
       top: 21,
       width: 201,
       height: 202,
-      regionId: 'css:element2 (1)',
+      regionId: 'element2 (1)',
     },
     {
       type: 'IgnoreContrast',
@@ -63,7 +63,7 @@ async function runTest(driver, useVisualGrid) {
       top: 31,
       width: 301,
       height: 302,
-      regionId: 'css:element2 (2)',
+      regionId: 'element2 (2)',
     },
   ]
   const expectedAccessibilitySettings = {

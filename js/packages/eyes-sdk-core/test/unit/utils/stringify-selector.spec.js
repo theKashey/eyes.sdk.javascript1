@@ -8,11 +8,8 @@ describe('stringify-selector', () => {
   })
   it('returns type prefix', () => {
     const fakeElement = {
-      commonSelector: {
-        selector: '.blah',
-        type: 'css',
-      },
+      commonSelector: {selector: '.blah', type: 'css'},
     }
-    assert.deepStrictEqual(stringifySelector(fakeElement), 'css:.blah')
+    assert.deepStrictEqual(stringifySelector(fakeElement), '.blah')
   })
 })
