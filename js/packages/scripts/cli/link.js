@@ -63,6 +63,7 @@ async function link({
   if (linkPackages) {
     linkPackages = Object.values(packages)
       .filter(pkg => linkPackages.some(linkName => [pkg.name, pkg.dirname, ...pkg.aliases].includes(linkName)))
+      .filter(pkg => targetPackage.name !== pkg.name)
       .filter(pkg => hasInDependencyTree(targetPackage, pkg.name))
   } else {
     linkPackages = getDependencyTree(targetPackage)
