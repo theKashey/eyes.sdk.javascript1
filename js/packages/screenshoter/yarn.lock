@@ -16,13 +16,13 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@^1.9.11":
-  version "1.9.11"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.11.tgz#ea486d646fe5c8aa7af738ac157909b961532bff"
-  integrity sha512-BMMtDF5QxvyCQbFI8K6/LTPwJ6XyIs9V59KRQ8Mhj2gpfUYD4fKXXV+Q8DeCGgTKCvs6ffwwEDpG+dCA/C+9FQ==
+"@applitools/driver@^1.9.12":
+  version "1.9.12"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.12.tgz#ffdbbe8027a405c193a26c08b7ed0dd463e87240"
+  integrity sha512-A4mgrLoWvpD9rRaCpC9h2QcG46uKndIA9OA8F6bhmLZYQ8qENrKJIzdT9JyW1JearX3+EnXgHMLrWmab2hxXFA==
   dependencies:
     "@applitools/logger" "1.1.14"
-    "@applitools/snippets" "2.4.3"
+    "@applitools/snippets" "2.4.4"
     "@applitools/types" "1.5.6"
     "@applitools/utils" "1.3.10"
 
@@ -43,11 +43,6 @@
     chalk "3.0.0"
     cli-table3 "0.6.0"
     yargs "15.3.1"
-
-"@applitools/snippets@2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.3.tgz#4f214e637c65da2137513835479d9e101200314b"
-  integrity sha512-dKe8TnUmj4cPwy6JYTYfuVsw/QHadGAhtweg3v39ePDo8ZzmCtnvmFLVtkdBveNlgJ/CoU/fSmubZ3Wnp2x7Eg==
 
 "@applitools/snippets@2.4.4":
   version "2.4.4"
