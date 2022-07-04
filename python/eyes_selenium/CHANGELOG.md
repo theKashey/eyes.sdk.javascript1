@@ -2,6 +2,7 @@
 ### Fixed
 - Log Server.log notification with requested level [Trello 2953](https://trello.com/c/IFCsr37o)
 - Cleanup obsolete selector type conversion, fix repr for MobileBy TargetPaths [Trello 2955](https://trello.com/c/YDPO9isU)
+- Missing license file in distributed packages [Trello 2962](https://trello.com/c/0HdBnfAK)
 
 ## [5.7.0] - 2022-06-15
 ### Added

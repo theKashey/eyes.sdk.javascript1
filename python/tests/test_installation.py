@@ -11,6 +11,21 @@ here = os.path.dirname(__file__)
 root_dir = os.path.normpath(os.path.join(here, os.pardir))
 
 
+def _get_venv_package_license(venv, package):
+    # strip all non-ascii charters to avoid console encoding error on windows
+    cmd = [
+        venv.python,
+        "-c",
+        "from pkg_resources import get_distribution;"
+        "from sys import version_info;"
+        "py2 = version_info < (3,);"
+        'license = get_distribution("{package}").get_metadata("LICENSE");'
+        'license = license.decode("utf-8") if py2 else license;'
+        'print(license.encode("ascii", "ignore"))'.format(package=package),
+    ]
+    return subprocess.check_output(cmd).decode("ascii")
+
+
 @pytest.fixture
 def eyes_universal_installed(venv):
     wheels = os.path.join(root_dir, "eyes_universal", "dist")
@@ -44,11 +59,26 @@ def test_setup_eyes_universal(venv, eyes_universal_installed):
     )
 
 
+def test_eyes_universal_has_license(venv, eyes_universal_installed):
+    license = _get_venv_package_license(venv, "eyes-universal")
+    assert "SDK LICENSE AGREEMENT" in license
+
+
 def test_setup_eyes_selenium(venv, eyes_selenium_installed):
     assert str(venv.get_version("eyes-selenium")) == eyes_selenium_version
     subprocess.check_call([venv.python, "-c", "from applitools.selenium import *"])
 
 
+def test_eyes_selenium_has_license(venv, eyes_selenium_installed):
+    license = _get_venv_package_license(venv, "eyes-selenium")
+    assert "SDK LICENSE AGREEMENT" in license
+
+
 def test_setup_eyes_robot(venv, eyes_robotframework_installed):
     assert str(venv.get_version("eyes-robotframework")) == eyes_robotframework_version
     subprocess.check_call([venv.python, "-c", "from EyesLibrary import *"])
+
+
+def test_eyes_robotframework_has_license(venv, eyes_robotframework_installed):
+    license = _get_venv_package_license(venv, "eyes-robotframework")
+    assert "SDK LICENSE AGREEMENT" in license
