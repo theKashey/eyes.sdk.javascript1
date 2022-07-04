@@ -80,10 +80,10 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.6",
-    "@applitools/driver": "^1.9.12",
+    "@applitools/driver": "^1.9.13",
     "@applitools/scripts": "^1.1.0",
-    "@applitools/spec-driver-webdriverio": "^1.2.16",
-    "@applitools/test-utils": "^1.4.0",
+    "@applitools/spec-driver-webdriverio": "^1.2.17",
+    "@applitools/test-utils": "^1.4.2",
     "appium": "^1.22.3",
     "chromedriver": "^101.0.0",
     "eslint": "^8.16.0",
