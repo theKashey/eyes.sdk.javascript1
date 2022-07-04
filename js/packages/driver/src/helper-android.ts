@@ -55,7 +55,6 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   }
 
   async getContentSize(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {
-    console.log('getContentSize', !!this._action)
     let contentHeightString
     if (this._legacy) {
       await this._input.click()

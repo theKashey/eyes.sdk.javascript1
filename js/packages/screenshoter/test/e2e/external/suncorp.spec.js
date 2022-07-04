@@ -65,7 +65,40 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it.skip('take full app screenshot', async () => {
+  it('take full app screenshot', async () => {
+    await sleep(10000)
+
+    const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
+    await loginButton.click()
+    await sleep(3000)
+
+    const passwordField = await driver.element({type: 'id', selector: 'passwordField'})
+    await passwordField.type('a')
+    const loginButton2 = await driver.element({type: 'id', selector: 'loginButton'})
+    await loginButton2.click()
+    await sleep(15000)
+
+    const cardElement = await driver.element({type: 'id', selector: 'card_view'})
+    await cardElement.click()
+    await sleep(5000)
+
+    await driver.init()
+
+    await driver.mainContext.setScrollingElement({type: 'id', selector: 'policyDetailsScrollView'})
+
+    await test({
+      type: 'android',
+      tag: 'app-fully-suncorp',
+      fully: true,
+      framed: true,
+      wait: 1500,
+      scrollingMode: 'scroll',
+      driver,
+      logger,
+    })
+  })
+
+  it('take full app screenshot', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
