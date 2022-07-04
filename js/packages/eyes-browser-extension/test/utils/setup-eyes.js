@@ -12,22 +12,27 @@ function setupEyes({driver, vg, ...config} = {}) {
       return driver.evaluate(() => window.__applitools.getViewportSize())
     },
     async open(_driver, appName, testName, viewportSize) {
+      const configuration = {
+        appName,
+        testName,
+        viewportSize,
+        batch: {id: process.env.APPLITOOLS_BATCH_ID, name: process.env.APPLITOOLS_BATCH_NAME || 'JS Coverage Tests'},
+        parentBranchName: 'master',
+        branchName: 'master',
+        dontCloseBatches: true,
+        matchTimeout: 0,
+        saveNewTests: false,
+        ...config,
+      }
+
+      if (process.env.APPLITOOLS_API_KEY_SDK) {
+        configuration.apiKey = process.env.APPLITOOLS_API_KEY_SDK
+      }
+
       return driver.evaluate(async options => (window.__eyes = await window.__applitools.openEyes(options)), {
         type: vg ? 'vg' : 'classic',
         concurrency: 10,
-        config: {
-          apiKey: process.env.APPLITOOLS_API_KEY_SDK,
-          appName,
-          testName,
-          viewportSize,
-          batch: {id: process.env.APPLITOOLS_BATCH_ID, name: process.env.APPLITOOLS_BATCH_NAME || 'JS Coverage Tests'},
-          parentBranchName: 'master',
-          branchName: 'master',
-          dontCloseBatches: true,
-          matchTimeout: 0,
-          saveNewTests: false,
-          ...config,
-        },
+        config: configuration,
       })
     },
     async check(settings) {

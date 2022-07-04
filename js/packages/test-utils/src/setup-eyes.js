@@ -10,7 +10,6 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = 
   const {Eyes, VisualGridRunner} = require(require.resolve(path.join(sdk, './dist'), {paths: [cwd]}))
   runner = runner || (vg ? new VisualGridRunner({testConcurrency: 500}) : undefined)
   const configuration = {
-    apiKey: process.env.APPLITOOLS_API_KEY_SDK,
     batch,
     parentBranchName: 'master',
     branchName: 'master',
@@ -18,6 +17,10 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = 
     matchTimeout: 0,
     saveNewTests: false,
     ...config,
+  }
+
+  if (process.env.APPLITOOLS_API_KEY_SDK) {
+    configuration.apiKey = process.env.APPLITOOLS_API_KEY_SDK
   }
 
   if (process.env.APPLITOOLS_SHOW_LOGS || showLogs) {

@@ -89,7 +89,7 @@ jobs:
           grep: ${{github.event.inputs.grep}}
         env:
           APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
-          APPLITOOLS_API_KEY_JSSDK: ${{secrets.APPLITOOLS_API_KEY_SDK}}
+          APPLITOOLS_API_KEY_JSSDK: ${{secrets.APPLITOOLS_API_KEY_JSSDK}}
           APPLITOOLS_API_KEY_READ: ${{secrets.APPLITOOLS_API_KEY_READ}}
           SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
           SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
