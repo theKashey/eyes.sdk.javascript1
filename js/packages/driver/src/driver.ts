@@ -589,10 +589,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         .then(r => r?.trim?.())
         .catch(() => null as never)
 
-      if (rotation === 'ROTATION_0') orientation = 'portrait'
-      else if (rotation === 'ROTATION_90') orientation = 'landscape-secondary'
-      else if (rotation === 'ROTATION_180') orientation = 'portrait-secondary'
-      else if (rotation === 'ROTATION_270') orientation = 'landscape'
+      if (rotation === 'ROTATION_0' || rotation === '0') orientation = 'portrait'
+      else if (rotation === 'ROTATION_90' || rotation === '3') orientation = 'landscape-secondary'
+      else if (rotation === 'ROTATION_180' || rotation === '2') orientation = 'portrait-secondary'
+      else if (rotation === 'ROTATION_270' || rotation === '1') orientation = 'landscape'
     }
     if (!orientation) {
       this._logger.log('Extracting device orientation')

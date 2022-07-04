@@ -268,7 +268,7 @@ export async function waitUntilDisplayed(driver: Driver, selector: Selector, tim
 // #endregion
 
 // #region MOBILE COMMANDS
-export async function getBarsSize(driver: Driver): Promise<{
+export async function getSystemBars(driver: Driver): Promise<{
   statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
   navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
 }> {
