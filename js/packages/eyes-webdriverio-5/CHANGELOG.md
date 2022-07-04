@@ -10,6 +10,12 @@
 
 
 
+## 5.35.7 - 2022/7/4
+
+### Features
+### Bug fixes
+- Implicitly convert tag to css selector due to removal of tag support from chromedriver
+
 ## 5.35.6 - 2022/6/27
 
 ### Features

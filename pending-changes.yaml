@@ -30,7 +30,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Implicitly convert tag to css selector due to removal of tag support from chromedriver
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
