@@ -110,7 +110,7 @@
     "@applitools/api-extractor": "1.2.9",
     "@applitools/bongo": "^2.1.6",
     "@applitools/scripts": "1.1.0",
-    "@applitools/test-utils": "1.3.4",
+    "@applitools/test-utils": "1.4.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
