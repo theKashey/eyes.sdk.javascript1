@@ -44,13 +44,13 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.9.11":
-  version "1.9.11"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.11.tgz#ea486d646fe5c8aa7af738ac157909b961532bff"
-  integrity sha512-BMMtDF5QxvyCQbFI8K6/LTPwJ6XyIs9V59KRQ8Mhj2gpfUYD4fKXXV+Q8DeCGgTKCvs6ffwwEDpG+dCA/C+9FQ==
+"@applitools/driver@1.9.12":
+  version "1.9.12"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.12.tgz#ffdbbe8027a405c193a26c08b7ed0dd463e87240"
+  integrity sha512-A4mgrLoWvpD9rRaCpC9h2QcG46uKndIA9OA8F6bhmLZYQ8qENrKJIzdT9JyW1JearX3+EnXgHMLrWmab2hxXFA==
   dependencies:
     "@applitools/logger" "1.1.14"
-    "@applitools/snippets" "2.4.3"
+    "@applitools/snippets" "2.4.4"
     "@applitools/types" "1.5.6"
     "@applitools/utils" "1.3.10"
 
@@ -67,19 +67,19 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.8.7":
-  version "13.8.7"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.8.7.tgz#c92251b2c4de0e7ebb014dd957745191045139b6"
-  integrity sha512-2iwrGJJwfgVoNHpcTjplr/+PLyJNoLNGf4DTarSYxuWev8+Z3iM/RxVCmjMEtyJAXo7D54jsb6COAP84d/L94w==
+"@applitools/eyes-sdk-core@13.8.9":
+  version "13.8.9"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.8.9.tgz#3101d9e6cd632a85696c9ce80f001cb5a8286c76"
+  integrity sha512-1u7wXWRN5KLcqaUWIBRjrEkV/oad5jR18YrR/KCe29r01JoOgD+n+p7L2xM7DsSvu+TKE1Cwxec/LcBB6lcPdQ==
   dependencies:
     "@applitools/dom-capture" "11.1.0"
     "@applitools/dom-snapshot" "4.6.0"
-    "@applitools/driver" "1.9.11"
+    "@applitools/driver" "1.9.12"
     "@applitools/execution-grid-client" "1.1.21"
     "@applitools/isomorphic-fetch" "3.0.0"
     "@applitools/logger" "1.1.14"
-    "@applitools/screenshoter" "3.4.7"
-    "@applitools/snippets" "2.4.3"
+    "@applitools/screenshoter" "3.4.8"
+    "@applitools/snippets" "2.4.4"
     "@applitools/types" "1.5.6"
     "@applitools/utils" "1.3.10"
     axios "0.26.0"
@@ -159,13 +159,13 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/screenshoter@3.4.7":
-  version "3.4.7"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.4.7.tgz#5529620dd6f182bd14c821b525ee671fb0435177"
-  integrity sha512-tN+7xZyltPfdV1Sz2stc2BjadSf0EgZLdQG5ta0WX5GDdEWIAEDn00/5cFT1eHLarxrQbddVK6u62z0KV99woQ==
+"@applitools/screenshoter@3.4.8":
+  version "3.4.8"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.4.8.tgz#6bb5354d0d303f214d09ae76ccaaec5787715e17"
+  integrity sha512-NbwYVPQVhhzI2B3xH0ti0gcyPRwIL6J+i/Th4rGjbfDSudJRFVTpu3yKF2f8Ni+rXnsI/F6yVfNzcDPZopsOLg==
   dependencies:
     "@applitools/logger" "1.1.14"
-    "@applitools/snippets" "2.4.3"
+    "@applitools/snippets" "2.4.4"
     "@applitools/utils" "1.3.10"
     jpeg-js "0.4.4"
     png-async "0.9.4"
@@ -180,10 +180,10 @@
     cli-table3 "0.6.0"
     yargs "15.3.1"
 
-"@applitools/snippets@2.4.3":
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.3.tgz#4f214e637c65da2137513835479d9e101200314b"
-  integrity sha512-dKe8TnUmj4cPwy6JYTYfuVsw/QHadGAhtweg3v39ePDo8ZzmCtnvmFLVtkdBveNlgJ/CoU/fSmubZ3Wnp2x7Eg==
+"@applitools/snippets@2.4.4":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.4.tgz#eec0851a32ce0ef2525ca532f9a048e6c36c270c"
+  integrity sha512-s7byCAtlSn4vc2UI/KfGGdu6oLJwTUoSNvfqRujbz2jwFWPo2Rox5d8YbzrcM0WcYigqYWt3wH7Y8T+ZBW7orw==
 
 "@applitools/test-server@1.1.4":
   version "1.1.4"
@@ -209,10 +209,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@1.3.4":
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.3.4.tgz#1e6b7f61dcb67c2e42a450e2ed78b862d11ddcf2"
-  integrity sha512-S1js26uj/EctDTrbxnHT+6C+s8h7RsFs8gFSu5OcpuxgJTVyF9SsdS65zqGWmyLUo2uqzi1b6kN8rsbrG1G1KA==
+"@applitools/test-utils@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.4.0.tgz#82fc834ace54a4e691e4b81ac0a5188597b4f20d"
+  integrity sha512-rp0tgsYVsokCGQRXnQ1WEVcnCx4zkHez2y5AZTsqb2HR6TECvhJ412Z383CGD4YTpOQ+z6ev9MGkgh9PPbDpWQ==
   dependencies:
     node-fetch "2.6.1"
 
