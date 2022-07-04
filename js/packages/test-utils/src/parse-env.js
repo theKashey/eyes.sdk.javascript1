@@ -282,6 +282,7 @@ const DEVICES = {
 
   'Android 8.0 Chrome Emulator': {
     type: 'local',
+    url: 'http://localhost:4444/wd/hub',
     capabilities: {
       browserName: 'chrome',
       'goog:chromeOptions': {
