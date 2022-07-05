@@ -8,6 +8,12 @@
 
 
 
+## 2.9.5 - 2022/7/5
+
+### Features
+### Bug fixes
+- Fix auto-generated region ids
+
 ## 2.9.4 - 2022/6/30
 
 ### Features
