@@ -8,6 +8,21 @@
 
 
 
+## 4.59.3 - 2022/7/5
+
+### Features
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+- Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+- Support `addMobileDevice` in user API for NMG
+- Add support for dynamic coded regions
+### Bug fixes
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+- Fixed native screenshots of the elements under large collapsing areas
+- Fixed scrolling on some android devices
+- Improved handling of touch padding related issues in native apps
+- Prevented navbar from appearing on Android 12 screenshots
+- Improve the logic that detects the side of native Android navigation bar
+
 ## 4.59.2 - 2022/6/9
 
 ### Features
