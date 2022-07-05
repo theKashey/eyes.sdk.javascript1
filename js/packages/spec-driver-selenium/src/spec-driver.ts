@@ -365,7 +365,7 @@ export async function build({selenium, ...env}: any): Promise<[Driver, () => Pro
     desiredCapabilities['appium:chromeOptions'] = {w3c: false}
   }
   if (browser === 'chrome' && process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
-    desiredCapabilities['goog:chromeOptions'] = {w3c: false}
+    desiredCapabilities['goog:chromeOptions'].w3c = false
   }
   const builder = new Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)
