@@ -217,7 +217,16 @@ def test_region_padding_are_added(method_name):
         method_name, [By.NAME, "name"], padding={"top": 1, "left": 2}
     )
 
-    assert regions_selector[0]._padding == {"top": 1, "left": 2}
+    assert regions_selector[0].padding == {"top": 1, "left": 2}
+
+
+@pytest.mark.parametrize("method_name", ["ignore", "layout", "strict", "content"])
+def test_region_region_id_added(method_name):
+    regions_selector = get_regions_from_(
+        method_name, [By.NAME, "name"], region_id="region_id"
+    )
+
+    assert regions_selector[0].region_id == "region_id"
 
 
 def test_lazy_load_default_settings():

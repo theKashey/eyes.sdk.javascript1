@@ -22,10 +22,7 @@ __all__ = (
 
 
 class GetRegion(object):
-    @property
-    def padding(self):
-        # type: () -> Optional[CodedRegionPadding]
-        return getattr(self, "_padding", None)
+    pass
 
 
 class GetFloatingRegion(GetRegion):

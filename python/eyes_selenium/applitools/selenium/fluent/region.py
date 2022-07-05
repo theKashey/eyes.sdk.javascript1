@@ -10,7 +10,7 @@ from applitools.core.fluent.region import (
 )
 
 if typing.TYPE_CHECKING:
-    from typing import Optional
+    from typing import Optional, Text
 
     from applitools.common import FloatingBounds
     from applitools.common.utils.custom_types import CodedRegionPadding
@@ -37,7 +37,8 @@ class RegionBySelector(GetSeleniumRegion):
     """
 
     _target_path = attr.ib()  # type: RegionLocator
-    _padding = attr.ib(default=None)  # type: Optional[CodedRegionPadding]
+    padding = attr.ib(default=None)  # type: Optional[CodedRegionPadding]
+    region_id = attr.ib(default=None)  # type: Optional[Text]
 
 
 class GetSeleniumFloatingRegion(GetFloatingRegion):

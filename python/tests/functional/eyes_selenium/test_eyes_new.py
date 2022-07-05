@@ -14,6 +14,7 @@ from applitools.selenium import (
     TargetPath,
     VisualGridRunner,
 )
+from tests.utils import get_session_results
 
 
 def test_create_open_check_close_eyes(local_chrome_driver):
@@ -316,3 +317,26 @@ def test_should_wait_before_capture_in_config(local_chrome_driver):
     )
     eyes.check("", Target.window())
     eyes.close()
+
+
+def test_region_id(local_chrome_driver):
+    eyes = Eyes()
+    eyes.open(
+        local_chrome_driver,
+        "USDK Tests",
+        "Test region id",
+        {"width": 800, "height": 600},
+    )
+    local_chrome_driver.get(
+        "https://applitools.github.io/demo/TestPages/SimpleTestPage"
+    )
+    eyes.check(Target.window().ignore("h1", region_id="header").fully(False))
+    result = eyes.close()
+    session_results = get_session_results(eyes.configure.api_key, result)
+    assert session_results["actualAppOutput"][0]["imageMatchSettings"]["ignore"][0] == {
+        "height": 37,
+        "left": 8,
+        "regionId": "header",
+        "top": 21,
+        "width": 784,
+    }

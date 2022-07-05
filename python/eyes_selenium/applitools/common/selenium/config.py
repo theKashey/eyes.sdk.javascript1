@@ -54,8 +54,8 @@ class Configuration(ConfigurationBase):
     )  # type: Optional[bool]
 
     # Rendering Configuration
-    _browsers_info = attr.ib(
-        metadata={JsonInclude.NON_NONE: "browsersInfo"}, init=False, factory=list
+    browsers_info = attr.ib(
+        metadata={JsonInclude.NON_NONE: True}, init=False, factory=list
     )  # type: List[IRenderBrowserInfo]
     visual_grid_options = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, default=None
@@ -173,7 +173,7 @@ class Configuration(ConfigurationBase):
 
     def add_browser(self, *args):  # noqa
         if isinstance(args[0], IRenderBrowserInfo):
-            self._browsers_info.append(args[0])
+            self.browsers_info.append(args[0])
         elif (
             isinstance(args[0], int)
             and isinstance(args[1], int)
@@ -183,7 +183,7 @@ class Configuration(ConfigurationBase):
                 baseline_env_name = args[3]
             else:
                 baseline_env_name = self.baseline_env_name
-            self._browsers_info.append(
+            self.browsers_info.append(
                 DesktopBrowserInfo(args[0], args[1], args[2], baseline_env_name)
             )
         else:
@@ -229,25 +229,10 @@ class Configuration(ConfigurationBase):
         # type: (*Union[IosDeviceInfo, AndroidDeviceInfo]) -> Configuration
         return self.add_browsers(*mobile_device_infos)
 
-    @property
-    def browsers_info(self):
-        # type: () -> List[RenderBrowserInfo]
-        if self._browsers_info:
-            return self._browsers_info
-        if self.viewport_size:
-            browser_info = DesktopBrowserInfo(
-                width=self.viewport_size["width"],
-                height=self.viewport_size["height"],
-                browser_type=BrowserType.CHROME,
-                baseline_env_name=self.baseline_env_name,
-            )
-            return [browser_info]
-        return []
-
     def clone(self):
         # type: () -> Configuration
         # TODO: Remove this huck when get rid of Python2
         conf = super(Configuration, self).clone()
-        conf._browsers_info = deepcopy(self._browsers_info)
+        conf.browsers_info = deepcopy(self.browsers_info)
         conf.visual_grid_options = deepcopy(self.visual_grid_options)
         return conf

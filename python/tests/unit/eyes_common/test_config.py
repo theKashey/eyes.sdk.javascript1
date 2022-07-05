@@ -204,7 +204,7 @@ def test_config_cloning():
     assert id(conf.default_match_settings.content_regions) != id(
         cloned_conf.default_match_settings.content_regions
     )
-    assert id(conf._browsers_info[0]) != id(cloned_conf._browsers_info[0])
+    assert id(conf.browsers_info[0]) != id(cloned_conf.browsers_info[0])
     assert id(conf.viewport_size) != id(cloned_conf.viewport_size)
     assert id(conf.visual_grid_options[0]) != id(cloned_conf.visual_grid_options[0])
 

@@ -110,28 +110,48 @@ class SeleniumCheckSettings(CheckSettings):
     _frame = attr.ib(default=None)
 
     @overload  # noqa
-    def layout(self, *by, **kwargs):
-        # type: (*BySelector,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def layout(
+        self,
+        *by,  # type: BySelector
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def layout(self, *element, **kwargs):
-        # type: (*AnyWebElement,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def layout(
+        self,
+        *element,  # type: AnyWebElement
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def layout(self, *css_selector, **kwargs):
-        # type: (*CssSelector,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def layout(
+        self,
+        *css_selector,  # type: CssSelector
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def layout(self, *target_path, **kwargs):
-        # type: (*RegionLocator,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def layout(
+        self,
+        *target_path,  # type: RegionLocator
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def layout(self, *region, **kwargs):
-        # type: (*Region,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def layout(
+        self,
+        *region,  # type: Region
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     def layout(self, *region, **kwargs):  # noqa
@@ -146,28 +166,48 @@ class SeleniumCheckSettings(CheckSettings):
         return super(SeleniumCheckSettings, self).layout(*region, **kwargs)
 
     @overload  # noqa
-    def strict(self, *by, **kwargs):
-        # type: (*BySelector, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def strict(
+        self,
+        *by,  # type: BySelector
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def strict(self, *element, **kwargs):
-        # type: (*AnyWebElement,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def strict(
+        self,
+        *element,  # type: AnyWebElement
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def strict(self, *css_selector, **kwargs):
-        # type: (*CssSelector,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def strict(
+        self,
+        *css_selector,  # type: CssSelector
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def strict(self, *target_path, **kwargs):
-        # type: (*RegionLocator,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def strict(
+        self,
+        *target_path,  # type: RegionLocator
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def strict(self, *region, **kwargs):
-        # type: (*Region, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def strict(
+        self,
+        *region,  # type: Region
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     def strict(self, *region, **kwargs):  # noqa
@@ -182,32 +222,48 @@ class SeleniumCheckSettings(CheckSettings):
         return super(SeleniumCheckSettings, self).strict(*region, **kwargs)
 
     @overload  # noqa
-    def content(self, *by, **kwargs):
-        # type: (*BySelector, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def content(
+        self,
+        *by,  # type: BySelector
+        **kwargs  # type: Union[Text, CodedRegionPadding]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def content(self, *element, **kwargs):
-        # type: (*AnyWebElement,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def content(
+        self,
+        *element,  # type: AnyWebElement
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def content(self, *css_selector, **kwargs):
-        # type: (*CssSelector, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def content(
+        self,
+        *css_selector,  # type: CssSelector
+        **kwargs  # type: Union[CodedRegionPadding,Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
     def content(
         self,
         *target_path,  # type: RegionLocator
-        **kwargs  # type: Optional[CodedRegionPadding]
+        **kwargs  # type: Union[CodedRegionPadding, Text]
     ):
         # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def content(self, *region, **kwargs):
-        # type: (*Region, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def content(
+        self,
+        *region,  # type: Region
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     def content(self, *region, **kwargs):  # noqa
@@ -222,32 +278,48 @@ class SeleniumCheckSettings(CheckSettings):
         return super(SeleniumCheckSettings, self).content(*region, **kwargs)
 
     @overload  # noqa
-    def ignore(self, *by, **kwargs):
-        # type: (*BySelector, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def ignore(
+        self,
+        *by,  # type: BySelector
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def ignore(self, *element, **kwargs):
-        # type: (*AnyWebElement,**Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def ignore(
+        self,
+        *element,  # type: AnyWebElement
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def ignore(self, *css_selector, **kwargs):
-        # type: (*CssSelector, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def ignore(
+        self,
+        *css_selector,  # type: CssSelector
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
     def ignore(
         self,
         *target_path,  # type: RegionLocator
-        **kwargs  # type: Optional[CodedRegionPadding]
+        **kwargs  # type: Union[CodedRegionPadding, Text]
     ):
         # type: (...) -> SeleniumCheckSettings
         pass
 
     @overload  # noqa
-    def ignore(self, *region, **kwargs):
-        # type: (*Region, **Optional[CodedRegionPadding]) -> SeleniumCheckSettings
+    def ignore(
+        self,
+        *region,  # type: Region
+        **kwargs  # type: Union[CodedRegionPadding, Text]
+    ):
+        # type: (...) -> SeleniumCheckSettings
         pass
 
     def ignore(self, *region, **kwargs):  # noqa
@@ -399,15 +471,15 @@ class SeleniumCheckSettings(CheckSettings):
         self.values.script_hooks[BEFORE_CAPTURE_SCREENSHOT] = hook
         return self
 
-    def _region_provider_from(self, region, method_name, padding):
+    def _region_provider_from(self, region, method_name, padding, region_id):
         if isinstance(region, string_types) or is_webelement(region):
-            return RegionBySelector(TargetPath.region(region), padding)
+            return RegionBySelector(TargetPath.region(region), padding, region_id)
         elif is_list_or_tuple(region):
-            return RegionBySelector(TargetPath.region(*region), padding)
+            return RegionBySelector(TargetPath.region(*region), padding, region_id)
         elif isinstance(region, RegionLocator):
-            return RegionBySelector(region, padding)
+            return RegionBySelector(region, padding, region_id)
         return super(SeleniumCheckSettings, self)._region_provider_from(
-            region, method_name, padding
+            region, method_name, padding, region_id
         )
 
     def _set_scroll_root_locator(self, target_path):

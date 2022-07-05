@@ -19,7 +19,7 @@ from .region import (
 )
 
 if TYPE_CHECKING:
-    from applitools.common.utils.custom_types import CodedRegionPadding, Num
+    from applitools.common.utils.custom_types import CodedRegionPadding, Num, Union
 
 __all__ = ("CheckSettings", "CheckSettingsValues")
 
@@ -118,7 +118,10 @@ class CheckSettings(object):
             return self
         try:
             self.values.layout_regions = self.__regions(
-                regions, method_name="layout_regions", padding=kwargs.get("padding")
+                regions,
+                method_name="layout_regions",
+                padding=kwargs.get("padding"),
+                region_id=kwargs.get("region_id"),
             )
         except TypeError as e:
             raise_from(TypeError("Wrong argument in .layout()"), e)
@@ -137,7 +140,10 @@ class CheckSettings(object):
             return self
         try:
             self.values.strict_regions = self.__regions(
-                regions, method_name="strict_regions", padding=kwargs.get("padding")
+                regions,
+                method_name="strict_regions",
+                padding=kwargs.get("padding"),
+                region_id=kwargs.get("region_id"),
             )
         except TypeError as e:
             raise_from(TypeError("Wrong argument in .strict()"), e)
@@ -151,18 +157,24 @@ class CheckSettings(object):
             return self
         try:
             self.values.content_regions = self.__regions(
-                regions, method_name="content_regions", padding=kwargs.get("padding")
+                regions,
+                method_name="content_regions",
+                padding=kwargs.get("padding"),
+                region_id=kwargs.get("region_id"),
             )
         except TypeError as e:
             raise_from(TypeError("Wrong argument in .content()"), e)
         return self
 
     def ignore(self, *regions, **kwargs):
-        # type: (Self, *Region, **Optional[CodedRegionPadding])  -> Self
+        # type: (Self, *Region, **Union[CodedRegionPadding, Text])  -> Self
         """Adds one or more ignore regions."""
         try:
             self.values.ignore_regions = self.__regions(
-                regions, method_name="ignore_regions", padding=kwargs.get("padding")
+                regions,
+                method_name="ignore_regions",
+                padding=kwargs.get("padding"),
+                region_id=kwargs.get("region_id"),
             )
         except TypeError as e:
             raise_from(TypeError, e)
@@ -311,7 +323,7 @@ class CheckSettings(object):
         self.values.wait_before_capture = milliseconds
         return self
 
-    def __regions(self, regions, method_name, padding):
+    def __regions(self, regions, method_name, padding, region_id):
         if not regions:
             raise TypeError(
                 "{name} method called without arguments!".format(name=method_name)
@@ -320,11 +332,11 @@ class CheckSettings(object):
         regions_list = getattr(self.values, method_name)
         for region in regions:
             regions_list.append(
-                self._region_provider_from(region, method_name, padding)
+                self._region_provider_from(region, method_name, padding, region_id)
             )
         return regions_list
 
-    def _region_provider_from(self, region, method_name, padding):
+    def _region_provider_from(self, region, method_name, padding, region_id):
         if isinstance(region, Region):
             return RegionByRectangle(region)
         raise TypeError(
