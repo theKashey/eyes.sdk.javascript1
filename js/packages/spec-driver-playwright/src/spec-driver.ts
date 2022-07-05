@@ -60,7 +60,7 @@ export function transformSelector(selector: CommonSelector<Selector>): Selector 
 }
 export function untransformSelector(selector: Selector): CommonSelector {
   if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) {
-    [, selector] = selector.toString().match(/Locator@(.+)/)
+    ;[, selector] = selector.toString().match(/Locator@(.+)/)
   }
   if (utils.types.isString(selector)) return {selector}
   return selector
