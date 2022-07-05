@@ -77,6 +77,7 @@ jobs:
     needs: [verify]
     strategy:
       max-parallel: 3
+      fail-fast: false
       matrix:
         include: ${{fromJSON(needs.verify.outputs.environments)}}
     name: 'Test (node: ${{matrix.node-version}})'
