@@ -9,6 +9,25 @@
 
 
 
+
+
+## 1.10.2 - 2022/7/5
+
+### Features
+- Added support for taking full screenshots of elements that are scroll by pages only
+- Allowed `` values in custom properties
+- Add special attribute for pseudo elements
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+- Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+- Add support for dynamic coded regions
+### Bug fixes
+- Fixed broken links to enums implementation in the README.md
+- Fixed `forceFullPageScreenshot` option behavior
+- Fix calling `waitBeforeCapture` when failed to set required viewport size
+- Fix rendering issues with Salesforce Lightning design system
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+- Fixed native screenshots of the elements under large collapsing areas
+
 ## 1.10.1 - 2022/6/2
 
 ### Features
