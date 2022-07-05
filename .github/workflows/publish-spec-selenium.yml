@@ -27,7 +27,6 @@ env:
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
   SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
   SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
-  CVG_TESTS_REMOTE: http://localhost:4444/wd/hub
 
 jobs:
   test:
