@@ -1,6 +1,6 @@
 {
   "name": "@applitools/spec-driver-playwright",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "keywords": [
     "playwright",
     "chrome devtools protocol",
