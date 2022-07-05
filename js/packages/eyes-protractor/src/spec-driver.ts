@@ -62,10 +62,7 @@ export function transformSelector(selector: CommonSelector<Selector>): Selector 
     if (!utils.types.isString(selector.selector)) return selector.selector
     if (!utils.types.has(selector, 'type')) return {css: selector.selector}
     if (selector.type === 'css') return {css: selector.selector}
-    else {
-      const by = new Protractor.ProtractorBy()
-      return by[selector.type](selector.selector)
-    }
+    else return {using: selector.type, value: selector.selector}
   }
   return selector
 }
@@ -75,7 +72,8 @@ export function untransformSelector(selector: Selector): CommonSelector {
   } else if (isByHashSelector(selector)) {
     const [[how, what]] = Object.entries(selector) as [[typeof byHash[number], string]]
     if (how === 'js') return null
-    selector = Protractor.By[how](what)
+    const by = new Protractor.ProtractorBy()
+    selector = by[how](what)
   }
   if (utils.types.has(selector, ['using', 'value']) || utils.types.instanceOf<Selenium.By>(selector, 'By')) {
     const {using, value} = selector as {using: string; value: string}
