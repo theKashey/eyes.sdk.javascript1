@@ -361,11 +361,12 @@ export async function build({selenium, ...env}: any): Promise<[Driver, () => Pro
       desiredCapabilities[browserOptionsName] = browserOptions
     }
   }
-  if (appium && browser === 'chrome') {
-    desiredCapabilities['appium:chromeOptions'] = {w3c: false}
-  }
-  if (browser === 'chrome' && process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
-    desiredCapabilities['goog:chromeOptions'].w3c = false
+  if (browser === 'chrome') {
+    if (appium) {
+      desiredCapabilities['appium:chromeOptions'] = {w3c: false, ...desiredCapabilities['appium:chromeOptions']}
+    } else if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
+      desiredCapabilities['goog:chromeOptions'] = {w3c: false, ...desiredCapabilities['goog:chromeOptions']}
+    }
   }
   const builder = new Builder().withCapabilities(desiredCapabilities)
   if (url && !attach) builder.usingServer(url.href)
