@@ -5,7 +5,7 @@ import re
 import shutil
 from collections import OrderedDict
 from enum import Enum
-from typing import Any, Generator, Text, Type
+from typing import Any, Generator, Optional, Text, Type
 
 import six
 import yaml
@@ -15,6 +15,8 @@ from applitools.common import RectangleSize, Region
 from applitools.common.utils import argument_guard
 from applitools.common.validators import is_webelement
 from applitools.selenium.fluent import SeleniumCheckSettings
+
+from .keywords_list import CHECK_SETTINGS_KEYWORDS_LIST
 
 SEPARATOR = object()
 
@@ -63,9 +65,42 @@ def splits_args_by_separator(args):
             yield res
 
 
-def collect_check_settings(check_settings, defined_keywords, *keywords):
-    # type: (SeleniumCheckSettings,list[str],tuple[Any])->SeleniumCheckSettings
+def try_resolve_tag_and_keyword(tag, check_settings_keywords, defined_keywords):
+    if tag in defined_keywords:
+        check_settings_keywords = (tag,) + check_settings_keywords
+        tag = None
+    return check_settings_keywords, tag
+
+
+def collect_check_settings_with_tag(tag, check_settings, *check_settings_keywords):
+    # type: (Optional[str],SeleniumCheckSettings,tuple[Any])->SeleniumCheckSettings
     """Fill `check_setting` with data from keyword and return `check_settings`"""
+    defined_keywords = CHECK_SETTINGS_KEYWORDS_LIST
+    check_settings_keywords, tag = try_resolve_tag_and_keyword(
+        tag, check_settings_keywords, defined_keywords
+    )
+
+    return _collect_check_settings(
+        tag, check_settings, defined_keywords, *check_settings_keywords
+    )
+
+
+def collect_check_settings(check_settings, *check_settings_keywords):
+    # type: (SeleniumCheckSettings,tuple[Any])->SeleniumCheckSettings
+    """Fill `check_setting` with data from keyword and return `check_settings`"""
+    defined_keywords = CHECK_SETTINGS_KEYWORDS_LIST
+
+    return _collect_check_settings(
+        None, check_settings, defined_keywords, *check_settings_keywords
+    )
+
+
+def _collect_check_settings(tag, check_settings, defined_keywords, *keywords):
+    # type: (Optional[str],SeleniumCheckSettings,list[str],tuple[Any])->SeleniumCheckSettings
+    """Fill `check_setting` with data from keyword and return `check_settings`"""
+    if tag is not None:
+        check_settings = check_settings.with_name(tag)
+
     for keyword, keyword_args in extract_keyword_and_arguments(
         keywords, defined_keywords
     ):
@@ -75,7 +110,7 @@ def collect_check_settings(check_settings, defined_keywords, *keywords):
                 separated_args += (check_settings,)
                 BuiltIn().run_keyword(keyword, *separated_args)
         else:
-            # in case keyword without args like `Fully`
+            # in case keyword without args
             BuiltIn().run_keyword(keyword, check_settings)
     return check_settings
 

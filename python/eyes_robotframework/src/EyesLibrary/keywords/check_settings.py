@@ -10,6 +10,7 @@ from applitools.common import AccessibilityRegionType, MatchLevel, VisualGridOpt
 from applitools.selenium.fluent import SeleniumCheckSettings
 
 from ..base import LibraryComponent
+from ..keywords_list import register_check_settings_keyword
 from ..utils import get_enum_by_upper_name, is_webelement_guard, parse_region
 from .keyword_tags import CHECK_SETTING, UFG_RELATED
 
@@ -21,6 +22,7 @@ if TYPE_CHECKING:
 
 def keyword(name=None, tags=(), types=()):
     """Keyword with predefined CHECK_SETTING tag"""
+    register_check_settings_keyword(name)
     tags = tags + (CHECK_SETTING,)
     return original_keyword(name, tags, types)
 
@@ -32,7 +34,7 @@ def new_or_cur_check_settings(check_settings):
     return check_settings
 
 
-class IgnoreCheckSettingsKeyword(object):
+class IgnoreCheckSettingsKeywords(object):
     @keyword("Ignore Region By Coordinates", types=(str,))
     def ignore_region_by_coordinates(
         self,
@@ -95,7 +97,7 @@ class IgnoreCheckSettingsKeyword(object):
         )
 
 
-class LayoutCheckSettingsKeyword(object):
+class LayoutCheckSettingsKeywords(object):
     @keyword("Layout Region By Coordinates", types=(str,))
     def layout_region_by_coordinates(
         self,
@@ -158,7 +160,7 @@ class LayoutCheckSettingsKeyword(object):
         )
 
 
-class ContentCheckSettingsKeyword(object):
+class ContentCheckSettingsKeywords(object):
     @keyword("Content Region By Coordinates", types=(str,))
     def content_region_by_coordinates(
         self,
@@ -652,9 +654,9 @@ class UFGCheckSettingsKeywords(object):
 
 class CheckSettingsKeywords(
     LibraryComponent,
-    IgnoreCheckSettingsKeyword,
-    LayoutCheckSettingsKeyword,
-    ContentCheckSettingsKeyword,
+    IgnoreCheckSettingsKeywords,
+    LayoutCheckSettingsKeywords,
+    ContentCheckSettingsKeywords,
     StrictCheckSettingsKeywords,
     FloatingCheckSettingsKeywords,
     AccessibilityCheckSettingsKeywords,

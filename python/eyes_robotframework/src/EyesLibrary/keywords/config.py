@@ -1,11 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
-from typing import Any, Optional, Text, Union
+from typing import Dict, Optional, Text, Union
 
 from robot.api.deco import keyword
 from six import string_types as basestring
 
+from applitools.common import deprecated
 from applitools.selenium import BatchInfo
 
 from ..base import LibraryComponent
@@ -60,10 +61,19 @@ class ConfigurationKeywords(LibraryComponent):
 
     @keyword("Get Eyes Configure Property", types=(str,))
     def get_eyes_configure_property(self, name):
-        # type: (Text) -> Any
-        return getattr(self.ctx.configure, name)
+        # type: (Text) -> Dict[Text,Text]
+        result = [p for p in self.ctx.configure.properties if p.get("name") == name]
+        if result:
+            return result[0]
+        return {}
 
     @keyword("Set Eyes Configure Property", types=(str, str))
+    @deprecated.attribute("use `Eyes Configure Add Property` instead")
     def set_eyes_configure_property(self, name, value):
-        # type: (Text, Any) -> Any
-        setattr(self.ctx.configure, name, value)
+        # type: (Text, Text) -> None
+        self.eyes_configure_add_property(name, value)
+
+    @keyword("Eyes Configure Add Property", types=(str, str))
+    def eyes_configure_add_property(self, name, value):
+        # type: (Text, Text) -> None
+        self.ctx.configure.add_property(name, value)
