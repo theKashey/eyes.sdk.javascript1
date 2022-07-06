@@ -1,4 +1,4 @@
-## [vNext]
+## [5.8.0] - 2022-07-06
 ### Added
 - Region Id support for coded regions [Trello 47](https://trello.com/c/pv51sCYA)
 ### Fixed
