@@ -64,10 +64,6 @@ publish_testing_eyes_universal: eyes_universal/dist install_publish_requirements
 	twine upload --verbose --repository testpypi eyes_universal/dist/*
 
 
-install_build_requirements:
-	python -m pip install --upgrade setuptools
-
-
 install_publish_requirements:
 	python -m pip install twine
 
@@ -75,15 +71,18 @@ install_publish_requirements:
 dist: eyes_universal/dist eyes_selenium/dist eyes_robotframework/dist
 
 
-eyes_universal/dist: install_build_requirements
+eyes_universal/dist:
+	python -m pip install --upgrade setuptools
 	cd eyes_universal && make dist
 
 
-eyes_selenium/dist: install_build_requirements
+eyes_selenium/dist:
+	python -m pip install --upgrade setuptools
 	cd eyes_selenium && python setup.py --quiet sdist
 
 
-eyes_robotframework/dist: install_build_requirements
+eyes_robotframework/dist:
+	python -m pip install --upgrade setuptools
 	cd eyes_robotframework && python setup.py --quiet sdist
 
 
