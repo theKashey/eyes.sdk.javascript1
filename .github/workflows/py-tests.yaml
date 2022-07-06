@@ -11,10 +11,6 @@ on:
         required: false
         type: string
 
-defaults:
-  run:
-    working-directory: python
-
 jobs:
   dist-build:
     runs-on: ubuntu-latest
@@ -26,6 +22,7 @@ jobs:
         with:
           python-version: "3.6"
       - name: Build packages
+        working-directory: python
         run: make eyes_universal/dist eyes_selenium/dist eyes_robotframework/dist
       - uses: actions/upload-artifact@v3
         with:
@@ -59,6 +56,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_selenium_unit_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
 
@@ -75,6 +73,7 @@ jobs:
           name: packages
       - run: apk add gcc libffi-dev make musl-dev py3-pip python3-dev && ln -s /usr/bin/python3 /usr/bin/python
       - run: make eyes_selenium_unit_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
 
@@ -99,6 +98,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_selenium_installation_tests
+        working-directory: python
 
   generated-tests:
     needs: dist-build
@@ -123,6 +123,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_selenium_generated_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           APPLITOOLS_API_KEY_READ: ${{ secrets.APPLITOOLS_API_KEY_READ }}
@@ -151,6 +152,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_selenium_functional_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
 
@@ -168,6 +170,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_selenium_sauce_functional_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
@@ -187,6 +190,7 @@ jobs:
         with:
           name: packages
       - run: make eyes_robotframework_functional_tests
+        working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}

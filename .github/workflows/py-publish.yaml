@@ -14,10 +14,6 @@ on:
         options: [patch, minor, major]
         required: true
 
-defaults:
-  run:
-    working-directory: python
-
 jobs:
   make_release_branch:
     runs-on: ubuntu-latest
@@ -36,6 +32,7 @@ jobs:
           git push -u origin $RELEASE_BRANCH
           echo "::set-output name=release_branch::$RELEASE_BRANCH"
           echo "::set-output name=release_version::$new_version"
+        working-directory: python
         env:
           GIT_AUTHOR_NAME: ${{github.actor}}
           GIT_COMMITTER_NAME: ${{github.actor}}
@@ -70,6 +67,7 @@ jobs:
           git merge origin/$RELEASE_BRANCH
           git push origin
           git push origin --delete $RELEASE_BRANCH
+        working-directory: python
         env:
           GIT_AUTHOR_NAME: ${{github.actor}}
           GIT_COMMITTER_NAME: ${{github.actor}}
