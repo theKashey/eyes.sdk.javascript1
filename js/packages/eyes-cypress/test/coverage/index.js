@@ -3,7 +3,7 @@ module.exports = {
   ext: '.spec.js',
   emitter: './test/coverage/emitter.js',
   template: './test/coverage/template.hbs',
-  output: './test/coverage/generic/cypress/integration/generic',
+  output: './test/coverage/generic/cypress/e2e/generic',
   tests:
     'https://raw.githubusercontent.com/applitools/sdk.coverage.tests/universal-sdk/coverage-tests.js',
   overrides: [

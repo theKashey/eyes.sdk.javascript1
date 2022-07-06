@@ -11,5 +11,4 @@ function addEyesCypressPlugin(content) {
   }
 }
 
-module.exports = addEyesCypressPlugin;
-module.exports.pluginRequire = pluginRequire;
+module.exports = {addEyesCypressPlugin, pluginRequire};

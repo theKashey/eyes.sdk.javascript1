@@ -1,5 +1,5 @@
 /commands.js
 test/fixtures/**
 test/coverage/generic/cypress/support/
-test/coverage/generic/cypress/integration/generic
+test/coverage/generic/cypress/e2e/generic
 test/e2e/ts/cypress/support/

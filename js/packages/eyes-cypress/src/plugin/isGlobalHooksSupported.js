@@ -5,8 +5,9 @@ function isGlobalHooksSupported(config) {
   const {version, experimentalRunEvents} = config;
 
   return (
-    version >= CYPRESS_NO_FLAG_VERSION ||
-    (version >= CYPRESS_SUPPORTED_VERSION && !!experimentalRunEvents)
+    parseFloat(version, 10) >= parseFloat(CYPRESS_NO_FLAG_VERSION, 10) ||
+    (parseFloat(version, 10) >= parseFloat(CYPRESS_SUPPORTED_VERSION, 10) &&
+      !!experimentalRunEvents)
   );
 }
 

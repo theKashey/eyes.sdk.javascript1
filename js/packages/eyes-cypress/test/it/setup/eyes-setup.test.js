@@ -18,6 +18,8 @@ describe('eyes-setup script', () => {
   const origSupportFileContent = readFileSync(supportFilePath).toString();
 
   const typescriptFilePath = resolve(fixturesPath, 'cypress/support/index.d.ts');
+  const cypressConfigPath = resolve(fixturesPath, 'cypress.config.js');
+  const origCypressConfigContent = readFileSync(cypressConfigPath, 'utf-8');
 
   before(() => {
     cwd = process.cwd();
@@ -34,11 +36,35 @@ describe('eyes-setup script', () => {
     unlinkSync(typescriptFilePath);
   });
 
-  it('works', () => {
+  afterEach(() => {
+    unlinkSync('package.json');
+  });
+
+  it('works for cypress version < 10', () => {
+    writeFileSync('package.json', '{"dependencies": {"cypress": 9}}');
+
     require('../../../bin/eyes-setup');
 
     expect(readFileSync(pluginFilePath).toString()).to.equal(
       origPluginFileContent.replace(/};\n$/, `};\n${pluginRequire}`),
+    );
+
+    expect(readFileSync(supportFilePath).toString()).to.equal(
+      origSupportFileContent.replace(
+        '\n// Import commands.js using ES2015 syntax:',
+        `${commandsImport}\n\n// Import commands.js using ES2015 syntax:`,
+      ),
+    );
+    expect(readFileSync(typescriptFilePath).toString()).to.equal(eyesIndexContent);
+  });
+
+  it('works for cypress version >= 10', () => {
+    writeFileSync('package.json', '{"dependencies": {"cypress": 10}}');
+
+    require('../../../bin/eyes-setup');
+
+    expect(readFileSync(cypressConfigPath).toString()).to.equal(
+      origCypressConfigContent.replace(/};\n$/, `};\n${pluginRequire}`),
     );
 
     expect(readFileSync(supportFilePath).toString()).to.equal(
