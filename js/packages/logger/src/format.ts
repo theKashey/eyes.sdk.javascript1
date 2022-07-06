@@ -99,7 +99,7 @@ export function format(
     const strings = chunks.map(chunk => {
       return utils.types.isString(chunk)
         ? colorize(chunk, {color})
-        : inspect(chunk, {colors: Boolean(colors), compact: 5, depth: 5})
+        : inspect?.(chunk, {colors: Boolean(colors), compact: 5, depth: 5})
     })
     message.push(strings.join(' '))
   }

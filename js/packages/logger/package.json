@@ -38,7 +38,8 @@
   "browser": {
     ".": "./dist/browser.js",
     "./dist/handler-file.js": false,
-    "./dist/handler-rolling-file.js": false
+    "./dist/handler-rolling-file.js": false,
+    "util": false
   },
   "types": "./types/index.d.ts",
   "files": [
