@@ -597,7 +597,7 @@ class ServerConnector {
       name: 'renderGetRenderJobInfo',
       withApiKey: false,
       method: 'POST',
-      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/job-info'),
+      url: GeneralUtils.urlConcat(this._renderingInfo.getServiceUrl(), '/v2/job-info'),
       headers: {
         'X-Auth-Token': this._renderingInfo.getAccessToken(),
       },

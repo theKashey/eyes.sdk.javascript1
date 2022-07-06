@@ -2,6 +2,7 @@
 
 function makeTestController({testName, numOfTests, logger}) {
   const errors = [...new Array(numOfTests)]
+  const shouldSkipAbort = [...new Array(numOfTests)]
   const renderIds = [...new Array(numOfTests)].map(() => [])
   let abortedByUser = false
   let fatalError = false
@@ -14,6 +15,14 @@ function makeTestController({testName, numOfTests, logger}) {
 
     getError: index => {
       return errors[index]
+    },
+
+    setShouldSkipAbort: (index, value) => {
+      shouldSkipAbort[index] = value
+    },
+
+    getShouldSkipAbort: index => {
+      return shouldSkipAbort[index]
     },
 
     setIsAbortedByUser: () => {

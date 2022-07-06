@@ -18,7 +18,7 @@ function makeClose({
   })
 
   return async (throwEx = true) => {
-    let error, didError
+    let didError
     const settleError = (throwEx ? Promise.reject : Promise.resolve).bind(Promise)
     logger.log('closeEyes() called')
 
@@ -32,7 +32,7 @@ function makeClose({
 
     return waitAndResolveTests(async testIndex => {
       resolveTests[testIndex]()
-
+      let error
       if ((error = testController.getFatalError())) {
         logger.log('closeEyes() fatal error found')
         await wrappers[testIndex].ensureAborted()
@@ -40,6 +40,9 @@ function makeClose({
       }
       if ((error = testController.getError(testIndex))) {
         logger.log('closeEyes() found test error')
+        if (!testController.getShouldSkipAbort(testIndex)) {
+          await wrappers[testIndex].ensureAborted()
+        }
         return (didError = true), error
       }
 

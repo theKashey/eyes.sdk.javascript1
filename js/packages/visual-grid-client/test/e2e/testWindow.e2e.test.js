@@ -111,4 +111,70 @@ describe('testWindow', () => {
     expect(err.length).to.eq(3)
     err.map(r => expect(r).to.be.instanceOf(DiffsFoundError))
   })
+  it('does not fails after single aborted', async () => {
+    await page.goto(`${baseUrl}/test-with-media-query.html`)
+
+    const {cdt, url, resourceContents, resourceUrls} = await processPage()
+
+    const openParams = {
+      appName: 'some app',
+      testName: 'does not fails after single aborted',
+      browser: [
+        {width: 1280, height: 768, name: 'chrome'},
+        {width: 640, height: 480, name: 'chrome'},
+        {width: 1024, height: 640, name: 'firefox'},
+        {width: 800, height: 600, name: 'firefox'},
+        {deviceName: 'iPhone X'},
+      ],
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+    }
+    const checkParams = {
+      snapshot: {resourceUrls, resourceContents, cdt},
+      tag: 'first',
+      target: 'selector',
+      selector: '#size-dependent-div',
+      url,
+    }
+    // take out the indexes of expected to fail browsers: width is less then 700 or mobile
+    const expectedFailureInIndexs = openParams.browser
+      .map((b, i) => ((b.width && b.width < 700) || b.deviceName ? i : undefined))
+      .filter(x => x)
+    const [err] = await presult(testWindow({openParams, checkParams}))
+
+    // Confusing: the 'err' array contains both 'TestResult' (passed) and 'Error' (failed) results
+    expect(err.length).to.eq(5)
+    expectedFailureInIndexs.map(r => expect(err[r]).to.be.instanceOf(Error))
+  })
+
+  it('one wrong device configuration will not fail whole test', async () => {
+    await page.goto(`${baseUrl}/test.html`)
+
+    const {cdt, url, resourceContents, resourceUrls} = await processPage()
+
+    const openParams = {
+      appName: 'some app',
+      testName: 'one wrong device configuration will not fail whole test',
+      browser: [
+        {width: 1280, height: 768, name: 'chrome'},
+        {
+          iosDeviceInfo: {
+            deviceName: 'PIXEL',
+            iosVersion: 'latest',
+          },
+        },
+      ],
+      showLogs: process.env.APPLITOOLS_SHOW_LOGS,
+    }
+    const checkParams = {
+      snapshot: {resourceUrls, resourceContents, cdt},
+      tag: 'first',
+      url,
+    }
+    const [err] = await presult(testWindow({openParams, checkParams}))
+
+    // Confusing: the 'err' array contains both 'TestResult' (passed) and 'Error' (failed) results
+    expect(err.length).to.eq(2)
+    expect(err[0]).not.to.be.instanceOf(Error)
+    expect(err[1]).to.be.instanceOf(Error)
+  })
 })

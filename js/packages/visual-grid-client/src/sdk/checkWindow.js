@@ -107,7 +107,7 @@ function makeCheckWindow({
         logger,
       })
 
-      let error, didError
+      let didError
       const settleError = (throwEx ? Promise.reject : Promise.resolve).bind(Promise)
 
       const batchId = wrappers[0].getBatchIdWithoutGenerating()
@@ -115,12 +115,13 @@ function makeCheckWindow({
 
       return waitAndResolveTests(async (testIndex, result) => {
         resolveTests[testIndex]()
-
+        let error
         if ((error = testController.getFatalError())) {
           await wrappers[testIndex].ensureAborted()
           return (didError = true), error
         }
         if ((error = testController.getError(testIndex))) {
+          await wrappers[testIndex].ensureAborted()
           return (didError = true), error
         }
 
@@ -173,6 +174,12 @@ function makeCheckWindow({
 
       if (!wrapper.getAppEnvironment()) {
         const info = await getRenderJobInfo(renderRequest)
+        if (info.error) {
+          testController.setError(index, info.error)
+          testController.setShouldSkipAbort(index, true)
+          if (renderJobs.has(renderRequest)) renderJobs.get(renderRequest)()
+          return
+        }
         wrapper.setRenderJobInfo(info)
       }
 
@@ -224,7 +231,7 @@ function makeCheckWindow({
 
       if (renderStatusErr) {
         logger.log('got render status error aborting tests')
-        testController.setFatalError(renderStatusErr)
+        testController.setError(index, renderStatusErr)
         if (renderJobs.has(renderRequest)) renderJobs.get(renderRequest)()
         return
       }

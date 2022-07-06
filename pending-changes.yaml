@@ -12,12 +12,12 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-webdriverio":
   feature:
     - 
@@ -40,16 +40,17 @@ Apollo SDK:
       Fix calling `waitBeforeCapture` when failed to set required viewport size
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
 "@applitools/eyes-protractor":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-puppeteer":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-testcafe":
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
@@ -60,21 +61,22 @@ Apollo SDK:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Allow configuration file to be loaded from ancestor directories
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
 "@applitools/eyes-nightwatch":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-storybook":
   feature:
     - Allow configuration file to be loaded from ancestor directories
   bug-fix:
-    - 
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
