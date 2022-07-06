@@ -85,4 +85,33 @@ describe('eyes check mapping', () => {
     const coreConfig = eyesCheckMapValues({args, appliConfFile});
     expect(coreConfig).to.be.deep.equal(expected);
   });
+  it('should not include element in the returned config', () => {
+    const args = {
+      target: 'region',
+      element: 'some-element',
+    };
+    const expected = {
+      name: undefined,
+      hooks: undefined,
+      ignoreRegions: undefined,
+      floatingRegions: undefined,
+      strictRegions: undefined,
+      layoutRegions: undefined,
+      contentRegions: undefined,
+      accessibilityRegions: undefined,
+      region: {'applitools-ref-id': '1234'},
+      target: 'region',
+    };
+
+    const refer = {
+      ref: () => {
+        return {
+          'applitools-ref-id': '1234',
+        };
+      },
+    };
+
+    const coreConfig = eyesCheckMapValues({args, refer});
+    expect(coreConfig).to.be.deep.equal(expected);
+  });
 });

@@ -12,6 +12,7 @@ function eyesCheckMapValues({args, refer}) {
     'accessibility',
     'region',
     'selector',
+    'element',
   ];
 
   let regionSettings = {};
