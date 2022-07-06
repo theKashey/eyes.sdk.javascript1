@@ -40,7 +40,7 @@ jobs:
 
   test:
     needs: [make_release_branch]
-    uses: applitools/eyes.sdk.python/.github/workflows/py-tests.yaml@develop
+    uses: applitools/eyes.sdk.javascript1/.github/workflows/py-tests.yaml@master
     secrets: inherit
     with:
       ref: ${{needs.make_release_branch.outputs.release_branch}}
