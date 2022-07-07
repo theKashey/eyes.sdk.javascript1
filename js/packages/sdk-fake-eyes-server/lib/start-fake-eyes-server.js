@@ -124,6 +124,19 @@ function startFakeEyesServer({
     )
   })
 
+  app.post('/v2/job-info', jsonMiddleware, (req, res) => {
+    const requests = req.body
+    res.send(
+      requests.map(request => ({
+        eyesEnvironment: {
+          displaySize: 'widthxheight',
+          originalRenderRequest: JSON.stringify(request),
+        },
+        renderer: '',
+      })),
+    )
+  })
+
   // put resource
   app.put('/resources/sha256/:hash', rawMiddleware, (req, res) => {
     resources[req.params.hash] = req.body
