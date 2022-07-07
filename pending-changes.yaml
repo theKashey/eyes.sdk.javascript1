@@ -8,28 +8,28 @@ Apollo SDK:
     - Remove kitchen to accommodate space for PlayStation
     - |
       An example of how to inline `markdown code highlights`
-"@applitools/eyes-universal":
+'@applitools/eyes-universal':
   feature:
     - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-selenium":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-selenium':
   feature:
     - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-webdriverio":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-webdriverio':
   feature:
     - 
   bug-fix:
     - 
-"@applitools/eyes-playwright":
+'@applitools/eyes-playwright':
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties
     - Add special attribute for pseudo elements
     - Add the ability for the SDK to lazy load the page prior to performing a check window
-    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+    - 'Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions'
     - Support `addMobileDevice` in user API for NMG
     - Add support for dynamic coded regions
   bug-fix:
@@ -41,20 +41,20 @@ Apollo SDK:
     - Fix rendering issues with Salesforce Lightning design system
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
-"@applitools/eyes-protractor":
+'@applitools/eyes-protractor':
   feature:
     - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-puppeteer":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-puppeteer':
   feature:
     - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-testcafe":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-testcafe':
   feature:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
-    - Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+    - 'Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions'
   bug-fix:
     - |
       Fix calling `waitBeforeCapture` when failed to set required viewport size
@@ -62,23 +62,23 @@ Apollo SDK:
     - Fix issue that prevented self-signed certificates from working when connecting through a proxy server
     - Allow configuration file to be loaded from ancestor directories
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
-"@applitools/eyes-nightwatch":
+'@applitools/eyes-nightwatch':
   feature:
     - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-cypress":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-cypress':
   feature:
     - Add support for cypress 10
   bug-fix:
-    - Fix use cases where we fail to serialize elements 
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-storybook":
+    - Fix use cases where we fail to serialize elements
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-storybook':
   feature:
     - Allow configuration file to be loaded from ancestor directories
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration 
-"@applitools/eyes-webdriverio5-service":
+    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+'@applitools/eyes-webdriverio5-service':
   feature:
     - Support UFG for native mobile
     - Drop support for Node.js versions <=12
@@ -127,6 +127,6 @@ eyes-browser-extension:
       Fixed `forceFullPageScreenshot` option behavior
 applitools-for-selenium-ide:
   feature:
-    - add support for capturing video blobs when running on the ultrafast grid
+    - 
   bug-fix:
     - 

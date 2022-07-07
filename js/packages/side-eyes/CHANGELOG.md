@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 1.14.0 - 2022/7/7
+
+### Features
+- add support for capturing video blobs when running on the ultrafast grid
+### Bug fixes
+
 ## 1.13.7 - 2022/1/13
 
 - fix build error that prevented check commands from running
