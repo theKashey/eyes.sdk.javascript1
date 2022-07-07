@@ -12,6 +12,7 @@ from applitools.common import Region
 from applitools.core import RegionByRectangle
 from applitools.selenium.fluent import FrameLocator, RegionBySelector
 from applitools.selenium.fluent.target_path import TargetPath
+from EyesLibrary import TargetPathKeywords
 from EyesLibrary.keywords.check_settings import CheckSettingsKeywords
 
 WEB_ELEMENT = Mock(WebElement)
@@ -20,6 +21,39 @@ WEB_ELEMENT = Mock(WebElement)
 def run_keyword(name, *args):
     if name == "Ignore Region By Coordinates":
         return CheckSettingsKeywords(Mock()).ignore_region_by_coordinates(*args)
+    if name == "Shadow By Selector":
+        return TargetPathKeywords(Mock()).shadow_by_selector(*args)
+
+
+@pytest.fixture
+def patched_run_keyword(eyes_library_with_selenium):
+    def run_keyword(name, *args):
+        if name == "Ignore Region By Coordinates":
+            return CheckSettingsKeywords(
+                eyes_library_with_selenium
+            ).ignore_region_by_coordinates(*args)
+        if name == "Shadow By Selector":
+            return TargetPathKeywords(eyes_library_with_selenium).shadow_by_selector(
+                *args
+            )
+        if name == "Shadow By Element":
+            return TargetPathKeywords(eyes_library_with_selenium).shadow_by_element(
+                *args
+            )
+        if name == "Region By Selector":
+            return TargetPathKeywords(eyes_library_with_selenium).region_by_selector(
+                *args
+            )
+        if name == "Region By Element":
+            return TargetPathKeywords(eyes_library_with_selenium).region_by_element(
+                *args
+            )
+        raise Exception("Unknown keyword: `{}`".format(name))
+
+    with mock.patch(
+        "robot.libraries.BuiltIn.BuiltIn.run_keyword", side_effect=run_keyword
+    ):
+        yield
 
 
 CheckSettingsData = namedtuple("CheckSettingsData", "params result")
@@ -29,7 +63,7 @@ CheckSettingsData = namedtuple("CheckSettingsData", "params result")
 class TestData(object):
     method = attr.ib(type=str)
     check_tag = attr.ib(default=None)
-    check_region = attr.ib(default=None)
+    check_values = attr.ib(default=None)
     check_region_result = attr.ib(default=None)
 
     check_settings_data = CheckSettingsData(
@@ -44,8 +78,11 @@ class TestData(object):
         # type: () -> List
         result = []
         # order does matter here!
-        if self.check_region:
-            result.append(self.check_region)
+        if self.check_values:
+            if isinstance(self.check_values, list):
+                result.extend(self.check_values)
+            else:
+                result.append(self.check_values)
         if self.check_tag:
             result.append(self.check_tag)
         if self.check_settings_data.params:
@@ -68,13 +105,9 @@ class TestData(object):
     ],
     ids=lambda d: str(d),
 )
-def test_check_window(check_keyword, data):
+def test_check_window(check_keyword, data, patched_run_keyword):
     call_method = getattr(check_keyword, data.method)
-
-    with mock.patch(
-        "robot.libraries.BuiltIn.BuiltIn.run_keyword", side_effect=run_keyword
-    ):
-        call_method(*data.check_params)
+    call_method(*data.check_params)
 
     check_settings, tag = check_keyword.results[0]
     assert tag == data.check_tag
@@ -86,25 +119,46 @@ def test_check_window(check_keyword, data):
     [
         TestData(
             "check_region_by_coordinates",
-            check_region="[20 20 20 20]",
+            check_values="[20 20 20 20]",
             check_region_result=Region(20, 20, 20, 20),
         ),
         TestData(
             "check_region_by_selector",
-            check_region="id:overflow-div",
+            check_values="id:overflow-div",
             check_region_result=RegionBySelector(By.ID, "overflow-div"),
         ),
-        TestData("check_region_by_element", check_region=WEB_ELEMENT),
+        TestData("check_region_by_element", check_values=WEB_ELEMENT),
+        TestData(
+            "check_region_by_target_path",
+            check_values=[
+                "Shadow By Selector",
+                "id:overflow-div",
+                "Shadow By Element",
+                WEB_ELEMENT,
+                "Region By Selector",
+                "id:overflow-div",
+            ],
+            check_region_result=TargetPath.shadow([By.ID, "overflow-div"])
+            .shadow(WEB_ELEMENT)
+            .region([By.ID, "overflow-div"]),
+        ),
+        TestData(
+            "check_region_by_target_path",
+            check_values=[
+                "Shadow By Element",
+                WEB_ELEMENT,
+                "Region By Element",
+                WEB_ELEMENT,
+            ],
+            check_region_result=TargetPath.shadow(WEB_ELEMENT).region(WEB_ELEMENT),
+        ),
     ],
     ids=lambda d: str(d),
 )
-def test_check_region(check_keyword, data):
+def test_check_region(check_keyword, data, patched_run_keyword):
     call_method = getattr(check_keyword, data.method)
 
-    with mock.patch(
-        "robot.libraries.BuiltIn.BuiltIn.run_keyword", side_effect=run_keyword
-    ):
-        call_method(*data.check_params)
+    call_method(*data.check_params)
 
     check_settings, tag = check_keyword.results[0]
     assert tag == data.check_tag
@@ -117,24 +171,24 @@ def test_check_region(check_keyword, data):
     [
         TestData(
             "check_frame_by_element",
-            check_region=WEB_ELEMENT,
+            check_values=WEB_ELEMENT,
             check_region_result=FrameLocator(
                 frame_locator=TargetPath.frame(WEB_ELEMENT)
             ),
         ),
         TestData(
             "check_frame_by_index",
-            check_region=1,
+            check_values=1,
             check_region_result=FrameLocator(frame_index=1),
         ),
         TestData(
             "check_frame_by_name",
-            check_region="framename",
+            check_values="framename",
             check_region_result=FrameLocator(frame_name_or_id="framename"),
         ),
         TestData(
             "check_frame_by_selector",
-            check_region="id:overflow-div",
+            check_values="id:overflow-div",
             check_region_result=FrameLocator(
                 frame_locator=TargetPath.frame(By.ID, "overflow-div")
             ),
@@ -142,13 +196,10 @@ def test_check_region(check_keyword, data):
     ],
     ids=lambda d: str(d),
 )
-def test_check_frame(check_keyword, data):
+def test_check_frame(check_keyword, data, patched_run_keyword):
     call_method = getattr(check_keyword, data.method)
 
-    with mock.patch(
-        "robot.libraries.BuiltIn.BuiltIn.run_keyword", side_effect=run_keyword
-    ):
-        call_method(*data.check_params)
+    call_method(*data.check_params)
 
     check_settings, tag = check_keyword.results[0]
     assert tag == data.check_tag

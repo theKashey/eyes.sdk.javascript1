@@ -14,7 +14,12 @@ from applitools.selenium import Target
 
 from ..base import LibraryComponent
 from ..keywords_list import register_check_keyword
-from ..utils import collect_check_settings_with_tag, is_webelement_guard, parse_region
+from ..utils import (
+    collect_check_settings_with_tag,
+    collect_check_settings_with_tag_and_target_path,
+    is_webelement_guard,
+    parse_region,
+)
 from .keyword_tags import CHECK_FLOW, CHECK_SETTINGS_SUPPORT, TARGET_SUPPORT
 
 if TYPE_CHECKING:
@@ -107,6 +112,28 @@ class CheckRegionKeywords(object):
             *check_settings_keywords
         )
         return self.current_eyes.check(check_settings, tag)
+
+    @keyword(
+        "Eyes Check Region By Target Path",
+        types=(str,),
+        tags=(CHECK_FLOW,),
+    )
+    def check_region_by_target_path(
+        self,
+        tag=None,  # type: Optional[Text]
+        *check_settings_keywords  # type: tuple[Any]
+    ):
+        # type: (...) -> MatchResult
+        """
+        Check specified region by selector
+
+        *Example:*
+            |  Eyes Check Region By Target Path  |  Shadow By Selector  |  css:#selector  | Region By Selector  |  css:#selector  |
+        """
+        check_settings = collect_check_settings_with_tag_and_target_path(
+            tag, Target.region, *check_settings_keywords
+        )
+        return self.current_eyes.check(check_settings)
 
 
 class CheckFrameKeywords(object):
@@ -213,7 +240,7 @@ class CheckFrameKeywords(object):
 class CheckKeywords(LibraryComponent, CheckRegionKeywords, CheckFrameKeywords):
     @keyword("Eyes Check Window", types=(str,), tags=(CHECK_FLOW,))
     def check_window(self, tag=None, *check_settings_keywords):
-        # type: (Optional[Text], tuple[Any]) -> MatchResult
+        # type: (Optional[Text], tuple[Any]) -> Optional[MatchResult]
         """
         Check current browser window
 

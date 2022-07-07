@@ -112,6 +112,38 @@ def test_suite_web(data):
     assert code == 0, output
 
 
+def test_web_desktop_only():
+    runner, backend, platform = "web", "selenium", "desktop"
+    code, output = run_robot(
+        "--variablefile",
+        "variables_test.py:{runner}:{backend}:{platform}".format(
+            runner=runner, backend=backend, platform=platform
+        ),
+        "--output={}-{}-{}.xml".format(runner, backend, platform),
+        "--log=NONE",
+        "--report=NONE",
+        "web_desktop_only.robot",
+    )
+
+    expected = lines(
+        """
+        [ WARN ] No `config` set explicitly. Trying to find `applitools.yaml` in current path
+        Running test suite with `{runner}` runner and `applitools.yaml` config
+        Using library `{backend_name}` as backend
+        ==============================================================================
+        Web Desktop Only
+        ==============================================================================
+        Check Shadow Dom                                                      | PASS |
+        ------------------------------------------------------------------------------
+        """.format(
+            runner=runner,
+            backend_name=backend_to_backend_name[backend],
+        )
+    )
+    assert lines(output)[: len(expected)] == expected
+    assert code == 0, output
+
+
 @pytest.mark.parametrize(
     "data",
     [

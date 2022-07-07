@@ -1,3 +1,7 @@
+## [vNext]
+### Added
+- Support of Shadow DOM feature with Eyes Check Region [Trello 2826](https://trello.com/c/XM0mpzOZ)
+
 ## [5.6.1] - 2022-06-01
 ### Updated
 - Support for typed exceptions implemented in eyes-universal 2.5.19 [Trello 2912](https://trello.com/c/fN7fLjss)
