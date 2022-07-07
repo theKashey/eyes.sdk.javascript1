@@ -69,10 +69,9 @@ Apollo SDK:
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
 "@applitools/eyes-cypress":
   feature:
-    - Add support for cypress 10
+    - 
   bug-fix:
-    - Fix use cases where we fail to serialize elements
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Allow configuration file to be loaded from ancestor directories

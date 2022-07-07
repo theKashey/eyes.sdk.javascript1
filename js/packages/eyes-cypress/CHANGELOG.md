@@ -9,6 +9,14 @@
 
 
 
+## 3.26.4 - 2022/7/7
+
+### Features
+- Add support for cypress 10
+### Bug fixes
+- Fix use cases where we fail to serialize elements
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+
 ## 3.26.3 - 2022/6/17
 
 ### Features
