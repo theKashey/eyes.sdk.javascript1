@@ -127,6 +127,6 @@ eyes-browser-extension:
       Fixed `forceFullPageScreenshot` option behavior
 applitools-for-selenium-ide:
   feature:
-    - 
+    - add support for capturing video blobs when running on the ultrafast grid
   bug-fix:
     - 

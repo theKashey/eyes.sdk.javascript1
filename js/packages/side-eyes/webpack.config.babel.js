@@ -31,6 +31,10 @@ export default {
   module: {
     rules: [
       {
+        test: /cosmiconfig/,
+        use: 'null-loader',
+      },
+      {
         test: /@applitools\/screenshoter/,
         use: 'null-loader',
       },

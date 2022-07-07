@@ -26,7 +26,7 @@ export async function checkWindow(runId, testId, commandId, tabId, windowId, fra
   })
   return await (eyes.isVisualGrid
     ? checkWithVisualGrid(eyes, commandId, tabId, stepName, viewport, buildCheckUsingVisualGrid(eyes, driver, logger), {
-        sizeMode: 'full-page',
+        target: 'full-page',
         scriptHooks: {
           beforeCaptureScreenshot: eyes.getPreRenderHook(),
         },
@@ -68,7 +68,7 @@ export async function checkElement(
       viewport,
       buildCheckUsingVisualGrid(eyes, driver, logger),
       {
-        sizeMode: 'selector',
+        target: 'selector',
         selector: {
           type: 'xpath',
           selector: elementXPath,

@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 import React from 'react'
 import PropTypes from 'prop-types'
 import FlatButton from '../../../commons/components/FlatButton'
