@@ -9,7 +9,8 @@ describe('proxy-server', () => {
     await proxy.server.close()
   })
 
-  it('works with real server', async () => {
+  // skipping temporarily due to chrome 103 bug
+  it.skip('works with real server', async () => {
     proxy = await makeServer({eyesServerUrl: process.env.APPLITOOLS_SERVER_URL, apiKey: process.env.APPLITOOLS_API_KEY})
     const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
 
