@@ -28,31 +28,23 @@ uninstall:
 	python -m pip uninstall -y eyes-robotframework eyes-selenium eyes-universal
 
 
-publish_eyes_selenium: SELENIUM_CHANGELOG := $$(bash ./ci_scripts/extract_changelog.sh ${SDK_VERSION} eyes_selenium/CHANGELOG.md)
-publish_eyes_selenium: TEST_COVERAGE_GAP := $$(cat ./ci_scripts/testCoverageGap.txt)
 publish_eyes_selenium: eyes_selenium/dist install_publish_requirements
-	bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} "${SELENIUM_CHANGELOG}" "${TEST_COVERAGE_GAP}"
+	bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} eyes_selenium/CHANGELOG.md
 	twine upload --verbose eyes_selenium/dist/*
 
 
-publish_testing_eyes_selenium: SELENIUM_CHANGELOG := $$(bash ./ci_scripts/extract_changelog.sh ${SDK_VERSION} eyes_selenium/CHANGELOG.md)
-publish_testing_eyes_selenium: TEST_COVERAGE_GAP := $$(cat ./ci_scripts/testCoverageGap.txt)
 publish_testing_eyes_selenium: eyes_selenium/dist install_publish_requirements
-	echo bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} "${SELENIUM_CHANGELOG}" "${TEST_COVERAGE_GAP}"
+	echo bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} eyes_selenium/CHANGELOG.md
 	twine upload --verbose --repository testpypi eyes_selenium/dist/*
 
 
-publish_eyes_robotframework: ROBOTFRAMEWORK_CHANGELOG := $$(bash ./ci_scripts/extract_changelog.sh ${SDK_VERSION} eyes_robotframework/CHANGELOG.md)
-publish_eyes_robotframework: TEST_COVERAGE_GAP := $$(cat ./ci_scripts/testCoverageGap.txt)
 publish_eyes_robotframework: eyes_robotframework/dist install_publish_requirements
-	bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} "${ROBOTFRAMEWORK_CHANGELOG}" "${TEST_COVERAGE_GAP}"
+	bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
 	twine upload --verbose eyes_robotframework/dist/*
 
 
-publish_testing_eyes_robotframework: ROBOTFRAMEWORK_CHANGELOG := $$(bash ./ci_scripts/extract_changelog.sh ${SDK_VERSION} eyes_robotframework/CHANGELOG.md)
-publish_testing_eyes_robotframework: TEST_COVERAGE_GAP := $$(cat ./ci_scripts/testCoverageGap.txt)
 publish_testing_eyes_robotframework: eyes_robotframework/dist install_publish_requirements
-	echo bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} "${ROBOTFRAMEWORK_CHANGELOG}" "${TEST_COVERAGE_GAP}"
+	echo bash ./ci_scripts/send_mail.sh python ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
 	twine upload --verbose --repository testpypi eyes_robotframework/dist/*
 
 
