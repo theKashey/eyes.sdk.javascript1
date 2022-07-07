@@ -8,6 +8,12 @@
 
 
 
+## 2.9.6 - 2022/7/7
+
+### Features
+### Bug fixes
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+
 ## 2.9.5 - 2022/7/5
 
 ### Features
