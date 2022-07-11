@@ -168,6 +168,16 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       let windowSize = await this._spec.getWindowSize(this.target)
       this._driverInfo.displaySize ??= windowSize
 
+      if (
+        this.orientation?.startsWith('landscape') &&
+        this._driverInfo.displaySize.height > this._driverInfo.displaySize.width
+      ) {
+        this._driverInfo.displaySize = {
+          width: this._driverInfo.displaySize.height,
+          height: this._driverInfo.displaySize.width,
+        }
+      }
+
       if (this.isAndroid) {
         // bar sizes could be extracted only on android
         const systemBars = await this._spec.getSystemBars?.(this.target).catch(() => null as never)
@@ -211,6 +221,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         this._driverInfo.displaySize &&= utils.geometry.scale(this._driverInfo.displaySize, 1 / this.pixelRatio)
       }
 
+      if (this.isIOS) {
+        if (this.orientation?.startsWith('landscape')) this._driverInfo.statusBarSize = 0
+      }
+
       // calculate viewport location
       this._driverInfo.viewportLocation ??= {
         x: this.orientation === 'landscape' ? this.navigationBarSize : 0,
@@ -219,16 +233,11 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
       // calculate viewport size
       if (!this._driverInfo.viewportSize) {
-        if (this.orientation?.startsWith('landscape')) {
-          this._driverInfo.viewportSize = {
-            width: this._driverInfo.displaySize.height - this.navigationBarSize,
-            height: this._driverInfo.displaySize.width - this.statusBarSize,
-          }
-        } else {
-          this._driverInfo.viewportSize = {
-            width: this._driverInfo.displaySize.width,
-            height: this._driverInfo.displaySize.height - this.statusBarSize - this.navigationBarSize,
-          }
+        this._driverInfo.viewportSize = {...this._driverInfo.displaySize}
+        this._driverInfo.viewportSize.height -= this.statusBarSize
+        if (this.isAndroid) {
+          this._driverInfo.viewportSize[this.orientation?.startsWith('landscape') ? 'width' : 'height'] -=
+            this.navigationBarSize
         }
       }
 

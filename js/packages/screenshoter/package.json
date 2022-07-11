@@ -59,7 +59,7 @@
     "docker:setup": "node ../scripts/scripts/generate-docker-compose-config.js && docker-compose up -d",
     "docker:teardown": "docker-compose down",
     "ios:setup": "node ./scripts/ios-simulator.js",
-    "appium:setup": "mkdir -p ./logs && appium --address 127.0.0.1 --port 4723 --base-path /wd/hub --log-level error:info --log ./logs/appium.log &",
+    "appium:setup": "mkdir -p ./logs && appium --address 127.0.0.1 --port 4723 --base-path /wd/hub --log-level error:info --log ./logs/appium.log --relaxed-security &",
     "deps": "bongo deps",
     "gh:publish": "gh workflow run publish-screenshoter.yml --ref $(git rev-parse --abbrev-ref HEAD)",
     "preversion": "bongo preversion",

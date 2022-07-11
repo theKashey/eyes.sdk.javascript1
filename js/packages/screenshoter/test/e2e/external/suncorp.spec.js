@@ -17,7 +17,7 @@ describe('screenshoter android app', () => {
   before(async () => {
     ;[driver, destroyDriver] = await makeDriver({
       type: 'android',
-      app: '/Users/kyrylo/Downloads/Marketplace-1.14.0.2243-aami-qa-signed-aligned.apk',
+      app: '/Users/kyrylo/Downloads/Marketplace-1.16.0.2781-aami-qa-signed-aligned.apk',
       logger,
     })
 

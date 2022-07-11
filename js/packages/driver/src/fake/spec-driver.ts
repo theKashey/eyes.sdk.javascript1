@@ -63,8 +63,7 @@ export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
   return driver.info
 }
 export async function getWindowSize(driver: Driver): Promise<Size> {
-  const rect = await driver.getWindowRect()
-  return rect
+  return utils.geometry.size(await driver.getWindowRect())
 }
 export async function setWindowSize(driver: Driver, size: Size): Promise<void> {
   await driver.setWindowRect(size)

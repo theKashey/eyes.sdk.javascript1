@@ -1,4 +1,4 @@
-const {makeDriver, test, logger} = require('../e2e')
+const {makeDriver, test, sleep, logger} = require('../e2e')
 
 // appium's set orientation will set non-deterministic landscape mode to either 90° or 270°
 describe('screenshoter android app', () => {
@@ -18,6 +18,8 @@ describe('screenshoter android app', () => {
     // set device rotation to 270°
     await driver.execute('mobile:shell', {command: 'settings put system user_rotation 3'})
 
+    await sleep(5000)
+
     await driver.init()
 
     await test({
@@ -29,11 +31,13 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take viewport screenshot', async () => {
+  it('take viewport screenshot on device with landscape-secondary orientation', async () => {
     // disable auto-rotation
     await driver.execute('mobile:shell', {command: 'settings put system accelerometer_rotation 0'})
     // set device rotation to 90°
     await driver.execute('mobile:shell', {command: 'settings put system user_rotation 1'})
+
+    await sleep(5000)
 
     await driver.init()
 

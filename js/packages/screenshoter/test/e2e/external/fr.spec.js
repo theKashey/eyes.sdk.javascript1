@@ -92,3 +92,37 @@ describe('screenshoter android app', () => {
     })
   })
 })
+
+describe('screenshoter ios app', () => {
+  let driver, destroyDriver
+
+  before(async () => {
+    ;[driver, destroyDriver] = await makeDriver({
+      type: 'ios',
+      app: '/Users/kyrylo/Downloads/UNIQLO.app.zip',
+      logger,
+    })
+
+    await driver.target.updateSettings({allowInvisibleElements: true})
+  })
+
+  after(async () => {
+    await destroyDriver()
+  })
+
+  it('take full app screenshot on pager screen', async () => {
+    await sleep(5000)
+
+    await test({
+      type: 'ios',
+      tag: 'app-fully-fr0',
+      fully: true,
+      framed: true,
+      wait: 1500,
+      overlap: {top: 0, bottom: 0},
+      scrollingMode: 'scroll',
+      driver,
+      logger,
+    })
+  })
+})
