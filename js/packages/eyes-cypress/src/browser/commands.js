@@ -116,7 +116,6 @@ Cypress.Commands.add('eyesOpen', function(args = {}) {
         name: 'eyes.cypress',
         version: require('../../package.json').version,
         commands: Object.keys(spec).concat(['isSelector', 'isDriver', 'isElement']), // TODO fix spec.isSelector and spec.isDriver and spec.isElement in driver utils
-        cwd: process.cwd(),
       });
 
       manager =

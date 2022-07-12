@@ -114,4 +114,19 @@ describe('eyes check mapping', () => {
     const coreConfig = eyesCheckMapValues({args, refer});
     expect(coreConfig).to.be.deep.equal(expected);
   });
+  it('should work with string input', () => {
+    const args = 'some tag name';
+    const expected = {
+      name: 'some tag name',
+      hooks: undefined,
+      ignoreRegions: undefined,
+      floatingRegions: undefined,
+      strictRegions: undefined,
+      layoutRegions: undefined,
+      contentRegions: undefined,
+      accessibilityRegions: undefined,
+    };
+    const coreConfig = eyesCheckMapValues({args});
+    expect(coreConfig).to.be.deep.equal(expected);
+  });
 });

@@ -1,5 +1,8 @@
 /* global Node */
 function eyesCheckMapValues({args, refer}) {
+  if (typeof args === `string`) {
+    args = {tag: args};
+  }
   const config = args; // just did it for having less git changes at this moment
   const mappedValues = [
     'tag',

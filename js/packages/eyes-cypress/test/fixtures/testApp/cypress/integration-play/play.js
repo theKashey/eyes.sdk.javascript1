@@ -3,17 +3,15 @@ Cypress.on('uncaught:exception', () => {});
 
 describe('Play Cypress', () => {
   it.only('Play Cypress', () => {
+    cy.visit('https://example.org', {
+      failOnStatusCode: false,
+    });
     cy.eyesOpen({
       appName: 'Play Cypress',
       testName: 'Check Window',
       // browser: [{width: 1200, height: 900}]
     });
-    cy.visit('https://example.org', {
-      failOnStatusCode: false,
-    });
-    cy.eyesCheckWindow({
-      tag: 'Play Cypress',
-    });
+    cy.eyesCheckWindow('Play Cypress');
     cy.eyesClose();
   });
   it('Play Cypress checkRegion', () => {
@@ -32,7 +30,8 @@ describe('Play Cypress', () => {
       },
     });
     cy.eyesClose();
-    cy.eyesGetAllTestResults().then(async summary => {la
+    cy.eyesGetAllTestResults().then(async summary => {
+      la;
       // delete all tests
       // const promise = Promise.resolve()
       // for (const container of summary.results) {

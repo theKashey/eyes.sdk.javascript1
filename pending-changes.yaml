@@ -74,7 +74,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Support string tag name in eyesCheck
 "@applitools/eyes-storybook":
   feature:
     - Allow configuration file to be loaded from ancestor directories
