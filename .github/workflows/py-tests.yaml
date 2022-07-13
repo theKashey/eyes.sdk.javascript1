@@ -1,5 +1,6 @@
 name: Build and test python packages
 on:
+  schedule: [cron: 3 42 * * *]
   pull_request:
     paths:
       - 'python/**'
