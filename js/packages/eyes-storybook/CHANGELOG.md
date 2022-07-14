@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+## 3.29.2 - 2022/7/14
+
+### Features
+- Allow configuration file to be loaded from ancestor directories
+### Bug fixes
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+
 ## 3.29.1 - 2022/6/16
 
 ### Features

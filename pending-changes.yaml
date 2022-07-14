@@ -77,9 +77,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-storybook":
   feature:
-    - Allow configuration file to be loaded from ancestor directories
+    - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+    - 
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
