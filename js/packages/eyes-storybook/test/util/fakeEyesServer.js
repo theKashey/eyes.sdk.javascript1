@@ -92,6 +92,11 @@ function fakeEyesServer({
     res.send(new Array(requests.length).fill().map(() => ({eyesEnvironment: {}, renderer: ''})));
   });
 
+  app.post('/v2/job-info', (req, res) => {
+    const requests = req.body;
+    res.send(new Array(requests.length).fill().map(() => ({eyesEnvironment: {}, renderer: ''})));
+  });
+
   app.get('/user-agents', (_req, res) => {
     res.send({
       chrome: 'chrome-ua',
