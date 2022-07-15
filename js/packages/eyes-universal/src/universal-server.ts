@@ -49,7 +49,10 @@ export async function makeServer({
   console.log(`Logs saved in: ${LOG_DIRNAME}`)
   baseLogger.log('Server is started')
 
-  let idle = setTimeout(() => server.close(), idleTimeout)
+  let idle: any
+  if (idleTimeout) {
+    idle = setTimeout(() => server.close(), idleTimeout)
+  }
   let serverClosed = false
 
   server.on('close', () => {
@@ -69,12 +72,13 @@ export async function makeServer({
       > &
         Omit<Socket, 'command' | 'request'>,
     })
-
-    clearTimeout(idle)
-    socket.on('close', () => {
-      if (server.clients.size > 0 || serverClosed) return
-      idle = setTimeout(() => server.close(), idleTimeout)
-    })
+    if (idleTimeout) {
+      clearTimeout(idle)
+      socket.on('close', () => {
+        if (server.clients.size > 0 || serverClosed) return
+        idle = setTimeout(() => server.close(), idleTimeout)
+      })
+    }
 
     const logger = baseLogger.extend({
       console: {

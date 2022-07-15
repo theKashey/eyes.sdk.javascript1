@@ -10,7 +10,8 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - |
+      Add the option to cancel `idleTimeout` when sending zero as the value and add the option to send `detached` to `makeServerProcess`
   bug-fix:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
 "@applitools/eyes-selenium":
@@ -72,7 +73,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Internal architecture fixes
   bug-fix:
     - 
 "@applitools/eyes-storybook":

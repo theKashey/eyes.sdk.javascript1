@@ -2,10 +2,12 @@ import {type ServerOptions} from './universal-server'
 import {fork} from 'child_process'
 import path from 'path'
 
-export function makeServerProcess(options: ServerOptions): Promise<{port: number; close: () => void}> {
+export function makeServerProcess(
+  options: ServerOptions & {detached?: boolean},
+): Promise<{port: number; close: () => void}> {
   return new Promise((resolve, reject) => {
     const server = fork(path.resolve(__dirname, '../dist/cli.js'), [`--config=${JSON.stringify(options)}`], {
-      detached: true,
+      detached: options.detached ?? true,
       stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
     })
 

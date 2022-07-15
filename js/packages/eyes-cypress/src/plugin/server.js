@@ -34,6 +34,8 @@ function makeStartServer({logger}) {
     const {port: universalPort, close: closeUniversalServer} = await makeServerProcess({
       key: path.resolve(__dirname, '../pem/server.key'),
       cert: path.resolve(__dirname, '../pem/server.cert'),
+      detached: false,
+      idleTimeout: 0,
     });
 
     const managers = [];
