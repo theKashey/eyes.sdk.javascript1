@@ -8,6 +8,14 @@
 
 
 
+
+## 2.9.7 - 2022/7/15
+
+### Features
+- Add the option to cancel `idleTimeout` when sending zero as the value and add the option to send `detached` to `makeServerProcess`
+### Bug fixes
+- Fixed various issues during taking screenshots in landscape orientation on some native devices
+
 ## 2.9.6 - 2022/7/7
 
 ### Features
