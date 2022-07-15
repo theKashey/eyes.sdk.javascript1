@@ -95,10 +95,10 @@
     chalk "3.0.0"
     tunnel "0.0.6"
 
-"@applitools/eyes-universal@2.9.6":
-  version "2.9.6"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-universal/-/eyes-universal-2.9.6.tgz#65dad010283d5117704137e6c10e4592c6bdd7e1"
-  integrity sha512-Un6/p8CCI7bdootTDnjpls/mo53Q/3YV8VQQalbkR7Xex63Y4/r4Y/xowoAZb+Q/Iq/BblMwhKFh11dEePFMpA==
+"@applitools/eyes-universal@2.9.7":
+  version "2.9.7"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-universal/-/eyes-universal-2.9.7.tgz#0e4e5309e04abbeeb2f29a9e5d63a2feb90de55f"
+  integrity sha512-pqmgAt2MSSYsT1Iye0motD6x4O9IMF0CCpqKbllU2Om6KSSedT8+c8V0nr+SSrWxKYnvZ6Et1MPs2xYibOywsg==
   dependencies:
     "@applitools/execution-grid-client" "1.1.22"
     "@applitools/eyes-sdk-core" "13.8.12"
