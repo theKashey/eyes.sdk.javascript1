@@ -9,6 +9,12 @@
 
 
 
+## 3.26.6 - 2022/7/15
+
+### Features
+- Internal architecture fixes
+### Bug fixes
+
 ## 3.26.5 - 2022/7/12
 
 ### Features
