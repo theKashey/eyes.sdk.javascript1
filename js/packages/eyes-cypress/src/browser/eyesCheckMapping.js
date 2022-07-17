@@ -23,11 +23,11 @@ function eyesCheckMapValues({args, refer}) {
   const checkSettings = {
     name: config.tag,
     hooks: config.scriptHooks,
-    ignoreRegions: refElements(config.ignore),
+    ignoreRegions: convertPaddedRegion(config.ignore),
     floatingRegions: convertFloatingRegion(config.floating),
-    strictRegions: refElements(config.strict),
-    layoutRegions: refElements(config.layout),
-    contentRegions: refElements(config.content),
+    strictRegions: convertPaddedRegion(config.strict),
+    layoutRegions: convertPaddedRegion(config.layout),
+    contentRegions: convertPaddedRegion(config.content),
     accessibilityRegions: convertAccessabilityRegions(config.accessibility),
   };
 
@@ -81,6 +81,27 @@ function eyesCheckMapValues({args, refer}) {
   return Object.assign({}, checkSettings, regionSettings, config);
 
   // #region helper functions
+
+  function convertPaddedRegion(regions) {
+    if (!regions) return;
+    if (!Array.isArray(regions)) regions = [regions];
+    let resRegions = [];
+    for (const region of regions) {
+      if (region.element) {
+        if (region.padding) {
+          let currRefElements = refElements(region.element);
+          for (const refElement of currRefElements) {
+            resRegions.push({region: refElement, padding: region.padding});
+          }
+        } else {
+          resRegions = [...resRegions, refElements(region)];
+        }
+      } else {
+        resRegions.push(region);
+      }
+    }
+    return resRegions;
+  }
 
   function convertAccessabilityRegions(accessibilityRegions) {
     if (!accessibilityRegions) return accessibilityRegions;

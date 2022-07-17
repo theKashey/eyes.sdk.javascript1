@@ -213,6 +213,7 @@ Applitools will take screenshots and perform the visual comparisons in the backg
         - [`layout`](#layout)
         - [`strict`](#strict)
         - [`content`](#content)
+        - [`padded coded regions`](#padded-coded-regions)
         - [`accessibility`](#accessibility)
         - [`region in shadow DOM`](#region-in-shadow-dom)
         - [`scriptHooks`](#scripthooks)
@@ -491,6 +492,22 @@ cy.get('.some-div-to-float').then($el => {
     });
   })
   ```
+
+##### `padded coded regions`
+
+```js
+cy.get('some-region').then(el => {
+  cy.eyesCheckWindow({
+    // will add pedding to a region by a css selector at the left and top of the region
+    layout: {region: 'layout-region', padding: {left:20, top: 10}} 
+     // will add padding of 20px to all JQuery elements at the top, button, right and left of the region
+    ignore: {element: el, padding: 20},
+    // will add padding for a DOM element on the top of the region
+    content: {element: el[0], padding: {top:10}}
+  })
+
+})
+```
 
 ##### `accessibility`
 

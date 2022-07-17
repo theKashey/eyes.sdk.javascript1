@@ -72,7 +72,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Add support for padded coded regions
   bug-fix:
     - 
 "@applitools/eyes-storybook":
