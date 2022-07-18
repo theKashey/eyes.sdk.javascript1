@@ -12,18 +12,20 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Avoided unexpected touch actions during `check` on Android apps
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
+    - Avoided unexpected touch actions during `check` on Android apps
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
+    - Avoided unexpected touch actions during `check` on Android apps
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -48,6 +50,7 @@ Apollo SDK:
   bug-fix:
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
+    - Avoided unexpected touch actions during `check` on Android apps
 "@applitools/eyes-puppeteer":
   feature:
     - 
@@ -70,6 +73,7 @@ Apollo SDK:
   bug-fix:
     - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
+    - Avoided unexpected touch actions during `check` on Android apps
 "@applitools/eyes-cypress":
   feature:
     - Add support for padded coded regions
@@ -114,6 +118,7 @@ Apollo SDK:
     - Improved handling of touch padding related issues in native apps
     - Prevented navbar from appearing on Android 12 screenshots
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
+    - Avoided unexpected touch actions during `check` on Android apps
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

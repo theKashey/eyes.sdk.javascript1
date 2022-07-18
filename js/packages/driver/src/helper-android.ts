@@ -2,7 +2,6 @@ import type * as types from '@applitools/types'
 import {type Logger} from '@applitools/logger'
 import type {Driver} from './driver'
 import type {Element} from './element'
-import * as utils from '@applitools/utils'
 
 export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
@@ -54,7 +53,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     return resourceId.split('/')[1]
   }
 
-  async getContentSize(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {
+  async getContentRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
     let contentHeightString
     if (this._legacy) {
       await this._input.click()
@@ -72,9 +71,9 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     const region = await this._spec.getElementRegion(this._input.driver.target, element.target)
     const contentHeight = Number(contentHeightString)
 
-    if (Number.isNaN(contentHeight)) return utils.geometry.size(region)
-
-    return {width: region.width, height: contentHeight}
+    return !Number.isNaN(contentHeight) && contentHeight >= region.height
+      ? {x: region.x, y: region.y, width: region.width, height: contentHeight}
+      : null
   }
 
   async getRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {

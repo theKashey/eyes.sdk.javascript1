@@ -34,8 +34,10 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
     this.name = 'ios'
   }
 
-  async getContentSize(_element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Size> {
+  async getContentRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
     await this._element.click()
+
+    const region = await this._spec.getElementRegion(this._driver.target, element.target)
 
     const sizeLabel = await this._driver.element({type: 'name', selector: 'applitools_content_size_label'})
     const sizeString = await sizeLabel?.getText()
@@ -45,11 +47,12 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
     if (Number.isNaN(contentSize.width + contentSize.height)) return null
     const paddingLabel = await this._driver.element({type: 'name', selector: 'applitools_content_offset_label'})
     const paddingString = await paddingLabel?.getText()
-    if (!paddingString) return contentSize
-    const [, x, y] = paddingString.match(/\{(-?\d+(?:\.\d+)?),\s?(-?\d+(?:\.\d+)?)\}/)
-    const contentOffset = {x: Number(x), y: Number(y)}
-    if (!Number.isNaN(contentOffset.x)) contentSize.width -= contentOffset.x
-    if (!Number.isNaN(contentOffset.y)) contentSize.height -= contentOffset.y
-    return contentSize
+    if (paddingString) {
+      const [, x, y] = paddingString.match(/\{(-?\d+(?:\.\d+)?),\s?(-?\d+(?:\.\d+)?)\}/)
+      const contentOffset = {x: Number(x), y: Number(y)}
+      if (!Number.isNaN(contentOffset.x)) contentSize.width -= contentOffset.x
+      if (!Number.isNaN(contentOffset.y)) contentSize.height -= contentOffset.y
+    }
+    return contentSize.height >= region.height ? {x: region.x, y: region.y, ...contentSize} : null
   }
 }

@@ -114,29 +114,29 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         // appium doesn't have a way to check if an element is contained in another element, so juristic applied
         if (await this.equals(innerElement)) return false
         // if the inner element region is contained in this element region, then it then could be assumed that the inner element is contained in this element
-        const contentRegion = await this.getAttribute('contentSize')
-          .then(data => {
-            const contentSize = JSON.parse(data)
-            return {
-              x: contentSize.left,
-              y: contentSize.top,
-              width: contentSize.width,
-              height: this.driver.isIOS
-                ? Math.max(contentSize.height, contentSize.scrollableOffset)
-                : contentSize.height + contentSize.scrollableOffset,
-            }
-          })
-          .catch(() => this._spec.getElementRegion(this.driver.target, this.target))
-        const contentSize = await this.driver.helper?.getContentSize(this)
+        const contentRegion =
+          (await this.driver.helper?.getContentRegion(this)) ??
+          (await this.getAttribute('contentSize')
+            .then(data => {
+              const contentSize = JSON.parse(data)
+              return {
+                x: contentSize.left,
+                y: contentSize.top,
+                width: contentSize.width,
+                height: this.driver.isIOS
+                  ? Math.max(contentSize.height, contentSize.scrollableOffset)
+                  : contentSize.height + contentSize.scrollableOffset,
+              }
+            })
+            .catch(err => {
+              this._logger.warn(
+                `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
+              )
+              return this._spec.getElementRegion(this.driver.target, this.target)
+            }))
 
-        const region = {
-          x: contentRegion.x,
-          y: contentRegion.y,
-          width: Math.max(contentSize?.width ?? 0, contentRegion.width),
-          height: Math.max(contentSize?.height ?? 0, contentRegion.height),
-        }
         const innerRegion = await this._spec.getElementRegion(this.driver.target, innerElement)
-        const contains = utils.geometry.contains(region, innerRegion)
+        const contains = utils.geometry.contains(contentRegion, innerRegion)
         this._state.containedElements ??= new Map()
         this._state.containedElements.set(innerElement, contains)
         return contains
@@ -204,33 +204,30 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       } else {
         this._logger.log('Extracting content size of native element with selector', this.selector)
         try {
-          const contentRegion = await this.getAttribute('contentSize')
-            .then(data => {
-              const contentSize = JSON.parse(data)
-              return {
-                x: contentSize.left,
-                y: contentSize.top,
-                width: contentSize.width,
-                height: this.driver.isIOS
-                  ? Math.max(contentSize.height, contentSize.scrollableOffset)
-                  : contentSize.height + contentSize.scrollableOffset,
-              }
-            })
-            .catch(err => {
-              this._logger.warn(
-                `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
-              )
-              return this._spec.getElementRegion(this.driver.target, this.target)
-            })
-          this._logger.log('Extracted native content size attribute', contentRegion)
+          const contentRegion =
+            (await this.driver.helper?.getContentRegion(this)) ??
+            (await this.getAttribute('contentSize')
+              .then(data => {
+                const contentSize = JSON.parse(data)
+                return {
+                  x: contentSize.left,
+                  y: contentSize.top,
+                  width: contentSize.width,
+                  height: this.driver.isIOS
+                    ? Math.max(contentSize.height, contentSize.scrollableOffset)
+                    : contentSize.height + contentSize.scrollableOffset,
+                }
+              })
+              .catch(err => {
+                this._logger.warn(
+                  `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
+                )
+                return this._spec.getElementRegion(this.driver.target, this.target)
+              }))
 
-          const contentSize = await this.driver.helper?.getContentSize(this)
-          this._logger.log('Extracted native content size with helper library', contentSize)
+          this._logger.log('Extracted native content region', contentRegion)
 
-          this._state.contentSize = {
-            width: Math.max(contentSize?.width ?? 0, contentRegion.width),
-            height: Math.max(contentSize?.height ?? 0, contentRegion.height),
-          }
+          this._state.contentSize = utils.geometry.size(contentRegion)
 
           if (this.driver.isAndroid) {
             this._state.contentSize = utils.geometry.scale(this._state.contentSize, 1 / this.driver.pixelRatio)
@@ -307,9 +304,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       else if (this.driver.isIOS) this._state.touchPadding = 10
       else if (this.driver.isAndroid) {
         if (this.driver.helper?.name === 'android') {
-          this._state.touchPadding = await this.driver.helper?.getTouchPadding()
-        }
-        if (!this._state.touchPadding) {
+          this._state.touchPadding = (await this.driver.helper?.getTouchPadding()) || 20
+        } else {
           const touchPadding = await this.getAttribute('contentSize')
             .then(data => JSON.parse(data).touchPadding)
             .catch(err => {
@@ -317,7 +313,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
                 `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
               )
             })
-          this._state.touchPadding = touchPadding ?? 20
+          this._state.touchPadding = touchPadding || 20
         }
         this._logger.log('Touch padding set:', this._state.touchPadding)
       }
