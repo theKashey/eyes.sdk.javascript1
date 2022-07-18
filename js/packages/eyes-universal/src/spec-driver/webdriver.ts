@@ -113,13 +113,10 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     }
     options.agent = {http: agent, https: agent}
   } else {
-    const httpAgent = new http.Agent({
-      //rejectUnauthorized: false,
-    })
     const httpsAgent = new https.Agent({
       rejectUnauthorized: false,
     })
-    options.agent = {http: httpAgent, https: httpsAgent}
+    options.agent = {http: http.globalAgent, https: httpsAgent}
   }
 
   if (!options.port) {
