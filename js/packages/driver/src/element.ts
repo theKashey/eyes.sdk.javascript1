@@ -114,9 +114,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         // appium doesn't have a way to check if an element is contained in another element, so juristic applied
         if (await this.equals(innerElement)) return false
         // if the inner element region is contained in this element region, then it then could be assumed that the inner element is contained in this element
-        const contentRegion =
-          (await this.driver.helper?.getContentRegion(this)) ??
-          (await this.getAttribute('contentSize')
+        let contentRegion = await this.driver.helper?.getContentRegion(this)
+        if (!contentRegion || !this.driver.isAndroid) {
+          const nativeContentRegion = await this.getAttribute('contentSize')
             .then(data => {
               const contentSize = JSON.parse(data)
               return {
@@ -133,7 +133,14 @@ export class Element<TDriver, TContext, TElement, TSelector> {
                 `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
               )
               return this._spec.getElementRegion(this.driver.target, this.target)
-            }))
+            })
+          contentRegion = {
+            x: nativeContentRegion.x,
+            y: nativeContentRegion.y,
+            width: Math.max(contentRegion?.width ?? 0, nativeContentRegion.width),
+            height: Math.max(contentRegion?.height ?? 0, nativeContentRegion.height),
+          }
+        }
 
         const innerRegion = await this._spec.getElementRegion(this.driver.target, innerElement)
         const contains = utils.geometry.contains(contentRegion, innerRegion)
@@ -204,9 +211,12 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       } else {
         this._logger.log('Extracting content size of native element with selector', this.selector)
         try {
-          const contentRegion =
-            (await this.driver.helper?.getContentRegion(this)) ??
-            (await this.getAttribute('contentSize')
+          let contentRegion = await this.driver.helper?.getContentRegion(this)
+          this._logger.log('Extracted native content region using helper library', contentRegion)
+
+          // on android extraction of this argument will perform non-deterministic touch action, so it is better to avoid it
+          if (!contentRegion || !this.driver.isAndroid) {
+            const attrContentRegion = await this.getAttribute('contentSize')
               .then(data => {
                 const contentSize = JSON.parse(data)
                 return {
@@ -223,9 +233,15 @@ export class Element<TDriver, TContext, TElement, TSelector> {
                   `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
                 )
                 return this._spec.getElementRegion(this.driver.target, this.target)
-              }))
-
-          this._logger.log('Extracted native content region', contentRegion)
+              })
+            this._logger.log('Extracted native content region using attribute', attrContentRegion)
+            contentRegion = {
+              x: attrContentRegion.x,
+              y: attrContentRegion.y,
+              width: Math.max(contentRegion?.width ?? 0, attrContentRegion.width),
+              height: Math.max(contentRegion?.height ?? 0, attrContentRegion.height),
+            }
+          }
 
           this._state.contentSize = utils.geometry.size(contentRegion)
 
