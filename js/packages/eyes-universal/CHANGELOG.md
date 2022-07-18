@@ -9,6 +9,12 @@
 
 
 
+## 2.9.9 - 2022/7/18
+
+### Features
+### Bug fixes
+- Avoided unexpected touch actions during `check` on Android apps
+
 ## 2.9.8 - 2022/7/18
 
 ### Features
