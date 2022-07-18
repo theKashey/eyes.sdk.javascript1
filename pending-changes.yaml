@@ -74,7 +74,7 @@ Apollo SDK:
   feature:
     - Add support for padded coded regions
   bug-fix:
-    - 
+    - Fix `npx eyes-setup` for Cypress version with a caret, support `e2e.ts` as support file
 "@applitools/eyes-storybook":
   feature:
     - 

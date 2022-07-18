@@ -8,6 +8,7 @@ const {handleTypeScript, handlerTypeScriptCypress10} = require('../src/setup/han
 const {version} = require('../package');
 const fs = require('fs');
 const cwd = process.cwd();
+const semver = require('semver');
 
 console.log(chalk.cyan('Setup eyes-cypress', version));
 const packageJson = JSON.parse(fs.readFileSync('package.json'));
@@ -18,17 +19,18 @@ if (packageJson.dependencies && packageJson.dependencies.cypress) {
 } else if (packageJson.devDependencies && packageJson.devDependencies.cypress) {
   cypressVersion = packageJson.devDependencies.cypress;
 }
-console.log(chalk.cyan('Cypress version that was found', cypressVersion));
-const isCypress10 = parseFloat(cypressVersion, 10) >= 10 ? true : false;
+const logStr = `Cypress version that was found ${cypressVersion}`;
 try {
-  if (!isCypress10) {
-    handlePlugin(cwd, isCypress10);
-    handleCommands(cwd);
-    handleTypeScript(cwd);
-  } else {
-    handlePlugin(cwd, isCypress10);
+  if (semver.satisfies(semver.coerce(String(cypressVersion)), '>=10.0.0')) {
+    console.log(chalk.cyan(logStr, ' (above v10 handler)'));
+    handlePlugin(cwd, true);
     const supportFilePath = handlerCommandsCypress10(cwd);
     handlerTypeScriptCypress10(supportFilePath);
+  } else {
+    console.log(chalk.cyan(logStr));
+    handlePlugin(cwd, false);
+    handleCommands(cwd);
+    handleTypeScript(cwd);
   }
 } catch (e) {
   console.log(chalk.red('Setup error:\n', e));

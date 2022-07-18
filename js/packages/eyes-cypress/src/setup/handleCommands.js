@@ -33,6 +33,8 @@ function handlerCommandsCypress10(cwd) {
   } else {
     if (fs.existsSync(path.resolve(cwd, 'cypress/support/e2e.js'))) {
       supportFilePath = path.resolve(cwd, 'cypress/support/e2e.js');
+    } else if (fs.existsSync(path.resolve(cwd, 'cypress/support/e2e.ts'))) {
+      supportFilePath = path.resolve(cwd, 'cypress/support/e2e.ts');
     } else if (fs.existsSync(path.resolve(cwd, 'cypress/support/component.js'))) {
       supportFilePath = path.resolve(cwd, 'cypress/support/component.js');
     }
