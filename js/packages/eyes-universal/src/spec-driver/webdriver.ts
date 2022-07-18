@@ -4,6 +4,8 @@ import * as utils from '@applitools/utils'
 import {parse as parseUrl} from 'url'
 import WebDriver, {command} from 'webdriver'
 import ProxyAgent from 'proxy-agent'
+import http from 'http'
+import https from 'https'
 
 export type Driver = WD.Client
 export type Element = {'element-6066-11e4-a52e-4f735466cecf': string} | {ELEMENT: string}
@@ -110,6 +112,14 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
       return originalCallback(request, {...options, rejectUnauthorized: false}, callback)
     }
     options.agent = {http: agent, https: agent}
+  } else {
+    const httpAgent = new http.Agent({
+      //rejectUnauthorized: false,
+    })
+    const httpsAgent = new https.Agent({
+      rejectUnauthorized: false,
+    })
+    options.agent = {http: httpAgent, https: httpsAgent}
   }
 
   if (!options.port) {

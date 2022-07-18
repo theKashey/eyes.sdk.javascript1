@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Support self-signed certificates when communicating with the driver
 "@applitools/eyes-selenium":
   feature:
     - 

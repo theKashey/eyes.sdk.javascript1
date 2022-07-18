@@ -2,7 +2,7 @@ import assert from 'assert'
 import {testServer, testProxyServer} from '@applitools/test-server'
 import * as spec from '../../src/spec-driver/webdriver'
 
-describe('webdriver with proxy', () => {
+describe('webdriver with self-signed cert', () => {
   let driver: spec.Driver, destroyDriver, proxyServer, webdriverServer, serverUrl, pageUrl
 
   before(async () => {
@@ -27,7 +27,7 @@ describe('webdriver with proxy', () => {
     if (webdriverServer) await webdriverServer.close()
   })
 
-  it('works', async () => {
+  it('with proxy', async () => {
     const proxifiedDriver = spec.transformDriver({
       sessionId: driver.sessionId,
       serverUrl,
@@ -35,5 +35,14 @@ describe('webdriver with proxy', () => {
       capabilities: driver.capabilities,
     })
     assert.strictEqual(await proxifiedDriver.getUrl(), pageUrl)
+  })
+
+  it('without proxy', async () => {
+    const transformedDriver = spec.transformDriver({
+      sessionId: driver.sessionId,
+      serverUrl,
+      capabilities: driver.capabilities,
+    })
+    assert.strictEqual(await transformedDriver.getUrl(), pageUrl)
   })
 })
