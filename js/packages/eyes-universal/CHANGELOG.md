@@ -9,6 +9,12 @@
 
 
 
+## 2.9.8 - 2022/7/18
+
+### Features
+### Bug fixes
+- Support self-signed certificates when communicating with the driver
+
 ## 2.9.7 - 2022/7/15
 
 ### Features
