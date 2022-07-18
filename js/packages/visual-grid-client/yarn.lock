@@ -16,10 +16,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/dom-capture@11.1.0":
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.1.0.tgz#b20758f358a1170ff4905b49ee7cf0ea9a661f05"
-  integrity sha512-99NdLnHuoTT0EBDMixp19QLAZV704ztQjJfcvJZNmi5FnFzsnVpgTwRhgH5SA1JobQ09yMS9wvy0ekrpdX8lIw==
+"@applitools/dom-capture@11.1.1":
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.1.1.tgz#5bd61638dcacc224eaee876b1541bae7af339df4"
+  integrity sha512-aUPsS3h/caQryythSjaX4uG23HzTBsnFBfO7BUvuomMdAm3qIHBstIHPCiUSJbXmPBabfqlWm59YKdxC3PTWcw==
   dependencies:
     "@applitools/dom-shared" "1.0.5"
     "@applitools/functional-commons" "1.6.0"
@@ -67,12 +67,12 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.8.12":
-  version "13.8.12"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.8.12.tgz#bfe9576409dae76770080b51638a460ad67dd401"
-  integrity sha512-lACSAJEA3u1loGjj3gCC0eq9nlHtsCfWM1YwGQRCCVmFl10INRwsN6q5oH+9tI1I6GoPXc1seUJRL158taN7dQ==
+"@applitools/eyes-sdk-core@13.8.13":
+  version "13.8.13"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.8.13.tgz#b293e4974cd5375a209fc1e5025dac284971e6a3"
+  integrity sha512-kQ5CyTaRpberSPK62JWwIWi1+AqVEjUii/EN10wH4Ch0fyRGljXhjZcs+mdtWMBSB+JlznsXDNGlCR8rsKo2Tw==
   dependencies:
-    "@applitools/dom-capture" "11.1.0"
+    "@applitools/dom-capture" "11.1.1"
     "@applitools/dom-snapshot" "4.6.1"
     "@applitools/driver" "1.9.15"
     "@applitools/execution-grid-client" "1.1.22"
