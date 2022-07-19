@@ -252,6 +252,26 @@ const DEVICES = {
       ...SAUCE_CREDENTIALS,
     },
   },
+  'Pixel 5': {
+    type: 'sauce',
+    url: SAUCE_SERVER_URL,
+    capabilities: {
+      w3c: {
+        platformName: 'Android',
+        'appium:platformVersion': '11.0',
+        'appium:deviceName': 'Google Pixel 5 GoogleAPI Emulator',
+      },
+      legacy: {
+        deviceName: 'Google Pixel 5 GoogleAPI Emulator',
+        platformName: 'Android',
+        platformVersion: '11.0',
+      },
+    },
+    options: {
+      appiumVersion: '1.20.2',
+      ...SAUCE_CREDENTIALS,
+    },
+  },
   'Samsung Galaxy S8': {
     type: 'sauce',
     url: SAUCE_SERVER_URL,

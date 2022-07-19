@@ -128,7 +128,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const touchPadding = Number(touchPaddingString)
 
-    if (Number.isNaN(touchPadding)) return null
+    if (!touchPadding || Number.isNaN(touchPadding)) return null
 
     return touchPadding
   }

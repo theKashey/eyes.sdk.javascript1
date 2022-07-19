@@ -320,17 +320,19 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       else if (this.driver.isIOS) this._state.touchPadding = 10
       else if (this.driver.isAndroid) {
         if (this.driver.helper?.name === 'android') {
-          this._state.touchPadding = (await this.driver.helper?.getTouchPadding()) || 20
+          this._state.touchPadding = await this.driver.helper.getTouchPadding()
+          this._logger.log('Touch padding extracted using helper library', this._state.touchPadding)
         } else {
-          const touchPadding = await this.getAttribute('contentSize')
+          this._state.touchPadding = await this.getAttribute('contentSize')
             .then(data => JSON.parse(data).touchPadding)
             .catch(err => {
               this._logger.warn(
                 `Unable to get the attribute 'contentSize' when looking up 'touchPadding' due to the following error: '${err.message}'`,
               )
             })
-          this._state.touchPadding = touchPadding || 20
+          this._logger.log('Touch padding extracted using attribute', this._state.touchPadding)
         }
+        this._state.touchPadding ??= 20
         this._logger.log('Touch padding set:', this._state.touchPadding)
       }
     }
