@@ -5,6 +5,8 @@ from applitools.common import MatchLevel, RectangleSize, Region
 from EyesLibrary.utils import (
     get_enum_by_name,
     get_enum_by_upper_name,
+    parse_padding,
+    parse_padding_dict,
     parse_region,
     parse_viewport_size,
     unicode_yaml_load,
@@ -43,6 +45,41 @@ def test_parse_region_success(to_parse, result):
 def test_parse_region_failed(to_parse):
     with pytest.raises(ValueError):
         assert parse_region(to_parse)
+
+
+def test_parse_padding_dict():
+    assert parse_padding_dict("left: 10") == {"left": 10}
+    assert parse_padding_dict("left: -10") == {"left": -10}
+    assert parse_padding_dict("left: 10 right: 20") == {"left": 10, "right": 20}
+    assert parse_padding_dict("left: 1 right: 2 top: 3 bottom: 4") == {
+        "left": 1,
+        "right": 2,
+        "top": 3,
+        "bottom": 4,
+    }
+
+
+def test_parse_padding_dict_failure():
+    with pytest.raises(ValueError):
+        parse_padding_dict("5")
+
+    with pytest.raises(ValueError):
+        parse_padding_dict("left: 10a")
+
+    with pytest.raises(ValueError):
+        parse_padding_dict("wrong: 1")
+
+
+def test_parse_padding():
+    assert parse_padding(None) is None
+    assert parse_padding("left: 10") == {"left": 10}
+    assert parse_padding("10") == 10
+    assert parse_padding("-10") == -10
+
+
+def test_parse_padding_failure():
+    with pytest.raises(ValueError):
+        parse_padding("abc")
 
 
 def test_get_enum_by_upper_name():

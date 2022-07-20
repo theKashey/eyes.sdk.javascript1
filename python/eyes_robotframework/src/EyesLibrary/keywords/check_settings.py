@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
-from typing import TYPE_CHECKING, Optional, Text
+from typing import TYPE_CHECKING, Text
 
 from appium.webdriver import WebElement as AppiumWebElement
 from robot.api.deco import keyword as original_keyword
@@ -11,7 +11,12 @@ from applitools.selenium.fluent import SeleniumCheckSettings
 
 from ..base import LibraryComponent
 from ..keywords_list import register_check_settings_keyword
-from ..utils import get_enum_by_upper_name, is_webelement_guard, parse_region
+from ..utils import (
+    get_enum_by_upper_name,
+    is_webelement_guard,
+    parse_padding,
+    parse_region,
+)
 from .keyword_tags import CHECK_SETTING, UFG_RELATED
 
 if TYPE_CHECKING:
@@ -27,40 +32,37 @@ def keyword(name=None, tags=(), types=()):
     return original_keyword(name, tags, types)
 
 
-def new_or_cur_check_settings(check_settings):
-    # type: (Optional[SeleniumCheckSettings])->SeleniumCheckSettings
-    if check_settings is None:
-        return SeleniumCheckSettings()
-    return check_settings
-
-
-class IgnoreCheckSettingsKeywords(object):
+class IgnoreCheckSettingsKeywords(LibraryComponent):
     @keyword("Ignore Region By Coordinates", types=(str,))
     def ignore_region_by_coordinates(
         self,
         region,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
         Returns a CheckSettings object that ignores the region specified in the argument.
 
             | =Arguments=   | =Description=                                                       |
-            | Region          | *Mandatory* - The region to ignore in format [left top width height] ,e.g. [100 200 300 300]  |
+            | Region        | *Mandatory* - The region to ignore in format [left top width height] ,e.g. [100 200 300 300]  |
 
         *Example:*
             | Ignore Region By Coordinates           | [10 20 100 100]  |
         """
-        return new_or_cur_check_settings(check_settings).ignore(parse_region(region))
+        return self.current_check_settings.ignore(parse_region(region))
 
     @keyword(
         "Ignore Region By Element",
-        types={"element": (SeleniumWebElement, AppiumWebElement)},
+        types={
+            "element": (SeleniumWebElement, AppiumWebElement),
+            "padding": str,
+            "region_id": str,
+        },
     )
     def ignore_region_by_element(
         self,
         element,  # type: AnyWebElement
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -68,41 +70,51 @@ class IgnoreCheckSettingsKeywords(object):
 
             | =Arguments=   | =Description=                                           |
             | Element       | *Mandatory* - The element to ignore                     |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
-            | ${element}=   | Get Webelement                | //*[@id="logo"]   |
-            | ${target}=    | Ignore Region By Element      | ${element}        |
+            | ${element}=   | Get Webelement           | //*[@id="logo"]   |
+            | ${target}=    | Ignore Region By Element | ${element}        | padding=20 | region_id=Ignored logo |
+            | ${target}=    | Ignore Region By Element | ${element}        | padding=left:-10 top:20 right:30 bottom: 40 |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).ignore(element)
+        return self.current_check_settings.ignore(
+            element, padding=parse_padding(padding), region_id=region_id
+        )
 
-    @keyword("Ignore Region By Selector", types=(str,))
+    @keyword("Ignore Region By Selector", types=(str, str, str))
     def ignore_region_by_selector(
         self,
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
         Returns a CheckSettings object that ignores the region specified in the argument.
 
-            | =Arguments=   | =Description=                                               |
-            | Selector       | *Mandatory* - The selector for element to ignore. Selenium/Appium formats are supported. |
+            | =Arguments=   | =Description=                                           |
+            | Selector      | *Mandatory* - The selector for element to ignore. Selenium/Appium formats are supported. |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
-            | Ignore Region By Selector      | css:div         |
+            | Ignore Region By Selector  | css:div |
+            | Ignore Region By Selector  | css:div | padding=left: 10 |
         """
-        return new_or_cur_check_settings(check_settings).ignore(
-            *self.from_locators_to_supported_form(selector)
+        return self.current_check_settings.ignore(
+            *self.from_locators_to_supported_form(selector),
+            padding=parse_padding(padding),
+            region_id=region_id
         )
 
 
-class LayoutCheckSettingsKeywords(object):
+class LayoutCheckSettingsKeywords(LibraryComponent):
     @keyword("Layout Region By Coordinates", types=(str,))
     def layout_region_by_coordinates(
         self,
         region,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -114,16 +126,21 @@ class LayoutCheckSettingsKeywords(object):
         *Example:*
             | Leyout Region By Coordinates           | [10 20 100 100]  |
         """
-        return new_or_cur_check_settings(check_settings).layout(parse_region(region))
+        return self.current_check_settings.layout(parse_region(region))
 
     @keyword(
         "Layout Region By Element",
-        types={"element": (SeleniumWebElement, AppiumWebElement)},
+        types={
+            "element": (SeleniumWebElement, AppiumWebElement),
+            "padding": str,
+            "region_id": str,
+        },
     )
     def layout_region_by_element(
         self,
         element,  # type: AnyWebElement
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -131,19 +148,25 @@ class LayoutCheckSettingsKeywords(object):
 
             | =Arguments=   | =Description=                                               |
             | Element       | *Mandatory* - The element with layout region e.g. [100 200 300 300]  |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
-            | ${element}=   | Get Webelement                | //*[@id="logo"]   |
-            | ${target}=    | Layout Region By Element      | ${element}        |
+            | ${element}=   | Get Webelement           | //*[@id="logo"] |
+            | ${target}=    | Layout Region By Element | ${element}      |
+            | ${target}=    | Layout Region By Element | ${element}      | padding=10 | region_id=Layout Region |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).layout(element)
+        return self.current_check_settings.layout(
+            element, padding=parse_padding(padding), region_id=region_id
+        )
 
-    @keyword("Layout Region By Selector", types=(str,))
+    @keyword("Layout Region By Selector", types=(str, str, str))
     def layout_region_by_selector(
         self,
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -151,21 +174,25 @@ class LayoutCheckSettingsKeywords(object):
 
             | =Arguments=   | =Description=                                               |
             | Selector      | *Mandatory* - The selector for element for layout region. Selenium/Appium formats are supported. |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
             | Layout Region By Selector      | css:div         |
+            | Layout Region By Selector      | css:div         | padding=top:10 | region_id=Layout region |
         """
-        return new_or_cur_check_settings(check_settings).layout(
-            *self.from_locators_to_supported_form(selector)
+        return self.current_check_settings.layout(
+            *self.from_locators_to_supported_form(selector),
+            padding=parse_padding(padding),
+            region_id=region_id
         )
 
 
-class ContentCheckSettingsKeywords(object):
+class ContentCheckSettingsKeywords(LibraryComponent):
     @keyword("Content Region By Coordinates", types=(str,))
     def content_region_by_coordinates(
         self,
         region,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -177,36 +204,47 @@ class ContentCheckSettingsKeywords(object):
         *Example:*
             | Content Region By Coordinates           | [10 20 100 100]  |
         """
-        return new_or_cur_check_settings(check_settings).content(parse_region(region))
+        return self.current_check_settings.content(parse_region(region))
 
     @keyword(
         "Content Region By Element",
-        types={"element": (SeleniumWebElement, AppiumWebElement)},
+        types={
+            "element": (SeleniumWebElement, AppiumWebElement),
+            "padding": str,
+            "region_id": str,
+        },
     )
     def content_region_by_element(
         self,
         element,  # type: AnyWebElement
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
         Returns a CheckSettings object with content region specified in the argument.
 
-            | =Arguments=   | =Description=                                       |
-            | Element       | *Mandatory* - The element to become content region  |
+            | =Arguments=   | =Description=                                           |
+            | Element       | *Mandatory* - The element to become content region      |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
-            | ${element}=   | Get Webelement                | //*[@id="logo"]   |
-            | ${target}=    | Content Region By Element     | ${element}        |
+            | ${element}=   | Get Webelement             | //*[@id="logo"] |
+            | ${target}=    | Content Region By Element  | ${element}      |
+            | ${target}=    | Content Region By Element  | ${element}      | region_id=Logo |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).content(element)
+        return self.current_check_settings.content(
+            element, padding=parse_padding(padding), region_id=region_id
+        )
 
-    @keyword("Content Region By Selector", types=(str,))
+    @keyword("Content Region By Selector", types=(str, str, str))
     def content_region_by_selector(
         self,
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -214,21 +252,25 @@ class ContentCheckSettingsKeywords(object):
 
             | =Arguments=   | =Description=                                               |
             | Selector      | *Mandatory* - The selector for element for content region. Selenium/Appium formats are supported. |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
             | Content Region By Selector      | css:div         |
+            | Content Region By Selector      | css:div         | padding=right: 20 |
         """
-        return new_or_cur_check_settings(check_settings).content(
-            *self.from_locators_to_supported_form(selector)
+        return self.current_check_settings.content(
+            *self.from_locators_to_supported_form(selector),
+            padding=parse_padding(padding),
+            region_id=region_id
         )
 
 
-class StrictCheckSettingsKeywords(object):
+class StrictCheckSettingsKeywords(LibraryComponent):
     @keyword("Strict Region By Coordinates", types=(str,))
     def strict_region_by_coordinates(
         self,
         region,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -240,36 +282,47 @@ class StrictCheckSettingsKeywords(object):
         *Example:*
             | Strict Region By Coordinates           | [10 20 100 100]  |
         """
-        return new_or_cur_check_settings(check_settings).strict(parse_region(region))
+        return self.current_check_settings.strict(parse_region(region))
 
     @keyword(
         "Strict Region By Element",
-        types={"element": (SeleniumWebElement, AppiumWebElement)},
+        types={
+            "element": (SeleniumWebElement, AppiumWebElement),
+            "padding": str,
+            "region_id": str,
+        },
     )
     def strict_region_by_element(
         self,
         element,  # type: AnyWebElement
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
         Returns a CheckSettings object with strict region specified in the argument.
 
-            | =Arguments=   | =Description=                                         |
-            | Element       | *Mandatory* - The element to become strict region     |
+            | =Arguments=   | =Description=                                           |
+            | Element       | *Mandatory* - The element to become strict region       |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
             | ${element}=   | Get Webelement                | //*[@id="logo"]   |
             | ${target}=    | Strict Region By Element      | ${element}        |
+            | ${target}=    | Strict Region By Element      | ${element}        | region_id=Logo
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).strict(element)
+        return self.current_check_settings.strict(
+            element, padding=parse_padding(padding), region_id=region_id
+        )
 
-    @keyword("Strict Region By Selector", types=(str,))
+    @keyword("Strict Region By Selector", types=(str, str, str))
     def strict_region_by_selector(
         self,
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
+        padding=None,  # type: str
+        region_id=None,  # type: str
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -277,17 +330,22 @@ class StrictCheckSettingsKeywords(object):
 
             | =Arguments=   | =Description=                                               |
             | Selector      | *Mandatory* - The selector for element for strict region. Selenium/Appium formats are supported. |
+            | padding       | Increase or decrease all or specified region dimensions |
+            | region_id     | String identifier for the region used to match region in baseline and checkpoints. |
 
         *Example:*
             | Eyes Check                         |          |
             | ...  Strict Region By Selector     | css:div  |
+            | ...  Strict Region By Selector     | css:div  | padding=5 | region_id=A strict region |
         """
-        return new_or_cur_check_settings(check_settings).strict(
-            *self.from_locators_to_supported_form(selector)
+        return self.current_check_settings.strict(
+            *self.from_locators_to_supported_form(selector),
+            padding=parse_padding(padding),
+            region_id=region_id
         )
 
 
-class FloatingCheckSettingsKeywords(object):
+class FloatingCheckSettingsKeywords(LibraryComponent):
     @keyword(
         "Floating Region With Max Offset By Coordinates",
         types=(int, str),
@@ -296,7 +354,6 @@ class FloatingCheckSettingsKeywords(object):
         self,
         max_offset,  # type: int
         region,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -310,9 +367,7 @@ class FloatingCheckSettingsKeywords(object):
             | Eyes Check                                            |     |                   |
             | ...   Floating Region With Max Offset By Coordinates  |  5  |  [10 20 100 100]  |
         """
-        return new_or_cur_check_settings(check_settings).floating(
-            max_offset, parse_region(region)
-        )
+        return self.current_check_settings.floating(max_offset, parse_region(region))
 
     @keyword(
         "Floating Region With Max Offset By Element",
@@ -322,7 +377,6 @@ class FloatingCheckSettingsKeywords(object):
         self,
         max_offset,  # type: int
         element,  # type: AnyWebElement
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -338,7 +392,7 @@ class FloatingCheckSettingsKeywords(object):
             | ...   Floating Region With Max Offset By Element      |       5           |  ${element}  |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).floating(max_offset, element)
+        return self.current_check_settings.floating(max_offset, element)
 
     @keyword(
         "Floating Region With Max Offset By Selector",
@@ -348,7 +402,6 @@ class FloatingCheckSettingsKeywords(object):
         self,
         max_offset,  # type: int
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -362,7 +415,7 @@ class FloatingCheckSettingsKeywords(object):
             | Eyes Check                                            |                   |                    |
             | ...   Floating Region With Max Offset By Selector     |       5           |  //*[@id="logo"]   |
         """
-        return new_or_cur_check_settings(check_settings).floating(
+        return self.current_check_settings.floating(
             max_offset, self.from_locator_to_supported_form(selector)
         )
 
@@ -377,7 +430,6 @@ class FloatingCheckSettingsKeywords(object):
         max_down_offset=0,  # type: int
         max_left_offset=0,  # type: int
         max_right_offset=0,  # type: int
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -395,7 +447,7 @@ class FloatingCheckSettingsKeywords(object):
             | ...     Floating Region By Coordinates  |  [10 20 100 100]  |  5  |  5  | 5  |  5  |
             | ...     Floating Region By Coordinates  |  [10 20 100 100]  |  max_right_offset=5  |   |   |    |
         """
-        return new_or_cur_check_settings(check_settings).floating(
+        return self.current_check_settings.floating(
             parse_region(region),
             max_up_offset,
             max_down_offset,
@@ -420,7 +472,6 @@ class FloatingCheckSettingsKeywords(object):
         max_down_offset=0,  # type: int
         max_left_offset=0,  # type: int
         max_right_offset=0,  # type: int
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -441,7 +492,7 @@ class FloatingCheckSettingsKeywords(object):
 
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).floating(
+        return self.current_check_settings.floating(
             element,
             max_up_offset,
             max_down_offset,
@@ -460,7 +511,6 @@ class FloatingCheckSettingsKeywords(object):
         max_down_offset=0,  # type: int
         max_left_offset=0,  # type: int
         max_right_offset=0,  # type: int
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -478,7 +528,7 @@ class FloatingCheckSettingsKeywords(object):
             | ...     Floating Region By Selector     |  //*[@id="logo"] |  5  |  5  |  5  |  5   |
             | ...     Floating Region By Selector     |  //*[@id="logo"] |  max_left_offset=5 |   |   |    |
         """
-        return new_or_cur_check_settings(check_settings).floating(
+        return self.current_check_settings.floating(
             self.from_locator_to_supported_form(selector),
             max_up_offset,
             max_down_offset,
@@ -487,13 +537,12 @@ class FloatingCheckSettingsKeywords(object):
         )
 
 
-class AccessibilityCheckSettingsKeywords(object):
+class AccessibilityCheckSettingsKeywords(LibraryComponent):
     @keyword("Accessibility Region By Selector", types=(str, str))
     def accessibility_region_by_selector(
         self,
         selector,  # type: Text
         type,  # type: AccessibilityRegionType
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -507,7 +556,7 @@ class AccessibilityCheckSettingsKeywords(object):
             | Eyes Check                                |              |                  |
             | ...     Accessibility Region By Selector  |  //selector  |  GraphicalObject |
         """
-        return new_or_cur_check_settings(check_settings).accessibility(
+        return self.current_check_settings.accessibility(
             *self.from_locators_to_supported_form(selector),
             type=AccessibilityRegionType(type)
         )
@@ -520,7 +569,6 @@ class AccessibilityCheckSettingsKeywords(object):
         self,
         element,  # type: Text
         type,  # type: AccessibilityRegionType
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -535,7 +583,7 @@ class AccessibilityCheckSettingsKeywords(object):
             | ...     Accessibility Region By Coordinates  |  ${element}  |  GraphicalObject  |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).accessibility(
+        return self.current_check_settings.accessibility(
             element, type=AccessibilityRegionType(type)
         )
 
@@ -544,7 +592,6 @@ class AccessibilityCheckSettingsKeywords(object):
         self,
         region,  # type: Text
         type,  # type: AccessibilityRegionType
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -558,18 +605,17 @@ class AccessibilityCheckSettingsKeywords(object):
             | Eyes Check                                   |                 |                   |
             | ...     Accessibility Region By Coordinates  |  [10 20 30 40]  |  GraphicalObject  |
         """
-        return new_or_cur_check_settings(check_settings).accessibility(
+        return self.current_check_settings.accessibility(
             region=parse_region(region), type=AccessibilityRegionType(type)
         )
 
 
-class UFGCheckSettingsKeywords(object):
+class UFGCheckSettingsKeywords(LibraryComponent):
     @keyword("Visual Grid Option", types=(str, str), tags=(UFG_RELATED,))
     def visual_grid_option(
         self,
         name,  # type: Text
         value,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -584,14 +630,13 @@ class UFGCheckSettingsKeywords(object):
             | ...     Visual Grid Option  |  key name     value   |
             | ...     Visual Grid Option  |  key name2    value   |
         """
-        return new_or_cur_check_settings(check_settings).visual_grid_options(
+        return self.current_check_settings.visual_grid_options(
             VisualGridOption(name, value)
         )
 
     @keyword("Disable Browser Fetching", tags=(UFG_RELATED,))
     def disable_browser_fetching(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -601,12 +646,11 @@ class UFGCheckSettingsKeywords(object):
             | Eyes Check                        |           |
             | ...     Disable Browser Fetching  |           |
         """
-        return new_or_cur_check_settings(check_settings).disable_browser_fetching(True)
+        return self.current_check_settings.disable_browser_fetching(True)
 
     @keyword("Enable Layout Breakpoints", tags=(UFG_RELATED,))
     def enable_layout_breakpoints(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -616,13 +660,12 @@ class UFGCheckSettingsKeywords(object):
             | Eyes Check                         |          |
             | ...     Enable Layout Breakpoints  |          |
         """
-        return new_or_cur_check_settings(check_settings).layout_breakpoints(True)
+        return self.current_check_settings.layout_breakpoints(True)
 
     @keyword("Layout Breakpoints", types=(str,), tags=(UFG_RELATED,))
     def layout_breakpoints(
         self,
         breakpoints,  # type:str
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -636,24 +679,18 @@ class UFGCheckSettingsKeywords(object):
 
         """
         breakpoints = [int(b) for b in breakpoints.split(" ")]
-        return new_or_cur_check_settings(check_settings).layout_breakpoints(
-            *breakpoints
-        )
+        return self.current_check_settings.layout_breakpoints(*breakpoints)
 
     @keyword("Before Render Screenshot Hook", types=(str,), tags=(UFG_RELATED,))
     def before_render_screenshot_hook(
         self,
         hook,  # type:str
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
-        return new_or_cur_check_settings(check_settings).before_render_screenshot_hook(
-            hook
-        )
+        return self.current_check_settings.before_render_screenshot_hook(hook)
 
 
 class CheckSettingsKeywords(
-    LibraryComponent,
     IgnoreCheckSettingsKeywords,
     LayoutCheckSettingsKeywords,
     ContentCheckSettingsKeywords,
@@ -666,7 +703,6 @@ class CheckSettingsKeywords(
     def scroll_root_element_by_selector(
         self,
         selector,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -678,7 +714,7 @@ class CheckSettingsKeywords(
         *Example:*
             |  Scroll Root Element By Element  |  ${element}  |
         """
-        return new_or_cur_check_settings(check_settings).scroll_root_element(
+        return self.current_check_settings.scroll_root_element(
             self.from_locator_to_supported_form(selector)
         )
 
@@ -689,7 +725,6 @@ class CheckSettingsKeywords(
     def scroll_root_element_by_element(
         self,
         element,  # type: Locator
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -702,13 +737,12 @@ class CheckSettingsKeywords(
             |  Scroll Root Element By Element  |  ${element}  |
         """
         is_webelement_guard(element)
-        return new_or_cur_check_settings(check_settings).scroll_root_element(element)
+        return self.current_check_settings.scroll_root_element(element)
 
     @keyword("Variation Group Id", types=(str,))
     def variation_group_id(
         self,
         variation_group_id,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -720,15 +754,12 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |  Target Window  |  Variation Group Id  |  variation1 |
         """
-        return new_or_cur_check_settings(check_settings).variation_group_id(
-            variation_group_id
-        )
+        return self.current_check_settings.variation_group_id(variation_group_id)
 
     @keyword("Match Level", types=(str,))
     def match_level(
         self,
         match_level,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -741,12 +772,11 @@ class CheckSettingsKeywords(
             | Eyes Check   |  Target Window  |  Match Level  STRICT |
         """
         match_level = get_enum_by_upper_name(match_level, MatchLevel)
-        return new_or_cur_check_settings(check_settings).match_level(match_level)
+        return self.current_check_settings.match_level(match_level)
 
     @keyword("Enable Patterns")
     def enable_patterns(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -755,12 +785,11 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |  Target Window  |  Enable Patterns  |
         """
-        return new_or_cur_check_settings(check_settings).enable_patterns(True)
+        return self.current_check_settings.enable_patterns(True)
 
     @keyword("Ignore Displacements")
     def ignore_displacements(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -769,12 +798,11 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |  Target Window  |  Ignore Displacements |
         """
-        return new_or_cur_check_settings(check_settings).ignore_displacements(True)
+        return self.current_check_settings.ignore_displacements(True)
 
     @keyword("Ignore Caret")
     def ignore_caret(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -783,12 +811,11 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |  Target Window  |  Ignore Caret |
         """
-        return new_or_cur_check_settings(check_settings).ignore_caret(True)
+        return self.current_check_settings.ignore_caret(True)
 
     @keyword("Fully")
     def fully(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -797,13 +824,12 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |  Target Window  |  Fully |
         """
-        return new_or_cur_check_settings(check_settings).fully(True)
+        return self.current_check_settings.fully(True)
 
     @keyword("With Name", types=(str,))
     def with_name(
         self,
         name,  # type: Text
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -816,13 +842,12 @@ class CheckSettingsKeywords(
             | Eyes Check         |    Target Window        |
             | ...     With Name  |   User Check Step name  |
         """
-        return new_or_cur_check_settings(check_settings).with_name(name)
+        return self.current_check_settings.with_name(name)
 
     @keyword("Timeout", types=(int,))
     def timeout(
         self,
         timeout,  # type: int
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -835,12 +860,11 @@ class CheckSettingsKeywords(
             | Eyes Check         |    Target Window    |
             | ...     Timeout    |   3000              |
         """
-        return new_or_cur_check_settings(check_settings).timeout(timeout)
+        return self.current_check_settings.timeout(timeout)
 
     @keyword("Use Dom")
     def use_dom(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -849,12 +873,11 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |    Target Window    |  Use Dom   |
         """
-        return new_or_cur_check_settings(check_settings).use_dom(True)
+        return self.current_check_settings.use_dom(True)
 
     @keyword("Send Dom")
     def send_dom(
         self,
-        check_settings=None,  # type:Optional[SeleniumCheckSettings]
     ):
         # type: (...)->SeleniumCheckSettings
         """
@@ -863,4 +886,4 @@ class CheckSettingsKeywords(
         *Example:*
             | Eyes Check   |    Target Window    |  Send Dom   |
         """
-        return new_or_cur_check_settings(check_settings).send_dom(True)
+        return self.current_check_settings.send_dom(True)

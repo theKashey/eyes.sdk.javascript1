@@ -9,6 +9,7 @@ from SeleniumLibrary import SeleniumLibrary
 
 from applitools.common.utils import cached_property
 from applitools.selenium import ClassicRunner, VisualGridRunner
+from applitools.selenium.fluent import SeleniumCheckSettings
 
 from .config_parser import SelectedRunner
 from .errors import EyesLibraryValueError
@@ -158,3 +159,12 @@ class LibraryComponent(ContextAware):
             raise EyesLibraryValueError(
                 "Not supported library. Should be `SeleniumLibrary` or `AppiumLibrary`"
             )
+
+    @property
+    def current_check_settings(self):
+        # type: () -> SeleniumCheckSettings
+        return self.ctx.current_check_settings
+
+    def set_current_check_settings(self, check_settings):
+        # type: (SeleniumCheckSettings) -> None
+        self.ctx.set_current_check_settings(check_settings)

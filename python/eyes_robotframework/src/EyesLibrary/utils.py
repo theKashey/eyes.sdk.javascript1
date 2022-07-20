@@ -5,7 +5,7 @@ import re
 import shutil
 from collections import OrderedDict
 from enum import Enum
-from typing import Any, Callable, Generator, Optional, Text, Type
+from typing import TYPE_CHECKING, Any, Generator, Optional, Text, Type
 
 import six
 import yaml
@@ -14,11 +14,14 @@ from robot.libraries.BuiltIn import BuiltIn
 from applitools.common import RectangleSize, Region
 from applitools.common.utils import argument_guard
 from applitools.common.validators import is_webelement
-from applitools.selenium import TargetPath
+from applitools.selenium import Target, TargetPath
 from applitools.selenium.fluent import SeleniumCheckSettings
 from applitools.selenium.fluent.target_path import RegionLocator
 
 from .keywords_list import CHECK_SETTINGS_KEYWORDS_LIST, TARGET_PATH_KEYWORDS_LIST
+
+if TYPE_CHECKING:
+    from .base import LibraryComponent
 
 SEPARATOR = object()
 
@@ -92,16 +95,16 @@ def try_resolve_tag_and_keyword(tag, check_settings_keywords, defined_keywords):
     return check_settings_keywords, tag
 
 
-def collect_check_settings_with_target_path(target_method_call, *check_keywords):
-    # type: (Callable, tuple[Any])->SeleniumCheckSettings
+def collect_check_settings_with_target_path(library_component, *check_keywords):
+    # type: (LibraryComponent, tuple[Any])->SeleniumCheckSettings
     defined_keywords = TARGET_PATH_KEYWORDS_LIST + CHECK_SETTINGS_KEYWORDS_LIST
     skip_check_settings_keywords = TARGET_PATH_KEYWORDS_LIST
     target_path = collect_target_path(*check_keywords)
-    check_settings = target_method_call(target_path)
+    library_component.set_current_check_settings(Target.region(target_path))
 
     return _collect_check_settings(
         None,
-        check_settings,
+        library_component.current_check_settings,
         defined_keywords,
         skip_check_settings_keywords,
         *check_keywords
@@ -109,9 +112,9 @@ def collect_check_settings_with_target_path(target_method_call, *check_keywords)
 
 
 def collect_check_settings_with_tag_and_target_path(
-    tag, target_method_call, *check_keywords
+    tag, library_component, *check_keywords
 ):
-    # type: (Optional[str], Callable, tuple[Any])->SeleniumCheckSettings
+    # type: (Optional[str], LibraryComponent, tuple[Any])->SeleniumCheckSettings
     defined_keywords = TARGET_PATH_KEYWORDS_LIST + CHECK_SETTINGS_KEYWORDS_LIST
     skip_check_settings_keywords = TARGET_PATH_KEYWORDS_LIST
 
@@ -120,11 +123,11 @@ def collect_check_settings_with_tag_and_target_path(
     )
 
     target_path = collect_target_path(*check_keywords)
-    check_settings = target_method_call(target_path)
+    library_component.set_current_check_settings(Target.region(target_path))
 
     return _collect_check_settings(
         tag,
-        check_settings,
+        library_component.current_check_settings,
         defined_keywords,
         skip_check_settings_keywords,
         *check_keywords
@@ -170,15 +173,16 @@ def _collect_check_settings(
         if keyword_args:
             # keyword has arguments
             for separated_args in splits_args_by_separator(keyword_args):
-                separated_args += (check_settings,)
                 BuiltIn().run_keyword(keyword, *separated_args)
         else:
             # in case keyword without args
-            BuiltIn().run_keyword(keyword, check_settings)
+            BuiltIn().run_keyword(keyword)
     return check_settings
 
 
 int_float_pattern = r"\d+(?:\.\d+)?"
+padding_rx = re.compile(r"(left|right|top|bottom):\s?(-?\d+)")
+padding_match_rx = re.compile(r"^\s?(" + padding_rx.pattern + r"\s?)+$")
 
 
 def parse_viewport_size(text):
@@ -211,6 +215,26 @@ def parse_region(text):
         width=float(groups[2]),
         height=float(groups[3]),
     )
+
+
+def parse_padding(text):
+    if text is None:
+        return None
+    try:
+        return int(text)
+    except ValueError:
+        return parse_padding_dict(text)
+
+
+def parse_padding_dict(text):
+    if padding_match_rx.match(text):
+        return {match[0]: int(match[1]) for match in padding_rx.findall(text)}
+    else:
+        raise ValueError(
+            "Incorrect padding value: {}.\n\t Expected format: left: 1 right: 2".format(
+                text
+            )
+        )
 
 
 def is_webelement_guard(element):

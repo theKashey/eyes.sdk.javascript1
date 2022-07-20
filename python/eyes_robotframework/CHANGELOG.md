@@ -1,3 +1,7 @@
+[vNext]
+### Added
+- Coded region keywords now support optional padding and region_id arguments [Trello 2977](https://trello.com/c/lYJnhwCz)
+
 ## [5.7.0] - 2022-07-07
 ### Added
 - Support of Shadow DOM feature with Eyes Check Region [Trello 2826](https://trello.com/c/XM0mpzOZ)
