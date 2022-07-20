@@ -9,6 +9,12 @@
 
 
 
+## 2.9.10 - 2022/7/20
+
+### Features
+### Bug fixes
+- Better support in DOM slot element
+
 ## 2.9.9 - 2022/7/18
 
 ### Features

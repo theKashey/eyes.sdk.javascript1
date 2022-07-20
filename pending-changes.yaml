@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Better support in DOM slot element 
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
@@ -91,7 +91,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Better support in DOM slot element 
+    - Better support in DOM slot element
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile
@@ -142,9 +142,9 @@ eyes-browser-extension:
     - Fixed incorrect calculation of coded regions in classic mode when using CSS stitching
     - |
       Fixed `forceFullPageScreenshot` option behavior
-    - Better support in DOM slot element  
+    - Better support in DOM slot element
 applitools-for-selenium-ide:
   feature:
     - 
   bug-fix:
-    - Better support in DOM slot element 
+    - Better support in DOM slot element
