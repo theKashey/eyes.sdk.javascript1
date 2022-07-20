@@ -5,7 +5,7 @@ install_dev_requirements: install_test_requirements install_packages_editable
 
 
 install_packages_editable: eyes_universal eyes_selenium eyes_robotframework
-	for PACK in $^; do echo cd $$PACK && python -m pip install --upgrade --editable $$PACK; done
+	set -e; for PACK in $^; do python -m pip install --upgrade --editable $$PACK; done
 
 
 install_eyes_selenium: eyes_selenium/dist eyes_robotframework/dist install_eyes_universal
@@ -64,26 +64,25 @@ dist: eyes_universal/dist eyes_selenium/dist eyes_robotframework/dist
 
 
 eyes_universal/dist:
-	python -m pip install --upgrade setuptools
-	cd eyes_universal && make dist
+	python -m pip install --upgrade wheel
+	set -e; cd eyes_universal; \
+	for PLAT in macosx_10_7_x86_64 macosx_11_0_arm64 manylinux1_x86_64 musllinux_1_2_x86_64 win_amd64; \
+	do python setup.py bdist_wheel --plat-name=$$PLAT; rm -rf build; done
 
 
 eyes_selenium/dist:
-	python -m pip install --upgrade setuptools
-	cd eyes_selenium && python setup.py --quiet sdist
+	python -m pip install --upgrade wheel
+	cd eyes_selenium && python setup.py bdist_wheel
 
 
 eyes_robotframework/dist:
-	python -m pip install --upgrade setuptools
-	cd eyes_robotframework && python setup.py --quiet sdist
+	python -m pip install --upgrade wheel
+	cd eyes_robotframework && python setup.py bdist_wheel
 
 
 clean:
-	cd eyes_universal && make clean
-	rm -rf eyes_selenium/dist eyes_selenium/eyes_selenium.egg-info
-	rm -rf eyes_robotframework/dist eyes_robotframework/src/eyes_robotframework.egg-info
-	rm -rf dist
-	rm -rf bin
+	for PACK in eyes_universal eyes_selenium eyes_robotframework; \
+	do rm -rf $$PACK/dist $$PACK/build $$PACK/$$PACK.egg-info; done
 
 
 gen_robot_docs:

@@ -1,3 +1,7 @@
+## [vNext]
+### Updated
+- Distribute code in form of universal wheel package [Trello 2962](https://trello.com/c/0HdBnfAK)
+
 ## [5.8.0] - 2022-07-06
 ### Added
 - Region Id support for coded regions [Trello 47](https://trello.com/c/pv51sCYA)

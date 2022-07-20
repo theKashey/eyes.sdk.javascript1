@@ -1,5 +1,5 @@
 import os.path
-import subprocess
+from subprocess import call, check_call, check_output
 
 import pytest
 
@@ -9,6 +9,9 @@ from EyesLibrary.__version__ import __version__ as eyes_robotframework_version
 
 here = os.path.dirname(__file__)
 root_dir = os.path.normpath(os.path.join(here, os.pardir))
+
+env = dict(os.environ)
+env.pop("PYTHONPATH", None)
 
 
 def _get_venv_package_license(venv, package):
@@ -23,39 +26,42 @@ def _get_venv_package_license(venv, package):
         'license = license.decode("utf-8") if py2 else license;'
         'print(license.encode("ascii", "ignore"))'.format(package=package),
     ]
-    return subprocess.check_output(cmd).decode("ascii")
+    return check_output(cmd, env=env).decode("ascii")
 
 
 @pytest.fixture
 def eyes_universal_installed(venv):
+    call([venv.python, "-m", "pip", "uninstall", "-y", "wheel"], env=env)
     wheels = os.path.join(root_dir, "eyes_universal", "dist")
     pip = [venv.python, "-m", "pip", "install", "--no-index", "--find-links", wheels]
-    subprocess.check_call(pip + ["eyes_universal==" + eyes_universal_version])
+    check_call(pip + ["eyes_universal==" + eyes_universal_version], env=env)
 
 
 @pytest.fixture
 def eyes_selenium_installed(venv, eyes_universal_installed):
-    file_name = "eyes_selenium-{}.tar.gz".format(eyes_selenium_version)
+    file_name = "eyes_selenium-{}-py2.py3-none-any.whl".format(eyes_selenium_version)
     eyes_selenium = os.path.join(root_dir, "eyes_selenium", "dist", file_name)
     pip = [venv.python, "-m", "pip", "install"]
-    subprocess.check_call(pip + [eyes_selenium])
+    check_call(pip + [eyes_selenium], env=env)
 
 
 @pytest.fixture
 def eyes_robotframework_installed(venv, eyes_universal_installed):
-    file_name = "eyes_selenium-{}.tar.gz".format(eyes_selenium_version)
+    file_name = "eyes_selenium-{}-py2.py3-none-any.whl".format(eyes_selenium_version)
     eyes_selenium = os.path.join(root_dir, "eyes_selenium", "dist", file_name)
-    file_name = "eyes-robotframework-{}.tar.gz".format(eyes_robotframework_version)
+    file_name = "eyes_robotframework-{}-py2.py3-none-any.whl".format(
+        eyes_robotframework_version
+    )
     eyes_robot = os.path.join(root_dir, "eyes_robotframework", "dist", file_name)
     pip = [venv.python, "-m", "pip", "install"]
-    subprocess.check_call(pip + [eyes_selenium, eyes_robot])
+    check_call(pip + [eyes_selenium, eyes_robot], env=env)
 
 
 def test_setup_eyes_universal(venv, eyes_universal_installed):
     get_version = [venv.python, "-m", "applitools.eyes_universal", "--version"]
     assert str(venv.get_version("eyes-universal")) == eyes_universal_version
     assert (
-        eyes_universal_version.encode() == subprocess.check_output(get_version).rstrip()
+        eyes_universal_version.encode() == check_output(get_version, env=env).rstrip()
     )
 
 
@@ -66,7 +72,7 @@ def test_eyes_universal_has_license(venv, eyes_universal_installed):
 
 def test_setup_eyes_selenium(venv, eyes_selenium_installed):
     assert str(venv.get_version("eyes-selenium")) == eyes_selenium_version
-    subprocess.check_call([venv.python, "-c", "from applitools.selenium import *"])
+    check_call([venv.python, "-c", "from applitools.selenium import *"], env=env)
 
 
 def test_eyes_selenium_has_license(venv, eyes_selenium_installed):
@@ -76,7 +82,7 @@ def test_eyes_selenium_has_license(venv, eyes_selenium_installed):
 
 def test_setup_eyes_robot(venv, eyes_robotframework_installed):
     assert str(venv.get_version("eyes-robotframework")) == eyes_robotframework_version
-    subprocess.check_call([venv.python, "-c", "from EyesLibrary import *"])
+    check_call([venv.python, "-c", "from EyesLibrary import *"], env=env)
 
 
 def test_eyes_robotframework_has_license(venv, eyes_robotframework_installed):
