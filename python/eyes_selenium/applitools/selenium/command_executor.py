@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import logging
 from enum import Enum
 from os import getcwd
 from threading import Lock
@@ -8,6 +9,8 @@ from typing import Any, List, Optional, Text
 from ..common.errors import USDKFailure
 from .connection import USDKConnection
 from .universal_sdk_types import demarshal_error
+
+logger = logging.getLogger(__name__)
 
 Failure = USDKFailure  # backward compatibility with eyes-selenium==5.0.0
 
@@ -143,7 +146,9 @@ def _check_error(payload):
     # type: (dict) -> None
     error = payload.get("error")
     if error:
-        raise demarshal_error(error)
+        usdk_error = demarshal_error(error)
+        logger.error("Re-raising an error received from SDK server: %r", usdk_error)
+        raise usdk_error
 
 
 _instances = {}

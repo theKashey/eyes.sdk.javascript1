@@ -1,4 +1,8 @@
 ## [vNext]
+### Added
+- Log errors received from SDK server before re-raising them [Trello 2991](https://trello.com/c/PSEPcMyh)
+### Fixed
+- Cyclic import in applittols.core module [Trello 2985](https://trello.com/c/akCp8wcr)
 ### Updated
 - Distribute code in form of universal wheel package [Trello 2962](https://trello.com/c/0HdBnfAK)
 

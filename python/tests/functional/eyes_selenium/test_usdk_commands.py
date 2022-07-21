@@ -3,7 +3,9 @@ from __future__ import unicode_literals
 from os import getcwd
 
 from mock import ANY
+from pytest import raises
 
+from applitools.common.errors import USDKFailure
 from applitools.selenium.command_executor import CommandExecutor, ManagerType
 from applitools.selenium.connection import USDKConnection
 from applitools.selenium.universal_sdk_types import marshal_webdriver_ref
@@ -169,3 +171,12 @@ def test_usdk_commands_open_check_close_eyes(local_chrome_driver):
         "unresolved": 0,
         "results": [{"testResults": test_result}],
     }
+
+
+def test_usdk_commands_error_logging(caplog):
+    commands = CommandExecutor.get_instance("sdk_name", "sdk_version")
+
+    with raises(USDKFailure):
+        commands.manager_open_eyes({}, {})
+
+    assert "Re-raising an error received from SDK server: USDKFailure" in caplog.text
