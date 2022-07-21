@@ -1,4 +1,4 @@
-## [vNext]
+## [5.9.0] - 2022-07-21
 ### Added
 - Log errors received from SDK server before re-raising them [Trello 2991](https://trello.com/c/PSEPcMyh)
 - Support adding `user_test_id` to eyes.open config step [Trello 2977](https://trello.com/c/lYJnhwCz)
