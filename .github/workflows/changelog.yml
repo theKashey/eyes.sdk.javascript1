@@ -22,6 +22,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
+          echo ${{github.actor}}
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           if [[ $(git log origin/master... --grep=NO_CHANGELOG | wc -l) -gt 0 ]]; then
             echo NO_CHANGELOG commit tag found. Skipping changelog check.
