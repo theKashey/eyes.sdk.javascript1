@@ -31,7 +31,6 @@ describe('Play Cypress', () => {
     });
     cy.eyesClose();
     cy.eyesGetAllTestResults().then(async summary => {
-      la;
       // delete all tests
       // const promise = Promise.resolve()
       // for (const container of summary.results) {

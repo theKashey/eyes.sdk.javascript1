@@ -1,4 +1,4 @@
-# Eyes-Cypress
+ # Eyes-Cypress
 
 Applitools Eyes SDK for [Cypress](https://www.cypress.io/).
 
@@ -225,6 +225,8 @@ Applitools will take screenshots and perform the visual comparisons in the backg
         - [`enablePatterns`](#enablepatterns)
         - [`matchLevel`](#matchlevel)
         - [`visualGridOptions`](#visualgridoptions)
+        - [`coded regions-regionId`](#regionId)
+        - [`lazy loading`](#lazy-loading)
       - [Close](#close)
       - [GetAllTestResults](#getalltestresults)
       - [deleteTestResults](#deletetestresults)
@@ -651,6 +653,38 @@ cy.eyesCheckWindow({
   }
 })
 ```
+#### regionId
+
+The regionId can be automaticaly set from the region that is passed or can be explicitly sent using `regionId` property
+
+```js
+cy.get('.region.two:nth-child(2)').then(el => {
+      cy.eyesCheckWindow({
+        fully: false,
+        ignore: [
+          {type: 'css', selector: '.region.three:nth-child(3n)'},
+          {type: 'xpath', selector: '//div[@class="region one"][3]'},
+          {region: el, regionId: 'my-region-id'},
+        ],
+      });
+})
+```
+#### lazy loading
+
+It's possible to have the SDK scroll the entire page (or a specific length of the page) to make sure all lazyily loaded assets are on the page before performing a check.
+
+```js
+// lazy loads with sensible defaults
+eyes.check(lazyload:{})
+
+// lazy loads with options specified
+eyes.check({lazyLoad: {
+  maxAmountToScroll: 1000,   // total pixels of the page to be scrolled
+  scrollLength: 250,  // amount of pixels to use for each scroll attempt
+  waitingTime: 500,   // milliseconds to wait in-between each scroll attempt
+}})
+```
+
 
 #### Close
 

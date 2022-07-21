@@ -8,6 +8,14 @@ type CommonSelector<TSelector = never> = {
   frame?: CommonSelector<TSelector> | TSelector | string
 }
 
+export function isSimpleCommonSelector(selector: any): selector is CommonSelector {
+  return (
+    utils.types.isPlainObject(selector) &&
+    utils.types.has(selector, 'selector') &&
+    utils.types.isString(selector.selector)
+  )
+}
+
 export function isCommonSelector<TSelector>(
   spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
   selector: any,

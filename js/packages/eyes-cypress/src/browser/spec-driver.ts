@@ -61,7 +61,7 @@ export function setViewportSize(vs: any): void {
 export function transformSelector(selector: Selector): Selector {
   if (selector.hasOwnProperty('selector') && (!selector.hasOwnProperty('type') || (selector as EyesSelector).type === 'css')) {
     return (selector as EyesSelector).selector
-  }
+  } 
   return selector
 }
 
