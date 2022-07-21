@@ -2,6 +2,7 @@ name: pre-commit
 
 on:
     pull_request:
+        branches-ignore: ['dependabot/**']
     push:
         branches: [master, develop]
 

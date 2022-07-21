@@ -3,6 +3,7 @@ name: Test packages
 on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review]
+    branches-ignore: ['dependabot/**']
   workflow_dispatch:
     inputs:
       packages:
