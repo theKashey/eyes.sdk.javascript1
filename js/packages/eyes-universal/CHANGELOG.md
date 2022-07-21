@@ -9,6 +9,12 @@
 
 
 
+## 2.9.11 - 2022/7/21
+
+### Features
+### Bug fixes
+- Support adding `userTestId` to eyes.open config
+
 ## 2.9.10 - 2022/7/20
 
 ### Features
