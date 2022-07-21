@@ -9,6 +9,12 @@
 
 
 
+## 2.9.12 - 2022/7/21
+
+### Features
+### Bug fixes
+- Make adjustments to support regionId in cypress SDK
+
 ## 2.9.11 - 2022/7/21
 
 ### Features
