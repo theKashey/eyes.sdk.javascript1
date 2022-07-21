@@ -63,6 +63,7 @@ def test_usdk_commands_open_close_eyes(local_chrome_driver):
         {
             "appName": "USDK Test",
             "testName": "USDK Commands open close",
+            "userTestId": "42",
         },
     )
 
@@ -85,7 +86,7 @@ def test_usdk_commands_open_close_eyes(local_chrome_driver):
         "missing": 0,
         "passed": 1,
         "unresolved": 0,
-        "results": [{"testResults": test_result}],
+        "results": [{"testResults": test_result, "userTestId": "42"}],
     }
 
 
@@ -100,6 +101,7 @@ def test_usdk_commands_open_abort_eyes(local_chrome_driver):
         {
             "appName": "USDK Test",
             "testName": "USDK Commands open abort",
+            "userTestId": "abc",
         },
     )
 
@@ -132,6 +134,7 @@ def test_usdk_commands_open_abort_eyes(local_chrome_driver):
                     "stack": ANY,
                     "info": ANY,
                 },
+                "userTestId": "abc",
             }
         ],
     }
@@ -141,7 +144,11 @@ def test_usdk_commands_open_check_close_eyes(local_chrome_driver):
     local_chrome_driver.get(
         "https://applitools.github.io/demo/TestPages/SimpleTestPage"
     )
-    config = {"appName": "USDK Test", "testName": "USDK Commands open check close"}
+    config = {
+        "appName": "USDK Test",
+        "testName": "USDK Commands open check close",
+        "userTestId": "abc",
+    }
     driver = marshal_webdriver_ref(local_chrome_driver)
     commands = CommandExecutor(USDKConnection.create())
     commands.make_sdk("sdk_name", "sdk_version", getcwd())
@@ -169,7 +176,7 @@ def test_usdk_commands_open_check_close_eyes(local_chrome_driver):
         "missing": 0,
         "passed": 1,
         "unresolved": 0,
-        "results": [{"testResults": test_result}],
+        "results": [{"testResults": test_result, "userTestId": "abc"}],
     }
 
 
