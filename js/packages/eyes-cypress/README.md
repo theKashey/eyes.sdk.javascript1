@@ -675,10 +675,10 @@ It's possible to have the SDK scroll the entire page (or a specific length of th
 
 ```js
 // lazy loads with sensible defaults
-eyes.check(lazyload:{})
+cy.eyesCheckWindow(lazyload:{})
 
 // lazy loads with options specified
-eyes.check({lazyLoad: {
+cy.eyesCheckWindow({lazyLoad: {
   maxAmountToScroll: 1000,   // total pixels of the page to be scrolled
   scrollLength: 250,  // amount of pixels to use for each scroll attempt
   waitingTime: 500,   // milliseconds to wait in-between each scroll attempt
