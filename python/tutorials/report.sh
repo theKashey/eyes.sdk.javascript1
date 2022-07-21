@@ -1,6 +1,6 @@
 #!/bin/bash
 sdk='python'
-id=${TRAVIS_COMMIT:-$(uuidgen)}
+id=${GITHUB_SHA:-$(uuidgen)}
 [ "$TEST_REPORT_SANDBOX" = "False" ] && sandbox='false' || sandbox='true'
 payload='{
       "sdk":"'"$sdk"'",

@@ -25,7 +25,7 @@ REPORT_BASE_URL = "http://sdk-test-results.herokuapp.com"
 REPORT_DATA = {
     "sdk": "python",
     "group": "selenium",
-    "id": os.getenv("TRAVIS_COMMIT", str(uuid.uuid4())),
+    "id": os.getenv("GITHUB_SHA", str(uuid.uuid4())),
     "sandbox": bool(strtobool(os.getenv("TEST_REPORT_SANDBOX", "True"))),
     "mandatory": False,
     "results": [],

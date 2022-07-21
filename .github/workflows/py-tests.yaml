@@ -11,6 +11,11 @@ on:
         description: branch to test
         required: false
         type: string
+      test_report_prod:
+        description: report results as prod build
+        default: false
+        required: false
+        type: boolean
 
 jobs:
   dist-build:
@@ -131,6 +136,7 @@ jobs:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN }}
+          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
 
   functional-tests:
     needs: dist-build
