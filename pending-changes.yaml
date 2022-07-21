@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Make adjustments to support regionId in cypress SDK
 "@applitools/eyes-selenium":
   feature:
     - 
