@@ -11,6 +11,7 @@ const CheckSettingsUtils = require('./CheckSettingsUtils')
 const EyesUtils = require('./EyesUtils')
 const {lazyLoad} = require('@applitools/snippets')
 const makeLazyLoadOptions = require('../config/LazyLoadOptions')
+const {appendUserTestIdToTestResults} = require('../utils/amend-test-results')
 
 class EyesClassic extends EyesCore {
   static specialize({agentId, cwd, spec}) {
@@ -63,6 +64,10 @@ class EyesClassic extends EyesCore {
     if (!this._configuration.getViewportSize()) {
       const vs = await this._driver.getViewportSize()
       this._configuration.setViewportSize(utils.geometry.round(utils.geometry.scale(vs, this._driver.viewportScale)))
+    }
+
+    if (!this._configuration.getUserTestId()) {
+      this._configuration.setUserTestId(utils.general.guid())
     }
 
     if (this._driver.isMobile) {
@@ -209,6 +214,7 @@ class EyesClassic extends EyesCore {
   }
 
   async close() {
+    const userTestId = this._configuration.getUserTestId()
     let isErrorCaught = false
     this._closePromise = super
       .close(true)
@@ -218,10 +224,15 @@ class EyesClassic extends EyesCore {
       })
       .then(results => {
         if (isErrorCaught) {
-          if (results.info && results.info.testResult) return {testResults: results.info.testResult}
-          else return {exception: results}
+          if (results.info && results.info.testResult) {
+            let testResults = results.info.testResult
+            testResults = appendUserTestIdToTestResults(testResults, userTestId)
+            return {testResults, userTestId}
+          } else return {exception: results}
         }
-        return {testResults: results.toJSON()}
+        let testResults = results.toJSON()
+        testResults = appendUserTestIdToTestResults(testResults, userTestId)
+        return {testResults, userTestId}
       })
       .then(container => {
         if (this._runner) {
@@ -239,10 +250,12 @@ class EyesClassic extends EyesCore {
   }
 
   async abort() {
+    const userTestId = this._configuration.getUserTestId()
     return (this._abortPromise = super.abort().then(results => {
       if (results) {
-        const resultsJson = results.toJSON()
-        this._runner._allTestResult.push({testResults: resultsJson})
+        let resultsJson = results.toJSON()
+        resultsJson = appendUserTestIdToTestResults(resultsJson, userTestId)
+        this._runner._allTestResult.push({testResults: resultsJson, userTestId})
         return [resultsJson]
       } else {
         return results

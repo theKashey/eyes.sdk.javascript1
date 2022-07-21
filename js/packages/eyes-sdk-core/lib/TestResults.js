@@ -426,6 +426,7 @@ class TestResults {
       stepsInfo = stepsInfo.map(step => new StepInfo(step))
     }
 
+    this._userTestId = undefined
     this._id = id
     this._name = name
     this._secretToken = secretToken
@@ -461,6 +462,19 @@ class TestResults {
 
     /** @type {ServerConnector} */
     this._serverConnector = undefined
+  }
+  /**
+   * @return {string}
+   */
+  getUserTestId() {
+    return this._userTestId
+  }
+
+  /**
+   * @param {string} value
+   */
+  setUserTestId(value) {
+    this._userTestId = value
   }
 
   /**

@@ -1,5 +1,6 @@
 'use strict'
 
+const {expect} = require('chai')
 const assert = require('assert')
 const {Console} = require('console')
 const {Writable} = require('stream')
@@ -114,6 +115,84 @@ describe('EyesVisualGrid', () => {
       warns.forEach((warn, index) => {
         assert.strictEqual(output[index], chalk.yellow(warn) + '\n')
       })
+    })
+  })
+
+  describe('check userTestId', () => {
+    let server, serverUrl, driver, eyes
+
+    before(async () => {
+      server = await startFakeEyesServer({
+        logger: {log: () => {}},
+        matchMode: 'always',
+      })
+      serverUrl = `http://localhost:${server.port}`
+    })
+
+    beforeEach(async () => {
+      driver = new MockDriver()
+      driver.mockScript('dom-snapshot', () => generateDomSnapshot(driver))
+      eyes = new EyesVisualGrid()
+      eyes.setServerUrl(serverUrl)
+    })
+
+    after(async () => {
+      await server.close()
+    })
+    it('should generate userTestId if not defined', async () => {
+      const userTestIdBeforeOpen = eyes.getConfiguration().getUserTestId()
+      const config = new Configuration()
+        .setAppName('appName')
+        .setTestName('testName')
+        .addBrowser({width: 888, height: 666, name: 'chrome'})
+      await eyes.open(driver, config)
+      const userTestIdAfterOpen = eyes.getConfiguration().getUserTestId()
+      await eyes.check()
+      await eyes.close()
+      expect(userTestIdBeforeOpen).to.be.undefined
+      expect(userTestIdAfterOpen).to.not.be.undefined
+    })
+
+    it('should not override userTestId', async () => {
+      const userTestId = 'A_123456_B'
+      const config = new Configuration()
+        .setAppName('appName')
+        .setTestName('testName')
+        .addBrowser({width: 888, height: 666, name: 'chrome'})
+        .setUserTestId(userTestId)
+      await eyes.open(driver, config)
+      const userTestIdAfterOpen = eyes.getConfiguration().getUserTestId()
+      await eyes.check()
+      await eyes.close()
+      expect(userTestId).to.equal(userTestIdAfterOpen)
+    })
+
+    it('should keep generated userTestId in TestResults and in TestResultsContainer', async () => {
+      const config = new Configuration()
+        .setAppName('appName')
+        .setTestName('testName')
+        .addBrowser({width: 888, height: 666, name: 'chrome'})
+      await eyes.open(driver, config)
+      await eyes.check()
+      const results = await eyes.close(false)
+      const resultsContainer = await eyes.getRunner().getAllTestResults(false)
+      expect(results[0].userTestId).to.not.be.undefined
+      expect(resultsContainer[0].userTestId).to.not.be.undefined
+    })
+
+    it('should keep preset userTestId in TestResults and in TestResultsContainer', async () => {
+      const userTestId = 'A_123456_B'
+      const config = new Configuration()
+        .setAppName('appName')
+        .setTestName('testName')
+        .addBrowser({width: 888, height: 666, name: 'chrome'})
+        .setUserTestId(userTestId)
+      await eyes.open(driver, config)
+      await eyes.check()
+      const results = await eyes.close(false)
+      const resultsContainer = await eyes.getRunner().getAllTestResults(false)
+      expect(results[0].userTestId).to.equal(userTestId)
+      expect(resultsContainer[0].userTestId).to.equal(userTestId)
     })
   })
 })

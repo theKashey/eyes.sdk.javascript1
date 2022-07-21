@@ -14,6 +14,7 @@ const CheckSettingsUtils = require('../sdk/CheckSettingsUtils')
 const EyesUtils = require('./EyesUtils')
 const {lazyLoad} = require('@applitools/snippets')
 const makeLazyLoadOptions = require('../config/LazyLoadOptions')
+const {appendUserTestIdToTestResults} = require('../utils/amend-test-results')
 
 class EyesVisualGrid extends EyesCore {
   static specialize({agentId, spec, cwd, VisualGridClient}) {
@@ -97,6 +98,10 @@ class EyesVisualGrid extends EyesCore {
     if (!browsersInfo || browsersInfo.length === 0) {
       const vs = this._configuration.getViewportSize()
       this._configuration.addBrowser(vs.getWidth(), vs.getHeight(), 'chrome')
+    }
+
+    if (!this._configuration.getUserTestId()) {
+      this._configuration.setUserTestId(utils.general.guid())
     }
 
     const {openEyes, getResourceUrlsInCache, getIosDevicesSizes, getEmulatedDevicesSizes} =
@@ -271,6 +276,7 @@ class EyesVisualGrid extends EyesCore {
   }
 
   async close() {
+    const userTestId = this._configuration.getUserTestId()
     const browsersInfo = this._configuration.getBrowsersInfo()
     let isErrorCaught = false
     this._closePromise = this._closeCommand(true)
@@ -284,11 +290,13 @@ class EyesVisualGrid extends EyesCore {
           if (!Array.isArray(results)) throw results
         }
         return results.map((result, i) => {
-          const testResults = result instanceof Error ? result.info && result.info.testResult : result.toJSON()
+          let testResults = result instanceof Error ? result.info && result.info.testResult : result.toJSON()
+          testResults = appendUserTestIdToTestResults(testResults, userTestId)
           const exception = testResults ? null : result
           return {
             testResults,
             exception,
+            userTestId,
             browserInfo: browsersInfo[i],
           }
         })
@@ -317,10 +325,15 @@ class EyesVisualGrid extends EyesCore {
   }
 
   async abort() {
+    const userTestId = this._configuration.getUserTestId()
     this._isOpen = false
     return (this._abortPromise = this._abortCommand().then(results => {
-      const resultJson = results.map(result => (result ? result.toJSON() : result)) // not sure if it can even happen that abortCommand from vgc can return partly null array
-      this._runner._allTestResult.push(...resultJson.filter(result => !!result).map(result => ({testResults: result})))
+      const resultJson = results.map(result => {
+        return result ? appendUserTestIdToTestResults(result.toJSON(), userTestId) : result
+      }) // not sure if it can even happen that abortCommand from vgc can return partly null array
+      this._runner._allTestResult.push(
+        ...resultJson.filter(result => !!result).map(result => ({testResults: result, userTestId})),
+      )
       return resultJson
     }))
   }

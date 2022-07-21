@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "build": "tsc",
+    "test:sanity": "yarn build",
     "deps": "bongo deps",
     "lint": "eslint \"**/*.ts\"",
     "preversion": "bongo preversion && yarn build",
@@ -49,6 +50,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@applitools/scripts": "1.1.0",
     "@applitools/bongo": "^2.1.6",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^5.27.0",

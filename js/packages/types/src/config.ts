@@ -45,6 +45,7 @@ export type EyesBaseConfig = {
 export type EyesOpenConfig = {
   appName?: string
   testName?: string
+  userTestId?: string
   displayName?: string
   viewportSize?: Size
   sessionType?: SessionType

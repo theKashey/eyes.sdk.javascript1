@@ -139,6 +139,8 @@ describe('Configuration', () => {
       modifiedValue = true
     } else if (type === '_logs') {
       return {type: 'file'}
+    } else if (type === '_userTestId') {
+      modifiedValue = 'A_123456_B'
     }
     return modifiedValue
   }

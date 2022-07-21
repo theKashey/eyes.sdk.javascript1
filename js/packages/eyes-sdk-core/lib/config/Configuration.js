@@ -40,6 +40,7 @@ class Configuration {
 
     this._appName = undefined
     this._testName = undefined
+    this._userTestId = undefined
     this._displayName = undefined
     this._isDisabled = undefined
     this._matchTimeout = undefined
@@ -471,6 +472,16 @@ class Configuration {
     return this
   }
 
+  getUserTestId() {
+    return this._userTestId
+  }
+
+  setUserTestId(value) {
+    ArgumentGuard.isString(value, 'userTestId', false)
+    this._userTestId = value
+    return this
+  }
+
   getDisplayName() {
     return this._displayName
   }
@@ -820,6 +831,7 @@ class Configuration {
   toOpenEyesConfiguration() {
     return {
       appName: this.getAppName(),
+      userTestId: this.getUserTestId(),
       testName: this.getTestName(),
       displayName: this.getDisplayName(),
       browser: this.getBrowsersInfo(),
