@@ -228,6 +228,9 @@ class Configuration(object):
     wait_before_capture = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, default=None
     )  # type: Optional[int]
+    user_test_id = attr.ib(
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[Text]
 
     @property
     def enable_patterns(self):
@@ -496,9 +499,16 @@ class Configuration(object):
         return self
 
     def set_wait_before_capture(self, milliseconds):
+        # type: (int) -> Self
         self.wait_before_capture = milliseconds
         return self
 
     @deprecated.attribute("Configuration features are not supported")
     def set_features(self, *_):
         pass
+
+    def set_user_test_id(self, user_test_id):
+        # type: (Text) -> Self
+        argument_guard.is_a(user_test_id, Text)
+        self.user_test_id = user_test_id
+        return self

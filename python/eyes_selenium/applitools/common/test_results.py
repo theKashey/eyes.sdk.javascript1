@@ -193,6 +193,9 @@ class TestResults(object):
         type=SessionAccessibilityStatus,
         metadata={JsonInclude.THIS: True},
     )  # type: SessionAccessibilityStatus
+    user_test_id = attr.ib(
+        default=None, metadata={JsonInclude.THIS: True}
+    )  # type: Optional[Text]
     _connection_config = attr.ib(
         default=(None, None, None),
         eq=False,
@@ -244,6 +247,9 @@ class TestResultContainer(object):
     exception = attr.ib(
         default=None, metadata={JsonInclude.THIS: True}
     )  # type: Optional[Exception]
+    user_test_id = attr.ib(
+        default=None, metadata={JsonInclude.THIS: True}
+    )  # type: Optional[Text]
 
     def __str__(self):
         browser_info = (

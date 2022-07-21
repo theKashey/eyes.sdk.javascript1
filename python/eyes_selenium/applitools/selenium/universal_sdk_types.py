@@ -526,6 +526,7 @@ class EyesOpenConfig(object):
     save_new_tests = attr.ib(default=None)  # type: Optional[bool]
     save_diffs = attr.ib(default=None)  # type: Optional[bool]
     dont_close_batches = attr.ib(default=None)  # type: Optional[bool]
+    user_test_id = attr.ib(default=None)  # type: Optional[Text]
 
 
 @attr.s
@@ -636,6 +637,7 @@ class EyesConfig(
             visual_grid_options=record_convert(config.visual_grid_options),
             layout_breakpoints=config.layout_breakpoints,
             disable_browser_fetching=config.disable_browser_fetching,
+            user_test_id=config.user_test_id,
         )
 
 

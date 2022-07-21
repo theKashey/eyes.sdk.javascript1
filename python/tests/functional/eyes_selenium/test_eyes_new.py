@@ -319,24 +319,23 @@ def test_should_wait_before_capture_in_config(local_chrome_driver):
     eyes.close()
 
 
-def test_region_id(local_chrome_driver):
-    eyes = Eyes()
+def test_user_test_id_is_in_test_results(local_chrome_driver):
+    runner = ClassicRunner()
+    eyes = Eyes(runner)
+    user_test_id = "SUPER TEST ID"
+    eyes.configure.user_test_id = user_test_id
     eyes.open(
         local_chrome_driver,
         "USDK Tests",
-        "Test region id",
+        "Test user test id",
         {"width": 800, "height": 600},
     )
     local_chrome_driver.get(
         "https://applitools.github.io/demo/TestPages/SimpleTestPage"
     )
-    eyes.check(Target.window().ignore("h1", region_id="header").fully(False))
-    result = eyes.close()
-    session_results = get_session_results(eyes.configure.api_key, result)
-    assert session_results["actualAppOutput"][0]["imageMatchSettings"]["ignore"][0] == {
-        "height": 37,
-        "left": 8,
-        "regionId": "header",
-        "top": 21,
-        "width": 784,
-    }
+    eyes.check_window()
+    eyes.close_async()
+    results = runner.get_all_test_results(False)
+    test_results_container = results.results[0]
+    assert test_results_container.user_test_id == user_test_id
+    assert test_results_container.test_results.user_test_id == user_test_id
