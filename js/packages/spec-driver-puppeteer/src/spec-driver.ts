@@ -147,11 +147,13 @@ export async function childContext(_frame: Context, element: Element): Promise<C
 }
 export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
   const root = parent ?? frame
-  return isXpathSelector(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)
+  return (
+    isXpathSelector(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)
+  ) as Promise<Element>
 }
 export async function findElements(frame: Context, selector: Selector, parent?: Element): Promise<Element[]> {
   const root = parent ?? frame
-  return isXpathSelector(selector) ? root.$x(selector) : root.$$(selector)
+  return (isXpathSelector(selector) ? root.$x(selector) : root.$$(selector)) as Promise<Element[]>
 }
 export async function getViewportSize(page: Driver): Promise<Size> {
   return page.viewport()
@@ -189,8 +191,8 @@ export async function visit(page: Driver, url: string): Promise<void> {
   await page.goto(url)
 }
 export async function takeScreenshot(page: Driver): Promise<string> {
-  const scr = await (page as any)._client.send('Page.captureScreenshot')
-  return scr.data
+  const result = await page.screenshot({encoding: 'base64'})
+  return result as string
 }
 export async function click(frame: Context, element: Element | Selector): Promise<void> {
   if (isSelector(element)) element = await findElement(frame, element)

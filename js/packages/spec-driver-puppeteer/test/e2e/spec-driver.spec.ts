@@ -1,6 +1,7 @@
 import type {Size, Cookie} from '@applitools/types'
 import assert from 'assert'
 import * as spec from '../../src/spec-driver'
+import * as utils from '@applitools/utils'
 
 function isEqualElements(frame: spec.Context | spec.Driver, element1: spec.Element, element2: spec.Element) {
   return frame.evaluate((element1, element2) => element1 === element2, element1, element2).catch(() => false)
@@ -94,6 +95,10 @@ describe('spec driver', async () => {
     })
     it('visit()', async () => {
       await visit()
+    })
+    it('takeScreenshot()', async () => {
+      const result = await spec.takeScreenshot(page)
+      assert.ok(utils.types.isBase64(result))
     })
   })
 
@@ -302,7 +307,7 @@ describe('spec driver', async () => {
       value: 'world',
       domain: 'google.com',
       path: '/',
-      expiry: 4025208067,
+      expiry: Math.floor((Date.now() + 60000) / 1000),
       httpOnly: true,
       secure: true,
       sameSite: 'Lax',
