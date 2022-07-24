@@ -17,13 +17,8 @@ class RunnerKeywords(LibraryComponent):
     @keyword("Eyes Get All Test Results")
     def get_all_tests_results(self):
         # type: () -> TestResultsSummary
-        try:
-            test_results = self.eyes_runner.get_all_test_results()
-            self.log_to_console(test_results)
-            return test_results
-        finally:
-            # after fetching of results we don't need runner
-            self.ctx.clean_eyes_runner()
+        """*DEPRECATED!!* It's calling automatically, no need to use"""
+        pass
 
 
 class SessionKeywords(LibraryComponent):

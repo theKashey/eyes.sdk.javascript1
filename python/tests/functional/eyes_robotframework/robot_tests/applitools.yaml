@@ -1,4 +1,4 @@
-### applitools.yaml 1.1
+### applitools.yaml 1.2
 ### START `SHARED SECTION` ###
 #server_url: "https://eyesapi.applitools.com" #optional
 #api_key: YOUR_API_KEY  #Could be specified as APPLITOOLS_API_KEY env variable
@@ -13,6 +13,8 @@
 #properties:
 #  - name: YOUR_PROPERTY_NAME
 #   value: YOUR_PROPERTY_VALUE
+
+#propagate_eyes_test_results: true   #Propagate Eyes results to robot `report.html`
 
 ###### START `AVAILABLE DURING `Eyes Open` CALL SECTION` ######
 app_name: YOUR_APP_NAME

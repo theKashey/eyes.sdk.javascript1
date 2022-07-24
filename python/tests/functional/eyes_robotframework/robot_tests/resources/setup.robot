@@ -1,6 +1,8 @@
 *** Variables ***
 ${URL}                          https://demo.applitools.com/
 ${BROWSER_NAME}                 Chrome
+${FORM_XPATH}                   //html/body/div/div/form
+${FORM_USERNAME_XPATH}          //html/body/div/div/form/div[1]
 
 *** Keywords ***
 Setup
@@ -10,7 +12,7 @@ Setup
             Go To Url   ${URL}
         END
     ELSE IF  '${BACKEND_LIBRARY_NAME}' == 'SeleniumLibrary'
-        Open Browser   ${URL}   ${BROWSER_NAME}   remote_url=${REMOTE_URL}   desired_capabilities=${DESIRED CAPS}
+        Open Browser   ${URL}   ${BROWSER_NAME}   remote_url=${REMOTE_URL}   desired_capabilities=${DESIRED CAPS}    options=add_argument("--headless")
     END
     Eyes Configure Add Property     RUNNER    ${RUNNER}
     Eyes Configure Add Property     BACKEND_LIBRARY_NAME    ${RUNNER}

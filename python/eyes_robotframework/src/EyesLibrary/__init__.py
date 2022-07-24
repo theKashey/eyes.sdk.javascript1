@@ -201,6 +201,9 @@ class EyesLibrary(DynamicCore):
             validate_config(self._configuration)
             self.ROBOT_LIBRARY_LISTENER = LibraryListener(self)
             self._locator_converter = LocatorConverter(self)
+
+            if self._configuration.propagate_eyes_test_results:
+                from . import robot_patcher
         else:
             # hide objects that uses dynamic loading for generation of documentation
             self.current_library = None

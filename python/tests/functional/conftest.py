@@ -1,13 +1,10 @@
-import json
 import os
 
-import attr
 import pytest
+from selenium import webdriver
 from six import iteritems
 
 from applitools.common import BatchInfo, Configuration, StdoutLogger
-from applitools.common.utils.json_utils import attr_from_json
-from tests.utils import get_session_results
 
 pytest_plugins = ("tests.functional.pytest_reporting",)
 
@@ -67,3 +64,15 @@ def eyes_setup(request, eyes_class, eyes_config, eyes_runner, batch_info):
 
     yield eyes
     eyes.abort()
+
+
+@pytest.fixture
+def local_chrome_driver(request):
+    test_page_url = request.node.get_closest_marker("test_page_url")
+    test_page_url = test_page_url.args[-1] if test_page_url else None
+    options = webdriver.ChromeOptions()
+    options.headless = True
+    with webdriver.Chrome(options=options) as driver:
+        if test_page_url:
+            driver.get(test_page_url)
+        yield driver

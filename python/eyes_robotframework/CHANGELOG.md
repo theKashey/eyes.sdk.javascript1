@@ -1,8 +1,11 @@
 [vNext]
 ### Added
 - Coded region keywords now support optional padding and region_id arguments [Trello 2977](https://trello.com/c/lYJnhwCz)
+- Post-propagate of test results for test report [Trello 2898](https://trello.com/c/bVk3Q7vc)
 ### Updated
 - Distribute code in form of universal wheel package [Trello 2962](https://trello.com/c/0HdBnfAK)
+### Fixed
+- Regression with browser info assign
 
 ## [5.7.0] - 2022-07-07
 ### Added

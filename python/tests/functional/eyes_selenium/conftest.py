@@ -56,15 +56,3 @@ def pytest_runtest_makereport(item, call):
     # set an report attribute for each phase of a call, which can
     # be "setup", "call", "teardown"
     setattr(item, "rep_" + rep.when, rep)
-
-
-@pytest.fixture
-def local_chrome_driver(request):
-    test_page_url = request.node.get_closest_marker("test_page_url")
-    test_page_url = test_page_url.args[-1] if test_page_url else None
-    options = webdriver.ChromeOptions()
-    options.headless = True
-    with webdriver.Chrome(options=options) as driver:
-        if test_page_url:
-            driver.get(test_page_url)
-        yield driver

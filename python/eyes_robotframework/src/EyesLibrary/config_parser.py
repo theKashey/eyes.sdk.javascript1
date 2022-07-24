@@ -275,6 +275,7 @@ class ConfigurationTrafaret(trf.Trafaret):  # typedef
                 trf.Dict(name=trf.String, value=trf.String)
             ),
             trf.Key("wait_before_capture", optional=True): trf.Int,
+            trf.Key("propagate_eyes_test_results", optional=True): trf.Bool,
         },
     )
     web_scheme = shared_scheme + trf.Dict(
@@ -296,7 +297,7 @@ class ConfigurationTrafaret(trf.Trafaret):  # typedef
             trf.Key("enable_cross_origin_rendering", optional=True): trf.Bool,
             trf.Key("dont_use_cookies", optional=True): trf.Bool,
             trf.Key("layout_breakpoints", optional=True): trf.Bool | trf.List(trf.Int),
-            trf.Key("browsers", optional=True) >> "_browsers_info": BrowsersTrafaret,
+            trf.Key("browsers", optional=True) >> "browsers_info": BrowsersTrafaret,
         },
     )
     mobile_native_scheme = shared_scheme + trf.Dict(
@@ -306,7 +307,7 @@ class ConfigurationTrafaret(trf.Trafaret):  # typedef
     )
     native_mobile_grid_scheme = shared_scheme + trf.Dict(
         {
-            trf.Key("devices", optional=True) >> "_browsers_info": DevicesTrafaret,
+            trf.Key("devices", optional=True) >> "browsers_info": DevicesTrafaret,
         }
     )
     scheme = shared_scheme + trf.Dict(
