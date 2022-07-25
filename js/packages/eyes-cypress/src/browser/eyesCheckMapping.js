@@ -87,14 +87,21 @@ function eyesCheckMapValues({args, refer}) {
     if (!Array.isArray(regions)) regions = [regions];
     let resRegions = [];
     for (const region of regions) {
-      if (region.element) {
-        if (region.padding) {
+      if (region.element || isHTMLElement(region) || region.jquery) {
+        if (region.padding || region.regionId) {
           let currRefElements = refElements(region.element);
           for (const refElement of currRefElements) {
-            resRegions.push({region: refElement, padding: region.padding});
+            let curr = {region: refElement};
+            if (region.padding) {
+              curr.padding = region.padding;
+            }
+            if (region.regionId) {
+              curr.regionId = region.regionId;
+            }
+            resRegions.push(curr);
           }
         } else {
-          resRegions = [...resRegions, refElements(region)];
+          resRegions = [...resRegions, ...refElements(region)];
         }
       } else {
         resRegions.push(region);

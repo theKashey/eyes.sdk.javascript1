@@ -664,7 +664,7 @@ cy.get('.region.two:nth-child(2)').then(el => {
         ignore: [
           {type: 'css', selector: '.region.three:nth-child(3n)'},
           {type: 'xpath', selector: '//div[@class="region one"][3]'},
-          {region: el, regionId: 'my-region-id'},
+          {element: el, regionId: 'my-region-id'},
         ],
       });
 })

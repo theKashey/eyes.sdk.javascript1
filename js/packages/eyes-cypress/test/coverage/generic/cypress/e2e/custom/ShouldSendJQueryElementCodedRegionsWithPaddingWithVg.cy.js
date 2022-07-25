@@ -34,7 +34,6 @@ describe('Coverage Tests - ShouldSendCoddedRegionsWithPaddingWithVg', () => {
             top: 88,
             width: 838,
             height: 110,
-            regionId: '#ignoreRegions',
           },
         ],
         'ignore',

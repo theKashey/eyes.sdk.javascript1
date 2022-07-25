@@ -34,12 +34,13 @@ describe('Coverage tests', () => {
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['0'],
         {
-          isDisabled: false,
           type: 'LargeText',
+          isDisabled: false,
           left: 10,
           top: 285,
           width: 800,
           height: 501,
+          regionId: '.ignore (1)',
         },
         undefined,
       );
@@ -52,6 +53,7 @@ describe('Coverage tests', () => {
           top: 932,
           width: 456,
           height: 307,
+          regionId: '.ignore (2)',
         },
         undefined,
       );
@@ -64,6 +66,7 @@ describe('Coverage tests', () => {
           top: 1276,
           width: 690,
           height: 207,
+          regionId: '.ignore (3)',
         },
         undefined,
       );

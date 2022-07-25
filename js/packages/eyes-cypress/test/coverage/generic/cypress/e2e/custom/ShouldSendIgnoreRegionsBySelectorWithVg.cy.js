@@ -21,17 +21,17 @@ describe('Coverage tests', () => {
       );
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['ignore']['0'],
-        {left: 10, top: 285, width: 800, height: 501},
+        {left: 10, top: 285, width: 800, height: 501, regionId: '.ignore (1)'},
         undefined,
       );
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['ignore']['1'],
-        {left: 122, top: 932, width: 456, height: 307},
+        {left: 122, top: 932, width: 456, height: 307, regionId: '.ignore (2)'},
         undefined,
       );
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['ignore']['2'],
-        {left: 8, top: 1276, width: 690, height: 207},
+        {left: 8, top: 1276, width: 690, height: 207, regionId: '.ignore (3)'},
         undefined,
       );
     });

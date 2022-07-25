@@ -2,7 +2,7 @@
 const assert = require('assert');
 const {getTestInfo} = require('@applitools/test-utils');
 
-describe('Coverage Tests - ShouldSendCoddedRegionsWithPaddingWithVg', () => {
+describe('Coverage Tests - ShouldSendCoddedRegionByDomWithPaddingWithVg', () => {
   it('should send coded regions by DOM element with vg', () => {
     cy.visit('https://applitools.github.io/demo/TestPages/PaddedBody/region-padding.html');
     cy.eyesOpen({
@@ -34,7 +34,6 @@ describe('Coverage Tests - ShouldSendCoddedRegionsWithPaddingWithVg', () => {
             top: 238,
             width: 818,
             height: 90,
-            regionId: '#layoutRegions',
           },
         ],
         'layout',

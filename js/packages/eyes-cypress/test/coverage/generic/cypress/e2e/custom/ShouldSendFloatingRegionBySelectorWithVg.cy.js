@@ -37,6 +37,7 @@ describe('Coverage tests', () => {
           maxDownOffset: 3,
           maxLeftOffset: 20,
           maxRightOffset: 30,
+          regionId: '#overflowing-div',
         },
         undefined,
       );

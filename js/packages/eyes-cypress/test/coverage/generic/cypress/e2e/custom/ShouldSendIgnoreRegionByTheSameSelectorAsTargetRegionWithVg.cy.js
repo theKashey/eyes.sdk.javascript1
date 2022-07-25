@@ -24,7 +24,7 @@ describe('Coverage tests', () => {
       );
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['ignore']['0'],
-        {left: 0, top: 0, width: 304, height: 185},
+        {left: 0, top: 0, width: 304, height: 185, regionId: '#overflowing-div-image'},
         undefined,
       );
     });
