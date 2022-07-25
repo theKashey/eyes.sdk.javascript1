@@ -190,9 +190,9 @@ export async function getUrl(page: Driver): Promise<string> {
 export async function visit(page: Driver, url: string): Promise<void> {
   await page.goto(url)
 }
-export async function takeScreenshot(page: Driver): Promise<string> {
-  const result = await page.screenshot({encoding: 'base64'})
-  return result as string
+export async function takeScreenshot(page: Driver): Promise<Buffer> {
+  const result = await page.screenshot({captureBeyondViewport: false})
+  return result as Buffer
 }
 export async function click(frame: Context, element: Element | Selector): Promise<void> {
   if (isSelector(element)) element = await findElement(frame, element)
