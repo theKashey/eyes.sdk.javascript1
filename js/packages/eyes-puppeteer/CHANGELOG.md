@@ -11,6 +11,14 @@
 
 
 
+## 1.10.3 - 2022/7/25
+
+### Features
+### Bug fixes
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+- Better support in DOM slot element
+- Fixed breaking API change in Puppeteer used when taking screenshots
+
 ## 1.10.2 - 2022/7/5
 
 ### Features
