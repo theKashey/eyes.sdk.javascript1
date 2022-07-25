@@ -238,3 +238,53 @@ describe('screenshoter android app', () => {
     })
   })
 })
+
+describe('screenshoter android ios', () => {
+  let driver, destroyDriver
+
+  before(async () => {
+    ;[driver, destroyDriver] = await makeDriver({
+      type: 'ios-bs',
+      app: 'bs://9fa51ee3c516d1fa44942a63b55150849162f057',
+      logger,
+    })
+
+    await driver.target.updateSettings({allowInvisibleElements: true})
+  })
+
+  after(async () => {
+    await destroyDriver()
+  })
+
+  it.only('take full app screenshot', async () => {
+    // await sleep(10000)
+
+    // const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
+    // await loginButton.click()
+    // await sleep(3000)
+
+    // const passwordField = await driver.element({type: 'id', selector: 'passwordField'})
+    // await passwordField.type('a')
+    // const loginButton2 = await driver.element({type: 'id', selector: 'loginButton'})
+    // await loginButton2.click()
+    // await sleep(15000)
+
+    // await driver.init()
+
+    await driver.mainContext.setScrollingElement({
+      type: '-ios predicate string',
+      selector: "type = 'XCUIElementTypeCollectionView'",
+    })
+
+    await test({
+      type: 'ios',
+      tag: 'app-fully-suncorp',
+      fully: true,
+      framed: true,
+      wait: 1500,
+      scrollingMode: 'scroll',
+      driver,
+      logger,
+    })
+  })
+})

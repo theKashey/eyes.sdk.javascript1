@@ -167,6 +167,24 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
       },
     },
+    'ios-bs': {
+      url: 'https://hub.browserstack.com/wd/hub',
+      capabilities: {
+        'bstack:options': {
+          // realMobile: 'true',
+          // appiumVersion: '1.20.2',
+          local: 'true',
+          deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+          userName: process.env.BROWSERSTACK_USERNAME,
+          accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
+        },
+        browserName: app === 'safari' ? app : '',
+        platformName: 'iOS',
+        'appium:app': apps[app || type] || (app !== 'safari' ? app : undefined),
+        'appium:deviceName': deviceName || 'iPhone 12',
+        'appium:platformVersion': platformVersion || '14.5',
+      },
+    },
   }
   const env = envs[process.env.APPLITOOLS_TEST_REMOTE === 'sauce' ? `${type}-sauce` : type]
   const url = new URL(env.url)
