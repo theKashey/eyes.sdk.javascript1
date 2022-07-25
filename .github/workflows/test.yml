@@ -78,12 +78,12 @@ jobs:
         if: ${{matrix.xvfb}}
         run: |
           sudo apt-get install -y xvfb
-           Xvfb -ac $DISPLAY -screen 0 1280x1024x16 &
+          Xvfb -ac $DISPLAY -screen 0 1280x1024x16 &
       - name: Run tests
         uses: ./.github/actions/tests
         with:
           working-directory: ${{matrix.path}}
-          test-type: ${{github.event_name == 'workflow_dispatch' && github.event.inputs.test-type || 'sanity'}}
+          test-type: ${{(github.event_name == 'pull_request' && 'sanity') || github.event.inputs.test-type}}
           build-type: ${{github.event.inputs.build-type}}
           setup-type: ${{github.event.inputs.setup-type}}
           links: ${{matrix.links || github.event.inputs.links}}
