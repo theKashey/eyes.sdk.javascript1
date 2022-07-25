@@ -1,7 +1,6 @@
 import type {Size, Cookie} from '@applitools/types'
 import assert from 'assert'
 import * as spec from '../../src/spec-driver'
-import * as utils from '@applitools/utils'
 
 function isEqualElements(frame: spec.Context | spec.Driver, element1: spec.Element, element2: spec.Element) {
   return frame.evaluate((element1, element2) => element1 === element2, element1, element2).catch(() => false)
