@@ -9,6 +9,15 @@
 
 
 
+## 3.27.0 - 2022/7/25
+
+### Features
+- Add support for padded coded regions
+- Add support for dynamic coded regions
+### Bug fixes
+- Fix `npx eyes-setup` for Cypress version with a caret, support `e2e.ts` as support file
+- Better support in DOM slot element
+
 ## 3.26.6 - 2022/7/15
 
 ### Features

@@ -82,11 +82,9 @@ Apollo SDK:
     - Better support in DOM slot element
 "@applitools/eyes-cypress":
   feature:
-    - Add support for padded coded regions
-    - Add support for dynamic coded regions
+    - 
   bug-fix:
-    - Fix `npx eyes-setup` for Cypress version with a caret, support `e2e.ts` as support file
-    - Better support in DOM slot element
+    - 
 "@applitools/eyes-storybook":
   feature:
     - 
