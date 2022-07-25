@@ -228,10 +228,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
   integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
 
-"@applitools/spec-driver-puppeteer@1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-puppeteer/-/spec-driver-puppeteer-1.1.7.tgz#0d6fd311833d9407d02e31f40897338586e17026"
-  integrity sha512-PYiNgVo0RqNeCwdgZKKOo+5fH0XPTF8nbT6jSmvRZM+ur920IkQ2sbNCic4roJ0UaEwgmmZ76Yvh17370p+5+w==
+"@applitools/spec-driver-puppeteer@1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-puppeteer/-/spec-driver-puppeteer-1.1.8.tgz#ea6ee0b5a2c61fc0f526ff80729eeca7be9c67b3"
+  integrity sha512-cu1F8K9pacfWNZpWIcCUFC8y8tnPwWgpqa25OTP10L8OBo8cGP6kC57YxAAxfhnrdBFFXq35RIWxPoEzJk5C/g==
   dependencies:
     "@applitools/types" "1.5.7"
     "@applitools/utils" "1.3.10"
