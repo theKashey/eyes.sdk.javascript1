@@ -324,7 +324,8 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         if (this.driver.helper?.name === 'android') {
           this._state.touchPadding = await this.driver.helper.getTouchPadding()
           this._logger.log('Touch padding extracted using helper library', this._state.touchPadding)
-        } else {
+        }
+        if (!this._state.touchPadding) {
           this._state.touchPadding = await this.getAttribute('contentSize')
             .then(data => JSON.parse(data).touchPadding)
             .catch(err => {

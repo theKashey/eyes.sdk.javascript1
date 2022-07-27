@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed some issues with helper library usage
 "@applitools/eyes-selenium":
   feature:
     - 
@@ -21,6 +21,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
     - Avoided unexpected touch actions during `check` on Android apps
     - Better support in DOM slot element
+    - Fixed some issues with helper library usage
 "@applitools/eyes-webdriverio":
   feature:
     - 
@@ -28,6 +29,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
     - Avoided unexpected touch actions during `check` on Android apps
     - Better support in DOM slot element
+    - Fixed some issues with helper library usage
 "@applitools/eyes-playwright":
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -55,6 +57,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
     - Avoided unexpected touch actions during `check` on Android apps
     - Better support in DOM slot element
+    - Fixed some issues with helper library usage
 "@applitools/eyes-puppeteer":
   feature:
     - 
@@ -80,6 +83,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
     - Avoided unexpected touch actions during `check` on Android apps
     - Better support in DOM slot element
+    - Fixed some issues with helper library usage
 "@applitools/eyes-cypress":
   feature:
     - 
@@ -126,6 +130,7 @@ Apollo SDK:
     - Fixed various issues during taking screenshots in landscape orientation on some native devices
     - Avoided unexpected touch actions during `check` on Android apps
     - Better support in DOM slot element
+    - Fixed some issues with helper library usage
 eyes-browser-extension:
   feature:
     - Added support for taking full screenshots of elements that are scroll by pages only

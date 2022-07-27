@@ -6,9 +6,6 @@ const {makeDriver, sleep, test, logger} = require('../e2e')
  * 1. In application config ensure to use proper api url (https://api-uat.test.suncorp.com.au/dev) and turn on helper lib
  * 2. Login to the application (103@x.y or 108@x.y)
  * 3. Ensure to use `noReset: true` in capabilities
- * 
- *         appActivity: 'au.com.suncorp.marketplace.presentation.startup.view.SplashActivity',
-        appPackage: 'au.com.aami.marketplace.qa',
  */
 
 describe('screenshoter android app', () => {
@@ -18,6 +15,9 @@ describe('screenshoter android app', () => {
     ;[driver, destroyDriver] = await makeDriver({
       type: 'android',
       app: '/Users/kyrylo/Downloads/Marketplace-1.16.0.2781-aami-qa-signed-aligned.apk',
+      noReset: true,
+      appActivity: 'au.com.suncorp.marketplace.presentation.startup.view.SplashActivity',
+      appPackage: 'au.com.aami.marketplace.qa',
       logger,
     })
 
@@ -36,7 +36,7 @@ describe('screenshoter android app', () => {
     await destroyDriver()
   })
 
-  it('take full app screenshot', async () => {
+  it('take full app screenshot on insurances screen', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
@@ -65,7 +65,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take full app screenshot', async () => {
+  it('take full app screenshot on policy screen', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
@@ -98,7 +98,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take full app screenshot', async () => {
+  it('take full app screenshot on profile screen', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
@@ -131,7 +131,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take full app screenshot', async () => {
+  it('take full app screenshot on benefits screen', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
@@ -162,7 +162,7 @@ describe('screenshoter android app', () => {
     })
   })
 
-  it('take full app screenshot', async () => {
+  it('take full app screenshot on claims screen', async () => {
     await sleep(10000)
 
     const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
@@ -192,51 +192,6 @@ describe('screenshoter android app', () => {
       logger,
     })
   })
-
-  it.skip('take full app screenshot', async () => {
-    await sleep(10000)
-
-    const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
-    await loginButton.click()
-    await sleep(3000)
-
-    // const emailField = await driver.element({type: 'id', selector: 'emailAddressField'})
-    // await emailField.type('103@x.y')
-    const passwordField = await driver.element({type: 'id', selector: 'passwordField'})
-    await passwordField.type('a')
-    const loginButton2 = await driver.element({type: 'id', selector: 'loginButton'})
-    await loginButton2.click()
-    await sleep(15000)
-
-    const profileButton = await driver.element({type: 'id', selector: 'profileFragment'})
-    await profileButton.click()
-    await sleep(3000)
-
-    const benefitsButton = await driver.element({type: 'id', selector: 'benefitsFragment'})
-    await benefitsButton.click()
-    await sleep(3000)
-
-    const activeClaimsButton = await driver.element({type: 'id', selector: 'activeClaimsFragment'})
-    await activeClaimsButton.click()
-    await sleep(3000)
-
-    const insuranceButton = await driver.element({type: 'id', selector: 'insuranceFragment'})
-    await insuranceButton.click()
-    await sleep(3000)
-
-    await driver.init()
-
-    await test({
-      type: 'android',
-      tag: 'app-fully-suncorp5',
-      fully: true,
-      framed: true,
-      wait: 1500,
-      scrollingMode: 'scroll',
-      driver,
-      logger,
-    })
-  })
 })
 
 describe('screenshoter android ios', () => {
@@ -256,7 +211,7 @@ describe('screenshoter android ios', () => {
     await destroyDriver()
   })
 
-  it.only('take full app screenshot', async () => {
+  it('take full app screenshot', async () => {
     // await sleep(10000)
 
     // const loginButton = await driver.element({type: 'id', selector: 'loginButton'})

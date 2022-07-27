@@ -52,7 +52,16 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
   }
 }
 
-exports.makeDriver = async function makeDriver({type, app, orientation, logger, deviceName, platformVersion}) {
+exports.makeDriver = async function makeDriver({
+  type,
+  env,
+  app,
+  orientation,
+  logger,
+  deviceName,
+  platformVersion,
+  ...rest
+}) {
   const workerId = process.env.MOCHA_WORKER_ID ? Number(process.env.MOCHA_WORKER_ID) : 0
   console.log(`makeDriver called for worker #${process.env.MOCHA_WORKER_ID}`, workerId)
   const androidEmulatorIds = process.env.ANDROID_EMULATOR_UDID
@@ -86,9 +95,6 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         nativeWebScreenshot: true,
         skipUnlock: true,
         isHeadless: true,
-        // noReset: true,
-        // appPackage: 'au.com.aami.marketplace.qa',
-        // appActivity: 'au.com.suncorp.marketplace.presentation.startup.view.SplashActivity',
         browserName: app === 'chrome' ? app : '',
         app: app === 'chrome' ? undefined : apps[app || type] || app,
         deviceName: deviceName || 'Google Pixel 3a XL',
@@ -96,6 +102,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         platformVersion: platformVersion || '10.0',
         automationName: 'uiautomator2',
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        ...rest,
       },
     },
     'android-sauce': {
@@ -173,7 +180,7 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         'bstack:options': {
           // realMobile: 'true',
           // appiumVersion: '1.20.2',
-          local: 'true',
+          // local: 'true',
           deviceOrientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
           userName: process.env.BROWSERSTACK_USERNAME,
           accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
@@ -183,10 +190,11 @@ exports.makeDriver = async function makeDriver({type, app, orientation, logger, 
         'appium:app': apps[app || type] || (app !== 'safari' ? app : undefined),
         'appium:deviceName': deviceName || 'iPhone 12',
         'appium:platformVersion': platformVersion || '14.5',
+        'appium:autoAcceptAlerts': true,
       },
     },
   }
-  const env = envs[process.env.APPLITOOLS_TEST_REMOTE === 'sauce' ? `${type}-sauce` : type]
+  env = env || envs[process.env.APPLITOOLS_TEST_REMOTE === 'sauce' ? `${type}-sauce` : type]
   const url = new URL(env.url)
   const browser = await webdriverio.remote({
     protocol: url.protocol ? url.protocol.replace(/:$/, '') : undefined,

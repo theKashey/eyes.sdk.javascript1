@@ -2,7 +2,7 @@ const fs = require('fs')
 const utils = require('@applitools/utils')
 
 main({
-  device: 'Pixel 3a XL',
+  device: process.argv[2] || 'Pixel 3a XL',
   apiLevel: 29, // android 10
   port: 5555,
   jobs: process.env.MOCHA_JOBS ? Number(process.env.MOCHA_JOBS) : 1,
