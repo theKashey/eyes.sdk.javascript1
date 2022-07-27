@@ -189,8 +189,8 @@ exports.makeDriver = async function makeDriver({
         platformName: 'iOS',
         'appium:app': apps[app || type] || (app !== 'safari' ? app : undefined),
         'appium:deviceName': deviceName || 'iPhone 12',
-        'appium:platformVersion': platformVersion || '14.5',
-        'appium:autoAcceptAlerts': true,
+        'appium:platformVersion': platformVersion || '14.1',
+        // 'appium:autoAcceptAlerts': true,
       },
     },
   }

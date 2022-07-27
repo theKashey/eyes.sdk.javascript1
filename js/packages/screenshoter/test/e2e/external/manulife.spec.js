@@ -19,26 +19,38 @@ describe('screenshoter ios app', () => {
 
   it('take full app screenshot on pager screen', async () => {
     await sleep(5000)
-    await driver.element({type: '-ios predicate string', selector: "name = 'Singapore'"}).then(button => button.click())
-    await driver.element({type: '-ios predicate string', selector: "name = 'Next'"}).then(button => button.click())
-    await driver.target.touchAction([
-      {action: 'press', x: 290, y: 356 - 47},
-      {action: 'wait', ms: 500},
-      {action: 'release'},
-      // {action: 'press', x: 580, y: 1215},
-      // {action: 'release'},
-    ])
-    // require('fs').writeFileSync('./layout.png', await driver.takeScreenshot())
-    // return
-    await driver.element({type: '-ios predicate string', selector: "name = 'Skip'"}).then(button => button.click())
     await driver
-      .element({type: '-ios predicate string', selector: "value = 'Enter your email address'"})
+      .element({type: '-ios predicate string', selector: "name == 'Singapore'"})
+      .then(button => button.click())
+    await driver.element({type: '-ios predicate string', selector: "name == 'Next'"}).then(button => button.click())
+    await driver.element({type: '-ios predicate string', selector: "name == 'Skip'"}).then(button => button.click())
+    await driver.target.acceptAlert()
+    await driver.element({type: 'xpath', selector: '//*[@value="Enter your email address"]'})
+    await driver
+      .element({type: 'xpath', selector: '//XCUIElementTypeTextField'})
       .then(field => field.type('tuser@mailinator.com'))
     await driver
-      .element({type: '-ios predicate string', selector: "value = 'Enter your password'"})
+      .element({type: 'xpath', selector: '//XCUIElementTypeSecureTextField'})
       .then(field => field.type('AutoPw@1'))
-    await driver.element({type: '-ios predicate string', selector: "name = 'Sign in'"}).then(button => button.click())
     await sleep(5000)
+    await driver.execute('mobile: tap', {x: 50, y: 430})
+    await sleep(10000)
+    await driver.target.acceptAlert()
+    await driver.execute('mobile: tap', {x: 139, y: 755})
+    await sleep(5000)
+    await driver.execute('mobile: activateApp', {bundleId: 'com.manulife.ap.sit.move'})
+    await sleep(5000)
+    await driver.execute('mobile: tap', {x: 139, y: 755})
+    await sleep(5000)
+    await driver.execute('mobile: tap', {x: 22, y: 62})
+    await sleep(5000)
+
+    // await driver.element({type: 'xpath', selector: '//*[@label="Profile"]'}).then(button => button.click())
+    // await driver.element({type: 'xpath', selector: '//*[@label="My Policies"]'}).then(button => button.click())
+
+    await driver.init()
+
+    await driver.mainContext.setScrollingElement({type: 'xpath', selector: '//XCUIElementTypeTable'})
 
     await test({
       type: 'ios',
