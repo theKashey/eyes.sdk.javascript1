@@ -1,6 +1,6 @@
 {
   "name": "@applitools/screenshoter",
-  "version": "3.4.12",
+  "version": "3.4.13",
   "description": "Applitools universal screenshoter for web and native applications",
   "keywords": [
     "applitools",
@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.6",
-    "@applitools/driver": "^1.9.18",
+    "@applitools/driver": "^1.9.19",
     "@applitools/scripts": "^1.1.0",
     "@applitools/spec-driver-webdriverio": "^1.2.18",
     "@applitools/test-utils": "^1.4.3",
