@@ -88,7 +88,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - |
+    Fix `Maximum call stack size exceeded` error in `eyesCheck`
 "@applitools/eyes-storybook":
   feature:
     - 

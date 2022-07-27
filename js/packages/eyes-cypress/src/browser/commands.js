@@ -7,11 +7,7 @@ const {socketCommands} = require('./socketCommands');
 const {eyesOpenMapValues} = require('./eyesOpenMapping');
 const {eyesCheckMapValues} = require('./eyesCheckMapping');
 const {TestResultsSummary} = require('@applitools/eyes-api');
-const refer = new Refer(value => {
-  if (!value || !value.constructor || !value.constructor.name) return false;
-  const name = value.constructor.name;
-  return name === 'HTMLDocument' || name === 'Window' || value.ownerDocument;
-});
+const refer = new Refer();
 const socket = new Socket();
 const throwErr = Cypress.config('failCypressOnDiff');
 socketCommands(socket, refer);

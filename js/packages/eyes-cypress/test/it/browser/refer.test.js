@@ -6,10 +6,10 @@ const {exec} = require('child_process');
 const {promisify: p} = require('util');
 const pexec = p(exec);
 
-describe('spec-driver', () => {
+describe('refer', () => {
   before(async () => {
     try {
-      process.chdir(path.resolve(__dirname, '../spec-driver/fixtures'));
+      process.chdir(path.resolve(__dirname, '../browser/fixtures'));
       await pexec(`npm install`, {
         maxBuffer: 1000000,
       });
@@ -18,8 +18,8 @@ describe('spec-driver', () => {
     }
   });
 
-  it('works for spec-driver.spec.js', async () => {
-    await runCypress('spec-driver').then(results => {
+  it('works for refer.spec.js', async () => {
+    await runCypress('refer').then(results => {
       const tests = results.runs[0].tests;
       for (const res of tests) {
         if (res.state != 'passed') {

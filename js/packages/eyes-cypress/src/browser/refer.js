@@ -1,17 +1,26 @@
-const uuid = require('uuid');
+/* global Node */
 
+const uuid = require('uuid');
 const REF_ID = 'applitools-ref-id';
+
 class Refer {
-  constructor(check) {
+  constructor() {
     this.store = new Map();
     this.relation = new Map();
-    this.check = check;
   }
 
   isRef(ref) {
     return Boolean(ref && ref[REF_ID]);
   }
 
+  check(value) {
+    return (
+      value &&
+      (value.nodeType === Node.ELEMENT_NODE ||
+        value.nodeType === Node.DOCUMENT_NODE ||
+        (value.constructor && value.constructor.name === 'Window'))
+    );
+  }
   ref(value, parentRef) {
     if (this.check(value)) {
       const ref = uuid.v4();
