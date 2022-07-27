@@ -1,6 +1,6 @@
 {
   "name": "@applitools/execution-grid-client",
-  "version": "1.1.22",
+  "version": "1.1.23",
   "homepage": "https://applitools.com",
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
@@ -78,7 +78,7 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.6",
-    "@applitools/eg-tunnel": "^1.0.18",
+    "@applitools/eg-tunnel": "^1.0.20",
     "@applitools/scripts": "^1.1.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",

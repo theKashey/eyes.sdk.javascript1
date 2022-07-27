@@ -23,10 +23,10 @@
   dependencies:
     binary "^0.3.0"
 
-"@applitools/eg-tunnel@^1.0.18":
-  version "1.0.18"
-  resolved "https://registry.npmjs.org/@applitools/eg-tunnel/-/eg-tunnel-1.0.18.tgz#295cdcc3f32cfbb9d1e3d4d7b6f0abe888e661e8"
-  integrity sha512-iOc1t3V6BXxdIP2wrSrHj+lwdXriaPO+Sd3wwivMdUUkBvgO+gy5Pfjxb7Y9+EbhklFKDr8oFn0lK6+QbURFVw==
+"@applitools/eg-tunnel@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@applitools/eg-tunnel/-/eg-tunnel-1.0.20.tgz#1fa712d7b60d3f7e5df3a2681554b1d6d3076c64"
+  integrity sha512-HSwLY9k5tg1BncoZPUfQw3PLxzr1D0S1q6DLjcunu+kth3lNkQSDMwgbv28+Y8Tz0zgBDoSrePweZhwpjwCZiA==
   dependencies:
     "@applitools/eg-socks5-proxy-server" "^0.2.4"
     "@applitools/logger" "^1.0.12"
@@ -41,8 +41,9 @@
     p-retry "^4.6.2"
     run-script-os "^1.1.6"
     teen_process "^1.16.0"
+    yargs "^17.5.1"
 
-"@applitools/logger@1.1.15":
+"@applitools/logger@1.1.15", "@applitools/logger@^1.0.12":
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.15.tgz#7b37de9c76f413a62983f718ceafb09c8637b5af"
   integrity sha512-2SNbINnxvGxy8G5TXIZHhXWqWBFFn0o/+4ZP57VvohPG8AF4wqXBO3H93LZMMpDz/4prND0bBLqK3XFLY4ppTQ==
@@ -68,15 +69,15 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/utils@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
-  integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
-
 "@applitools/utils@1.3.10":
   version "1.3.10"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.10.tgz#307359d6f668c5fe6b3a7d213405ebe3bf2235b6"
   integrity sha512-CI/5BLB0D/aZn6uL8JJmsErI+TOHCa4Gz5Wi8sJknuPz/V9Ws6jIh9ZCTzvOCDUIp99qLJwD6TSA2BY9aMhCNw==
+
+"@applitools/utils@1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
+  integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
 
 "@babel/runtime@^7.0.0":
   version "7.18.6"
@@ -2581,6 +2582,19 @@ yargs@17.4.1:
   version "17.4.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.4.1.tgz#ebe23284207bb75cee7c408c33e722bfb27b5284"
   integrity sha512-WSZD9jgobAg3ZKuCQZSa3g9QOJeCCqLoLAykiWgmXnDo9EPnn4RPf5qVTtzgOx66o6/oqhcA5tHtJXpG8pMt3g==
+  dependencies:
+    cliui "^7.0.2"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.3"
+    y18n "^5.0.5"
+    yargs-parser "^21.0.0"
+
+yargs@^17.5.1:
+  version "17.5.1"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.5.1.tgz#e109900cab6fcb7fd44b1d8249166feb0b36e58e"
+  integrity sha512-t6YAJcxDkNX7NFYiVtKvWUz8l+PaKTLiL63mJYWR2GnHq2gjEWISzsLp9wg3aY36dY1j+gfIEL3pIF+XlJJfbA==
   dependencies:
     cliui "^7.0.2"
     escalade "^3.1.1"
