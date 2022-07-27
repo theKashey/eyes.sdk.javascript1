@@ -1,8 +1,21 @@
 import assert from 'assert'
 import {Builder} from 'selenium-webdriver'
 import {makeServer} from '../../src'
+import {spawn} from 'child_process'
+
+async function createTunnel() {
+  process.env.APPLITOOLS_EG_TUNNEL_PORT = 12345
+  const tunnel = spawn('node', ['./node_modules/@applitools/eg-tunnel/scripts/run-eg-tunnel.js'], {
+    detached: true,
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  await new Promise(res => setTimeout(res, 500)) // wait for tunnel to be ready
+  tunnel.unref()
+  return tunnel
+}
 
 describe('proxy-server', () => {
+  const eyesServerUrl = 'https://eyesapi.applitools.com'
   let proxy
 
   afterEach(async () => {
@@ -11,7 +24,6 @@ describe('proxy-server', () => {
 
   // skipping temporarily due to chrome 103 bug
   it.skip('works with real server', async () => {
-    proxy = await makeServer({eyesServerUrl: process.env.APPLITOOLS_SERVER_URL, apiKey: process.env.APPLITOOLS_API_KEY})
     const driver = await new Builder().forBrowser('chrome').usingServer(proxy.url).build()
 
     await driver.get('https://demo.applitools.com')
@@ -22,30 +34,46 @@ describe('proxy-server', () => {
     assert.strictEqual(title, 'ACME demo app')
   })
 
+  // skipping temporarily due to chrome 103 bug
   it.skip('works with real server and tunnels', async () => {
-    // NOTE:
-    // You need to spawn the tunnel server manually
-    // The binaries are brought in through the @applitools/eg-demo dev dep
-    //
-    // Run it with the following command/env vars:
-    //
-    // APPLITOOLS_EG_TUNNEL_PORT=12345 APPLITOOLS_EG_TUNNEL_MIN_PORT_RANGE=10000 APPLITOOLS_EG_TUNNEL_MAX_PORT_RANGE=20000 APPLITOOLS_EG_TUNNEL_MANAGER_URL=https://exec-wus.applitools.com node_modules/@applitools/eg-demo/eg-tunnel-macos
-    //
-    // Then you specify the tunnelUrl either in makeServer (with tunnelUrl0 or through the APPLITOOLS_EG_TUNNEL_URL env var
+    const tunnel = await createTunnel()
+    try {
+      proxy = await makeServer({
+        egTunnelUrl: 'http://localhost:12345',
+        eyesServerUrl,
+      })
+      const driver = await new Builder()
+        .withCapabilities({browserName: 'chrome', 'applitools:tunnel': true})
+        .usingServer(proxy.url)
+        .build()
 
+      await driver.get('https://applitools.com')
+
+      await driver.quit()
+    } finally {
+      tunnel.kill()
+    }
+  })
+
+  // skipping temporarily due to chrome 103 bug
+  it.skip('fails gracefully when tunnel closes during test run', async () => {
+    const tunnel = await createTunnel()
     proxy = await makeServer({
       egTunnelUrl: 'http://localhost:12345',
-      eyesServerUrl: 'https://eyes.applitools.com',
-      apiKey: process.env.APPLITOOLS_API_KEY,
+      eyesServerUrl,
     })
-
-    const driver = await new Builder()
+    let driver = await new Builder()
       .withCapabilities({browserName: 'chrome', 'applitools:tunnel': true})
       .usingServer(proxy.url)
       .build()
-
+    tunnel.kill()
     await driver.get('https://applitools.com')
-
+    await driver.quit()
+    driver = await new Builder()
+      .withCapabilities({browserName: 'chrome', 'applitools:tunnel': true})
+      .usingServer(proxy.url)
+      .build()
+    await driver.get('https://applitools.com')
     await driver.quit()
   })
 })

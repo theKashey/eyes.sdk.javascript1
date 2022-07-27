@@ -74,9 +74,11 @@ export function makeServer({
     } catch (err) {
       // console.error(err)
       requestLogger.error(`Error during processing request:`, err)
-      response
-        .writeHead(500)
-        .end(JSON.stringify({value: {error: 'internal proxy server error', message: err.message, stacktrace: ''}}))
+      if (!response.writableEnded) {
+        response
+          .writeHead(500)
+          .end(JSON.stringify({value: {error: 'internal proxy server error', message: err.message, stacktrace: ''}}))
+      }
     } finally {
       requestLogger.log(`Request was responded with status ${response.statusCode}`)
     }

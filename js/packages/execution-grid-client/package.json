@@ -78,6 +78,8 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.6",
+    "@applitools/eg-tunnel": "^1.0.18",
+    "@applitools/scripts": "^1.1.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
     "@types/node-fetch": "^2.6.1",
