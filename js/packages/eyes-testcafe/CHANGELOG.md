@@ -12,6 +12,20 @@
 
 
 
+
+## 1.17.3 - 2022/7/28
+
+### Features
+- Add the ability for the SDK to lazy load the page prior to performing a check window
+- Support padding for regions in the following region types - ignoreRegions, layoutRegions, strictRegions, contentRegions
+### Bug fixes
+- Fix calling `waitBeforeCapture` when failed to set required viewport size
+- Fix rendering issues with Salesforce Lightning design system
+- Fix issue that prevented self-signed certificates from working when connecting through a proxy server
+- Allow configuration file to be loaded from ancestor directories
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+- Better support in DOM slot element
+
 ## 1.17.2 - 2022/6/8
 
 ### Features
