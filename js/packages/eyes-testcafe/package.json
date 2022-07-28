@@ -60,6 +60,7 @@
     "test:coverage:generic": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/generic/*WithVg* --reporter spec,xunit:coverage-test-report.xml",
     "test:coverage:custom": "yarn generate:tests && APPLITOOLS_USE_PRELOADED_CONFIG=true APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-testcafe (custom)' APPLITOOLS_BATCH_ID=$(uuidgen) testcafe chrome:headless test/custom --reporter spec,xunit:coverage-test-report.xml",
     "report": "coverage-tests report ./test/coverage/config.js --name 'eyes-testcafe'",
+    "upgrade:framework": "if [ ! -z $APPLITOOLS_TESTCAFE_VERSION ]; then packagejson=`cat package.json`; yarn upgrade --no-lockfile testcafe@$APPLITOOLS_TESTCAFE_VERSION; echo \"$packagejson\" > package.json; fi",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='testcafe' -f links='eyes-sdk-core eyes-api types test-utils utils driver snippets screenshoter sdk-shared visual-grid-client'",
     "gh:publish": "gh workflow run publish-testcafe.yml --ref $(git rev-parse --abbrev-ref HEAD)",
