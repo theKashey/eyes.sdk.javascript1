@@ -28,6 +28,8 @@ function convertSdkNameToReportName(sdkName) {
       return 'js_protractor'
     case 'eyes_selenium_python':
       return 'python'
+    case 'eyes_robotframework':
+      return 'robotframework'
     case 'eyes_selenium_ruby':
       return 'ruby'
     case 'eyes_selenium_java':
