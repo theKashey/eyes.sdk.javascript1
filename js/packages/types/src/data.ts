@@ -213,6 +213,8 @@ export type AndroidDevice =
   | 'Pixel 3 XL'
   | 'Pixel 4'
   | 'Pixel 4 XL'
+  | 'Pixel 5'
+  | 'Pixel 6'
   | 'Galaxy Note 8'
   | 'Galaxy Note 9'
   | 'Galaxy S8'
@@ -228,6 +230,12 @@ export type AndroidDevice =
   | 'Galaxy S21'
   | 'Galaxy S21 Plus'
   | 'Galaxy S21 Ultra'
+  | 'Galaxy S22'
+  | 'Galaxy S22 Plus'
+  | 'Galaxy Tab S7'
+  | 'Galaxy Tab S8'
+  | 'Xiaomi Redmi Note 11'
+  | 'Xiaomi Redmi Note 11 Pro'
 
 export type AndroidVersion = 'latest' | 'latest-1' | 'latest-2'
 

@@ -2,6 +2,8 @@ export enum AndroidDeviceNameEnum {
   Pixel_3_XL = 'Pixel 3 XL',
   Pixel_4 = 'Pixel 4',
   Pixel_4_XL = 'Pixel 4 XL',
+  Pixel_5 = 'Pixel 5',
+  Pixel_6 = 'Pixel 6',
   Galaxy_Note_8 = 'Galaxy Note 8',
   Galaxy_Note_9 = 'Galaxy Note 9',
   Galaxy_S8 = 'Galaxy S8',
@@ -17,6 +19,12 @@ export enum AndroidDeviceNameEnum {
   Galaxy_S21 = 'Galaxy S21',
   Galaxy_S21_Plus = 'Galaxy S21 Plus',
   Galaxy_S21_Ultra = 'Galaxy S21 Ultra',
+  Galaxy_S22 = 'Galaxy S22',
+  Galaxy_S22_Plus = 'Galaxy S22 Plus',
+  Galaxy_Tab_S7 = 'Galaxy Tab S7',
+  Galaxy_Tab_S8 = 'Galaxy Tab S8',
+  Xiaomi_Redmi_Note_11 = 'Xiaomi Redmi Note 11',
+  Xiaomi_Redmi_Note_11_Pro = 'Xiaomi Redmi Note 11 Pro',
 }
 
 export type AndroidDeviceName = `${AndroidDeviceNameEnum}`
