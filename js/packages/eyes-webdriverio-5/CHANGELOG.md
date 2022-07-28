@@ -10,6 +10,16 @@
 
 
 
+## 5.35.8 - 2022/7/28
+
+### Features
+- Added new android devices
+### Bug fixes
+- Fixed various issues during taking screenshots in landscape orientation on some native devices
+- Avoided unexpected touch actions during `check` on Android apps
+- Better support in DOM slot element
+- Fixed some issues with helper library usage
+
 ## 5.35.7 - 2022/7/4
 
 ### Features

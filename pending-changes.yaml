@@ -20,12 +20,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-webdriverio":
   feature:
-    - Added new android devices
+    - 
   bug-fix:
-    - Fixed various issues during taking screenshots in landscape orientation on some native devices
-    - Avoided unexpected touch actions during `check` on Android apps
-    - Better support in DOM slot element
-    - Fixed some issues with helper library usage
+    - 
 "@applitools/eyes-playwright":
   feature:
     - 
