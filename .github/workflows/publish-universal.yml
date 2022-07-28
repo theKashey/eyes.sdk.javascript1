@@ -57,7 +57,7 @@ jobs:
       - name: Build
         shell: bash
         working-directory: ./js/packages/eyes-universal
-        run: yarn build
+        run: yarn build && yarn build:zip && yarn build:tgz
       - name: Upload building artifacts
         uses: actions/upload-artifact@v3
         with:
