@@ -1,6 +1,6 @@
 {
   "name": "@applitools/spec-driver-selenium",
-  "version": "1.3.16",
+  "version": "1.3.17",
   "keywords": [
     "selenium",
     "selenium-webdriver",
@@ -62,7 +62,7 @@
     }
   },
   "dependencies": {
-    "@applitools/types": "1.5.7",
+    "@applitools/types": "1.5.8",
     "@applitools/utils": "1.3.10"
   },
   "devDependencies": {

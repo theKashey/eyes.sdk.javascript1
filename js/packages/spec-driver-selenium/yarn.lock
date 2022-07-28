@@ -46,10 +46,10 @@
   dependencies:
     node-fetch "2.6.1"
 
-"@applitools/types@1.5.7":
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.7.tgz#395328a1d674a81f025fb86d857ca823542da48e"
-  integrity sha512-+jq8H9o1d6jJKieKC8QOrl8oyBeOM3r7h9HGfb55lpFPXxE5NakPBadBI4Pl/12+kt4rJTqJeBhZUSW+zN0W6A==
+"@applitools/types@1.5.8":
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.8.tgz#1d281e7f52e1f5b542d79f3a266fd29bf521b58e"
+  integrity sha512-trMH32oewkrptYG26IzEbwMW9VG9BJo64bzwx/T4oz6ZfndXGCjwGCFQE4FDE++dRZTjzSF00h2YSzIxPAapeQ==
 
 "@applitools/utils@1.3.10":
   version "1.3.10"
