@@ -11,6 +11,17 @@
 
 
 
+## 1.11.3 - 2022/7/28
+
+### Features
+- Added new android devices
+### Bug fixes
+- Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
+- Fixed various issues during taking screenshots in landscape orientation on some native devices
+- Avoided unexpected touch actions during `check` on Android apps
+- Better support in DOM slot element
+- Fixed some issues with helper library usage
+
 ## 1.11.2 - 2022/7/5
 
 ### Features

@@ -59,13 +59,9 @@ Apollo SDK:
     - Better support in DOM slot element
 "@applitools/eyes-nightwatch":
   feature:
-    - Added new android devices
+    - 
   bug-fix:
-    - Fixed bug where a failure in a single UFG environment fails all other environments in the same configuration
-    - Fixed various issues during taking screenshots in landscape orientation on some native devices
-    - Avoided unexpected touch actions during `check` on Android apps
-    - Better support in DOM slot element
-    - Fixed some issues with helper library usage
+    - 
 "@applitools/eyes-cypress":
   feature:
     - 
