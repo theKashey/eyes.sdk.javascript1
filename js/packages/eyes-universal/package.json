@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-universal",
-  "version": "2.9.13",
+  "version": "2.10.0",
   "description": "Applitools Eyes Universal SDK",
   "keywords": [
     "applitools",
@@ -59,9 +59,9 @@
     "test:e2e": "mocha ./test/e2e/*.spec.ts --exit --no-timeouts -r ts-node/register",
     "deps": "bongo deps",
     "gh:publish": "gh workflow run publish-universal.yml --ref $(git rev-parse --abbrev-ref HEAD)",
-    "preversion": "bongo preversion --verifyPendingChanges && yarn build && yarn build:zip && yarn build:tgz",
-    "version": "yarn build && bongo version --withPendingChanges",
-    "postversion": "bongo postversion"
+    "preversion": "bongo preversion --verify-pending-changes --skip-deps",
+    "version": "bongo version --with-pending-changes",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "husky": {
     "hooks": {

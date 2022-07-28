@@ -1,0 +1,65 @@
+name: Bump version
+
+description: Bump version of the package
+
+inputs:
+  working-directory:
+    description: the path to the directory from repository root
+    type: string
+    required: true
+  version:
+    description: version type (patch, major, minor)
+    type: string
+    required: true
+
+outputs:
+  branch:
+    description: name of the versioned branch
+    value: ${{steps.version.outputs.branch}}
+  version:
+    description: name of the tag pushed after publishing
+    value: ${{steps.version.outputs.version}}
+  tag:
+    description: name of the tag pushed after publishing
+    value: ${{steps.version.outputs.tag}}
+
+runs:
+  using: composite
+  steps:
+    - name: Version
+      id: version
+      shell: bash
+      working-directory: ${{inputs.working-directory}}
+      run: |
+        echo "::group::Prepare package"
+        PACKAGE_NAME="$(cat ./package.json | jq -r .name)"
+        CURRENT_VERSION="$(cat ./package.json | jq -r .version)"
+        echo "::endgroup::"
+
+        echo "::group::Configure Git"
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        echo "::endgroup::"
+
+        echo "::group::Creating temporary branch"
+        BRANCH="${PACKAGE_NAME}_$(date +%F_%H-%M)"
+        git checkout -b $BRANCH
+        git push -u origin $BRANCH
+        echo "::notice::Publish branch - $BRANCH"
+        echo "::set-output name=branch::$BRANCH"
+        echo "::endgroup::"
+
+        echo "::group::Installing and updating dependencies"
+        yarn install
+        npm run deps --if-present -- --commit
+        echo "::endgroup::"
+
+        echo "::group::Version $PACKAGE_NAME"
+        yarn version "--${{inputs.version}}"
+        NEW_VERSION="$(cat ./package.json | jq -r .version)"
+        echo "::notice::Bump version $CURRENT_VERSION -> $NEW_VERSION"
+        echo "::set-output name=version::$NEW_VERSION"
+        TAG="$(git describe --tags --abbrev=0)"
+        echo "::notice::Publish tag $TAG"
+        echo "::set-output name=tag::$TAG"
+        echo "::endgroup::"

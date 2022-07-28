@@ -32,11 +32,13 @@ env:
   AZURE_STORAGE_CONNECTION_STRING: ${{secrets.AZURE_STORAGE_CONNECTION_STRING}}
 
 jobs:
-  verify:
-    name: Verification
+  prepare:
+    name: Prepare
     runs-on: ubuntu-latest
     outputs:
-      environments: ${{steps.prepare.outputs.environments}}
+      branch: ${{steps.version.outputs.branch}}
+      version: ${{steps.version.outputs.version}}
+      tag: ${{steps.version.outputs.tag}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
@@ -46,16 +48,28 @@ jobs:
           node-version: lts/*
           registry-url: https://registry.npmjs.org/
           always-auth: true
-      - name: Run pre-publish verifications
+      - name: Version
+        id: version
+        uses: ./.github/actions/version
+        with:
+          working-directory: ./js/packages/eyes-universal
+          version: ${{inputs.version || github.event.inputs.version}}
+      - name: Build
         shell: bash
         working-directory: ./js/packages/eyes-universal
-        run: |
-          yarn install
-          npx bongo release-pre-check --skip-deps --skip-commit --skip-verify-installed-versions
-          npx bongo verify-changelog
+        run: yarn build
+      - name: Upload building artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: eyes-universal-bin-${{steps.version.outputs.version}}
+          retention-days: 2
+          path:  |
+            ./js/packages/eyes-universal/dist
+            ./js/packages/eyes-universal/bin
   test:
-    needs: [verify]
+    needs: [prepare]
     strategy:
+      fail-fast: false
       matrix:
         include:
           - name: alpine
@@ -77,42 +91,59 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{needs.prepare.outputs.branch}}
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org/
           always-auth: true
+      - name: Download building artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: eyes-universal-bin-${{needs.prepare.outputs.version}}
+          path: ./js/packages/eyes-universal
       - name: Run tests
         uses: ./.github/actions/tests
         with:
           working-directory: ./js/packages/eyes-universal
+          build-type: none
           test-type: e2e
           shell: ${{matrix.shell}}
   publish:
-    needs: [test]
+    needs: [prepare, test]
     name: Publish
     runs-on: ubuntu-latest
     steps:
-      - name: Check-out repository
+      - name: Check-out ${{github.ref_name}} branch
         uses: actions/checkout@v3
+      - name: Check-out ${{needs.prepare.outputs.branch}} branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{needs.prepare.outputs.branch}}
+          clean: false
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org/
           always-auth: true
+      - name: Download building artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: eyes-universal-bin-${{needs.prepare.outputs.version}}
+          path: ./js/packages/eyes-universal
       - name: Publish to NPM
-        id: publish
         uses: ./.github/actions/publish
         with:
           working-directory: ./js/packages/eyes-universal
-          version: ${{inputs.version || github.event.inputs.version}}
+          skip-build: true
       - name: Publish to GitHub
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{steps.publish.outputs.tag}}
-          name: ${{steps.publish.outputs.tag}}
+          tag_name: ${{needs.prepare.outputs.tag}}
+          name: ${{needs.prepare.outputs.tag}}
           files: |
             ./js/packages/eyes-universal/bin/eyes-universal-alpine
             ./js/packages/eyes-universal/bin/eyes-universal-linux
@@ -123,7 +154,7 @@ jobs:
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{steps.publish.outputs.tag}}|${{steps.publish.outputs.tag}}> 🎉 🎊 🥳\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{steps.publish.outputs.tag}}/eyes-universal.zip\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{needs.prepare.outputs.tag}}|${{needs.prepare.outputs.tag}}> 🎉 🎊 🥳\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

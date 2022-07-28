@@ -2,7 +2,7 @@ name: pre-commit
 
 on:
     pull_request:
-        branches-ignore: ['dependabot/**']
+        branches-ignore: ['dependabot/**', 'draft/**', 'play/**']
     push:
         branches: [master, develop]
 

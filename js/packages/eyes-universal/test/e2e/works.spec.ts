@@ -3,22 +3,18 @@ import fs from 'fs'
 
 describe('works', () => {
   it('works with stdout', async () => {
-    let platform
+    let bin
     if (process.platform === 'darwin') {
-      platform = 'macos'
+      bin = './bin/eyes-universal-macos'
     } else if (process.platform === 'win32') {
-      platform = 'win'
+      bin = './bin/eyes-universal-win'
     } else if (process.platform === 'linux') {
-      if (fs.existsSync('/etc/alpine-release')) {
-        platform = 'alpine'
-      } else {
-        platform = 'linux'
-      }
+      bin = `./bin/eyes-universal-${fs.existsSync('/etc/alpine-release') ? 'alpine' : 'linux'}`
     }
-    const server = spawn(`./bin/eyes-universal-${platform}`, {
+    const server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin}`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/sh',
-      stdio: ['ignore', 'pipe', 'ignore'],
+      stdio: ['ignore', 'pipe', 'inherit'],
     })
     return new Promise<void>((resolve, reject) => {
       server.on('error', reject)

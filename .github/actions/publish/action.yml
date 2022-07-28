@@ -1,5 +1,7 @@
 name: Publish
+
 description: Publish a package to NPM
+
 inputs:
   working-directory:
     description: the path to the directory from repository root
@@ -8,11 +10,15 @@ inputs:
   version:
     description: version type (patch, major, minor)
     type: string
-    default: patch
+  skip-build:
+    descriptions: should package be build before publish
+    type: boolean
+    default: false
   skip-npm:
     description: should the package be published in npm
     type: boolean
     default: false
+
 outputs:
   tag:
     description: name of the tag pushed after publishing
@@ -21,43 +27,63 @@ outputs:
 runs:
   using: composite
   steps:
-    - id: publish
+    - name: Publish
+      id: publish
       shell: bash
       working-directory: ${{inputs.working-directory}}
       run: |
         echo "::group::Prepare package"
-        PACKAGE_NAME="$(node -e "console.log(require('./package.json').name)")"
+        PACKAGE_NAME="$(cat ./package.json | jq -r .name)"
         echo "::endgroup::"
 
         echo "::group::Configure Git"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        TEMP_BRANCH="${PACKAGE_NAME}_$(date +%F_%H-%M)"
-        git checkout -b $TEMP_BRANCH
-        git push -u origin $TEMP_BRANCH
-        echo "::notice::Publish branch - $TEMP_BRANCH"
         echo "::endgroup::"
 
-        echo "::group::Installing and updating dependencies"
-        yarn install
-        npm run deps --if-present -- --commit
-        echo "::endgroup::"
+        BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+        if [ "$BRANCH" = "${{github.ref_name}}" ]
+        then
+          echo "::group::Creating temporary branch"
+          BRANCH="${PACKAGE_NAME}_$(date +%F_%H-%M)"
+          git checkout -b $BRANCH
+          git push -u origin $BRANCH
+          echo "::notice::Publish branch - $BRANCH"
+          echo "::set-output name=branch::$BRANCH"
+          echo "::endgroup::"
+        fi
 
-        echo "::group::Building package"
-        npm run build --if-present
-        echo "::endgroup::"
+        if [ "${{inputs.skip-build}}" = "false" ]
+        then
+          echo "::group::Installing and updating dependencies"
+          yarn install
+          npm run deps --if-present -- --commit
+          echo "::endgroup::"
+
+          echo "::group::Building package"
+          npm run build --if-present
+          echo "::endgroup::"
+        fi
 
         echo "::group::Publish $PACKAGE_NAME"
-        if [ "${{inputs.skip-npm}}" = "false" ]; then yarn publish "--${{inputs.version}}"; else yarn version "--${{inputs.version}}"; fi
-        TAG="$(git describe --tags --abbrev=0)"
-        echo "::notice::Publish tag - $TAG"
-        echo "::set-output name=tag::$TAG"
+        if [ "${{inputs.skip-npm}}" = "true" ]
+        then yarn version "--${{inputs.version}}"
+        elif [ ! -z "${{inputs.version}}" ]
+        then yarn publish "--${{inputs.version}}"
+        else yarn publish
+        fi
+        TAG="$(git describe --tags --abbrev=0 || true)"
+        if [ ! -z "$TAG" ]
+        then 
+          echo "::notice::Publish tag - $TAG"
+          echo "::set-output name=tag::$TAG"
+        fi
         echo "::endgroup::"
 
         echo "::group::Merge publish branch into ${{github.ref_name}}"
         git checkout ${{github.ref_name}}
         git status
         git pull origin ${{github.ref_name}} --rebase
-        git merge $TEMP_BRANCH
+        git merge $BRANCH
         git push origin ${{github.ref_name}}
         echo "::endgroup::"
