@@ -9,6 +9,12 @@
 
 
 
+## 2.10.3 - 2022/8/1
+
+### Features
+### Bug fixes
+- update vgc version
+
 ## 2.10.2 - 2022/7/28
 
 ### Features
