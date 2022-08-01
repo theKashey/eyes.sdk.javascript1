@@ -18,6 +18,7 @@ class Refer {
       value &&
       (value.nodeType === Node.ELEMENT_NODE ||
         value.nodeType === Node.DOCUMENT_NODE ||
+        value.ownerDocument ||
         (value.constructor && value.constructor.name === 'Window'))
     );
   }
