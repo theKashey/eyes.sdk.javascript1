@@ -9,6 +9,13 @@
 
 
 
+
+## 3.27.1 - 2022/8/1
+
+### Features
+### Bug fixes
+- Fix `Maximum call stack size exceeded` error in `eyesCheck`
+
 ## 3.27.0 - 2022/7/25
 
 ### Features
