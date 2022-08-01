@@ -31,7 +31,7 @@ describe('open before visit', () => {
         './node_modules/.bin/cypress run --headless --config testFiles=openBeforeVisit.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js ',
         {
           maxBuffer: 10000000,
-          timeout: 35000,
+          timeout: 40000,
         },
       );
     } catch (ex) {
