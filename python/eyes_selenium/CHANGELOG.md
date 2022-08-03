@@ -1,4 +1,4 @@
-## [vNext]
+## [5.10.0] - 2022-08-03
 ### Added
 - Add more devices supported by Native Mobile Grid [Trello 54](https://trello.com/c/SZAPDKSI)
 
