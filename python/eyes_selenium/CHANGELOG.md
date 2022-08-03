@@ -1,3 +1,7 @@
+## [vNext]
+### Added
+- Add more devices supported by Native Mobile Grid [Trello 54](https://trello.com/c/SZAPDKSI)
+
 ## [5.9.0] - 2022-07-21
 ### Added
 - Log errors received from SDK server before re-raising them [Trello 2991](https://trello.com/c/PSEPcMyh)
