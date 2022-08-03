@@ -42,7 +42,11 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
     const actual = await screenshot.image.toObject()
 
     const expected = await makeImage(`./test/fixtures/${type}/${tag}.png`).toObject()
-    assert.strictEqual(pixelmatch(actual.data, expected.data, null, expected.width, expected.height), 0)
+    assert.strictEqual(
+      pixelmatch(actual.data, expected.data, null, expected.width, expected.height),
+      0,
+      `Test filed! the image Pixel not match\n\tThe output failed test image is located in the ${process.cwd()}/logs folder`,
+    )
   } catch (err) {
     await screenshot.image.debug({
       path: './logs',
