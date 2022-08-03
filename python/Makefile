@@ -102,8 +102,12 @@ eyes_selenium_generated_tests: install_eyes_selenium install_test_requirements
 	npm run python:tests  --prefix ./coverage-tests
 
 
-eyes_robotframework_functional_tests: install_xvfb install_eyes_robotframework install_test_requirements
-	xvfb-run --auto-servernum pytest -n6 tests/functional/eyes_robotframework/test_integration.py::test_suite_web
+eyes_robotframework_functional_tests: install_eyes_robotframework install_test_requirements
+	pytest -n6 -m "not sauce" tests/functional/eyes_robotframework/test_integration.py
+
+
+eyes_robotframework_sauce_functional_tests: install_eyes_robotframework install_test_requirements
+	pytest -m sauce tests/functional/eyes_robotframework/test_integration.py
 
 
 eyes_selenium_functional_tests: install_eyes_selenium install_test_requirements
@@ -112,7 +116,3 @@ eyes_selenium_functional_tests: install_eyes_selenium install_test_requirements
 
 eyes_selenium_sauce_functional_tests: install_eyes_selenium install_test_requirements
 	pytest -m sauce tests/functional/eyes_selenium/
-
-
-install_xvfb:
-	sudo apt-get install -y xvfb

@@ -162,6 +162,7 @@ jobs:
         working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
 
   sauce-functional-tests:
     needs: dist-build
@@ -182,6 +183,7 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
 
   robot-framework-tests:
     needs: generated-tests
@@ -202,3 +204,25 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+
+  sauce-robot-framework-tests:
+    needs: generated-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{inputs.ref || github.ref}}
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.6'
+      - uses: actions/download-artifact@v3
+        with:
+          name: packages
+      - run: make eyes_robotframework_sauce_functional_tests
+        working-directory: python
+        env:
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}

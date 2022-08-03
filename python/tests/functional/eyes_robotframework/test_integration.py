@@ -1,10 +1,16 @@
+import json
 import os
 import subprocess
+import uuid
 from os import path
+from typing import Generator
 
 import pytest
-from robot.result import ExecutionResult
+import requests
+from robot.model import TestSuite
+from robot.result import ExecutionResult, TestCase
 
+from applitools.common.utils.converters import str2bool
 from EyesLibrary.test_results_manager import (
     METADATA_EYES_TEST_RESULTS_URL_NAME,
     METADATA_PATH_TO_EYES_RESULTS_NAME,
@@ -32,6 +38,40 @@ def run_robot(*args, output_file_path=None):
     return result.returncode, result.stdout.decode()
 
 
+def from_suite(suite):
+    # type: (TestSuite) -> Generator[TestCase]
+    if suite.suites:
+        for s in suite.suites:
+            for t in s.tests:
+                yield t
+    else:
+        for t in suite.tests:
+            yield t
+
+
+def send_test_report(suite, **kwargs):
+    report_data = {
+        "sdk": "robotframework",
+        "group": "selenium",
+        "id": os.getenv("GITHUB_SHA", str(uuid.uuid4())),
+        "sandbox": bool(str2bool(os.getenv("TEST_REPORT_SANDBOX", "True"))),
+        "results": [
+            {
+                "passed": t.passed,
+                "test_name": t.name,
+                "parameters": kwargs,
+            }
+            for t in from_suite(suite)
+        ],
+    }
+    r = requests.post(
+        "http://sdk-test-results.herokuapp.com/result", data=json.dumps(report_data)
+    )
+    r.raise_for_status()
+    print("Result report send: {} - {}".format(r.status_code, r.text))
+    return r
+
+
 @pytest.mark.parametrize("runner", ["web", "web_ufg"])
 @pytest.mark.parametrize(
     "with_propagation",
@@ -55,9 +95,7 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
     ]
     run_robot(*args, output_file_path=output_file_path)
     result = ExecutionResult(output_file_path + ".xml")
-    not_passed = [
-        t for suite in result.suite.suites for t in suite.tests if t.status != "PASS"
-    ]
+    not_passed = [t for t in from_suite(result.suite) if t.status != "PASS"]
     assert not_passed == []
     assert METADATA_PATH_TO_EYES_RESULTS_NAME in result.suite.suites[0].metadata
     assert METADATA_PATH_TO_EYES_RESULTS_NAME in result.suite.suites[1].metadata
@@ -67,6 +105,11 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
     local_chrome_driver.get("file://" + output_file_path + ".html")
     assert METADATA_EYES_TEST_RESULTS_URL_NAME in local_chrome_driver.page_source
     assert "1 test failed" in local_chrome_driver.page_source
+    send_test_report(
+        result.suite,
+        runner=runner,
+        with_propagation=with_propagation,
+    )
 
 
 @pytest.mark.parametrize(
@@ -76,11 +119,11 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
         ("web", "appium", "ios"),
         ("web", "selenium", "android"),
         ("web", "selenium", "ios"),
-        ("web_ufg", "selenium", "desktop"),
     ],
     ids=lambda d: str(d),
 )
-def test_suite_web(data, tmp_path):
+@pytest.mark.sauce
+def test_web_mobile(data, tmp_path):
     runner, backend, platform = data
     output_file_path = os.path.join(
         tmp_path, "{}-{}-{}".format(runner, backend, platform)
@@ -96,12 +139,24 @@ def test_suite_web(data, tmp_path):
     result = ExecutionResult(output_file_path + ".xml")
     not_passed = [t for t in result.suite.tests if t.status != "PASS"]
     assert not_passed == []
+    send_test_report(
+        result.suite,
+        runner=runner,
+        backend=backend,
+        platform=platform,
+    )
 
 
-def test_web_desktop(
-    tmp_path,
-):
-    runner, backend, platform = "web", "selenium", "desktop"
+@pytest.mark.parametrize(
+    "data",
+    [
+        ("web_ufg", "selenium", "desktop"),
+        ("web", "selenium", "desktop"),
+    ],
+    ids=lambda d: str(d),
+)
+def test_web_desktop(data, tmp_path):
+    runner, backend, platform = data
     output_file_path = os.path.join(
         tmp_path, "{}-{}-{}".format(runner, backend, platform)
     )
@@ -116,10 +171,14 @@ def test_web_desktop(
     )
     result = ExecutionResult(output_file_path + ".xml")
 
-    not_passed = [
-        t for suite in result.suite.suites for t in suite.tests if t.status != "PASS"
-    ]
+    not_passed = [t for t in from_suite(result.suite) if t.status != "PASS"]
     assert not_passed == []
+    send_test_report(
+        result.suite,
+        runner=runner,
+        backend=backend,
+        platform=platform,
+    )
 
 
 @pytest.mark.parametrize(
@@ -131,6 +190,7 @@ def test_web_desktop(
     ],
     ids=lambda d: str(d),
 )
+@pytest.mark.sauce
 def test_suite_mobile_native(data, tmp_path):
     backend = "appium"
     platform, runner = data
@@ -149,3 +209,9 @@ def test_suite_mobile_native(data, tmp_path):
     result = ExecutionResult(output_file_path + ".xml")
     not_passed = [t for t in result.suite.tests if t.status != "PASS"]
     assert not_passed == []
+    send_test_report(
+        result.suite,
+        runner=runner,
+        backend=backend,
+        platform=platform,
+    )
