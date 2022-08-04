@@ -30,6 +30,30 @@
   ],
   "main": "./dist/index-legacy.js",
   "types": "./types/index-legacy.d.ts",
+  "typesVersions": {
+    "*":  {
+      "dist": [
+        "./types/index.d.ts"
+      ],
+      "next": [
+        "./types/index.d.ts"
+      ]
+    }
+  },
+  "exports" : {
+    ".": {
+      "types": "./types/index-legacy.d.ts",
+      "default": "./dist/index-legacy.js"
+    },
+    "./dist/*": {
+        "types": "./types/*.d.ts",
+        "default": "./dist/*.js"
+    },
+    "./next": {
+      "types": "./types/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
     "dist",
     "types"

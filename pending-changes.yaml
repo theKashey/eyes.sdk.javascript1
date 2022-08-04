@@ -42,7 +42,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Added `next` sub-module to support `index.d.ts`. added it both with `exports` and `typesVersions`
 "@applitools/eyes-nightwatch":
   feature:
     - 
