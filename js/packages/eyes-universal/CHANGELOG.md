@@ -9,6 +9,12 @@
 
 
 
+## 2.10.4 - 2022/8/5
+
+### Features
+### Bug fixes
+- Suppress error of log file creation when another process already created the same file
+
 ## 2.10.3 - 2022/8/1
 
 ### Features
