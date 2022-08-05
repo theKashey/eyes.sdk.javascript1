@@ -43,7 +43,15 @@
     teen_process "^1.16.0"
     yargs "^17.5.1"
 
-"@applitools/logger@1.1.15", "@applitools/logger@^1.0.12":
+"@applitools/logger@1.1.16":
+  version "1.1.16"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.16.tgz#31c90aa9aaf4a9484ccd5088098676137cdb0dcf"
+  integrity sha512-AA18naLM/v+2k4YwUJ9ayuSUSQBRRlS7hZLQfHEFS9XZMcflSU8a5H0G2cl8AiZMj1hXK6bCIyH3x41x8aFtYQ==
+  dependencies:
+    "@applitools/utils" "1.3.10"
+    chalk "4.1.2"
+
+"@applitools/logger@^1.0.12":
   version "1.1.15"
   resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.15.tgz#7b37de9c76f413a62983f718ceafb09c8637b5af"
   integrity sha512-2SNbINnxvGxy8G5TXIZHhXWqWBFFn0o/+4ZP57VvohPG8AF4wqXBO3H93LZMMpDz/4prND0bBLqK3XFLY4ppTQ==
