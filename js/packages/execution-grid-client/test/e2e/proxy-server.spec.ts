@@ -14,7 +14,7 @@ async function createTunnel() {
   return tunnel
 }
 
-describe.only('proxy-server', () => {
+describe('proxy-server', () => {
   const eyesServerUrl = 'https://eyesapi.applitools.com'
   let proxy: any
 
