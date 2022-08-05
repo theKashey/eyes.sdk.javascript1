@@ -65,6 +65,13 @@ function ensureDirectoryExistence(filename: string) {
   const dirname = path.dirname(filename)
   if (!fs.existsSync(dirname)) {
     ensureDirectoryExistence(dirname)
-    fs.mkdirSync(dirname)
+    try {
+      fs.mkdirSync(dirname)
+    } catch (ex) {
+      // if a file already exists ignore the error
+      if (!ex.message.includes('file already exists')) {
+        throw ex
+      }
+    }
   }
 }

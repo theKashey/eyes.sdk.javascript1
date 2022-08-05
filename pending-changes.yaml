@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Suppress error of log file creation when another process already created the same file
 "@applitools/eyes-selenium":
   feature:
     - 
