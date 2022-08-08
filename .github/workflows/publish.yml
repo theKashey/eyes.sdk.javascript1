@@ -85,6 +85,19 @@ jobs:
         with:
           workflow: publish-logger.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).logger.version}}"}'
+  req:
+    needs: [ setup, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).req && !failure() && !cancelled()}}
+    name: req
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-req.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).req.version}}"}'
   snippets:
     needs: [ setup ]
     if: ${{fromJSON(needs.setup.outputs.packages).snippets && !failure() && !cancelled()}}
