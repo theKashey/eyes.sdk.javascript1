@@ -1,7 +1,7 @@
-const assert = require('assert')
-const fs = require('fs')
-const pixelmatch = require('pixelmatch')
-const makeImage = require('../../src/image')
+import assert from 'assert'
+import fs from 'fs'
+import pixelmatch from 'pixelmatch'
+import {makeImage} from '../src/image'
 
 describe('image', () => {
   it('should provide access to png image width/height before it parsed', async () => {

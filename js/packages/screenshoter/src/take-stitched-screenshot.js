@@ -1,5 +1,5 @@
 const utils = require('@applitools/utils')
-const makeImage = require('./image')
+const {makeImage} = require('@applitools/image')
 const makeTakeViewportScreenshot = require('./take-viewport-screenshot')
 const calculateScreenshotRegion = require('./calculate-screenshot-region')
 

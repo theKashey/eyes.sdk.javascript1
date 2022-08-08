@@ -1,5 +1,5 @@
 const assert = require('assert')
-const makeImage = require('../../src/image')
+const {makeImage} = require('@applitools/image')
 const findPattern = require('../../src/find-image-pattern')
 
 describe('pattern', () => {

@@ -1,13 +1,42 @@
-const fs = require('fs')
-const stream = require('stream')
-const path = require('path')
-const png = require('png-async')
-const jpeg = require('jpeg-js')
-const utils = require('@applitools/utils')
+import fs from 'fs'
+import stream from 'stream'
+import path from 'path'
+import * as png from 'png-async'
+import * as jpeg from 'jpeg-js'
+import * as utils from '@applitools/utils'
 
-function makeImage(data) {
-  let image, size
-  let transforms = {rotate: 0, scale: 1, crop: null, modifiers: []}
+type TransformData = {
+  rotate: number
+  scale: number
+  crop?: any
+  modifiers: any[]
+  added?: any
+}
+
+export interface Image {
+  isImage: boolean
+  size: {width: number; height: number}
+  unscaledSize: {width?: number; height?: number; x?: number; y?: number}
+  rawSize: {width: number; height: number}
+  transforms: TransformData
+  width: number
+  height: number
+  scale(ratio: number): Image
+  rotate(degrees: number): Image
+  crop(region: any): Image
+  copy(srcImage: Image, offset: any): Image
+  frame(topImage: Image, bottomImage: Image, region: any): Image
+  toRaw(): Promise<any>
+  toBuffer(): Promise<Buffer>
+  toPng(): Promise<any>
+  toFile(path: string): Promise<any>
+  toObject(): Promise<any>
+  debug(debug: any): Promise<any>
+}
+
+export function makeImage(data: any): Image {
+  let image: any, size: any
+  let transforms: TransformData = {rotate: 0, scale: 1, crop: null as any, modifiers: [] as any[]}
 
   if (utils.types.isBase64(data)) {
     return makeImage(Buffer.from(data, 'base64'))
@@ -29,7 +58,7 @@ function makeImage(data) {
     size = data.rawSize
   } else if (utils.types.has(data, ['width', 'height'])) {
     image = fromSize(data)
-    if (data.data) image.data = data.data
+    if (utils.types.has(data, 'data')) image.data = data.data
     size = {width: data.width, height: data.height}
   } else if (data.auto) {
     size = {width: -1, height: -1}
@@ -75,10 +104,10 @@ function makeImage(data) {
     crop(region) {
       if (utils.types.has(region, ['left', 'right', 'top', 'bottom'])) {
         region = {
-          x: region.left / transforms.scale,
-          y: region.top / transforms.scale,
-          width: size.width - (region.left + region.right) / transforms.scale,
-          height: size.height - (region.top + region.bottom) / transforms.scale,
+          x: (region.left as number) / transforms.scale,
+          y: (region.top as number) / transforms.scale,
+          width: size.width - ((region.left as any) + region.right) / transforms.scale,
+          height: size.height - ((region.top as any) + region.bottom) / transforms.scale,
         }
       } else {
         region = utils.geometry.scale(region, 1 / transforms.scale)
@@ -162,19 +191,19 @@ function makeImage(data) {
   }
 }
 
-function isPngBuffer(buffer) {
+function isPngBuffer(buffer: Buffer) {
   return buffer.slice(12, 16).toString('ascii') === 'IHDR'
 }
 
-function isJpegBuffer(buffer) {
+function isJpegBuffer(buffer: Buffer) {
   return buffer.slice(6, 10).toString('ascii') === 'JFIF'
 }
 
-function extractPngSize(buffer) {
+function extractPngSize(buffer: Buffer) {
   return {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
 }
 
-function extractJpegSize(buffer) {
+function extractJpegSize(buffer: Buffer) {
   // skip file signature
   let offset = 4
   while (buffer.length > offset) {
@@ -190,11 +219,11 @@ function extractJpegSize(buffer) {
   }
 }
 
-function fromSize(size) {
+function fromSize(size: any) {
   return new png.Image({width: size.width, height: size.height})
 }
 
-async function fromPngBuffer(buffer) {
+async function fromPngBuffer(buffer: Buffer) {
   return new Promise((resolve, reject) => {
     const image = new png.Image()
 
@@ -205,11 +234,11 @@ async function fromPngBuffer(buffer) {
   })
 }
 
-async function fromJpegBuffer(buffer) {
+async function fromJpegBuffer(buffer: Buffer) {
   return jpeg.decode(buffer, {tolerantDecoding: true, formatAsRGBA: true})
 }
 
-async function toPng(image) {
+async function toPng(image: any) {
   return new Promise((resolve, reject) => {
     let buffer = Buffer.alloc(0)
 
@@ -224,19 +253,19 @@ async function toPng(image) {
       .pack()
       .pipe(writable)
       .on('finish', () => resolve(buffer))
-      .on('error', err => reject(err))
+      .on('error', (err: Error) => reject(err))
   })
 }
 
-async function toFile(image, filepath) {
+async function toFile(image: any, filepath: string) {
   const buffer = await toPng(image)
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     fs.mkdirSync(path.dirname(filepath), {recursive: true})
     fs.writeFile(filepath, buffer, err => (err ? reject(err) : resolve()))
   })
 }
 
-async function transform(image, transforms) {
+async function transform(image: any, transforms: TransformData) {
   if (!image.data) {
     const size = transforms.added
       ? {width: image.width - transforms.added.width, height: image.height - transforms.added.height}
@@ -260,7 +289,7 @@ async function transform(image, transforms) {
   return image
 }
 
-async function scale(image, scaleRatio) {
+async function scale(image: any, scaleRatio: any) {
   if (scaleRatio === 1) return image
 
   const ratio = image.height / image.width
@@ -269,7 +298,7 @@ async function scale(image, scaleRatio) {
   return resize(image, {width: scaledWidth, height: scaledHeight})
 }
 
-async function resize(image, size) {
+async function resize(image: any, size: any) {
   const dst = {
     data: Buffer.alloc(size.height * size.width * 4),
     width: size.width,
@@ -289,7 +318,7 @@ async function resize(image, size) {
   return image
 }
 
-async function extract(image, region) {
+async function extract(image: any, region: any) {
   const srcX = Math.max(0, Math.round(region.x))
   const srcY = Math.max(0, Math.round(region.y))
   const dstWidth = Math.round(Math.min(image.width - srcX, region.width))
@@ -317,7 +346,7 @@ async function extract(image, region) {
   return extracted
 }
 
-async function rotate(image, degrees) {
+async function rotate(image: any, degrees: number) {
   degrees = (360 + degrees) % 360
 
   const dstImage = new png.Image({width: image.width, height: image.height})
@@ -356,7 +385,7 @@ async function rotate(image, degrees) {
   return dstImage
 }
 
-async function copy(dstImage, srcImage, offset) {
+async function copy(dstImage: any, srcImage: any, offset: any) {
   const dstX = Math.round(offset.x)
   const dstY = Math.round(offset.y)
   const srcWidth = Math.min(srcImage.width, dstImage.width - dstX)
@@ -380,7 +409,7 @@ async function copy(dstImage, srcImage, offset) {
   return dstImage
 }
 
-async function frame(topImage, bottomImage, srcImage, region) {
+async function frame(topImage: any, bottomImage: any, srcImage: any, region: any) {
   region = utils.geometry.intersect(
     {x: 0, y: 0, width: topImage.width, height: topImage.height},
     utils.geometry.round(region),
@@ -481,7 +510,7 @@ async function frame(topImage, bottomImage, srcImage, region) {
   return dstImage
 }
 
-function _interpolateCubic(x0, x1, x2, x3, t) {
+function _interpolateCubic(x0: number, x1: number, x2: number, x3: number, t: number) {
   const a0 = x3 - x2 - x0 + x1
   const a1 = x0 - x1 - a0
   const a2 = x2 - x0
@@ -489,7 +518,7 @@ function _interpolateCubic(x0, x1, x2, x3, t) {
   return Math.ceil(Math.max(0, Math.min(255, a0 * (t * t * t) + a1 * (t * t) + (a2 * t + x1))))
 }
 
-function _interpolateRows(bufSrc, wSrc, hSrc, wDst) {
+function _interpolateRows(bufSrc: any, wSrc: any, hSrc: any, wDst: any) {
   const buf = Buffer.alloc(wDst * hSrc * 4)
   for (let i = 0; i < hSrc; i += 1) {
     for (let j = 0; j < wDst; j += 1) {
@@ -512,7 +541,7 @@ function _interpolateRows(bufSrc, wSrc, hSrc, wDst) {
   return buf
 }
 
-function _interpolateColumns(bufSrc, hSrc, wDst, hDst) {
+function _interpolateColumns(bufSrc: any, hSrc: any, wDst: any, hDst: any) {
   const buf = Buffer.alloc(wDst * hDst * 4)
   for (let i = 0; i < hDst; i += 1) {
     for (let j = 0; j < wDst; j += 1) {
@@ -537,7 +566,7 @@ function _interpolateColumns(bufSrc, hSrc, wDst, hDst) {
   return buf
 }
 
-function _interpolateScale(bufColumns, wDst, hDst, wDst2, m, wM, hM) {
+function _interpolateScale(bufColumns: any, wDst: any, hDst: any, wDst2: any, m: any, wM: any, hM: any) {
   const buf = Buffer.alloc(wDst * hDst * 4)
   for (let i = 0; i < hDst; i += 1) {
     for (let j = 0; j < wDst; j += 1) {
@@ -573,7 +602,7 @@ function _interpolateScale(bufColumns, wDst, hDst, wDst2, m, wM, hM) {
   return buf
 }
 
-function _doBicubicInterpolation(src, dst) {
+function _doBicubicInterpolation(src: any, dst: any) {
   // The implementation was taken from
   // https://github.com/oliver-moran/jimp/blob/master/resize2.js
 
@@ -602,7 +631,7 @@ function _doBicubicInterpolation(src, dst) {
   return dst
 }
 
-function _scaleImageIncrementally(src, dst) {
+function _scaleImageIncrementally(src: any, dst: any) {
   let currentWidth = src.width
   let currentHeight = src.height
   const targetWidth = dst.width
@@ -663,5 +692,3 @@ function _scaleImageIncrementally(src, dst) {
 
   return dst
 }
-
-module.exports = makeImage

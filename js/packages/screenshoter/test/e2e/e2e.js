@@ -5,7 +5,7 @@ const utils = require('@applitools/utils')
 const spec = require('@applitools/spec-driver-webdriverio')
 const {makeLogger} = require('@applitools/logger')
 const {Driver} = require('@applitools/driver')
-const makeImage = require('../../src/image')
+const {makeImage} = require('@applitools/image')
 const takeScreenshot = require('../../src/take-screenshot')
 
 exports.logger = makeLogger()

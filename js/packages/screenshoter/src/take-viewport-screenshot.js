@@ -1,7 +1,7 @@
 const utils = require('@applitools/utils')
 const snippets = require('@applitools/snippets')
 const findImagePattern = require('./find-image-pattern')
-const makeImage = require('./image')
+const {makeImage} = require('@applitools/image')
 
 function makeTakeViewportScreenshot(options) {
   const {driver} = options
