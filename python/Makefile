@@ -103,16 +103,16 @@ eyes_selenium_generated_tests: install_eyes_selenium install_test_requirements
 
 
 eyes_robotframework_functional_tests: install_eyes_robotframework install_test_requirements
-	pytest -n6 -m "not sauce" tests/functional/eyes_robotframework/test_integration.py
+	pytest -n8 -m "not sauce" tests/functional/eyes_robotframework/test_integration.py
 
 
 eyes_robotframework_sauce_functional_tests: install_eyes_robotframework install_test_requirements
-	pytest -m sauce tests/functional/eyes_robotframework/test_integration.py
+	pytest -n4 -m sauce tests/functional/eyes_robotframework/test_integration.py
 
 
 eyes_selenium_functional_tests: install_eyes_selenium install_test_requirements
-	pytest -n6 -m "not sauce" tests/functional/eyes_selenium/
+	pytest -n8 -m "not sauce" tests/functional/eyes_selenium/
 
 
 eyes_selenium_sauce_functional_tests: install_eyes_selenium install_test_requirements
-	pytest -m sauce tests/functional/eyes_selenium/
+	pytest -n4 -m sauce tests/functional/eyes_selenium/

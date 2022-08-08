@@ -44,7 +44,7 @@ jobs:
     secrets: inherit
     with:
       ref: ${{needs.make_release_branch.outputs.release_branch}}
-      test_report_prod: true
+      releasing_package: ${{ github.event.inputs.package }}
 
   upload_to_pypi_merge_and_tag:
     needs: [make_release_branch, test]

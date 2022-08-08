@@ -33,8 +33,7 @@ def sauce_url():
 def pytest_collection_modifyitems(items):
     sauce_fixtures = _fixutres2vm_types.keys()
     limits = _SAUCE_LIMITS.items()
-    # use up to half of the allowed VMs of each kind
-    thread_counters = {k: iter(cycle(range(n // 2))) for k, n in limits if n > 0}
+    thread_counters = {k: iter(cycle(range(n))) for k, n in limits if n > 0}
     for test in items:
         sauce_fixture = set(test.fixturenames) & sauce_fixtures
         if sauce_fixture:
@@ -50,7 +49,7 @@ def _sauce_credentials():
     return os.environ["SAUCE_USERNAME"], os.environ["SAUCE_ACCESS_KEY"]
 
 
-def _fetch_sauce_limits():
+def _fetch_sauce_limits(need_vms, need_mac_vms):
     # Use environment variable to cache limits to avoid sending same request multiple
     # times when xdist workers start
     if "SAUCE_LIMITS" not in os.environ:
@@ -62,8 +61,15 @@ def _fetch_sauce_limits():
         url = url_template.format(username=username, key=key)
         response = requests.get(url).json()
         allowed = response["concurrency"]["team"]["allowed"]
-        os.environ["SAUCE_LIMITS"] = json.dumps(allowed)
+        limits = {
+            "vms": min(allowed["vms"], need_vms),
+            "mac_vms": min(allowed["mac_vms"], need_mac_vms),
+        }
+        os.environ["SAUCE_LIMITS"] = json.dumps(limits)
     return json.loads(os.environ["SAUCE_LIMITS"])
 
 
-_SAUCE_LIMITS = _fetch_sauce_limits()
+# There is no sense in using more than this amount of sauce VMs
+# because non-sauce tests take more time to execute. If non-sauce tests
+# start to pass much faster, should bump these numbers
+_SAUCE_LIMITS = _fetch_sauce_limits(need_vms=2, need_mac_vms=3)

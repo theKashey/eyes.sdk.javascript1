@@ -5,17 +5,39 @@ on:
     paths:
       - 'python/**'
   workflow_dispatch:
+    inputs:
+      # Unexpected feature: 'bool' type inputs are actually strings.
+      # it's just a signal to GitHub UI to draw a checkbox instead of text input
+      unit_tests:
+        description: Unit tests
+        type: boolean
+        required: false
+      installation_tests:
+        description: Installation tests
+        type: boolean
+        required: false
+      generated_tests:
+        description: Generated tests
+        type: boolean
+        required: false
+      functional_tests:
+        description: Functional tests
+        type: boolean
+        required: false
+      robotframework_tests:
+        description: Robot framework tests
+        type: boolean
+        required: false
   workflow_call:
     inputs:
       ref:
         description: branch to test
         required: false
         type: string
-      test_report_prod:
-        description: report results as prod build
-        default: false
+      releasing_package:
+        description: name of the package being released
         required: false
-        type: boolean
+        type: string
 
 jobs:
   dist-build:
@@ -41,6 +63,7 @@ jobs:
 
   unit-tests:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.unit_tests == 'true' }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
@@ -68,6 +91,7 @@ jobs:
 
   unit-tests-alpine:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.unit_tests == 'true' }}
     runs-on: ubuntu-latest
     container: "alpine:latest"
     steps:
@@ -85,6 +109,7 @@ jobs:
 
   installation-tests:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.installation_tests == 'true' }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
@@ -108,6 +133,8 @@ jobs:
 
   generated-tests:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.generated_tests == 'true' }}
+    concurrency: sauce_group_1
     strategy:
       matrix:
         python-version: [ '3.6', '3.10' ]
@@ -136,10 +163,12 @@ jobs:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           GH_TOKEN: ${{secrets.GITHUB_TOKEN }}
-          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+          RELEASING_PACKAGE: ${{ inputs.releasing_package }}
+          TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
 
   functional-tests:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.functional_tests == 'true' }}
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
@@ -162,10 +191,12 @@ jobs:
         working-directory: python
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+          TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
 
   sauce-functional-tests:
     needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.functional_tests == 'true' }}
+    concurrency: sauce_group_2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -183,10 +214,11 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+          TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
 
   robot-framework-tests:
-    needs: generated-tests
+    needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.robotframework_tests == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -204,10 +236,12 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+          TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
 
   sauce-robot-framework-tests:
-    needs: generated-tests
+    needs: dist-build
+    if: ${{ !(github.event_name == 'workflow_dispatch') || github.event.inputs.robotframework_tests == 'true' }}
+    concurrency: sauce_group_2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -225,4 +259,4 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-          TEST_REPORT_SANDBOX: ${{ inputs.test_report_prod && 'False' || 'True'}}
+          TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
