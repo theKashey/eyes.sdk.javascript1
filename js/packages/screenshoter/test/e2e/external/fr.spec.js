@@ -4,19 +4,19 @@ describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   before(async () => {
-    // ;[driver, destroyDriver] = await makeDriver({
-    //   type: 'android',
-    //   app: '/Users/kyrylo/Downloads/InstrumentedApk_#26906.apk',
-    //   logger,
-    // })
-
     ;[driver, destroyDriver] = await makeDriver({
-      type: 'android-sauce',
-      deviceName: 'Google Pixel 3 GoogleAPI Emulator',
-      platformVersion: '11.0',
-      app: 'storage:6f652ae7-53c2-450e-87ff-89b23d4dfe26',
+      type: 'android',
+      app: '/Users/kyrylo/Downloads/InstrumentedAppWithFlutterJuly26.apk',
       logger,
     })
+
+    // ;[driver, destroyDriver] = await makeDriver({
+    //   type: 'android-sauce',
+    //   deviceName: 'Google Pixel 3 GoogleAPI Emulator',
+    //   platformVersion: '11.0',
+    //   app: 'storage:6f652ae7-53c2-450e-87ff-89b23d4dfe26',
+    //   logger,
+    // })
 
     // ;[driver, destroyDriver] = await makeDriver({
     //   type: 'android-bs',
@@ -35,13 +35,13 @@ describe('screenshoter android app', () => {
 
   it('take full app screenshot on buggy screen with collapsable view', async () => {
     await driver.target.updateSettings({allowInvisibleElements: true})
-    await sleep(3000)
+    await sleep(5000)
     const nextButton = await driver.element({type: 'id', selector: 'next_button'})
     await nextButton.click()
-    await sleep(2000)
+    await sleep(5000)
     const memberButton = await driver.element({type: 'id', selector: 'navigation_member'})
     await memberButton.click()
-    await sleep(2000)
+    await sleep(5000)
 
     await driver.init()
 

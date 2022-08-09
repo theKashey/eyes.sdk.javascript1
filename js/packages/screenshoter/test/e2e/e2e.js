@@ -161,6 +161,7 @@ exports.makeDriver = async function makeDriver({
         platformVersion: platformVersion || '14.5',
         automationName: 'XCUITest',
         orientation: orientation ? orientation.toUpperCase() : 'PORTRAIT',
+        ...rest,
       },
     },
     'ios-sauce': {
