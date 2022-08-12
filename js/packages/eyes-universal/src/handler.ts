@@ -1,6 +1,6 @@
 import {Server as HttpServer, request as httpRequest} from 'http'
 import {Server as HttpsServer, request as httpsRequest} from 'https'
-import {Server as WsServer} from 'ws'
+import {Server as WsServer, type AddressInfo} from 'ws'
 import fs from 'fs'
 
 const {name, version} = require('../package.json')
@@ -10,7 +10,7 @@ const TOKEN = `${name}@${version}`
 export type HandlerOptions = {
   port?: number
   singleton?: boolean
-  lazy?: boolean
+  portResolutionMode?: 'next' | 'random' | 'lazy'
   debug?: boolean
   key?: string | Buffer
   cert?: string | Buffer
@@ -19,8 +19,8 @@ export type HandlerOptions = {
 export async function makeHandler({
   port = 21077,
   singleton = true,
-  lazy = false,
   debug = false,
+  portResolutionMode = 'next',
   cert,
   key,
 }: HandlerOptions = {}): Promise<{server?: WsServer; port: number}> {
@@ -47,15 +47,15 @@ export async function makeHandler({
     http.on('listening', () => {
       const ws = new WsServer({server: http, path: '/eyes', maxPayload: 256 * 1024 * 1024})
       ws.on('close', () => http.close())
-      resolve({server: ws, port})
+      resolve({server: ws, port: (http.address() as AddressInfo).port})
     })
 
     http.on('error', async (err: Error & {code: string}) => {
-      if (!lazy && err.code === 'EADDRINUSE') {
+      if (portResolutionMode !== 'lazy' && err.code === 'EADDRINUSE') {
         if (singleton && (await isHandshakable({port, secure}))) {
           return resolve({port})
         } else {
-          return resolve(await makeHandler({port: port + 1, singleton}))
+          return resolve(await makeHandler({port: portResolutionMode === 'next' ? port + 1 : 0, singleton}))
         }
       }
       reject(err)

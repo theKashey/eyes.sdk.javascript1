@@ -18,17 +18,18 @@ import {makeSpec} from './spec-driver/custom'
 import * as webdriverSpec from './spec-driver/webdriver'
 import {abort} from './universal-server-eyes-commands'
 
-const IDLE_TIMEOUT = 900000 // 15min
 const LOG_DIRNAME = process.env.APPLITOOLS_LOG_DIR ?? path.resolve(os.tmpdir(), `applitools-logs`)
 
 export type ServerOptions = HandlerOptions & {
   debug?: boolean
+  shutdownMode?: 'lazy' | 'stdin'
   idleTimeout?: number
 }
 
 export async function makeServer({
   debug = false,
-  idleTimeout = IDLE_TIMEOUT,
+  shutdownMode = 'lazy',
+  idleTimeout = 900000, // 15min
   ...handlerOptions
 }: ServerOptions = {}): Promise<{port: number; close: () => void}> {
   const {server, port} = await makeHandler({...handlerOptions, debug})
@@ -38,6 +39,7 @@ export async function makeServer({
     console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
     return
   }
+  process.stdout.write = () => true // NOTE: prevent any write to stdout
 
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},
@@ -50,10 +52,17 @@ export async function makeServer({
   baseLogger.log('Server is started')
 
   let idle: any
-  if (idleTimeout) {
-    idle = setTimeout(() => server.close(), idleTimeout)
-  }
   let serverClosed = false
+  if (shutdownMode === 'stdin') {
+    process.stdin.resume()
+    process.stdin.on('end', () => {
+      server.close()
+    })
+  } else if (shutdownMode === 'lazy') {
+    if (idleTimeout) {
+      idle = setTimeout(() => server.close(), idleTimeout)
+    }
+  }
 
   server.on('close', () => {
     clearTimeout(idle)
@@ -72,7 +81,8 @@ export async function makeServer({
       > &
         Omit<Socket, 'command' | 'request'>,
     })
-    if (idleTimeout) {
+
+    if (shutdownMode === 'lazy' && idleTimeout) {
       clearTimeout(idle)
       socket.on('close', () => {
         if (server.clients.size > 0 || serverClosed) return

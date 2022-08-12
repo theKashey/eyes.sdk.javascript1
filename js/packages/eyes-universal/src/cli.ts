@@ -11,7 +11,7 @@ yargs
     ['eyes-universal --fork', 'Run Eyes Universal server in a forked process'],
     ['eyes-universal --port 8080', 'Run Eyes Universal server on port 8080'],
     ['eyes-universal --no-singleton', 'Run Eyes Universal server on a non-singleton mode'],
-    ['eyes-universal --lazy', 'Run Eyes Universal server on a lazy mode'],
+    ['eyes-universal --shutdown-mode stdin', 'Run Eyes Universal server which will close once stdin stream will end'],
   ])
   .command({
     command: '*',
@@ -19,23 +19,14 @@ yargs
       yargs.options({
         port: {
           description: 'run server on a specific port.',
-          alias: 'p',
           type: 'number',
           default: 21077,
         },
         singleton: {
           description:
             'runs server on a singleton mode. It will prevent the server to start in case the same server is already started.',
-          alias: 's',
           type: 'boolean',
           default: true,
-        },
-        lazy: {
-          description:
-            'runs server on a lazy mode. It will not try to find a free port if the required one is already taken.',
-          alias: 'l',
-          type: 'boolean',
-          default: false,
         },
         fork: {
           description: 'runs server in a forked process.',
@@ -46,6 +37,26 @@ yargs
           description: 'runs server in a debug mode.',
           type: 'boolean',
           default: false,
+        },
+        'port-resolution-mode': {
+          describe:
+            'preferred algorithm to solve port collisions.\n"lazy" mode will not try find free port.\n"random" mode will run on a random port.\n"next" mode will run on next free port after the given one.',
+          alias: 'port-resolution',
+          type: 'string',
+          default: 'next',
+        },
+        'shutdown-mode': {
+          describe:
+            'preferred algorithm to automatically kill the process.\n"lazy" mode will end the process once the idle timeout ran out after the last client is disconnected from the server.\n"stdin" mode will end the process once its stdin stream got to its end.',
+          alias: 'shutdown',
+          type: 'string',
+          default: 'lazy',
+        },
+        'idle-timeout': {
+          description: 'time in minutes for server to stay responsible in case of idle.',
+          type: 'number',
+          default: 15,
+          coerce: value => value * 60 * 1000,
         },
         cert: {
           description: 'path to the certificate file.',
@@ -58,12 +69,6 @@ yargs
           alias: 'key-path',
           type: 'string',
           implies: 'cert',
-        },
-        'idle-timeout': {
-          description: 'time in minutes for server to stay responsible in case of idle.',
-          type: 'number',
-          default: 15,
-          coerce: value => value * 60 * 1000,
         },
         config: {
           description: 'json string to use instead of cli arguments',
