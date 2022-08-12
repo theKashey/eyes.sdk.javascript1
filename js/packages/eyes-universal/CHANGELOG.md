@@ -9,6 +9,15 @@
 
 
 
+
+## 2.10.5 - 2022/8/12
+
+### Features
+- Added `--shutdown-mode` argument, which accepts `stdin` value to kill the process when its stdin stream ends. The default value is `lazy`, which preserves the current behavior
+- Prevented any writes to stdout after port is reported
+### Bug fixes
+- Fixed error object serialization
+
 ## 2.10.4 - 2022/8/5
 
 ### Features

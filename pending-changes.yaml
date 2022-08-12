@@ -10,11 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - |
-      Added `--shutdown-mode` argument, which accepts `stdin` value to kill the process when its stdin stream ends. The default value is `lazy`, which preserves the current behavior
-    - Prevented any writes to stdout after port is reported
+    - 
   bug-fix:
-    - Fixed error object serialization
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
