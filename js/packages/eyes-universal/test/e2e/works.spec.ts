@@ -50,7 +50,7 @@ describe('works', () => {
     }).finally(() => server.kill())
   })
 
-  it.only('ends with stdin', async () => {
+  it('ends with stdin', async () => {
     const server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin} --shutdown stdin`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/sh',
@@ -58,9 +58,11 @@ describe('works', () => {
     })
     return new Promise<void>((resolve, reject) => {
       server.on('error', reject)
+      setTimeout(() => reject(new Error('No output from the server for 20 seconds')), 20000)
       server.on('exit', resolve)
+      server.on('close', resolve)
 
-      server.stdin.destroy()
+      server.stdin.end()
     }).finally(() => server.kill())
   })
 })
