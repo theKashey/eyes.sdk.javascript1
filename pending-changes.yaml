@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed error object serialization
 "@applitools/eyes-selenium":
   feature:
     - 

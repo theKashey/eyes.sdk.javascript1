@@ -66,11 +66,11 @@ describe('webdriver spec driver', async () => {
       })
     })
     it('untransformSelector(string)', async () => {
-      await untransformSelector({input: '.class', expected: '.class'})
+      await untransformSelector({input: '.class' as any, expected: '.class'})
     })
     it('untransformSelector(common-selector)', async () => {
       await untransformSelector({
-        input: {type: 'selector', selector: '.class'},
+        input: {type: 'selector', selector: '.class'} as any,
         expected: {type: 'selector', selector: '.class'},
       })
     })
@@ -263,7 +263,7 @@ describe('webdriver spec driver', async () => {
     input,
     expected,
   }: {
-    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    input: spec.Selector
     expected: {type: string; selector: string} | string | null
   }) {
     assert.deepStrictEqual(spec.untransformSelector(input), expected)
