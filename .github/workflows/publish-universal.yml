@@ -139,7 +139,7 @@ jobs:
           test-type: e2e
           shell: ${{matrix.shell}}
   publish:
-    needs: [prepare, test]
+    needs: [prepare, test-it, test-e2e]
     name: Publish
     runs-on: ubuntu-latest
     steps:
