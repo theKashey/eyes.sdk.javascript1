@@ -66,7 +66,33 @@ jobs:
           path:  |
             ./js/packages/eyes-universal/dist
             ./js/packages/eyes-universal/bin
-  test:
+  test-it:
+    needs: [prepare]
+    name: 'Test integration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{needs.prepare.outputs.branch}}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org/
+          always-auth: true
+      - name: Download building artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: eyes-universal-bin-${{needs.prepare.outputs.version}}
+          path: ./js/packages/eyes-universal
+      - name: Run tests
+        uses: ./.github/actions/tests
+        with:
+          working-directory: ./js/packages/eyes-universal
+          build-type: none
+          test-type: it
+  test-e2e:
     needs: [prepare]
     strategy:
       fail-fast: false
@@ -85,7 +111,7 @@ jobs:
           - name: macos
             os: macos-latest
             shell: bash
-    name: 'Test (os: ${{matrix.name}})'
+    name: 'Test e2e (os: ${{matrix.name}})'
     runs-on: ${{matrix.os}}
     container: ${{matrix.container}}
     steps:
@@ -109,6 +135,7 @@ jobs:
         with:
           working-directory: ./js/packages/eyes-universal
           build-type: none
+          setup-type: none
           test-type: e2e
           shell: ${{matrix.shell}}
   publish:
