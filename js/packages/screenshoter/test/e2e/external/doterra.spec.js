@@ -4,19 +4,19 @@ describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   before(async () => {
-    ;[driver, destroyDriver] = await makeDriver({
-      type: 'android',
-      app: '/Users/kyrylo/Downloads/app-qa-debug.apk',
-      noReset: true,
-      logger,
-    })
-
     // ;[driver, destroyDriver] = await makeDriver({
-    //   type: 'android-sauce',
-    //   deviceName: 'Google Pixel 3 GoogleAPI Emulator',
-    //   platformVersion: '11.0',
+    //   type: 'android',
+    //   app: 'storage:bd0f4b6b-bcb7-46db-978c-2e3f9cdf6989',
     //   logger,
     // })
+
+    ;[driver, destroyDriver] = await makeDriver({
+      type: 'android-sauce',
+      deviceName: 'Google Pixel 3a XL GoogleAPI Emulator',
+      app: 'storage:bd0f4b6b-bcb7-46db-978c-2e3f9cdf6989',
+      platformVersion: '11.0',
+      logger,
+    })
 
     // ;[driver, destroyDriver] = await makeDriver({
     //   type: 'android-bs',
@@ -33,29 +33,17 @@ describe('screenshoter android app', () => {
   })
 
   it('take full app screenshot', async () => {
-    await sleep(30000)
-    console.log('starting...')
+    await sleep(20000)
+    await driver.element({type: 'id', selector: 'button_load_catalog'}).then(button => button.click())
+    await sleep(20000)
+    await driver.element({type: 'id', selector: 'login_notification_close_icon'}).then(button => button.click())
+    await sleep(10000)
+    await driver
+      .element({type: '-android uiautomator', selector: 'new UiSelector().textContains("Single Oils")'})
+      .then(button => button.click())
+    await sleep(10000)
+
     await driver.init()
-    // const nextButton = await driver.element({type: 'id', selector: 'next_button'})
-    // await nextButton.click()
-    // await sleep(2000)
-    // let searchField = await driver.element({type: 'id', selector: 'search_view'})
-    // await searchField.click()
-    // await sleep(2000)
-    // searchField = await driver.element({type: 'id', selector: 'search_edit_text'})
-    // await searchField.type('red')
-    // await driver.target.pressKeyCode(66)
-    // await sleep(4000)
-    // const productView = await driver.elements({type: 'id', selector: 'product_imageView'})
-    // await productView[1].click()
-    // await sleep(5000)
-
-    // const okButton = await driver.element('android=new UiSelector().text("OK")')
-    // await okButton?.click()
-
-    // await driver.init()
-
-    // await driver.mainContext.setScrollingElement({type: 'id', selector: 'content_list'})
 
     await test({
       type: 'android',

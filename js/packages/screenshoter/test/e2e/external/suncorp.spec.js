@@ -203,8 +203,11 @@ describe('screenshoter android ios', () => {
       app: '/Users/kyrylo/Downloads/aami-3.4.0-2582-fe8983426f-QA.ipa',
       udid: '00008101-001018180113001E',
       bundleId: 'au.com.suncorp.sg.aami',
+      platformVersion: '15.4',
       fullReset: false,
       noReset: true,
+      // showIOSLog: true,
+      // showXcodeLog: true,
       logger,
     })
 
@@ -216,19 +219,7 @@ describe('screenshoter android ios', () => {
   })
 
   it('take full app screenshot', async () => {
-    // await sleep(10000)
-
-    // const loginButton = await driver.element({type: 'id', selector: 'loginButton'})
-    // await loginButton.click()
-    // await sleep(3000)
-
-    // const passwordField = await driver.element({type: 'id', selector: 'passwordField'})
-    // await passwordField.type('a')
-    // const loginButton2 = await driver.element({type: 'id', selector: 'loginButton'})
-    // await loginButton2.click()
-    // await sleep(15000)
-
-    // await driver.init()
+    await sleep(20000)
 
     await driver.mainContext.setScrollingElement({
       type: '-ios predicate string',
