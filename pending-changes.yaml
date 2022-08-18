@@ -58,6 +58,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Better support in DOM slot element
+    - fix error handling
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile

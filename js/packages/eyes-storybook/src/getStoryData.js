@@ -28,10 +28,11 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
           logger.log(`[story data] done with page evaluate for story index: ${story.index}`);
           err && handleRenderStoryError(err);
         } catch (ex) {
-          if (!ex.message.includes('Eyes could not render stories properly'))
+          if (ex.message && !ex.message.includes('Eyes could not render stories properly'))
             handleRenderStoryError(ex);
           else {
-            throw ex;
+            const errMsg = ex.message || ex
+            throw new Error(errMsg);
           }
         }
       } else {
