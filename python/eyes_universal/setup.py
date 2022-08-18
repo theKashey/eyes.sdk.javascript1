@@ -135,6 +135,7 @@ class build_py(_build_py):  # noqa
     def get_data_files(self):
         if selected_executable:
             version = self.distribution.get_version()
+            version = ".".join(version.split(".")[:3])  # drop post-build number
             self.mkpath("applitools/eyes_universal/bin")
             self.announce("downloading %s executable" % selected_executable, 2)
             downloaded_bin = download(selected_executable, version, self.dry_run)

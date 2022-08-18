@@ -58,11 +58,11 @@ def eyes_robotframework_installed(venv, eyes_universal_installed):
 
 
 def test_setup_eyes_universal(venv, eyes_universal_installed):
-    get_version = [venv.python, "-m", "applitools.eyes_universal", "--version"]
     assert str(venv.get_version("eyes-universal")) == eyes_universal_version
-    assert (
-        eyes_universal_version.encode() == check_output(get_version, env=env).rstrip()
-    )
+    get_version = [venv.python, "-m", "applitools.eyes_universal", "--version"]
+    # drop post-version part, that might only be present in package version
+    binary_version = ".".join(eyes_universal_version.split(".")[:3])
+    assert binary_version.encode() == check_output(get_version, env=env).rstrip()
 
 
 def test_eyes_universal_has_license(venv, eyes_universal_installed):
