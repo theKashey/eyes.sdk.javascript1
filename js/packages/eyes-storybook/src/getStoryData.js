@@ -31,7 +31,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
           if (ex.message && !ex.message.includes('Eyes could not render stories properly'))
             handleRenderStoryError(ex);
           else {
-            const errMsg = ex.message || ex
+            const errMsg = ex.message || ex;
             throw new Error(errMsg);
           }
         }
