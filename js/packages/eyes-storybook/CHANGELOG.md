@@ -3,6 +3,13 @@
 ## Unreleased
 
 
+## 3.29.3 - 2022/8/18
+
+### Features
+### Bug fixes
+- Better support in DOM slot element
+- fix error handling
+
 ## 3.29.2 - 2022/7/14
 
 ### Features
