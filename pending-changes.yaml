@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Avoided implicit set of the `allowInvisibleElements` appium setting on Android
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

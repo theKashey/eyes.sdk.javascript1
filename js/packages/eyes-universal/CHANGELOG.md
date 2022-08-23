@@ -10,6 +10,12 @@
 
 
 
+## 2.10.6 - 2022/8/23
+
+### Features
+### Bug fixes
+- Avoided implicit set of the `allowInvisibleElements` appium setting on Android
+
 ## 2.10.5 - 2022/8/12
 
 ### Features
