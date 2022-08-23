@@ -157,12 +157,7 @@ export function transformDriver(driver: Driver | StaticDriver): Driver {
     },
   }
 
-  const modifiedDriver = WebDriver.attachToSession(options, undefined, additionalCommands)
-  if (environment.isAndroid) {
-    modifiedDriver?.updateSettings({allowInvisibleElements: true})
-  }
-  // console.log('transformDriver attach completed, returning modified driver', modifiedDriver)
-  return modifiedDriver
+  return WebDriver.attachToSession(options, undefined, additionalCommands)
 }
 export function transformElement(element: Element | StaticElement): Element {
   const elementId = extractElementId(element)
