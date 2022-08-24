@@ -108,7 +108,7 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
     send_test_report(
         result.suite,
         runner=runner,
-        with_propagation=with_propagation,
+        with_propagation=bool(with_propagation),
     )
 
 

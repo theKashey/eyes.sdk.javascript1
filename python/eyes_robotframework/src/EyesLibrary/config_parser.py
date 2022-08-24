@@ -328,14 +328,20 @@ class ConfigurationTrafaret(trf.Trafaret):  # typedef
 
     def check_and_return(self, value, context=None):
         sanitized = self.scheme.check(value, context)
+        if self._selected_runner.value not in sanitized:
+            raise KeyError(
+                "The `{}` runner option is not present in configuration file".format(
+                    self._selected_runner.value
+                )
+            )
         selected_sdk_conf = sanitized[self._selected_runner.value]
 
         combined_raw_config = sanitized.copy()
         # we need only shared data here  TODO: make it nicer
-        combined_raw_config.pop(SelectedRunner.web.value)
-        combined_raw_config.pop(SelectedRunner.web_ufg.value)
-        combined_raw_config.pop(SelectedRunner.mobile_native.value)
-        combined_raw_config.pop(SelectedRunner.native_mobile_grid.value)
+        combined_raw_config.pop(SelectedRunner.web.value, None)
+        combined_raw_config.pop(SelectedRunner.web_ufg.value, None)
+        combined_raw_config.pop(SelectedRunner.mobile_native.value, None)
+        combined_raw_config.pop(SelectedRunner.native_mobile_grid.value, None)
 
         # add config for selected runner
         combined_raw_config.update(selected_sdk_conf)
