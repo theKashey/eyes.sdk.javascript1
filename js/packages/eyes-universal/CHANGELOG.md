@@ -10,6 +10,12 @@
 
 
 
+## 2.10.7 - 2022/8/24
+
+### Features
+- Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+### Bug fixes
+
 ## 2.10.6 - 2022/8/23
 
 ### Features
