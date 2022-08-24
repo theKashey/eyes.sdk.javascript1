@@ -14,5 +14,3 @@ module.exports = defineConfig({
   },
   supportFile: 'cypress/support/index-bla-commands.js',
 });
-
-require('@applitools/eyes-cypress')(module);

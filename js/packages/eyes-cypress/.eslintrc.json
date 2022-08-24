@@ -14,7 +14,7 @@
     "test/unit/setup/fixtures/cypressConfig-legacy-file/cypress.config.js",
     "test/play/support.js",
     "test/unit/setup/fixtures/supportFile-handle-commands.js",
-    "test/it/setup/fixtures/cypress.config.js",
+    "test/e2e/setup/fixtures/cypress.config.js",
     "test/play/cypress"
   ],
   "env": {
