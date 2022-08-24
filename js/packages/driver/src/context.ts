@@ -319,18 +319,16 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   }
 
   async elements(
-    elementOrSelector: TElement | types.Selector<TSelector>,
+    selectorOrElement: types.Selector<TSelector> | TElement,
   ): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
-    if (this._spec.isElement(elementOrSelector)) {
-      return [new Element({spec: this._spec, context: this, element: elementOrSelector, logger: this._logger})]
-    } else if (specUtils.isSelector(this._spec, elementOrSelector)) {
+    if (specUtils.isSelector(this._spec, selectorOrElement)) {
       if (this.isRef) {
-        return [new Element({spec: this._spec, context: this, selector: elementOrSelector, logger: this._logger})]
+        return [new Element({spec: this._spec, context: this, selector: selectorOrElement, logger: this._logger})]
       }
 
-      this._logger.log('Finding elements by selector: ', elementOrSelector)
+      this._logger.log('Finding elements by selector: ', selectorOrElement)
 
-      const root = await this.root(elementOrSelector)
+      const root = await this.root(selectorOrElement)
       if (!root) return []
 
       const elements = await this._spec.findElements(
@@ -349,6 +347,8 @@ export class Context<TDriver, TContext, TElement, TSelector> {
           logger: this._logger,
         })
       })
+    } else if (this._spec.isElement(selectorOrElement)) {
+      return [new Element({spec: this._spec, context: this, element: selectorOrElement, logger: this._logger})]
     } else {
       throw new TypeError('Cannot find elements using argument of unknown type!')
     }

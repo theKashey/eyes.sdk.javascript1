@@ -10,10 +10,14 @@ export function isDriver(driver: any): driver is Driver {
   return driver && driver.constructor.name === 'MockDriver'
 }
 export function isElement(element: any): element is Element {
+  if (element?.notting === true) return false
   return utils.types.has(element, 'id')
 }
 export function isSelector(selector: any): selector is Selector {
-  return utils.types.isString(selector) || utils.types.has(selector, ['using', 'value'])
+  if (selector?.notting === true) return false
+  return (
+    utils.types.isString(selector) || utils.types.has(selector, ['using', 'value']) || selector?.forceSelector === true
+  )
 }
 export function transformSelector(selector: Selector | {selector: Selector}): Selector {
   return utils.types.has(selector, 'selector') ? selector.selector : selector

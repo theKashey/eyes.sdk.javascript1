@@ -277,7 +277,7 @@ export class MockDriver {
       : null
   }
   async findElements(selector, rootElement) {
-    const elements = this._elements.get(selector)
+    const elements = this._elements.get(typeof selector === 'string' ? selector : selector.id)
     return elements
       ? elements.filter(
           element =>

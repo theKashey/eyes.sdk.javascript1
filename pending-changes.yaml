@@ -43,6 +43,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Added `next` sub-module to support `index.d.ts`. added it both with `exports` and `typesVersions`
+    - fix selector issue in `testcafe`, the selector and the element are the same and once there are multi selector the it's only peak the element
 "@applitools/eyes-nightwatch":
   feature:
     - 

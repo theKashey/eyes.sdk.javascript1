@@ -243,4 +243,68 @@ describe('context', () => {
     const locationContext11 = await childContext11.getLocationInViewport()
     assert.deepStrictEqual(locationContext11, {x: -20, y: -20})
   })
+
+  describe('selecotrOrElement', () => {
+    const selector = 'frame10'
+    const randomLengthOfElements = Array.from({length: parseInt(Math.random() * 8 + '') + 2}, () => ({
+      selector,
+      frame: true,
+    }))
+
+    beforeEach(async () => {
+      mock = new MockDriver()
+      mock.mockElements(randomLengthOfElements)
+      driver = new Driver({
+        logger,
+        spec,
+        driver: mock,
+      })
+      await driver.init()
+    })
+
+    afterEach(async () => {
+      await driver.switchToMainContext()
+    })
+
+    it('should return single element if the `isElement` return `true` and `isSelector` return `false`', async () => {
+      const selectorOrElement = {id: selector}
+      assert.strictEqual(spec.isElement(selectorOrElement), true, `the selectorOrElement isn't a element`)
+      assert.strictEqual(spec.isSelector(selectorOrElement), false, `the selectorOrElement isn't a selector`)
+      const frameElement = await driver.mainContext.elements(selectorOrElement)
+      assert.strictEqual(frameElement.length, 1, `the length of frameElement should be 1`)
+    })
+    it('should return all of the elements if the `isElement` return `false` and `isSelector` return `true`', async () => {
+      const selectorOrElement = selector
+      assert.strictEqual(spec.isElement(selectorOrElement), false, `the selectorOrElement isn't a element`)
+      assert.strictEqual(spec.isSelector(selectorOrElement), true, `the selectorOrElement isn't a selector`)
+      const frameElement = await driver.mainContext.elements(selectorOrElement)
+      assert.strictEqual(
+        frameElement.length,
+        randomLengthOfElements.length,
+        `the length of frameElement isn't equal to the length of randomLengthOfElements`,
+      )
+    })
+    it('should return all of the elements if the `isElement` and `isSelector` both return `true`', async () => {
+      const selectorOrElement = {id: selector, forceSelector: true}
+      assert.strictEqual(spec.isElement(selectorOrElement), true, `the selectorOrElement isn't a element`)
+      assert.strictEqual(spec.isSelector(selectorOrElement), true, `the selectorOrElement isn't a selector`)
+      const frameElement = await driver.mainContext.elements(selectorOrElement)
+      assert.strictEqual(
+        frameElement.length,
+        randomLengthOfElements.length,
+        `the length of frameElement isn't equal to the length of randomLengthOfElements`,
+      )
+    })
+    it('should throw an error if both `isElement` and `isSelector` return `false`', async () => {
+      const selectorOrElement = {id: selector, notting: true}
+      assert.strictEqual(spec.isElement(selectorOrElement), false, `the selectorOrElement isn't a element`)
+      assert.strictEqual(spec.isSelector(selectorOrElement), false, `the selectorOrElement isn't a selector`)
+      try {
+        await driver.mainContext.elements(selectorOrElement)
+        assert.strictEqual(true, false, 'should thrown error and skip this')
+      } catch {
+        assert.strictEqual(true, true, 'should thrown error and get here')
+      }
+    })
+  })
 })
