@@ -240,7 +240,7 @@ class EyesCore extends EyesBase {
         this._viewportSizeHandler.set(
           new RectangleSize(utils.geometry.round(utils.geometry.scale(viewportSize, this._driver.viewportScale))),
         )
-        this._logger.error('Failed to set the viewport size', e)
+        this._logger.log('Failed to set the viewport size', e)
         throw new EyesError('Failed to set the viewport size', e)
       }
     }

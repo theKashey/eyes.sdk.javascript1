@@ -15,6 +15,7 @@ const EyesUtils = require('./EyesUtils')
 const {lazyLoad} = require('@applitools/snippets')
 const makeLazyLoadOptions = require('../config/LazyLoadOptions')
 const {appendUserTestIdToTestResults} = require('../utils/amend-test-results')
+const EyesError = require('../errors/EyesError')
 
 class EyesVisualGrid extends EyesCore {
   static specialize({agentId, spec, cwd, VisualGridClient}) {
@@ -117,9 +118,15 @@ class EyesVisualGrid extends EyesCore {
         testConcurrency: this._runner.testConcurrency,
       })
 
-    if (this._configuration.getViewportSize()) {
-      const vs = this._configuration.getViewportSize()
-      await this.setViewportSize(vs)
+    const vsFromConfiguration = this._configuration.getViewportSize()
+    if (vsFromConfiguration) {
+      try {
+        await this.setViewportSize(vsFromConfiguration)
+      } catch (error) {
+        if (error instanceof EyesError)
+          this._logger.warn(`failed to "setViewportSize" to ${vsFromConfiguration}, but still continue with the test`)
+        else throw error
+      }
     }
 
     const openParams = this._configuration.toOpenEyesConfiguration()

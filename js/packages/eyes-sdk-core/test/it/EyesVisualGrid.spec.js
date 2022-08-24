@@ -1,5 +1,6 @@
 const {expect} = require('chai')
 const {startFakeEyesServer, getSession} = require('@applitools/sdk-fake-eyes-server')
+const snippets = require('@applitools/snippets')
 const {MockDriver} = require('@applitools/driver/fake')
 const {makeLogger} = require('@applitools/logger')
 const {EyesVisualGrid} = require('../utils/FakeSDK')
@@ -59,6 +60,29 @@ describe('EyesVisualGrid', async () => {
     const {browser, renderInfo} = JSON.parse(originalRenderRequest)
     expect(browser).to.deep.equal({name: 'firefox'})
     expect(renderInfo).to.deep.equal({width: 888, height: 777, target: 'viewport'})
+  })
+
+  it('should return original width/height when the width/height of the `getViewportSize` (a.k.a. screen size) is less then the width/height set in the browser', async () => {
+    // overwrite the `snippets.getViewportSize` so it will return sizes less than set in the browser
+    // there is no need to clean this mock becuase `forEach` function create new `dirver`
+    driver.mockScript(String(snippets.getViewportSize), () => {
+      return {
+        width: 1000,
+        height: 1000,
+      }
+    })
+    const config = eyes.getConfiguration()
+    config.addBrowser({width: 1001, height: 1001, name: 'firefox'})
+    eyes.setConfiguration(config)
+    await eyes.open(driver, 'FakeApp', 'FakeTest')
+    await eyes.check()
+    const [results] = await eyes.close()
+    const {startInfo} = await getSession(new TestResults(results), serverUrl)
+    const {
+      environment: {originalRenderRequest},
+    } = startInfo
+    const {renderInfo} = JSON.parse(originalRenderRequest)
+    expect(renderInfo).to.deep.equal({width: 1001, height: 1001, target: 'viewport'})
   })
 
   it('should not create session with missing device size', async () => {
