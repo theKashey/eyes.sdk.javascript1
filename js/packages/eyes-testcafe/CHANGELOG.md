@@ -13,6 +13,14 @@
 
 
 
+## 1.17.4 - 2022/8/25
+
+### Features
+- Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+### Bug fixes
+- Added `next` sub-module to support `index.d.ts`. added it both with `exports` and `typesVersions`
+- fix selector issue in `testcafe`, the selector and the element are the same and once there are multi selector the it's only peak the element
+
 ## 1.17.3 - 2022/7/28
 
 ### Features
