@@ -39,12 +39,12 @@ publish_testing_eyes_selenium: eyes_selenium/dist install_publish_requirements
 
 
 publish_eyes_robotframework: eyes_robotframework/dist install_publish_requirements
-	bash ./ci_scripts/send_mail.sh eyes-robotframework ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
+	bash ./ci_scripts/send_mail.sh robotframework ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
 	twine upload --verbose eyes_robotframework/dist/*
 
 
 publish_testing_eyes_robotframework: eyes_robotframework/dist install_publish_requirements
-	echo bash ./ci_scripts/send_mail.sh eyes-robotframework ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
+	echo bash ./ci_scripts/send_mail.sh robotframework ${SDK_VERSION} eyes_robotframework/CHANGELOG.md
 	twine upload --verbose --repository testpypi eyes_robotframework/dist/*
 
 

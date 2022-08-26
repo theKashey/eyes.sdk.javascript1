@@ -1,8 +1,8 @@
-[5.8.1] - 2022-08-26
+## [5.8.1] - 2022-08-26
 ### Fixed
 - Not possible to remove runner related sections from config [Trello 3016](https://trello.com/c/B0V3HPtF)
 
-[5.8.0] - 2022-07-26
+## [5.8.0] - 2022-07-26
 ### Added
 - Coded region keywords now support optional padding and region_id arguments [Trello 2977](https://trello.com/c/lYJnhwCz)
 - Post-propagate of test results for test report [Trello 2898](https://trello.com/c/bVk3Q7vc)
