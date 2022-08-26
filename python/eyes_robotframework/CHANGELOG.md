@@ -1,4 +1,4 @@
-[vNext]
+[5.8.1] - 2022-08-26
 ### Fixed
 - Not possible to remove runner related sections from config [Trello 3016](https://trello.com/c/B0V3HPtF)
 
