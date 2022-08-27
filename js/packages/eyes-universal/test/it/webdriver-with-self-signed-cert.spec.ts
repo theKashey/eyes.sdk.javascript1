@@ -9,8 +9,8 @@ describe('webdriver with self-signed cert', () => {
     proxyServer = await testProxyServer()
     webdriverServer = await testServer({
       middlewares: ['webdriver'],
-      key: './test/fixtures/test.key',
-      cert: './test/fixtures/test.cert',
+      key: './test/fixtures/key.pem',
+      cert: './test/fixtures/cert.pem',
     })
     ;[driver, destroyDriver] = await spec.build({
       url: `https://localhost:${webdriverServer.port}`,

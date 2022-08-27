@@ -24,12 +24,14 @@ export type ServerOptions = HandlerOptions & {
   debug?: boolean
   shutdownMode?: 'lazy' | 'stdin'
   idleTimeout?: number
+  printStdout?: boolean
 }
 
 export async function makeServer({
   debug = false,
   shutdownMode = 'lazy',
   idleTimeout = 900000, // 15min
+  printStdout = false,
   ...handlerOptions
 }: ServerOptions = {}): Promise<{port: number; close: () => void}> {
   const {server, port} = await makeHandler({...handlerOptions, debug})
@@ -39,7 +41,7 @@ export async function makeServer({
     console.log(`You are trying to spawn a duplicated server, use the server on port ${port} instead`)
     return
   }
-  process.stdout.write = () => true // NOTE: prevent any write to stdout
+  if (!printStdout) process.stdout.write = () => true // NOTE: prevent any write to stdout
 
   const baseLogger = makeLogger({
     handler: {type: 'rolling file', name: 'eyes', dirname: LOG_DIRNAME},

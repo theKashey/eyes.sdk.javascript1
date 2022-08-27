@@ -1,4 +1,4 @@
-import {spawn, fork} from 'child_process'
+import {spawn, fork, ChildProcess} from 'child_process'
 import fs from 'fs'
 
 describe('works', () => {
@@ -10,9 +10,13 @@ describe('works', () => {
   } else if (process.platform === 'linux') {
     bin = `./bin/eyes-universal-${fs.existsSync('/etc/alpine-release') ? 'alpine' : 'linux'}`
   }
+  let server: ChildProcess
+  afterEach(() => {
+    server?.kill()
+  })
 
   it('works with ipc', async () => {
-    const server = fork(`./dist/cli.js`, {detached: true, stdio: 'ignore'})
+    server = fork(`./dist/cli.js`, {detached: true, stdio: 'ignore'})
     return new Promise<void>((resolve, reject) => {
       server.on('error', reject)
 
@@ -25,11 +29,11 @@ describe('works', () => {
           reject(new Error(`Server first message expected to be a port, but got "${JSON.stringify(data)}"`))
         }
       })
-    }).finally(() => server.kill())
+    })
   })
 
   it('works with stdout', async () => {
-    const server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin}`, {
+    server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin} --shutdown stdin`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/sh',
       stdio: ['ignore', 'pipe', 'inherit'],
@@ -47,22 +51,25 @@ describe('works', () => {
           reject(new Error(`Server first line of stdout output expected to be a port, but got "${firstLine}"`))
         }
       })
-    }).finally(() => server.kill())
+    })
   })
 
   it('ends with stdin', async () => {
-    const server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin} --shutdown stdin`, {
+    server = spawn(process.platform === 'win32' ? bin : `chmod +x ${bin} && ${bin} --shutdown stdin`, {
       detached: true,
       shell: process.platform === 'win32' ? 'C:\\Program Files\\Git\\bin\\bash.exe' : '/bin/sh',
       stdio: ['pipe', 'inherit', 'inherit'],
     })
-    return new Promise<void>((resolve, reject) => {
+    let timeoutId
+    await new Promise<void>((resolve, reject) => {
       server.on('error', reject)
-      setTimeout(() => reject(new Error('No output from the server for 20 seconds')), 20000)
+
+      timeoutId = setTimeout(() => reject(new Error('No output from the server for 20 seconds')), 2000)
       server.on('exit', resolve)
       server.on('close', resolve)
 
       server.stdin.end()
-    }).finally(() => server.kill())
+    })
+    clearTimeout(timeoutId)
   })
 })

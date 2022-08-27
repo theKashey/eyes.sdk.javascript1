@@ -3,7 +3,11 @@ import {makeServer} from '../../src'
 
 describe('universal-server', () => {
   it('starts server in secure mode', async () => {
-    const server = await makeServer({cert: './test/fixtures/test.cert', key: './test/fixtures/test.key'})
+    const server = await makeServer({
+      cert: './test/fixtures/cert.pem',
+      key: './test/fixtures/key.pem',
+      printStdout: true,
+    })
     const ws = new WebSocket(`wss://localhost:${server.port}/eyes`, {rejectUnauthorized: false})
 
     try {
@@ -19,7 +23,7 @@ describe('universal-server', () => {
   })
 
   it('accepts payload of 256mb', async () => {
-    const server = await makeServer()
+    const server = await makeServer({printStdout: true})
     const ws = new WebSocket(`ws://localhost:${server.port}/eyes`)
 
     try {
