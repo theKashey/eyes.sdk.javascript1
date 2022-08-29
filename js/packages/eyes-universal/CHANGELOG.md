@@ -10,6 +10,12 @@
 
 
 
+## 2.10.8 - 2022/8/29
+
+### Features
+- disable the usage of `HelperAndroid` and `HelperIOS` once using `UFG`
+### Bug fixes
+
 ## 2.10.7 - 2022/8/24
 
 ### Features
