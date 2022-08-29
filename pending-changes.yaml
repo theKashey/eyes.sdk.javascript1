@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - disable the usage of `HelperAndroid` and `HelperIOS` once using `UFG`
   bug-fix:
     - 
 "@applitools/eyes-selenium":

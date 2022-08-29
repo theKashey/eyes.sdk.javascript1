@@ -34,6 +34,7 @@ export type CustomCapabilitiesConfig = {
 
 export type CustomDriverConfig = CustomCapabilitiesConfig & {
   useCeilForViewportSize?: boolean
+  disableHelper?: boolean
 }
 
 export type Cookie = {

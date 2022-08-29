@@ -106,7 +106,7 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
       driver,
       selector: 'UFG_TriggerArea',
       type: 'Button',
-      timeout: 30000,
+      timeout: 0,
       throwErr: false,
     })
     if (triggerRetry) {
