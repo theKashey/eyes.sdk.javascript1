@@ -260,11 +260,11 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       }
 
       // init helper lib
-     if (!this._customConfig?.disableHelper) {
-       this._helper = this.isIOS
+      if (!this._customConfig?.disableHelper) {
+        this._helper = this.isIOS
           ? await HelperIOS.make({spec: this._spec, driver: this, logger: this._logger})
           : await HelperAndroid.make({spec: this._spec, driver: this, logger: this._logger})
-     }
+      }
     }
 
     this._logger.log('Combined driver info', this._driverInfo)
