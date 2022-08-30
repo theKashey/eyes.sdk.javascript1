@@ -289,3 +289,26 @@ jobs:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           TEST_REPORT_SANDBOX: ${{ inputs.releasing_package && 'False' || 'True'}}
+
+  report:
+    needs:
+      - unit-tests
+      - unit-tests-alpine
+      - installation-tests
+      - generated-tests
+      - functional-tests
+      - sauce-functional-tests
+      - robot-framework-tests
+      - sauce-robot-framework-tests
+    if: ${{ always() && github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slackapi/slack-github-action@v1.21.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.PYTHON_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        with:
+          payload: |
+            {
+              "text": "Python tests <https://github.com/applitools/eyes.sdk.javascript1/actions/runs/${{github.run_id}}|execution> report:\nUnit tests: ${{needs.unit-tests.result}}\nUnit tests (alpine): ${{needs.unit-tests-alpine.result}}\nInstallation tests: ${{needs.installation-tests.result}}\nGenerated tests: ${{needs.generated-tests.result}}\nFunctional tests: ${{needs.functional-tests.result}}\nFunctional tests (sauce): ${{needs.sauce-functional-tests.result}}\nRobot framework tests: ${{needs.robot-framework-tests.result}}\nRobot framework tests (sauce): ${{needs.sauce-robot-framework-tests.result}}"
+            }
