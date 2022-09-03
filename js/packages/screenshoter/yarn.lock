@@ -16,14 +16,14 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@^1.9.21":
-  version "1.9.21"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.21.tgz#3d1060178eda1b26784938840d4f168434e0cc9b"
-  integrity sha512-XZByjN+k7gheBza/3BqqU8Y40/S79o2krC4rdI4o/8svW8nyysQhkohtuD6N5gaDg6sWAO3+7hFxtHW61dCdkQ==
+"@applitools/driver@^1.9.23":
+  version "1.9.23"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.23.tgz#964076d917b759f9271c449552521a51edbd9f4c"
+  integrity sha512-TFwU0nW3bRWd8sACmq1FrPmDroShRSiCr3wc4jq5lsE2GaZ6h53nBsRVaUAzxwHRYmS6iekdvH1coCZG2tBaNg==
   dependencies:
     "@applitools/logger" "1.1.16"
     "@applitools/snippets" "2.4.5"
-    "@applitools/types" "1.5.8"
+    "@applitools/types" "1.5.9"
     "@applitools/utils" "1.3.10"
 
 "@applitools/image@1.0.1":
@@ -74,10 +74,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/test-utils@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.4.3.tgz#c61fba0f75103275d13ccca350682cd88968c94e"
-  integrity sha512-XA8rqBoKeEoBSZfPLLo8GdmSF3ldj7h/gcqJS6s8u1F82GhKKwhc8BW08wGQoljcVAQWruV3PJGSBaDlCCIsOQ==
+"@applitools/test-utils@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.5.0.tgz#840f0ff9ee4ce4107507d8c2d74ed0a37e872628"
+  integrity sha512-gQy9SWPQGL0+PJCRezcV1nZDWhLnQZve7ryCp45LE/8ZipwF5vBqzEqogJhFqUAhUYmtJXTh/9JopvuCu5h7fQ==
   dependencies:
     node-fetch "2.6.1"
 
@@ -85,6 +85,11 @@
   version "1.5.8"
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.8.tgz#1d281e7f52e1f5b542d79f3a266fd29bf521b58e"
   integrity sha512-trMH32oewkrptYG26IzEbwMW9VG9BJo64bzwx/T4oz6ZfndXGCjwGCFQE4FDE++dRZTjzSF00h2YSzIxPAapeQ==
+
+"@applitools/types@1.5.9":
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.9.tgz#91a6e58a8fc32bfa73028a4a6a9474ae261d1315"
+  integrity sha512-8lBeXQ3dRRcIRREisGj9kxFXRNoctMbeAQHWfiSDe/6CS/qO2cGArWRPhOusFsZiYE1NEahgIM6exufztgkfKA==
 
 "@applitools/utils@1.3.10":
   version "1.3.10"
