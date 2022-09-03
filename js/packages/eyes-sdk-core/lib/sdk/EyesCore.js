@@ -39,7 +39,7 @@ class EyesCore extends EyesBase {
     ArgumentGuard.notNull(visualLocatorSettings, 'visualLocatorSettings')
     this._logger.log('Get locators with given names: ', visualLocatorSettings.locatorNames)
     await this._driver.init()
-    const screenshot = await takeScreenshot({
+    const {screenshot} = await takeScreenshot({
       logger: this._logger,
       driver: this._driver,
       hideScrollbars: this._configuration.getHideScrollbars(),
@@ -77,7 +77,7 @@ class EyesCore extends EyesBase {
       const region = {...userRegion}
 
       let dom
-      const screenshot = await takeScreenshot({
+      const {screenshot} = await takeScreenshot({
         logger: this._logger,
         driver: this._driver,
         region: Region.isRegionCompatible(region.target)
@@ -159,7 +159,7 @@ class EyesCore extends EyesBase {
     await this._driver.refreshContexts()
 
     let dom
-    const screenshot = await takeScreenshot({
+    const {screenshot} = await takeScreenshot({
       logger: this._logger,
       driver: this._driver,
       hideScrollbars: this._configuration.getHideScrollbars(),

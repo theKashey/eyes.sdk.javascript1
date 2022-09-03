@@ -170,16 +170,17 @@ class EyesClassic extends EyesCore {
 
     let dom
     let afterScreenShotScrollingOffeset = null
-    const screenshot = await takeScreenshot({
+    const {regions: regionsToCalculate, getBaseCheckSettings} = CheckSettingsUtils.toBaseCheckSettings(
+      this._checkSettings,
+      this._context,
+    )
+
+    const {screenshot, caltulatedRegions} = await takeScreenshot({
       ...screenshotSettings,
       driver: this._driver,
+      regionsToCalculate,
       hooks: {
-        afterScreenshot: async ({driver, scroller, screenshot}) => {
-          this._checkSettings = await CheckSettingsUtils.toScreenshotCheckSettings({
-            context: driver.currentContext,
-            checkSettings: this._checkSettings,
-            screenshot,
-          })
+        afterScreenshot: async ({driver, scroller}) => {
           if (driver.isWeb && TypeUtils.getOrDefault(this._checkSettings.sendDom, this._configuration.getSendDom())) {
             this._logger.log('Getting window DOM...')
             if (screenshotSettings.fully) {
@@ -198,6 +199,12 @@ class EyesClassic extends EyesCore {
       debug: this.getDebugScreenshots(),
       logger: this._logger,
     })
+    // TODOs:
+    // - skip region calculation when calling takeScreenshot on native mobile since it just returns the URL of the uploaded screenshot
+    // - return the url on a key that can be used by the caller
+
+    this._checkSettings = getBaseCheckSettings(caltulatedRegions)
+
     this._imageLocation = new Location(Math.round(screenshot.region.x), Math.round(screenshot.region.y))
     if (afterScreenShotScrollingOffeset) {
       const imagePositionInPage_x = Math.round(afterScreenShotScrollingOffeset.x + screenshot.region.x)

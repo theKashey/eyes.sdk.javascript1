@@ -1730,6 +1730,7 @@ class EyesBase {
   async _getAppOutputWithScreenshot() {
     this._logger.log('getting screenshot...')
 
+    // TODO: if screenshot.url set it to screenshotURL and skip this conditional block
     // Getting the screenshot (abstract function implemented by each SDK).
     const screenshot = await this.getScreenshot()
     this._logger.log('Done getting screenshot!')

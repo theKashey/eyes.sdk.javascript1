@@ -230,8 +230,8 @@ class EyesVisualGrid extends EyesCore {
             waitBeforeCapture: () => utils.general.sleep(waitBeforeCapture),
             logger: this._logger,
           })
-          snapshotArgs.isNativeUFG = true
           snapshotArgs.snapshot = snapshots
+          snapshotArgs.isNativeUFG = true
         }
 
         const config = CheckSettingsUtils.toCheckWindowConfiguration({

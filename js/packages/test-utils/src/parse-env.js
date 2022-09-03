@@ -33,37 +33,18 @@ const DEVICES = {
     type: 'sauce',
     url: SAUCE_SERVER_URL,
     capabilities: {
-      w3c: {
-        platformName: 'iOS',
-        'appium:platformVersion': '14.5',
-        'appium:deviceName': 'iPhone 12 Simulator',
-      },
-      legacy: {
-        platformName: 'iOS',
-        platformVersion: '14.5',
-        deviceName: 'iPhone 12 Simulator',
-      },
-    },
-    options: {
-      appiumVersion: '1.20.0',
-      ...SAUCE_CREDENTIALS,
-    },
-  },
-  'iPhone 12 UFG native': {
-    type: 'sauce',
-    url: SAUCE_SERVER_URL,
-    capabilities: {
       deviceName: 'iPhone 12 Pro Simulator',
       platformName: 'iOS',
       platformVersion: '15.2',
       deviceOrientation: 'portrait',
-      processArguments: {
-        args: [],
-        env: {
-          DYLD_INSERT_LIBRARIES:
-            '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
-        },
-      },
+      //processArguments: {
+      //  args: [],
+      //  env: {
+      //    DYLD_INSERT_LIBRARIES:
+      //      '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
+      //    NML_API_KEY: process.env.APPLITOOLS_API_KEY_SDK,
+      //  },
+      //},
       ...SAUCE_CREDENTIALS,
     },
   },
@@ -600,7 +581,7 @@ const BROWSERS = {
 }
 
 function parseEnv(
-  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, eg, injectUFGLib, ...options} = {},
+  {browser, app, device, url, headless = !process.env.NO_HEADLESS, legacy, eg, injectUFGLib, withNML, ...options} = {},
   protocol = 'wd',
 ) {
   const env = {browser, device, headless, protocol, ...options}
@@ -639,11 +620,12 @@ function parseEnv(
       env.url = new URL(process.env.CVG_TESTS_EG_REMOTE)
     }
     if (injectUFGLib) {
-      env.capabilities['appium:processArguments'] = {
+      env.capabilities.processArguments = {
         args: [],
         env: {
           DYLD_INSERT_LIBRARIES:
             '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
+          NML_API_KEY: withNML ? process.env.APPLITOOLS_API_KEY_SDK : undefined,
         },
       }
     }

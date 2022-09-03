@@ -485,78 +485,6 @@ describe('CheckSettingsUtils', () => {
       )
     })
 
-    it('handle region by selector', async () => {
-      const checkSettings = {ignoreRegions: ['custom selector']}
-
-      const screenshotCheckSettings = await CheckSettingsUtils.toScreenshotCheckSettings({
-        checkSettings,
-        context: driver.currentContext,
-        screenshot,
-      })
-
-      const matchSettings = await CheckSettingsUtils.toMatchSettings({
-        checkSettings: screenshotCheckSettings,
-        configuration: new Configuration(),
-      })
-
-      assert.deepStrictEqual(
-        matchSettings.getIgnoreRegions().map(region => region.toJSON()),
-        [
-          {
-            left: region1.x - 1,
-            top: region1.y - 1,
-            width: region1.width,
-            height: region1.height,
-            regionId: 'custom selector (1)',
-          },
-          {
-            left: region2.x - 1,
-            top: region2.y - 1,
-            width: region2.width,
-            height: region2.height,
-            regionId: 'custom selector (2)',
-          },
-        ],
-      )
-    })
-
-    it('handle region by selector with options', async () => {
-      const checkSettings = {accessibilityRegions: [{region: 'custom selector', type: 'RegularText'}]}
-
-      const screenshotCheckSettings = await CheckSettingsUtils.toScreenshotCheckSettings({
-        checkSettings,
-        context: driver.currentContext,
-        screenshot,
-      })
-
-      const matchSettings = await CheckSettingsUtils.toMatchSettings({
-        checkSettings: screenshotCheckSettings,
-        configuration: new Configuration(),
-      })
-
-      assert.deepStrictEqual(
-        matchSettings.getAccessibilityRegions().map(region => region.toJSON()),
-        [
-          {
-            left: region1.x - 1,
-            top: region1.y - 1,
-            width: region1.width,
-            height: region1.height,
-            type: 'RegularText',
-            regionId: 'custom selector (1)',
-          },
-          {
-            left: region2.x - 1,
-            top: region2.y - 1,
-            width: region2.width,
-            height: region2.height,
-            type: 'RegularText',
-            regionId: 'custom selector (2)',
-          },
-        ],
-      )
-    })
-
     // NOTE: This test is broken due to the CORRECT fix in the driver, but it makes mock elements to be recognized as common selectors
     it.skip('handle region by element', async () => {
       console.log(await mockDriver.findElement('custom selector'))
@@ -679,5 +607,94 @@ describe('CheckSettingsUtils', () => {
       checkWindowConfiguration.ignore,
       persistedCheckSettings.ignoreRegions.map(({region, ...offsets}) => ({...transformRegion(region), ...offsets})),
     )
+  })
+  it('toBaseCheckSettings filter out coordinate regions', async () => {
+    const mockDriver = new MockDriver()
+    mockDriver.mockElements([{selector: 'element0', rect: {x: 1, y: 2, width: 500, height: 501}}])
+    const webElement = await mockDriver.findElement('element0')
+    const ignoreRegions = [{region: 'selector1'}, {x: 10, y: 20, width: 30, height: 40}, webElement]
+    const checkSettings = {
+      ignoreRegions,
+    }
+    const {regions} = CheckSettingsUtils.toBaseCheckSettings(checkSettings)
+
+    assert.deepEqual(regions, ['selector1', webElement])
+  })
+
+  it('getBaseCheckSettings should map coordinate regions in the correct order, with options and multi region selector', async () => {
+    const settings = {
+      ignoreRegions: [{region: '.ignore', regionId: 'my-ignore-region'}],
+      layoutRegions: [{region: '.layout', padding: 10}],
+      accessibilityRegions: [{region: '.accessibility', type: 'RegularText'}],
+      strictRegions: [{region: '.strict'}], // this region has a "bad" selector, therefore it does not exist in the "expected"
+    }
+    const coordinateIgnoreRegions = [
+      {regions: [{region: {x: 1, y: 2, width: 500, height: 501}}], commonSelector: {selector: '.ignore'}},
+    ]
+    const coordinateLayoutRegions = [
+      {regions: [{region: {x: 10, y: 11, width: 101, height: 102}}], commonSelector: {selector: '.layout'}},
+    ]
+    const coordinateAccessibilityRegions = [
+      {
+        regions: [{region: {x: 12, y: 13, width: 103, height: 104}}, {region: {x: 52, y: 53, width: 103, height: 104}}],
+        commonSelector: {selector: '.accessibility'},
+      },
+    ]
+
+    const expected = {
+      accessibilityRegions: [
+        {
+          _left: 12,
+          _top: 13,
+          _width: 103,
+          _height: 104,
+          _regionId: '.accessibility (1)',
+          _type: 'RegularText',
+        },
+        {
+          _left: 52,
+          _top: 53,
+          _width: 103,
+          _height: 104,
+          _regionId: '.accessibility (2)',
+          _type: 'RegularText',
+        },
+      ],
+      ignoreRegions: [
+        {
+          _left: 1,
+          _top: 2,
+          _width: 500,
+          _height: 501,
+          _regionId: 'my-ignore-region',
+        },
+      ],
+      expectedLayoutRegions: [
+        {
+          _left: 0,
+          _top: 1,
+          _width: 121,
+          _height: 122,
+          _regionId: '.layout',
+        },
+      ],
+    }
+
+    const {getBaseCheckSettings} = CheckSettingsUtils.toBaseCheckSettings(settings)
+
+    const transformedCheckSettings = await getBaseCheckSettings([
+      ...coordinateIgnoreRegions,
+      ...coordinateLayoutRegions,
+      {regions: []},
+      ...coordinateAccessibilityRegions,
+    ])
+    const checkSettings = CheckSettingsUtils.toMatchSettings({
+      checkSettings: transformedCheckSettings,
+      configuration: new Configuration(),
+    })
+
+    assert.deepEqual(checkSettings._ignoreRegions, expected.ignoreRegions)
+    assert.deepEqual(checkSettings._accessibilityMatchSettings, expected.accessibilityRegions)
+    assert.deepEqual(checkSettings._layoutRegions, expected.expectedLayoutRegions)
   })
 })

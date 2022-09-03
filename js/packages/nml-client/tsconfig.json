@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "types",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+
+    "module": "commonjs",
+    "target": "es2019",
+    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "stripInternal": false,
+    "removeComments": false,
+    "skipLibCheck": true
+
+  },
+  "ts-node": {
+    "transpileOnly": true
+  },
+  "exclude" : ["dist", "types", "test"]
+}

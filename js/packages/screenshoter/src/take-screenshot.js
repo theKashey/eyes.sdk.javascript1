@@ -3,11 +3,13 @@ const getTarget = require('./get-target')
 const scrollIntoViewport = require('./scroll-into-viewport')
 const takeStitchedScreenshot = require('./take-stitched-screenshot')
 const takeSimpleScreenshot = require('./take-simple-screenshot')
+const extractCoodinatesForSelectorsAndElements = require('./extract-coodinates-for-selectors-and-elements')
 
 async function takeScreenshot({
   driver,
   frames = [],
   region,
+  regionsToCalculate = [],
   fully,
   scrollingMode,
   hideScrollbars,
@@ -62,6 +64,8 @@ async function takeScreenshot({
   }
 
   try {
+    // TODO: identify spot in this function to call to takeScreenshot in the nml-client
+    // if running on native mobile and the user has enabled NML
     if (!window && !driver.isNative) await scrollIntoViewport({...target, logger})
 
     if (fully && !target.region && target.scroller) await target.scroller.moveTo({x: 0, y: 0})
@@ -82,11 +86,13 @@ async function takeScreenshot({
 
     screenshot.image.scale(driver.viewportScale)
 
+    const caltulatedRegions = await extractCoodinatesForSelectorsAndElements({regionsToCalculate, screenshot, context})
+
     if (hooks && hooks.afterScreenshot) {
       await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
     }
 
-    return screenshot
+    return {screenshot, caltulatedRegions}
   } finally {
     if (target.scroller) {
       await target.scroller.restoreScrollbars()

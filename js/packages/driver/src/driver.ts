@@ -259,6 +259,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         }
       }
 
+      // TODO: if user opts into NML, skip initializing the helpers
       // init helper lib
       if (!this._customConfig?.disableHelper) {
         this._helper = this.isIOS

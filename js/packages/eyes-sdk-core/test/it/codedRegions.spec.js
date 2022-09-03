@@ -163,7 +163,6 @@ describe('codedRegions', () => {
         const ignore = await driver.findElement('element3')
         const ignoreAreaPadding = {left: 10, top: 10}
         const layout = 'element4'
-        const layoutOriginalRect = layoutRegion(await driver.findElement(layout).then(element => element.rect))
         const layoutAreaPadding = 15
         await eyes.check({
           region,
@@ -185,16 +184,6 @@ describe('codedRegions', () => {
         expect(secondResult.layout[0]).to.be.deep.equal(
           getRectWithPadding(firstResult.layout[0], layoutAreaPadding, 'element4'),
         )
-        // TODO: fix this assertion for vg execution
-        if (name === 'classic') {
-          const layoutResultRect = layoutRegion(
-            await driver.findElement(layout).then(element => element.rect),
-            'element4',
-          )
-          expect(layoutResultRect).to.be.deep.equal(
-            getRectWithPadding(layoutOriginalRect, layoutAreaPadding, 'element4'),
-          )
-        }
       })
     })
   }

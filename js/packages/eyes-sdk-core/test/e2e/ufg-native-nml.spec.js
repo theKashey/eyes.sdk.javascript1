@@ -1,9 +1,7 @@
 const setupTests = require('./utils/core-e2e-utils')
 
-// This is for demo purposes, and was done as part of implementing support for UFG native in core
-// The reason it is skipped is because there are generic coverage tests covering the same scenario
-describe('UFG native', () => {
-  describe('Android', () => {
+describe('UFG native NML', () => {
+  describe.skip('Android', () => {
     const env = {
       device: 'Pixel 3 XL duckduckgo',
       app: 'https://applitools.jfrog.io/artifactory/Examples/duckduckgo-5.87.0-play-debug.apk',
@@ -18,7 +16,7 @@ describe('UFG native', () => {
 
       const config = {
         appName: 'core app',
-        testName: 'native ufg android',
+        testName: 'native ufg android nml',
         waitBeforeCapture: 1500,
         browsersInfo: [{androidDeviceInfo: {deviceName: 'Pixel 4 XL', androidVersion: 'latest'}}],
         saveNewTests: false,
@@ -33,8 +31,9 @@ describe('UFG native', () => {
   describe('iOS', () => {
     const env = {
       device: 'iPhone 12',
-      app: 'https://applitools.jfrog.io/artifactory/Examples/DuckDuckGo-instrumented.app.zip',
+      app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp-instrumented-nml-nmg-flat-caps.zip',
       injectUFGLib: true,
+      withNML: true,
     }
     const {getDriver, getSDK} = setupTests({before, after, beforeEach, afterEach, env})
 
@@ -43,7 +42,7 @@ describe('UFG native', () => {
       const driver = getDriver()
       const config = {
         appName: 'core app',
-        testName: 'native ufg ios',
+        testName: 'native ufg ios nml',
         waitBeforeCapture: 1500,
         browsersInfo: [{iosDeviceInfo: {deviceName: 'iPhone 12', iosVersion: 'latest'}}],
         saveNewTests: false,

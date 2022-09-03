@@ -196,60 +196,61 @@ function toMatchSettings({checkSettings = {}, configuration}) {
   }
 }
 
-async function toScreenshotCheckSettings({checkSettings, context, screenshot}) {
-  const screenshotCheckSettings = {
-    ...checkSettings,
-    ignoreRegions: await referencesToRegions(checkSettings.ignoreRegions),
-    floatingRegions: await referencesToRegions(checkSettings.floatingRegions),
-    strictRegions: await referencesToRegions(checkSettings.strictRegions),
-    layoutRegions: await referencesToRegions(checkSettings.layoutRegions),
-    contentRegions: await referencesToRegions(checkSettings.contentRegions),
-    accessibilityRegions: await referencesToRegions(checkSettings.accessibilityRegions),
-  }
+function toBaseCheckSettings(settings) {
+  const regionTypes = ['ignore', 'layout', 'strict', 'content', 'floating', 'accessibility']
+  const regions = regionTypes.flatMap(regionType => {
+    return (settings[`${regionType}Regions`] ? settings[`${regionType}Regions`] : []).reduce((regions, reference) => {
+      const {region} = utils.types.has(reference, 'region') ? reference : {region: reference}
+      return !isRegion(region) ? regions.concat(region) : regions
+    }, [])
+  })
 
-  return screenshotCheckSettings
-
-  async function referencesToRegions(references) {
-    if (!references) return references
-    const regions = []
-    for (const reference of references) {
-      const referenceRegions = []
-      const {region, ...options} = reference.region ? reference : {region: reference}
-      if (utils.types.has(region, ['width', 'height'])) {
-        const referenceRegion = utils.types.has(region, ['x', 'y'])
-          ? region
-          : {x: region.left, y: region.top, width: region.width, height: region.height}
-        referenceRegions.push(referenceRegion)
-      } else {
-        const elements = await context.elements(region)
-        if (elements.length > 0) {
-          options.regionId = options.regionId || stringifySelector(elements[0])
-          const contextLocationInViewport = await elements[0].context.getLocationInViewport()
-          for (const element of elements) {
-            const elementRegion = utils.geometry.withPadding(await element.getRegion(), options.padding)
-            const region = utils.geometry.offset(elementRegion, contextLocationInViewport)
-            const scaledRegion = utils.geometry.scale(
-              {
-                x: Math.max(0, region.x - screenshot.region.x),
-                y: Math.max(0, region.y - screenshot.region.y),
-                width: region.width,
-                height: region.height,
-              },
-              context.driver.viewportScale,
-            )
-            referenceRegions.push(scaledRegion)
-          }
-        }
+  function getBaseCheckSettings(regionsByCoordinates) {
+    const transformedSettings = {...settings}
+    for (const regionType of regionTypes) {
+      const enrichedRegions = []
+      for (const region of transformedSettings[`${regionType}Regions`] || []) {
+        enrichedRegions.push(enrichRegion(region, regionsByCoordinates))
       }
-      regions.push(...referenceRegions.map(region => ({region, ...options})))
+      transformedSettings[`${regionType}Regions`] = enrichedRegions.filter(Boolean).flat()
     }
-    return regions
+
+    return transformedSettings
   }
+
+  function isRegion(region) {
+    return utils.types.has(region, ['x', 'y', 'width', 'height'])
+  }
+
+  function enrichRegion(reference, regionsByCoordinates) {
+    const {region, ...options} = utils.types.has(reference, 'region') ? reference : {region: reference}
+    if (!isRegion(region)) {
+      const regionsAndSelector = regionsByCoordinates.shift()
+      if (regionsAndSelector.regions.length) {
+        return regionsAndSelector.regions.map(region => {
+          let regionWithPadding
+          if (reference.padding) {
+            regionWithPadding = utils.geometry.withPadding(region.region, reference.padding)
+          }
+          return {
+            region: regionWithPadding || region.region,
+            regionId: reference.regionId || stringifySelector(regionsAndSelector),
+            ...options,
+          }
+        })
+      } else {
+        return undefined
+      }
+    } else {
+      return reference
+    }
+  }
+  return {regions, getBaseCheckSettings}
 }
 
 module.exports = {
   toPersistedCheckSettings,
   toCheckWindowConfiguration,
-  toScreenshotCheckSettings,
   toMatchSettings,
+  toBaseCheckSettings,
 }

@@ -33,7 +33,7 @@ exports.sleep = utils.general.sleep
 exports.test = async function test({type, tag, driver, ...options} = {}) {
   if (options.withStatusBar) tag += '-statusbar'
 
-  const screenshot = await takeScreenshot({driver, ...options})
+  const {screenshot} = await takeScreenshot({driver, ...options})
   try {
     if (options.withStatusBar) {
       if (type === 'android') await sanitizeAndroidStatusBar(screenshot.image)
@@ -54,6 +54,26 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
     })
     throw err
   }
+}
+
+exports.testCodedRegions = async function testCodedRegions({driver, ...options}, expectedCoordinates) {
+  const {caltulatedRegions} = await takeScreenshot({driver, ...options})
+  const roundedRegionsArray = caltulatedRegions.map(regions => {
+    const result = []
+    for (const r of regions.regions) {
+      result.push({
+        region: {
+          x: Math.round(r.region.x),
+          y: Math.round(r.region.y),
+          width: Math.round(r.region.width),
+          height: Math.round(r.region.height),
+        },
+      })
+    }
+    return {regions: result, commonSelector: regions.commonSelector}
+  })
+
+  assert.deepEqual(roundedRegionsArray, expectedCoordinates)
 }
 
 exports.makeDriver = async function makeDriver({
