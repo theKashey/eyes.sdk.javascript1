@@ -12,7 +12,7 @@ export async function publishMessageRequest(options: {url: string; payload: any}
           retry: [{statuses: [404]}],
         })
       },
-    }
+    },
   })
   if (response.status !== 200) {
     throw new Error(
@@ -60,7 +60,7 @@ export async function broker(url: string, request: BrokerRequest) {
     payload: request,
   })
   const {payload} = await response.json()
-  if (!payload || payload && payload.error)
+  if (!payload || (payload && payload.error))
     throw new Error(
       `There was a problem when interacting with the mobile application. The provided error message was "${payload.error.message}" and had a stack trace of "${payload.error.stack}"`,
     )
