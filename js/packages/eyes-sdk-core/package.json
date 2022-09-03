@@ -77,7 +77,7 @@
     }
   },
   "dependencies": {
-    "@applitools/nml-client": "file:../nml-client",
+    "@applitools/nml-client": "1.0.1",
     "@applitools/dom-capture": "11.1.2",
     "@applitools/dom-snapshot": "4.6.2",
     "@applitools/driver": "1.9.23",

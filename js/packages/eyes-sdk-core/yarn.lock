@@ -24,14 +24,6 @@
     "@applitools/dom-shared" "1.0.5"
     "@applitools/functional-commons" "1.6.0"
 
-"@applitools/dom-capture@11.1.2":
-  version "11.1.2"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-11.1.2.tgz#2cb85746bb872a48c390a99e53f061d13313727f"
-  integrity sha512-LRs3yWiS7NQpDrNTx77zO7U/nldrzq5B5HnEmM/ZJM6xThOPZdTJNYEcdzQV8yfZVawX/pq/imyejcVIvhmFzA==
-  dependencies:
-    "@applitools/dom-shared" "1.0.5"
-    "@applitools/functional-commons" "1.6.0"
-
 "@applitools/dom-shared@1.0.5":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@applitools/dom-shared/-/dom-shared-1.0.5.tgz"
@@ -186,11 +178,13 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/nml-client@file:../nml-client":
-  version "1.0.0"
+"@applitools/nml-client@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@applitools/nml-client/-/nml-client-1.0.1.tgz#aa72e485372bac6a56612f58c2cbbb85795b9b27"
+  integrity sha512-JrIQr35RU2TqHTkwSKrnsg2fQiMh+fFkUDd692XyA5ouAnD3H4eYUoF+3OffSwFBdmqGDDgvz3zkrT2xu+W0Bg==
   dependencies:
     "@applitools/req" "1.0.1"
-    uuid "^8.3.2"
+    "@applitools/utils" "1.3.10"
 
 "@applitools/req@1.0.1":
   version "1.0.1"
@@ -202,21 +196,10 @@
     node-fetch "2.6.7"
     proxy-agent "5.0.0"
 
-"@applitools/screenshoter@3.4.14":
-  version "3.4.14"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.4.14.tgz#ca3120120042e5c1431ea1e3f0ef8e7a81098c6f"
-  integrity sha512-vdaHxzSobJzujyXENSuVybYyOfBWZlDb6OwVzRsiJxpwuN9L5VtOu30kuvxAXzycHMfa+8vLgO2pHnU6Vp/MiQ==
-  dependencies:
-    "@applitools/logger" "1.1.15"
-    "@applitools/snippets" "2.4.5"
-    "@applitools/utils" "1.3.10"
-    jpeg-js "0.4.4"
-    png-async "0.9.4"
-
-"@applitools/screenshoter@3.4.15":
-  version "3.4.15"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.4.15.tgz#0afa6077dc4a30f3ac1bd6837509ac1a496307ce"
-  integrity sha512-FYO+q06xd1W2C4tiGP0aaFfSnJjSUr/PALE0TqmA0OYN/jPb8N+gmKs0nU+50e68Va+w/p5mqw98XQSSTP0CDw==
+"@applitools/screenshoter@3.4.16":
+  version "3.4.16"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.4.16.tgz#bf19bc064e9acbd5aaf04f51f21b0f9adce0a5b7"
+  integrity sha512-eNoLNDSYTnOhT61XSwlAFqVhD6vS2VsYO6VZP51JwY04vhilkuwgEm4Aj1P+aKRO5f1tOtXi7/l9QPkbQDAb+g==
   dependencies:
     "@applitools/image" "1.0.1"
     "@applitools/logger" "1.1.16"
@@ -2923,11 +2906,6 @@ uuid@3.3.3:
   version "3.3.3"
   resolved "https://registry.npmjs.org/uuid/-/uuid-3.3.3.tgz"
   integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
-  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
