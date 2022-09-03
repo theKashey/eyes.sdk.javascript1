@@ -37,14 +37,6 @@ const DEVICES = {
       platformName: 'iOS',
       platformVersion: '15.2',
       deviceOrientation: 'portrait',
-      //processArguments: {
-      //  args: [],
-      //  env: {
-      //    DYLD_INSERT_LIBRARIES:
-      //      '@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib',
-      //    NML_API_KEY: process.env.APPLITOOLS_API_KEY_SDK,
-      //  },
-      //},
       ...SAUCE_CREDENTIALS,
     },
   },
