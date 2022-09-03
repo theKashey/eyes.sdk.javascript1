@@ -20,6 +20,9 @@ on:
 
 env:
   FORCE_COLOR: 3
+  APPLITOOLS_API_KEY: ${{secrets.APPLITOOLS_API_KEY}}
+  SAUCE_USERNAME: ${{secrets.SAUCE_USERNAME}}
+  SAUCE_ACCESS_KEY: ${{secrets.SAUCE_ACCESS_KEY}}
   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
 jobs:
