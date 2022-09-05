@@ -17,7 +17,8 @@
     "email": "team@applitools.com"
   },
   "aliases": [
-    "nml-client"
+    "nml-client",
+    "nml"
   ],
   "files": [
     "dist",

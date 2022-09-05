@@ -1,4 +1,4 @@
-name: Publish - nml-client
+name: Publish - nml client
 
 on:
   workflow_dispatch:

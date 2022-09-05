@@ -180,6 +180,7 @@ jobs:
     needs:
       [
         setup,
+        nml-client,
         driver,
         eg-client,
         logger,
@@ -228,6 +229,19 @@ jobs:
         with:
           workflow: publish-eg-client.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).eg-client.version}}"}'
+  nml-client:
+    needs: [ setup, req, utils, spec-selenium, test-utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).nml-client && !failure() && !cancelled()}}
+    name: nml-client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-nml-client.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).nml-client.version}}"}'
   universal:
     needs:
       [
