@@ -77,7 +77,6 @@ class DeviceName(Enum):
 class AndroidVersion(Enum):
     LATEST = "latest"
     ONE_VERSION_BACK = "latest-1"
-    TWO_VERSIONS_BACK = "latest-2"
 
 
 class IosVersion(Enum):
@@ -91,10 +90,7 @@ class AndroidDeviceName(Enum):
     Pixel_4_XL = "Pixel 4 XL"
     Pixel_5 = "Pixel 5"
     Pixel_6 = "Pixel 6"
-    Galaxy_Note_8 = "Galaxy Note 8"
     Galaxy_Note_9 = "Galaxy Note 9"
-    Galaxy_S8 = "Galaxy S8"
-    Galaxy_S8_Plus = "Galaxy S8 Plus"
     Galaxy_S9 = "Galaxy S9"
     Galaxy_S9_Plus = "Galaxy S9 Plus"
     Galaxy_S10 = "Galaxy S10"
