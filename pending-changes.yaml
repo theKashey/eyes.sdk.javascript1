@@ -10,7 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Add NML NMG support for iOS
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
