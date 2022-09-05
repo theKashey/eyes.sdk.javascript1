@@ -1,4 +1,4 @@
-## [vNext]
+## [5.11.0] - 2022-09-05
 ## Updated
 - Removed outdated android devices supported by Native Mobile Grid
 
