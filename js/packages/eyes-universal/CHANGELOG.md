@@ -10,6 +10,14 @@
 
 
 
+## 2.11.1 - 2022/9/7
+
+### Features
+- Dynamically include changelog entries in a release description and publish notifications to Slack
+- Added support for lazy loading views in android native apps
+- Add NML NMG support for iOS
+### Bug fixes
+
 ## 2.11.0 - 2022/9/7
 
 ### Features

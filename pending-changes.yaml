@@ -10,9 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Dynamically include changelog entries in a release description and publish notifications to Slack
-    - Added support for lazy loading views in android native apps
-    - Add NML NMG support for iOS
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
