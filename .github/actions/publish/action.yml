@@ -81,8 +81,9 @@ runs:
           echo "::notice::Publish tag - $TAG"
           echo "::set-output name=tag::$TAG"
         fi
-        yarn add @applitools/bongo
-        echo "::set-output name=changelog::$(npx bongo log --latest-changelog)"
+        yarn add @applitools/bongo 
+        CHANGELOG="$(npx bongo log --latest-changelog)"
+        echo "::set-output name=changelog::$CHANGELOG"
         echo "::endgroup::"
 
         echo "::group::Merge publish branch into ${{github.ref_name}}"
