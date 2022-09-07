@@ -10,6 +10,13 @@
 
 
 
+## 2.11.0 - 2022/9/7
+
+### Features
+- Dynamically include changelog entries in a release description and publish notifications to Slack
+- Added support for lazy loading views in android native apps
+### Bug fixes
+
 ## 2.10.9 - 2022/9/5
 
 ### Features
