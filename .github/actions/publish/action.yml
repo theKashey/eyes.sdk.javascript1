@@ -81,7 +81,7 @@ runs:
           echo "::notice::Publish tag - $TAG"
           echo "::set-output name=tag::$TAG"
         fi
-        CHANGELOG="$(yarn run --silent bongo log --latest-changelog)"
+        CHANGELOG="$(npx bongo log --latest-changelog)"
         if [ ! -z "$CHANGELOG" ]
         then
           echo "::set-output name=changelog::$CHANGELOG"
