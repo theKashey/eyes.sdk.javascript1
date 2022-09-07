@@ -85,7 +85,7 @@
     "semver": "7.3.7"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.1.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "^17.0.31",
