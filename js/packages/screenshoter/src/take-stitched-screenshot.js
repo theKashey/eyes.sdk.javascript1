@@ -14,6 +14,7 @@ async function takeStitchedScreenshot({
   wait,
   stabilization,
   debug,
+  lazyLoad,
 }) {
   logger.verbose('Taking full image of...')
 
@@ -30,7 +31,7 @@ async function takeStitchedScreenshot({
 
   await utils.general.sleep(wait)
 
-  const contentSize = await scroller.getContentSize()
+  const contentSize = await scroller.getContentSize({lazyLoad})
 
   logger.verbose(
     'preMoveOffset',

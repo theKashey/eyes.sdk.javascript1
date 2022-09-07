@@ -203,7 +203,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return region
   }
 
-  async getContentSize(): Promise<types.Size> {
+  async getContentSize(options: {lazyLoad?: types.LazyLoadOptions} = {}): Promise<types.Size> {
     if (this._state.contentSize) return this._state.contentSize
 
     const size = await this.withRefresh(async () => {
@@ -213,7 +213,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       } else {
         this._logger.log('Extracting content size of native element with selector', this.selector)
         try {
-          let contentRegion = await this.driver.helper?.getContentRegion(this)
+          let contentRegion = await this.driver.helper?.getContentRegion(this, options)
           this._logger.log('Extracted native content region using helper library', contentRegion)
 
           // on android extraction of this argument will perform non-deterministic touch action, so it is better to avoid it

@@ -149,11 +149,12 @@ class EyesClassic extends EyesCore {
         scale: this.getScaleRatio(),
         rotation: this.getRotation(),
       },
+      lazyLoad: this._checkSettings.lazyLoad,
     }
 
     const lazyLoadOptions = makeLazyLoadOptions(this._checkSettings.lazyLoad)
 
-    if (lazyLoadOptions) {
+    if (lazyLoadOptions && this._driver.isWeb) {
       this._logger.log('lazy loading the page before capturing a screenshot')
       const scripts = {
         main: {

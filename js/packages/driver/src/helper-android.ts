@@ -2,6 +2,8 @@ import type * as types from '@applitools/types'
 import {type Logger} from '@applitools/logger'
 import type {Driver} from './driver'
 import type {Element} from './element'
+import * as utils from '@applitools/utils'
+import semverGte from 'semver/functions/gte'
 
 export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
@@ -16,11 +18,23 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
       legacy = true
       input = await driver.element({type: 'xpath', selector: '//*[@content-desc="EyesAppiumHelper"]'})
     }
+    const versionElement = await driver.element({
+      type: 'xpath',
+      selector: '//*[@content-desc="EyesAppiumHelper_Version"]',
+    })
+    const version = (await versionElement?.getText()) ?? '0.0.0'
     const action = !legacy
       ? await driver.element({type: 'xpath', selector: '//*[@content-desc="EyesAppiumHelper_Action"]'})
       : null
     return input
-      ? new HelperAndroid<TDriver, TContext, TElement, TSelector>({spec, input, action, legacy, logger})
+      ? new HelperAndroid<TDriver, TContext, TElement, TSelector>({
+          spec,
+          input,
+          action,
+          legacy,
+          logger,
+          supportAsync: semverGte(version, '1.8.0'),
+        })
       : null
   }
 
@@ -28,6 +42,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   private readonly _input: Element<TDriver, TContext, TElement, TSelector>
   private readonly _action?: Element<TDriver, TContext, TElement, TSelector>
   private readonly _legacy: boolean
+  private readonly _supportAsync: boolean = false
   private _logger: Logger
 
   readonly name: 'android' | 'android-legacy'
@@ -38,6 +53,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     action?: Element<TDriver, TContext, TElement, TSelector>
     legacy: boolean
     logger?: any
+    supportAsync?: boolean
   }) {
     this._spec = options.spec
     this._input = options.input
@@ -45,6 +61,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     this._legacy = options.legacy
     this._logger = options.logger
     this.name = this._legacy ? 'android-legacy' : 'android'
+    this._supportAsync = options.supportAsync === true
   }
 
   private async _getElementId(element: Element<TDriver, TContext, TElement, TSelector>): Promise<string> {
@@ -61,33 +78,54 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
       await this._action.type('1').catch(() => null)
       text = await this._input.getText()
     }
+
+    // wait until the JAVA complete the async operation
+    const timeout = 5 * 60 * 1000
+    const finishAt = Date.now() + timeout
+    while (text === 'WAIT' && finishAt > Date.now()) {
+      await utils.general.sleep(1000)
+      text = await this._input.getText()
+    }
+    if (text === 'WAIT') {
+      this._logger.warn(`Helper library didn't provide a response for async command (${command}) during ${timeout}ms`)
+      text = null
+    }
+
     await this._input.type('')
     return text
   }
 
-  async getContentRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
+  async getContentRegion(
+    element: Element<TDriver, TContext, TElement, TSelector>,
+    options?: {lazyLoad?: types.LazyLoadOptions},
+  ): Promise<types.Region> {
+    const elementId = await this._getElementId(element)
+    if (!elementId) return null
+
     let contentHeightString
     if (this._legacy) {
       await this._input.click()
       contentHeightString = await this._input.getText()
+    } else if (this._supportAsync && options?.lazyLoad?.waitingTime) {
+      const result = await this._command(`offset_async;${elementId};0;0;0;${options?.lazyLoad?.waitingTime ?? 0}`)
+      contentHeightString = result.split(';')[0]
     } else {
-      const elementId = await this._getElementId(element)
-      if (!elementId) return null
-      contentHeightString = await this._command(`offset;${elementId};0;0;0`)
+      contentHeightString = await this._command(`'offset';${elementId};0;0;0;0`)
     }
 
-    const region = await this._spec.getElementRegion(this._input.driver.target, element.target)
     const contentHeight = Number(contentHeightString)
+    if (Number.isNaN(contentHeight)) return null
 
-    return !Number.isNaN(contentHeight) && contentHeight >= region.height
-      ? {x: region.x, y: region.y, width: region.width, height: contentHeight}
-      : null
+    const region = await this._spec.getElementRegion(this._input.driver.target, element.target)
+    if (contentHeight < region.height) return null
+
+    return {x: region.x, y: region.y, width: region.width, height: contentHeight}
   }
 
   async getTouchPadding(): Promise<number> {
     if (this._legacy) return null
 
-    const touchPaddingString = await this._command(`getTouchPadding;0;0;0;0`)
+    const touchPaddingString = await this._command(`getTouchPadding;0;0;0;0;0`)
 
     const touchPadding = Number(touchPaddingString)
     if (!touchPadding || Number.isNaN(touchPadding)) return null
@@ -100,7 +138,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    const regionString = await this._command(`getRect;${elementId};0;0`)
+    const regionString = await this._command(`getRect;${elementId};0;0;0`)
     if (!regionString) return null
     const [, x, y, height, width] = regionString.match(
       /\[(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?);(-?\d+(?:\.\d+)?)\]/,
@@ -116,7 +154,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._command(`moveToTop;${elementId};0;-1`)
+    await this._command(`moveToTop;${elementId};0;-1;0`)
   }
 
   async scrollBy(element: Element<TDriver, TContext, TElement, TSelector>, offset: types.Location): Promise<void> {
@@ -124,6 +162,6 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
     const elementId = await this._getElementId(element)
     if (!elementId) return null
-    await this._command(`scroll;${elementId};${offset.y};0;0`)
+    await this._command(`scroll;${elementId};${offset.y};0;0;0`)
   }
 }

@@ -37,8 +37,8 @@ function makeScroller({logger, element, scrollingMode = 'mixed'}) {
     if (scrollingMode === 'mixed+') return getShiftOffset(element)
   }
 
-  async function getContentSize() {
-    const size = await element.getContentSize()
+  async function getContentSize(options) {
+    const size = await element.getContentSize(options)
     return size
   }
 

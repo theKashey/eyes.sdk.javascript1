@@ -10,17 +10,19 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Added support for lazy loading views in android native apps
   bug-fix:
     - 
 "@applitools/eyes-selenium":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+    - Added support for lazy loading views in android native apps
   bug-fix:
     - 
 "@applitools/eyes-webdriverio":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+    - Added support for lazy loading views in android native apps
   bug-fix:
     - 
 "@applitools/eyes-playwright":
@@ -31,6 +33,7 @@ Apollo SDK:
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+    - Added support for lazy loading views in android native apps
   bug-fix:
     - 
 "@applitools/eyes-puppeteer":
@@ -46,6 +49,7 @@ Apollo SDK:
 "@applitools/eyes-nightwatch":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+    - Added support for lazy loading views in android native apps
   bug-fix:
     - 
 "@applitools/eyes-cypress":

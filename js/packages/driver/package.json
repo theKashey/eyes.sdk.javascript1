@@ -81,7 +81,8 @@
     "@applitools/logger": "1.1.16",
     "@applitools/snippets": "2.4.5",
     "@applitools/types": "1.5.9",
-    "@applitools/utils": "1.3.10"
+    "@applitools/utils": "1.3.10",
+    "semver": "7.3.7"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.1.6",

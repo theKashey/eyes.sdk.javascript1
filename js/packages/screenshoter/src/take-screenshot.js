@@ -22,6 +22,7 @@ async function takeScreenshot({
   hooks,
   debug,
   logger,
+  lazyLoad,
 }) {
   debug =
     debug ||
@@ -81,6 +82,7 @@ async function takeScreenshot({
             stabilization,
             debug,
             logger,
+            lazyLoad,
           })
         : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 

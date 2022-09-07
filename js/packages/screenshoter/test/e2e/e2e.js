@@ -94,7 +94,7 @@ exports.makeDriver = async function makeDriver({
   const iosSimulatorIds = process.env.IOS_SIMULATOR_UDID ? process.env.IOS_SIMULATOR_UDID.split(',') : []
   const apps = {
     android: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
-    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/1.3.6/app_androidx.apk',
+    androidx: 'https://applitools.jfrog.io/artifactory/Examples/androidx/helper_lib/1.8.4/app-androidx-debug.apk',
     ios: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
   }
 
@@ -132,8 +132,8 @@ exports.makeDriver = async function makeDriver({
     'android-sauce': {
       url: 'https://ondemand.us-west-1.saucelabs.com/wd/hub',
       capabilities: {
+        automationName: 'uiautomator2',
         name: 'Android screenshoter',
-        appiumVersion: '1.20.2',
         username: process.env.SAUCE_USERNAME,
         accessKey: process.env.SAUCE_ACCESS_KEY,
         browserName: app === 'chrome' ? app : '',
