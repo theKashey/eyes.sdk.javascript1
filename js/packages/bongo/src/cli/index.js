@@ -92,8 +92,7 @@ yargs
         } catch (error) {
           // no-op
         }
-      }
-      else await log(args)
+      } else await log(args)
     },
   )
   .command(
