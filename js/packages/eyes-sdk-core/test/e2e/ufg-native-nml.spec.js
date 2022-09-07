@@ -23,7 +23,6 @@ describe('UFG native NML', () => {
       }
       const eyes = await manager.openEyes({driver, config})
       await eyes.check()
-      await eyes.check()
       await eyes.close({throwErr: true})
     })
   })
@@ -49,7 +48,6 @@ describe('UFG native NML', () => {
       }
       const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
       const eyes = await manager.openEyes({driver, config})
-      await eyes.check()
       await eyes.check()
       await eyes.close({throwErr: true})
     })

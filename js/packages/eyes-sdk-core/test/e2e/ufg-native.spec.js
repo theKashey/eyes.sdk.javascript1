@@ -25,7 +25,6 @@ describe('UFG native', () => {
       }
       const eyes = await manager.openEyes({driver, config})
       await eyes.check()
-      await eyes.check()
       await eyes.close({throwErr: true})
     })
   })
@@ -50,7 +49,6 @@ describe('UFG native', () => {
       }
       const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
       const eyes = await manager.openEyes({driver, config})
-      await eyes.check()
       await eyes.check()
       await eyes.close({throwErr: true})
     })

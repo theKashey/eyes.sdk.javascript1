@@ -89,7 +89,7 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
       selector: 'UFG_TriggerArea',
       type: 'Button',
       timeout: 0,
-      throwErr: false,
+      throwErr: true,
     })
 
     if (driver.isAndroid) {
