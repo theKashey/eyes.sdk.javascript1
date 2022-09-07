@@ -10,6 +10,7 @@ const {
   verifyPendingChanges,
   writePendingChangesToChangelog,
   writeReleaseEntryToChangelog,
+  getLatestReleaseEntries,
 } = require('../changelog')
 const {packInstall, lsDryRun} = require('../dry-run')
 const {lint} = require('../lint')
@@ -82,9 +83,17 @@ yargs
       versionsBack: {alias: 'n', type: 'number', default: 3},
       listVersions: {alias: 'lsv', type: 'boolean'},
       splitByVersion: {alias: 'split', type: 'boolean', default: true},
+      'latest-changelog': {type: 'boolean', default: false},
     },
     async args => {
-      await log(args)
+      if (args['latest-changelog']) {
+        try {
+          console.log(getLatestReleaseEntries({targetFolder: args.cwd}).join('\n'))
+        } catch (error) {
+          // no-op
+        }
+      }
+      else await log(args)
     },
   )
   .command(

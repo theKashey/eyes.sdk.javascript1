@@ -114,7 +114,7 @@ describe('query-changelog', () => {
 
       - some more blah as well
     `
-    assert.deepStrictEqual(getLatestReleaseEntries(changelogContents), ['      - more blah'])
+    assert.deepStrictEqual(getLatestReleaseEntries({changelogContents}), ['      - more blah'])
   })
 })
 

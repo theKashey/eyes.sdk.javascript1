@@ -23,6 +23,9 @@ outputs:
   tag:
     description: name of the tag pushed after publishing
     value: ${{steps.publish.outputs.tag}}
+  changelog:
+    description: changelog entries for the latest package version
+    value: ${{steps.publish.outputs.changelog}}
 
 runs:
   using: composite
@@ -77,6 +80,11 @@ runs:
         then 
           echo "::notice::Publish tag - $TAG"
           echo "::set-output name=tag::$TAG"
+        fi
+        CHANGELOG="$(yarn run --silent bongo log --latest-changelog)"
+        if [ ! -z "$CHANGELOG" ]
+        then
+          echo "::set-output name=changelog::$CHANGELOG"
         fi
         echo "::endgroup::"
 

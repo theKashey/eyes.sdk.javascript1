@@ -1,5 +1,4 @@
 const path = require('path')
-const {readFileSync} = require('fs')
 const {convertSdkNameToReportName, sendNotification} = require('./send-report-util')
 const {getLatestReleaseEntries} = require('../changelog')
 
@@ -22,14 +21,13 @@ async function sendReleaseNotification(
 }
 
 module.exports = async (targetFolder, recipient) => {
-  const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
   const {name, version} = require(path.resolve(targetFolder, 'package.json'))
   const send = sendReleaseNotification.bind(
     undefined,
     {
       sdkName: convertSdkNameToReportName(name),
       sdkVersion: version,
-      changeLog: getLatestReleaseEntries(changelogContents).join('\n'),
+      changeLog: getLatestReleaseEntries({targetFolder}).join('\n'),
       testCoverageGap: 'TODO', // track in a file in the package, get it from there
     },
     recipient,

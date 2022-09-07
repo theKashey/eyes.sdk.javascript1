@@ -18,7 +18,12 @@ function getEntriesForHeading({changelogContents, targetHeading, includeHeading}
   return foundEntries
 }
 
-function getLatestReleaseEntries(changelogContents) {
+function getChangelogContents(targetFolder) {
+  return readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
+}
+
+function getLatestReleaseEntries({changelogContents, targetFolder}) {
+  if (!changelogContents) changelogContents = getChangelogContents(targetFolder)
   const targetHeading = getLatestReleaseHeading(changelogContents).heading
   const entries = getEntriesForHeading({changelogContents, targetHeading})
   return entries.map(entry => entry.entry)
@@ -43,7 +48,7 @@ function getReleaseNumberFromHeading(heading) {
 
 function verifyChangelog(targetFolder) {
   try {
-    const changelogContents = readFileSync(path.resolve(targetFolder, 'CHANGELOG.md'), 'utf8')
+    const changelogContents = getChangelogContents(targetFolder)
     const {version} = require(path.resolve(targetFolder, 'package.json'))
     verifyChangelogContents({changelogContents, version})
   } catch (error) {
