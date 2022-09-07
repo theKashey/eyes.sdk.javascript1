@@ -410,6 +410,12 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
         if (!options?.force && utils.geometry.equals(offset, currentScrollOffset)) return currentScrollOffset
 
+        if (this.driver.helper?.name === 'android' && utils.geometry.equals(offset, {x: 0, y: 0})) {
+          await this.driver.helper.scrollToTop(this)
+          this._state.scrollOffset = offset
+          return this._state.scrollOffset
+        }
+
         const contentSize = await this.getContentSize()
         const scrollableRegion = await this.getClientRegion()
 
@@ -418,12 +424,6 @@ export class Element<TDriver, TContext, TElement, TSelector> {
           y: Math.round(scrollableRegion.height * (contentSize.height / scrollableRegion.height - 1)),
         }
         const requiredOffset = {x: Math.min(offset.x, maxOffset.x), y: Math.min(offset.y, maxOffset.y)}
-
-        if (this.driver.helper?.name === 'android' && utils.geometry.equals(requiredOffset, {x: 0, y: 0})) {
-          await this.driver.helper.scrollToTop(this)
-          this._state.scrollOffset = requiredOffset
-          return this._state.scrollOffset
-        }
 
         let effectiveRegion = scrollableRegion
         let remainingOffset = utils.geometry.equals(requiredOffset, {x: 0, y: 0})
