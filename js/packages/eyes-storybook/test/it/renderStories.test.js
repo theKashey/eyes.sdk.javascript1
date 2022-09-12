@@ -9,7 +9,7 @@ const {delay} = require('@applitools/functional-commons');
 const logger = require('../util/testLogger');
 const puppeteer = require('puppeteer');
 const snap = require('@applitools/snaptdout');
-const getStoryTitle = require('../../src/getStoryTitle')
+const getStoryTitle = require('../../src/getStoryTitle');
 
 const waitForQueuedRenders = () => {};
 
@@ -266,7 +266,7 @@ describe('renderStories', () => {
       });
       const story = {name: 's1', kind: 'k1'};
       pagePool.addToPool((await pagePool.createPage()).pageId);
-      const title = getStoryTitle(story)
+      const title = getStoryTitle(story);
       const getStoryData = async () => {
         throw new Error(`timeout reached when trying to take DOM for story ${title}`);
       };
@@ -286,7 +286,7 @@ describe('renderStories', () => {
         stream,
         getClientAPI: () => {},
       });
-      
+
       const results = await renderStories([story], {hello: 'world'});
       expect(results[0].resultsOrErr.message).to.equal(
         `[page 0] Failed to get story data for \"k1: s1\". Error: timeout reached when trying to take DOM for story ${title}`,
