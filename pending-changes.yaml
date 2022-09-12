@@ -61,7 +61,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Prevent Eyes-Storybook from hanging when there is a failure to take DOM
 "@applitools/eyes-webdriverio5-service":
   feature:
     - Support UFG for native mobile

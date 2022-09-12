@@ -75,7 +75,12 @@ function makeRenderStories({
             }),
           );
 
-          if (error && /(Protocol error|Execution context was destroyed)/.test(error.message)) {
+          if (
+            error &&
+            /(Protocol error|Execution context was destroyed|timeout reached when trying to take DOM for story)/.test(
+              error.message,
+            )
+          ) {
             logger.log(
               `Puppeteer error from [page ${pageId}] while getting story data. Replacing page. ${error.message}`,
             );

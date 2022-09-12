@@ -23,7 +23,7 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const takeDomSnapshots = () => [
+    const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: ['url1'],
         blobs,
@@ -63,7 +63,7 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const takeDomSnapshots = () => [
+    const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: ['url1'],
         blobs,
@@ -103,7 +103,7 @@ describe('getStoryData', () => {
     const valueBuffer = Buffer.from('value');
     const blobs = [{url: 'url2', type: 'type', value: valueBuffer.toString('base64')}];
     const expectedResourceContents = {url2: {url: 'url2', type: 'type', value: valueBuffer}};
-    const takeDomSnapshots = () => [
+    const takeDomSnapshots = async () => [
       deserializeDomSnapshotResult({
         resourceUrls: ['url1'],
         blobs,
@@ -233,7 +233,7 @@ describe('getStoryData', () => {
     };
     const getStoryData = makeGetStoryData({
       logger,
-      takeDomSnapshots: () => [
+      takeDomSnapshots: async () => [
         deserializeDomSnapshotResult({
           resourceUrls: [],
           blobs: [],

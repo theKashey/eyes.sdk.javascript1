@@ -9,6 +9,7 @@ const {delay} = require('@applitools/functional-commons');
 const logger = require('../util/testLogger');
 const puppeteer = require('puppeteer');
 const snap = require('@applitools/snaptdout');
+const getStoryTitle = require('../../src/getStoryTitle')
 
 const waitForQueuedRenders = () => {};
 
@@ -253,6 +254,46 @@ describe('renderStories', () => {
 
     await snap(results[0].resultsOrErr.message, 'err message');
     await snap(getEvents().join(''), 'getStoryData err');
+  });
+
+  it('return Error in results with retry when reached to timeout on takeDomeSnapshots', async () => {
+    const browser = await puppeteer.launch();
+    try {
+      const page = await browser.newPage();
+      const pagePool = createPagePool({
+        logger,
+        initPage: async ({pageId}) => (pageId === 0 ? page : browser.newPage()),
+      });
+      const story = {name: 's1', kind: 'k1'};
+      pagePool.addToPool((await pagePool.createPage()).pageId);
+      const title = getStoryTitle(story)
+      const getStoryData = async () => {
+        throw new Error(`timeout reached when trying to take DOM for story ${title}`);
+      };
+
+      const renderStory = async arg => [{arg, getStatus: () => 'Passed'}];
+
+      const storybookUrl = 'http://something';
+      const {stream} = testStream();
+
+      const renderStories = makeRenderStories({
+        getStoryData,
+        waitForQueuedRenders,
+        pagePool,
+        renderStory,
+        storybookUrl,
+        logger,
+        stream,
+        getClientAPI: () => {},
+      });
+      
+      const results = await renderStories([story], {hello: 'world'});
+      expect(results[0].resultsOrErr.message).to.equal(
+        `[page 0] Failed to get story data for \"k1: s1\". Error: timeout reached when trying to take DOM for story ${title}`,
+      );
+    } finally {
+      await browser.close();
+    }
   });
 
   it('returns errors from renderStory', async () => {

@@ -8,6 +8,7 @@ const {URL} = require('url');
 const runRunAfterScript = require('../dist/runRunAfterScript');
 const waitFor = require('./waitFor');
 const PAGE_EVALUATE_TIMEOUT = 120000;
+const DOM_SNAPSHOTS_TIMEOUT = 5 * 60 * 1000;
 
 function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPagePerStory}) {
   return async function getStoryData({story, storyUrl, page, browser, waitBeforeStory}) {
@@ -23,9 +24,9 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
           const err = await ptimeoutWithError(
             page.evaluate(renderStoryWithClientAPI, story.index),
             PAGE_EVALUATE_TIMEOUT,
-            'page evaluate timed out!',
+            new Error('page evaluate timed out!'),
           );
-          logger.log(`[story data] done with page evaluate for story index: ${story.index}`);
+          logger.log(`[story data] done with page evaluate for story ${title}`);
           err && handleRenderStoryError(err);
         } catch (ex) {
           if (ex.message && !ex.message.includes('Eyes could not render stories properly'))
@@ -59,7 +60,7 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
 
     logger.log(`running takeDomSnapshot(s) for story ${title}`);
 
-    const result = await takeDomSnapshots({
+    const domSnapshotsPromise = takeDomSnapshots({
       page,
       browser,
       layoutBreakpoints: eyesParameters ? eyesParameters.layoutBreakpoints : undefined,
@@ -70,6 +71,14 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
           }
         : undefined,
     });
+
+    const result = await ptimeoutWithError(
+      domSnapshotsPromise,
+      DOM_SNAPSHOTS_TIMEOUT,
+      new Error(`timeout reached when trying to take DOM for story ${title}`),
+    );
+
+    logger.log(`done getting DOM for story ${title}`);
 
     if (eyesParameters && eyesParameters.runAfter) {
       await page.evaluate(runRunAfterScript, story.index).catch(err => {
