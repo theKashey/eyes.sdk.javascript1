@@ -606,6 +606,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   }
 
   async type(value: string): Promise<void> {
+    this._logger.log(`Typing text "${value}" in element with selector`, this.selector)
     await this._spec.type(this.context.target, this.target, value)
   }
 

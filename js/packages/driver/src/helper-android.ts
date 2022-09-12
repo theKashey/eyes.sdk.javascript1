@@ -110,7 +110,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
       const result = await this._command(`offset_async;${elementId};0;0;0;${options?.lazyLoad?.waitingTime ?? 0}`)
       contentHeightString = result.split(';')[0]
     } else {
-      contentHeightString = await this._command(`'offset';${elementId};0;0;0;0`)
+      contentHeightString = await this._command(`offset;${elementId};0;0;0;0`)
     }
 
     const contentHeight = Number(contentHeightString)
