@@ -3,6 +3,12 @@
 ## Unreleased
 
 
+## 3.29.4 - 2022/9/12
+
+### Features
+### Bug fixes
+- Prevent Eyes-Storybook from hanging when there is a failure to take DOM
+
 ## 3.29.3 - 2022/8/18
 
 ### Features
