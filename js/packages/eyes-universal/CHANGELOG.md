@@ -10,6 +10,12 @@
 
 
 
+## 2.11.2 - 2022/9/12
+
+### Features
+### Bug fixes
+- Sending correct commands with android helper lib
+
 ## 2.11.1 - 2022/9/7
 
 ### Features
