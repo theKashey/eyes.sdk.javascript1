@@ -70,15 +70,15 @@
     }
   },
   "dependencies": {
-    "@applitools/driver": "1.9.21",
-    "@applitools/eyes-sdk-core": "13.8.22",
+    "@applitools/driver": "1.9.26",
+    "@applitools/eyes-sdk-core": "13.8.26",
     "@applitools/functional-commons": "1.6.0",
     "@applitools/logger": "1.1.16",
     "@applitools/monitoring-commons": "1.0.19",
     "@applitools/spec-driver-puppeteer": "1.1.8",
     "@applitools/test-server": "1.1.4",
     "@applitools/utils": "1.3.10",
-    "@applitools/visual-grid-client": "15.13.16",
+    "@applitools/visual-grid-client": "15.13.21",
     "boxen": "4.2.0",
     "chalk": "3.0.0",
     "detect-port": "1.3.0",
@@ -90,7 +90,7 @@
     "yargs": "15.4.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.1.0",
     "@applitools/sdk-shared": "0.9.13",
     "@applitools/snaptdout": "^1.0.1",
