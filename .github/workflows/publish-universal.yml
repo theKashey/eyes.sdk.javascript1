@@ -41,7 +41,7 @@ jobs:
       branch: ${{steps.version.outputs.branch}}
       version: ${{steps.version.outputs.version}}
       tag: ${{steps.version.outputs.tag}}
-      changelog: ${{steps.version.outputs.changelog}}
+      changelog: ${{steps.publish.outputs.changelog}}
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3

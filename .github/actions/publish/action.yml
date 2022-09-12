@@ -83,6 +83,9 @@ runs:
         fi
         yarn add @applitools/bongo 
         CHANGELOG="$(npx bongo log --latest-changelog)"
+        CHANGELOG="${CHANGELOG//'%'/'%25'}"
+        CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+        CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
         echo "::set-output name=changelog::$CHANGELOG"
         echo "::endgroup::"
 
