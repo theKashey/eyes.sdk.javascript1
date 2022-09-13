@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed issue that prevented NMG from working when NML was enabled
 "@applitools/eyes-selenium":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.

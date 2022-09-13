@@ -27,7 +27,7 @@ describe('UFG native NML', () => {
     })
   })
 
-  describe.skip('iOS', () => {
+  describe('iOS', () => {
     const env = {
       device: 'iPhone 12',
       app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp-instrumented-nml-nmg-flat-caps.zip',
