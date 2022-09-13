@@ -10,6 +10,12 @@
 
 
 
+## 2.11.3 - 2022/9/13
+
+### Features
+### Bug fixes
+- Fixed issue that prevented NMG from working when NML was enabled
+
 ## 2.11.2 - 2022/9/12
 
 ### Features
