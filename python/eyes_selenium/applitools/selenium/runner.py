@@ -14,7 +14,7 @@ from applitools.common.config import DEFAULT_ALL_TEST_RESULTS_TIMEOUT
 
 from .__version__ import __version__
 from .command_executor import CommandExecutor, ManagerType
-from .universal_sdk_types import demarshal_close_manager_results, demarshal_server_info
+from .schema import demarshal_close_manager_results, demarshal_server_info
 
 if typing.TYPE_CHECKING:
     from typing import Optional, Union

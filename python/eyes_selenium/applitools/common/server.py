@@ -1,6 +1,13 @@
 from enum import Enum
 
-__all__ = ("SessionType", "FailureReports")
+import attr
+
+__all__ = ("SessionType", "FailureReports", "ServerInfo")
+
+
+@attr.s
+class ServerInfo(object):
+    logs_dir = attr.ib()
 
 
 class SessionType(Enum):

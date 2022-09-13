@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from collections import namedtuple
 from enum import Enum
 from typing import TYPE_CHECKING, List, Optional, Text, Tuple
 
@@ -15,8 +16,14 @@ from .ultrafastgrid import RenderBrowserInfo
 if TYPE_CHECKING:
     from . import ProxySettings
 
+__all__ = (
+    "TestResults",
+    "TestResultsStatus",
+    "TestResultsSummary",
+    "TestResultContainer",
+)
 
-__all__ = ("TestResults", "TestResultsSummary", "TestResultContainer")
+ConnectionConfig = namedtuple("ConnectionConfig", "server_url api_key proxy")
 
 
 class TestResultsStatus(Enum):
@@ -222,14 +229,14 @@ class TestResults(object):
 
     def set_connection_config(self, server_url, api_key, proxy_settings):
         # type: (Text, Text, Optional[ProxySettings]) -> None
-        self._connection_config = (server_url, api_key, proxy_settings)
+        self._connection_config = ConnectionConfig(server_url, api_key, proxy_settings)
 
     def delete(self):
         # type: () -> None
         from applitools.selenium.__version__ import __version__
         from applitools.selenium.command_executor import CommandExecutor
         from applitools.selenium.eyes import EyesRunner
-        from applitools.selenium.universal_sdk_types import marshal_delete_test_settings
+        from applitools.selenium.schema import marshal_delete_test_settings
 
         cmd = CommandExecutor.get_instance(EyesRunner.BASE_AGENT_ID, __version__)
         marshaled = marshal_delete_test_settings(self)

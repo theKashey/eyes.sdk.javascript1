@@ -21,7 +21,7 @@ from .command_executor import CommandExecutor
 from .fluent.selenium_check_settings import SeleniumCheckSettings
 from .fluent.target import Target
 from .runner import ClassicRunner, EyesRunner, log_session_results_and_raise_exception
-from .universal_sdk_types import (
+from .schema import (
     demarshal_locate_result,
     demarshal_match_result,
     demarshal_test_results,

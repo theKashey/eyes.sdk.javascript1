@@ -42,7 +42,7 @@ from .match import (  # noqa
     MatchResult,
 )
 from .selenium import StitchMode  # noqa
-from .server import FailureReports, SessionType  # noqa
+from .server import FailureReports, ServerInfo, SessionType  # noqa
 from .test_results import TestResultContainer, TestResults, TestResultsSummary  # noqa
 from .ultrafastgrid.config import (  # noqa
     AndroidDeviceName,

@@ -8,7 +8,7 @@ from pytest import raises
 from applitools.common.errors import USDKFailure
 from applitools.selenium.command_executor import CommandExecutor, ManagerType
 from applitools.selenium.connection import USDKConnection
-from applitools.selenium.universal_sdk_types import marshal_webdriver_ref
+from applitools.selenium.schema import marshal_webdriver_ref
 
 
 def test_usdk_commands_make_manager():

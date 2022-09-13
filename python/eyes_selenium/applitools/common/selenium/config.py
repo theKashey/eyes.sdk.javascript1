@@ -69,6 +69,9 @@ class Configuration(ConfigurationBase):
     dont_use_cookies = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, default=False
     )  # type: bool
+    dont_close_batches = attr.ib(
+        metadata={JsonInclude.NON_NONE: True}, default=True
+    )  # type: bool
     layout_breakpoints = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, default=None
     )  # type: Optional[Union[bool, List[int]]]

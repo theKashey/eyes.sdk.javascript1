@@ -8,7 +8,7 @@ from typing import Any, List, Optional, Text
 
 from ..common.errors import USDKFailure
 from .connection import USDKConnection
-from .universal_sdk_types import demarshal_error
+from .schema import demarshal_error
 
 logger = logging.getLogger(__name__)
 
