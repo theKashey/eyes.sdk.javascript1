@@ -68,7 +68,7 @@ async function takeVHSes({driver, browsers, apiKey, serverUrl, proxy, waitBefore
   const brokerURL = await getBrokerURL(driver)
   if (brokerURL) {
     log('taking NMG snapshot with NML')
-    const nmlSnapshot = await takeSnapshot(brokerURL)
+    const nmlSnapshot = await takeSnapshot(brokerURL, {proxy: proxy && proxy.toReqObject(), logger})
     const snapshot = {
       platformName: nmlSnapshot.resourceMap.metadata.platformName,
       vhsHash: nmlSnapshot.resourceMap.vhs,

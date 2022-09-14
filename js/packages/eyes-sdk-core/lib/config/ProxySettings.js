@@ -83,6 +83,17 @@ class ProxySettings {
     return this._isDisabled
   }
 
+  toReqObject() {
+    if (this._isDisabled) {
+      return false
+    }
+    return {
+      url: this._uri,
+      username: this._username || this._url.username,
+      password: this._password || this._url.password,
+    }
+  }
+
   /**
    * @return {{protocol: string, host: string, port: number, auth: {username: string, password: string}, isHttpOnly: boolean}|boolean}
    */

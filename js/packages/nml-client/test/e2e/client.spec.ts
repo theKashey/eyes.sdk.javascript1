@@ -2,6 +2,7 @@ import {takeScreenshot, takeSnapshot} from '../../src/client'
 import assert from 'assert'
 import selenium from 'selenium-webdriver'
 import spec from '@applitools/spec-driver-selenium'
+import {testProxyServer} from '@applitools/test-server'
 
 async function getBrokerURL(driver: any) {
   const element = await driver.findElement({
@@ -55,5 +56,22 @@ describe('e2e client', () => {
         }
       })
     }
+    it(`works with a proxy server`, async () => {
+      let proxyServer
+      const [driver, destroyDriver] = await spec.build({selenium, ...env['ios']})
+      try {
+        proxyServer = await testProxyServer()
+        const brokerURL = await getBrokerURL(driver)
+        const {resourceMap} = await takeSnapshot(brokerURL, {
+          proxy: {
+            url: `http://localhost:${proxyServer.port}`,
+          },
+        })
+        assert.deepStrictEqual(resourceMap.metadata.platformName, 'ios')
+      } finally {
+        await destroyDriver()
+        if (proxyServer) await proxyServer.close()
+      }
+    })
   })
 })

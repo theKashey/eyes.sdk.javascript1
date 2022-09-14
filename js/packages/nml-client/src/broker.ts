@@ -1,10 +1,11 @@
 import {req} from '@applitools/req'
 
-export async function publishMessageRequest(options: {url: string; payload: any}): Promise<any> {
+export async function publishMessageRequest(options: {url: string; payload: any; proxy?: any}): Promise<any> {
   const response = await req(options.url, {
     method: 'POST',
     body: options.payload,
     headers: {'Content-Type': 'application/json'},
+    proxy: options.proxy,
     hooks: {
       afterResponse: async (response: any) => {
         if (response.response.status != 200) return
@@ -54,10 +55,11 @@ export interface BrokerRequest {
   payload: ScreenshotSettings | SnapshotSettings
 }
 
-export async function broker(url: string, request: BrokerRequest) {
+export async function broker(url: string, request: BrokerRequest, options?: any) {
   const response = await publishMessageRequest({
     url,
     payload: request,
+    ...options,
   })
   const {payload} = await response.json()
   if (!payload || (payload && payload.error))

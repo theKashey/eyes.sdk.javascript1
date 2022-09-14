@@ -1,4 +1,5 @@
 const setupTests = require('./utils/core-e2e-utils')
+const {testProxyServer} = require('@applitools/test-server')
 
 describe('UFG native NML', () => {
   describe.skip('Android', () => {
@@ -49,7 +50,34 @@ describe('UFG native NML', () => {
       const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
       const eyes = await manager.openEyes({driver, config})
       await eyes.check()
+      await eyes.check()
       await eyes.close({throwErr: true})
+    })
+
+    it('works with proxy', async () => {
+      let proxyServer
+      try {
+        proxyServer = await testProxyServer()
+        const sdk = getSDK()
+        const driver = getDriver()
+        const config = {
+          appName: 'core app',
+          testName: 'native ufg ios nml',
+          waitBeforeCapture: 1500,
+          browsersInfo: [{iosDeviceInfo: {deviceName: 'iPhone 12', iosVersion: 'latest'}}],
+          saveNewTests: false,
+          proxy: {
+            url: `http://localhost:${proxyServer.port}`,
+          },
+        }
+        const manager = await sdk.makeManager({type: 'vg', concurrency: 5})
+        const eyes = await manager.openEyes({driver, config})
+        await eyes.check()
+        await eyes.check()
+        await eyes.close({throwErr: true})
+      } finally {
+        if (proxyServer) await proxyServer.close()
+      }
     })
   })
 })
