@@ -10,6 +10,12 @@
 
 
 
+## 2.12.0 - 2022/9/15
+
+### Features
+- Add proxy support when using NML for NMG
+### Bug fixes
+
 ## 2.11.3 - 2022/9/13
 
 ### Features
