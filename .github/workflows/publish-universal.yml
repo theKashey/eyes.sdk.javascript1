@@ -184,7 +184,7 @@ jobs:
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{needs.prepare.outputs.tag}}|${{needs.prepare.outputs.tag}}> 🎉 🎊 🥳\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{needs.prepare.outputs.tag}}|${{needs.prepare.outputs.tag}}> 🎉 🎊 🥳 \\n\\nChangelog:\\n\\n ${{steps.publish.outputs.changelog}}\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
