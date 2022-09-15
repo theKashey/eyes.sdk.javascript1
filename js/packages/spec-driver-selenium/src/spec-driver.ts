@@ -332,7 +332,7 @@ const browserOptionsNames: Record<string, string> = {
   chrome: 'goog:chromeOptions',
   firefox: 'moz:firefoxOptions',
 }
-export async function build({selenium, ...env}: any): Promise<[Driver, () => Promise<void>]> {
+export async function build({selenium, ...env}: any): Promise<[Driver & {__serverUrl?: string}, () => Promise<void>]> {
   const {Builder} = (selenium ?? require('selenium-webdriver')) as typeof Selenium
   const parseEnv = require('@applitools/test-utils/src/parse-env')
 
@@ -379,7 +379,8 @@ export async function build({selenium, ...env}: any): Promise<[Driver, () => Pro
       noProxy: proxy.bypass,
     })
   }
-  const driver = await builder.build()
+  const driver: Driver & {__serverUrl?: string} = await builder.build()
+  driver.__serverUrl = url
   return [driver, () => driver.quit()]
 }
 
