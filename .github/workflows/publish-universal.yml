@@ -184,7 +184,64 @@ jobs:
       - name: Send slack notification
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{needs.prepare.outputs.tag}}|${{needs.prepare.outputs.tag}}> 🎉 🎊 🥳 \\n\\nChangelog:\\n\\n ${{toJSON(steps.publish.outputs.changelog)}}\"}},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Binaries ZIP archive\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Download\",\"emoji\":true},\"url\":\"https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip\"}}]}"
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type":"section",
+                  "text": {"type": "mrkdwn", "text": "@channel *Universal SDK* has been released under the tag <https://github.com/applitools/eyes.sdk.javascript1/releases/tag/${{needs.prepare.outputs.tag}}|${{needs.prepare.outputs.tag}}> 🎉 🎊 🥳"}
+                },
+                {
+                  "type": "section",
+                  "text": {"type":"mrkdwn", "text": "Binaries ZIP archive"},
+                  "accessory": {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Download"},
+                    "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip"
+                  }
+                },
+                {"type": "divider"},
+                {
+                  "type": "header",
+                  "text": {"type": "plain_text", "text": "Changelog"}
+                },
+                {
+                  "type":"section",
+                  "text": {"type": "mrkdwn", "text": ${{toJSON(steps.publish.outputs.changelog)}}}
+                },
+                {"type": "divider"},
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "emoji": true, "text": "Download zip 🗃️"},
+                      "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal.zip"
+                    },
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "emoji": true, "text": "Download Mac 🍎"},
+                      "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal-macos"
+                    },
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "emoji": true, "text": "Download Linux 🐧"},
+                      "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal-linux"
+                    },
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "emoji": true, "text": "Download Windows 🪟"},
+                      "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal-win.exe"
+                    },
+                    {
+                      "type": "button",
+                      "text": {"type": "plain_text", "emoji": true, "text": "Download Alpine 🏔️"},
+                      "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal-alpine"
+                    },
+                  ]
+                },
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.UNIVERSAL_SLACK_WEBHOOK_URL}}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
