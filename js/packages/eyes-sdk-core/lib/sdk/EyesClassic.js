@@ -129,21 +129,21 @@ class EyesClassic extends EyesCore {
   async getScreenshot() {
     this._logger.log('getScreenshot()')
 
-    const lazyLoad = makeLazyLoadOptions(this._checkSettings.lazyLoad)
+    const lazyLoadOptions = makeLazyLoadOptions(this._checkSettings.lazyLoad)
     let wait = this._configuration.getWaitBeforeScreenshots()
 
-    // in case the user assign `lazyLoad.waitingTime` but didn't assign `waitBeforeScreenshots`
-    // the `lazyLoad.waitingTime` assign to `screenshotSettings.wait`.
+    // in case the user assign `lazyLoadOptions.waitingTime` but didn't assign `waitBeforeScreenshots`
+    // the `lazyLoadOptions.waitingTime` assign to `screenshotSettings.wait`.
     if (
-      lazyLoad &&
-      lazyLoad.waitingTime > 0 &&
+      lazyLoadOptions &&
+      lazyLoadOptions.waitingTime > 0 &&
       this._driver.isNative &&
       this._configuration.isDefualt('waitBeforeScreenshots')
     ) {
       this._logger.warn(
-        `lazyLoad.waitingTime assign without assigning waitBeforeScreenshots, assigning ${lazyLoad.waitingTime} to screenshotSettings.wait`,
+        `lazyLoadOptions.waitingTime assign without assigning waitBeforeScreenshots, assigning ${lazyLoadOptions.waitingTime} to screenshotSettings.wait`,
       )
-      wait = lazyLoad.waitingTime
+      wait = lazyLoadOptions.waitingTime
     }
 
     const screenshotSettings = {
@@ -166,22 +166,22 @@ class EyesClassic extends EyesCore {
         scale: this.getScaleRatio(),
         rotation: this.getRotation(),
       },
-      lazyLoad,
+      lazyLoad: lazyLoadOptions,
     }
 
-    if (lazyLoad && this._driver.isWeb) {
+    if (lazyLoadOptions && this._driver.isWeb) {
       this._logger.log('lazy loading the page before capturing a screenshot')
       const scripts = {
         main: {
           script: lazyLoad,
-          args: [[lazyLoad]],
+          args: [[lazyLoadOptions]],
         },
         poll: {
           script: lazyLoad,
           args: [[]],
         },
       }
-      await EyesUtils.executePollScript(this._logger, this._driver, scripts, {pollTimeout: lazyLoad.waitingTime})
+      await EyesUtils.executePollScript(this._logger, this._driver, scripts, {pollTimeout: lazyLoadOptions.waitingTime})
     }
 
     let dom
