@@ -12,7 +12,7 @@ export interface SpawnedServer {
   socket: Socket
 }
 
-export default function startServer({logger, cliType}: {logger: Logger; cliType: CliType}): Promise<SpawnedServer> {
+export default function startServer({logger}: {logger: Logger; cliType: CliType}): Promise<SpawnedServer> {
   const eyesUniversalArgs: Array<string> = ['--shutdown-mode', 'stdin']
   const spawnOptions: SpawnOptionsWithStdioTuple<StdioPipe, StdioPipe, StdioNull> = {
     detached: true,
@@ -27,28 +27,27 @@ export default function startServer({logger, cliType}: {logger: Logger; cliType:
 
   logger.log('wait for the server to response with port to connect')
   return new Promise((resolve, reject) => {
-    server.stdout.once('data', data => {
+    server.stdout?.once('data', data => {
       ;(server.stdout as ReadableWithRef).unref()
-      let port: string
       // TODO:
       // i don't like it, i think we should find a better way to pass the port through the child process `stdin`
       try {
-        port = data.toString().match(/\d+/)[0]
+        const port = data.toString().match(/\d+/)[0]
+        logger.log('server is spawned at port', port)
+        socket.connect(`http://localhost:${port}/eyes`)
+        socket.emit('Core.makeSDK', {
+          name: 'eyes-universal-tests',
+          version: require(path.resolve(process.cwd(), 'package.json')).version,
+          protocol: 'webdriver',
+          cwd: process.cwd(),
+        })
+
+        logger.log('resolving the server and the socket')
+        resolve({server: server, socket})
       } catch (e) {
         logger.error('could not parse the port input')
         reject('could not parse the port input')
       }
-      logger.log('server is spawned at port', port)
-      socket.connect(`http://localhost:${port}/eyes`)
-      socket.emit('Core.makeSDK', {
-        name: 'eyes-universal-tests',
-        version: require(path.resolve(process.cwd(), 'package.json')).version,
-        protocol: 'webdriver',
-        cwd: process.cwd(),
-      })
-
-      logger.log('resolving the server and the socket')
-      resolve({server: server, socket})
     })
   })
 }
