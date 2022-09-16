@@ -10,9 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Created testing client for eyes-universal
-    - Using `lazyLoad.waitingTime` as a delay between stitches by default
-    - Using proxy while polling for the result of the nml command
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":

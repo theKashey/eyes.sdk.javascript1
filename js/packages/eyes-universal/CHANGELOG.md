@@ -10,6 +10,14 @@
 
 
 
+## 2.12.1 - 2022/9/16
+
+### Features
+- Created testing client for eyes-universal
+- Using `lazyLoad.waitingTime` as a delay between stitches by default
+- Using proxy while polling for the result of the nml command
+### Bug fixes
+
 ## 2.12.0 - 2022/9/15
 
 ### Features
