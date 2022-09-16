@@ -237,9 +237,9 @@ jobs:
                       "type": "button",
                       "text": {"type": "plain_text", "emoji": true, "text": "Download Alpine 🏔️"},
                       "url": "https://github.com/applitools/eyes.sdk.javascript1/releases/download/${{needs.prepare.outputs.tag}}/eyes-universal-alpine"
-                    },
+                    }
                   ]
-                },
+                }
               ]
             }
         env:
