@@ -10,6 +10,12 @@
 
 
 
+## 2.12.3 - 2022/9/16
+
+### Features
+- Dummy changelog entry
+### Bug fixes
+
 ## 2.12.2 - 2022/9/16
 
 ### Features
