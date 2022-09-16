@@ -3,7 +3,7 @@ import * as assert from 'assert'
 import {Eyes} from '../utils/client/webdriver'
 import {VisualGridRunner} from '@applitools/eyes-api'
 
-describe('Universal client', () => {
+describe.skip('Universal client', () => {
   let driver: spec.Driver, destroyDriver: () => Promise<void>
   describe('Web', () => {
     beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('Universal client', () => {
     })
   })
 
-  describe.skip('Android', () => {
+  describe('Android', () => {
     beforeEach(async () => {
       ;[driver, destroyDriver] = await spec.build({
         device: 'Pixel 3 XL',
