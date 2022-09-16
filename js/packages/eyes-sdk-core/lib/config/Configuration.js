@@ -868,6 +868,10 @@ class Configuration {
   cloneConfig() {
     return new Configuration(this)
   }
+
+  isDefualt(key) {
+    return this.hasOwnProperty(`_${key}`) && typeof this[`_${key}`] === 'undefined'
+  }
 }
 
 module.exports = Configuration
