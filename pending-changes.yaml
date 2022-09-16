@@ -12,6 +12,7 @@ Apollo SDK:
   feature:
     - Created testing client for eyes-universal
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
+    - Using proxy while polling for the result of the nml command
   bug-fix:
     - 
 "@applitools/eyes-selenium":

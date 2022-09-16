@@ -10,6 +10,7 @@ export async function publishMessageRequest(options: {url: string; payload: any;
       afterResponse: async (response: any) => {
         if (response.response.status != 200) return
         return req(options.url + '-response', {
+          proxy: options.proxy,
           retry: [{statuses: [404]}],
         })
       },
