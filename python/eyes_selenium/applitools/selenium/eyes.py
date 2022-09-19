@@ -10,12 +10,14 @@ from six import string_types
 from applitools.common import (
     EyesError,
     FailureReports,
+    ProxySettings,
     RectangleSize,
     TestFailedError,
     deprecated,
 )
 from applitools.common.selenium import Configuration
 
+from ..common.utils.general_utils import get_env_with_prefix
 from .__version__ import __version__
 from .command_executor import CommandExecutor
 from .fluent.selenium_check_settings import SeleniumCheckSettings
@@ -235,6 +237,44 @@ class Eyes(object):
     def set_configuration(self, configuration):
         # type:(Configuration) -> None
         self.configure = configuration.clone()
+
+    @staticmethod
+    def set_nmg_capabilities(
+        caps,  # type: dict
+        api_key=None,  # type: Optional[Text]
+        eyes_server_url=None,  # type: Optional[Text]
+        proxy_settings=None,  # type: Optional[Union[Text, ProxySettings]]
+    ):
+        # type: (...) -> None
+        if not api_key:
+            api_key = get_env_with_prefix("APPLITOOLS_API_KEY")
+            if not api_key:
+                raise EyesError("No API key was given, or is an empty string.")
+        env_caps = {
+            "NML_API_KEY": api_key,
+        }
+
+        if not eyes_server_url:
+            eyes_server_url = get_env_with_prefix("APPLITOOLS_SERVER_URL")
+        if eyes_server_url:
+            env_caps["NML_SERVER_URL"] = eyes_server_url
+
+        if not proxy_settings:
+            proxy_settings = ProxySettings.from_env()
+        if proxy_settings:
+            env_caps["NML_PROXY_URL"] = proxy_settings.url
+
+        # for iOS
+        ios_env_caps = {
+            "DYLD_INSERT_LIBRARIES": "@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib"
+        }
+        ios_env_caps.update(env_caps)
+        caps["processArguments"] = {
+            "args": [],
+            "env": ios_env_caps,
+        }
+        # for Android
+        caps["optionalIntentArguments"] = {"--es APPLITOOLS": env_caps}
 
     @property
     def is_open(self):

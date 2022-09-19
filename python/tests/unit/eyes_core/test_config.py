@@ -1,6 +1,6 @@
 import pytest
 
-from applitools.common import Configuration, MatchLevel
+from applitools.common import Configuration, MatchLevel, ProxySettings
 from applitools.common.accessibility import (
     AccessibilityGuidelinesVersion,
     AccessibilityLevel,
@@ -41,3 +41,23 @@ def test_set_get_values_present_in_image_match_settings(config):
     config.accessibility_validation = a_setting
     assert config.accessibility_validation == a_setting
     assert config.default_match_settings.accessibility_settings == a_setting
+
+
+def test_set_get_proxy():
+    PROXY_URL = "http://localhost:8888"
+
+    config = Configuration()
+    config.set_proxy(PROXY_URL)
+    assert config.proxy.url == ProxySettings(PROXY_URL).url
+
+    config = Configuration()
+    config.set_proxy(ProxySettings(PROXY_URL))
+    assert config.proxy.url == ProxySettings(PROXY_URL).url
+
+
+def test_set_proxy_with_environment(monkeypatch):
+    PROXY_URL = "http://localhost:8888"
+    monkeypatch.setenv("APPLITOOLS_HTTP_PROXY", PROXY_URL)
+
+    config = Configuration()
+    assert config.proxy.url == ProxySettings(PROXY_URL).url

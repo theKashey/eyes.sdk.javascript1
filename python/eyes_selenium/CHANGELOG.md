@@ -1,5 +1,12 @@
+## [vNext]
+### Added
+- Add `Eyes.set_nmg_capabilities` for update capabilities with NMG related options [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
+- Add `APPLITOOLS_HTTP_PROXY` environment variable to set proxy address [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
+### Updated
+- Allow to pass HTTP proxy address as string into `Configuration.set_proxy` [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
+
 ## [5.11.0] - 2022-09-05
-## Updated
+### Updated
 - Removed outdated android devices supported by Native Mobile Grid
 
 ## [5.10.0] - 2022-08-03

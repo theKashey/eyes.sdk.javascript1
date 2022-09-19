@@ -11,15 +11,10 @@ from applitools.common.ultrafastgrid import (
 )
 from applitools.selenium import Eyes, VisualGridRunner
 
-IOS_UFGLIB = (
-    "@executable_path/Frameworks/UFG_lib.xcframework/"
-    "ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib"
-)
-
 
 @pytest.mark.sauce
 @pytest.mark.filterwarnings("ignore:desired_capabilities has been deprecated")
-def test_ufg_native_ios_basic(sauce_driver_url):
+def test_nmg_ios_basic(sauce_driver_url):
     caps = {
         "app": "https://applitools.jfrog.io/artifactory/"
         "Examples/DuckDuckGo-instrumented.app.zip",
@@ -27,11 +22,8 @@ def test_ufg_native_ios_basic(sauce_driver_url):
         "platformName": "iOS",
         "platformVersion": "15.2",
         "deviceOrientation": "portrait",
-        "processArguments": {
-            "args": [],
-            "env": {"DYLD_INSERT_LIBRARIES": IOS_UFGLIB},
-        },
     }
+    Eyes.set_nmg_capabilities(caps)
     with Remote(sauce_driver_url, caps) as driver:
         runner = VisualGridRunner()
         eyes = Eyes(runner)
@@ -49,7 +41,7 @@ def test_ufg_native_ios_basic(sauce_driver_url):
 
 @pytest.mark.skip("Skip until test working build of test app is available")
 @pytest.mark.sauce
-def test_ufg_android_basic(sauce_driver_url):
+def test_nmg_android_basic(sauce_driver_url):
     caps = {
         "app": "https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk",
         "deviceName": "Google Pixel 3a XL GoogleAPI Emulator",
@@ -61,6 +53,7 @@ def test_ufg_android_basic(sauce_driver_url):
         "name": "Pixel 3a xl (Python)",
         "appiumVersion": "1.20.2",
     }
+    Eyes.set_nmg_capabilities(caps)
     with Remote(sauce_driver_url, caps) as driver:
         runner = VisualGridRunner()
         eyes = Eyes(runner)

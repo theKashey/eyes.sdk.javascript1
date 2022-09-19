@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Set
 
 import attr
+import six
 from six.moves.urllib.parse import urlparse, urlunsplit
 
 from applitools.common import deprecated
@@ -129,6 +130,14 @@ class ProxySettings(object):
         port = ":{}".format(self.port) if self.port else ""
         return urlunsplit((self.scheme, auth + self.host + port, "", "", ""))
 
+    @classmethod
+    def from_env(cls):
+        # type: (ProxySettings) -> ProxySettings | None
+        url = get_env_with_prefix("APPLITOOLS_HTTP_PROXY")
+        if url:
+            return cls(url)
+        return None
+
 
 @attr.s
 class Configuration(object):
@@ -216,7 +225,7 @@ class Configuration(object):
         ),
     )  # type: Text
     _timeout = attr.ib(default=DEFAULT_SERVER_REQUEST_TIMEOUT_MS)  # type: int # ms
-    proxy = attr.ib(default=None)  # type: ProxySettings
+    proxy = attr.ib(factory=ProxySettings.from_env)  # type: ProxySettings | None
     save_debug_screenshots = attr.ib(default=False)  # type: bool
     debug_screenshots_path = attr.ib(
         converter=str, factory=lambda: get_env_with_prefix("DEBUG_SCREENSHOT_PATH", "")
@@ -493,9 +502,11 @@ class Configuration(object):
         return self
 
     def set_proxy(self, proxy):
-        # type: (Optional[ProxySettings]) -> Self
-        argument_guard.is_a(proxy, ProxySettings)
-        self.proxy = proxy
+        # type: (Optional[ProxySettings | Text]) -> Self
+        if isinstance(proxy, ProxySettings):
+            self.proxy = proxy
+        elif isinstance(proxy, six.string_types):
+            self.proxy = ProxySettings(proxy)
         return self
 
     def set_wait_before_capture(self, milliseconds):
