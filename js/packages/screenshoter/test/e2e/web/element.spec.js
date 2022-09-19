@@ -34,4 +34,15 @@ describe('screenshoter web', () => {
       logger,
     })
   })
+
+  it('take element screenshot after manual scroll with "scroll" scrolling', async () => {
+    await driver.execute(`document.querySelector('html').scrollTop = 200`)
+    await test({
+      type: 'web',
+      tag: 'element',
+      region: '#overflowing-div-image',
+      driver,
+      logger,
+    })
+  })
 })
