@@ -1,4 +1,4 @@
-## [vNext]
+## [5.12.0] - 2022-09-19
 ### Added
 - Add `Eyes.set_nmg_capabilities` for update capabilities with NMG related options [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
 - Add `APPLITOOLS_HTTP_PROXY` environment variable to set proxy address [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
