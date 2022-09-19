@@ -51,7 +51,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
         returnRegion = await element.getRegion()
       }
       const scroller = makeScroller({element: scrollingElement, scrollingMode, logger})
-      if (returnRegion && !(await scrollingElement.isRoot())) {
+      if (returnRegion && !element.driver.isNative && !(await scrollingElement.isRoot())) {
         const scrollerOffset = await scroller.getScrollOffset()
         returnRegion = utils.geometry.offset(returnRegion, scrollerOffset)
       }
