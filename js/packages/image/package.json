@@ -1,6 +1,6 @@
 {
   "name": "@applitools/image",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Image primitive used for capturing and manipulating screenshots",
   "homepage": "https://applitools.com",
   "bugs": {
