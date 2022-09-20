@@ -16,7 +16,7 @@ export function makeLocate({requests, logger: defaultLogger}: Options) {
     logger = defaultLogger,
   }: {
     target: Target
-    settings?: LocateSettings<TLocator>
+    settings: LocateSettings<TLocator>
     logger?: Logger
   }): Promise<Record<TLocator, Region[]>> {
     logger.log('Command "locate" is called with settings', settings)

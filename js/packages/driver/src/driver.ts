@@ -135,7 +135,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     const capabilities = await this._spec.getCapabilities?.(this.target)
     this._logger.log('Driver capabilities', capabilities)
 
-    const capabilitiesInfo = capabilities ? parseCapabilities(capabilities, this._customConfig) : undefined
+    const capabilitiesInfo = capabilities ? parseCapabilities(capabilities) : undefined
     const driverInfo = await this._spec.getDriverInfo?.(this.target)
 
     this._driverInfo = {...capabilitiesInfo, ...driverInfo}

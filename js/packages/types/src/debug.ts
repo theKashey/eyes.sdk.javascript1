@@ -21,12 +21,14 @@ export type LogHandler = CustomLogHandler | FileLogHandler | ConsoleLogHandler
 
 export type Logger = {
   isLogger: true
+  debug(...messages: any[]): void
   log(...messages: any[]): void
   warn(...messages: any[]): void
   error(...messages: any[]): void
   fatal(...messages: any[]): void
   verbose(...messages: any[]): void
   console: {
+    debug(...messages: any[]): void
     log(...messages: any[]): void
     warn(...messages: any[]): void
     error(...messages: any[]): void

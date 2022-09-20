@@ -88,7 +88,7 @@ describe('upload-resource', () => {
           return new Promise(resolve => queueMicrotask(resolve))
         },
       } as UFGRequests,
-      batchingTimeout: 10,
+      batchingTimeout: 50,
     })
 
     const resource1 = makeResource({url: 'url1', value: Buffer.from('content1')})
@@ -111,9 +111,9 @@ describe('upload-resource', () => {
     const puts = [] as Promise<void>[]
     puts.push(uploadResource({resource: domResource1}), uploadResource({resource: resource1}))
     puts.push(uploadResource({resource: domResource2}), uploadResource({resource: resource2}))
-    await utils.general.sleep(10)
+    await utils.general.sleep(50)
     puts.push(uploadResource({resource: domResource2}), uploadResource({resource: resource3}))
-    await utils.general.sleep(5)
+    await utils.general.sleep(25)
     puts.push(
       uploadResource({resource: domResource1}),
       uploadResource({resource: resource1}),
