@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {rename, rm, mkdir} from 'fs/promises'
+import {renameSync, rmdirSync, mkdirSync} from 'fs'
 import {resolve, join} from 'path'
 import {extractBranchingTimestamp} from '../../src/utils/extract-branching-timestamp'
 import * as utils from '@applitools/utils'
@@ -14,11 +14,11 @@ describe('extract branching timestamp', () => {
 
     before(async () => {
       // make a valid repo
-      await rename(join(repoDir, '.git-fake'), join(repoDir, '.git'))
+      renameSync(join(repoDir, '.git-fake'), join(repoDir, '.git'))
     })
 
     after(async () => {
-      await rename(join(repoDir, '.git'), join(repoDir, '.git-fake'))
+      renameSync(join(repoDir, '.git'), join(repoDir, '.git-fake'))
     })
 
     it('works and caches response', async () => {
@@ -34,11 +34,13 @@ describe('extract branching timestamp', () => {
     const repoDir = resolve('./test/fixtures/git-remote-repo')
 
     afterEach(async () => {
-      await rm(repoDir, {recursive: true, force: true})
+      try {
+        await rmdirSync(repoDir, {recursive: true})
+      } catch {}
     })
 
     beforeEach(async () => {
-      await mkdir(repoDir)
+      await mkdirSync(repoDir)
     })
 
     it('fetches missing parent branch', async () => {
@@ -76,7 +78,7 @@ describe('extract branching timestamp', () => {
       )
       await assert.rejects(
         extractBranchingTimestamp({parentBranchName: 'no-there', branchName: 'some-branch-name'}, {cwd: repoDir}),
-        err => err.message.includes('fatal: --unshallow on a complete repository does not make sense'),
+        (error: Error) => error.message.includes('fatal: --unshallow on a complete repository does not make sense'),
       )
     })
   })

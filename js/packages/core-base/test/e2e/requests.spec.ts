@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {readFile} from 'fs/promises'
+import {readFileSync} from 'fs'
 import {getTestInfo} from '@applitools/test-utils'
 import {makeCoreRequests, type CoreRequests} from '../../src/server/requests'
 
@@ -28,7 +28,7 @@ describe('requests', () => {
 
     await eyes.check({
       target: {
-        image: await readFile('./test/fixtures/screenshot.png'),
+        image: readFileSync('./test/fixtures/screenshot.png'),
       },
       settings: {
         ignoreRegions: [{x: 0, y: 0, width: 100, height: 100}],

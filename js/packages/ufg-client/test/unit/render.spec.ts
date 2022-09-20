@@ -153,9 +153,9 @@ describe('render', () => {
     )
     await utils.general.sleep(50)
     renders.push(render({request: createRenderRequest('page4')}))
-    await utils.general.sleep(17)
+    await utils.general.sleep(30)
     renders.push(render({request: createRenderRequest('page5')}))
-    await utils.general.sleep(17)
+    await utils.general.sleep(30)
     renders.push(render({request: createRenderRequest('page6')}))
     await Promise.all(renders)
 
