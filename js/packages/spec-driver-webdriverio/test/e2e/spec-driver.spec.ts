@@ -560,7 +560,7 @@ describe('spec driver', async () => {
       value: 'world',
       domain: input?.context ? '.applitools.github.io' : 'google.com',
       path: '/',
-      expiry: 4025208067,
+      expiry: Math.floor((Date.now() + 60000) / 1000),
       httpOnly: true,
       secure: true,
     }

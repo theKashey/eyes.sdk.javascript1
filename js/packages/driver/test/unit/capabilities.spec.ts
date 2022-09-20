@@ -1126,7 +1126,7 @@ describe('capabilities', () => {
     assert.deepStrictEqual(driverInfo, {
       browserName: undefined,
       browserVersion: undefined,
-      platformName: 'Android', // THIS IS THE IMPORTANT PART (it was capitalized because keepPlatformNameAsIs was not set)
+      platformName: 'android',
       platformVersion: '7.0',
       deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
       displaySize: {height: 2220, width: 1080},
@@ -1175,7 +1175,7 @@ describe('capabilities', () => {
     const driverInfo = parseCapabilities({
       deviceName: 'iPhone 8',
       platformVersion: '11.0',
-      platformName: 'ios', // THIS IS THE IMPORTANT PART
+      platformName: 'ios',
       orientation: 'PORTRAIT',
       pixelRatio: 2,
     })
@@ -1183,7 +1183,7 @@ describe('capabilities', () => {
       browserName: undefined,
       browserVersion: undefined,
       deviceName: 'iPhone 8',
-      platformName: 'iOS', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
+      platformName: 'ios',
       platformVersion: '11.0',
       displaySize: undefined,
       orientation: 'portrait',
