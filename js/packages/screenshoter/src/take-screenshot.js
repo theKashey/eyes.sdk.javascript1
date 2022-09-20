@@ -64,57 +64,58 @@ async function takeScreenshot({
     if (driver.isWeb && hideScrollbars) await target.scroller.hideScrollbars()
   }
 
-  try {
-    // TODO: identify spot in this function to call to takeScreenshot in the nml-client
-    // if running on native mobile and the user has enabled NML
-    if (!window && !driver.isNative) await scrollIntoViewport({...target, logger})
+  if (!window && !driver.isNative) await scrollIntoViewport({...target, logger})
 
-    if (fully && !target.region && target.scroller) await target.scroller.moveTo({x: 0, y: 0})
+  if (fully && !target.region && target.scroller) await target.scroller.moveTo({x: 0, y: 0})
 
-    const screenshot =
-      fully && target.scroller
-        ? await takeStitchedScreenshot({
-            ...target,
-            withStatusBar,
-            overlap,
-            framed,
-            wait,
-            stabilization,
-            debug,
-            logger,
-            lazyLoad,
-          })
-        : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
+  const screenshot =
+    fully && target.scroller
+      ? await takeStitchedScreenshot({
+          ...target,
+          withStatusBar,
+          overlap,
+          framed,
+          wait,
+          stabilization,
+          debug,
+          logger,
+          lazyLoad,
+        })
+      : await takeSimpleScreenshot({...target, withStatusBar, wait, stabilization, debug, logger})
 
-    screenshot.image.scale(driver.viewportScale)
+  screenshot.image.scale(driver.viewportScale)
 
-    const caltulatedRegions = await extractCoodinatesForSelectorsAndElements({regionsToCalculate, screenshot, context})
+  const calculatedRegions = await extractCoodinatesForSelectorsAndElements({regionsToCalculate, screenshot, context})
 
-    if (hooks && hooks.afterScreenshot) {
-      await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
-    }
+  if (hooks && hooks.afterScreenshot) {
+    await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})
+  }
 
-    return {screenshot, caltulatedRegions}
-  } finally {
-    if (target.scroller) {
-      await target.scroller.restoreScrollbars()
-      await target.scroller.restoreState()
-    }
-
-    // if there was active element and we have blurred it, then restore focus
-    if (activeElement) await context.focusElement(activeElement)
-
-    // traverse from target context to the main context to restore scrollbars and context states
-    for (const prevContext of context.path.reverse()) {
-      const scrollingElement = await prevContext.getScrollingElement()
-      if (scrollingElement) {
-        if (driver.isWeb && hideScrollbars) await scrollingElement.restoreScrollbars()
-        await scrollingElement.restoreState()
+  return {
+    ...screenshot,
+    scrollingElement: target.scroller && target.scroller.element,
+    calculatedRegions,
+    async restoreState() {
+      if (target.scroller) {
+        await target.scroller.restoreScrollbars()
+        await target.scroller.restoreState()
       }
-    }
 
-    // restore focus on original active context
-    await activeContext.focus()
+      // if there was active element and we have blurred it, then restore focus
+      if (activeElement) await context.focusElement(activeElement)
+
+      // traverse from target context to the main context to restore scrollbars and context states
+      for (const prevContext of context.path.reverse()) {
+        const scrollingElement = await prevContext.getScrollingElement()
+        if (scrollingElement) {
+          if (driver.isWeb && hideScrollbars) await scrollingElement.restoreScrollbars()
+          await scrollingElement.restoreState()
+        }
+      }
+
+      // restore focus on original active context
+      await activeContext.focus()
+    },
   }
 }
 

@@ -1,4 +1,4 @@
-import {spawn, SpawnOptions} from 'child_process'
+import {exec, ExecOptions, spawn, SpawnOptions} from 'child_process'
 import {existsSync} from 'fs'
 
 function makeError(error: string | Error, properties: Record<string, any>) {
@@ -89,5 +89,17 @@ export async function sh(command: string, options?: {spawnOptions?: SpawnOptions
       shell,
       ...options?.spawnOptions,
     },
+  })
+}
+
+export async function execute(
+  command: string,
+  options?: ExecOptions,
+): Promise<{stdout: string; stderr: string; code: number}> {
+  return new Promise(resolve => {
+    exec(command, options, (error, stdout, stderr) => {
+      if (error) resolve({stdout, stderr, code: error.code})
+      resolve({stdout, stderr, code: 0})
+    })
   })
 }

@@ -28,7 +28,7 @@
     "email": "team@applitools.com"
   },
   "aliases": [
-    "core"
+    "core-legacy"
   ],
   "exports": {
     ".": {
@@ -77,40 +77,26 @@
     }
   },
   "dependencies": {
-    "@applitools/dom-capture": "11.1.2",
-    "@applitools/dom-snapshot": "4.6.2",
+    "@applitools/core": "link:../core",
     "@applitools/driver": "1.9.26",
     "@applitools/execution-grid-client": "1.1.24",
     "@applitools/isomorphic-fetch": "3.0.0",
-    "@applitools/logger": "1.1.16",
-    "@applitools/nml-client": "1.1.1",
-    "@applitools/screenshoter": "3.5.1",
-    "@applitools/snippets": "2.4.5",
-    "@applitools/types": "1.5.9",
     "@applitools/utils": "1.3.10",
-    "axios": "0.26.0",
-    "chalk": "3.0.0",
-    "tunnel": "0.0.6"
+    "chalk": "3"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.1.0",
-    "@applitools/sdk-fake-eyes-server": "2.1.3",
-    "@applitools/spec-driver-selenium": "1.3.19",
+    "@applitools/snippets": "^2.4.5",
+    "@applitools/spec-driver-selenium": "1.3.17",
     "@applitools/test-server": "^1.1.4",
     "@applitools/test-utils": "1.5.1",
-    "@applitools/visual-grid-client": "15.14.0",
-    "chai": "4.2.0",
-    "chai-uuid": "1.0.6",
     "eslint": "^8.16.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "http-proxy": "^1.18.1",
     "husky": "^4.3.8",
     "mocha": "^10.0.0",
-    "nock": "^13.0.4",
-    "png-async": "^0.9.4",
     "prettier": "2.6.2",
     "selenium-webdriver": "^4.2.0"
   },

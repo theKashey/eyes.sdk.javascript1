@@ -1,3 +1,4 @@
+import type {Proxy} from '@applitools/types'
 import {parse as urlToHttpOptions} from 'url' // should be replaced with `urlToHttpOptions` after supporting node >=16
 import {AbortController} from 'abort-controller'
 import {Agent as HttpsAgent} from 'https'
@@ -6,6 +7,8 @@ import globalFetch, {Request, Response} from 'node-fetch'
 import * as utils from '@applitools/utils'
 
 const stop = Symbol('stop retry')
+
+export type Fetch = typeof globalFetch
 
 export type Options = {
   /**
@@ -40,7 +43,7 @@ export type Options = {
    * Proxy settings for the request. Auth credentials specified in the object will override ones specified in url
    * @example {url: 'http://localhost:2107', username: 'kyrylo', password: 'pass'}
    */
-  proxy?: {url: string; username: string; password: string}
+  proxy?: Proxy | ((url: URL) => Proxy)
   /**
    * Connection timeout in ms
    * @example 7000
@@ -57,7 +60,7 @@ export type Options = {
    * @see Hooks
    */
   hooks?: Hooks | Hooks[]
-  fetch?: typeof globalFetch
+  fetch?: Fetch
 }
 
 export type Retry = {
@@ -93,7 +96,19 @@ export type Retry = {
   attempt?: number
 }
 
-export type Hooks = {
+export type Hooks<TOptions extends Options = Options> = {
+  /**
+   * Hook that will be executed after options are merged, it will not be executed if no merge takes place
+   * @example
+   * ```
+   * {
+   *   afterOptionsMerged({options}) {
+   *      options.timeout = 0
+   *   }
+   * }
+   * ```
+   */
+  afterOptionsMerged?(options: {options: TOptions}): TOptions | void
   /**
    * Hook that will be executed before sending the request, after all, modifications of the `Request` object are already passed
    * @example
@@ -105,7 +120,7 @@ export type Hooks = {
    * }
    * ```
    */
-  beforeRequest?(options: {request: Request; options: Options}): Request | void | Promise<Request | void>
+  beforeRequest?(options: {request: Request; options: TOptions}): Request | void | Promise<Request | void>
   /**
    * Hook that will be executed before retrying the request. If this hook will return {@link req.stop}
    * it will prevent request from retrying and execution of other hooks
@@ -126,7 +141,7 @@ export type Hooks = {
     stop: typeof stop
     response?: Response
     error?: Error
-    options: Options
+    options: TOptions
   }): Request | typeof stop | void | Promise<Request | void | typeof stop>
   /**
    * Hook that will be executed after getting the final response of the request (after all of the retries)
@@ -139,7 +154,7 @@ export type Hooks = {
    * }
    * ```
    */
-  afterResponse?(options: {request: Request; response: Response; options: Options}): Response | void | Promise<Response | void>
+  afterResponse?(options: {request: Request; response: Response; options: TOptions}): Response | void | Promise<Response | void>
   /**
    * Hook that will be executed after request will throw an error
    * @example
@@ -151,14 +166,16 @@ export type Hooks = {
    * }
    * ```
    */
-  afterError?(options: {request: Request; error: Error; options: Options}): Error | void | Promise<Error | void>
+  afterError?(options: {request: Request; error: Error; options: TOptions}): Error | void | Promise<Error | void>
 }
+
+export type Req<TOptions extends Options = Options> = (input: string | URL | Request, options?: TOptions) => Promise<Response>
 
 /**
  * Helper function that will properly merge two {@link Options} objects
  */
 export function mergeOptions<TOptions extends Options>(baseOption: TOptions, options: TOptions): TOptions {
-  return {
+  const mergedOptions = {
     ...baseOption,
     ...options,
     query: {...baseOption.query, ...options?.query},
@@ -166,13 +183,15 @@ export function mergeOptions<TOptions extends Options>(baseOption: TOptions, opt
     retry: [...(baseOption.retry ? [].concat(baseOption.retry) : []), ...(options?.retry ? [].concat(options.retry) : [])],
     hooks: [...(baseOption.hooks ? [].concat(baseOption.hooks) : []), ...(options?.hooks ? [].concat(options.hooks) : [])],
   }
+
+  return mergedOptions.hooks.reduce((options, hooks) => hooks.afterOptionsMerged?.({options}) || options, mergedOptions)
 }
 
 /**
  * Helper function that will create {@link req} function with predefined options
  * @example const req = makeReq({baseUrl: 'http://localhost:2107'})
  */
-export function makeReq(baseOption?: Options): typeof req {
+export function makeReq<TOptions extends Options = Options>(baseOption?: Partial<Options>): Req<TOptions> {
   return (location, options) => req(location, mergeOptions(baseOption, options))
 }
 
@@ -189,20 +208,20 @@ export async function req(input: string | URL | Request, options?: Options): Pro
     ((options?.hooks as Hooks[]) ?? []).reduce(async (request, hooks) => {
       request = await request
       const result = (await hooks.beforeRequest?.({request, ...rest})) || null
-      return result?.clone() ?? request
+      return result ?? request
     }, request as Request | Promise<Request>)
   const beforeRetry = ({request, ...rest}: Parameters<Hooks['beforeRetry']>[0]) =>
     ((options?.hooks as Hooks[]) ?? []).reduce(async (request, hooks) => {
       request = await request
       if (request === stop) return request
       const result = (await hooks.beforeRetry?.({request, ...rest})) || null
-      return result === stop ? result : result?.clone() ?? request
+      return result === stop ? result : result ?? request
     }, request as Request | typeof stop | Promise<Request | typeof stop>)
   const afterResponse = ({response, ...rest}: Parameters<Hooks['afterResponse']>[0]) =>
     ((options?.hooks as Hooks[]) ?? [])?.reduce(async (response, hooks) => {
       response = await response
       const result = (await hooks.afterResponse?.({response, ...rest})) || null
-      return result?.clone() ?? response
+      return result ?? response
     }, response as Response | Promise<Response>)
   const afterError = ({error, ...rest}: Parameters<Hooks['afterError']>[0]) =>
     ((options?.hooks as Hooks[]) ?? [])?.reduce(async (error, hooks) => {
@@ -221,12 +240,16 @@ export async function req(input: string | URL | Request, options?: Options): Pro
   let request = new Request(url, {
     method: options?.method ?? (input as Request).method,
     headers: {...options?.headers, ...Object.fromEntries((input as Request).headers?.entries() ?? [])},
-    body: utils.types.isPlainObject(options?.body) ? JSON.stringify(options.body) : options?.body ?? (input as Request).body,
+    body:
+      utils.types.isPlainObject(options?.body) || utils.types.isArray(options?.body)
+        ? JSON.stringify(options.body)
+        : options?.body ?? (input as Request).body,
     agent: url => {
-      if (options?.proxy) {
-        const proxyUrl = new URL(options.proxy.url)
-        proxyUrl.username = options.proxy.username ?? proxyUrl.username
-        proxyUrl.password = options.proxy.password ?? proxyUrl.password
+      const proxy = utils.types.isFunction(options?.proxy) ? options.proxy(url) : options?.proxy
+      if (proxy) {
+        const proxyUrl = new URL(proxy.url)
+        proxyUrl.username = proxy.username ?? proxyUrl.username
+        proxyUrl.password = proxy.password ?? proxyUrl.password
         const agent = new ProxyAgent({...urlToHttpOptions(proxyUrl.href), rejectUnauthorized: false} as any)
         const originalCallback = agent.callback.bind(agent)
         agent.callback = (request, options, callback?: any) =>
@@ -239,7 +262,7 @@ export async function req(input: string | URL | Request, options?: Options): Pro
     signal: controller.signal,
   })
 
-  request = await beforeRequest({request: request.clone(), options})
+  request = await beforeRequest({request, options})
   const timer = options?.timeout > 0 ? setTimeout(() => controller.abort(), options.timeout) : null
   try {
     let response = await fetch(request)
@@ -247,8 +270,8 @@ export async function req(input: string | URL | Request, options?: Options): Pro
     // if the request has to be retried due to status code
     const retry = (options?.retry as Retry[])?.find(
       retry =>
-        (retry.statuses?.includes(response.status) && (!retry.limit || !retry.attempt || retry.attempt < retry.limit)) ||
-        retry.validate?.({response}),
+        (retry.statuses?.includes(response.status) || retry.validate?.({response})) &&
+        (!retry.limit || !retry.attempt || retry.attempt < retry.limit),
     )
     if (retry) {
       retry.attempt ??= 0
@@ -257,26 +280,20 @@ export async function req(input: string | URL | Request, options?: Options): Pro
       await utils.general.sleep(delay)
       retry.attempt += 1
 
-      const retryRequest = await beforeRetry({
-        request: request.clone(),
-        response: response.clone(),
-        attempt: retry.attempt,
-        stop,
-        options,
-      })
+      const retryRequest = await beforeRetry({request, response, attempt: retry.attempt, stop, options})
       if (retryRequest !== stop) {
         return req(retryRequest, options)
       }
     }
 
-    response = await afterResponse({request: request.clone(), response: response.clone(), options})
+    response = await afterResponse({request, response, options})
     return response
   } catch (error) {
     // if the request has to be retried due to network error
     const retry = (options?.retry as Retry[])?.find(
       retry =>
-        (retry.codes?.includes(error.code) && (!retry.limit || !retry.attempt || retry.attempt < retry.limit)) ||
-        retry.validate?.({error}),
+        (retry.codes?.includes(error.code) || retry.validate?.({error})) &&
+        (!retry.limit || !retry.attempt || retry.attempt < retry.limit),
     )
     if (retry) {
       retry.attempt ??= 0
@@ -286,7 +303,7 @@ export async function req(input: string | URL | Request, options?: Options): Pro
       await utils.general.sleep(delay)
       retry.attempt = retry.attempt + 1
 
-      const retryRequest = await beforeRetry({request: request.clone(), error, attempt: retry.attempt, stop, options})
+      const retryRequest = await beforeRetry({request, error, attempt: retry.attempt, stop, options})
       if (retryRequest !== stop) {
         return req(retryRequest, options)
       }
@@ -298,7 +315,5 @@ export async function req(input: string | URL | Request, options?: Options): Pro
     clearTimeout(timer)
   }
 }
-
-export type Req = typeof req
 
 export default req

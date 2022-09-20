@@ -8,7 +8,7 @@ import type {
 import type {Driver as WDDriver, Element as WDElement, Selector as WDSelector} from './spec-driver/webdriver'
 import os from 'os'
 import path from 'path'
-import {makeSDK, checkSpecDriver} from '@applitools/eyes-sdk-core'
+import {makeCore, checkSpecDriver} from '@applitools/core'
 import {makeLogger} from '@applitools/logger'
 import {makeHandler, type HandlerOptions} from './handler'
 import {makeSocket, type Socket} from './socket'
@@ -16,7 +16,6 @@ import {makeRefer} from './refer'
 import {withTracker} from './debug/tracker'
 import {makeSpec} from './spec-driver/custom'
 import * as webdriverSpec from './spec-driver/webdriver'
-import {abort} from './universal-server-eyes-commands'
 
 const LOG_DIRNAME = process.env.APPLITOOLS_LOG_DIR ?? path.resolve(os.tmpdir(), `applitools-logs`)
 
@@ -107,72 +106,71 @@ export async function makeServer({
       return {logsDir: LOG_DIRNAME}
     })
 
-    const sdkPromise = socket.create('Core.makeSDK', ({name, version, cwd, commands, protocol}) => {
-      const spec = protocol === 'webdriver' ? webdriverSpec : makeSpec({socket, commands})
-      return makeSDK<
+    const sdkPromise = socket.create('Core.makeCore', ({name, version, cwd, commands, protocol}) => {
+      return makeCore<
         CustomDriver | WDDriver,
         CustomContext | WDDriver,
         CustomElement | WDElement,
         CustomSelector | WDSelector
       >({
-        name: `eyes-universal/${name}`,
-        version: `${require('../package.json').version}/${version}`,
+        spec: protocol === 'webdriver' ? webdriverSpec : makeSpec({socket, commands}),
+        agentId: `eyes-universal/${name}/${require('../package.json').version}/${version}`,
         cwd,
-        spec,
-        VisualGridClient: require('@applitools/visual-grid-client'),
       })
     })
 
-    socket.command('Core.makeManager', async config => {
+    socket.command('Core.makeManager', async options => {
       const sdk = await sdkPromise
-      const managerRef = refer.ref(await sdk.makeManager(config))
+      const managerRef = refer.ref(await sdk.makeManager(options))
       return managerRef
     })
-    socket.command('Core.getViewportSize', async ({driver}) => {
+    socket.command('Core.getViewportSize', async ({target}) => {
       const sdk = await sdkPromise
-      return sdk.getViewportSize({logger, driver})
+      return sdk.getViewportSize({target, logger})
     })
-    socket.command('Core.setViewportSize', async ({driver, size}) => {
+    socket.command('Core.setViewportSize', async ({target, size}) => {
       const sdk = await sdkPromise
-      return sdk.setViewportSize({logger, driver, size})
+      return sdk.setViewportSize({target, size, logger})
     })
-    socket.command('Core.closeBatches', async ({settings}) => {
+    socket.command('Core.closeBatch', async ({settings}) => {
       const sdk = await sdkPromise
-      return sdk.closeBatches({logger, settings})
+      return sdk.closeBatch({settings, logger})
     })
     socket.command('Core.deleteTest', async ({settings}) => {
       const sdk = await sdkPromise
-      return sdk.deleteTest({logger, settings})
+      return sdk.deleteTest({settings, logger})
     })
 
-    socket.command('EyesManager.openEyes', async ({manager, driver, config}) => {
-      const eyes = await refer.deref(manager).openEyes({logger, driver, config})
+    socket.command('EyesManager.openEyes', async ({manager, target, settings, config}) => {
+      const eyes = await refer.deref(manager)?.openEyes({target, settings, config, logger})
       const eyesRef = refer.ref(eyes, manager)
       return eyesRef
     })
-    socket.command('EyesManager.closeManager', async ({manager, throwErr}) => {
-      return refer.deref(manager).closeManager({throwErr})
+    socket.command('EyesManager.closeManager', async ({manager, settings}) => {
+      return refer.deref(manager)?.closeManager({settings, logger})
     })
 
-    socket.command('Eyes.check', async ({eyes, settings, config, driver}) => {
-      return refer.deref(eyes).check({settings, config, driver})
+    socket.command('Eyes.check', async ({eyes, target, settings, config}) => {
+      return refer.deref(eyes)?.check({target, settings, config, logger})
     })
-    socket.command('Eyes.locate', async ({eyes, settings, config}) => {
-      return refer.deref(eyes).locate({settings, config})
+    socket.command('Eyes.locate', async ({eyes, target, settings, config}) => {
+      return refer.deref(eyes)?.locate({target, settings, config, logger})
     })
-    socket.command('Eyes.extractTextRegions', async ({eyes, settings, config}) => {
-      return refer.deref(eyes).extractTextRegions({settings, config})
+    socket.command('Eyes.locateText', async ({eyes, target, settings, config}) => {
+      return refer.deref(eyes)?.locateText({target, settings, config, logger})
     })
-    socket.command('Eyes.extractText', async ({eyes, regions, config}) => {
-      return refer.deref(eyes).extractText({regions, config})
+    socket.command('Eyes.extractText', async ({eyes, target, settings, config}) => {
+      return refer.deref(eyes)?.extractText({target, settings, config, logger})
     })
-    socket.command('Eyes.close', async ({eyes, throwErr}) => {
-      const results = await refer.deref(eyes).close({throwErr})
+    socket.command('Eyes.close', async ({eyes, settings, config}) => {
+      const results = await refer.deref(eyes)?.close({settings, config, logger})
       refer.destroy(eyes)
       return results
     })
     socket.command('Eyes.abort', async ({eyes}) => {
-      return await abort({eyes, refer})
+      const results = refer.deref(eyes)?.abort()
+      refer.destroy(eyes)
+      return results
     })
 
     socket.command('Debug.checkSpecDriver', async ({driver, commands}) => {

@@ -32,7 +32,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: ['12', '14', '16']
+        node-version: ['12', '14', '16', '18']
     name: 'Test (node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
       - name: Run tests
         uses: ./.github/actions/tests
         with:
-          working-directory: ./js/packages/visual-grid-client
+          working-directory: ./js/packages/ufg-client
   publish:
     needs: [test]
     name: Publish
@@ -64,5 +64,5 @@ jobs:
       - name: Publish to NPM
         uses: ./.github/actions/publish
         with:
-          working-directory: ./js/packages/visual-grid-client
+          working-directory: ./js/packages/ufg-client
           version: ${{inputs.version || github.event.inputs.version}}

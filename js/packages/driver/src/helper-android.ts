@@ -97,7 +97,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
 
   async getContentRegion(
     element: Element<TDriver, TContext, TElement, TSelector>,
-    options?: {lazyLoad?: types.LazyLoadOptions},
+    options?: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}},
   ): Promise<types.Region> {
     const elementId = await this._getElementId(element)
     if (!elementId) return null

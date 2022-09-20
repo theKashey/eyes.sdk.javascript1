@@ -1,6 +1,6 @@
 {
   "name": "@applitools/types",
-  "version": "1.5.9",
+  "version": "1.5.11",
   "keywords": [
     "applitools",
     "eyes",
@@ -32,6 +32,18 @@
     ".": {
       "types": "./types/index.d.ts"
     },
+    "./base": {
+      "types": "./types/core-base.d.ts"
+    },
+    "./classic": {
+      "types": "./types/core-classic.d.ts"
+    },
+    "./ufg": {
+      "types": "./types/core-ufg.d.ts"
+    },
+    "./types/*": {
+      "types": "./types/*.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "types": "./types/index.d.ts",
@@ -50,7 +62,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "1.1.0",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^5.27.0",

@@ -7,7 +7,7 @@ export function getEnvValue<T extends 'boolean' | 'number' | 'string' = 'string'
   if (!process) return
   const value = process.env[`APPLITOOLS_${name}`]
   if (value === undefined || value === 'null') return
-  if (type === 'boolean' && types.isBoolean(value)) return (value === 'true') as any
+  if (type === 'boolean') return ['true', true, '1', 1].includes(value) as any
   if (type === 'number') return Number(value) as any
   return value as any
 }
@@ -72,6 +72,79 @@ export function toJSON(object: Record<PropertyKey, any>, props?: string[] | Reco
 
 export function toString(object: Record<PropertyKey, any>): string {
   return `${this.constructor.name} ${JSON.stringify(object, null, 2)}`
+}
+
+export function toUnAnchoredUri(url: string): string {
+  const [, result = url] = url.match(/(^[^#]*)/) ?? []
+  return result?.replace(/\?\s*$/, '?')
+}
+
+export function toUriEncoding(url: string): string {
+  return url.replace(/(\\[0-9a-fA-F]{1,6}\s?)/g, s => {
+    return String.fromCodePoint(Number.parseInt(s.substring(1).trim(), 16))
+  })
+}
+
+export function absolutizeUrl(url: string, baseUrl: string): string {
+  return new URL(url, baseUrl).href
+}
+
+export function cachify<TFunc extends (...args: any[]) => any>(
+  func: TFunc,
+  getKey?: (args: Parameters<TFunc>) => any,
+): TFunc & {clearCache(): void; getCachedValues(): ReturnType<TFunc>[]} {
+  const cache = new Map<string, ReturnType<TFunc>>()
+  const funcWithCache = ((...args: Parameters<TFunc>) => {
+    const key = JSON.stringify(getKey?.(args) ?? args, (_, t) => (typeof t === 'function' ? t.toString() : t))
+    let value = cache.get(key)
+    if (!value) {
+      value = func(...args)
+      cache.set(key, value)
+    }
+    return value
+  }) as TFunc & {clearCache(): void; getCachedValues(): ReturnType<TFunc>[]}
+  funcWithCache.clearCache = () => cache.clear()
+  funcWithCache.getCachedValues = () => Array.from(cache.values())
+  return funcWithCache
+}
+
+export function batchify<
+  TFunc extends (batch: [TInput, {resolve(result?: TResult): void; reject(reason?: any): void}][]) => Promise<void>,
+  TInput = Parameters<TFunc>[0][number][0],
+  TResult = Parameters<Parameters<TFunc>[0][number][1]['resolve']>[0],
+>(func: TFunc, {timeout}: {timeout: number}): (input: Parameters<TFunc>[0][number][0]) => Promise<TResult> {
+  let pendingInputs = new Map<TInput, {resolve(result?: TResult): void; reject(reason?: any): void}>()
+  let throttleTimer = false
+  return function (input: TInput): Promise<TResult> {
+    return new Promise(async (resolve, reject) => {
+      pendingInputs.set(input, {resolve, reject})
+      if (!throttleTimer) {
+        throttleTimer = true
+        setTimeout(() => {
+          func(Array.from(pendingInputs.entries()))
+          pendingInputs = new Map()
+          throttleTimer = false
+        }, timeout)
+      }
+    })
+  }
+}
+
+export function wrap<TFunc extends (...args: any[]) => any>(
+  func: TFunc,
+  wrapper: (func: TFunc, ...args: Parameters<TFunc>) => ReturnType<TFunc>,
+): TFunc {
+  return ((...args: Parameters<TFunc>) => wrapper(func, ...args)) as TFunc
+}
+
+export function extend<TTarget extends Record<PropertyKey, any>, TExtension extends Record<PropertyKey, any>>(
+  target: TTarget,
+  extension: TExtension,
+): TTarget & TExtension {
+  return Object.defineProperties({} as any, {
+    ...Object.getOwnPropertyDescriptors(target),
+    ...Object.getOwnPropertyDescriptors(extension),
+  })
 }
 
 export function pluralize(object: [] | number, config?: [manyCase: string, singleCase: string]): string {

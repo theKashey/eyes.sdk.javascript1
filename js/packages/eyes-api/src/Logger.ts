@@ -9,7 +9,7 @@ import {
   NullLogHandlerData,
 } from './input/LogHandler'
 
-export class Logger implements logger.Logger {
+export class Logger {
   private _logger: logger.Logger
   private _handler: LogHandler
   private _show: boolean
@@ -42,11 +42,6 @@ export class Logger implements logger.Logger {
       this._label = loggerOrOptionsOrShow.label
       this._handler = loggerOrOptionsOrShow.handler
     }
-  }
-
-  /** @internal */
-  get console() {
-    return this._logger.console
   }
 
   getLogHandler(): LogHandlerData {

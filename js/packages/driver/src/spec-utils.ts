@@ -23,6 +23,7 @@ export function isCommonSelector<TSelector>(
   return (
     utils.types.isPlainObject(selector) &&
     utils.types.has(selector, 'selector') &&
+    Object.keys(selector).every(key => ['selector', 'type', 'frame', 'shadow'].includes(key)) &&
     (utils.types.isString(selector.selector) || spec.isSelector(selector.selector))
   )
 }

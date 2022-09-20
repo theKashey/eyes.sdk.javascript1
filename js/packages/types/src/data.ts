@@ -21,10 +21,9 @@ export type Proxy = {
   isHttpOnly?: boolean
 }
 
-export type AutProxy = {
-  proxy: Proxy
+export type AutProxy = Proxy & {
+  mode?: 'Allow' | 'Block'
   domains?: string[]
-  AUTProxyMode?: 'Allow' | 'Block'
 }
 
 export type CustomProperty = {
@@ -176,6 +175,8 @@ export type ChromeEmulationDeviceRenderer = {
 }
 
 export type IOSDevice =
+  | 'iPhone 14 Pro Max'
+  | 'iPhone 14'
   | 'iPhone 13 Pro Max'
   | 'iPhone 13 Pro'
   | 'iPhone 13'
@@ -204,7 +205,7 @@ export type IOSVersion = 'latest' | 'latest-1'
 export type IOSDeviceRenderer = {
   iosDeviceInfo: {
     deviceName: IOSDevice
-    iosVersion?: IOSVersion
+    version?: IOSVersion
     screenOrientation?: ScreenOrientation
   }
 }
@@ -246,101 +247,8 @@ export type AndroidDeviceRenderer = {
     screenOrientation?: ScreenOrientation
   }
 }
-export type BrowserInfoRenderer =
+export type Renderer =
   | DesktopBrowserRenderer
   | ChromeEmulationDeviceRenderer
   | IOSDeviceRenderer
   | AndroidDeviceRenderer
-
-export type MatchResult = {
-  readonly asExpected?: boolean
-  readonly windowId?: number
-}
-
-export type TestResult = {
-  readonly id?: string
-  readonly name?: string
-  readonly secretToken?: string
-  readonly status?: TestResultsStatus
-  readonly appName?: string
-  readonly batchId?: string
-  readonly batchName?: string
-  readonly branchName?: string
-  readonly hostOS?: string
-  readonly hostApp?: string
-  readonly hostDisplaySize?: Size
-  readonly accessibilityStatus?: {
-    readonly level: AccessibilityLevel
-    readonly version: AccessibilityGuidelinesVersion
-    readonly status: AccessibilityStatus
-  }
-  readonly startedAt?: Date | string
-  readonly duration?: number
-  readonly isNew?: boolean
-  readonly isDifferent?: boolean
-  readonly isAborted?: boolean
-  readonly appUrls?: SessionUrls
-  readonly apiUrls?: SessionUrls
-  readonly stepsInfo?: StepInfo[]
-  readonly steps?: number
-  readonly matches?: number
-  readonly mismatches?: number
-  readonly missing?: number
-  readonly exactMatches?: number
-  readonly strictMatches?: number
-  readonly contentMatches?: number
-  readonly layoutMatches?: number
-  readonly noneMatches?: number
-  readonly url?: string
-}
-
-export type StepInfo = {
-  readonly name?: string
-  readonly isDifferent?: boolean
-  readonly hasBaselineImage?: boolean
-  readonly hasCurrentImage?: boolean
-  readonly appUrls?: AppUrls
-  readonly apiUrls?: ApiUrls
-  readonly renderId?: string[]
-}
-
-export type ApiUrls = {
-  readonly baselineImage?: string
-  readonly currentImage?: string
-  readonly checkpointImage?: string
-  readonly checkpointImageThumbnail?: string
-  readonly diffImage?: string
-}
-
-export type AppUrls = {
-  readonly step?: string
-  readonly stepEditor?: string
-}
-
-export type SessionUrls = {
-  readonly batch?: string
-  readonly session?: string
-}
-
-export type LazyLoadOptions = {
-  scrollLength?: number
-  waitingTime?: number
-  maxAmountToScroll?: number
-}
-
-export type TestResultContainer = {
-  readonly exception?: Error
-  readonly testResults?: TestResult
-  readonly browserInfo?: BrowserInfoRenderer
-}
-
-export type TestResultSummary = {
-  results: TestResultContainer[]
-  passed: number
-  unresolved: number
-  failed: number
-  exceptions: number
-  mismatches: number
-  missing: number
-  matches: number
-}

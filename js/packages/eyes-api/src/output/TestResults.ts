@@ -1,4 +1,4 @@
-import type {Mutable} from '@applitools/utils'
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import {TestResultsStatus, TestResultsStatusEnum} from '../enums/TestResultsStatus'
 import {RectangleSize, RectangleSizeData} from '../input/RectangleSize'
@@ -39,356 +39,359 @@ export type TestResults = {
   readonly url?: string
 }
 
-export type DeleteTestFunc = (options: {testId: string; batchId: string; secretToken: string}) => Promise<void>
-
 export class TestResultsData implements Required<TestResults> {
-  private _results: Mutable<TestResults> = {} as any
-  private readonly _deleteTest: DeleteTestFunc
+  private _result: types.TestResult<'classic' | 'ufg'> = {}
+  private readonly _deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
 
   /** @internal */
-  constructor(results?: TestResults, deleteTest?: DeleteTestFunc) {
-    this._deleteTest = deleteTest
-    if (!results) return this
-    this._results = results instanceof TestResultsData ? results.toJSON() : results
+  constructor(options?: {
+    result?: types.TestResult<'classic' | 'ufg'>
+    deleteTest?: types.Core<unknown, unknown, unknown>['deleteTest']
+  }) {
+    if (!options) return this
+    this._deleteTest = options.deleteTest
+    this._result = options.result
   }
 
   get id(): string {
-    return this._results.id
+    return this._result.id
   }
   getId(): string {
     return this.id
   }
   /** @deprecated */
-  setId(id: string) {
-    this._results.id = id
+  setId(_id: string) {
+    // DEPRECATED
   }
 
   get name(): string {
-    return this._results.name
+    return this._result.name
   }
   getName(): string {
     return this.name
   }
   /** @deprecated */
-  setName(name: string) {
-    this._results.name = name
+  setName(_name: string) {
+    // DEPRECATED
   }
 
   get secretToken(): string {
-    return this._results.secretToken
+    return this._result.secretToken
   }
   getSecretToken(): string {
     return this.secretToken
   }
   /** @deprecated */
-  setSecretToken(secretToken: string) {
-    this._results.secretToken = secretToken
+  setSecretToken(_secretToken: string) {
+    // DEPRECATED
   }
 
   get status(): TestResultsStatus {
-    return this._results.status
+    return this._result.status
   }
   getStatus(): TestResultsStatusEnum {
     return this.status as TestResultsStatusEnum
   }
   /** @deprecated */
-  setStatus(status: TestResultsStatusEnum) {
-    this._results.status = status
+  setStatus(_status: TestResultsStatusEnum) {
+    // DEPRECATED
   }
 
   get appName(): string {
-    return this._results.appName
+    return this._result.appName
   }
   getAppName(): string {
     return this.appName
   }
   /** @deprecated */
-  setAppName(appName: string) {
-    this._results.appName = appName
+  setAppName(_appName: string) {
+    // DEPRECATED
   }
 
   get batchName(): string {
-    return this._results.batchName
+    return this._result.batchName
   }
   getBatchName(): string {
     return this.batchName
   }
   /** @deprecated */
-  setBatchName(batchName: string) {
-    this._results.batchName = batchName
+  setBatchName(_batchName: string) {
+    // DEPRECATED
   }
 
   get batchId(): string {
-    return this._results.batchId
+    return this._result.batchId
   }
   getBatchId(): string {
     return this.batchId
   }
   /** @deprecated */
-  setBatchId(batchId: string) {
-    this._results.batchId = batchId
+  setBatchId(_batchId: string) {
+    // DEPRECATED
   }
 
   get branchName(): string {
-    return this._results.batchName
+    return this._result.batchName
   }
   getBranchName(): string {
     return this.branchName
   }
   /** @deprecated */
-  setBranchName(branchName: string) {
-    this._results.branchName = branchName
+  setBranchName(_branchName: string) {
+    // DEPRECATED
   }
 
   get hostOS(): string {
-    return this._results.hostOS
+    return this._result.hostOS
   }
   getHostOS(): string {
     return this.hostOS
   }
   /** @deprecated */
-  setHostOS(hostOS: string) {
-    this._results.hostOS = hostOS
+  setHostOS(_hostOS: string) {
+    // DEPRECATED
   }
 
   get hostApp(): string {
-    return this._results.hostApp
+    return this._result.hostApp
   }
   getHostApp(): string {
     return this.hostApp
   }
   /** @deprecated */
-  setHostApp(hostApp: string) {
-    this._results.hostApp = hostApp
+  setHostApp(_hostApp: string) {
+    // DEPRECATED
   }
 
   get hostDisplaySize(): RectangleSize {
-    return this._results.hostDisplaySize
+    return this._result.hostDisplaySize
   }
   getHostDisplaySize(): RectangleSizeData {
     return new RectangleSizeData(this.hostDisplaySize)
   }
   /** @deprecated */
-  setHostDisplaySize(hostDisplaySize: RectangleSize) {
-    this._results.hostDisplaySize = hostDisplaySize
+  setHostDisplaySize(_hostDisplaySize: RectangleSize) {
+    // DEPRECATED
   }
 
   get accessibilityStatus(): TestAccessibilityStatus {
-    return this._results.accessibilityStatus
+    return this._result.accessibilityStatus
   }
   getAccessibilityStatus(): TestAccessibilityStatus {
     return this.accessibilityStatus
   }
   /** @deprecated */
-  setAccessibilityStatus(accessibilityStatus: TestAccessibilityStatus) {
-    this._results.accessibilityStatus = accessibilityStatus
+  setAccessibilityStatus(_accessibilityStatus: TestAccessibilityStatus) {
+    // DEPRECATED
   }
 
   get startedAt(): Date | string {
-    return this._results.startedAt
+    return this._result.startedAt
   }
   getStartedAt(): Date {
     return new Date(this.startedAt)
   }
   /** @deprecated */
-  setStartedAt(startedAt: Date | string) {
-    this._results.startedAt = startedAt
+  setStartedAt(_startedAt: Date | string) {
+    // DEPRECATED
   }
 
   get duration(): number {
-    return this._results.duration
+    return this._result.duration
   }
   getDuration(): number {
     return this.duration
   }
   /** @deprecated */
-  setDuration(duration: number) {
-    this._results.duration = duration
+  setDuration(_duration: number) {
+    // DEPRECATED
   }
 
   get isNew(): boolean {
-    return this._results.isNew
+    return this._result.isNew
   }
   getIsNew(): boolean {
     return this.isNew
   }
   /** @deprecated */
-  setIsNew(isNew: boolean) {
-    this._results.isNew = isNew
+  setIsNew(_isNew: boolean) {
+    // DEPRECATED
   }
 
   get isDifferent(): boolean {
-    return this._results.isDifferent
+    return this._result.isDifferent
   }
   getIsDifferent(): boolean {
     return this.isDifferent
   }
   /** @deprecated */
-  setIsDifferent(isDifferent: boolean) {
-    this._results.isDifferent = isDifferent
+  setIsDifferent(_isDifferent: boolean) {
+    // DEPRECATED
   }
 
   get isAborted(): boolean {
-    return this._results.isAborted
+    return this._result.isAborted
   }
   getIsAborted(): boolean {
     return this.isAborted
   }
   /** @deprecated */
-  setIsAborted(isAborted: boolean) {
-    this._results.isAborted = isAborted
+  setIsAborted(_isAborted: boolean) {
+    // DEPRECATED
   }
 
   get appUrls(): SessionUrls {
-    return this._results.appUrls
+    return this._result.appUrls
   }
   getAppUrls(): SessionUrlsData {
     return new SessionUrlsData(this.appUrls)
   }
   /** @deprecated */
-  setAppUrls(appUrls: SessionUrls) {
-    this._results.appUrls = appUrls
+  setAppUrls(_appUrls: SessionUrls) {
+    // DEPRECATED
   }
 
   get apiUrls(): SessionUrls {
-    return this._results.apiUrls
+    return this._result.apiUrls
   }
   getApiUrls(): SessionUrlsData {
     return new SessionUrlsData(this.apiUrls)
   }
   /** @deprecated */
-  setApiUrls(apiUrls: SessionUrls) {
-    this._results.apiUrls = apiUrls
+  setApiUrls(_apiUrls: SessionUrls) {
+    // DEPRECATED
   }
 
   get stepsInfo(): StepInfo[] {
-    return this._results.stepsInfo
+    return this._result.stepsInfo
   }
   getStepsInfo(): StepInfoData[] {
     return this.stepsInfo.map(info => new StepInfoData(info))
   }
   /** @deprecated */
-  setStepsInfo(stepInfo: StepInfo[]) {
-    this._results.stepsInfo = stepInfo
+  setStepsInfo(_stepInfo: StepInfo[]) {
+    // DEPRECATED
   }
 
   get steps(): number {
-    return this._results.steps
+    return this._result.steps
   }
   getSteps(): number {
     return this.steps
   }
   /** @deprecated */
-  setSteps(steps: number) {
-    this._results.steps = steps
+  setSteps(_steps: number) {
+    // DEPRECATED
   }
 
   get matches(): number {
-    return this._results.matches
+    return this._result.matches
   }
   getMatches(): number {
     return this.matches
   }
   /** @deprecated */
-  setMatches(matches: number) {
-    this._results.matches = matches
+  setMatches(_matches: number) {
+    // DEPRECATED
   }
 
   get mismatches(): number {
-    return this._results.mismatches
+    return this._result.mismatches
   }
   getMismatches(): number {
     return this.mismatches
   }
   /** @deprecated */
-  setMismatches(mismatches: number) {
-    this._results.mismatches = mismatches
+  setMismatches(_mismatches: number) {
+    // DEPRECATED
   }
 
   get missing(): number {
-    return this._results.missing
+    return this._result.missing
   }
   getMissing(): number {
     return this.missing
   }
   /** @deprecated */
-  setMissing(missing: number) {
-    this._results.missing = missing
+  setMissing(_missing: number) {
+    // DEPRECATED
   }
 
   get exactMatches(): number {
-    return this._results.exactMatches
+    return this._result.exactMatches
   }
   getExactMatches(): number {
     return this.exactMatches
   }
   /** @deprecated */
-  setExactMatches(exactMatches: number) {
-    this._results.exactMatches = exactMatches
+  setExactMatches(_exactMatches: number) {
+    // DEPRECATED
   }
 
   get strictMatches(): number {
-    return this._results.strictMatches
+    return this._result.strictMatches
   }
   getStrictMatches(): number {
     return this.strictMatches
   }
   /** @deprecated */
-  setStrictMatches(strictMatches: number) {
-    this._results.strictMatches = strictMatches
+  setStrictMatches(_strictMatches: number) {
+    // DEPRECATED
   }
 
   get contentMatches(): number {
-    return this._results.contentMatches
+    return this._result.contentMatches
   }
   getContentMatches(): number {
     return this.contentMatches
   }
   /** @deprecated */
-  setContentMatches(contentMatches: number) {
-    this._results.contentMatches = contentMatches
+  setContentMatches(_contentMatches: number) {
+    // DEPRECATED
   }
 
   get layoutMatches(): number {
-    return this._results.layoutMatches
+    return this._result.layoutMatches
   }
   getLayoutMatches(): number {
     return this.layoutMatches
   }
   /** @deprecated */
-  setLayoutMatches(layoutMatches: number) {
-    this._results.layoutMatches = layoutMatches
+  setLayoutMatches(_layoutMatches: number) {
+    // DEPRECATED
   }
 
   get noneMatches(): number {
-    return this._results.noneMatches
+    return this._result.noneMatches
   }
   getNoneMatches(): number {
     return this.noneMatches
   }
   /** @deprecated */
-  setNoneMatches(noneMatches: number) {
-    this._results.noneMatches = noneMatches
+  setNoneMatches(_noneMatches: number) {
+    // DEPRECATED
   }
 
   get url(): string {
-    return this._results.url
+    return this._result.url
   }
   getUrl(): string {
     return this.url
   }
   /** @deprecated */
-  setUrl(url: string) {
-    this._results.url = url
+  setUrl(_url: string) {
+    // DEPRECATED
   }
 
   isPassed(): boolean {
-    return this._results.status === TestResultsStatusEnum.Passed
+    return this._result.status === TestResultsStatusEnum.Passed
   }
 
   async delete(): Promise<void> {
     if (!this._deleteTest) return
-    return this._deleteTest({testId: this.id, batchId: this.batchId, secretToken: this.secretToken})
+    return this._deleteTest({
+      settings: {serverUrl: '', apiKey: '', testId: this.id, batchId: this.batchId, secretToken: this.secretToken},
+    })
   }
   /** @deprecated */
   async deleteSession(): Promise<void> {
@@ -397,12 +400,12 @@ export class TestResultsData implements Required<TestResults> {
 
   /** @internal */
   toObject(): TestResults {
-    return this._results
+    return this._result
   }
 
   /** @internal */
-  toJSON(): TestResults {
-    return utils.general.toJSON(this._results)
+  toJSON(): types.TestResult<'classic' | 'ufg'> {
+    return this._result
   }
 
   /** @internal */

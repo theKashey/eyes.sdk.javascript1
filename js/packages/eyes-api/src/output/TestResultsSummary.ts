@@ -1,47 +1,46 @@
-import * as utils from '@applitools/utils'
 import type * as types from '@applitools/types'
-import {TestResultContainerData} from './TestResultContainer'
-import {DeleteTestFunc} from './TestResults'
+import {TestResultContainer, TestResultContainerData} from './TestResultContainer'
 
-export type TestResultsSummary = types.TestResultSummary
+export type TestResultsSummary = Iterable<TestResultContainer>
 
-export class TestResultsSummaryData implements Iterable<types.TestResultContainer> {
-  private _results: TestResultContainerData[] = []
-  private _passed = 0
-  private _unresolved = 0
-  private _failed = 0
-  private _exceptions = 0
-  private _mismatches = 0
-  private _missing = 0
-  private _matches = 0
+export class TestResultsSummaryData implements Iterable<TestResultContainerData> {
+  private _summary: types.TestResultSummary<'classic' | 'ufg'>
+  private _deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
 
   /** @internal */
-  constructor(options?: {summary: types.TestResultSummary; deleteTest: DeleteTestFunc}) {
+  constructor(options?: {
+    summary: types.TestResultSummary<'classic' | 'ufg'>
+    deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
+  }) {
     if (!options) return
 
     const {summary, deleteTest} = options
 
-    this._results = summary.results.map(container => new TestResultContainerData(container, deleteTest))
-    this._passed = summary.passed
-    this._unresolved = summary.unresolved
-    this._failed = summary.failed
-    this._exceptions = summary.exceptions
-    this._mismatches = summary.mismatches
-    this._missing = summary.missing
-    this._matches = summary.matches
+    this._summary = summary
+    this._deleteTest = deleteTest
   }
 
   getAllResults(): TestResultContainerData[] {
-    return this._results
+    return (
+      this._summary?.results.map(container => {
+        return new TestResultContainerData({container, deleteTest: this._deleteTest})
+      }) ?? []
+    )
   }
 
   [Symbol.iterator](): Iterator<TestResultContainerData> {
-    return this._results[Symbol.iterator]()
+    return (
+      this._summary?.results
+        .map(container => {
+          return new TestResultContainerData({container, deleteTest: this._deleteTest})
+        })
+        [Symbol.iterator]() ?? [][Symbol.iterator]()
+    )
   }
 
   /** @internal */
-  toJSON(): Array<types.TestResultContainer> {
-    return this._results.map(container => utils.general.toJSON(container))
+  toJSON(): types.TestResultContainer<'classic' | 'ufg'>[] {
+    return this._summary?.results
   }
 
   /** @internal */
@@ -49,19 +48,19 @@ export class TestResultsSummaryData implements Iterable<types.TestResultContaine
     return (
       'result summary {' +
       '\n\tpassed=' +
-      this._passed +
+      this._summary.passed +
       '\n\tunresolved=' +
-      this._unresolved +
+      this._summary.unresolved +
       '\n\tfailed=' +
-      this._failed +
+      this._summary.failed +
       '\n\texceptions=' +
-      this._exceptions +
+      this._summary.exceptions +
       '\n\tmismatches=' +
-      this._mismatches +
+      this._summary.mismatches +
       '\n\tmissing=' +
-      this._missing +
+      this._summary.missing +
       '\n\tmatches=' +
-      this._matches +
+      this._summary.matches +
       '\n}'
     )
   }

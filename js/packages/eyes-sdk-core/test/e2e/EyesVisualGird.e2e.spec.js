@@ -1,4 +1,4 @@
-const {expect} = require('chai')
+const assert = require('assert')
 const {getViewportSize} = require('@applitools/snippets')
 const setupTests = require('./utils/core-e2e-utils')
 
@@ -36,7 +36,7 @@ describe('eyes visual gird', () => {
     await eyes.check()
     const actualViewportSize = await driver.executeScript(getViewportSize)
     await eyes.close({throwErr: true})
-    expect(actualViewportSize.width).to.be.lessThan(UFG_MAX_WIDTH_HEIGHT_SIZE - 1)
-    expect(actualViewportSize.height).to.be.lessThan(UFG_MAX_WIDTH_HEIGHT_SIZE - 1)
+    assert.ok(actualViewportSize.width < UFG_MAX_WIDTH_HEIGHT_SIZE - 1)
+    assert.ok(actualViewportSize.height < UFG_MAX_WIDTH_HEIGHT_SIZE - 1)
   })
 })

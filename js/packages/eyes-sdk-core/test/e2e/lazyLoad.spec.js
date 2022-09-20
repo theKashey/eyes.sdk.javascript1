@@ -1,4 +1,3 @@
-const VisualGridClient = require('@applitools/visual-grid-client')
 const spec = require('@applitools/spec-driver-selenium')
 const {makeSDK} = require('../../index')
 
@@ -9,7 +8,6 @@ describe('lazyLoad', () => {
     name: 'eyes-core',
     version: require('../../package.json').version,
     spec,
-    VisualGridClient,
   })
 
   beforeEach(async () => {

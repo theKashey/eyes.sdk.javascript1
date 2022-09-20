@@ -27,6 +27,15 @@ export function isBase64(value: any): value is string {
   return isString(value) && /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/.test(value)
 }
 
+export function isHttpUrl(value: any): value is string {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export function isNumber(value: any): value is number {
   return typeof value === 'number' || value instanceof Number
 }

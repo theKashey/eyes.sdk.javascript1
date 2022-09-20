@@ -23,8 +23,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "author": "Amit Zur <amit.zur@applitools.com>",
   "aliases": [
-    "ufg-client",
-    "ufgc",
+    "vg-client-legacy",
     "vg-client",
     "vgc"
   ],

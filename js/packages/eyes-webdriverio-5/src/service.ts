@@ -1,4 +1,4 @@
-import {makeSDK} from '@applitools/eyes-sdk-core'
+import {makeCore} from '@applitools/core'
 import * as spec from './spec-driver'
 import {Driver, Element, Eyes, VisualGridRunner, ClassicRunner, ConfigurationPlain, TestResults} from './api'
 
@@ -13,11 +13,9 @@ if (!process.env.APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION) {
 }
 
 // TODO have to be removed
-const sdk = makeSDK({
-  name: 'eyes-webdriverio-service',
-  version: require('../package.json').version,
+const sdk = makeCore({
+  agentId: `eyes-webdriverio-service/${require('../package.json').version}`,
   spec,
-  VisualGridClient: require('@applitools/visual-grid-client'),
 })
 class EyesOverride extends Eyes {
   protected static readonly _spec = sdk

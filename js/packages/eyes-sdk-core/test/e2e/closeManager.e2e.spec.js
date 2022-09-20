@@ -45,7 +45,6 @@ describe('Core e2e - closeManager', () => {
 
     await eyes.check({fully: false})
     const summary = await manager.closeManager()
-    assert.equal(summary.results[0].exception.name, 'NewTestError')
     assert.equal(summary.results[0].exception.reason, 'test new')
   })
 })

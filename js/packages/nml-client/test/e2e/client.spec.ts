@@ -1,16 +1,7 @@
-import {takeScreenshot, takeSnapshot} from '../../src/client'
-import assert from 'assert'
-import selenium from 'selenium-webdriver'
-import spec from '@applitools/spec-driver-selenium'
+import {takeScreenshot, takeSnapshots} from '../../src/client'
 import {testProxyServer} from '@applitools/test-server'
-
-async function getBrokerURL(driver: any) {
-  const element = await driver.findElement({
-    xpath: '//XCUIElementTypeOther[@name="Applitools_View"]',
-  })
-  const result = JSON.parse(await element.getText())
-  return result.nextPath
-}
+import * as spec from '@applitools/spec-driver-selenium'
+import assert from 'assert'
 
 const env = {
   //android: {
@@ -25,15 +16,21 @@ const env = {
   },
 }
 
-// TODO: enable and verify when test apps received
-describe('e2e client', () => {
+async function extractBrokerUrl(driver: any): Promise<string> {
+  const element = await driver.findElement({xpath: '//XCUIElementTypeOther[@name="Applitools_View"]'})
+  const result = JSON.parse(await element.getText())
+  return result.nextPath
+}
+
+describe('client', () => {
+  // TODO: enable and verify when test apps received
   describe.skip('takeScreenshot', () => {
     for (const platform of Object.keys(env)) {
       it(`${platform} works`, async () => {
-        const [driver, destroyDriver] = await spec.build({selenium, ...env[platform]})
+        const [driver, destroyDriver] = await spec.build(env[platform])
         try {
-          const brokerURL = await getBrokerURL(driver)
-          const screenshotURL = await takeScreenshot(brokerURL)
+          const brokerUrl = await extractBrokerUrl(driver)
+          const screenshotURL = await takeScreenshot({url: brokerUrl, settings: {}})
           new URL(screenshotURL) // will throw if invalid
           //BONUS POINTS: perform a head request and check the content type and size
         } finally {
@@ -42,36 +39,48 @@ describe('e2e client', () => {
       })
     }
   })
-  describe('takeSnapshot', () => {
+
+  describe('takeSnapshots', () => {
     for (const platform of Object.keys(env)) {
       it(`${platform} works`, async () => {
-        const [driver, destroyDriver] = await spec.build({selenium, ...env[platform]})
+        const [driver, destroyDriver] = await spec.build(env[platform])
         try {
-          const brokerURL = await getBrokerURL(driver)
-          const {resourceMap} = await takeSnapshot(brokerURL)
-          assert.deepStrictEqual(resourceMap.metadata.platformName, platform)
-          //BONUS POINTS: assert resourceMap.vhs.contentType, hash, and hashFormat have the relevant bits
+          const brokerUrl = await extractBrokerUrl(driver)
+          const snapshots = await takeSnapshots({
+            url: brokerUrl,
+            settings: {renderers: [{iosDeviceInfo: {deviceName: 'iPhone 12'}}]},
+          })
+          assert.strictEqual(snapshots.length, 1)
+          assert.strictEqual(snapshots[0].platformName, platform)
+          assert.strictEqual(snapshots[0].vhsHash.hashFormat, 'sha256')
+          assert.strictEqual(snapshots[0].vhsHash.contentType, 'x-applitools-vhs/ios')
         } finally {
           await destroyDriver()
         }
       })
+
+      it(`${platform} works with a proxy server`, async () => {
+        let proxyServer
+        const [driver, destroyDriver] = await spec.build(env[platform])
+        try {
+          proxyServer = await testProxyServer()
+          const brokerUrl = await extractBrokerUrl(driver)
+          const snapshots = await takeSnapshots({
+            url: brokerUrl,
+            settings: {
+              renderers: [{iosDeviceInfo: {deviceName: 'iPhone 12'}}],
+              proxy: {url: `http://localhost:${proxyServer.port}`},
+            },
+          })
+          assert.strictEqual(snapshots.length, 1)
+          assert.strictEqual(snapshots[0].platformName, platform)
+          assert.strictEqual(snapshots[0].vhsHash.hashFormat, 'sha256')
+          assert.strictEqual(snapshots[0].vhsHash.contentType, 'x-applitools-vhs/ios')
+        } finally {
+          await destroyDriver?.()
+          await proxyServer?.close()
+        }
+      })
     }
-    it(`works with a proxy server`, async () => {
-      let proxyServer
-      const [driver, destroyDriver] = await spec.build({selenium, ...env['ios']})
-      try {
-        proxyServer = await testProxyServer()
-        const brokerURL = await getBrokerURL(driver)
-        const {resourceMap} = await takeSnapshot(brokerURL, {
-          proxy: {
-            url: `http://localhost:${proxyServer.port}`,
-          },
-        })
-        assert.deepStrictEqual(resourceMap.metadata.platformName, 'ios')
-      } finally {
-        await destroyDriver()
-        if (proxyServer) await proxyServer.close()
-      }
-    })
   })
 })

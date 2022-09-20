@@ -2,23 +2,8 @@ import type * as types from '@applitools/types'
 
 type Capabilities = Record<string, any>
 
-export function parseCapabilities(
-  capabilities: Capabilities,
-  customConfig?: types.CustomCapabilitiesConfig,
-): types.DriverInfo {
+export function parseCapabilities(capabilities: Capabilities): types.DriverInfo {
   if (capabilities.capabilities) capabilities = capabilities.capabilities
-
-  if (!customConfig?.keepPlatformNameAsIs) {
-    // We use `startsWith` for just a theorerical reason. It's not based on any concrete case that we knew of at the time of writing this code.
-    if (capabilities.platformName?.startsWith('android')) {
-      capabilities.platformName = capabilities.platformName.charAt(0).toUpperCase() + capabilities.platformName.slice(1)
-    }
-
-    // We use `startsWith` for just a theorerical reason. It's not based on any concrete case that we knew of at the time of writing this code.
-    if (capabilities.platformName?.startsWith('ios')) {
-      capabilities.platformName = 'iOS' + capabilities.platformName.slice(3)
-    }
-  }
 
   const info: types.DriverInfo = {
     browserName:

@@ -1,0 +1,71 @@
+[
+  {
+    "nodeType": 9,
+    "childNodeIndexes": [
+      1,
+      7
+    ]
+  },
+  {
+    "nodeType": 10,
+    "nodeName": "html"
+  },
+  {
+    "nodeType": 3,
+    "nodeValue": "/* You can add global styles to this file, and also import other style files */\n"
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "STYLE",
+    "attributes": [
+      {
+        "name": "type",
+        "value": "text/css"
+      }
+    ],
+    "childNodeIndexes": [
+      2
+    ]
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "HEAD",
+    "attributes": [],
+    "childNodeIndexes": [
+      3
+    ]
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "IMG",
+    "attributes": [
+      {
+        "name": "src",
+        "value": "smurfs.jpg"
+      }
+    ],
+    "childNodeIndexes": []
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "BODY",
+    "attributes": [],
+    "childNodeIndexes": [
+      5
+    ]
+  },
+  {
+    "nodeType": 1,
+    "nodeName": "HTML",
+    "attributes": [
+      {
+        "name": "lang",
+        "value": "en"
+      }
+    ],
+    "childNodeIndexes": [
+      4,
+      6
+    ]
+  }
+]

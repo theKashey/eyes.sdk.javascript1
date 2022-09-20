@@ -203,7 +203,9 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return region
   }
 
-  async getContentSize(options: {lazyLoad?: types.LazyLoadOptions} = {}): Promise<types.Size> {
+  async getContentSize(
+    options: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}} = {},
+  ): Promise<types.Size> {
     if (this._state.contentSize) return this._state.contentSize
 
     const size = await this.withRefresh(async () => {

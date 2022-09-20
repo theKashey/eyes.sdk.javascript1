@@ -1,6 +1,6 @@
 import {strict as assert} from 'assert'
-import fetch from 'node-fetch'
 import {DeviceName, IosDeviceName, AndroidDeviceName} from '../../src'
+import fetch from 'node-fetch'
 
 describe('enums', () => {
   describe('DeviceName', () => {

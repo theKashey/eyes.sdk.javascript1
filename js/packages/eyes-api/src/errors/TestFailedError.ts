@@ -3,7 +3,7 @@ import {EyesError} from './EyesError'
 import {TestResults, TestResultsData} from '../output/TestResults'
 
 export class TestFailedError extends EyesError {
-  private _results: TestResults
+  private _result: TestResults
   constructor(message: string, results?: TestResults)
   constructor(results: TestResults)
   constructor(message: string | TestResults, results?: TestResults) {
@@ -12,13 +12,13 @@ export class TestFailedError extends EyesError {
       message = `Test '${results.name}' of '${results.appName}' is failed! See details at ${results.url}`
     }
     super(message)
-    if (results) this._results = results
+    if (results) this._result = results
   }
 
   get testResults(): TestResults {
-    return this._results
+    return this._result
   }
   getTestResults(): TestResultsData {
-    return new TestResultsData(this._results)
+    return new TestResultsData({result: this._result})
   }
 }

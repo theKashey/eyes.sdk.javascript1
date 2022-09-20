@@ -17,11 +17,11 @@ type EyesRunnerSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> 
 export abstract class EyesRunner {
   protected _spec: EyesRunnerSpec<unknown, unknown, unknown>
 
-  private _manager: types.EyesManager<unknown, unknown, unknown>
+  private _manager: types.EyesManager<unknown, unknown, unknown, 'classic' | 'ufg'>
   private _eyes: Eyes<unknown, unknown, unknown>[] = []
 
   /** @internal */
-  abstract get config(): types.EyesManagerConfig
+  abstract get config(): any
 
   /** @internal */
   attach<TDriver, TElement, TSelector>(
@@ -34,10 +34,10 @@ export abstract class EyesRunner {
 
   /** @internal */
   async openEyes<TDriver, TElement, TSelector>(options: {
-    driver: TDriver
-    config?: types.EyesConfig<TElement, TSelector>
+    target: TDriver
+    config?: types.Config<TElement, TSelector, 'classic' | 'ufg'>
     on?: (name: string, data?: Record<string, any>) => void
-  }): Promise<types.Eyes<TDriver, TElement, TSelector>> {
+  }): Promise<types.Eyes<TDriver, TElement, TSelector, 'classic' | 'ufg'>> {
     if (!this._manager) this._manager = await this._spec.makeManager(this.config)
 
     return await this._manager.openEyes(options)
@@ -46,19 +46,22 @@ export abstract class EyesRunner {
   async getAllTestResults(throwErr = true): Promise<TestResultsSummaryData> {
     if (!this._manager) return new TestResultsSummaryData()
     const [eyes] = this._eyes
-    const deleteTest = (options: any) =>
+    const deleteTest: typeof this._spec.deleteTest = options =>
       this._spec.deleteTest({
         ...options,
-        serverUrl: eyes.configuration.serverUrl,
-        apiKey: eyes.configuration.apiKey,
-        proxy: eyes.configuration.proxy,
+        settings: {
+          ...options.settings,
+          serverUrl: eyes.configuration.serverUrl,
+          apiKey: eyes.configuration.apiKey,
+          proxy: eyes.configuration.proxy,
+        },
       })
     try {
-      const summary = await this._manager.closeManager({throwErr})
+      const summary = await this._manager.closeManager({settings: {throwErr}})
       return new TestResultsSummaryData({summary, deleteTest})
     } catch (err) {
-      if (!err.info?.testResult) throw err
-      const testResult = new TestResultsData(err.info.testResult, deleteTest)
+      if (!err.info?.result) throw err
+      const testResult = new TestResultsData({result: err.info.result, deleteTest})
       if (err.reason === 'test failed') {
         throw new TestFailedError(err.message, testResult)
       } else if (err.reason === 'test different') {
@@ -93,11 +96,11 @@ export class VisualGridRunner extends EyesRunner {
   }
 
   /** @internal */
-  get config(): types.EyesManagerConfig<'vg'> {
+  get config() {
     return {
-      type: 'vg',
-      concurrency: this._testConcurrency || this._legacyConcurrency,
-      legacy: Boolean(this._legacyConcurrency),
+      type: 'ufg',
+      concurrency: this._testConcurrency,
+      legacyConcurrency: this._legacyConcurrency,
     }
   }
 
@@ -118,7 +121,7 @@ export class VisualGridRunner extends EyesRunner {
 
 export class ClassicRunner extends EyesRunner {
   /** @internal */
-  get config(): types.EyesManagerConfig<'classic'> {
+  get config() {
     return {type: 'classic'}
   }
 }

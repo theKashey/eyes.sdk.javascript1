@@ -1,4 +1,6 @@
 export enum IosDeviceNameEnum {
+  iPhone_14_Pro_Max = 'iPhone 14 Pro Max',
+  iPhone_14 = 'iPhone 14',
   iPhone_13_Pro_Max = 'iPhone 13 Pro Max',
   iPhone_13_Pro = 'iPhone 13 Pro',
   iPhone_13 = 'iPhone 13',

@@ -126,26 +126,33 @@ export type Configuration<TElement = unknown, TSelector = unknown> = GeneralConf
 export class ConfigurationData<TElement = unknown, TSelector = unknown>
   implements Required<Configuration<TElement, TSelector>>
 {
-  protected static readonly _spec: ConfigurationSpec
-  protected get _spec(): ConfigurationSpec<TElement, TSelector> {
-    return (this.constructor as typeof ConfigurationData)._spec as ConfigurationSpec<TElement, TSelector>
-  }
+  protected static readonly _spec: ConfigurationSpec<any, any>
+
+  private _spec: ConfigurationSpec<TElement, TSelector>
 
   private _config: Configuration<TElement, TSelector> = {}
 
-  private _isSelector(selector: any): selector is types.Selector<TSelector> {
+  private _isElementReference(value: any): value is TElement | types.Selector<TSelector> {
+    const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
+    return spec.isElement(value) || this._isSelectorReference(value)
+  }
+
+  private _isSelectorReference(selector: any): selector is types.Selector<TSelector> {
+    const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
     return (
-      this._spec.isSelector(selector) ||
+      spec.isSelector(selector) ||
       utils.types.isString(selector) ||
       (utils.types.isPlainObject(selector) &&
         utils.types.has(selector, 'selector') &&
-        (utils.types.isString(selector.selector) || this._spec.isSelector(selector.selector)))
+        (utils.types.isString(selector.selector) || spec.isSelector(selector.selector)))
     )
   }
 
-  constructor(config?: Configuration<TElement, TSelector>) {
+  constructor(config?: Configuration<TElement, TSelector>, spec?: ConfigurationSpec<TElement, TSelector>) {
     if (!config) return this
-    if (config instanceof ConfigurationData) config = config.toJSON()
+    if (config instanceof ConfigurationData) config = config.toObject()
+
+    this._spec = spec
 
     for (const [key, value] of Object.entries(config)) {
       ;(this as any)[key] = value
@@ -335,14 +342,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get apiKey(): string {
-    return this._config.apiKey ?? utils.general.getEnvValue('API_KEY')
+    return this._config.apiKey
   }
   set apiKey(apiKey: string) {
     utils.guard.isString(apiKey, {name: 'apiKey', alpha: true, numeric: true})
     this._config.apiKey = apiKey
   }
   getApiKey(): string {
-    return this.apiKey
+    return this.apiKey ?? utils.general.getEnvValue('API_KEY')
   }
   setApiKey(apiKey: string): this {
     this.apiKey = apiKey
@@ -350,14 +357,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get serverUrl(): string {
-    return this._config.serverUrl ?? utils.general.getEnvValue('SERVER_URL')
+    return this._config.serverUrl
   }
   set serverUrl(serverUrl: string) {
     utils.guard.isString(serverUrl, {name: 'serverUrl', strict: false})
     this._config.serverUrl = serverUrl
   }
   getServerUrl(): string {
-    return this.serverUrl
+    return this.serverUrl ?? utils.general.getEnvValue('SERVER_URL')
   }
   setServerUrl(serverUrl: string): this {
     this.serverUrl = serverUrl
@@ -461,14 +468,6 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get batch(): BatchInfo {
-    if (!this._config.batch) {
-      return {
-        id: utils.general.getEnvValue('BATCH_ID'),
-        name: utils.general.getEnvValue('BATCH_NAME'),
-        sequenceName: utils.general.getEnvValue('BATCH_SEQUENCE'),
-        notifyOnCompletion: utils.general.getEnvValue('BATCH_NOTIFY', 'boolean'),
-      }
-    }
     return this._config.batch
   }
   set batch(batch: BatchInfo) {
@@ -540,14 +539,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get branchName(): string {
-    return this._config.branchName ?? utils.general.getEnvValue('BRANCH')
+    return this._config.branchName
   }
   set branchName(branchName: string) {
     utils.guard.isString(branchName, {name: 'branchName'})
     this._config.branchName = branchName
   }
   getBranchName(): string {
-    return this.branchName
+    return this.branchName ?? utils.general.getEnvValue('BRANCH')
   }
   setBranchName(branchName: string): this {
     this.branchName = branchName
@@ -555,14 +554,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get parentBranchName(): string {
-    return this._config.parentBranchName ?? utils.general.getEnvValue('PARENT_BRANCH')
+    return this._config.parentBranchName
   }
   set parentBranchName(parentBranchName: string) {
     utils.guard.isString(parentBranchName, {name: 'parentBranchName'})
     this._config.parentBranchName = parentBranchName
   }
   getParentBranchName(): string {
-    return this.parentBranchName
+    return this.parentBranchName ?? utils.general.getEnvValue('PARENT_BRANCH')
   }
   setParentBranchName(parentBranchName: string): this {
     this.parentBranchName = parentBranchName
@@ -570,14 +569,14 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   get baselineBranchName(): string {
-    return this._config.baselineBranchName ?? utils.general.getEnvValue('BASELINE_BRANCH_NAME')
+    return this._config.baselineBranchName
   }
   set baselineBranchName(baselineBranchName: string) {
     utils.guard.isString(baselineBranchName, {name: 'baselineBranchName'})
     this._config.baselineBranchName = baselineBranchName
   }
   getBaselineBranchName(): string {
-    return this.baselineBranchName
+    return this.baselineBranchName ?? utils.general.getEnvValue('BASELINE_BRANCH_NAME')
   }
   setBaselineBranchName(baselineBranchName: string): this {
     this.baselineBranchName = baselineBranchName
@@ -931,7 +930,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this._config.scrollRootElement
   }
   set scrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>) {
-    utils.guard.custom(scrollRootElement, value => this._spec.isElement(value) || this._isSelector(value), {
+    utils.guard.custom(scrollRootElement, value => this._isElementReference(value), {
       name: 'scrollRootElement',
       message: 'must be element or selector',
       strict: false,
@@ -1129,7 +1128,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
 
   /** @undocumented */
   get dontCloseBatches(): boolean {
-    return this._config.dontCloseBatches ?? utils.general.getEnvValue('DONT_CLOSE_BATCHES', 'boolean')
+    return this._config.dontCloseBatches
   }
   /** @undocumented */
   set dontCloseBatches(dontCloseBatches: boolean) {
@@ -1137,7 +1136,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
   /** @undocumented */
   getDontCloseBatches(): boolean {
-    return this.dontCloseBatches
+    return this.dontCloseBatches ?? utils.general.getEnvValue('DONT_CLOSE_BATCHES', 'boolean')
   }
   /** @undocumented */
   setDontCloseBatches(dontCloseBatches: boolean): this {
@@ -1151,8 +1150,95 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   /** @internal */
-  toJSON(): Configuration<TElement, TSelector> {
-    return utils.general.toJSON(this._config)
+  toJSON(): types.Config<TElement, TSelector, 'classic'> & types.Config<TElement, TSelector, 'ufg'> {
+    const config: types.Config<TElement, TSelector, 'classic'> & types.Config<TElement, TSelector, 'ufg'> = {
+      open: {
+        serverUrl: this.serverUrl,
+        apiKey: this.apiKey,
+        agentId: this.agentId,
+        proxy: this.proxy,
+        connectionTimeout: this.connectionTimeout,
+        removeSession: this.removeSession,
+        appName: this.appName,
+        testName: this.testName,
+        displayName: this.displayName,
+        sessionType: this.sessionType,
+        properties: this.properties,
+        batch: this.batch,
+        baselineEnvName: this.baselineEnvName,
+        environmentName: this.environmentName,
+        environment: {
+          hostingApp: this.hostApp,
+          hostingAppInfo: this.hostAppInfo,
+          os: this.hostOS,
+          osInfo: this.hostOSInfo,
+          deviceName: this.deviceInfo,
+          viewportSize: this.viewportSize,
+        },
+        branchName: this.branchName,
+        parentBranchName: this.parentBranchName,
+        baselineBranchName: this.baselineBranchName,
+        compareWithParentBranch: this.compareWithParentBranch,
+        ignoreBaseline: this.ignoreBaseline,
+        ignoreGitBranching: this.ignoreGitMergeBase,
+        saveDiffs: this.saveDiffs,
+        keepBatchOpen: this.dontCloseBatches,
+      },
+      screenshot: {
+        fully: this.forceFullPageScreenshot,
+        scrollRootElement: this.scrollRootElement,
+        stitchMode: this.stitchMode,
+        hideScrollbars: this.hideScrollbars,
+        hideCaret: this.hideCaret,
+        overlap: !utils.types.isNull(this.stitchOverlap) ? {bottom: this.stitchOverlap} : undefined,
+        waitBetweenStitches: this.waitBeforeScreenshots,
+        waitBeforeCapture: this.waitBeforeCapture,
+        normalization: {
+          cut: this.cut,
+          rotation: this.rotation,
+          scaleRatio: this.scaleRatio,
+        },
+        debugImages:
+          this.debugScreenshots?.save && utils.types.has(this.debugScreenshots, 'path')
+            ? this.debugScreenshots
+            : undefined,
+      },
+      check: {
+        renderers: this.browsersInfo?.map(browserInfo => {
+          if (utils.types.has(browserInfo, 'iosDeviceInfo')) {
+            const {iosVersion, ...iosDeviceInfo} = browserInfo.iosDeviceInfo
+            return {iosDeviceInfo: {...iosDeviceInfo, version: iosVersion}}
+          }
+          return browserInfo
+        }),
+        ufgOptions: this.visualGridOptions,
+        layoutBreakpoints: this.layoutBreakpoints,
+        disableBrowserFetching: this.disableBrowserFetching,
+        autProxy: this.autProxy,
+        sendDom: this.sendDom,
+        retryTimeout: this.matchTimeout,
+        matchLevel: this.defaultMatchSettings?.matchLevel,
+        ignoreCaret: this.defaultMatchSettings?.ignoreCaret,
+        ignoreDisplacements: this.defaultMatchSettings?.ignoreDisplacements,
+        enablePatterns: this.defaultMatchSettings?.enablePatterns,
+        accessibilitySettings: this.defaultMatchSettings?.accessibilitySettings && {
+          level: this.defaultMatchSettings.accessibilitySettings.level,
+          version: this.defaultMatchSettings.accessibilitySettings.guidelinesVersion,
+        },
+        useDom: this.defaultMatchSettings?.useDom,
+        ignoreRegions: this.defaultMatchSettings?.ignoreRegions,
+        contentRegions: this.defaultMatchSettings?.contentRegions,
+        layoutRegions: this.defaultMatchSettings?.layoutRegions,
+        strictRegions: this.defaultMatchSettings?.strictRegions,
+        floatingRegions: this.defaultMatchSettings?.floatingRegions,
+        accessibilityRegions: this.defaultMatchSettings?.accessibilityRegions,
+      },
+      close: {
+        updateBaselineIfDifferent: this.saveFailedTests,
+        updateBaselineIfNew: this.saveNewTests,
+      },
+    }
+    return JSON.parse(JSON.stringify(config))
   }
 
   /** @internal */

@@ -15,6 +15,7 @@ export type PrinterOptions = {
 }
 
 export interface Printer {
+  debug(...messages: any[]): void
   log(...messages: any[]): void
   warn(...messages: any[]): void
   error(...messages: any[]): void
@@ -23,8 +24,13 @@ export interface Printer {
 }
 
 export function makePrinter({handler, format, level, ...defaults}: PrinterOptions): Printer {
-  return {log, warn, error, fatal, verbose: log}
+  return {debug, log, warn, error, fatal, verbose: log}
 
+  function debug(...messages: any[]) {
+    if (level < LogLevel.debug) return
+    const options = {...defaults, level: 'debug' as const}
+    handler.log(format(messages, options))
+  }
   function log(...messages: any[]) {
     if (level < LogLevel.info) return
     const options = {...defaults, level: 'info' as const}

@@ -4,7 +4,7 @@ import * as utils from '@applitools/utils'
 export type Driver = any
 export type Element = any
 export type Selector = string | {using: string; value: string}
-type CommonSelector = string | {selector: Selector | string; type?: string}
+type CommonSelector = string | {selector: string; type?: string}
 
 export function isDriver(driver: any): driver is Driver {
   return driver && driver.constructor.name === 'MockDriver'

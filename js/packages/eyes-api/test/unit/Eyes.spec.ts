@@ -34,7 +34,7 @@ describe('Eyes', () => {
     await eyes.open(driver)
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'makeManager'),
-      [{command: 'makeManager', data: {type: 'vg', concurrency: 7, legacy: false}}],
+      [{command: 'makeManager', data: {type: 'ufg', concurrency: 7, legacyConcurrency: undefined}}],
     )
   })
 
@@ -44,7 +44,7 @@ describe('Eyes', () => {
     await eyes.open(driver)
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'makeManager'),
-      [{command: 'makeManager', data: {type: 'vg', concurrency: 7, legacy: true}}],
+      [{command: 'makeManager', data: {type: 'ufg', concurrency: undefined, legacyConcurrency: 7}}],
     )
   })
 
@@ -54,8 +54,9 @@ describe('Eyes', () => {
       displayName: 'name',
       branchName: 'branch',
       baselineBranchName: 'baseline',
+      apiKey: 'apikey',
     }
-    const eyes = new Eyes()
+    const eyes = new Eyes({apiKey: config.apiKey})
     eyes.getConfiguration().setDisplayName(config.displayName)
     eyes.setBranchName(config.branchName)
     eyes.configuration.baselineBranchName = config.baselineBranchName
@@ -69,7 +70,20 @@ describe('Eyes', () => {
 
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
-      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig, keepPlatformNameAsIs: true}}}],
+      [
+        {
+          command: 'openEyes',
+          data: {
+            target: driver,
+            config: {
+              open: {...config, ...openConfig, environment: {}},
+              screenshot: {normalization: {}},
+              check: {},
+              close: {},
+            },
+          },
+        },
+      ],
     )
   })
 
@@ -78,21 +92,41 @@ describe('Eyes', () => {
       appName: 'app',
       testName: 'test',
       displayName: 'name',
-      viewportSize: {width: 600, height: 700},
+      environment: {viewportSize: {width: 600, height: 700}},
       sessionType: 'SEQUENTIAL',
+      apiKey: 'apikey',
     }
     const eyes = new Eyes(config)
 
     const openConfig = <const>{
       appName: 'app-o',
       testName: 'test-o',
-      viewportSize: {width: 300, height: 400},
+      environment: {viewportSize: {width: 300, height: 400}},
       sessionType: 'PROGRESSION',
     }
-    await eyes.open(driver, openConfig.appName, openConfig.testName, openConfig.viewportSize, openConfig.sessionType)
+    await eyes.open(
+      driver,
+      openConfig.appName,
+      openConfig.testName,
+      openConfig.environment.viewportSize,
+      openConfig.sessionType,
+    )
     assert.deepEqual(
       sdk.history.filter(h => h.command === 'openEyes'),
-      [{command: 'openEyes', data: {driver, config: {...config, ...openConfig, keepPlatformNameAsIs: true}}}],
+      [
+        {
+          command: 'openEyes',
+          data: {
+            target: driver,
+            config: {
+              open: {...config, ...openConfig},
+              screenshot: {normalization: {}},
+              check: {},
+              close: {},
+            },
+          },
+        },
+      ],
     )
   })
 
@@ -199,7 +233,7 @@ describe('Eyes', () => {
     assert.equal(actualResult, null)
   })
 
-  it('should listen session events using "on" method', async () => {
+  it.skip('should listen session events using "on" method', async () => {
     const viewportSize = {width: 200, height: 300}
     const eyes = new Eyes({viewportSize})
     const events = {} as any
@@ -236,7 +270,7 @@ describe('Eyes', () => {
     })
   })
 
-  it('should listen session events using legacy session event handler', async () => {
+  it.skip('should listen session events using legacy session event handler', async () => {
     const viewportSize = {width: 200, height: 300}
     const eyes = new Eyes({viewportSize})
     const events = {} as any

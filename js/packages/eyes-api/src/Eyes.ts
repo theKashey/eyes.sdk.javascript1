@@ -40,12 +40,12 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   private _config: ConfigurationData<TElement, TSelector>
   private _runner: EyesRunner
   private _driver: TDriver
-  private _eyes: types.Eyes<TDriver, TElement, TSelector>
+  private _eyes: types.Eyes<TDriver, TElement, TSelector, 'ufg' | 'classic'>
   private _events: Map<string, Set<(...args: any[]) => any>> = new Map()
   private _handlers: SessionEventHandlers = new SessionEventHandlers()
 
   static async setViewportSize(driver: unknown, size: RectangleSize) {
-    await this._spec.setViewportSize({driver, size})
+    await this._spec.setViewportSize({target: driver, size})
   }
 
   constructor(runner?: EyesRunner, config?: Configuration<TElement, TSelector>)
@@ -56,10 +56,10 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   ) {
     if (utils.types.instanceOf(runnerOrConfig, EyesRunner)) {
       this._runner = runnerOrConfig
-      this._config = new ConfigurationData(config)
+      this._config = new ConfigurationData(config, this._spec)
     } else {
       this._runner = new ClassicRunner()
-      this._config = new ConfigurationData(runnerOrConfig ?? config)
+      this._config = new ConfigurationData(runnerOrConfig ?? config, this._spec)
     }
 
     this._runner.attach(this, this._spec)
@@ -92,13 +92,13 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this._config
   }
   set configuration(config: Configuration<TElement, TSelector>) {
-    this._config = new ConfigurationData(config)
+    this._config = new ConfigurationData(config, this._spec)
   }
   getConfiguration(): ConfigurationData<TElement, TSelector> {
     return this._config
   }
   setConfiguration(config: Configuration<TElement, TSelector>) {
-    this._config = new ConfigurationData(config)
+    this._config = new ConfigurationData(config, this._spec)
   }
 
   get isOpen(): boolean {
@@ -156,7 +156,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     }
   }
 
-  async open(driver: TDriver, config?: Configuration): Promise<TDriver>
+  async open(driver: TDriver, config?: Configuration<TElement, TSelector>): Promise<TDriver>
   async open(
     driver: TDriver,
     appName?: string,
@@ -166,7 +166,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   ): Promise<TDriver>
   async open(
     driver: TDriver,
-    configOrAppName?: Configuration | string,
+    configOrAppName?: Configuration<TElement, TSelector> | string,
     testName?: string,
     viewportSize?: RectangleSize,
     sessionType?: SessionType,
@@ -175,25 +175,30 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
     if (this._config.isDisabled) return driver
 
-    const config: types.EyesConfig<TElement, TSelector> = this._config.toJSON()
+    const config: types.Config<TElement, TSelector, 'ufg' | 'classic'> = this._config.toJSON()
     if (utils.types.instanceOf(configOrAppName, ConfigurationData)) {
-      Object.assign(config, configOrAppName.toJSON())
+      const transformedConfig = configOrAppName.toJSON()
+      config.open = {...config.open, ...transformedConfig.open}
+      config.screenshot = {...config.screenshot, ...transformedConfig.screenshot}
+      config.check = {...config.check, ...transformedConfig.check}
+      config.close = {...config.close, ...transformedConfig.close}
     } else if (utils.types.isObject(configOrAppName)) {
-      Object.assign(config, configOrAppName)
+      const transformedConfig = new ConfigurationData(configOrAppName, this._spec).toJSON()
+      config.open = {...config.open, ...transformedConfig.open}
+      config.screenshot = {...config.screenshot, ...transformedConfig.screenshot}
+      config.check = {...config.check, ...transformedConfig.check}
+      config.close = {...config.close, ...transformedConfig.close}
     } else if (utils.types.isString(configOrAppName)) {
-      config.appName = configOrAppName
+      config.open.appName = configOrAppName
     }
-    if (utils.types.isString(testName)) config.testName = testName
-    if (utils.types.has(viewportSize, ['width', 'height'])) config.viewportSize = viewportSize
-    if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.sessionType = sessionType
+    if (utils.types.isString(testName)) config.open.testName = testName
+    if (utils.types.has(viewportSize, ['width', 'height'])) config.open.environment.viewportSize = viewportSize
+    if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.open.sessionType = sessionType
 
-    // TODO remove when major version of sdk should be released
-    config.keepPlatformNameAsIs = true
-    // TODO remove when major version of sdk should be released
-    if (config.proxy) config.proxy.isHttpOnly ??= false
+    config.open.keepPlatformNameAsIs = true
 
     this._eyes = await this._runner.openEyes({
-      driver,
+      target: this._driver,
       config,
       on: (name: string, data?: Record<string, any>) => {
         const globalHandlers = this._events.get('*')
@@ -257,25 +262,19 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    let settings: CheckSettings<TElement, TSelector>
+    let settings: types.CheckSettings<TElement, TSelector, 'classic' | 'ufg'>
     if (utils.types.isString(checkSettingsOrName)) {
       utils.guard.notNull(checkSettings, {name: 'checkSettings'})
-      settings = utils.types.instanceOf(checkSettings, CheckSettingsFluent)
-        ? checkSettings.name(checkSettingsOrName).toJSON()
-        : {...checkSettings, name: checkSettingsOrName}
+      settings = new CheckSettingsFluent(checkSettings, this._spec).name(checkSettingsOrName).toJSON()
     } else {
-      settings = utils.types.instanceOf(checkSettingsOrName, CheckSettingsFluent)
-        ? checkSettingsOrName.toJSON()
-        : {...checkSettingsOrName}
+      settings = new CheckSettingsFluent(checkSettingsOrName, this._spec).toJSON()
     }
 
     const config = this._config.toJSON()
     // TODO remove when major version of sdk should be released
-    if (config.proxy) config.proxy.isHttpOnly ??= false
-    // TODO remove when major version of sdk should be released
-    config.forceFullPageScreenshot ??= false
+    config.screenshot.fully ??= false
 
-    const result = await this._eyes.check({settings, config})
+    const [result] = await this._eyes.check({settings, config})
 
     return new MatchResultData(result)
   }
@@ -287,10 +286,8 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
     const config = this._config.toJSON()
-    // TODO remove when major version of sdk should be released
-    if (config.proxy) config.proxy.isHttpOnly ??= false
 
-    return this._eyes.locate({settings, config})
+    return this._spec.locate({settings, config})
   }
 
   async extractTextRegions<TPattern extends string>(
@@ -300,21 +297,25 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
     const config = this._config.toJSON()
-    // TODO remove when major version of sdk should be released
-    if (config.proxy) config.proxy.isHttpOnly ??= false
 
-    return this._eyes.extractTextRegions({settings, config})
+    return this._eyes.locateText({settings, config})
   }
 
-  async extractText(regions: OCRRegion<TElement, TSelector>[]): Promise<string[]> {
+  async extractText(settings: OCRRegion<TElement, TSelector>[]): Promise<string[]> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    const config = this._config.toJSON()
-    // TODO remove when major version of sdk should be released
-    if (config.proxy) config.proxy.isHttpOnly ??= false
+    settings = settings.map(settings => ({
+      ...settings,
+      region:
+        utils.types.isPlainObject(settings.target) && utils.types.has(settings.target, ['left', 'top'])
+          ? {...settings.target, x: settings.target.left, y: settings.target.top}
+          : settings.target,
+    }))
 
-    return this._eyes.extractText({regions, config})
+    const config = this._config.toJSON()
+
+    return this._eyes.extractText({settings, config})
   }
 
   async close(throwErr = true): Promise<TestResultsData> {
@@ -328,17 +329,19 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
         proxy: this._config.proxy,
       })
     try {
-      const [result] = await this._eyes.close({throwErr})
-      return new TestResultsData(result, deleteTest)
+      const config = this._config.toJSON()
+
+      const [result] = await this._eyes.close({settings: {throwErr}, config})
+      return new TestResultsData({result, deleteTest})
     } catch (err) {
-      if (!err.info?.testResult) throw err
-      const testResult = new TestResultsData(err.info.testResult, deleteTest)
+      if (!err.info?.result) throw err
+      const result = new TestResultsData({result: err.info.result, deleteTest})
       if (err.reason === 'test failed') {
-        throw new TestFailedError(err.message, testResult)
+        throw new TestFailedError(err.message, result)
       } else if (err.reason === 'test different') {
-        throw new DiffsFoundError(err.message, testResult)
+        throw new DiffsFoundError(err.message, result)
       } else if (err.reason === 'test new') {
-        throw new NewTestError(err.message, testResult)
+        throw new NewTestError(err.message, result)
       }
     } finally {
       this._eyes = null
@@ -354,16 +357,19 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this._eyes
       .abort()
       .then(([result]) => {
-        return new TestResultsData(result, settings =>
-          this._spec.deleteTest({
-            settings: {
-              ...settings,
-              serverUrl: this._config.serverUrl,
-              apiKey: this._config.apiKey,
-              proxy: this._config.proxy,
-            },
-          }),
-        )
+        return new TestResultsData({
+          result,
+          deleteTest: options =>
+            this._spec.deleteTest({
+              ...options,
+              settings: {
+                ...options.settings,
+                serverUrl: this._config.serverUrl,
+                apiKey: this._config.apiKey,
+                proxy: this._config.proxy,
+              },
+            }),
+        })
       })
       .finally(() => (this._eyes = null))
   }
@@ -380,7 +386,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
   async getViewportSize(): Promise<RectangleSizeData> {
     return (
-      this._config.getViewportSize() || new RectangleSizeData(await this._spec.getViewportSize({driver: this._driver}))
+      this._config.getViewportSize() || new RectangleSizeData(await this._spec.getViewportSize({target: this._driver}))
     )
   }
   async setViewportSize(size: RectangleSize): Promise<void> {
@@ -390,10 +396,10 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
       this._config.setViewportSize(size)
     } else {
       try {
-        await this._spec.setViewportSize({driver: this._driver, size})
+        await this._spec.setViewportSize({target: this._driver, size})
         this._config.setViewportSize(size)
       } catch (err) {
-        this._config.setViewportSize(await this._spec.getViewportSize({driver: this._driver}))
+        this._config.setViewportSize(await this._spec.getViewportSize({target: this._driver}))
         throw new TestFailedError('Failed to set the viewport size')
       }
     }
