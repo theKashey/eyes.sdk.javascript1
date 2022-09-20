@@ -1,6 +1,6 @@
 {
   "name": "@applitools/test-server",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
@@ -32,7 +32,7 @@
     "postversion": "bongo postversion --skip-release-notification"
   },
   "dependencies": {
-    "@applitools/utils": "1.3.10",
+    "@applitools/utils": "1.3.12",
     "body-parser": "1.20.0",
     "chalk": "3.0.0",
     "cookie-parser": "1.4.5",
@@ -44,7 +44,7 @@
     "yargs": "17.0.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",
