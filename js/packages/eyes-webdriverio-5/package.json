@@ -116,9 +116,9 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "link:../core",
-    "@applitools/eyes-api": "1.7.5",
-    "@applitools/spec-driver-webdriverio": "1.2.19"
+    "@applitools/core": "1.0.0",
+    "@applitools/eyes-api": "1.7.6",
+    "@applitools/spec-driver-webdriverio": "1.2.20"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.9",
