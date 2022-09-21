@@ -42,6 +42,7 @@ describe('native app', () => {
       })
     })
   })
+
   describe('legacy protocol', () => {
     describe('android', () => {
       let driver, destroyDriver

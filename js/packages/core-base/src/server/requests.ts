@@ -561,7 +561,7 @@ function transformCheckOptions({target, settings}: {target: Target; settings: Ch
         ignoreDisplacements: settings.ignoreDisplacements,
         ignoreCaret: settings.ignoreCaret,
         enablePatterns: settings.enablePatterns,
-        matchLevel: settings.matchLevel,
+        matchLevel: settings.matchLevel ?? 'Strict',
         useDom: settings.useDom,
       },
       name: settings.name,
