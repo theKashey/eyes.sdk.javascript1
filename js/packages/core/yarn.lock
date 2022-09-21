@@ -16,10 +16,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/core-base@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/core-base/-/core-base-1.0.1.tgz#34deb3f49a46b4c0c8b977de7819a6b2d2cd556e"
-  integrity sha512-U6qNEE7wLnVUrKJgtJ9h2j3UAJys8+nNT3fDGjABbPyu9eaegQnEhTMfuLoH4MmbrVVBKDjlgVhFPvmXMQD5Cw==
+"@applitools/core-base@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@applitools/core-base/-/core-base-1.0.2.tgz#f6fbf04b8472e11cc6c5c45bd4beee3792ba404b"
+  integrity sha512-xQAOaihzFbke5fycPNV17lFITWpw8S1Rq4Batk5Tto1BIEc+TutTqj4rljLbg22BbGSL60L2t15Pjs0XXjFHAA==
   dependencies:
     "@applitools/image" "1.0.2"
     "@applitools/logger" "1.1.20"
@@ -55,10 +55,10 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.9.28":
-  version "1.9.28"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.28.tgz#0487134f997204fbfc0cfe792ae0cee380836edf"
-  integrity sha512-kPqoUeOnsJM7BfzIPMEj67xOri2ks58776wTr3IYo6Ij2EpgQzEKVpC0tga8h+nFDWb/kB1pbIrj0YjnW7KWTw==
+"@applitools/driver@1.9.29":
+  version "1.9.29"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.29.tgz#5df6fabce00c6e05cec4c2f71cc16bbd63146051"
+  integrity sha512-00DXZVPxayzO9ndvsRmHH9W+1RQQKPeakd1r14aZwyia38M5mg4szmk28KLkZERtT6vXyBlB86SuC8HgaQJ8RA==
   dependencies:
     "@applitools/logger" "1.1.20"
     "@applitools/snippets" "2.4.5"
@@ -216,10 +216,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.13.tgz#18b8a7d393a74f955b11c19f0391b88ee4bcc13f"
   integrity sha512-blYuOWBMxMu03RUmUTsal1KW2KuKTJfEL3HMgijOzlsUy65MwYFGmE8DtBGEN3YwhusgqaN05P+NVATsx2Glow==
 
-"@applitools/ufg-client@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@applitools/ufg-client/-/ufg-client-1.0.1.tgz#fca31f5883ee1dc22265f8a86d17dce9a551321c"
-  integrity sha512-O7hiMKq6WqFYx3b96UaOYjuYMPe2axNA6WvQl8W6z9R3KGsgiZTnfwoaXNWIcKyXoAel26jMaYazrkdWotZ+NQ==
+"@applitools/ufg-client@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@applitools/ufg-client/-/ufg-client-1.0.2.tgz#82cf98b930addd91e481b8a508bb19201c91b9df"
+  integrity sha512-iiGAbIo0Xo0UNH15xWw/ndCHbM7J0QLzFTeRGPuUysYmBIQydZJbZImslZW9tVJsUiReZuoxY6W6c7IlWUAAfw==
   dependencies:
     "@applitools/jsdom" "1.0.4"
     "@applitools/logger" "1.1.20"
