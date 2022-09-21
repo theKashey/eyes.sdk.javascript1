@@ -33,7 +33,7 @@ exports.sleep = utils.general.sleep
 exports.test = async function test({type, tag, driver, ...options} = {}) {
   if (options.withStatusBar) tag += '-statusbar'
 
-  const {screenshot} = await takeScreenshot({driver, ...options})
+  const screenshot = await takeScreenshot({driver, ...options})
   try {
     if (options.withStatusBar) {
       if (type === 'android') await sanitizeAndroidStatusBar(screenshot.image)
@@ -53,12 +53,14 @@ exports.test = async function test({type, tag, driver, ...options} = {}) {
       name: `${type}--${tag}` + (options.scrollingMode === 'css' ? '-css' : ''),
     })
     throw err
+  } finally {
+    await screenshot.restoreState()
   }
 }
 
 exports.testCodedRegions = async function testCodedRegions({driver, ...options}, expectedCoordinates) {
-  const {caltulatedRegions} = await takeScreenshot({driver, ...options})
-  const roundedRegionsArray = caltulatedRegions.map(regions => {
+  const {calculatedRegions} = await takeScreenshot({driver, ...options})
+  const roundedRegionsArray = calculatedRegions.map(regions => {
     const result = []
     for (const r of regions.regions) {
       result.push({
