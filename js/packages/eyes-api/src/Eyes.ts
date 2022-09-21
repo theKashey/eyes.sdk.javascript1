@@ -38,6 +38,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
   private _logger: Logger
   private _config: ConfigurationData<TElement, TSelector>
+  private _state: {appName?: string} = {}
   private _runner: EyesRunner
   private _driver: TDriver
   private _eyes: types.Eyes<TDriver, TElement, TSelector, 'ufg' | 'classic'>
@@ -175,7 +176,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
     if (this._config.isDisabled) return driver
 
-    const config: types.Config<TElement, TSelector, 'ufg' | 'classic'> = this._config.toJSON()
+    const config = this._config.toJSON()
     if (utils.types.instanceOf(configOrAppName, ConfigurationData)) {
       const transformedConfig = configOrAppName.toJSON()
       config.open = {...config.open, ...transformedConfig.open}
@@ -196,6 +197,8 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (utils.types.isEnumValue(sessionType, SessionTypeEnum)) config.open.sessionType = sessionType
 
     config.open.keepPlatformNameAsIs = true
+
+    this._state.appName = config.open?.appName
 
     this._eyes = await this._runner.openEyes({
       target: this._driver,
@@ -287,7 +290,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
     const config = this._config.toJSON()
 
-    return this._spec.locate({settings, config})
+    return this._spec.locate({target: this._driver, settings: {...this._state, ...settings}, config})
   }
 
   async extractTextRegions<TPattern extends string>(

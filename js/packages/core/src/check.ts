@@ -26,7 +26,6 @@ export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' 
   } = {}): Promise<CheckResult<TType>[]> {
     settings = {...config?.screenshot, ...config?.check, ...settings}
     settings.fully ??= !settings.region && (!settings.frames || settings.frames.length === 0)
-    settings.sendDom ??= true
     settings.waitBeforeCapture ??= 100
     settings.stitchMode ??= 'Scroll'
     settings.hideScrollbars ??= true
@@ -34,7 +33,8 @@ export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' 
     settings.overlap ??= {top: 10, bottom: 50}
     settings.matchLevel ??= 'Strict'
     settings.ignoreCaret ??= true
-    settings.useDom ?? false
+    settings.sendDom ??= true
+    settings.useDom ??= false
     ;(settings as CheckSettings<TElement, TSelector, 'classic'>).retryTimeout ??= 2000
     settings.lazyLoad = settings.lazyLoad === true ? {} : settings.lazyLoad
     if (settings.lazyLoad) {

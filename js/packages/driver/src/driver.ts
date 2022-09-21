@@ -162,6 +162,10 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         }
       }
 
+      if (!this._driverInfo.isMobile && (this.isAndroid || this.isIOS)) {
+        this._driverInfo.isMobile = true
+      }
+
       this._driverInfo.features ??= {}
       this._driverInfo.features.allCookies ??=
         /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile

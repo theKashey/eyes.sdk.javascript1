@@ -10,6 +10,7 @@ import {waitForLazyLoad} from '../utils/wait-for-lazy-load'
 import {toBaseCheckSettings} from '../utils/to-base-check-settings'
 import {generateSafeSelectors} from './utils/generate-safe-selectors'
 import * as utils from '@applitools/utils'
+import chalk from 'chalk'
 
 type Options<TDriver, TContext, TElement, TSelector> = {
   getEyes: (options: {rawEnvironment: any}) => Promise<BaseEyes>
@@ -115,6 +116,13 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
     }))
 
     const promises = settings.renderers.map(async (renderer, index) => {
+      if (utils.types.has(renderer, 'name') && renderer.name === 'edge') {
+        const message = chalk.yellow(
+          `The 'edge' option that is being used in your browsers' configuration will soon be deprecated. Please change it to either 'edgelegacy' for the legacy version or to 'edgechromium' for the new Chromium-based version. Please note, when using the built-in BrowserType enum, then the values are BrowserType.EDGE_LEGACY and BrowserType.EDGE_CHROMIUM, respectively.`,
+        )
+        logger.console.log(message)
+      }
+
       try {
         if (signal.aborted) {
           logger.warn('Command "check" was aborted before rendering')

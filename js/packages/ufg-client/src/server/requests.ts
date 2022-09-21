@@ -308,7 +308,7 @@ function extractRenderEnvironment({settings}: {settings: RenderSettings}) {
   if (utils.types.has(settings.renderer, ['width', 'height'])) {
     return {
       platform: {name: 'linux', type: 'web'},
-      browser: {name: settings.renderer.name},
+      browser: {name: settings.renderer.name.replace(/(one|two)-versions?-back$/, (_, num) => ({one: 1, two: 2}[num]))},
       renderInfo: {width: settings.renderer.width, height: settings.renderer.height},
     }
   } else if (utils.types.has(settings.renderer, 'chromeEmulationInfo')) {

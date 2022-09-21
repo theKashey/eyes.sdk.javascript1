@@ -562,7 +562,7 @@ function transformCheckOptions({target, settings}: {target: Target; settings: Ch
         ignoreCaret: settings.ignoreCaret,
         enablePatterns: settings.enablePatterns,
         matchLevel: settings.matchLevel ?? 'Strict',
-        useDom: settings.useDom,
+        useDom: settings.useDom ?? false,
       },
       name: settings.name,
       source: target.source,
