@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.1.6":
-  version "2.1.6"
-  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.6.tgz#596eef37fa7b75f5dd3a4b8b4e89fc38f2cd32ce"
-  integrity sha512-yj8O9FwDuH5GOy56KVF9VDj21nPkcRfwEhuX3+J/zeo3jAHZPUmpKCOcxtRvVaZ9L+IPziEtqdPJGKb894y+VQ==
+"@applitools/bongo@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.2.0.tgz#c8cae6a68ea4ec0955ecb5fe88ab35a523a0cf7f"
+  integrity sha512-XgEs7ts7qkpPpTDJZqpXkegPXRSAqazNhXuXm3kxpGCixvHz4H2Zfd1rbNePNzhtB/8xBrKpABzaEJL7VsozrA==
   dependencies:
-    "@applitools/utils" "1.3.5"
+    "@applitools/utils" "1.3.10"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -16,12 +16,12 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/test-server@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.1.4.tgz#ed774e2d8a05b7e9e25fa3a472067e377957cedb"
-  integrity sha512-KbBE094EC3NENAHZ2fQOHz8uqQShrgJZQJGu+MHvLbt9es15CaNuYhp6YX5Q2ajMWzXwYzW+zAypAqq9rt23tg==
+"@applitools/test-server@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.1.5.tgz#b9c54e9eb240ac88eba3c66af51a337d847cb1f7"
+  integrity sha512-urO8PgHxaCzv5rF3W9NPvGX3W7Ay3i6Y45rcwZDo5Vh9CFZwOnLEWVN4hbWnHMMEDecJabUvR2f5srtgRP6IeQ==
   dependencies:
-    "@applitools/utils" "1.3.10"
+    "@applitools/utils" "1.3.12"
     body-parser "1.20.0"
     chalk "3.0.0"
     cookie-parser "1.4.5"
@@ -32,10 +32,10 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.4.1.tgz#7ae558a122b8f6b2d64be2ad770fec979c347a33"
-  integrity sha512-G2nN67pg65pQ/jogTz4J53yRFnzAeNu4tUzm61Wfv0AW7DXjaF2mXy/TcBhZqdYHf0x6E42WaC2PZV+Qd2wYig==
+"@applitools/test-utils@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.5.1.tgz#bdba94cf9d54a1c6e17254b67410ed49530e58e3"
+  integrity sha512-L80Cx8yVG/kMDyqD9x0wENcpKbu4HrljZbhprc/OfuhhR7fzIuw7k+EDwLXrSSKxYV4gI2vBVa2J2FbJai7ayA==
   dependencies:
     node-fetch "2.6.1"
 
@@ -44,10 +44,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.10.tgz#307359d6f668c5fe6b3a7d213405ebe3bf2235b6"
   integrity sha512-CI/5BLB0D/aZn6uL8JJmsErI+TOHCa4Gz5Wi8sJknuPz/V9Ws6jIh9ZCTzvOCDUIp99qLJwD6TSA2BY9aMhCNw==
 
-"@applitools/utils@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.npmjs.org/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
-  integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
+"@applitools/utils@1.3.12":
+  version "1.3.12"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.12.tgz#43953c5cf6992adf12a6ba449fb36f0941004cb0"
+  integrity sha512-aWIMcq6wqzIVVIcbe1Q5f2g7PJeyLq17S0hH5xhqOArzJz/urAbLl98jHMOOkIBZVfuIAX0cIgaMPfuUpky96g==
 
 "@babel/code-frame@^7.0.0":
   version "7.10.4"
