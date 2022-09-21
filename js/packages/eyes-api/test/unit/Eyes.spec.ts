@@ -76,7 +76,7 @@ describe('Eyes', () => {
           data: {
             target: driver,
             config: {
-              open: {...config, ...openConfig, environment: {}},
+              open: {...config, ...openConfig, environment: {}, keepPlatformNameAsIs: true},
               screenshot: {normalization: {}},
               check: {},
               close: {},
@@ -119,7 +119,7 @@ describe('Eyes', () => {
           data: {
             target: driver,
             config: {
-              open: {...config, ...openConfig},
+              open: {...config, ...openConfig, keepPlatformNameAsIs: true},
               screenshot: {normalization: {}},
               check: {},
               close: {},
