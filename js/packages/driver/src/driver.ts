@@ -661,7 +661,6 @@ export async function makeDriver<TDriver, TContext, TElement, TSelector>(
   options: DriverOptions<TDriver, TContext, TElement, TSelector>,
 ): Promise<Driver<TDriver, TContext, TElement, TSelector>> {
   const driver = new Driver(options)
-  await utils.general.sleep(5000)
   await driver.init()
   await driver.refreshContexts()
   return driver

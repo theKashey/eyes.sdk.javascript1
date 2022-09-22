@@ -57,8 +57,8 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
     if (spec?.isDriver(target)) {
       // TODO driver custom config
       const driver = await makeDriver({spec, driver: target, logger})
-      const viewportSize = await driver.getViewportSize()
       if (driver.isWeb && (!settings.renderers || settings.renderers.length === 0)) {
+        const viewportSize = await driver.getViewportSize()
         settings.renderers = [{name: 'chrome', ...viewportSize}]
       }
 
