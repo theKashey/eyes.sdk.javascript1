@@ -8,6 +8,17 @@
 
 
 
+## 4.59.5 - 2022/9/22
+
+### Features
+- Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+- Added support for lazy loading views in android native apps
+- Using `lazyLoad.waitingTime` as a delay between stitches by default
+- Added `Sony Xperia 10 II` emulation device
+- Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
+### Bug fixes
+- Fixed incorrect calculation of the target element position.
+
 ## 4.59.4 - 2022/7/28
 
 ### Features
