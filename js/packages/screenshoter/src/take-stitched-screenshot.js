@@ -80,7 +80,8 @@ async function takeStitchedScreenshot({
   }
   region = utils.geometry.floor(region)
 
-  const [initialRegion, ...partRegions] = utils.geometry.divide(region, image.size, overlap)
+  const partSize = lazyLoad && driver.isNative ? {width: image.size.width, height: image.size.height / 2} : image.size
+  const [initialRegion, ...partRegions] = utils.geometry.divide(region, partSize, overlap)
   logger.verbose('Part regions', partRegions)
 
   logger.verbose('Creating stitched image composition container')

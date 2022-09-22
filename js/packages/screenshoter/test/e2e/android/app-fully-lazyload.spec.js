@@ -35,8 +35,8 @@ describe('screenshoter androidx app', () => {
       fully: true,
       framed: true,
       scrollingMode: 'scroll',
-      wait: 2000,
-      lazyLoad: {waitingTime: 1000},
+      wait: 3000,
+      lazyLoad: {waitingTime: 3000},
       driver,
       logger,
     })
