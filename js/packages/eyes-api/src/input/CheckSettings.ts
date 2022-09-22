@@ -681,7 +681,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
 
   /** @internal */
   toJSON(): types.CheckSettings<TElement, TSelector, 'classic' | 'ufg'> {
-    const settings: types.CheckSettings<TElement, TSelector, 'classic' | 'ufg'> = {
+    return dropUndefinedProperties({
       name: this._settings.name,
       region: this._settings.region,
       frames: this._settings.frames,
@@ -708,15 +708,18 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
       waitBeforeCapture: this._settings.waitBeforeCapture,
       retryTimeout: this._settings.timeout,
       userCommandId: this._settings.variationGroupId,
-    }
-    return Object.entries(settings).reduce(
-      (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
-      {} as any,
-    )
+    })
   }
 
   /** @internal */
   toString(): string {
     return utils.general.toString(this)
   }
+}
+
+function dropUndefinedProperties(object: Record<string, any>) {
+  return Object.entries(object).reduce(
+    (object, [key, value]) => (value !== undefined ? Object.assign(object, {[key]: value}) : object),
+    {} as any,
+  )
 }
