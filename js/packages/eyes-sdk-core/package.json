@@ -77,19 +77,17 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "link:../core",
-    "@applitools/driver": "1.9.26",
+    "@applitools/core": "1.0.3",
+    "@applitools/driver": "1.9.32",
     "@applitools/execution-grid-client": "1.1.24",
-    "@applitools/isomorphic-fetch": "3.0.0",
-    "@applitools/utils": "1.3.10",
-    "chalk": "3"
+    "@applitools/utils": "1.3.12"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.1.0",
     "@applitools/snippets": "^2.4.5",
-    "@applitools/spec-driver-selenium": "1.3.17",
-    "@applitools/test-server": "^1.1.4",
+    "@applitools/spec-driver-selenium": "1.3.22",
+    "@applitools/test-server": "^1.1.5",
     "@applitools/test-utils": "1.5.1",
     "eslint": "^8.16.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
