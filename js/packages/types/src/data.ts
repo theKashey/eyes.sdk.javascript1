@@ -166,6 +166,7 @@ export type ChromeEmulationDevice =
   | 'Pixel 4'
   | 'Pixel 4 XL'
   | 'Pixel 5'
+  | 'Sony Xperia 10 II'
 
 export type ChromeEmulationDeviceRenderer = {
   chromeEmulationInfo: {

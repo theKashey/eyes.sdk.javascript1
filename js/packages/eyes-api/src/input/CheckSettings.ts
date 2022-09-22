@@ -709,7 +709,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
       retryTimeout: this._settings.timeout,
       userCommandId: this._settings.variationGroupId,
     }
-    return JSON.parse(JSON.stringify(settings))
+    return Object.entries(settings).reduce(
+      (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
+      {} as any,
+    )
   }
 
   /** @internal */

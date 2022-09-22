@@ -123,6 +123,7 @@
   "devDependencies": {
     "@applitools/api-extractor": "1.2.9",
     "@applitools/bongo": "^2.2.0",
+    "@applitools/eyes-webdriverio": "^5.35.8",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.20",
     "@applitools/sdk-shared": "0.9.13",

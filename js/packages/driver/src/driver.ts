@@ -132,6 +132,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async init(): Promise<this> {
+    // NOTE: this is here because saucelabs does not provide right capabilities for the first call
+    await this._spec.getCapabilities?.(this.target)
     const capabilities = await this._spec.getCapabilities?.(this.target)
     this._logger.log('Driver capabilities', capabilities)
 
@@ -659,6 +661,7 @@ export async function makeDriver<TDriver, TContext, TElement, TSelector>(
   options: DriverOptions<TDriver, TContext, TElement, TSelector>,
 ): Promise<Driver<TDriver, TContext, TElement, TSelector>> {
   const driver = new Driver(options)
+  await utils.general.sleep(5000)
   await driver.init()
   await driver.refreshContexts()
   return driver

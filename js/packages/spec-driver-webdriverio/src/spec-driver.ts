@@ -259,10 +259,7 @@ export async function getCookies(browser: Driver, context?: boolean): Promise<Co
 }
 export async function getCapabilities(browser: Driver): Promise<Record<string, any>> {
   try {
-    const capabilities = (await browser.getSession?.()) ?? browser.capabilities
-    return JSON.stringify(capabilities) === JSON.stringify(browser.capabilities)
-      ? (await browser.getSession?.()) ?? capabilities
-      : capabilities
+    return (await browser.getSession?.()) ?? browser.capabilities
   } catch (error) {
     if (/cannot call non W3C standard command/i.test(error.message)) return browser.capabilities
     throw error

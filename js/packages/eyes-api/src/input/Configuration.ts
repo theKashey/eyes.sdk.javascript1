@@ -1238,7 +1238,32 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
         updateBaselineIfNew: this.saveNewTests,
       },
     }
-    return JSON.parse(JSON.stringify(config))
+    return {
+      open:
+        config.open &&
+        Object.entries(config.open).reduce(
+          (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
+          {} as any,
+        ),
+      screenshot:
+        config.screenshot &&
+        Object.entries(config.screenshot).reduce(
+          (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
+          {} as any,
+        ),
+      check:
+        config.check &&
+        Object.entries(config.check).reduce(
+          (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
+          {} as any,
+        ),
+      close:
+        config.close &&
+        Object.entries(config.close).reduce(
+          (settings, [key, value]) => (!utils.types.isNull(value) ? Object.assign(settings, {[key]: value}) : settings),
+          {} as any,
+        ),
+    }
   }
 
   /** @internal */
