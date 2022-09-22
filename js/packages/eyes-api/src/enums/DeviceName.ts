@@ -65,6 +65,7 @@ export enum DeviceNameEnum {
   Pixel_4 = 'Pixel 4',
   Pixel_4_XL = 'Pixel 4 XL',
   Pixel_5 = 'Pixel 5',
+  Sony_Xperia_10_II = 'Sony Xperia 10 II',
 }
 
 export type DeviceName = `${DeviceNameEnum}`
