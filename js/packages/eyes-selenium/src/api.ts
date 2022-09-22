@@ -1,13 +1,11 @@
 import type {Driver, Element, Selector} from '@applitools/spec-driver-selenium'
-import {makeSDK} from '@applitools/eyes-sdk-core'
+import {makeCore} from '@applitools/core'
 import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-selenium'
 
-const sdk: any = makeSDK({
-  name: 'eyes.selenium',
-  version: `${require('../package.json').version}--${process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION}`,
+const sdk: any = makeCore({
+  agentId: `eyes-webdriverio/${require('../package.json').version}`,
   spec,
-  VisualGridClient: require('@applitools/visual-grid-client'),
 })
 
 export * from '@applitools/eyes-api'
