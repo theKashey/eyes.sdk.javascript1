@@ -55,10 +55,10 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.9.31":
-  version "1.9.31"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.31.tgz#213efee6b338cabd4b243ce09cd3fd56d31f8ae4"
-  integrity sha512-pZadrIVpAm2+l1V53ZmMxg3P7nxLdCg7HDo8GVWtERnd5OXywxAPZ/aDEGv25zLN+b+r04Awzoy85YGpNzVWRA==
+"@applitools/driver@1.9.32":
+  version "1.9.32"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.32.tgz#15880965fa7c97c23d0635b34a8ff66981204ac8"
+  integrity sha512-ksz7jjOAbABmDUmx7bsxJhjnUn69dP1sH/gRxeZMA0rhYTRWy7rULkLdIbVYfZo6wKH5z9C3cLnSKDW+VOT5Lw==
   dependencies:
     "@applitools/logger" "1.1.21"
     "@applitools/snippets" "2.4.5"

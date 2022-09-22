@@ -60,7 +60,7 @@
     "@applitools/core-base": "1.0.3",
     "@applitools/dom-capture": "11.1.2",
     "@applitools/dom-snapshot": "4.6.2",
-    "@applitools/driver": "1.9.31",
+    "@applitools/driver": "1.9.32",
     "@applitools/logger": "1.1.21",
     "@applitools/nml-client": "1.2.2",
     "@applitools/req": "1.1.5",
