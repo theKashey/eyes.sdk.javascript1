@@ -37,7 +37,7 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
     logger.log(`Command "openEyes" is called with ${spec?.isDriver(target) ? 'default driver and' : ''} settings`, settings)
 
     if (spec?.isDriver(target)) {
-      const driver = await makeDriver({spec, driver: target, logger})
+      const driver = await makeDriver({spec, driver: target, logger, customConfig: {disableHelper: true}})
 
       if (settings.environment?.viewportSize) {
         await driver.setViewportSize(settings.environment.viewportSize)

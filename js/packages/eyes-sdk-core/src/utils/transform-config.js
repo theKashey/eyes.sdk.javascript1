@@ -33,6 +33,7 @@ function transformConfig(config) {
       ignoreGitBranching: config.ignoreGitMergeBase,
       saveDiffs: config.saveDiffs,
       keepBatchOpen: config.dontCloseBatches,
+      useCeilForViewportSize: config.useCeilForViewportSize,
     }),
     screenshot: dropUndefinedProperties({
       fully: config.forceFullPageScreenshot,

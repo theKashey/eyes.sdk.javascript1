@@ -31,6 +31,7 @@ export interface Eyes<TDriver, TElement, TSelector, TTarget = Target<TDriver>>
 
 export type OpenSettings = AutomationCore.OpenSettings & {
   keepPlatformNameAsIs?: boolean
+  useCeilForViewportSize?: boolean
 }
 
 export type CheckSettings<TElement, TSelector> = AutomationCore.CheckSettings<TElement, TSelector> & {
