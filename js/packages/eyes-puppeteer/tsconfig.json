@@ -17,7 +17,7 @@
     "downlevelIteration": true,
     "removeComments": true,
     "plugins": [{
-      "transform": "../api-extractor/dist/transformer.js",
+      "transform": "@applitools/api-extractor",
       "afterDeclarations": true,
       "rootFile": "./index.ts",
       "allowModules": ["puppeteer"],
