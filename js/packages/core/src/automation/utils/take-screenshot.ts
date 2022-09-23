@@ -36,6 +36,7 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
     overlap: settings.overlap,
     wait: settings.waitBeforeCapture,
     framed: driver.isNative,
+    lazyLoad: settings.lazyLoad,
     stabilization: settings.normalization && {
       crop: settings.normalization.cut,
       scale: settings.normalization.scaleRatio,
