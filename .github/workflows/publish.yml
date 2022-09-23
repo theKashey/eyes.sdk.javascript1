@@ -73,7 +73,7 @@ jobs:
           workflow: publish-utils.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).utils.version}}"}'
   logger:
-    needs: [ setup, utils ]
+    needs: [ setup, types, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
     name: logger
     runs-on: ubuntu-latest
@@ -307,6 +307,7 @@ jobs:
         setup,
         core,
         eg-client,
+        core-legacy,
         logger,
         utils,
         api,
@@ -396,7 +397,7 @@ jobs:
 
   # JS SDKS
   playwright:
-    needs: [ setup, api, core-legacy, spec-playwright, test-utils ]
+    needs: [ setup, core, api, spec-playwright, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
     name: playwright
     runs-on: ubuntu-latest
@@ -409,7 +410,7 @@ jobs:
           workflow: publish-playwright.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).playwright.version}}"}'
   puppeteer:
-    needs: [ setup, api, core-legacy, spec-puppeteer, test-utils ]
+    needs: [ setup, core, api, spec-puppeteer, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).puppeteer && !failure() && !cancelled()}}
     name: puppeteer
     runs-on: ubuntu-latest
@@ -448,7 +449,7 @@ jobs:
           workflow: publish-webdriverio-service.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).webdriverio-service.version}}"}'
   selenium:
-    needs: [ setup, api, core-legacy, spec-selenium, test-utils ]
+    needs: [ setup, core, api, spec-selenium, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).selenium && !failure() && !cancelled()}}
     name: selenium
     runs-on: ubuntu-latest
