@@ -11,6 +11,16 @@
 
 
 
+## 1.12.3 - 2022/9/23
+
+### Features
+- Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+- Using `lazyLoad.waitingTime` as a delay between stitches by default
+- Added `Sony Xperia 10 II` emulation device
+- Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
+### Bug fixes
+- Fixed incorrect calculation of the target element position.
+
 ## 1.12.2 - 2022/7/28
 
 ### Features
