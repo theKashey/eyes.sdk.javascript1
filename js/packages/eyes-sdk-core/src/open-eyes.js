@@ -13,7 +13,7 @@ function makeOpenEyes({manager, core}) {
 
     return {
       check: makeCheck({eyes, config}),
-      locate: makeLocate({core, config}),
+      locate: makeLocate({core, config, driver}),
       extractText: makeExtractText({eyes, config}),
       extractTextRegions: makeExtractTextRegions({eyes, config}),
       close: makeClose({eyes, config}),

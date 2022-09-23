@@ -6,7 +6,6 @@ export function makeSDK<TDriver, TContext, TElement, TSelector>(options: {
   version: string
   cwd?: string
   spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
-  VisualGridClient: any
 }): types.Core<TDriver, TElement, TSelector>
 
 export {Core} from '@applitools/types'
