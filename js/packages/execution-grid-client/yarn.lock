@@ -2,12 +2,12 @@
 # yarn lockfile v1
 
 
-"@applitools/bongo@^2.1.6":
-  version "2.1.6"
-  resolved "https://registry.npmjs.org/@applitools/bongo/-/bongo-2.1.6.tgz#596eef37fa7b75f5dd3a4b8b4e89fc38f2cd32ce"
-  integrity sha512-yj8O9FwDuH5GOy56KVF9VDj21nPkcRfwEhuX3+J/zeo3jAHZPUmpKCOcxtRvVaZ9L+IPziEtqdPJGKb894y+VQ==
+"@applitools/bongo@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@applitools/bongo/-/bongo-2.2.0.tgz#c8cae6a68ea4ec0955ecb5fe88ab35a523a0cf7f"
+  integrity sha512-XgEs7ts7qkpPpTDJZqpXkegPXRSAqazNhXuXm3kxpGCixvHz4H2Zfd1rbNePNzhtB/8xBrKpABzaEJL7VsozrA==
   dependencies:
-    "@applitools/utils" "1.3.5"
+    "@applitools/utils" "1.3.10"
     chalk "3.0.0"
     compare-versions "4.1.3"
     js-yaml "4.1.0"
@@ -43,12 +43,13 @@
     teen_process "^1.16.0"
     yargs "^17.5.1"
 
-"@applitools/logger@1.1.16":
-  version "1.1.16"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.16.tgz#31c90aa9aaf4a9484ccd5088098676137cdb0dcf"
-  integrity sha512-AA18naLM/v+2k4YwUJ9ayuSUSQBRRlS7hZLQfHEFS9XZMcflSU8a5H0G2cl8AiZMj1hXK6bCIyH3x41x8aFtYQ==
+"@applitools/logger@1.1.22":
+  version "1.1.22"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.22.tgz#f8480f9ceebd9a0b2f2e8102afb61713f867fe86"
+  integrity sha512-Q2cqgWBUXemZXdjYKFoIr2Egq4tc9TautYs0QFj+5CwuiFisBS1C5YVgAS6kFmA7hvJPmf/DAW//nuKz01NfFw==
   dependencies:
-    "@applitools/utils" "1.3.10"
+    "@applitools/types" "1.5.15"
+    "@applitools/utils" "1.3.12"
     chalk "4.1.2"
 
 "@applitools/logger@^1.0.12":
@@ -77,15 +78,20 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
+"@applitools/types@1.5.15":
+  version "1.5.15"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.15.tgz#9717ed0feb2184c4d886fbe0d1fbfee4c9a97dcc"
+  integrity sha512-q9RAROy125NMW/Oi6oCCypd2iV2EaXE+VPUuLsnWLUxt+DkqwGzLUNLALEfasBY60YJQZqgKVWYT/PNh8y49Pg==
+
 "@applitools/utils@1.3.10":
   version "1.3.10"
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.10.tgz#307359d6f668c5fe6b3a7d213405ebe3bf2235b6"
   integrity sha512-CI/5BLB0D/aZn6uL8JJmsErI+TOHCa4Gz5Wi8sJknuPz/V9Ws6jIh9ZCTzvOCDUIp99qLJwD6TSA2BY9aMhCNw==
 
-"@applitools/utils@1.3.5":
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.5.tgz#ac4e7e257334672e51f31028e439b83f01a485ff"
-  integrity sha512-w1XJWj/MzZmTRbCUU/f5SvGAa4lKCeelNaI6HEi0VSqZirYmrzZdXFMlHqoh2RlDneLUEbBTbLhWC/RixaA1RA==
+"@applitools/utils@1.3.12":
+  version "1.3.12"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.12.tgz#43953c5cf6992adf12a6ba449fb36f0941004cb0"
+  integrity sha512-aWIMcq6wqzIVVIcbe1Q5f2g7PJeyLq17S0hH5xhqOArzJz/urAbLl98jHMOOkIBZVfuIAX0cIgaMPfuUpky96g==
 
 "@babel/runtime@^7.0.0":
   version "7.18.6"
