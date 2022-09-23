@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed issue when lazy loading script being executed on native app
 "@applitools/eyes-selenium":
   feature:
     - 
