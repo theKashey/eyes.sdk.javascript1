@@ -86,13 +86,13 @@
     "@applitools/utils" "1.3.12"
     semver "7.3.7"
 
-"@applitools/execution-grid-client@1.1.24":
-  version "1.1.24"
-  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.24.tgz#40c9782ddc059ca0eb1b7acd74f5c829bcd5acdd"
-  integrity sha512-SA6pl54KwkExr30lPRrEGfP3Ypfyfw8LLhVk7XWMLp4D7JgBPNyzAbY+KHLE4bVXRUBiXDzQGcf8scLVycajxg==
+"@applitools/execution-grid-client@1.1.25":
+  version "1.1.25"
+  resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.25.tgz#3e4b9fa30ca7f8b9df85ea419a0278ece99cffeb"
+  integrity sha512-WrdjFQ01I5tmQdC7IDzGhOoq+tH16A3sad+ufZYTcH7fur36AbLgr8mMRarIfvDSnRsb5AXZPw/sntXjD8tL2w==
   dependencies:
-    "@applitools/logger" "1.1.16"
-    "@applitools/utils" "1.3.10"
+    "@applitools/logger" "1.1.22"
+    "@applitools/utils" "1.3.12"
     abort-controller "3.0.0"
     node-fetch "2.6.7"
     proxy-agent "5.0.0"
@@ -108,14 +108,14 @@
     "@applitools/types" "1.5.14"
     "@applitools/utils" "1.3.12"
 
-"@applitools/eyes-sdk-core@13.10.1":
-  version "13.10.1"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.10.1.tgz#479bb4836ecf384ec8f610191c53c9b6bf3345a4"
-  integrity sha512-FICebqwk40ILwkgJmv7Q1B34E0/vGzPXtkMzsNfhf/gJg7VhoT3RSsw8shPcqVmCYmk+mphTAlodekwvk7qhUQ==
+"@applitools/eyes-sdk-core@13.10.2":
+  version "13.10.2"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.10.2.tgz#905eb00f62b644d53c05d00034431c6f8ab04044"
+  integrity sha512-JQw08llcs5N8/+AT/2vgrFoaZNcv/ENECy7cmThXMkdu/ejxWCsobofq9NolShA4Iw1YP1IRrhLMZD7x1pt4ag==
   dependencies:
     "@applitools/core" "1.0.4"
     "@applitools/driver" "1.9.33"
-    "@applitools/execution-grid-client" "1.1.24"
+    "@applitools/execution-grid-client" "1.1.25"
     "@applitools/utils" "1.3.12"
 
 "@applitools/functional-commons@1.6.0":
@@ -164,14 +164,6 @@
     whatwg-url "^10.0.0"
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
-
-"@applitools/logger@1.1.16":
-  version "1.1.16"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.16.tgz#31c90aa9aaf4a9484ccd5088098676137cdb0dcf"
-  integrity sha512-AA18naLM/v+2k4YwUJ9ayuSUSQBRRlS7hZLQfHEFS9XZMcflSU8a5H0G2cl8AiZMj1hXK6bCIyH3x41x8aFtYQ==
-  dependencies:
-    "@applitools/utils" "1.3.10"
-    chalk "4.1.2"
 
 "@applitools/logger@1.1.21":
   version "1.1.21"
