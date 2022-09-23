@@ -11,6 +11,12 @@
 
 
 
+## 2.13.3 - 2022/9/23
+
+### Features
+### Bug fixes
+- Fixed `lazyLoad` property propagation to helper lib
+
 ## 2.13.2 - 2022/9/23
 
 ### Features
