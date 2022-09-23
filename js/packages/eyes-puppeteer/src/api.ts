@@ -1,13 +1,11 @@
 import type {Driver, Element, Selector} from '@applitools/spec-driver-puppeteer'
-import {makeSDK} from '@applitools/eyes-sdk-core'
+import {makeCore} from '@applitools/core'
 import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-puppeteer'
 
-const sdk: any = makeSDK({
-  name: 'eyes.puppeteer',
-  version: require('../package.json').version,
+const sdk: any = makeCore({
+  agentId: `eyes.puppeteer/${require('../package.json').version}`,
   spec,
-  VisualGridClient: require('@applitools/visual-grid-client'),
 })
 
 export * from '@applitools/eyes-api'

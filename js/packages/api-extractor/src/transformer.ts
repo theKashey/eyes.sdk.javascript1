@@ -223,7 +223,7 @@ export default function transformer(program: ts.Program, config: TransformerConf
     const fileName = sourceFile.fileName
     const dirName = fileName.includes('/node_modules/') ? sourceFile.fileName.replace(/\/node_modules\/.*$/, '') : program.getCurrentDirectory()
     const moduleName = config.allowModules?.find(moduleName => {
-      const cache = modules.getOrCreateCacheForModuleName(moduleName, undefined)
+      const cache = modules.getOrCreateCacheForModuleName(moduleName, ts.ModuleKind.CommonJS)
       const module = cache.get(dirName) ?? cache.get(`${dirName}/node_modules`)
       if (!module?.resolvedModule) return false
       const moduleSourceFile = program.getSourceFile(module.resolvedModule.resolvedFileName)
