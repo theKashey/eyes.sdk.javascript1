@@ -11,6 +11,12 @@
 
 
 
+## 2.13.1 - 2022/9/23
+
+### Features
+### Bug fixes
+- Fixed issue when lazy loading script being executed on native app
+
 ## 2.13.0 - 2022/9/23
 
 ### Features
