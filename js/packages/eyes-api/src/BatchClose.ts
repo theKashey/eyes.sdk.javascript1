@@ -1,21 +1,20 @@
+import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import {ProxySettings} from './input/ProxySettings'
 
 type BatchCloseOptions = {
   batchIds: string[]
-  serverUrl?: string
-  apiKey?: string
+  serverUrl: string
+  apiKey: string
   proxy?: ProxySettings
 }
 
-type BatchCloseSpec = {
-  closeBatches(options: {settings: BatchCloseOptions}): Promise<void>
-}
+type BatchCloseSpec = Pick<types.Core<unknown, unknown, unknown>, 'closeBatch'>
 
 export function closeBatch(spec: BatchCloseSpec): (options: BatchCloseOptions) => Promise<void> {
   return (settings: BatchCloseOptions) => {
     utils.guard.notNull(settings.batchIds, {name: 'options.batchIds'})
-    return spec.closeBatches({settings})
+    return spec.closeBatch({settings: settings.batchIds.map(batchId => ({batchId, ...settings}))})
   }
 }
 
@@ -25,39 +24,39 @@ export class BatchClose {
     return (this.constructor as typeof BatchClose)._spec
   }
 
-  private _options: BatchCloseOptions = {batchIds: null}
+  private _settings = {} as BatchCloseOptions
 
   static async close(settings: BatchCloseOptions): Promise<void> {
     utils.guard.notNull(settings.batchIds, {name: 'options.batchIds'})
-    await this._spec.closeBatches({settings})
+    await this._spec.closeBatch({settings: settings.batchIds.map(batchId => ({batchId, ...settings}))})
   }
 
   constructor(options?: BatchCloseOptions) {
-    if (options) this._options = options
+    if (options) this._settings = options
   }
 
   async close(): Promise<void> {
-    utils.guard.notNull(this._options.batchIds, {name: 'batchIds'})
-    await this._spec.closeBatches({settings: this._options})
+    utils.guard.notNull(this._settings.batchIds, {name: 'batchIds'})
+    await this._spec.closeBatch({settings: this._settings.batchIds.map(batchId => ({batchId, ...this._settings}))})
   }
 
   setBatchIds(batchIds: string[]): this {
-    this._options.batchIds = batchIds
+    this._settings.batchIds = batchIds
     return this
   }
 
   setUrl(serverUrl: string): this {
-    this._options.serverUrl = serverUrl
+    this._settings.serverUrl = serverUrl
     return this
   }
 
   setApiKey(apiKey: string): this {
-    this._options.apiKey = apiKey
+    this._settings.apiKey = apiKey
     return this
   }
 
   setProxy(proxy: ProxySettings): this {
-    this._options.proxy = proxy
+    this._settings.proxy = proxy
     return this
   }
 }

@@ -3,7 +3,7 @@ import {makeCore} from '@applitools/core'
 import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-playwright'
 
-const sdk: any = makeCore({
+const sdk = makeCore({
   agentId: `eyes.playwright/${require('../package.json').version}`,
   spec,
 })
