@@ -152,12 +152,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     if (settings.scrollRootElement) this.scrollRootElement(settings.scrollRootElement)
     if (settings.frames) {
       settings.frames.forEach(reference => {
-        if (utils.types.isNull(reference)) return
-        if (utils.types.has(reference, 'frame')) {
-          this.frame(reference.frame, reference.scrollRootElement)
-        } else {
-          this.frame(reference)
-        }
+        if (!utils.types.isNull(reference)) this.frame(reference as ContextReference<TElement, TSelector>)
       })
     }
     if (!utils.types.isNull(settings.fully)) this.fully(settings.fully)
@@ -264,9 +259,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     contextOrFrame: ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>,
     scrollRootElement?: ElementReference<TElement, TSelector>,
   ): this {
-    const context = utils.types.has(contextOrFrame, 'frame')
-      ? contextOrFrame
-      : {frame: contextOrFrame, scrollRootElement}
+    const context: ContextReference<TElement, TSelector> =
+      this._isFrameReference(contextOrFrame) || this._isSelectorReference(contextOrFrame)
+        ? {frame: contextOrFrame, scrollRootElement}
+        : contextOrFrame
     if (!this._settings.frames) this._settings.frames = []
     utils.guard.custom(context.frame, value => this._isFrameReference(value), {name: 'frame'})
     utils.guard.custom(context.scrollRootElement, value => this._isElementReference(value), {

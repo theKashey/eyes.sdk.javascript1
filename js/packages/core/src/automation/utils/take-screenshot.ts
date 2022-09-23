@@ -24,7 +24,7 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
   return legacyTakeScreenshot({
     driver,
     frames: settings.frames?.map(frame => {
-      return utils.types.has(frame, 'frame')
+      return utils.types.isPlainObject(frame) && utils.types.has(frame, 'frame')
         ? {reference: frame.frame, scrollingElement: frame.scrollRootElement}
         : {reference: frame}
     }),
