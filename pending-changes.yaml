@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed `Eyes.check` command response regression
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

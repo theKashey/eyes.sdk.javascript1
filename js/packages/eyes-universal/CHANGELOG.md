@@ -11,6 +11,12 @@
 
 
 
+## 2.13.2 - 2022/9/23
+
+### Features
+### Bug fixes
+- Fixed `Eyes.check` command response regression
+
 ## 2.13.1 - 2022/9/23
 
 ### Features
