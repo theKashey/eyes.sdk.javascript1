@@ -5,7 +5,8 @@ function makeCheck({eyes, config: defaultConfig}) {
   return async function check({settings, config = defaultConfig} = {}) {
     const transformedConfig = transformConfig(config)
     const transformedSettings = settings && transformCheckSettings(settings)
-    return eyes.check({settings: transformedSettings, config: transformedConfig})
+    const [result] = await eyes.check({settings: transformedSettings, config: transformedConfig})
+    return result
   }
 }
 
