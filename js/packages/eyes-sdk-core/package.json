@@ -46,12 +46,8 @@
     "@applitools/screenshoter": false
   },
   "types": "./index.d.ts",
-  "bin": {
-    "eyes-check-network": "./lib/runCheckNetwork.js"
-  },
   "files": [
-    "bin",
-    "lib",
+    "src",
     "index.js",
     "browser.js",
     "index.d.ts"
