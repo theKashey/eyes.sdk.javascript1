@@ -34,6 +34,7 @@ function transformConfig(config) {
       saveDiffs: config.saveDiffs,
       keepBatchOpen: config.dontCloseBatches,
       useCeilForViewportSize: config.useCeilForViewportSize,
+      userTestId: config.userTestId,
     }),
     screenshot: dropUndefinedProperties({
       fully: config.forceFullPageScreenshot,

@@ -203,8 +203,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
           throw error
         }
       } catch (error) {
-        error.userTestId = test.userTestId
-        error.renderer = renderer
+        error.info = {userTestId: test.userTestId, renderer}
         throw error
       }
     })

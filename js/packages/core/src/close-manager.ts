@@ -2,6 +2,7 @@ import type {Eyes, CloseBatchSettings, TestResult, TestResultContainer, TestResu
 import type {Core as BaseCore} from '@applitools/types/base'
 import {type Logger} from '@applitools/logger'
 import {TestError} from './errors/test-error'
+import {InternalError} from './errors/internal-error'
 
 type Options<TDriver, TElement, TSelector, TType extends 'classic' | 'ufg'> = {
   core: BaseCore<unknown>
@@ -31,7 +32,7 @@ export function makeCloseManager<TDriver, TElement, TSelector, TType extends 'cl
             }
           })
         } catch (error) {
-          return [{error, userTestId: error.userTestId, renderer: error.renderer}]
+          return [{error: new InternalError(error), ...error.info}]
         }
       }),
     )

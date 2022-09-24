@@ -1,4 +1,5 @@
 const transformConfig = require('./utils/transform-config')
+const transformException = require('./utils/transform-exception')
 
 function makeClose({eyes, config: defaultConfig}) {
   return async function close({throwErr = false, config = defaultConfig} = {}) {
@@ -6,10 +7,7 @@ function makeClose({eyes, config: defaultConfig}) {
       const transformedConfig = transformConfig(config)
       return await eyes.close({settings: {throwErr}, config: transformedConfig})
     } catch (error) {
-      if (error.info) {
-        error.info = {...error.info, testResults: error.info.result, browserInfo: error.info.renderer}
-      }
-      throw error
+      throw transformException(error)
     }
   }
 }
