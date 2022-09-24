@@ -12,7 +12,8 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed propagation of the provided `userTestId` property
+    - Return error object in manager's summary in common format
 "@applitools/eyes-selenium":
   feature:
     - 
