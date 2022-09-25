@@ -11,6 +11,12 @@
 
 
 
+## 2.13.5 - 2022/9/25
+
+### Features
+### Bug fixes
+- Fixed the wrong naming of the error info field `testResults` renamed to `testResult`
+
 ## 2.13.4 - 2022/9/25
 
 ### Features

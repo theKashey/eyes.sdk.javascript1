@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed the wrong naming of the error info field `testResults` renamed to `testResult`
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
