@@ -44,7 +44,7 @@ describe('UFG native', () => {
         appName: 'core app',
         testName: 'native ufg ios',
         waitBeforeCapture: 1500,
-        browsersInfo: [{iosDeviceInfo: {deviceName: 'iPhone 12', iosVersion: 'latest'}}],
+        browsersInfo: [{iosDeviceInfo: {deviceName: 'iPhone 12', iosVersion: 'latest-1'}}],
         saveNewTests: false,
       }
       const manager = await sdk.makeManager({type: 'vg', concurrency: 5})

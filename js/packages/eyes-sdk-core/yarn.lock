@@ -27,10 +27,10 @@
     "@applitools/types" "1.5.15"
     "@applitools/utils" "1.3.12"
 
-"@applitools/core@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.0.7.tgz#38adefdb46ec6ba4de0c9b7738b4f954a6505152"
-  integrity sha512-rFAXGJZaDat7JaU48gxjFBr1a21JOx83ZJBpCqwZv1DPXLq7Y74qOOHdt2ZzQvhYwRDXhvp3T7eN39uXQWvtUA==
+"@applitools/core@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.0.8.tgz#cd0a14b4c2bbd1fda763d1f873198892e84c39ea"
+  integrity sha512-0N1Glu/wwYNY4d07B5XujzN4qGTsxXS8yhZjzQ0RfTWBDA3CQ7nfPAOm316esbl6qV9wiW22ISLSAn1XTz1QWw==
   dependencies:
     "@applitools/core-base" "1.0.4"
     "@applitools/dom-capture" "11.1.2"

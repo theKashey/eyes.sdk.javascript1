@@ -5,7 +5,11 @@ function makeCloseManager({manager}) {
     try {
       const summary = await manager.closeManager({settings: {throwErr, logger}})
       summary.results = summary.results.map(result => {
-        return {testResults: result.result, exception: transformException(result.error), browserInfo: result.renderer}
+        return {
+          testResults: result.result,
+          exception: result.error && transformException(result.error),
+          browserInfo: result.renderer,
+        }
       })
       return summary
     } catch (error) {
