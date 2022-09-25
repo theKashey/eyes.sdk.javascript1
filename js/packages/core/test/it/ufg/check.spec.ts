@@ -202,7 +202,7 @@ describe('check', () => {
     })
 
     await assert.rejects(eyes.close(), error => {
-      return error.message === 'chrome render failed' && Boolean(error.renderer && error.eyes)
+      return error.message === 'chrome render failed' && Boolean(error.info)
     })
 
     assert.strictEqual(checked, 2)

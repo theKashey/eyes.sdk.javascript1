@@ -9,6 +9,7 @@ import {takeSnapshots} from './utils/take-snapshots'
 import {waitForLazyLoad} from '../utils/wait-for-lazy-load'
 import {toBaseCheckSettings} from '../utils/to-base-check-settings'
 import {generateSafeSelectors} from './utils/generate-safe-selectors'
+import {AbortError} from '../errors/abort-error'
 import * as utils from '@applitools/utils'
 import chalk from 'chalk'
 
@@ -44,7 +45,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
     if (signal.aborted) {
       logger.warn('Command "check" was called after test was already aborted')
-      throw new Error('Command "check" was called after test was already aborted')
+      throw new AbortError('Command "check" was called after test was already aborted')
     }
 
     const {elementReferencesToCalculate, elementReferenceToTarget, getBaseCheckSettings} = toBaseCheckSettings({settings})
@@ -126,7 +127,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
       try {
         if (signal.aborted) {
           logger.warn('Command "check" was aborted before rendering')
-          throw new Error('Command "check" was aborted before rendering')
+          throw new AbortError('Command "check" was aborted before rendering')
         }
 
         const {cookies, ...snapshot} = snapshots[index] as typeof snapshots[number] & {cookies: any[]}
@@ -153,10 +154,10 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         try {
           if (signal.aborted) {
             logger.warn('Command "check" was aborted before rendering')
-            throw new Error('Command "check" was aborted before rendering')
+            throw new AbortError('Command "check" was aborted before rendering')
           } else if (eyes.aborted) {
             logger.warn(`Renderer with id ${rendererId} was aborted during one of the previous steps`)
-            throw new Error(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
+            throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
           request.settings.rendererId = rendererId
@@ -164,10 +165,10 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
           if (signal.aborted) {
             logger.warn('Command "check" was aborted before rendering')
-            throw new Error('Command "check" was aborted before rendering')
+            throw new AbortError('Command "check" was aborted before rendering')
           } else if (eyes.aborted) {
             logger.warn(`Renderer with id ${rendererId} was aborted during one of the previous steps`)
-            throw new Error(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
+            throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
           const {renderId, selectorRegions, ...baseTarget} = await client.render({request, signal})
@@ -183,27 +184,27 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
           if (signal.aborted) {
             logger.warn('Command "check" was aborted after rendering')
-            throw new Error('Command "check" was aborted after rendering')
+            throw new AbortError('Command "check" was aborted after rendering')
           } else if (eyes.aborted) {
             logger.warn(`Renderer with id ${rendererId} was aborted during one of the previous steps`)
-            throw new Error(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
+            throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
           const [result] = await eyes.check({target: baseTarget, settings: baseSettings, logger})
 
           if (eyes.aborted) {
             logger.warn(`Renderer with id ${rendererId} was aborted during one of the previous steps`)
-            throw new Error(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
+            throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
           return {...result, eyes, renderer}
         } catch (error) {
-          error.eyes = eyes
           await eyes.abort()
+          error.info = {eyes}
           throw error
         }
       } catch (error) {
-        error.info = {userTestId: test.userTestId, renderer}
+        error.info = {...error.info, userTestId: test.userTestId, renderer}
         throw error
       }
     })

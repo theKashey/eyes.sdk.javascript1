@@ -71,7 +71,7 @@ describe('close', async () => {
     })
 
     await assert.rejects(eyes.close(), error => {
-      return error.message === 'check failed' && Boolean(error.renderer && error.eyes)
+      return error.message === 'check failed' && Boolean(error.info)
     })
   })
 
@@ -99,7 +99,7 @@ describe('close', async () => {
     })
 
     await assert.rejects(eyes.close(), error => {
-      return error.message === 'render failed' && Boolean(error.renderer && error.eyes)
+      return error.message === 'render failed' && Boolean(error.info)
     })
   })
 })

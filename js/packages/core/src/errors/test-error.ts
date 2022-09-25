@@ -20,6 +20,8 @@ export class TestError extends CoreError {
           result,
         })
       }
+    } else {
+      super('')
     }
   }
 }

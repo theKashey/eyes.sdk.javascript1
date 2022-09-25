@@ -18,12 +18,7 @@ describe('close-manager', () => {
     const manager = await core.makeManager()
     const eyes = await manager.openEyes({
       target: driver,
-      settings: {
-        serverUrl: 'https://eyesapi.applitools.com',
-        apiKey: process.env.APPLITOOLS_API_KEY,
-        appName: 'core e2e',
-        testName: 'aborts unclosed tests',
-      },
+      settings: {appName: 'core e2e', testName: 'aborts unclosed tests'},
     })
 
     await eyes.check({settings: {fully: false}})
@@ -33,7 +28,7 @@ describe('close-manager', () => {
     assert.ok(summary.results[0].result.isAborted)
   })
 
-  it('should set add new test error to the summary', async () => {
+  it('should add new test error to the summary', async () => {
     const core = makeCore({spec})
     const manager = await core.makeManager()
 
@@ -41,16 +36,25 @@ describe('close-manager', () => {
 
     const eyes = await manager.openEyes({
       target: driver,
-      settings: {
-        serverUrl: 'https://eyesapi.applitools.com',
-        apiKey: process.env.APPLITOOLS_API_KEY,
-        appName: 'core e2e',
-        testName: 'should set NewTestError to TestResultContainer Exception',
-      },
+      settings: {appName: 'core e2e', testName: 'should set NewTestError to TestResultContainer Exception'},
     })
 
     await eyes.check({settings: {fully: false}})
     const summary = await manager.closeManager()
     assert.strictEqual((summary.results[0].error as any).reason, 'test new')
+  })
+
+  it('should add internal error to the summary', async () => {
+    const core = makeCore({spec})
+    const manager = await core.makeManager({type: 'ufg', concurrency: 5})
+
+    const eyes = await manager.openEyes({
+      target: driver,
+      settings: {appName: 'core e2e', testName: 'should add internal error to the summary'},
+    })
+
+    await eyes.check({settings: {fully: false, renderers: [{name: 'firefox-3' as 'firefox', width: 640, height: 480}]}})
+    const summary = await manager.closeManager()
+    assert.strictEqual((summary.results[0].error as any).reason, 'internal')
   })
 })
