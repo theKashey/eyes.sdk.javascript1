@@ -11,6 +11,13 @@
 
 
 
+## 2.13.4 - 2022/9/25
+
+### Features
+### Bug fixes
+- Fixed propagation of the provided `userTestId` property
+- Return error object in manager's summary in common format
+
 ## 2.13.3 - 2022/9/23
 
 ### Features
