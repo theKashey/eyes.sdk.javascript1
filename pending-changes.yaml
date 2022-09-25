@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Respond with dummy TestResult object on `Eyes.close` even if no session were actually started
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

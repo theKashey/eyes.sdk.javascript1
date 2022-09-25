@@ -11,6 +11,12 @@
 
 
 
+## 2.14.0 - 2022/9/25
+
+### Features
+### Bug fixes
+- Respond with dummy TestResult object on `Eyes.close` even if no session were actually started
+
 ## 2.13.5 - 2022/9/25
 
 ### Features
