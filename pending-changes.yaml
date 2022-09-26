@@ -45,7 +45,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed minor issues
+    - 
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
