@@ -68,7 +68,7 @@
     }
   },
   "dependencies": {
-    "@applitools/logger": "1.1.22",
+    "@applitools/logger": "1.1.23",
     "@applitools/utils": "1.3.12",
     "abort-controller": "3.0.0",
     "node-fetch": "2.6.7",
