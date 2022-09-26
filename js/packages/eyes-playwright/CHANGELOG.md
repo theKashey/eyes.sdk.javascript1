@@ -11,6 +11,12 @@
 
 
 
+## 1.12.4 - 2022/9/26
+
+### Features
+### Bug fixes
+- Fixed minor issues
+
 ## 1.12.3 - 2022/9/23
 
 ### Features

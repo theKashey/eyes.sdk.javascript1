@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-playwright",
-  "version": "1.12.3",
+  "version": "1.12.4",
   "description": "Applitools Eyes SDK for Playwright",
   "keywords": [
     "eyes-playwright",
@@ -58,8 +58,8 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "1.0.4",
-    "@applitools/eyes-api": "1.7.8",
+    "@applitools/core": "1.0.9",
+    "@applitools/eyes-api": "1.7.10",
     "@applitools/spec-driver-playwright": "1.3.3"
   },
   "devDependencies": {
