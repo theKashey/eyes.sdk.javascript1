@@ -75,7 +75,7 @@
   "dependencies": {
     "@applitools/core": "1.0.9",
     "@applitools/driver": "1.9.34",
-    "@applitools/execution-grid-client": "1.1.25",
+    "@applitools/execution-grid-client": "1.1.26",
     "@applitools/utils": "1.3.12"
   },
   "devDependencies": {
