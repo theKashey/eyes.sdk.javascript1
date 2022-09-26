@@ -211,7 +211,6 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
     return settings.renderers.map((renderer, index) => ({
       asExpected: true,
-      windowId: null,
       userTestId: test.userTestId,
       renderer,
       promise: promises[index],

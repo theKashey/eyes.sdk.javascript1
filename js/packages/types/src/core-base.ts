@@ -242,7 +242,7 @@ export interface AccountInfo {
 
 export interface CheckResult {
   readonly asExpected: boolean
-  readonly windowId: number
+  readonly windowId?: number
   readonly userTestId: string
 }
 

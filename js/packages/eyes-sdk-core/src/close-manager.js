@@ -9,6 +9,7 @@ function makeCloseManager({manager}) {
           testResults: result.result,
           exception: result.error && transformException(result.error),
           browserInfo: result.renderer,
+          userTestId: result.userTestId,
         }
       })
       return summary
