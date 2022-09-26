@@ -1,3 +1,5 @@
+const utils = require('@applitools/utils')
+
 function transformCheckSettings(settings) {
   return dropUndefinedProperties({
     name: settings.name,
@@ -15,7 +17,18 @@ function transformCheckSettings(settings) {
     layoutRegions: settings.layoutRegions,
     strictRegions: settings.strictRegions,
     contentRegions: settings.contentRegions,
-    floatingRegions: settings.floatingRegions,
+    floatingRegions:
+      settings.floatingRegions &&
+      settings.floatingRegions.map(floatingRegion => {
+        if (utils.types.has(floatingRegion, 'region')) {
+          const {maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset, ...rest} = floatingRegion
+          return {
+            offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
+            ...rest,
+          }
+        }
+        return floatingRegion
+      }),
     accessibilityRegions: settings.accessibilityRegions,
     disableBrowserFetching: settings.disableBrowserFetching,
     layoutBreakpoints: settings.layoutBreakpoints,
