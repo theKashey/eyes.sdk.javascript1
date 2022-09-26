@@ -91,13 +91,13 @@
     "@applitools/utils" "1.3.12"
     semver "7.3.7"
 
-"@applitools/eyes-api@1.7.9":
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-api/-/eyes-api-1.7.9.tgz#b23477d90179e59d93563b021c7f49cfb47ffd2b"
-  integrity sha512-JJqllE/5Bg6tBJSh8vrOoQ97TGqttyIB2AYhBiJTiO0ZY9zXXQGi6aipbMRCSsxkIJbsLAvNrIWdO+KaNg22Og==
+"@applitools/eyes-api@1.7.10":
+  version "1.7.10"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-api/-/eyes-api-1.7.10.tgz#f8b8060a88a6d80da3e2a6ae1efa0b121f6047b1"
+  integrity sha512-xi+qpkOd/6WVdYEHz9jyDqHV1wUCMj1YwBae5xLMqpP5Eupx7AqSz/41qq5Mt0plGyfxT/mXqaWEu9hSTZOPtA==
   dependencies:
-    "@applitools/logger" "1.1.22"
-    "@applitools/types" "1.5.15"
+    "@applitools/logger" "1.1.23"
+    "@applitools/types" "1.5.16"
     "@applitools/utils" "1.3.12"
 
 "@applitools/functional-commons@1.6.0":
@@ -146,15 +146,6 @@
     whatwg-url "^10.0.0"
     ws "^8.2.3"
     xml-name-validator "^4.0.0"
-
-"@applitools/logger@1.1.22":
-  version "1.1.22"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.22.tgz#f8480f9ceebd9a0b2f2e8102afb61713f867fe86"
-  integrity sha512-Q2cqgWBUXemZXdjYKFoIr2Egq4tc9TautYs0QFj+5CwuiFisBS1C5YVgAS6kFmA7hvJPmf/DAW//nuKz01NfFw==
-  dependencies:
-    "@applitools/types" "1.5.15"
-    "@applitools/utils" "1.3.12"
-    chalk "4.1.2"
 
 "@applitools/logger@1.1.23":
   version "1.1.23"
@@ -281,11 +272,6 @@
   integrity sha512-L80Cx8yVG/kMDyqD9x0wENcpKbu4HrljZbhprc/OfuhhR7fzIuw7k+EDwLXrSSKxYV4gI2vBVa2J2FbJai7ayA==
   dependencies:
     node-fetch "2.6.1"
-
-"@applitools/types@1.5.15":
-  version "1.5.15"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.15.tgz#9717ed0feb2184c4d886fbe0d1fbfee4c9a97dcc"
-  integrity sha512-q9RAROy125NMW/Oi6oCCypd2iV2EaXE+VPUuLsnWLUxt+DkqwGzLUNLALEfasBY60YJQZqgKVWYT/PNh8y49Pg==
 
 "@applitools/types@1.5.16":
   version "1.5.16"
