@@ -11,6 +11,13 @@
 
 
 
+## 2.15.0 - 2022/9/26
+
+### Features
+### Bug fixes
+- Fixed issue with missed offsets when floating region was provided in legacy format
+- Fixed issue with missed `userTestId` in manager's summary
+
 ## 2.14.0 - 2022/9/25
 
 ### Features

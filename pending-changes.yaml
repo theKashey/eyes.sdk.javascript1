@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed issue with missed offsets when floating region was provided in legacy format
-    - Fixed issue with missed `userTestId` in manager's summary
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
