@@ -16,12 +16,12 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/logger@1.1.22":
-  version "1.1.22"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.22.tgz#f8480f9ceebd9a0b2f2e8102afb61713f867fe86"
-  integrity sha512-Q2cqgWBUXemZXdjYKFoIr2Egq4tc9TautYs0QFj+5CwuiFisBS1C5YVgAS6kFmA7hvJPmf/DAW//nuKz01NfFw==
+"@applitools/logger@1.1.23":
+  version "1.1.23"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.23.tgz#1df390c1e0d6e00966cd6bbf53208096e095e4a6"
+  integrity sha512-ajhw1cq3cTV51tnbWs1tLgn1Y5t7Ci+yA5VySC22U9pb+QY2JU96DB46ECVSX6UBCslTpei+dnpp4wHvBSiEUA==
   dependencies:
-    "@applitools/types" "1.5.15"
+    "@applitools/types" "1.5.16"
     "@applitools/utils" "1.3.12"
     chalk "4.1.2"
 
@@ -48,10 +48,10 @@
     chalk "4.1.1"
     node-fetch "2.6.1"
 
-"@applitools/types@1.5.15":
-  version "1.5.15"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.15.tgz#9717ed0feb2184c4d886fbe0d1fbfee4c9a97dcc"
-  integrity sha512-q9RAROy125NMW/Oi6oCCypd2iV2EaXE+VPUuLsnWLUxt+DkqwGzLUNLALEfasBY60YJQZqgKVWYT/PNh8y49Pg==
+"@applitools/types@1.5.16":
+  version "1.5.16"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.16.tgz#09e52b424a256610fde12dbd5cdbf3854951e118"
+  integrity sha512-jWOusueffcLa37uG7YWZ41wfHcC//wa6tWIuthapVZn11JRCAYsFZHKSt79UJnOgP5Zm6jb/O3BM8wn0iKM2gA==
 
 "@applitools/utils@1.3.10":
   version "1.3.10"
