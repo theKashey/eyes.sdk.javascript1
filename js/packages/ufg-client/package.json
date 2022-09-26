@@ -52,9 +52,9 @@
   },
   "dependencies": {
     "@applitools/jsdom": "1.0.4",
-    "@applitools/logger": "1.1.22",
-    "@applitools/req": "1.1.6",
-    "@applitools/types": "1.5.15",
+    "@applitools/logger": "1.1.23",
+    "@applitools/req": "1.1.7",
+    "@applitools/types": "1.5.16",
     "@applitools/utils": "1.3.12",
     "abort-controller": "3.0.0",
     "postcss-value-parser": "4.2.0",
