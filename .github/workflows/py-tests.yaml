@@ -165,6 +165,7 @@ jobs:
     if: ${{ !(github.event_name == 'workflow_dispatch') || inputs.generated_tests }}
     concurrency: sauce_group_1
     strategy:
+      max-parallel: 1
       matrix:
         python-version: [ '3.6', '3.10' ]
     runs-on: ubuntu-latest

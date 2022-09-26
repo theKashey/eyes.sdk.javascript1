@@ -14,6 +14,7 @@ from applitools.selenium import Eyes, VisualGridRunner
 
 @pytest.mark.sauce
 @pytest.mark.filterwarnings("ignore:desired_capabilities has been deprecated")
+@pytest.mark.skip("Needs new app")
 def test_nmg_ios_basic(sauce_driver_url):
     caps = {
         "app": "https://applitools.jfrog.io/artifactory/"

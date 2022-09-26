@@ -47,11 +47,10 @@ def test_create_open_check_close_vg_eyes(local_chrome_driver):
         "Test create open VG eyes",
         {"width": 800, "height": 600},
     )
-    check_result = eyes.check_window()
+    eyes.check_window()
     eyes.close_async()
     all_results = runner.get_all_test_results().all_results
 
-    assert check_result is None
     assert len(all_results) == 1
     assert all_results[0].test_results.is_passed
 

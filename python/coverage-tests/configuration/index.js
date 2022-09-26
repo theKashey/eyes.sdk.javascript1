@@ -1,4 +1,4 @@
-let ref = "328f1720466";
+let ref = "universal-sdk";
 let report_package_name = {
     'eyes_robotframework': 'eyes_robotframework',
     'eyes_selenium': 'eyes_selenium_python',
