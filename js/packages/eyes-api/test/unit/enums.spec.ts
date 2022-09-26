@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 
 describe('enums', () => {
   // TODO unskip when grid will add Sony Xperia 10 II device
-  describe.skip('DeviceName', () => {
+  describe('DeviceName', () => {
     const url = 'https://render-wus.applitools.com/emulated-devices'
     let expectedDeviceNames: string[]
     before(async () => {
