@@ -62,9 +62,9 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "1.0.5",
-    "@applitools/eyes-api": "1.7.9",
-    "@applitools/spec-driver-puppeteer": "1.1.11"
+    "@applitools/core": "1.0.9",
+    "@applitools/eyes-api": "1.7.10",
+    "@applitools/spec-driver-puppeteer": "1.1.12"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.11",
