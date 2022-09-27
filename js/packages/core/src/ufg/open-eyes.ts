@@ -63,7 +63,7 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
       eyes.check = utils.general.wrap(eyes.check, async (check, options) => {
         const index = (options.settings as any).index
         queue[index] ??= makeHolderPromise()
-        if (index > 0) await Promise.race([(queue[index - 1] ??= makeHolderPromise()).promise, aborted.promise])
+        if (index > 0) await Promise.race([(queue[index - 1] ??= makeHolderPromise()), aborted])
         return check(options).finally(queue[index].resolve)
       })
       eyes.abort = utils.general.wrap(eyes.abort, async (abort, options) => {
@@ -121,8 +121,27 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
   }
 }
 
-function makeHolderPromise(): {promise: Promise<void>; resolve(): void; reject(reason?: any): void} {
-  let resolve, reject
-  const promise = new Promise<void>((...args) => ([resolve, reject] = args))
-  return {promise, resolve, reject}
+function makeHolderPromise(): PromiseLike<void> & {resolve(): void; reject(reason?: any): void} {
+  let promise: Promise<void>
+  let resolve: () => void
+  let reject: (reason: any) => void
+  let result: {status: 'fulfilled'} | {status: 'rejected'; reason: any}
+  return {
+    then(onFulfilled, onRejected) {
+      if (!promise) {
+        promise = new Promise<void>((...args) => ([resolve, reject] = args))
+        if (result.status === 'fulfilled') resolve()
+        else if (result.status === 'rejected') reject(result.reason)
+      }
+      return promise.then(onFulfilled, onRejected)
+    },
+    resolve() {
+      if (resolve) resolve()
+      else result ??= {status: 'fulfilled'}
+    },
+    reject(reason) {
+      if (reject) reject(reason)
+      else result ??= {status: 'rejected', reason}
+    },
+  }
 }

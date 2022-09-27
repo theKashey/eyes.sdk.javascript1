@@ -116,16 +116,16 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "1.0.0",
-    "@applitools/eyes-api": "1.7.6",
-    "@applitools/spec-driver-webdriverio": "1.2.20"
+    "@applitools/core": "1.0.9",
+    "@applitools/eyes-api": "1.7.10",
+    "@applitools/spec-driver-webdriverio": "1.2.26"
   },
   "devDependencies": {
-    "@applitools/api-extractor": "1.2.9",
+    "@applitools/api-extractor": "1.2.11",
     "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "1.1.0",
     "@applitools/sdk-coverage-tests": "^2.3.20",
-    "@applitools/sdk-shared": "0.9.13",
+    "@applitools/sdk-shared": "0.9.14",
     "@applitools/test-utils": "1.5.1",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
@@ -135,7 +135,7 @@
     "@wdio/dot-reporter": "^7.16.4",
     "@wdio/local-runner": "^7.16.5",
     "@wdio/mocha-framework": "^7.16.4",
-    "chromedriver": "^101.0.0",
+    "chromedriver": "^105.0.1",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
