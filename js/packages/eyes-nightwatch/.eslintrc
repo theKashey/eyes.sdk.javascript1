@@ -7,7 +7,9 @@
     "tmp/",
     "types/",
     "test/generic/",
-    "*.d.ts"
+    "*.d.ts",
+    "tests_output/",
+    "nightwatch.conf.js"
   ],
   "env": {
     "node": true

@@ -1,13 +1,11 @@
-import {makeSDK} from '@applitools/eyes-sdk-core'
+import {makeCore} from '@applitools/core'
 import * as api from '@applitools/eyes-api'
 import * as spec from './spec-driver'
 import type {Driver, Element, Selector} from './spec-driver'
 
-const sdk = makeSDK({
-  name: 'eyes.nightwatch',
-  version: require('../package.json').version,
+const sdk: any = makeCore({
+  agentId: `eyes.nightwatch/${require('../package.json').version}`,
   spec,
-  VisualGridClient: require('@applitools/visual-grid-client'),
 })
 
 export * from '@applitools/eyes-api'

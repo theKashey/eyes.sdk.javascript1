@@ -677,7 +677,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
       const result = await operation()
       // Some frameworks could handle stale element reference error by itself or doesn't throw an error
       if (this._spec.isStaleElementError(result, this.selector as TSelector)) {
-        await this.refresh()
+        const refreshed = await this.refresh()
+        if (!refreshed) {
+          throw result
+        }
         return operation()
       }
       return result

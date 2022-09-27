@@ -10,7 +10,7 @@ export type Element = (
 ) & {__applitoolsBrand?: never}
 export type Selector = {locateStrategy: Nightwatch.LocateStrategy; selector: string} & {__applitoolsBrand?: never}
 
-type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string}
+type ShadowRoot = {'shadow-6066-11e4-a52e-4f735466cecf': string} | {getId: () => string}
 type CommonSelector<TSelector = never> = string | {selector: TSelector | string; type?: string}
 
 // #region HELPERS
@@ -23,6 +23,7 @@ function extractElementId(element: Element | ShadowRoot): string {
   if (utils.types.has(element, ELEMENT_ID)) return element[ELEMENT_ID]
   else if (utils.types.has(element, LEGACY_ELEMENT_ID)) return element[LEGACY_ELEMENT_ID]
   else if (utils.types.has(element, SHADOW_ROOT_ID)) return element[SHADOW_ROOT_ID]
+  else if (utils.types.has(element, 'getId')) return element.getId()
 }
 function call<
   TCommand extends keyof {
@@ -38,13 +39,20 @@ function call<
 >(driver: Driver, command: TCommand, ...args: any[]): Promise<TResult> {
   return new Promise<TResult>((resolve, reject) => {
     const promise = (driver[command] as any)(...args, (result: Nightwatch.NightwatchCallbackResult<TResult>) => {
+      if (!result) reject(new Error('Got empty result'))
       if (!('value' in result) && !(result as any).error) resolve(result as any)
       else if (!result.status && !(result as any).error) resolve(result.value as TResult)
       else reject(result.value || (result as any).error)
     })
-    if (promise instanceof Promise) promise.then(resolve, reject)
+    if (
+      (process.env.APPLITOOLS_NIGHTWATCH_MAJOR_VERSION === '1' || command === 'moveTo') &&
+      promise instanceof Promise
+    ) {
+      promise.then(resolve, reject)
+    }
   })
 }
+// }
 
 // #endregion
 
@@ -157,10 +165,20 @@ export async function setWindowSize(driver: Driver, size: Size): Promise<void> {
   // Same deal as with getWindowSize. If running on JWP, need to catch and retry
   // with a different command.
   try {
-    await call(driver, 'setWindowRect' as any, size)
+    if (process.env.APPLITOOLS_NIGHTWATCH_MAJOR_VERSION === '1') {
+      await call(driver, 'setWindowRect' as any, size)
+    } else {
+      // calling setWindowRect without a callback above version 1, as the callback is called before the command finishes.
+      await driver.setWindowRect(size as any)
+    }
   } catch {
-    await call(driver, 'setWindowPosition' as 'windowPosition', 0, 0)
-    await call(driver, 'setWindowSize' as 'windowSize', size.width, size.height)
+    if (process.env.APPLITOOLS_NIGHTWATCH_MAJOR_VERSION === '1') {
+      await call(driver, 'setWindowPosition' as 'windowPosition', 0, 0)
+      await call(driver, 'setWindowSize' as 'windowSize', size.width, size.height)
+    } else {
+      await driver.setWindowPosition(0, 0)
+      await driver.setWindowSize(size.width, size.height)
+    }
   }
 }
 export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
@@ -169,7 +187,19 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
 }
 export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
   try {
-    return await call(driver, 'session')
+    const session = await call(driver, 'session')
+    if (process.env.APPLITOOLS_NIGHTWATCH_MAJOR_VERSION === '1') {
+      return session
+    } else {
+      const capabilities = session.getCapabilities()
+      const mapIterator = capabilities.keys()
+      const caps = {} as any
+
+      for (const cap of mapIterator) {
+        caps[cap] = capabilities.get(cap)
+      }
+      return caps
+    }
   } catch {
     return driver.options.desiredCapabilities
   }
@@ -264,10 +294,25 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
     {},
     'default',
   )
-  const client = Nightwatch.client(settings)
-  client.isES6AsyncTestcase = true
-  await client.createSession()
-  return [client.api, () => client.session.close()]
-}
 
+  if (process.env.APPLITOOLS_NIGHTWATCH_MAJOR_VERSION === '1') {
+    const client = Nightwatch.client(settings)
+    client.isES6AsyncTestcase = true
+    await client.createSession()
+    return [client.api, () => client.session.close()]
+  } else {
+    // for CheckRegionBySelectorInFrameFullyOnFirefoxLegacy
+    settings.desiredCapabilities.browserName =
+      settings.desiredCapabilities.browserName === 'Firefox'
+        ? settings.desiredCapabilities.browserName.toLowerCase()
+        : settings.desiredCapabilities.browserName
+    settings.selenium = {
+      host: settings.webdriver.host,
+      port: settings.webdriver.port,
+    }
+    const client = Nightwatch.createClient(Object.assign(settings, settings.desiredCapabilities))
+    const driver = await client.launchBrowser()
+    return [driver, () => driver.end()]
+  }
+}
 // #endregion
