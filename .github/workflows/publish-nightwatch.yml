@@ -80,7 +80,7 @@ jobs:
       fail-fast: false
       matrix:
         include: ${{fromJSON(needs.verify.outputs.environments)}}
-    name: 'Test (node: ${{matrix.node-version}})'
+    name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest
     env:
       APPLITOOLS_NIGHTWATCH_MAJOR_VERSION: ${{matrix.framework-version}}
