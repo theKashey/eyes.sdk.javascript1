@@ -399,7 +399,7 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
 
   const options: any = {
     capabilities: {browserName: browser, ...capabilities},
-    logLevel: 'info',
+    logLevel: 'error',
     // connectionRetryCount: 5,
     // connectionRetryTimeout: 180000,
   }
