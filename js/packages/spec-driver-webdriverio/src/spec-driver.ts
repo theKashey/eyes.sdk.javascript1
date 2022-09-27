@@ -399,9 +399,9 @@ export async function build(env: any): Promise<[Driver, () => Promise<void>]> {
 
   const options: any = {
     capabilities: {browserName: browser, ...capabilities},
-    logLevel: 'error',
-    // connectionRetryCount: 5,
-    // connectionRetryTimeout: 180000,
+    logLevel,
+    connectionRetryCount: 5,
+    connectionRetryTimeout: 180000,
   }
   if (browser === 'chrome' && protocol === 'cdp') {
     options.automationProtocol = 'devtools'
