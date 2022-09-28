@@ -149,8 +149,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isMobile) {
       this._driverInfo.orientation =
         (await this.getOrientation().catch(() => undefined)) ?? this._driverInfo.orientation
-      const {isWebView} = this.isMobile && (await this.getCurrentWorld())
-      this._driverInfo.isWebView = isWebView
+      const world = this.isMobile && (await this.getCurrentWorld())
+      this._driverInfo.isWebView = !!world?.isWebView
     }
 
     if (this.isWeb) {
@@ -349,6 +349,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
 
   async getCurrentWorld(): Promise<types.WorldInfo> {
+    if (!this._spec.getCurrentWorld) return
     const [origin, next] = await this.getWorlds()
     const currentWorld = await this._spec.getCurrentWorld?.(this.target)
     return {
