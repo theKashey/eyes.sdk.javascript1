@@ -1,4 +1,6 @@
 import {makeCore} from '../../../src/ufg/core'
+import {makeFakeClient} from '../../utils/fake-ufg-client'
+import {makeFakeCore} from '../../utils/fake-base-core'
 import * as utils from '@applitools/utils'
 import assert from 'assert'
 
@@ -237,5 +239,28 @@ describe('concurrency', () => {
     await eyes2.check({target: {cdt: []}, settings: {renderers: [{name: 'chrome', width: 100, height: 100}]}})
 
     await assert.rejects(eyes2.close(), error => error.message === 'render')
+  })
+
+  it('releases concurrency slot when all steps are finished', async () => {
+    const fakeCore = makeFakeCore()
+
+    const fakeClient = makeFakeClient()
+
+    const core = makeCore({concurrency: 2, core: fakeCore as any, client: fakeClient as any})
+
+    const eyes = await core.openEyes({
+      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+    })
+
+    const renderers: any[] = [
+      {name: 'chrome', width: 100, height: 100},
+      {name: 'firefox', width: 100, height: 100},
+      {name: 'safari', width: 100, height: 100},
+    ]
+
+    await eyes.check({target: {cdt: []}, settings: {renderers}})
+    await eyes.check({target: {cdt: []}, settings: {renderers}})
+
+    await eyes.close()
   })
 })

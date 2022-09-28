@@ -81,7 +81,7 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
       async (check, options) => {
         ;(options.settings as any).index = index++
         const results = await check(options)
-        storage.push(...results.map(result => result.promise))
+        storage.push(...results.map(result => ({promise: result.promise, renderer: result.renderer})))
         return results
       },
     )
@@ -130,8 +130,8 @@ function makeHolderPromise(): PromiseLike<void> & {resolve(): void; reject(reaso
     then(onFulfilled, onRejected) {
       if (!promise) {
         promise = new Promise<void>((...args) => ([resolve, reject] = args))
-        if (result.status === 'fulfilled') resolve()
-        else if (result.status === 'rejected') reject(result.reason)
+        if (result?.status === 'fulfilled') resolve()
+        else if (result?.status === 'rejected') reject(result.reason)
       }
       return promise.then(onFulfilled, onRejected)
     },

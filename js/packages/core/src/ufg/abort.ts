@@ -6,7 +6,7 @@ import {type AbortController} from 'abort-controller'
 import {AbortError} from '../errors/abort-error'
 
 type Options = {
-  storage: Promise<{eyes: BaseEyes; renderer: Renderer}>[]
+  storage: {renderer: Renderer; promise: Promise<{eyes: BaseEyes; renderer: Renderer}>}[]
   controller: AbortController
   logger: Logger
 }
@@ -19,8 +19,13 @@ export function makeAbort({storage, controller, logger: defaultLogger}: Options)
   } = {}): Promise<TestResult[]> {
     controller.abort()
 
+    const tests = storage.reduce((tests, {renderer, promise}) => {
+      const key = JSON.stringify(renderer)
+      return tests.set(key, promise)
+    }, new Map<string, Promise<{eyes: BaseEyes; renderer: Renderer}>>())
+
     return Promise.all(
-      storage.map(async promise => {
+      Array.from(tests.values(), async promise => {
         let eyes: BaseEyes, renderer: Renderer
         try {
           const value = await promise
