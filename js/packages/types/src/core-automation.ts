@@ -63,6 +63,7 @@ export interface ScreenshotSettings<TElement, TSelector>
   waitBeforeCapture?: number
   waitBetweenStitches?: number
   lazyLoad?: boolean | {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}
+  webview?: boolean | string
 }
 
 export type LocateSettings<TLocator extends string, TElement, TSelector> = BaseCore.LocateSettings<

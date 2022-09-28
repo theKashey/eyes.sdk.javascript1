@@ -22,6 +22,7 @@ export type DriverInfo = {
   isNative?: boolean
   isAndroid?: boolean
   isIOS?: boolean
+  isWebView?: boolean
   features?: {
     shadowSelector?: boolean
     allCookies?: boolean
@@ -59,6 +60,14 @@ export type Selector<TSelector = never> =
       shadow?: Selector<TSelector>
       frame?: Selector<TSelector>
     }
+
+export type WorldInfo = {
+  id: string
+  home: string
+  next?: string
+  isNative: boolean
+  isWebView: boolean
+}
 
 export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   // #region UTILITY
@@ -102,6 +111,9 @@ export interface SpecDriver<TDriver, TContext, TElement, TSelector> {
   click?(context: TContext, element: TElement | TSelector): Promise<void>
   type?(context: TContext, element: TElement, value: string): Promise<void>
   visit?(driver: TDriver, url: string): Promise<void>
+  getCurrentWorld?(driver: TDriver): Promise<any>
+  getWorlds?(driver: TDriver): Promise<any>
+  switchWorld?(driver: TDriver, id: string): Promise<void>
   // #endregion
 
   // #region MOBILE COMMANDS

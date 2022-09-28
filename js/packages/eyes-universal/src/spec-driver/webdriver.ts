@@ -323,6 +323,15 @@ export async function getElementText(driver: Driver, element: Element): Promise<
 export async function performAction(driver: Driver, steps: any[]): Promise<void> {
   return driver.touchPerform(steps.map(({action, ...options}) => ({action, options})))
 }
+export async function getCurrentWorld(driver: Driver): Promise<string> {
+  return driver.getContext()
+}
+export async function getWorlds(driver: Driver): Promise<string[]> {
+  return driver.getContexts()
+}
+export async function switchWorld(driver: Driver, id: string): Promise<void> {
+  await driver.switchContext(id)
+}
 
 // #endregion
 

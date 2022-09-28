@@ -30,6 +30,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   private _helper?:
     | HelperAndroid<TDriver, TContext, TElement, TSelector>
     | HelperIOS<TDriver, TContext, TElement, TSelector>
+  private _previousWorld: string
 
   protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
 
@@ -106,10 +107,13 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this._driverInfo.navigationBarSize ?? (this.isNative ? 0 : undefined)
   }
   get isNative(): boolean {
-    return this._driverInfo?.isNative ?? false
+    return (!this.isWebView && this._driverInfo?.isNative) ?? false
+  }
+  get isWebView(): boolean {
+    return this._driverInfo?.isWebView ?? false
   }
   get isWeb(): boolean {
-    return !this.isNative
+    return this.isWebView || !this.isNative
   }
   get isMobile(): boolean {
     return this._driverInfo?.isMobile ?? false
@@ -145,6 +149,8 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isMobile) {
       this._driverInfo.orientation =
         (await this.getOrientation().catch(() => undefined)) ?? this._driverInfo.orientation
+      const {isWebView} = this.isMobile && (await this.getCurrentWorld())
+      this._driverInfo.isWebView = isWebView
     }
 
     if (this.isWeb) {
@@ -280,6 +286,80 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
     return this
   }
+
+  // begin world
+  //
+  // About the concept of a  "World":
+  //
+  // Since "context" is an overloaded term from frames, we have decided to use
+  // the concept of a "world" when switching between mobile app contexts (e.g., native and webview(s))
+  //
+  // Notes:
+  // - two new functions need to be added to a spec driver for this to work (`getCurrentWorld` and `switchWorld`)
+  // - you can see a reference implementation of this in spec-driver-webdriverio
+  // - if a world id is provided it will be used for switching
+  // - if a world id is not provided, the first non-native world will be used
+  //    (regardless of which world the driver is currently switched into)
+  // - before switching, the current world context is stored so it can switched back to later
+  //    (with the `restoreState` option)
+  // - the native app world can be switched to (with the `goHome` option)
+  async switchWorld(options?: {id?: string; restoreState?: boolean; goHome?: boolean}) {
+    if (options?.restoreState && !this._previousWorld) return
+    if (!this._spec.getCurrentWorld || !this._spec.switchWorld) {
+      this._logger.warn('world switching not implemented in the spec driver, skipping')
+      return
+    }
+    this._logger.log('switchWorld called with', options ? options : 'no options')
+    const {id, home, next} = await this.getCurrentWorld()
+    if (!this._previousWorld) {
+      this._logger.log('storing current world id for future restoration', id)
+      this._previousWorld = id
+    }
+    const providedTarget = options?.restoreState
+      ? this._previousWorld
+      : options?.goHome
+      ? home
+      : options?.id
+      ? options.id
+      : next
+    this._logger.log('switching world with', providedTarget ? providedTarget : 'no id')
+    try {
+      await this._spec.switchWorld?.(this.target, providedTarget)
+      await this.init()
+    } catch (error) {
+      throw new Error(`Unable to switch worlds, the original error was: ${error.message}`)
+    }
+  }
+
+  async getWorlds(attempt = 1): Promise<string[]> {
+    if (!this._spec.getWorlds) return
+    this._logger.log('attempting to find worlds')
+    await utils.general.sleep(500)
+    const worlds = await this._spec.getWorlds?.(this.target)
+    if (!worlds[1]) {
+      if (attempt > 5) {
+        this._logger.warn(`just one world found - ${worlds}. done looking.`)
+        return worlds
+      }
+      this._logger.log(`just one world found, retrying to see if there are others (attempt #${attempt})`)
+      return this.getWorlds(attempt++)
+    }
+    this._logger.log(`worlds found - ${worlds}`)
+    return worlds
+  }
+
+  async getCurrentWorld(): Promise<types.WorldInfo> {
+    const [origin, next] = await this.getWorlds()
+    const currentWorld = await this._spec.getCurrentWorld?.(this.target)
+    return {
+      id: currentWorld,
+      home: origin,
+      next,
+      isNative: currentWorld === origin,
+      isWebView: currentWorld !== origin,
+    }
+  }
+  // end world
 
   async refreshContexts(): Promise<Context<TDriver, TContext, TElement, TSelector>> {
     if (this.isNative) return this.currentContext

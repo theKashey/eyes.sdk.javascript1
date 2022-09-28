@@ -1,10 +1,10 @@
 const {makeDriver, test, logger} = require('../e2e')
 
-describe('screenshoter ios app', () => {
+describe('screenshoter android app', () => {
   let driver, destroyDriver
 
   beforeEach(async () => {
-    ;[driver, destroyDriver] = await makeDriver({type: 'ios', logger})
+    ;[driver, destroyDriver] = await makeDriver({type: 'android', logger})
   })
 
   afterEach(async () => {
@@ -12,11 +12,11 @@ describe('screenshoter ios app', () => {
   })
 
   it('take full webview screenshot', async () => {
-    const button = await driver.element({type: 'accessibility id', selector: 'Web view'})
+    const button = await driver.element({type: 'id', selector: 'com.applitools.eyes.android:id/btn_web_view'})
     await button.click()
 
     await test({
-      type: 'ios',
+      type: 'android',
       tag: 'webview-fully',
       fully: true,
       scrollingMode: 'scroll',

@@ -1,6 +1,7 @@
 import type {Size, Cookie} from '@applitools/types'
 import assert from 'assert'
 import * as spec from '../../src'
+import * as utils from '@applitools/utils'
 
 function extractElementId(element: any) {
   return element.elementId || element['element-6066-11e4-a52e-4f735466cecf'] || element.ELEMENT
@@ -386,7 +387,7 @@ describe('spec driver', async () => {
       if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
     })
 
-    before(async () => {
+    beforeEach(async () => {
       ;[browser, destroyBrowser] = await spec.build({
         app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
         device: 'Pixel 3a XL',
@@ -394,7 +395,7 @@ describe('spec driver', async () => {
       })
     })
 
-    after(async () => {
+    afterEach(async () => {
       if (destroyBrowser) await destroyBrowser()
       destroyBrowser = null as any
     })
@@ -404,6 +405,27 @@ describe('spec driver', async () => {
     })
     it('getOrientation()', async () => {
       await getOrientation({expected: 'landscape'})
+    })
+    it('getCurrentWorld', async () => {
+      const actual = await spec.getCurrentWorld(browser)
+      const expected = 'NATIVE_APP'
+      assert.deepStrictEqual(actual, expected)
+    })
+    it('getWorlds', async () => {
+      await browser.setOrientation('portrait')
+      await browser.$('id:com.applitools.eyes.android:id/btn_web_view').click()
+      await utils.general.sleep(5000)
+      const actual = await spec.getWorlds(browser)
+      const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
+      assert.deepStrictEqual(actual, expected)
+    })
+    it('switchWorld(id)', async () => {
+      await browser.setOrientation('portrait')
+      await browser.$('id:com.applitools.eyes.android:id/btn_web_view').click()
+      await spec.switchWorld(browser, 'WEBVIEW_com.applitools.eyes.android')
+      const actual = await spec.getCurrentWorld(browser)
+      const expected = 'WEBVIEW_com.applitools.eyes.android'
+      assert.deepStrictEqual(actual, expected)
     })
   })
 

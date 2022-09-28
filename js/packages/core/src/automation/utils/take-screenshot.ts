@@ -44,5 +44,6 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
     },
     debug: settings.debugImages,
     logger,
+    webview: settings.webview,
   })
 }

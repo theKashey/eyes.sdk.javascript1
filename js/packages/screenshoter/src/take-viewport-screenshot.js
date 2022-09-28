@@ -7,7 +7,7 @@ function makeTakeViewportScreenshot(options) {
   const {driver} = options
   if (driver.isNative) {
     return makeTakeNativeScreenshot(options)
-  } else if (driver.isIOS) {
+  } else if (driver.isIOS || driver.isWebView) {
     // safari on ios takes screenshot with browser and os interfaces
     return makeTakeMarkedScreenshot(options)
   } else if (driver.browserName === 'Firefox') {

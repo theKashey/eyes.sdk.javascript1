@@ -40,6 +40,10 @@ describe('client', () => {
     }
   })
 
+  // TODO:
+  // Refactor these tests to also support android when needed.
+  // (the renderers and assertions are specific to ios, but the test was written
+  // to be platform agnostic and dynamic based on the platform type)
   describe('takeSnapshots', () => {
     for (const platform of Object.keys(env)) {
       it(`${platform} works`, async () => {

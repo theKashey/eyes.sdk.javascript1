@@ -39,6 +39,7 @@ function transformCheckSettings(settings) {
     waitBeforeCapture: settings.waitBeforeCapture,
     retryTimeout: settings.timeout,
     userCommandId: settings.variationGroupId,
+    webview: settings.webview,
   })
 }
 

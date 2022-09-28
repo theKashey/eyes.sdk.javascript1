@@ -55,4 +55,11 @@ describe('CheckSettings', () => {
       assert.deepStrictEqual(actual, expected)
     })
   })
+
+  it('set webview', () => {
+    const checkSettings = new CheckSettings().webview(true)
+    assert.equal(checkSettings.toJSON().webview, true)
+    checkSettings.webview('blah')
+    assert.equal(checkSettings.toJSON().webview, 'blah')
+  })
 })
