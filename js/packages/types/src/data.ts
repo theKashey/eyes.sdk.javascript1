@@ -2,7 +2,7 @@ export type SessionType = 'SEQUENTIAL' | 'PROGRESSION'
 
 export type StitchMode = 'CSS' | 'Scroll'
 
-export type MatchLevel = 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'Strict' | 'Exact'
+export type MatchLevel = 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'IgnoreColor' | 'Strict' | 'Exact'
 
 export type AccessibilityRegionType = 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject'
 

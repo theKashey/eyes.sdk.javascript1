@@ -3,8 +3,8 @@ import type {DomSnapshot} from '@applitools/types/ufg'
 import {type Logger} from '@applitools/logger'
 import {type Driver} from '@applitools/driver'
 import {takeDomSnapshot, type DomSnapshotSettings} from './take-dom-snapshot'
-import chalk from 'chalk'
 import * as utils from '@applitools/utils'
+import chalk from 'chalk'
 
 export * from './take-dom-snapshot'
 

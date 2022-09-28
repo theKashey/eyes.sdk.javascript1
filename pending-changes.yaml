@@ -10,12 +10,12 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - 
 "@applitools/eyes-webdriverio":
@@ -25,11 +25,12 @@ Apollo SDK:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-playwright":
   feature:
-    - 
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - 
 "@applitools/eyes-protractor":
@@ -39,11 +40,12 @@ Apollo SDK:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-puppeteer":
   feature:
-    - 
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - 
 "@applitools/eyes-testcafe":
@@ -51,6 +53,7 @@ Apollo SDK:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
@@ -62,17 +65,19 @@ Apollo SDK:
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
     - Support Nightwatch major version 2
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-cypress":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Internal Infrastructure update
 "@applitools/eyes-storybook":
   feature:
-    - 
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - 
 "@applitools/eyes-webdriverio5-service":
@@ -87,6 +92,7 @@ Apollo SDK:
     - Add support for dynamic coded regions
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
@@ -121,6 +127,7 @@ eyes-browser-extension:
     - Allowed `` values in custom properties
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
+    - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates

@@ -3,6 +3,7 @@ import type {Eyes as ClassicEyes} from '@applitools/types/classic'
 import type {Eyes as UFGEyes} from '@applitools/types/ufg'
 import {type Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
+import chalk from 'chalk'
 
 type Options<TDriver, TElement, TSelector> = {
   eyes: ClassicEyes<TDriver, TElement, TSelector> | UFGEyes<TDriver, TElement, TSelector>
@@ -43,6 +44,10 @@ export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' 
       settings.lazyLoad.maxAmountToScroll ??= 15000
     }
     settings.waitBetweenStitches ??= utils.types.isObject(settings.lazyLoad) ? settings.lazyLoad.waitingTime : 100
+
+    if (settings.matchLevel === 'Content') {
+      logger.console.log(chalk.yellow(`The "Content" match level value has been deprecated, use "IgnoreColors" instead.`))
+    }
 
     const results = await eyes.check({target: target as any, settings, logger})
     return results
