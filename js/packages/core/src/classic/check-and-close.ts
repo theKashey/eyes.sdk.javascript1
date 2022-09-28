@@ -51,6 +51,7 @@ export function makeCheckAndClose<TDriver, TContext, TElement, TSelector>({
       image: await screenshot.image.toPng(),
       locationInViewport: utils.geometry.location(screenshot.region),
     }
+    const baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
     if (driver.isWeb && settings.sendDom) {
       if (settings.fully) await screenshot.scrollingElement.setAttribute('data-applitools-scroll', 'true')
       baseTarget.dom = await takeDomCapture({driver, logger}).catch(() => null)
@@ -61,7 +62,6 @@ export function makeCheckAndClose<TDriver, TContext, TElement, TSelector>({
       baseTarget.locationInView = utils.geometry.offset(scrollingOffset, screenshot.region)
       baseTarget.fullViewSize = scrollingElement ? await scrollingElement.getContentSize() : await driver.getViewportSize()
     }
-    const baseSettings = await transformCheckSettings({driver, screenshot, settings, logger})
     await screenshot.restoreState()
 
     const results = await eyes.checkAndClose({target: baseTarget, settings: baseSettings, logger})

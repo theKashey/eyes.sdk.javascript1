@@ -1,19 +1,19 @@
 import type {CheckSettings as BaseCheckSettings} from '@applitools/types/base'
 import type {CheckSettings} from '@applitools/types/classic'
 import {type Logger} from '@applitools/logger'
-import {type Driver} from '@applitools/driver'
+import {type Context} from '@applitools/driver'
 import {type Screenshot} from '../../automation/utils/take-screenshot'
 import * as utils from '@applitools/utils'
 
 type RegionType = 'ignore' | 'layout' | 'content' | 'strict' | 'floating' | 'accessibility'
 
 export async function transformCheckSettings<TDriver, TContext, TElement, TSelector>({
-  driver,
+  context,
   settings,
   screenshot,
   logger: _logger,
 }: {
-  driver: Driver<TDriver, TContext, TElement, TSelector>
+  context: Context<TDriver, TContext, TElement, TSelector>
   settings: CheckSettings<TElement, TSelector>
   screenshot: Screenshot
   logger: Logger
@@ -41,7 +41,7 @@ export async function transformCheckSettings<TDriver, TContext, TElement, TSelec
       if (utils.types.has(reference, ['x', 'y', 'width', 'height'])) {
         transformedRegions.push(region as BaseCheckSettings[`${TRegionType}Regions`][number])
       } else {
-        const elements = await driver.currentContext.elements(reference as any)
+        const elements = await context.elements(reference as any)
         if (elements.length === 0) continue
         const contextLocationInViewport = await elements[0].context.getLocationInViewport()
         for (const element of elements) {
@@ -50,7 +50,7 @@ export async function transformCheckSettings<TDriver, TContext, TElement, TSelec
             elementRegionInViewport,
             utils.geometry.location(screenshot.region),
           )
-          const elementRegionIScaled = utils.geometry.scale(elementRegionInTarget, driver.viewportScale)
+          const elementRegionIScaled = utils.geometry.scale(elementRegionInTarget, context.driver.viewportScale)
           transformedRegions.push({
             region: elementRegionIScaled,
             regionId: utils.types.isString(element.commonSelector) ? element.commonSelector : element.commonSelector?.selector,

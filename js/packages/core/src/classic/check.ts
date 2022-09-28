@@ -54,6 +54,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         image: await screenshot.image.toPng(),
         locationInViewport: utils.geometry.location(screenshot.region),
       }
+      baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
       if (driver.isWeb && settings.sendDom) {
         if (settings.fully) await screenshot.scrollingElement.setAttribute('data-applitools-scroll', 'true')
         baseTarget.dom = await takeDomCapture({driver, logger}).catch(() => null)
@@ -64,7 +65,6 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         baseTarget.locationInView = utils.geometry.offset(scrollingOffset, screenshot.region)
         baseTarget.fullViewSize = scrollingElement ? await scrollingElement.getContentSize() : await driver.getViewportSize()
       }
-      baseSettings = await transformCheckSettings({driver, screenshot, settings, logger})
       await screenshot.restoreState()
       results = await eyes.check({target: baseTarget, settings: {...baseSettings, ignoreMismatch: !shouldRunOnce}, logger})
     } while (!shouldRunOnce && !results.some(result => result.asExpected) && Date.now() < finishAt)
