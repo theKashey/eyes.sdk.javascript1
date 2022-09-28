@@ -23,6 +23,8 @@ declare namespace Applitools {
       switchToParentFrame(): void
       takeScreenshot(): string
       sendCommandAndGetResult(command: string, params: Record<string, any>): Record<string, any>
+      switchContext(): void
+      getContexts(): string[]
     }
     interface Element extends globalThis.WebdriverIO.Element {}
     type Selector = string | ((element: HTMLElement) => HTMLElement) | ((element: HTMLElement) => HTMLElement[])

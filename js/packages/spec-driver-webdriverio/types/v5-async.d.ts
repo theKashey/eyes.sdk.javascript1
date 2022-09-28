@@ -23,6 +23,8 @@ declare namespace Applitools {
       switchToParentFrame(): Promise<void>
       takeScreenshot(): Promise<string>
       sendCommandAndGetResult(command: string, params: Record<string, any>): Promise<Record<string, any>>
+      switchContext(): Promise<void>
+      getContexts(): Promise<string[]>
     }
     interface Element extends globalThis.WebdriverIOAsync.Element {}
     type Selector = string | ((element: HTMLElement) => HTMLElement) | ((element: HTMLElement) => HTMLElement[])
