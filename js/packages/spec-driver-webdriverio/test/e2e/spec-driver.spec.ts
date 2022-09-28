@@ -413,7 +413,7 @@ describe('spec driver', async () => {
     })
     it('getWorlds', async () => {
       await browser.setOrientation('portrait')
-      await browser.$('id:com.applitools.eyes.android:id/btn_web_view').click()
+      await spec.click(browser, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
       await utils.general.sleep(5000)
       const actual = await spec.getWorlds(browser)
       const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
@@ -421,7 +421,7 @@ describe('spec driver', async () => {
     })
     it('switchWorld(id)', async () => {
       await browser.setOrientation('portrait')
-      await browser.$('id:com.applitools.eyes.android:id/btn_web_view').click()
+      await spec.click(browser, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
       await spec.switchWorld(browser, 'WEBVIEW_com.applitools.eyes.android')
       const actual = await spec.getCurrentWorld(browser)
       const expected = 'WEBVIEW_com.applitools.eyes.android'
