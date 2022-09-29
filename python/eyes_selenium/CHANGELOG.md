@@ -1,3 +1,7 @@
+## [vNext]
+### Updated
+- Adopt iPhone 14 and 14 Pro Max for NMG [Trello 73](https://trello.com/c/M1YiwtHb)
+
 ## [5.12.0] - 2022-09-19
 ### Added
 - Add `Eyes.set_nmg_capabilities` for update capabilities with NMG related options [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
