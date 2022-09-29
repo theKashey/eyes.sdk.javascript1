@@ -1,13 +1,15 @@
 ## [vNext]
 ### Updated
 - Adopt iPhone 14 and 14 Pro Max for NMG [Trello 73](https://trello.com/c/M1YiwtHb)
+### Fixed
+- Missing dyld for iOS real devices in `set_nmg_capabilities` [GH-1123](/../../pull/1123)
 
 ## [5.12.0] - 2022-09-19
 ### Added
-- Add `Eyes.set_nmg_capabilities` for update capabilities with NMG related options [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
-- Add `APPLITOOLS_HTTP_PROXY` environment variable to set proxy address [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
+- Add `Eyes.set_nmg_capabilities` for update capabilities with NMG related options [GH-1104](/../../pull/1104)
+- Add `APPLITOOLS_HTTP_PROXY` environment variable to set proxy address [GH-1104](/../../pull/1104)
 ### Updated
-- Allow to pass HTTP proxy address as string into `Configuration.set_proxy` [GH-1104](https://github.com/applitools/eyes.sdk.javascript1/pull/1104)
+- Allow to pass HTTP proxy address as string into `Configuration.set_proxy` [GH-1104](/../../pull/1104)
 
 ## [5.11.0] - 2022-09-05
 ### Updated

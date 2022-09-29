@@ -35,6 +35,10 @@ def test_ios_nmg_capabilities():
     assert ios_envs["NML_API_KEY"] == API_KEY
     assert ios_envs["NML_SERVER_URL"] == SERVER_URL
     assert ios_envs["NML_PROXY_URL"] == PROXY_SETTINGS.url
+    assert (
+        ios_envs["DYLD_INSERT_LIBRARIES"]
+        == "@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib:@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64/UFG_lib.framework/UFG_lib"
+    )
 
 
 def test_defaults_from_env(monkeypatch):

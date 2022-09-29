@@ -266,7 +266,10 @@ class Eyes(object):
 
         # for iOS
         ios_env_caps = {
-            "DYLD_INSERT_LIBRARIES": "@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib"
+            "DYLD_INSERT_LIBRARIES": (
+                "@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib"
+                ":@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64/UFG_lib.framework/UFG_lib"
+            )
         }
         ios_env_caps.update(env_caps)
         caps["processArguments"] = {
