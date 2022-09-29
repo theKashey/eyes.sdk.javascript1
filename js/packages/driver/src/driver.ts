@@ -110,7 +110,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return (!this.isWebView && this._driverInfo?.isNative) ?? false
   }
   get isWebView(): boolean {
-    return this._driverInfo?.isWebView ?? false
+    return (this._driverInfo?.isNative && this._driverInfo?.isWebView) ?? false
   }
   get isWeb(): boolean {
     return this.isWebView || !this.isNative
@@ -357,7 +357,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
       home: origin,
       next,
       isNative: currentWorld === origin,
-      isWebView: currentWorld !== origin && currentWorld !== 'CHROMIUM',
+      isWebView: currentWorld !== origin,
     }
     this._logger.log('current world', result)
     return result
