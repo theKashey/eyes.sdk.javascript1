@@ -31,6 +31,8 @@
         * [Accessiblity Regions](#accessiblity-regions)
         * [Scroll root element](#scroll-root-element)
         * [Variation group ID](#variation-group-id)
+        * [Lazy loading](#lazy-loading)
+        * [WebView](#webview)
         * [Other checkSettings configuration](#other-checksettings-configuration)
   * [close](#close)
 - [Runners](#runners)
@@ -374,6 +376,22 @@ Other details:
 - If an option is omitted, the sensible default for that value will be used
 - The SDK will repeatedly scroll the page using the `scrollLength` until either the page cannot be scrolled further or the `maxAmountToScroll` has been reached (whichever happens first)
 - If more time is needed for additional content to load, then increase the waitingTime to a value higher than 500 milliseconds. If better performance is desired and additional content lazily loads faster than the default waitingTime, then reduce it to a value below 500 milliseconds
+
+##### WebView (`webview`)
+
+When working with native apps that have webviews, it's possible to capture their contents in a check command.
+
+You do this by specifying it in the check settings like so:
+
+```js
+// the SDK will automatically switch to the first available web view
+eyes.check(Target.webview())
+
+// they can also specify the webview id (if it's static and they know what it is)
+eyes.check(Target.webview('webview-id'))
+```
+
+After the check command, the SDK will switch the driver back to the app context that it was prior to performing the check.
 
 ###### Other checkSettings configuration
 
