@@ -1,4 +1,4 @@
-## [vNext]
+## [5.12.1] - 2022-09-29
 ### Updated
 - Adopt iPhone 14 and 14 Pro Max for NMG [Trello 73](https://trello.com/c/M1YiwtHb)
 ### Fixed
