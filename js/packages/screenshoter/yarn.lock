@@ -16,14 +16,14 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@^1.9.34":
-  version "1.9.34"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.9.34.tgz#57edf1ab7bec4cf1d68f391d0010c79d0c1491ae"
-  integrity sha512-rio/EuYjmnQSzukyf3EJ94wX2aVi3VoFJ8M+Ft7u64K0pZVpaRkiswdBIECeqU7JOi8UvaLGcWmDZ5ZEDi7/Zw==
+"@applitools/driver@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.3.tgz#dcc5f35caa4ec3621d351c20899189ab2838c192"
+  integrity sha512-Mnt7x0y0hrbfUrs/4QVOWKnBBQScYuju5Zk2TUtac9TtVHUdri4OdAA0j29LfJrdkjUBeZ10jY9IZbITafcJgw==
   dependencies:
-    "@applitools/logger" "1.1.23"
+    "@applitools/logger" "1.1.24"
     "@applitools/snippets" "2.4.5"
-    "@applitools/types" "1.5.16"
+    "@applitools/types" "1.5.17"
     "@applitools/utils" "1.3.12"
     semver "7.3.7"
 
@@ -36,12 +36,12 @@
     jpeg-js "0.4.4"
     png-async "0.9.4"
 
-"@applitools/logger@1.1.23":
-  version "1.1.23"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.23.tgz#1df390c1e0d6e00966cd6bbf53208096e095e4a6"
-  integrity sha512-ajhw1cq3cTV51tnbWs1tLgn1Y5t7Ci+yA5VySC22U9pb+QY2JU96DB46ECVSX6UBCslTpei+dnpp4wHvBSiEUA==
+"@applitools/logger@1.1.24":
+  version "1.1.24"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.24.tgz#24798aa55c0eb8cfc6e38e4007ed2c47453fa72c"
+  integrity sha512-ZdUO8hT5q0XBr9qi/DpIYjv316zoPL/8hmqH5KNOqxAoDF+BjbH7hUSr85DLcJgl29IpuL6aHdIs8RpQSoTj8A==
   dependencies:
-    "@applitools/types" "1.5.16"
+    "@applitools/types" "1.5.17"
     "@applitools/utils" "1.3.12"
     chalk "4.1.2"
 
@@ -60,12 +60,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
   integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
 
-"@applitools/spec-driver-webdriverio@^1.2.25":
-  version "1.2.25"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.2.25.tgz#63c846889cbc60f9a9aa1fae78814670ec47ce0c"
-  integrity sha512-yED+lKPR3H6Lv3hYBYvmtcwRKTPp3E5Ex9Ke2OGePAL3IyXrSJFhxhEgF7aV5c0DdZ0bgRCYyv+ntUfOboaT4g==
+"@applitools/spec-driver-webdriverio@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.3.0.tgz#c4d452bbb5b8c0a7ec5d8bad4884573590a3124a"
+  integrity sha512-OkqWdwm9qbs1RenW/b54QpRHpavf1FsAdIQZM5vVvluQhtWo+cejJhakPGW4mZqHhSWbNUlntGWO3yGgihcpYA==
   dependencies:
-    "@applitools/types" "1.5.16"
+    "@applitools/types" "1.5.17"
     "@applitools/utils" "1.3.12"
 
 "@applitools/test-utils@1.0.10":
@@ -83,10 +83,10 @@
   dependencies:
     node-fetch "2.6.1"
 
-"@applitools/types@1.5.16":
-  version "1.5.16"
-  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.16.tgz#09e52b424a256610fde12dbd5cdbf3854951e118"
-  integrity sha512-jWOusueffcLa37uG7YWZ41wfHcC//wa6tWIuthapVZn11JRCAYsFZHKSt79UJnOgP5Zm6jb/O3BM8wn0iKM2gA==
+"@applitools/types@1.5.17":
+  version "1.5.17"
+  resolved "https://registry.yarnpkg.com/@applitools/types/-/types-1.5.17.tgz#e957b287689da68afcdc601dacc2e47f0a16d36c"
+  integrity sha512-YyDExU1RRF6SV9bcIzojKnDuHLQIq2WJCogviHYnL0mjknMPGAOCjZ0R2yLgcEcAHWNXm0WjHhjXHZPVjNOXaQ==
 
 "@applitools/utils@1.3.10":
   version "1.3.10"
