@@ -8,7 +8,7 @@ async function switchToWebview(driver: any, attempt = 1) {
   const worlds = await spec.getWorlds(driver)
   if (!worlds[1]) {
     if (attempt > 5) throw new Error(`no webview found - just ${worlds}`)
-    return switchToWebview(driver, attempt++)
+    return switchToWebview(driver, attempt + 1)
   }
   await spec.switchWorld(driver, worlds[1])
   return

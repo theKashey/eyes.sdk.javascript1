@@ -342,7 +342,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         return worlds
       }
       this._logger.log(`just one world found, retrying to see if there are others (attempt #${attempt})`)
-      return this.getWorlds(attempt++)
+      await this.getWorlds(attempt + 1)
     }
     this._logger.log(`worlds found - ${worlds}`)
     return worlds
