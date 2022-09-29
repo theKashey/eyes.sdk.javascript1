@@ -11,6 +11,13 @@
 
 
 
+## 2.16.0 - 2022/9/29
+
+### Features
+- Deprecated "Content" match level value in favor of "IgnoreColors"
+- Added support for webview switching in classic execution
+### Bug fixes
+
 ## 2.15.0 - 2022/9/26
 
 ### Features
