@@ -147,9 +147,12 @@ export function makeSpec(options: {
     async performAction(driver: Driver, steps: any[]): Promise<void> {
       return socket.request('Driver.performAction', {driver, steps})
     },
+    /* eslint-disable @typescript-eslint/no-empty-function */
     async getCurrentWorld(): Promise<void> {},
     async getWorlds(): Promise<void> {},
     async switchWorld(): Promise<void> {},
+    /* eslint-enable @typescript-eslint/no-empty-function*/
+
     // #endregion
   }
 
