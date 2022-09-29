@@ -352,13 +352,15 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (!this._spec.getCurrentWorld) return
     const [origin, next] = await this.getWorlds()
     const currentWorld = await this._spec.getCurrentWorld?.(this.target)
-    return {
+    const result = {
       id: currentWorld,
       home: origin,
       next,
       isNative: currentWorld === origin,
-      isWebView: currentWorld !== origin,
+      isWebView: currentWorld !== origin && currentWorld !== 'CHROMIUM',
     }
+    this._logger.log('current world', result)
+    return result
   }
   // end world
 
