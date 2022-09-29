@@ -21,15 +21,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-webdriverio":
   feature:
-    - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
-    - Added support for lazy loading views in android native apps
-    - Using `lazyLoad.waitingTime` as a delay between stitches by default
-    - Added `Sony Xperia 10 II` emulation device
-    - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
-    - Deprecated "Content" match level value in favor of "IgnoreColors"
-    - Added support for webview switching in classic execution
+    - 
   bug-fix:
-    - Fixed incorrect calculation of the target element position.
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
