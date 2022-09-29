@@ -147,6 +147,9 @@ export function makeSpec(options: {
     async performAction(driver: Driver, steps: any[]): Promise<void> {
       return socket.request('Driver.performAction', {driver, steps})
     },
+    async getCurrentWorld(): Promise<void> {},
+    async getWorlds(): Promise<void> {},
+    async switchWorld(): Promise<void> {},
     // #endregion
   }
 
