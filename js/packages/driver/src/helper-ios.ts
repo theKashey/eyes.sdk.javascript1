@@ -1,11 +1,12 @@
-import type * as types from '@applitools/types'
+import type {Region} from './types'
+import {type SpecDriver} from './spec-driver'
+import {type Driver} from './driver'
+import {type Element} from './element'
 import {type Logger} from '@applitools/logger'
-import type {Driver} from './driver'
-import type {Element} from './element'
 
 export class HelperIOS<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector>
     logger: Logger
   }): Promise<HelperIOS<TDriver, TContext, TElement, TSelector> | null> {
@@ -16,7 +17,7 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
 
   private readonly _driver: Driver<TDriver, TContext, TElement, TSelector>
   private readonly _element: Element<TDriver, TContext, TElement, TSelector>
-  private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  private readonly _spec: SpecDriver<TDriver, TContext, TElement, TSelector>
   private _logger: Logger
 
   readonly name: 'ios'
@@ -24,7 +25,7 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
   constructor(options: {
     driver: Driver<TDriver, TContext, TElement, TSelector>
     element: Element<TDriver, TContext, TElement, TSelector>
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     logger?: Logger
   }) {
     this._driver = options.driver
@@ -34,7 +35,7 @@ export class HelperIOS<TDriver, TContext, TElement, TSelector> {
     this.name = 'ios'
   }
 
-  async getContentRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
+  async getContentRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<Region> {
     await this._element.click()
 
     const region = await this._spec.getElementRegion(this._driver.target, element.target)

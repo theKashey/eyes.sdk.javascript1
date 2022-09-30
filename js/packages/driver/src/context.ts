@@ -1,9 +1,11 @@
-import type * as types from '@applitools/types'
-import {type Logger} from '@applitools/logger'
+import type {Location, Size, Region, Cookie} from './types'
+import {type SpecDriver, type WaitOptions} from './spec-driver'
 import {type Driver} from './driver'
+import {type Selector} from './selector'
+import {type Logger} from '@applitools/logger'
+import {Element} from './element'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
-import {Element} from './element'
 
 const snippets = require('@applitools/snippets')
 
@@ -11,7 +13,7 @@ export type ContextReference<TDriver, TContext, TElement, TSelector> =
   | Context<TDriver, TContext, TElement, TSelector>
   | Element<TDriver, TContext, TElement, TSelector>
   | TElement
-  | types.Selector<TSelector>
+  | Selector<TSelector>
   | string
   | number
 
@@ -24,10 +26,10 @@ export type ContextPlain<TDriver, TContext, TElement, TSelector> =
     }
 
 export type ContextState = {
-  region?: types.Region
-  clientRegion?: types.Region
-  scrollingRegion?: types.Region
-  innerOffset?: types.Location
+  region?: Region
+  clientRegion?: Region
+  scrollingRegion?: Region
+  innerOffset?: Location
 }
 
 export class Context<TDriver, TContext, TElement, TSelector> {
@@ -52,10 +54,10 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     )
   }
 
-  protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  protected readonly _spec: SpecDriver<TDriver, TContext, TElement, TSelector>
 
   constructor(options: {
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     context?: TContext | Context<TDriver, TContext, TElement, TSelector>
     driver?: Driver<TDriver, TContext, TElement, TSelector>
     parent?: Context<TDriver, TContext, TElement, TSelector>
@@ -242,10 +244,10 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async root(selector: types.Selector<TSelector>): Promise<{
+  async root(selector: Selector<TSelector>): Promise<{
     context: Context<TDriver, TContext, TElement, TSelector>
     shadow?: Element<TDriver, TContext, TElement, TSelector>
-    selector: types.Selector<TSelector>
+    selector: Selector<TSelector>
   }> {
     await this.focus()
 
@@ -289,7 +291,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   }
 
   async element(
-    elementOrSelector: TElement | types.Selector<TSelector>,
+    elementOrSelector: TElement | Selector<TSelector>,
   ): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     if (this._spec.isElement(elementOrSelector)) {
       return new Element({spec: this._spec, context: this, element: elementOrSelector, logger: this._logger})
@@ -319,7 +321,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   }
 
   async elements(
-    selectorOrElement: types.Selector<TSelector> | TElement,
+    selectorOrElement: Selector<TSelector> | TElement,
   ): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
     if (specUtils.isSelector(this._spec, selectorOrElement)) {
       if (this.isRef) {
@@ -355,8 +357,8 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   }
 
   async waitFor(
-    selector: types.Selector<TSelector>,
-    options?: types.WaitOptions,
+    selector: Selector<TSelector>,
+    options?: WaitOptions,
   ): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     const root = await this.root(selector)
     if (!root) return null
@@ -436,9 +438,14 @@ export class Context<TDriver, TContext, TElement, TSelector> {
       if (this._scrollingElement) {
         this._scrollingElement = await this.element(this._scrollingElement)
       } else if (this.driver.isWeb) {
-        const isIOS = this.driver.isIOS
-        const selector = isIOS ? 'html' : await this.execute(snippets.getDocumentScrollingElement)
-        this._logger.log(`default SRE is ${selector}${isIOS ? ' (because Safari on iOS)' : ''}`)
+        let selector
+        if (this.driver.isIOS && !this.driver.isEmulation) {
+          selector = 'html'
+          this._logger.log(`Using hardcoded default scrolling element for Safari on iOS - "${selector}"`)
+        } else {
+          selector = await this.execute(snippets.getDocumentScrollingElement)
+          this._logger.log(`Using dynamic default scrolling element - "${selector}"`)
+        }
         this._scrollingElement = await this.element({type: 'css', selector})
       } else {
         this._scrollingElement = await this.element({type: 'xpath', selector: '//*[@scrollable="true"]'})
@@ -448,7 +455,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
   }
 
   async setScrollingElement(
-    scrollingElement: Element<TDriver, TContext, TElement, TSelector> | TElement | types.Selector<TSelector>,
+    scrollingElement: Element<TDriver, TContext, TElement, TSelector> | TElement | Selector<TSelector>,
   ): Promise<void> {
     if (scrollingElement === undefined) return
     else if (scrollingElement === null) this._scrollingElement = null
@@ -478,7 +485,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getRegion(): Promise<types.Region> {
+  async getRegion(): Promise<Region> {
     if (this.isMain && this.isCurrent) {
       const viewportRegion = utils.geometry.region({x: 0, y: 0}, await this.driver.getViewportSize())
       this._state.region = this._scrollingElement
@@ -494,7 +501,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return this._state.region
   }
 
-  async getClientRegion(): Promise<types.Region> {
+  async getClientRegion(): Promise<Region> {
     if (this.isMain && this.isCurrent) {
       const viewportRegion = utils.geometry.region({x: 0, y: 0}, await this.driver.getViewportSize())
       this._state.clientRegion = this._scrollingElement
@@ -510,7 +517,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return this._state.clientRegion
   }
 
-  async getScrollingRegion(): Promise<types.Region> {
+  async getScrollingRegion(): Promise<Region> {
     if (this.isCurrent) {
       const scrollingElement = await this.getScrollingElement()
       this._state.scrollingRegion = await scrollingElement.getClientRegion()
@@ -518,11 +525,11 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return this._state.scrollingRegion
   }
 
-  async getContentSize(): Promise<types.Size> {
+  async getContentSize(): Promise<Size> {
     return this.execute(snippets.getDocumentSize)
   }
 
-  async getInnerOffset(): Promise<types.Location> {
+  async getInnerOffset(): Promise<Location> {
     if (this.isCurrent) {
       const scrollingElement = await this.getScrollingElement()
       this._state.innerOffset = scrollingElement ? await scrollingElement.getInnerOffset() : {x: 0, y: 0}
@@ -530,7 +537,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return this._state.innerOffset
   }
 
-  async getLocationInMainContext(): Promise<types.Location> {
+  async getLocationInMainContext(): Promise<Location> {
     return this.path.reduce((location, context) => {
       return location.then(async location => {
         return utils.geometry.offset(location, utils.geometry.location(await context.getClientRegion()))
@@ -538,7 +545,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     }, Promise.resolve({x: 0, y: 0}))
   }
 
-  async getLocationInViewport(): Promise<types.Location> {
+  async getLocationInViewport(): Promise<Location> {
     let location = utils.geometry.offsetNegative({x: 0, y: 0}, await this.getInnerOffset())
 
     if (this.isMain) return location
@@ -557,7 +564,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return location
   }
 
-  async getRegionInViewport(region: types.Region): Promise<types.Region> {
+  async getRegionInViewport(region: Region): Promise<Region> {
     let currentContext = this as Context<TDriver, TContext, TElement, TSelector>
 
     this._logger.log('Converting context region to viewport region', region)
@@ -586,7 +593,7 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     return region
   }
 
-  async getCookies(): Promise<types.Cookie[]> {
+  async getCookies(): Promise<Cookie[]> {
     if (this.driver.isNative) return []
     await this.focus()
     return this._spec.getCookies?.(this.target, true) ?? []

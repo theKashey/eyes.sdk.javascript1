@@ -1,14 +1,16 @@
-import type * as types from '@applitools/types'
-import {type Logger} from '@applitools/logger'
+import type {Location, Size, Region} from './types'
+import {type SpecDriver} from './spec-driver'
 import {type Context} from './context'
+import {type Selector} from './selector'
+import {type Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
 
 const snippets = require('@applitools/snippets')
 
 export type ElementState<TElement> = {
-  contentSize?: types.Size
-  scrollOffset?: types.Location
+  contentSize?: Size
+  scrollOffset?: Location
   transforms?: any
   attributes?: Record<string, string | Error>
   touchPadding?: number
@@ -19,20 +21,20 @@ export class Element<TDriver, TContext, TElement, TSelector> {
   private _target: TElement
 
   private _context: Context<TDriver, TContext, TElement, TSelector>
-  private _selector: types.Selector<TSelector>
-  private _commonSelector?: types.Selector
+  private _selector: Selector<TSelector>
+  private _commonSelector?: Selector
   private _index: number
   private _state: ElementState<TElement> = {}
   private _originalOverflow: any
   private _logger: Logger
 
-  protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  protected readonly _spec: SpecDriver<TDriver, TContext, TElement, TSelector>
 
   constructor(options: {
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     element?: TElement | Element<TDriver, TContext, TElement, TSelector>
     context?: Context<TDriver, TContext, TElement, TSelector>
-    selector?: types.Selector<TSelector>
+    selector?: Selector<TSelector>
     index?: number
     logger?: Logger
   }) {
@@ -168,7 +170,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getRegion(): Promise<types.Region> {
+  async getRegion(): Promise<Region> {
     const region = await this.withRefresh(async () => {
       if (this.driver.isWeb) {
         this._logger.log('Extracting region of web element with selector', this.selector)
@@ -190,7 +192,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return region
   }
 
-  async getClientRegion(): Promise<types.Region> {
+  async getClientRegion(): Promise<Region> {
     const region = await this.withRefresh(async () => {
       if (this.driver.isWeb) {
         this._logger.log('Extracting region of web element with selector', this.selector)
@@ -205,7 +207,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
   async getContentSize(
     options: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}} = {},
-  ): Promise<types.Size> {
+  ): Promise<Size> {
     if (this._state.contentSize) return this._state.contentSize
 
     const size = await this.withRefresh(async () => {
@@ -399,7 +401,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async scrollTo(offset: types.Location, options?: {force: boolean}): Promise<types.Location> {
+  async scrollTo(offset: Location, options?: {force: boolean}): Promise<Location> {
     return this.withRefresh(async () => {
       offset = utils.geometry.round({x: Math.max(offset.x, 0), y: Math.max(offset.y, 0)})
       if (this.driver.isWeb) {
@@ -570,7 +572,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     })
   }
 
-  async translateTo(offset: types.Location): Promise<types.Location> {
+  async translateTo(offset: Location): Promise<Location> {
     offset = {x: Math.round(offset.x), y: Math.round(offset.y)}
     if (this.driver.isWeb) {
       return this.withRefresh(async () => this.context.execute(snippets.translateTo, [this, offset]))
@@ -579,7 +581,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getScrollOffset(): Promise<types.Location> {
+  async getScrollOffset(): Promise<Location> {
     if (this.driver.isWeb) {
       return this.withRefresh(() => this.context.execute(snippets.getElementScrollOffset, [this]))
     } else {
@@ -587,7 +589,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getTranslateOffset(): Promise<types.Location> {
+  async getTranslateOffset(): Promise<Location> {
     if (this.driver.isWeb) {
       return this.withRefresh(() => this.context.execute(snippets.getElementTranslateOffset, [this]))
     } else {
@@ -595,7 +597,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     }
   }
 
-  async getInnerOffset(): Promise<types.Location> {
+  async getInnerOffset(): Promise<Location> {
     if (this.driver.isWeb) {
       return this.withRefresh(() => this.context.execute(snippets.getElementInnerOffset, [this]))
     } else {

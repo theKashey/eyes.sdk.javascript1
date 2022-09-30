@@ -1,4 +1,4 @@
-import type {SpecDriver} from '@applitools/types'
+import {type SpecDriver} from '../spec-driver'
 import {strict as assert} from 'assert'
 
 const snippets = require('@applitools/snippets')

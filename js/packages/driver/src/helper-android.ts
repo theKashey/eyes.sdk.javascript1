@@ -1,13 +1,14 @@
-import type * as types from '@applitools/types'
+import type {Location, Region} from './types'
+import {type SpecDriver} from './spec-driver'
+import {type Driver} from './driver'
+import {type Element} from './element'
 import {type Logger} from '@applitools/logger'
-import type {Driver} from './driver'
-import type {Element} from './element'
 import * as utils from '@applitools/utils'
 import semverGte from 'semver/functions/gte'
 
 export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   static async make<TDriver, TContext, TElement, TSelector>(options: {
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     driver: Driver<TDriver, TContext, TElement, TSelector>
     logger: Logger
   }): Promise<HelperAndroid<TDriver, TContext, TElement, TSelector> | null> {
@@ -38,7 +39,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
       : null
   }
 
-  private readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  private readonly _spec: SpecDriver<TDriver, TContext, TElement, TSelector>
   private readonly _input: Element<TDriver, TContext, TElement, TSelector>
   private readonly _action?: Element<TDriver, TContext, TElement, TSelector>
   private readonly _legacy: boolean
@@ -48,7 +49,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   readonly name: 'android' | 'android-legacy'
 
   constructor(options: {
-    spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+    spec: SpecDriver<TDriver, TContext, TElement, TSelector>
     input: Element<TDriver, TContext, TElement, TSelector>
     action?: Element<TDriver, TContext, TElement, TSelector>
     legacy: boolean
@@ -102,7 +103,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
   async getContentRegion(
     element: Element<TDriver, TContext, TElement, TSelector>,
     options?: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}},
-  ): Promise<types.Region> {
+  ): Promise<Region> {
     const elementId = await this._getElementId(element)
     if (!elementId) return null
 
@@ -137,7 +138,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     return touchPadding
   }
 
-  async getRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<types.Region> {
+  async getRegion(element: Element<TDriver, TContext, TElement, TSelector>): Promise<Region> {
     if (this._legacy) return null
 
     const elementId = await this._getElementId(element)
@@ -161,7 +162,7 @@ export class HelperAndroid<TDriver, TContext, TElement, TSelector> {
     await this._command(`moveToTop;${elementId};0;-1;0`)
   }
 
-  async scrollBy(element: Element<TDriver, TContext, TElement, TSelector>, offset: types.Location): Promise<void> {
+  async scrollBy(element: Element<TDriver, TContext, TElement, TSelector>, offset: Location): Promise<void> {
     if (this._legacy) return null
 
     const elementId = await this._getElementId(element)

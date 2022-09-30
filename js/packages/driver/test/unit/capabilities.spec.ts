@@ -37,6 +37,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: true,
     })
   })
 
@@ -74,6 +75,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -107,6 +109,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -155,6 +158,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: false,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -188,6 +192,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: true,
     })
   })
 
@@ -222,6 +227,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: true,
     })
   })
 
@@ -259,6 +265,7 @@ describe('capabilities', () => {
       platformVersion: '10.0',
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -294,6 +301,7 @@ describe('capabilities', () => {
       platformVersion: '10.0',
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -327,6 +335,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -358,6 +367,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -391,6 +401,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: true,
     })
   })
 
@@ -425,6 +436,7 @@ describe('capabilities', () => {
       platformVersion: undefined,
       isW3C: true,
       isMobile: false,
+      isChrome: true,
     })
   })
 
@@ -462,6 +474,7 @@ describe('capabilities', () => {
       platformVersion: '20.4.0',
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -497,6 +510,7 @@ describe('capabilities', () => {
       platformVersion: '20.6.0',
       isW3C: true,
       isMobile: false,
+      isChrome: false,
     })
   })
 
@@ -557,6 +571,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -598,6 +613,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -660,6 +676,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -701,6 +718,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -763,6 +781,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -832,6 +851,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -895,6 +915,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -965,233 +986,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
-      isIOS: true,
-      isAndroid: false,
-    })
-  })
-
-  it('should keep android platformName with lowercase if config.keepPlatformNameAsIs is set to true', () => {
-    const customConfig = {
-      keepPlatformNameAsIs: true,
-    }
-    const driverInfo = parseCapabilities(
-      {
-        deviceName: 'emulator-5554',
-        takesScreenshot: true,
-        orientation: 'PORTRAIT',
-        viewportRect: {width: 1080, top: 72, height: 2004, left: 0},
-        app: '/tmp/tmpHNTQ8x/eyes-android-hello-world.apk',
-        networkConnectionEnabled: true,
-        deviceUDID: 'emulator-5554',
-        newCommandTimeout: 600,
-        deviceManufacturer: 'unknown',
-        deviceScreenSize: '1080x2220',
-        appPackage: 'com.applitools.helloworld.android',
-        deviceModel: 'Android SDK built for x86_64',
-        'webdriver.remote.quietExceptions': false,
-        locationContextEnabled: false,
-        platform: 'LINUX',
-        'webdriver.remote.sessionid': 'a6c14e78e8014db29891f1000703063a',
-        maxTypingFrequency: 8,
-        noSign: true,
-        deviceApiLevel: 24,
-        platformName: 'android', // THIS IS THE IMPORTANT PART
-        events: {
-          commands: [[Object], [Object], [Object], [Object], [Object], [Object]],
-        },
-        pixelRatio: 3,
-        deviceScreenDensity: 480,
-        warnings: {},
-        javascriptEnabled: true,
-        automationName: 'uiautomator2',
-        databaseEnabled: false,
-        noReset: true,
-        desired: {
-          deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
-          orientation: 'PORTRAIT',
-          udid: 'emulator-5554',
-          app: '/tmp/tmpHNTQ8x/eyes-android-hello-world.apk',
-          'webdriver.remote.quietExceptions': false,
-          noReset: true,
-          platformVersion: '7.0',
-          browserName: '',
-          maxTypingFrequency: 8,
-          automationName: 'uiautomator2',
-          newCommandTimeout: 600,
-          noSign: true,
-          platformName: 'android',
-          eventTimings: true,
-          proxy: {
-            proxyAutoconfigUrl: 'http://127.0.0.1:19876/pac.js',
-            proxyType: 'PAC',
-          },
-        },
-        browserName: '',
-        hasMetadata: true,
-        proxy: {
-          proxyAutoconfigUrl: 'http://127.0.0.1:19876/pac.js',
-          proxyType: 'PAC',
-        },
-        platformVersion: '7.0',
-        webStorageEnabled: false,
-        eventTimings: true,
-        udid: 'emulator-5554',
-        statBarHeight: 72,
-      },
-      customConfig,
-    )
-    assert.deepStrictEqual(driverInfo, {
-      browserName: undefined,
-      browserVersion: undefined,
-      platformName: 'android', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
-      platformVersion: '7.0',
-      deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
-      displaySize: {height: 2220, width: 1080},
-      orientation: 'portrait',
-      statusBarSize: 72,
-      navigationBarSize: 144,
-      pixelRatio: 3,
-      isW3C: true,
-      isMobile: true,
-      isNative: true,
-      isIOS: false,
-      isAndroid: true,
-    })
-  })
-
-  it('should set android platformName to start with uppercase if config.keepPlatformNameAsIs is not set', () => {
-    const driverInfo = parseCapabilities({
-      deviceName: 'emulator-5554',
-      takesScreenshot: true,
-      orientation: 'PORTRAIT',
-      viewportRect: {width: 1080, top: 72, height: 2004, left: 0},
-      app: '/tmp/tmpHNTQ8x/eyes-android-hello-world.apk',
-      networkConnectionEnabled: true,
-      deviceUDID: 'emulator-5554',
-      newCommandTimeout: 600,
-      deviceManufacturer: 'unknown',
-      deviceScreenSize: '1080x2220',
-      appPackage: 'com.applitools.helloworld.android',
-      deviceModel: 'Android SDK built for x86_64',
-      'webdriver.remote.quietExceptions': false,
-      locationContextEnabled: false,
-      platform: 'LINUX',
-      'webdriver.remote.sessionid': 'a6c14e78e8014db29891f1000703063a',
-      maxTypingFrequency: 8,
-      noSign: true,
-      deviceApiLevel: 24,
-      platformName: 'android', // THIS IS THE IMPORTANT PART
-      events: {
-        commands: [[Object], [Object], [Object], [Object], [Object], [Object]],
-      },
-      pixelRatio: 3,
-      deviceScreenDensity: 480,
-      warnings: {},
-      javascriptEnabled: true,
-      automationName: 'uiautomator2',
-      databaseEnabled: false,
-      noReset: true,
-      desired: {
-        deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
-        orientation: 'PORTRAIT',
-        udid: 'emulator-5554',
-        app: '/tmp/tmpHNTQ8x/eyes-android-hello-world.apk',
-        'webdriver.remote.quietExceptions': false,
-        noReset: true,
-        platformVersion: '7.0',
-        browserName: '',
-        maxTypingFrequency: 8,
-        automationName: 'uiautomator2',
-        newCommandTimeout: 600,
-        noSign: true,
-        platformName: 'android',
-        eventTimings: true,
-        proxy: {
-          proxyAutoconfigUrl: 'http://127.0.0.1:19876/pac.js',
-          proxyType: 'PAC',
-        },
-      },
-      browserName: '',
-      hasMetadata: true,
-      proxy: {
-        proxyAutoconfigUrl: 'http://127.0.0.1:19876/pac.js',
-        proxyType: 'PAC',
-      },
-      platformVersion: '7.0',
-      webStorageEnabled: false,
-      eventTimings: true,
-      udid: 'emulator-5554',
-      statBarHeight: 72,
-    })
-    assert.deepStrictEqual(driverInfo, {
-      browserName: undefined,
-      browserVersion: undefined,
-      platformName: 'android',
-      platformVersion: '7.0',
-      deviceName: 'Samsung Galaxy S8 FHD GoogleAPI Emulator',
-      displaySize: {height: 2220, width: 1080},
-      orientation: 'portrait',
-      statusBarSize: 72,
-      navigationBarSize: 144,
-      pixelRatio: 3,
-      isW3C: true,
-      isMobile: true,
-      isNative: true,
-      isIOS: false,
-      isAndroid: true,
-    })
-  })
-
-  it('should keep ios platformName with lowercase if config.keepPlatformNameAsIs is set to true', () => {
-    const driverInfo = parseCapabilities(
-      {
-        deviceName: 'iPhone 8',
-        platformVersion: '11.0',
-        platformName: 'ios', // THIS IS THE IMPORTANT PART
-        orientation: 'PORTRAIT',
-        pixelRatio: 2,
-      },
-      {keepPlatformNameAsIs: true},
-    )
-    assert.deepStrictEqual(driverInfo, {
-      browserName: undefined,
-      browserVersion: undefined,
-      deviceName: 'iPhone 8',
-      platformName: 'ios', // THIS IS THE IMPORTANT PART (it did not change because keepPlatformNameAsIs was set to true)
-      platformVersion: '11.0',
-      displaySize: undefined,
-      orientation: 'portrait',
-      statusBarSize: undefined,
-      pixelRatio: 2,
-      isW3C: true,
-      isMobile: true,
-      isNative: true,
-      isIOS: true,
-      isAndroid: false,
-    })
-  })
-
-  it('should set ios platformName to start with uppercase if config.keepPlatformNameAsIs is not set', () => {
-    const driverInfo = parseCapabilities({
-      deviceName: 'iPhone 8',
-      platformVersion: '11.0',
-      platformName: 'ios',
-      orientation: 'PORTRAIT',
-      pixelRatio: 2,
-    })
-    assert.deepStrictEqual(driverInfo, {
-      browserName: undefined,
-      browserVersion: undefined,
-      deviceName: 'iPhone 8',
-      platformName: 'ios',
-      platformVersion: '11.0',
-      displaySize: undefined,
-      orientation: 'portrait',
-      statusBarSize: undefined,
-      pixelRatio: 2,
-      isW3C: true,
-      isMobile: true,
-      isNative: true,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1252,6 +1047,8 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1322,6 +1119,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1363,6 +1161,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1405,6 +1204,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1475,6 +1275,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1545,6 +1346,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: false,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1597,6 +1399,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: true,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })
@@ -1662,6 +1465,7 @@ describe('capabilities', () => {
       isW3C: true,
       isMobile: true,
       isNative: true,
+      isChrome: false,
       isIOS: true,
       isAndroid: false,
     })

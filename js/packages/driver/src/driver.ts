@@ -1,21 +1,23 @@
-import type * as types from '@applitools/types'
-import {type Logger, makeLogger} from '@applitools/logger'
-import * as utils from '@applitools/utils'
-import * as specUtils from './spec-utils'
-import {Context, ContextReference} from './context'
-import {Element} from './element'
+import type {Size, Region, ScreenOrientation, Cookie} from './types'
+import {type Selector} from './selector'
+import {type SpecDriver, type DriverInfo} from './spec-driver'
+import {type Element} from './element'
+import {Context, type ContextReference} from './context'
+import {makeLogger, type Logger} from '@applitools/logger'
 import {HelperIOS} from './helper-ios'
 import {HelperAndroid} from './helper-android'
 import {parseUserAgent} from './user-agent'
 import {parseCapabilities} from './capabilities'
+import * as utils from '@applitools/utils'
+import * as specUtils from './spec-utils'
 
 const snippets = require('@applitools/snippets')
 
 type DriverOptions<TDriver, TContext, TElement, TSelector> = {
-  spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  spec: SpecDriver<TDriver, TContext, TElement, TSelector>
   driver: Driver<TDriver, TContext, TElement, TSelector> | TDriver
   logger?: Logger
-  customConfig?: types.CustomDriverConfig
+  customConfig?: {useCeilForViewportSize?: boolean; disableHelper?: boolean}
 }
 
 // eslint-disable-next-line
@@ -24,15 +26,15 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
   private _mainContext: Context<TDriver, TContext, TElement, TSelector>
   private _currentContext: Context<TDriver, TContext, TElement, TSelector>
-  private _driverInfo: types.DriverInfo
+  private _driverInfo: DriverInfo
   private _logger: Logger
-  private _customConfig: types.CustomDriverConfig
+  private _customConfig: {useCeilForViewportSize?: boolean; disableHelper?: boolean}
   private _helper?:
     | HelperAndroid<TDriver, TContext, TElement, TSelector>
     | HelperIOS<TDriver, TContext, TElement, TSelector>
   private _previousWorld: string
 
-  protected readonly _spec: types.SpecDriver<TDriver, TContext, TElement, TSelector>
+  protected readonly _spec: SpecDriver<TDriver, TContext, TElement, TSelector>
 
   constructor(options: DriverOptions<TDriver, TContext, TElement, TSelector>) {
     if (options.driver instanceof Driver) return options.driver
@@ -91,7 +93,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   get userAgent(): string {
     return this._driverInfo?.userAgent
   }
-  get orientation(): 'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary' {
+  get orientation(): ScreenOrientation {
     return this._driverInfo.orientation
   }
   get pixelRatio(): number {
@@ -114,6 +116,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
   }
   get isWeb(): boolean {
     return this.isWebView || !this.isNative
+  }
+  get isEmulation(): boolean {
+    return this._driverInfo?.isEmulation ?? false
   }
   get isMobile(): boolean {
     return this._driverInfo?.isMobile ?? false
@@ -149,7 +154,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     if (this.isMobile) {
       this._driverInfo.orientation =
         (await this.getOrientation().catch(() => undefined)) ?? this._driverInfo.orientation
-      const world = this.isMobile && (await this.getCurrentWorld())
+      const world = await this.getCurrentWorld()
       this._driverInfo.isWebView = !!world?.isWebView
     }
 
@@ -172,11 +177,12 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
 
       if (!this._driverInfo.isMobile && (this.isAndroid || this.isIOS)) {
         this._driverInfo.isMobile = true
+        this._driverInfo.isEmulation = this._driverInfo.isChrome
       }
 
       this._driverInfo.features ??= {}
       this._driverInfo.features.allCookies ??=
-        /chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile
+        this._driverInfo.isChrome || (/chrome/i.test(this._driverInfo.browserName) && !this._driverInfo.isMobile)
     } else {
       // this value always excludes the height of the navigation bar, and sometimes it also excludes the height of the status bar
       let windowSize = await this._spec.getWindowSize(this.target)
@@ -348,7 +354,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return worlds
   }
 
-  async getCurrentWorld(): Promise<types.WorldInfo> {
+  async getCurrentWorld(): Promise<{id: string; home: string; next?: string; isNative: boolean; isWebView: boolean}> {
     if (!this._spec.getCurrentWorld) return
     const [origin, next] = await this.getWorlds()
     const currentWorld = await this._spec.getCurrentWorld?.(this.target)
@@ -388,7 +394,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     this._currentContext = this._mainContext
     return this.switchToChildContext(...path)
 
-    function transformSelector(selector: types.Selector<TSelector>) {
+    function transformSelector(selector: Selector<TSelector>) {
       return specUtils.transformSelector(spec, selector, {isWeb: true})
     }
 
@@ -543,7 +549,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this.currentContext
   }
 
-  async normalizeRegion(region: types.Region): Promise<types.Region> {
+  async normalizeRegion(region: Region): Promise<Region> {
     if (this.isWeb) return region
 
     let normalizedRegion = region
@@ -561,19 +567,16 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return normalizedRegion
   }
 
-  async getRegionInViewport(
-    context: Context<TDriver, TContext, TElement, TSelector>,
-    region: types.Region,
-  ): Promise<types.Region> {
+  async getRegionInViewport(context: Context<TDriver, TContext, TElement, TSelector>, region: Region): Promise<Region> {
     await context.focus()
     return context.getRegionInViewport(region)
   }
 
-  async element(selector: types.Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>> {
+  async element(selector: Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     return this.currentContext.element(selector)
   }
 
-  async elements(selector: types.Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
+  async elements(selector: Selector<TSelector>): Promise<Element<TDriver, TContext, TElement, TSelector>[]> {
     return this.currentContext.elements(selector)
   }
 
@@ -589,14 +592,14 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return image
   }
 
-  async getViewportRegion(): Promise<types.Region> {
+  async getViewportRegion(): Promise<Region> {
     return {
       ...(this._driverInfo?.viewportLocation ?? {x: 0, y: 0}),
       ...(await this.getViewportSize()),
     }
   }
 
-  async getViewportSize(): Promise<types.Size> {
+  async getViewportSize(): Promise<Size> {
     let size
     if (this.isNative) {
       if (this._driverInfo?.viewportSize) {
@@ -626,7 +629,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return size
   }
 
-  async setViewportSize(size: types.Size): Promise<void> {
+  async setViewportSize(size: Size): Promise<void> {
     if (this.isMobile) return
     if (this._spec.setViewportSize) {
       this._logger.log('Setting viewport size to', size, 'using spec method')
@@ -665,7 +668,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     throw new Error('Failed to set viewport size!')
   }
 
-  async getDisplaySize(): Promise<types.Size> {
+  async getDisplaySize(): Promise<Size> {
     if (this.isWeb && !this.isMobile) return
     if (this._driverInfo?.displaySize) {
       this._logger.log('Extracting display size from native driver using cached value')
@@ -711,7 +714,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     await this._spec.setOrientation(this.target, orientation)
   }
 
-  async getCookies(): Promise<types.Cookie[]> {
+  async getCookies(): Promise<Cookie[]> {
     if (this.isNative || !this.features.allCookies) return []
     try {
       return (await this._spec.getCookies?.(this.target)) ?? []

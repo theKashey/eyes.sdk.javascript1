@@ -7,7 +7,7 @@ function makeTakeViewportScreenshot(options) {
   const {driver} = options
   if (driver.isNative) {
     return makeTakeNativeScreenshot(options)
-  } else if (driver.isIOS || driver.isWebView) {
+  } else if ((!driver.isEmulation && driver.isIOS) || driver.isWebView) {
     // safari on ios takes screenshot with browser and os interfaces
     return makeTakeMarkedScreenshot(options)
   } else if (driver.browserName === 'Firefox') {
@@ -28,7 +28,7 @@ function makeTakeViewportScreenshot(options) {
 
 function makeTakeDefaultScreenshot({driver, stabilization = {}, debug, logger}) {
   return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking screenshot...')
+    logger.verbose('Taking screenshot (default)...')
     const image = makeImage(await driver.takeScreenshot())
     await image.debug({...debug, name, suffix: 'original'})
 
@@ -45,7 +45,7 @@ function makeTakeDefaultScreenshot({driver, stabilization = {}, debug, logger}) 
 
 function makeTakeMainContextScreenshot({driver, stabilization = {}, debug, logger}) {
   return async function takeScreenshot({name} = {}) {
-    logger.verbose('Taking screenshot...')
+    logger.verbose('Taking screenshot (with forced main context)...')
     const originalContext = driver.currentContext
     await driver.mainContext.focus()
     const image = makeImage(await driver.takeScreenshot())
@@ -99,7 +99,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     else image.scale(1 / driver.pixelRatio / driver.viewportScale)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
-    else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
+    else if (driver.orientation?.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
@@ -126,7 +126,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
       const image = makeImage(await driver.takeScreenshot())
 
       if (stabilization.rotate) image.rotate(stabilization.rotate)
-      else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
+      else if (driver.orientation?.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
       await image.debug({...debug, name: 'marker'})
 

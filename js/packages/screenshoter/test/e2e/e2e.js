@@ -86,6 +86,8 @@ exports.makeDriver = async function makeDriver({
   logger,
   deviceName,
   platformVersion,
+  emulation,
+  headless = true,
   ...rest
 }) {
   const workerId = process.env.MOCHA_WORKER_ID ? Number(process.env.MOCHA_WORKER_ID) : 0
@@ -105,7 +107,10 @@ exports.makeDriver = async function makeDriver({
       url: 'http://localhost:4444/wd/hub',
       capabilities: {
         browserName: 'chrome',
-        'goog:chromeOptions': {args: ['headless']},
+        'goog:chromeOptions': {
+          args: headless ? ['headless'] : [],
+          mobileEmulation: emulation && {deviceName: emulation},
+        },
       },
     },
     android: {

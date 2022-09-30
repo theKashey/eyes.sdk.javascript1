@@ -1,11 +1,12 @@
-import type * as types from '@applitools/types'
+import {type DriverInfo} from './spec-driver'
+import {type Size} from './types'
 
 type Capabilities = Record<string, any>
 
-export function parseCapabilities(capabilities: Capabilities): types.DriverInfo {
+export function parseCapabilities(capabilities: Capabilities): DriverInfo {
   if (capabilities.capabilities) capabilities = capabilities.capabilities
 
-  const info: types.DriverInfo = {
+  const info: DriverInfo = {
     browserName:
       !capabilities.app && !capabilities.bundleId
         ? (capabilities.browserName ?? capabilities.desired?.browserName) || undefined
@@ -16,6 +17,7 @@ export function parseCapabilities(capabilities: Capabilities): types.DriverInfo 
     platformVersion: capabilities.platformVersion || undefined,
     isW3C: isW3C(capabilities),
     isMobile: isMobile(capabilities),
+    isChrome: isChrome(capabilities),
   }
 
   if (info.isMobile) {
@@ -56,7 +58,7 @@ function isAppium(capabilities: Capabilities) {
   )
 }
 
-function _isChrome(capabilities: Capabilities) {
+function isChrome(capabilities: Capabilities) {
   return Boolean(capabilities.chrome || capabilities['goog:chromeOptions'])
 }
 
@@ -80,7 +82,7 @@ function isAndroid(capabilities: Capabilities) {
   return /Android/i.test(capabilities.platformName) || /Android/i.test(capabilities.browserName)
 }
 
-function extractDisplaySize(capabilities: Capabilities): types.Size {
+function extractDisplaySize(capabilities: Capabilities): Size {
   if (!capabilities.deviceScreenSize) return undefined
   const [width, height] = capabilities.deviceScreenSize.split('x')
   if (Number.isNaN(Number(width)) || Number.isNaN(Number(height))) return undefined

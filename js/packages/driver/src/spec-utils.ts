@@ -1,4 +1,5 @@
-import type * as types from '@applitools/types'
+import {type SpecDriver} from './spec-driver'
+import {type Selector} from './selector'
 import * as utils from '@applitools/utils'
 
 type CommonSelector<TSelector = never> = {
@@ -17,7 +18,7 @@ export function isSimpleCommonSelector(selector: any): selector is CommonSelecto
 }
 
 export function isCommonSelector<TSelector>(
-  spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
+  spec: Pick<SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
   selector: any,
 ): selector is CommonSelector<TSelector> {
   return (
@@ -29,15 +30,15 @@ export function isCommonSelector<TSelector>(
 }
 
 export function isSelector<TSelector>(
-  spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
+  spec: Pick<SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
   selector: any,
-): selector is types.Selector<TSelector> {
+): selector is Selector<TSelector> {
   return spec.isSelector(selector) || utils.types.isString(selector) || isCommonSelector(spec, selector)
 }
 
 export function transformSelector<TSelector>(
-  spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector' | 'transformSelector'>,
-  selector: types.Selector<TSelector>,
+  spec: Pick<SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector' | 'transformSelector'>,
+  selector: Selector<TSelector>,
   environment?: {isWeb?: boolean; isNative?: boolean; isIOS?: boolean; isAndroid?: boolean},
 ): TSelector {
   if (environment?.isWeb && isCommonSelector(spec, selector)) {
@@ -50,16 +51,16 @@ export function transformSelector<TSelector>(
 }
 
 export function splitSelector<TSelector>(
-  spec: Pick<types.SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
-  selector: types.Selector<TSelector>,
+  spec: Pick<SpecDriver<unknown, unknown, unknown, TSelector>, 'isSelector'>,
+  selector: Selector<TSelector>,
 ): {
-  contextSelectors: types.Selector<TSelector>[]
-  elementSelector: types.Selector<TSelector>
+  contextSelectors: Selector<TSelector>[]
+  elementSelector: Selector<TSelector>
 } {
   let targetSelector = selector
   let activeSelector = {} as CommonSelector<TSelector>
   let elementSelector = activeSelector
-  const contextSelectors = [] as types.Selector<TSelector>[]
+  const contextSelectors = [] as Selector<TSelector>[]
   while (targetSelector) {
     if (isCommonSelector(spec, targetSelector)) {
       activeSelector.selector = targetSelector.selector
@@ -84,7 +85,7 @@ export function splitSelector<TSelector>(
   return {contextSelectors, elementSelector}
 }
 
-export function withFastCache<TSpecDriver extends types.SpecDriver<unknown, unknown, unknown, unknown>>(
+export function withFastCache<TSpecDriver extends SpecDriver<unknown, unknown, unknown, unknown>>(
   spec: TSpecDriver,
 ): TSpecDriver {
   const cache = new Map<(...args: any[]) => any, {args: any[]; result: Promise<any>}>()
