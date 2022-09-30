@@ -1,6 +1,6 @@
 {
   "name": "@applitools/scripts",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Helper CLI scripts for development and testing purposes",
   "homepage": "https://github.com/applitools/eyes.sdk.javascript1#readme",
   "bugs": {
