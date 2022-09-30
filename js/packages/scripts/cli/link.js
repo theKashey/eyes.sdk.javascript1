@@ -36,6 +36,11 @@ yargs
           description: 'Run `yarn build` if needed before link package',
           type: 'boolean',
         },
+        verbose: {
+          alias: ['v'],
+          description: 'Log verbose log',
+          type: 'bollean',
+        },
       }),
     handler: async args => {
       try {
@@ -48,12 +53,48 @@ yargs
   })
   .wrap(yargs.terminalWidth()).argv
 
+function sortDependencies(json) {
+  // create an empty array for the return value
+  const sortedDependencies = []
+  // using Set to check if the package added to the arr
+  const checkSet = new Set()
+  // the recursive function to check add dependencies tree
+  function innerSortDependencies(name, obj, dedupe = []) {
+    // if there is dependencies run on each of them
+    if (obj.dependencies) {
+      Object.entries(obj.dependencies).map(([name, deps]) => innerSortDependencies(name, deps, dedupe))
+    } else if (
+      // check if the `name` is deduped
+      json.dependencies[name] &&
+      json.dependencies[name].dependencies &&
+      // check if it's the dedpuped pacakge already been check
+      !dedupe.some(pName => pName === name)
+    ) {
+      Object.entries(json.dependencies[name].dependencies).map(([depName, depDeps]) =>
+        // recursively run on the dependencies packages
+        innerSortDependencies(depName, depDeps, dedupe.concat(depName)),
+      )
+    }
+    // if the name already added skip
+    if (!checkSet.has(name)) {
+      checkSet.add(name)
+      sortedDependencies.push(name)
+    }
+  }
+  // start the recursive function
+  innerSortDependencies(json.name, json)
+
+  // return the sorted array
+  return sortedDependencies
+}
+
 async function link({
   linkPackages,
   packagePath = process.cwd(),
   packagesPath = path.resolve(packagePath, '..'),
   runInstall,
   runBuild,
+  verbose = false,
 } = {}) {
   const manifest = JSON.parse(fs.readFileSync(path.resolve(packagePath, 'package.json'), {encoding: 'utf8'}))
   const packages = getPackages(packagesPath)
@@ -74,14 +115,38 @@ async function link({
     return
   }
 
-  await Promise.all(
-    linkPackages.map(async linkPackage => {
-      console.log(`Preparing ${linkPackage.name} for linking`)
-      const commands = ['yarn link']
-      if (runInstall || runBuild) commands.push('yarn install', 'npm run upgrade:framework --if-present')
-      return execAsync(commands.join(' && '), {cwd: path.resolve(packagesPath, linkPackage.dirname), encoding: 'utf8'})
-    }),
+  // getting the package names
+  const packagesName = await linkPackages.map(({name}) => `'${name}'`)
+
+  // run `npm ls` to get the dependencies tree of the package base on the packagesName
+  const {stdout: npmLsRaw} = await execAsync(`npm -s ls --json ${packagesName.join(' ')}`, {encoding: 'utf8'}).catch(
+    ([error, stdout]) => {
+      // there could error if there are link packages that
+      // not suite with the version in the `package.json`
+      if (verbose) {
+        console.error(error)
+      }
+      return {
+        stdout,
+      }
+    },
   )
+
+  // parse the result to JSON
+  const npmLsJSON = JSON.parse(npmLsRaw)
+
+  // sort the dependencies tree
+  linkPackages = sortDependencies(npmLsJSON)
+    .map(name => linkPackages.find(obj => obj.name === name))
+    .filter(Boolean)
+
+  await linkPackages.reduce(async (promise, linkPackage) => {
+    await promise
+    console.log(`Preparing ${linkPackage.name} for linking`)
+    const commands = ['yarn link']
+    if (runInstall || runBuild) commands.push('yarn install', 'npm run upgrade:framework --if-present')
+    return execAsync(commands.join(' && '), {cwd: path.resolve(packagesPath, linkPackage.dirname), encoding: 'utf8'})
+  }, Promise.resolve())
 
   await Promise.all(
     [targetPackage, ...linkPackages].map(async targetPackage => {
@@ -95,23 +160,26 @@ async function link({
   )
 
   if (runBuild) {
-    await Promise.all(
-      linkPackages.map(async linkPackage => {
-        console.log(`Building ${linkPackage.name}`)
-        return execAsync('npm run build --if-present', {
-          cwd: path.resolve(packagesPath, linkPackage.dirname),
-          encoding: 'utf8',
-        })
-      }),
-    )
+    linkPackages.reduce(async (promise, linkPackage) => {
+      await promise
+      console.log(`Try to build ${linkPackage.name}`)
+      return execAsync('npm run build --if-present', {
+        cwd: path.resolve(packagesPath, linkPackage.dirname),
+        encoding: 'utf8',
+      })
+    }, Promise.resolve())
   }
 
   function execAsync(command, options) {
     return new Promise((resolve, reject) => {
-      exec(command, options, (error, stdout, stderr) => {
-        if (error) reject(error)
+      const cmd = exec(command, options, (error, stdout, stderr) => {
+        if (error) reject([error, stdout])
         resolve({stdout, stderr})
       })
+      if (verbose)
+        cmd.stdout.on('data', data => {
+          console.log(data)
+        })
     })
   }
 
