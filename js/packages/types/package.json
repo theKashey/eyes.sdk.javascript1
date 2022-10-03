@@ -63,7 +63,7 @@
   "dependencies": {},
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
-    "@applitools/scripts": "1.1.0",
+    "@applitools/scripts": "1.2.0",
     "@types/node": "12",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
