@@ -1,10 +1,12 @@
 import typing
+import warnings
 from enum import Enum
 
 import attr
 
 from .accessibility import AccessibilitySettings
 from .geometry import AccessibilityRegion, Rectangle, Region
+from .utils.general_utils import DynamicEnumGetter
 from .utils.json_utils import JsonInclude
 
 if typing.TYPE_CHECKING:
@@ -36,11 +38,22 @@ class MatchLevel(Enum):
     # Images have the same layout.
     LAYOUT2 = "Layout2"
     # Images have the same content.
-    CONTENT = "Content"
+    IGNORE_COLORS = "IgnoreColors"
     # Images are nearly identical.
     STRICT = "Strict"
     # Images are identical.
     EXACT = "Exact"
+
+    @DynamicEnumGetter
+    def CONTENT(self):
+        # type: () -> MatchLevel
+        warnings.warn(
+            "The `CONTENT` option that is being used will soon be deprecated. "
+            "Please change it to `IGNORE_COLORS`",
+            DeprecationWarning,
+            stacklevel=3,
+        )
+        return self.IGNORE_COLORS
 
 
 @attr.s

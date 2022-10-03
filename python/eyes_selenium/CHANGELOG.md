@@ -1,3 +1,7 @@
+## [vNext]
+### Updated
+- Deprecated "CONTENT" match level value in favor of "IGNORE_COLORS" [Trello 78](https://trello.com/c/hDmn5WOD)
+
 ## [5.12.1] - 2022-09-29
 ### Updated
 - Adopt iPhone 14 and 14 Pro Max for NMG [Trello 73](https://trello.com/c/M1YiwtHb)
