@@ -99,7 +99,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
     else image.scale(1 / driver.pixelRatio / driver.viewportScale)
 
     if (stabilization.rotate) image.rotate(stabilization.rotate)
-    else if (driver.orientation?.startsWith('landscape') && image.width < image.height) image.rotate(-90)
+    else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
     if (stabilization.crop) image.crop(stabilization.crop)
     else {
@@ -126,7 +126,7 @@ function makeTakeMarkedScreenshot({driver, stabilization = {}, debug, logger}) {
       const image = makeImage(await driver.takeScreenshot())
 
       if (stabilization.rotate) image.rotate(stabilization.rotate)
-      else if (driver.orientation?.startsWith('landscape') && image.width < image.height) image.rotate(-90)
+      else if (driver.orientation.startsWith('landscape') && image.width < image.height) image.rotate(-90)
 
       await image.debug({...debug, name: 'marker'})
 
