@@ -62,4 +62,10 @@ describe('CheckSettings', () => {
     checkSettings.webview('blah')
     assert.equal(checkSettings.toJSON().webview, 'blah')
   })
+
+  it('set webview static', () => {
+    const id = 'blah-blah'
+    const settings = CheckSettings.webview(id)
+    assert.equal(settings.toJSON().webview, id)
+  })
 })

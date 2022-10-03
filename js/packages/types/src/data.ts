@@ -239,7 +239,7 @@ export type AndroidDevice =
   | 'Xiaomi Redmi Note 11'
   | 'Xiaomi Redmi Note 11 Pro'
 
-export type AndroidVersion = 'latest' | 'latest-1' | 'latest-2'
+export type AndroidVersion = 'latest' | 'latest-1'
 
 export type AndroidDeviceRenderer = {
   androidDeviceInfo: {

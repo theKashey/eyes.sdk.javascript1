@@ -89,6 +89,7 @@ export type Target<TElement, TSelector> = {
     scrollRootElement?: ElementReference<TElement, TSelector>,
   ): CheckSettingsFluent<TElement, TSelector>
   shadow(selector: SelectorReference<TSelector>): CheckSettingsFluent<TSelector>
+  webview(option?: string | boolean): CheckSettingsFluent<TElement, TSelector>
 }
 
 export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
@@ -107,6 +108,10 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   /** @internal */
   static shadow(selector: unknown): CheckSettingsFluent {
     return new this().shadow(selector)
+  }
+  /** @internal */
+  static webview(option: string | boolean | null): CheckSettingsFluent {
+    return new this().webview(option)
   }
 
   protected static readonly _spec: CheckSettingsSpec<any, any>

@@ -23,6 +23,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - Fixed issue that prevented Target.webview() from being called
 "@applitools/eyes-playwright":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
