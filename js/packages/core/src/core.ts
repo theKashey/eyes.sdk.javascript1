@@ -8,6 +8,8 @@ import {makeSetViewportSize} from './automation/set-viewport-size'
 import {makeLocate} from './locate'
 import {makeOpenEyes} from './open-eyes'
 import {makeMakeManager} from './make-manager'
+import {makeCloseBatch} from './close-batch'
+import {makeDeleteTest} from './delete-test'
 import * as utils from '@applitools/utils'
 
 type Options<TDriver, TContext, TElement, TSelector> = {
@@ -40,5 +42,7 @@ export function makeCore<TDriver, TContext, TElement, TSelector>({
     locate: makeLocate({spec, core, logger}),
     openEyes: makeOpenEyes({spec, core, concurrency, logger}),
     makeManager: makeMakeManager({spec, concurrency, agentId, logger}),
+    closeBatch: makeCloseBatch({core, logger}),
+    deleteTest: makeDeleteTest({core, logger}),
   })
 }
