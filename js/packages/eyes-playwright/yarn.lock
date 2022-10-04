@@ -32,10 +32,10 @@
     "@applitools/types" "1.5.18"
     "@applitools/utils" "1.3.12"
 
-"@applitools/core@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.1.2.tgz#571ae77079fc660d4dfe247585bc39b38a96ef2a"
-  integrity sha512-1fegPrns4KOP7GgQFAGfz//24bPeRaz8HRFzy+0bQIzfjQerdkUfOJGx6ynwTS07zgy0BwqsWPPnUmhQBTWdtg==
+"@applitools/core@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.1.3.tgz#45fa93c30113d2bfd1d95d49eb966f14ccb7c302"
+  integrity sha512-cD9HVcgMy5eqBi+Dk6MkGWjLypHI5JqsX1PgtarrwMVvA2MLGGkv5Rn9HZb25lbRmfPi1vEoobY0rL9PcvM4rQ==
   dependencies:
     "@applitools/core-base" "1.0.7"
     "@applitools/dom-capture" "11.1.2"
