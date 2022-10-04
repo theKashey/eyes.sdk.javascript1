@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

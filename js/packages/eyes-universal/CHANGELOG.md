@@ -11,6 +11,12 @@
 
 
 
+## 2.16.1 - 2022/10/4
+
+### Features
+### Bug fixes
+- Fixed the issue with screenshots being taken on chrome-emulated devices
+
 ## 2.16.0 - 2022/9/29
 
 ### Features
