@@ -11,6 +11,12 @@
 
 
 
+## 1.12.6 - 2022/10/4
+
+### Features
+### Bug fixes
+- Fixed bug when error was thrown when coded region wasn't found using selector
+
 ## 1.12.5 - 2022/10/4
 
 ### Features
