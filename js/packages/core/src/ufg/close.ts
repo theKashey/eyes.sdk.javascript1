@@ -30,7 +30,7 @@ export function makeClose({storage, logger: defaultLogger}: Options) {
           const [result] = await eyes.close({settings, logger})
           return {...result, renderer}
         } catch (error) {
-          await error.info?.eyes.abort({logger})
+          await error.info?.eyes?.abort({logger})
           throw error
         }
       }),

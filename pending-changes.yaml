@@ -19,16 +19,17 @@ Apollo SDK:
     - Added support for webview switching in classic execution
   bug-fix:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-playwright":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
@@ -44,7 +45,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
@@ -58,6 +59,7 @@ Apollo SDK:
     - 
   bug-fix:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-cypress":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
@@ -65,6 +67,7 @@ Apollo SDK:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
   bug-fix:
     - Internal Infrastructure update
+    - Fixed bug when error was thrown when coded region wasn't found using selector
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

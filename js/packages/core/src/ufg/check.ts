@@ -143,7 +143,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
             region: regionToTarget,
             type: utils.types.has(snapshot, 'cdt') ? 'web' : 'native',
             renderer,
-            selectorsToCalculate: selectorsToCalculate.map(({safeSelector}) => safeSelector),
+            selectorsToCalculate: selectorsToCalculate.flatMap(({safeSelector}) => safeSelector ?? []),
             includeFullPageSize: Boolean(settings.pageId),
           },
         }
@@ -172,10 +172,11 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
           }
 
           const {renderId, selectorRegions, ...baseTarget} = await client.render({request, signal})
+          let offset = 0
           const baseSettings = getBaseCheckSettings({
-            calculatedRegions: selectorsToCalculate.map(({originalSelector}, index) => ({
+            calculatedRegions: selectorsToCalculate.map(({originalSelector, safeSelector}) => ({
               selector: originalSelector,
-              regions: selectorRegions[index],
+              regions: safeSelector ? selectorRegions[offset++] : [],
             })),
           })
           baseSettings.renderId = renderId

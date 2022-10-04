@@ -95,4 +95,29 @@ describe('coded regions', () => {
       assert.deepStrictEqual(info.actualAppOutput[3].imageMatchSettings.strict, expectedRegions)
     })
   }
+
+  it(`ufg with non-existent regions`, async () => {
+    const core = makeCore({spec})
+
+    const manager = await core.makeManager({type: 'ufg', concurrency: 5})
+    const eyes = await manager.openEyes({
+      target: driver,
+      settings: {
+        serverUrl: 'https://eyesapi.applitools.com',
+        apiKey: process.env.APPLITOOLS_API_KEY,
+        appName: 'js core',
+        testName: `non-existent coded region`,
+        environment: {viewportSize: {width: 800, height: 600}},
+      },
+    })
+    await driver.get('https://applitools.github.io/demo/TestPages/CodedRegionPage/index.html')
+
+    await eyes.check({settings: {fully: false, ignoreRegions: ['.region.one:nth-child(1)', '.made.up.region']}})
+
+    const [result] = await eyes.close({settings: {updateBaselineIfNew: false}})
+    const info = await getTestInfo(result, process.env.APPLITOOLS_API_KEY)
+    assert.deepStrictEqual(info.actualAppOutput[0].imageMatchSettings.ignore, [
+      {left: 30, top: 30, width: 100, height: 100, regionId: '.region.one:nth-child(1)'},
+    ])
+  })
 })
