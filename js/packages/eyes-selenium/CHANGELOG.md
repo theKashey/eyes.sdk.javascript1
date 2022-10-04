@@ -8,6 +8,15 @@
 
 
 
+## 4.60.0 - 2022/10/4
+
+### Features
+- Deprecated "Content" match level value in favor of "IgnoreColors"
+- Added support for webview switching in classic execution
+### Bug fixes
+- Fixed the issue with screenshots being taken on chrome-emulated devices
+- Fixed bug when error was thrown when coded region wasn't found using selector
+
 ## 4.59.6 - 2022/9/26
 
 ### Features
