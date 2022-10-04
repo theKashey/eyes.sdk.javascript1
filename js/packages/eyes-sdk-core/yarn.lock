@@ -27,10 +27,10 @@
     "@applitools/types" "1.5.18"
     "@applitools/utils" "1.3.12"
 
-"@applitools/core@1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.1.2.tgz#571ae77079fc660d4dfe247585bc39b38a96ef2a"
-  integrity sha512-1fegPrns4KOP7GgQFAGfz//24bPeRaz8HRFzy+0bQIzfjQerdkUfOJGx6ynwTS07zgy0BwqsWPPnUmhQBTWdtg==
+"@applitools/core@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.1.3.tgz#45fa93c30113d2bfd1d95d49eb966f14ccb7c302"
+  integrity sha512-cD9HVcgMy5eqBi+Dk6MkGWjLypHI5JqsX1PgtarrwMVvA2MLGGkv5Rn9HZb25lbRmfPi1vEoobY0rL9PcvM4rQ==
   dependencies:
     "@applitools/core-base" "1.0.7"
     "@applitools/dom-capture" "11.1.2"
@@ -203,10 +203,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
   integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
 
-"@applitools/spec-driver-selenium@1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.4.2.tgz#469628189654a66eca4a65815a0ddff7110fa8a6"
-  integrity sha512-iEfCD/C6xceOjpLUJcM0ljy/5ybrM6FLfvrAOSsxi0h1JVkppLVNi4NXz60R2A2Dr75fpj636XuIM5v2RJZ97A==
+"@applitools/spec-driver-selenium@1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.4.4.tgz#b22d4f417c8020ee28a527afe423da46195f73d9"
+  integrity sha512-vrDAQX3D8wq8ekvepQBBOG/7yPWRC27OAXXfP1i7pd3a17qY+vLlZxScUDsPUUK5vUfYewUMASIGxtsxEZRFzg==
   dependencies:
     "@applitools/types" "1.5.18"
     "@applitools/utils" "1.3.12"
