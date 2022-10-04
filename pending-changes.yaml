@@ -42,9 +42,9 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 "@applitools/eyes-puppeteer":
   feature:
-    - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - 
   bug-fix:
-    - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - 
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
