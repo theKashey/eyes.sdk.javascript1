@@ -69,7 +69,7 @@ jobs:
         run: |
           if [ ${{github.event.inputs.multienv}} = true ]
           then
-            echo "::set-output name=environments::[{\"framework-version\":\"4.4\",",\"node-version\":16}, {\"framework-version\":3,\"node-version\":16}, {\"framework-version\":\"4.4\",\"node-version\":14}, {\"framework-version\":\"4.4\",\"node-version\":12}]"
+            echo "::set-output name=environments::[{\"framework-version\":\"4.4\",\"node-version\":16}, {\"framework-version\":3,\"node-version\":16}, {\"framework-version\":\"4.4\",\"node-version\":14}, {\"framework-version\":\"4.4\",\"node-version\":12}]"
           else
             echo "::set-output name=environments::[{\"framework-version\":\"4.4\",\"node-version\":16}]"
           fi
