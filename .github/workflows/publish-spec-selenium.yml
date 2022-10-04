@@ -32,7 +32,7 @@ jobs:
   test:
     strategy:
       matrix:
-        framework-version: [3, 4]
+        framework-version: ['3', '4.4']
         node-version: [12, 14, 16]
     name: 'Test (selenium: ${{matrix.framework-version}}, node: ${{matrix.node-version}})'
     runs-on: ubuntu-latest

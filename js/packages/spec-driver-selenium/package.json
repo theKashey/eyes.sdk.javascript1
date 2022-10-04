@@ -83,7 +83,7 @@
     "husky": "^4.3.7",
     "mocha": "^9.2.2",
     "prettier": "^2.6.2",
-    "selenium-webdriver": "^4.2.0",
+    "selenium-webdriver": "4.4.0",
     "ts-node": "^10.8.0",
     "ttypescript": "^1.5.13",
     "typescript": "^4.7.2"
