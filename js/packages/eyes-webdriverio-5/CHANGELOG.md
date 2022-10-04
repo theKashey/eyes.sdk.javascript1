@@ -10,6 +10,13 @@
 
 
 
+## 5.36.1 - 2022/10/4
+
+### Features
+### Bug fixes
+- Fixed the issue with screenshots being taken on chrome-emulated devices
+- Fixed issue that prevented Target.webview() from being called
+
 ## 5.36.0 - 2022/9/29
 
 ### Features
