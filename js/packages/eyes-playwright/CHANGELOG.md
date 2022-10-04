@@ -11,6 +11,13 @@
 
 
 
+## 1.12.5 - 2022/10/4
+
+### Features
+- Deprecated "Content" match level value in favor of "IgnoreColors"
+### Bug fixes
+- Fixed the issue with screenshots being taken on chrome-emulated devices
+
 ## 1.12.4 - 2022/9/26
 
 ### Features

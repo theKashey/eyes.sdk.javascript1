@@ -26,9 +26,9 @@ Apollo SDK:
     - Fixed issue that prevented Target.webview() from being called
 "@applitools/eyes-playwright":
   feature:
-    - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - 
   bug-fix:
-    - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - 
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
