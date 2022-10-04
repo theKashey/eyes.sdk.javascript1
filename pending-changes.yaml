@@ -45,7 +45,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed bug when error was thrown when coded region wasn't found using selector
+    - 
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
