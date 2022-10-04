@@ -216,7 +216,7 @@ export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
 }
 export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
   try {
-    return executeCustomCommand(driver, new Command('getSessionDetails'))
+    return await executeCustomCommand(driver, new Command('getSessionDetails'))
   } catch {
     const capabilities = await driver.getCapabilities()
     return Array.from(capabilities.keys()).reduce((obj, key) => Object.assign(obj, {key: capabilities.get(key)}), {})
