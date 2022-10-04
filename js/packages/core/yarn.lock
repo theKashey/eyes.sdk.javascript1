@@ -179,10 +179,10 @@
     "@applitools/types" "1.5.18"
     "@applitools/utils" "1.3.12"
 
-"@applitools/spec-driver-selenium@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.4.3.tgz#5cd7f484727f2db12d6083eddc515c4ee24258ed"
-  integrity sha512-HSV2TJKz6ah4TL+UZHgJjlnzb7SdUCrIGRlG0VaXBWzv/gJiiOglK9sghMhgliftQzaSjrIMn7+hnUgRkn3f3A==
+"@applitools/spec-driver-selenium@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.4.4.tgz#b22d4f417c8020ee28a527afe423da46195f73d9"
+  integrity sha512-vrDAQX3D8wq8ekvepQBBOG/7yPWRC27OAXXfP1i7pd3a17qY+vLlZxScUDsPUUK5vUfYewUMASIGxtsxEZRFzg==
   dependencies:
     "@applitools/types" "1.5.18"
     "@applitools/utils" "1.3.12"
