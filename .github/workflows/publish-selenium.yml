@@ -121,7 +121,7 @@ jobs:
       - name: Download testing artifacts
         uses: actions/download-artifact@v2
         with:
-          name: selenium-test-results-framework-4-node-16
+          name: selenium-test-results-framework-4.4-node-16
           path: ./js/packages/eyes-selenium
       - name: Publish to NPM
         uses: ./.github/actions/publish
