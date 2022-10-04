@@ -28,6 +28,7 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
         ? {reference: frame.frame, scrollingElement: frame.scrollRootElement}
         : {reference: frame}
     }),
+    webview: settings.webview,
     region: settings.region,
     fully: settings.fully,
     hideScrollbars: settings.hideScrollbars,
@@ -44,6 +45,5 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
     },
     debug: settings.debugImages,
     logger,
-    webview: settings.webview,
   })
 }
