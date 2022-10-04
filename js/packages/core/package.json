@@ -76,7 +76,7 @@
     "@applitools/bongo": "^2.2.0",
     "@applitools/sdk-fake-eyes-server": "^2.1.3",
     "@applitools/spec-driver-puppeteer": "^1.1.14",
-    "@applitools/spec-driver-selenium": "^1.4.1",
+    "@applitools/spec-driver-selenium": "^1.4.3",
     "@applitools/spec-driver-webdriverio": "^1.3.1",
     "@applitools/test-server": "^1.1.5",
     "@applitools/test-utils": "^1.5.1",
