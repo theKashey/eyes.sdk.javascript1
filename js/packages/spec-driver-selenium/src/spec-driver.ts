@@ -1,6 +1,8 @@
 /* eslint @typescript-eslint/ban-types: ["error", {"types": {"Function": false}}] */
 import type {Size, Region, Cookie, DriverInfo, WaitOptions, ScreenOrientation} from '@applitools/types'
+import {Command} from 'selenium-webdriver/lib/command'
 import * as Selenium from 'selenium-webdriver'
+
 import * as utils from '@applitools/utils'
 
 export type Driver = Selenium.WebDriver & {__applitoolsBrand?: never}
@@ -28,6 +30,11 @@ function transformShadowRoot(driver: Driver, shadowRoot: ShadowRoot | Element): 
 }
 function isByHashSelector(selector: any): selector is Selenium.ByHash {
   return byHash.includes(Object.keys(selector)[0] as typeof byHash[number])
+}
+async function executeCustomCommand(driver: Driver, command: Command) {
+  return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
+    ? (driver as any).schedule(command)
+    : driver.execute(command)
 }
 
 // #endregion
@@ -58,7 +65,10 @@ export function transformDriver(driver: Driver): Driver {
   driver.getExecutor().defineCommand('setWindowPosition', 'POST', '/session/:sessionId/window/current/position')
   driver.getExecutor().defineCommand('performTouch', 'POST', '/session/:sessionId/touch/perform')
   driver.getExecutor().defineCommand('executeCdp', 'POST', '/session/:sessionId/chromium/send_command_and_get_result')
-  driver.getExecutor().defineCommand('setOrientation', 'POST', '/session/:sessionId/orientation/')
+  driver.getExecutor().defineCommand('setOrientation', 'POST', '/session/:sessionId/orientation')
+  driver.getExecutor().defineCommand('getCurrentContext', 'GET', '/session/:sessionId/context')
+  driver.getExecutor().defineCommand('getContexts', 'GET', '/session/:sessionId/contexts')
+  driver.getExecutor().defineCommand('switchToContext', 'POST', '/session/:sessionId/context')
 
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
     driver.getExecutor().defineCommand('switchToParentFrame', 'POST', '/session/:sessionId/frame/parent')
@@ -115,8 +125,7 @@ export async function mainContext(driver: Driver): Promise<Driver> {
 }
 export async function parentContext(driver: Driver): Promise<Driver> {
   if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
-    const {Command} = require('selenium-webdriver/lib/command')
-    await (driver as any).schedule(new Command('switchToParentFrame'))
+    await executeCustomCommand(driver, new Command('switchToParentFrame'))
     return driver
   }
   await driver.switchTo().parentFrame()
@@ -158,11 +167,9 @@ export async function getWindowSize(driver: Driver): Promise<Size> {
     const rect = await driver.manage().window().getRect()
     return {width: rect.width, height: rect.height}
   } catch {
-    const {Command} = require('selenium-webdriver/lib/command')
-    const getWindowSizeCommand = new Command('getWindowSize')
     const size: any = driver.manage().window().getSize
       ? await driver.manage().window().getSize()
-      : await driver.execute(getWindowSizeCommand)
+      : await executeCustomCommand(driver, new Command('getWindowSize'))
     return {width: size.width, height: size.height}
   }
 }
@@ -170,13 +177,10 @@ export async function setWindowSize(driver: Driver, size: Size) {
   try {
     await driver.manage().window().setRect({x: 0, y: 0, width: size.width, height: size.height})
   } catch {
-    const {Command} = require('selenium-webdriver/lib/command')
-    const setWindowPositionCommand = new Command('setWindowPosition').setParameters({x: 0, y: 0})
     if (driver.manage().window().setPosition) await driver.manage().window().setPosition(0, 0)
-    else await driver.execute(setWindowPositionCommand)
-    const setWindowSizeCommand = new Command('setWindowSize').setParameters({...size})
+    else await executeCustomCommand(driver, new Command('setWindowPosition').setParameters({x: 0, y: 0}))
     if (driver.manage().window().setSize) await driver.manage().window().setSize(size.width, size.height)
-    else await driver.execute(setWindowSizeCommand)
+    else await executeCustomCommand(driver, new Command('setWindowSize').setParameters({...size}))
   }
 }
 export async function getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
@@ -187,14 +191,10 @@ export async function getCookies(driver: Driver, context?: boolean): Promise<Coo
     const response = await driver.sendAndGetDevToolsCommand('Network.getAllCookies')
     cookies = response.cookies
   } else {
-    const {Command} = require('selenium-webdriver/lib/command')
-    const executeCdpCommand = new Command('executeCdp')
-      .setParameter('cmd', 'Network.getAllCookies')
-      .setParameter('params', {})
-    const response =
-      process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-        ? await (driver as any).schedule(executeCdpCommand)
-        : await (driver as any).execute(executeCdpCommand)
+    const response = await executeCustomCommand(
+      driver,
+      new Command('executeCdp').setParameter('cmd', 'Network.getAllCookies').setParameter('params', {}),
+    )
     cookies = response.cookies
   }
 
@@ -216,11 +216,7 @@ export async function getDriverInfo(driver: Driver): Promise<DriverInfo> {
 }
 export async function getCapabilities(driver: Driver): Promise<Record<string, any>> {
   try {
-    const {Command} = require('selenium-webdriver/lib/command')
-    const getSessionDetailsCommand = new Command('getSessionDetails')
-    return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-      ? await (driver as any).schedule(getSessionDetailsCommand)
-      : await driver.execute(getSessionDetailsCommand)
+    return executeCustomCommand(driver, new Command('getSessionDetails'))
   } catch {
     const capabilities = await driver.getCapabilities()
     return Array.from(capabilities.keys()).reduce((obj, key) => Object.assign(obj, {key: capabilities.get(key)}), {})
@@ -272,29 +268,15 @@ export async function getSystemBars(driver: Driver): Promise<{
   statusBar: {visible: boolean; x: number; y: number; height: number; width: number}
   navigationBar: {visible: boolean; x: number; y: number; height: number; width: number}
 }> {
-  const {Command} = require('selenium-webdriver/lib/command')
-
-  const getSystemBarsCommand = new Command('getSystemBars')
-  return process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-    ? await (driver as any).schedule(getSystemBarsCommand)
-    : await driver.execute(getSystemBarsCommand)
+  return executeCustomCommand(driver, new Command('getSystemBars'))
 }
 
 export async function setOrientation(driver: Driver, orientation: ScreenOrientation) {
-  const {Command} = require('selenium-webdriver/lib/command')
-  const setOrientationCommand = new Command('setOrientation').setParameters({orientation})
-  process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-    ? await (driver as any).schedule(setOrientationCommand)
-    : await driver.execute(setOrientationCommand)
+  await executeCustomCommand(driver, new Command('setOrientation').setParameters({orientation}))
 }
 
 export async function getOrientation(driver: Driver): Promise<'portrait' | 'landscape'> {
-  const {Command} = require('selenium-webdriver/lib/command')
-  const getOrientationCommand = new Command('getOrientation')
-  const orientation =
-    process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3'
-      ? await (driver as any).schedule(getOrientationCommand)
-      : await driver.execute(getOrientationCommand)
+  const orientation = await executeCustomCommand(driver, new Command('getOrientation'))
   return orientation.toLowerCase() as 'portrait' | 'landscape'
 }
 export async function getElementRegion(_driver: Driver, element: Element): Promise<Region> {
@@ -313,15 +295,21 @@ export async function getElementText(_driver: Driver, element: Element): Promise
   return element.getText()
 }
 export async function performAction(driver: Driver, steps: any[]): Promise<void> {
-  const {Command} = require('selenium-webdriver/lib/command')
-  const performTouchCommand = new Command('performTouch').setParameters({
-    actions: steps.map(({action, ...options}) => ({action, options})),
-  })
-  if (process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION === '3') {
-    await (driver as any).schedule(performTouchCommand)
-  } else {
-    await driver.execute(performTouchCommand)
-  }
+  await executeCustomCommand(
+    driver,
+    new Command('performTouch').setParameters({
+      actions: steps.map(({action, ...options}) => ({action, options})),
+    }),
+  )
+}
+export async function getCurrentWorld(driver: Driver): Promise<string> {
+  return executeCustomCommand(driver, new Command('getCurrentContext'))
+}
+export async function getWorlds(driver: Driver): Promise<string[]> {
+  return executeCustomCommand(driver, new Command('getContexts'))
+}
+export async function switchWorld(driver: Driver, name: string): Promise<void> {
+  return executeCustomCommand(driver, new Command('switchToContext').setParameters({name}))
 }
 
 // #endregion

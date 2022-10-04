@@ -362,7 +362,11 @@ describe('spec driver', async () => {
     })
 
     before(async () => {
-      ;[browser, destroyBrowser] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL'})
+      ;[browser, destroyBrowser] = await spec.build({
+        browser: 'chrome',
+        device: 'Pixel 3a XL',
+        orientation: 'landscape',
+      })
       await browser.url(url)
     })
 
@@ -378,7 +382,7 @@ describe('spec driver', async () => {
       await getCookies({input: {context: true}})
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'portrait'})
+      await getOrientation({expected: 'landscape'})
     })
   })
 
@@ -387,15 +391,16 @@ describe('spec driver', async () => {
       if (process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL === 'cdp') this.skip()
     })
 
-    beforeEach(async () => {
+    before(async () => {
       ;[browser, destroyBrowser] = await spec.build({
         app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
         device: 'Pixel 3a XL',
-        orientation: 'landscape',
       })
+      await spec.click(browser, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
+      await utils.general.sleep(5000)
     })
 
-    afterEach(async () => {
+    after(async () => {
       if (destroyBrowser) await destroyBrowser()
       destroyBrowser = null as any
     })
@@ -404,28 +409,16 @@ describe('spec driver', async () => {
       await getWindowSize()
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'landscape'})
+      await getOrientation({expected: 'portrait'})
     })
-    it('getCurrentWorld', async () => {
-      const actual = await spec.getCurrentWorld(browser)
-      const expected = 'NATIVE_APP'
-      assert.deepStrictEqual(actual, expected)
+    it('getCurrentWorld()', async () => {
+      await getCurrentWorld()
     })
-    it('getWorlds', async () => {
-      await browser.setOrientation('portrait')
-      await spec.click(browser, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
-      await utils.general.sleep(5000)
-      const actual = await spec.getWorlds(browser)
-      const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
-      assert.deepStrictEqual(actual, expected)
+    it('getWorlds()', async () => {
+      await getWorlds()
     })
-    it('switchWorld(id)', async () => {
-      await browser.setOrientation('portrait')
-      await spec.click(browser, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
-      await spec.switchWorld(browser, 'WEBVIEW_com.applitools.eyes.android')
-      const actual = await spec.getCurrentWorld(browser)
-      const expected = 'WEBVIEW_com.applitools.eyes.android'
-      assert.deepStrictEqual(actual, expected)
+    it('switchWorld(name)', async () => {
+      await switchWorld({input: {name: 'WEBVIEW_com.applitools.eyes.android'}})
     })
   })
 
@@ -524,6 +517,22 @@ describe('spec driver', async () => {
       await browser.switchToFrame(null).catch(() => null)
     }
   }
+  async function getCurrentWorld() {
+    const actual = await spec.getCurrentWorld(browser)
+    const expected = 'NATIVE_APP'
+    assert.deepStrictEqual(actual, expected)
+  }
+  async function getWorlds() {
+    const actual = await spec.getWorlds(browser)
+    const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
+    assert.deepStrictEqual(actual, expected)
+  }
+  async function switchWorld({input}: {input: {name: string}}) {
+    await spec.switchWorld(browser, input.name)
+    const actual = await browser.getContext()
+    const expected = input.name
+    assert.deepStrictEqual(actual, expected)
+  }
   async function findElement({
     input,
     expected,
@@ -548,9 +557,9 @@ describe('spec driver', async () => {
     const root = (input.parent as any) ?? browser
     expected = expected === undefined ? await root.$$(input.selector) : expected
     const elements = await spec.findElements(browser, input.selector, input.parent)
-    assert.strictEqual(elements.length, expected.length)
+    assert.strictEqual(elements.length, (expected as any).length)
     for (const [index, element] of elements.entries()) {
-      assert.ok(await equalElements(browser, element, expected[index]))
+      assert.ok(await equalElements(browser, element, (expected as any)[index]))
     }
   }
   async function getWindowSize({legacy = false} = {}) {

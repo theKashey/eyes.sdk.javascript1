@@ -2,6 +2,7 @@ import type {Size} from '@applitools/types'
 import assert from 'assert'
 import {By, locateWith} from 'selenium-webdriver'
 import * as spec from '../../src'
+import * as utils from '@applitools/utils'
 
 describe('spec driver', async () => {
   let driver: spec.Driver, destroyDriver: () => void
@@ -157,7 +158,7 @@ describe('spec driver', async () => {
 
   describe('mobile driver (@mobile @android)', async () => {
     before(async () => {
-      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL'})
+      ;[driver, destroyDriver] = await spec.build({browser: 'chrome', device: 'Pixel 3a XL', orientation: 'landscape'})
       driver = spec.transformDriver(driver)
       await driver.get(url)
     })
@@ -173,29 +174,40 @@ describe('spec driver', async () => {
       await getCookies({input: {context: true}})
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'portrait'})
+      await getOrientation({expected: 'landscape'})
     })
   })
 
-  describe('mobile driver (@mobile @native @android)', async () => {
+  describe('native app (@mobile @native @android)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({
         app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
         device: 'Pixel 3a XL',
-        orientation: 'landscape',
       })
       driver = spec.transformDriver(driver)
+      await spec.click(driver, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
+      await utils.general.sleep(5000)
     })
 
     after(async () => {
-      await destroyDriver()
+      if (destroyDriver) await destroyDriver()
+      destroyDriver = null as any
     })
 
     it('getWindowSize()', async () => {
       await getWindowSize()
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'landscape'})
+      await getOrientation({expected: 'portrait'})
+    })
+    it('getCurrentWorld()', async () => {
+      await getCurrentWorld()
+    })
+    it('getWorlds()', async () => {
+      await getWorlds()
+    })
+    it('switchWorld(name)', async () => {
+      await switchWorld({input: {name: 'WEBVIEW_com.applitools.eyes.android'}})
     })
   })
 
@@ -289,6 +301,22 @@ describe('spec driver', async () => {
         .frame(null)
         .catch(() => null)
     }
+  }
+  async function getCurrentWorld() {
+    const actual = await spec.getCurrentWorld(driver)
+    const expected = 'NATIVE_APP'
+    assert.deepStrictEqual(actual, expected)
+  }
+  async function getWorlds() {
+    const actual = await spec.getWorlds(driver)
+    const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
+    assert.deepStrictEqual(actual, expected)
+  }
+  async function switchWorld({input}: {input: {name: string}}) {
+    await spec.switchWorld(driver, input.name)
+    const actual = await spec.getCurrentWorld(driver)
+    const expected = input.name
+    assert.deepStrictEqual(actual, expected)
   }
   async function findElement({
     input,

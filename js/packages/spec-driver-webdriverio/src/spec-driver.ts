@@ -371,14 +371,14 @@ export async function getElementText(browser: Driver, element: Element): Promise
 export async function performAction(browser: Driver, steps: any[]): Promise<void> {
   return browser.touchAction(steps as any)
 }
-export async function getCurrentWorld(driver: Driver): Promise<any> {
+export async function getCurrentWorld(driver: Driver): Promise<string> {
   return driver.getContext()
 }
-export async function getWorlds(driver: Driver): Promise<any> {
+export async function getWorlds(driver: Driver): Promise<string[]> {
   return driver.getContexts()
 }
-export async function switchWorld(driver: Driver, id: string): Promise<void> {
-  return driver.switchContext(id)
+export async function switchWorld(driver: Driver, name: string): Promise<void> {
+  return driver.switchContext(name)
 }
 
 // #endregion
