@@ -73,7 +73,7 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "1.1.1",
+    "@applitools/core": "1.1.2",
     "@applitools/driver": "1.10.4",
     "@applitools/execution-grid-client": "1.1.28",
     "@applitools/utils": "1.3.12"
@@ -82,7 +82,7 @@
     "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.2.0",
     "@applitools/snippets": "^2.4.5",
-    "@applitools/spec-driver-selenium": "1.4.1",
+    "@applitools/spec-driver-selenium": "1.4.2",
     "@applitools/test-server": "^1.1.5",
     "@applitools/test-utils": "1.5.1",
     "eslint": "^8.16.0",
