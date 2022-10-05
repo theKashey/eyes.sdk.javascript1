@@ -38,3 +38,5 @@ export const Target: api.Target<Element, Selector> = CheckSettings as any
 export class BatchClose extends api.BatchClose {
   protected static readonly _spec = sdk
 }
+
+export const closeBatch = api.closeBatch(sdk)
