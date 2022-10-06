@@ -1,4 +1,4 @@
-## [vNext]
+## [5.9.0] - 2022-10-06
 ### Added
 - `Eyes Set NMG Capabilities` keyword to update existing capabilities with NMG params [GH-1124](/../../pull/1124)
 - `Eyes Create NMG Capabilities` keyword to create new capabilities with NMG params in it [GH-1124](/../../pull/1124)
