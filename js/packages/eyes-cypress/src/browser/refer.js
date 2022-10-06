@@ -14,16 +14,19 @@ class Refer {
   }
 
   check(value) {
-    return (
-      value &&
-      (value.nodeType === Node.ELEMENT_NODE ||
-        value.nodeType === Node.DOCUMENT_NODE ||
-        value.ownerDocument ||
-        (value.constructor && value.constructor.name === 'Window'))
-    );
+    if (!value) return;
+    if (value.nodeType === Node.ELEMENT_NODE) {
+      return 'element';
+    } else if (value.nodeType === Node.DOCUMENT_NODE || value.ownerDocument) {
+      return 'context';
+    } else if (value.constructor && value.constructor.name === 'Window') {
+      return 'driver';
+    }
   }
+
   ref(value, parentRef) {
-    if (this.check(value)) {
+    const refType = this.check(value);
+    if (refType) {
       const ref = uuid.v4();
       this.store.set(ref, value);
       if (parentRef) {
@@ -34,7 +37,7 @@ class Refer {
         }
         childRefs.add({[REF_ID]: ref});
       }
-      return {[REF_ID]: ref};
+      return {[REF_ID]: ref, type: refType};
     } else if (Array.isArray(value)) {
       return value.map(value => this.ref(value, parentRef));
     } else if (typeof value === 'object' && value !== null) {

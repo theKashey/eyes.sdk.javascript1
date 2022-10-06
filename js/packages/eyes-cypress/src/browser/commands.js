@@ -38,7 +38,7 @@ Cypress.Commands.add('eyesGetAllTestResults', () => {
     await Promise.all(closePromiseArr);
     const summary = await socket.request('EyesManager.closeManager', {manager, throwErr});
 
-    const deleteTest = ({testId, batchId, secretToken}) => {
+    const deleteTest = ({settings: {testId, batchId, secretToken}}) => {
       const {serverUrl, proxy, apiKey} = Cypress.config('appliConfFile');
       return socket.request('Core.deleteTest', {
         settings: {
@@ -51,7 +51,9 @@ Cypress.Commands.add('eyesGetAllTestResults', () => {
         },
       });
     };
-
+    summary.results = summary.results.map(res => {
+      return {...res, result: res.testResults, error: res.exception};
+    });
     return new TestResultsSummary({summary, deleteTest});
   });
 });

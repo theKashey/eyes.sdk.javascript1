@@ -74,6 +74,8 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
         .context(reference)
         .then(context => context.focus())
         .catch(err => {
+          const srcAttr = cdtNode.attributes.find(attr => attr.name === 'src')
+          if (srcAttr) srcAttr.value = ''
           logger.log(`could not switch to frame during takeDomSnapshot. Path to frame: ${JSON.stringify(reference)}`, err)
         })
 
@@ -91,7 +93,7 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
     logger.log(`dom snapshot cdt length: ${snapshot.cdt.length}`)
     logger.log(`blobs urls (${snapshot.blobs.length}):`, JSON.stringify(snapshot.blobs.map(({url}) => url))) // eslint-disable-line prettier/prettier
     logger.log(`resource urls (${snapshot.resourceUrls.length}):`, JSON.stringify(snapshot.resourceUrls)) // eslint-disable-line prettier/prettier
-    return blankMissedFramesSrc(snapshot)
+    return snapshot
   }
 }
 
@@ -128,18 +130,4 @@ export function extractCrossFrames({snapshot, parent = null, logger}): any[] {
   logger.log(`frames paths for ${snapshot.crossFrames}`, crossFrames.map(selector => JSON.stringify(selector)).join(' , '))
 
   return crossFrames
-}
-
-function blankMissedFramesSrc(snapshot) {
-  const frameUrls = new Set(snapshot.frames.map(frame => frame.url))
-  snapshot.cdt.forEach(node => {
-    if (node.nodeName !== 'IFRAME') return
-    try {
-      const srcAttr = node.attributes.find(attr => attr.name === 'src')
-      if (srcAttr && !frameUrls.has(new URL(srcAttr.value, snapshot.url).href)) {
-        srcAttr.value = ''
-      }
-    } catch {}
-  })
-  return snapshot
 }

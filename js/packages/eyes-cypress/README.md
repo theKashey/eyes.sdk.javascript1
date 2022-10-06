@@ -662,7 +662,7 @@ cy.get('.region.two:nth-child(2)').then(el => {
       cy.eyesCheckWindow({
         fully: false,
         ignore: [
-          {type: 'css', selector: '.region.three:nth-child(3n)'},
+          {region: {type: 'css', selector: '.region.three:nth-child(3n)'}, regionId: 'region3'},
           {type: 'xpath', selector: '//div[@class="region one"][3]'},
           {element: el, regionId: 'my-region-id'},
         ],
@@ -716,7 +716,7 @@ after(() => {
 
 ```js
 after(() => {
-  cy.eyesGetAllTestResults().then(summary => {
+  cy.eyesGetAllTestResults().then(async summary => {
     for(const result of summary.getAllResults()) {
       await result.getTestResults().delete()
     }

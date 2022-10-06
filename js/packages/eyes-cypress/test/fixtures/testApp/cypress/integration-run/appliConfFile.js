@@ -26,7 +26,7 @@ describe('Hello world', () => {
       let res = '';
       for (const result of summary.getAllResults()) {
         res +=
-          result.getTestResults()._results.name +
+          result.getTestResults().getName() +
           ' - browsers: ' +
           JSON.stringify(result._container.browserInfo) +
           '\n';

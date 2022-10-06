@@ -36,14 +36,29 @@ function eyesCheckMapValues({args, refer}) {
       if (config.element) {
         if (isHTMLElement(config.element)) {
           regionSettings = {
-            region: refer.ref(config.element),
+            region: Object.assign(refer.ref(config.element), {type: 'element'}),
           };
         } else {
           // JQuery element
           regionSettings = {
-            region: refer.ref(config.element[0]),
+            region: Object.assign(refer.ref(config.element[0]), {type: 'element'}),
           };
         }
+      } else if (
+        config.region &&
+        config.region.hasOwnProperty('top') &&
+        config.region.hasOwnProperty('left') &&
+        config.region.hasOwnProperty('width') &&
+        config.region.hasOwnProperty('height')
+      ) {
+        regionSettings = {
+          region: {
+            y: config.region.top,
+            x: config.region.left,
+            width: config.region.width,
+            height: config.region.height,
+          },
+        };
       } else if (!config.hasOwnProperty('selector')) {
         regionSettings = {
           region: config.region,
@@ -128,8 +143,8 @@ function eyesCheckMapValues({args, refer}) {
         }
       } else {
         accessabilityRegion.region = {
-          top: region.top,
-          left: region.left,
+          y: region.top,
+          x: region.left,
           width: region.width,
           height: region.height,
         };
@@ -161,8 +176,8 @@ function eyesCheckMapValues({args, refer}) {
         }
       } else {
         floatingRegion.region = {
-          top: region.top,
-          left: region.left,
+          y: region.top,
+          x: region.left,
           width: region.width,
           height: region.height,
         };
@@ -178,11 +193,13 @@ function eyesCheckMapValues({args, refer}) {
     const elements = [];
     for (const region of regions) {
       if (isHTMLElement(region)) {
-        elements.push(refer.ref(region));
+        elements.push(Object.assign(refer.ref(region), {type: 'element'}));
       } else if (region.jquery) {
         region.each(function() {
           // there's a small chance that `this` is not an HTML element. So we just verify it.
-          elements.push(isHTMLElement(this) ? refer.ref(this) : this);
+          elements.push(
+            isHTMLElement(this) ? Object.assign(refer.ref(this), {type: 'element'}) : this,
+          );
         });
       } else {
         elements.push(region);

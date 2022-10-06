@@ -85,6 +85,7 @@ describe('spec: getCookies', () => {
         domain: 'applitools.com',
         secure: false,
         httpOnly: false,
+        hostOnly: true,
       });
     });
   });

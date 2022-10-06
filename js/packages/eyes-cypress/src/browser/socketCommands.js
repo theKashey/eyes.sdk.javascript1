@@ -1,12 +1,14 @@
+/* global Node */
 const spec = require('../../dist/browser/spec-driver');
 
 function socketCommands(socket, refer) {
   socket.command('Driver.executeScript', ({context, script, arg = []}) => {
     const res = spec.executeScript(refer.deref(context), script, derefArgs(arg));
-    return refer.ref(res);
+    return res ? refer.ref(res) : res;
   });
+
   socket.command('Driver.mainContext', () => {
-    return refer.ref(spec.mainContext());
+    return refer.ref(spec.mainContext()), {type: 'context'};
   });
 
   socket.command('Driver.parentContext', ({context}) => {
@@ -42,12 +44,12 @@ function socketCommands(socket, refer) {
     );
   });
 
-  socket.command('Driver.getUrl', context => {
-    return spec.getUrl(refer.deref(context));
+  socket.command('Driver.getUrl', ({driver}) => {
+    return spec.getUrl(refer.deref(driver));
   });
 
-  socket.command('Driver.getTitle', context => {
-    return spec.getTitle(refer.deref(context.driver));
+  socket.command('Driver.getTitle', ({driver}) => {
+    return spec.getTitle(refer.deref(driver));
   });
 
   socket.command('Driver.getCookies', async () => {
@@ -74,6 +76,19 @@ function socketCommands(socket, refer) {
       return derefArg;
     } else {
       return arg;
+    }
+  }
+
+  function getType(value) {
+    if (!value) return;
+    if (value.nodeType === Node.ELEMENT_NODE) {
+      return 'element';
+    } else if (
+      value.nodeType === Node.DOCUMENT_NODE ||
+      value.ownerDocument ||
+      (value.constructor && value.constructor.name === 'Window')
+    ) {
+      return 'context';
     }
   }
 }

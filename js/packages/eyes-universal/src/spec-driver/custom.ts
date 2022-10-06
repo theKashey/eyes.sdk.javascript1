@@ -26,11 +26,11 @@ export function makeSpec(options: {
       return utils.types.has(context, 'applitools-ref-id')
     },
     isElement(element: any): element is Element {
-      return utils.types.has(element, 'applitools-ref-id')
+      return utils.types.has(element, ['applitools-ref-id', 'type']) && element.type === 'element'
     },
     isSelector(selector: any): selector is Selector {
       return (
-        utils.types.has(selector, 'applitools-ref-id') ||
+        (utils.types.has(selector, ['applitools-ref-id', 'type']) && selector.type === 'selector') ||
         utils.types.isString(selector) ||
         (utils.types.isPlainObject(selector) &&
           utils.types.has(selector, 'selector') &&

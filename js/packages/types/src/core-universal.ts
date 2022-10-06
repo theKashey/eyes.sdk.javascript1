@@ -65,7 +65,7 @@ type UniversalEyes<TDriver, TElement, TSelector, TType extends 'classic' | 'ufg'
 >
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type Ref<TValue = never> = {'applitools-ref-id': string}
+export type Ref<TValue = never> = {'applitools-ref-id': string; type?: string}
 
 /* eslint-disable prettier/prettier */
 export type Refify<TValue> = TValue extends string | number | boolean | null | undefined ? TValue

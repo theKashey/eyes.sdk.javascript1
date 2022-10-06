@@ -36,6 +36,7 @@ function makeStartServer({logger}) {
       cert: path.resolve(__dirname, '../pem/server.cert'),
       detached: false,
       idleTimeout: 0,
+      shutdownMode: 'stdin',
     });
 
     const managers = [];

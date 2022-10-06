@@ -16,8 +16,10 @@ describe('Coverage Tests - ShouldSendCoddedRegionsWithSelectorWithCustomRegionId
       fully: false,
       ignore: [
         {
-          type: 'css',
-          selector: 'body > div:nth-child(3) > div:nth-child(3)',
+          region: {
+            type: 'css',
+            selector: 'body > div:nth-child(3) > div:nth-child(3)',
+          },
           regionId: 'my-region-id',
         },
       ],

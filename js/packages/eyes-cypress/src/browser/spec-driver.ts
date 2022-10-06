@@ -47,8 +47,8 @@ export function getViewportSize(): Object {
   //@ts-ignore
   const currWindow = cy.state('window')
   const viewportSize = {
-    width: Math.max(currWindow.document.documentElement.clientWidth || 0, currWindow.innerWidth || 0),
-    height: Math.max(currWindow.document.documentElement.clientHeight || 0, currWindow.innerHeight || 0)
+    width:  currWindow.innerWidth || currWindow.document.documentElement.clientWidth || currWindow.document.body.clientWidth,
+    height: currWindow.innerHeight || currWindow.document.documentElement.clientHeight || currWindow.document.body.clientHeight
   };
   return viewportSize;
 }

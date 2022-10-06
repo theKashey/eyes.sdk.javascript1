@@ -9,7 +9,7 @@ type LegacyRegion = {left: number; top: number; width: number; height: number}
 type Selector = {selector: string; type?: 'css' | 'xpath', nodeType?: 'element' | 'shadow-root'} | 'string'
 type Element = HTMLElement | JQuery<HTMLElement>
 
-interface CypressCheckSettings extends types.CheckSettings<Element, Selector> {
+interface CypressCheckSettings extends api.CheckSettingsPlain<Element, Selector>{
   tag?: CypressCheckSettings['name']
 
   target?: 'window' | 'region'
@@ -22,11 +22,12 @@ interface CypressCheckSettings extends types.CheckSettings<Element, Selector> {
   strict?: MaybeArray<CypressCheckSettings['strictRegions'][number] | LegacyRegion>
   floating?: MaybeArray<CypressCheckSettings['floatingRegions'][number] | (({element: Element} | Selector | LegacyRegion) & {maxUpOffset?: number; maxDownOffset?: number; maxLeftOffset?: number; maxRightOffset?: number})>
   accessibility?: MaybeArray<CypressCheckSettings['accessibilityRegions'][number] | (({element: Element} | Selector | LegacyRegion) & {accessibilityType?: types.AccessibilityRegionType})>
-
   scriptHooks?: CypressCheckSettings['hooks']
+  ignoreCaret?: boolean
+  ignoreDisplacements?: boolean
 }
 
-interface CypressEyesConfig extends types.EyesConfig<Element, Selector> {
+interface CypressEyesConfig extends api.ConfigurationPlain<Element, Selector> {
   browser?: MaybeArray<CypressEyesConfig['browsersInfo'][number] | {deviceName: string; screenOrientation?: types.ScreenOrientation; name?: string}>
 
   batchId?: CypressEyesConfig['batch']['id']
@@ -36,10 +37,7 @@ interface CypressEyesConfig extends types.EyesConfig<Element, Selector> {
 
   envName?: CypressEyesConfig['environmentName']
 
-  ignoreCaret?: CypressEyesConfig['defaultMatchSettings']['ignoreCaret']
-  matchLevel?: CypressEyesConfig['defaultMatchSettings']['matchLevel']
   accessibilitySettings?: CypressEyesConfig['defaultMatchSettings']['accessibilitySettings']
-  ignoreDisplacements?: CypressEyesConfig['defaultMatchSettings']['ignoreDisplacements']
 }
 
 declare global {

@@ -99,7 +99,7 @@ describe('eyes check mapping', () => {
       layoutRegions: undefined,
       contentRegions: undefined,
       accessibilityRegions: undefined,
-      region: {'applitools-ref-id': '1234'},
+      region: {'applitools-ref-id': '1234', type: 'element'},
       target: 'region',
     };
 

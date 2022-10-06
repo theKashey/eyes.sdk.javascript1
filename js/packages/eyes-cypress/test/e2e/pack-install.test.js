@@ -47,7 +47,7 @@ describe('package and install', () => {
         {maxBuffer: 10000000},
       );
     } catch (ex) {
-      console.error('Error!', ex.stdout);
+      console.error('Error!', JSON.stringify(ex));
       throw ex;
     }
   });
