@@ -17,19 +17,17 @@ def get_variables(
         batch_name += " | Android"
         desired_caps = {
             "platformName": "Android",
-            "platformVersion": "8.1",
-            "deviceName": "Samsung Galaxy S9 HD GoogleAPI Emulator",
+            "platformVersion": "11.0",
+            "deviceName": "Android GoogleAPI Emulator",
             "deviceOrientation": "portrait",
-            "appiumVersion": "1.20.1",
         }
     elif platform == "ios":
         batch_name += " | IOS"
         desired_caps = {
             "platformName": "iOS",
-            "platformVersion": "14.3",
-            "deviceName": "iPhone XR Simulator",
+            "platformVersion": "15.4",
+            "deviceName": "iPhone 13 Simulator",
             "deviceOrientation": "portrait",
-            "appiumVersion": "1.20.1",
         }
     else:
         desired_caps = {}  # What?
@@ -57,18 +55,6 @@ def get_variables(
                         "automationName": "XCUITest",
                     }
                 )
-                if runner_type == "native_mobile_grid":
-                    desired_caps.update(
-                        {
-                            "processArguments": {
-                                "args": [],
-                                "env": {
-                                    "DYLD_INSERT_LIBRARIES": "@executable_path/Frameworks/UFG_lib.xcframework/ios-arm64_x86_64-simulator/UFG_lib.framework/UFG_lib"
-                                },
-                            }
-                        }
-                    )
-
         else:
             batch_name += " | Web"
             if platform == "desktop":

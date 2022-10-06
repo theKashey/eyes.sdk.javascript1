@@ -1,3 +1,10 @@
+## [vNext]
+### Added
+- `Eyes Set NMG Capabilities` keyword to update existing capabilities with NMG params [GH-1124](/../../pull/1124)
+- `Eyes Create NMG Capabilities` keyword to create new capabilities with NMG params in it [GH-1124](/../../pull/1124)
+### Updated
+- Improved error handling [GH-1124](/../../pull/1124)
+
 ## [5.8.1] - 2022-08-26
 ### Fixed
 - Not possible to remove runner related sections from config [Trello 3016](https://trello.com/c/B0V3HPtF)

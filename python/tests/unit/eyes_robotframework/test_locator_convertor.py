@@ -47,10 +47,10 @@ def test_convert_selenium_library_selector(eyes_library_with_selenium, data):
 
 
 @pytest.mark.parametrize("data", APPIUM_SELECTORS_DATA, ids=lambda d: d.selector)
-def test_convert_appium_library_selector(eyes_library_with_appium, data):
-    assert data.result == LocatorConverter(eyes_library_with_appium).to_by_selector(
-        data.selector
-    )
+def test_convert_appium_library_selector(eyes_library_with_appium_mobile_native, data):
+    assert data.result == LocatorConverter(
+        eyes_library_with_appium_mobile_native
+    ).to_by_selector(data.selector)
 
 
 def test_default_locator(eyes_library_with_selenium):

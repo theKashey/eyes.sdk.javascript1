@@ -96,7 +96,7 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
     run_robot(*args, output_file_path=output_file_path)
     result = ExecutionResult(output_file_path + ".xml")
     not_passed = [t for t in from_suite(result.suite) if t.status != "PASS"]
-    assert not_passed == []
+    assert not_passed == [], "\n".join(msg.message for msg in result.errors.messages)
     assert METADATA_PATH_TO_EYES_RESULTS_NAME in result.suite.suites[0].metadata
     assert METADATA_PATH_TO_EYES_RESULTS_NAME in result.suite.suites[1].metadata
 
@@ -117,8 +117,6 @@ def test_suite_dir_with_results_propagation_and_one_diff_in_report(
     [
         ("web", "appium", "android"),
         ("web", "appium", "ios"),
-        ("web", "selenium", "android"),
-        ("web", "selenium", "ios"),
     ],
     ids=lambda d: str(d),
 )
@@ -138,7 +136,7 @@ def test_web_mobile(data, tmp_path):
     )
     result = ExecutionResult(output_file_path + ".xml")
     not_passed = [t for t in result.suite.tests if t.status != "PASS"]
-    assert not_passed == []
+    assert not_passed == [], "\n".join(msg.message for msg in result.errors.messages)
     send_test_report(
         result.suite,
         runner=runner,
@@ -172,7 +170,7 @@ def test_web_desktop(data, tmp_path):
     result = ExecutionResult(output_file_path + ".xml")
 
     not_passed = [t for t in from_suite(result.suite) if t.status != "PASS"]
-    assert not_passed == []
+    assert not_passed == [], "\n".join(msg.message for msg in result.errors.messages)
     send_test_report(
         result.suite,
         runner=runner,
@@ -208,7 +206,7 @@ def test_suite_mobile_native(data, tmp_path):
 
     result = ExecutionResult(output_file_path + ".xml")
     not_passed = [t for t in result.suite.tests if t.status != "PASS"]
-    assert not_passed == []
+    assert not_passed == [], "\n".join(msg.message for msg in result.errors.messages)
     send_test_report(
         result.suite,
         runner=runner,

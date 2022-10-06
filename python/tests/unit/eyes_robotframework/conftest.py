@@ -67,14 +67,32 @@ def selenium_library():
 @pytest.fixture
 def eyes_library_with_selenium(eyes_library, selenium_library):
     eyes_library._selected_runner = SelectedRunner.web
-    eyes_library._configuration = Configuration()
+    eyes_library._configuration = Configuration(api_key="SOME API KEY")
     eyes_library.current_library = selenium_library
     eyes_library._locator_converter = LocatorConverter(eyes_library)
     return eyes_library
 
 
 @pytest.fixture
-def eyes_library_with_appium(eyes_library, appium_library):
+def eyes_library_with_appium_mobile_native(eyes_library, appium_library):
+    eyes_library._selected_runner = SelectedRunner.mobile_native
+    eyes_library._configuration = Configuration()
+    eyes_library.current_library = appium_library
+    eyes_library._locator_converter = LocatorConverter(eyes_library)
+    return eyes_library
+
+
+@pytest.fixture
+def eyes_library_with_appium_native_mobile_grid(eyes_library, appium_library):
+    eyes_library._selected_runner = SelectedRunner.native_mobile_grid
+    eyes_library._configuration = Configuration()
+    eyes_library.current_library = appium_library
+    eyes_library._locator_converter = LocatorConverter(eyes_library)
+    return eyes_library
+
+
+@pytest.fixture
+def eyes_library_with_appium_mobile_native(eyes_library, appium_library):
     eyes_library._selected_runner = SelectedRunner.mobile_native
     eyes_library._configuration = Configuration()
     eyes_library.current_library = appium_library
@@ -109,4 +127,13 @@ def check_keyword(defined_keywords, eyes_library_with_selenium):
 def configuration_keyword(eyes_library_with_selenium):
     eyes_library_with_selenium.eyes_runner = ClassicRunner()
     keyword = ConfigurationKeywords(eyes_library_with_selenium)
+    return keyword
+
+
+@pytest.fixture
+def configuration_keyword_with_native_mobile_grid(
+    eyes_library_with_appium_native_mobile_grid,
+):
+    eyes_library_with_appium_native_mobile_grid.eyes_runner = ClassicRunner()
+    keyword = ConfigurationKeywords(eyes_library_with_appium_native_mobile_grid)
     return keyword

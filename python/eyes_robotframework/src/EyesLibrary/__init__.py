@@ -151,7 +151,7 @@ class EyesLibrary(DynamicCore):
         """
         Initialize the EyesLibrary
             | =Arguments=      | =Description=  |
-            | runner           | Specify one of `web`, `web_ufg`, or `mobile_native` runners (by default `web`)  |
+            | runner           | Specify one of `web`, `web_ufg`, `mobile_native` or `native_mobile_grid` runners (by default `web`)  |
             | config           | Path to applitools.yaml (if no specify, trying to find it in test suite dir)  |
             | run_on_failure   | Specify keyword to run in case of failure (By default `Eyes Abort Async`)  |
 
@@ -258,9 +258,9 @@ class EyesLibrary(DynamicCore):
             )
         return supported_library
 
-    def run_keyword(self, name, *args, **kwargs):
+    def run_keyword(self, name, args, kwargs=None):
         try:
-            return DynamicCore.run_keyword(self, name, *args, **kwargs)
+            return DynamicCore.run_keyword(self, name, args, kwargs)
         except Exception as e:
             trb_text = traceback.format_exc()
             self.failure_occurred(e, trb_text)
@@ -271,7 +271,14 @@ class EyesLibrary(DynamicCore):
             return
         try:
             self._running_on_failure_keyword = True
-            if self.run_on_failure_keyword.lower() == "eyes abort":
+            if self.current_eyes is None:
+                robot_logger.warn(
+                    "Keyword '{}' could not be run on failure: Eyes was not open".format(
+                        self.run_on_failure_keyword
+                    )
+                )
+                return
+            if self.run_on_failure_keyword.lower() == "eyes abort async":
                 self.current_eyes.abort_async()
             else:
                 BuiltIn().run_keyword(self.run_on_failure_keyword)

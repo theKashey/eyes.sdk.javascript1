@@ -1,11 +1,21 @@
 *** Settings ***
-Resource    resources/setup.robot
 Library     AppiumLibrary
 Library     EyesLibrary     runner=${RUNNER}
 
 Test Setup       Setup
 Test Teardown    Teardown
-Suite Teardown   Eyes Get All Test Results
+
+*** Keywords ***
+Setup
+    ${DESIRED_CAPS}=   Eyes Create NMG Capabilities       &{DESIRED_CAPS}
+    Open Application        ${REMOTE_URL}    &{DESIRED_CAPS}
+    Eyes Configure Add Property     RUNNER    ${RUNNER}
+    Eyes Configure Add Property     BACKEND_LIBRARY_NAME    ${RUNNER}
+
+
+Teardown
+    Close Application
+    Eyes Close Async
 
 
 *** Test Cases ***
