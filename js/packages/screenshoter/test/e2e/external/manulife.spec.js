@@ -5,8 +5,30 @@ describe('screenshoter ios app', () => {
 
   before(async () => {
     ;[driver, destroyDriver] = await makeDriver({
-      type: 'ios-bs',
-      app: 'bs://33647e8de45b0bbfeae051ebd3c65ab891a5da02',
+      env: {
+        capabilities: {
+          browserName: '',
+          pCloudy_Username: process.env.PCLOUDY_MANULIFE_USERNAME,
+          pCloudy_ApiKey: process.env.PCLOUDY_MANULIFE_API_KEY,
+          pCloudy_DurationInMinutes: 4,
+          newCommandTimeout: 600,
+          launchTimeout: 90000,
+          pCloudy_DeviceFullName: 'APPLE_iPhone12_ios_15.2.0_fef61',
+          platformVersion: '15.2.0',
+          platformName: 'ios',
+          acceptAlerts: true,
+          automationName: 'XCUITest',
+          bundleId: 'com.manulife.ap.sit.move',
+          pCloudy_WildNet: 'false',
+          pCloudy_EnableVideo: 'true',
+          pCloudy_EnablePerformanceData: 'false',
+          pCloudy_EnableDeviceLogs: 'true',
+          appiumVersion: '1.20.2',
+          noReset: true,
+          fullReset: false,
+        },
+        url: 'https://manulife.pcloudy.com/appiumcloud/wd/hub',
+      },
       logger,
     })
 
@@ -18,44 +40,27 @@ describe('screenshoter ios app', () => {
   })
 
   it('take full app screenshot on pager screen', async () => {
-    await sleep(5000)
-    await driver
-      .element({type: '-ios predicate string', selector: "name == 'Singapore'"})
-      .then(button => button.click())
-    await driver.element({type: '-ios predicate string', selector: "name == 'Next'"}).then(button => button.click())
-    await driver.element({type: '-ios predicate string', selector: "name == 'Skip'"}).then(button => button.click())
-    await driver.target.acceptAlert()
-    await driver.element({type: 'xpath', selector: '//*[@value="Enter your email address"]'})
+    await sleep(30000)
+
     await driver
       .element({type: 'xpath', selector: '//XCUIElementTypeTextField'})
-      .then(field => field.type('tuser@mailinator.com'))
+      .then(field => field.type('hkss@mailinator.com'))
     await driver
       .element({type: 'xpath', selector: '//XCUIElementTypeSecureTextField'})
       .then(field => field.type('AutoPw@1'))
     await sleep(5000)
-    await driver.execute('mobile: tap', {x: 50, y: 430})
+    await driver
+      .element({type: 'xpath', selector: "//XCUIElementTypeButton[@name='Log in']"})
+      .then(button => button.click())
     await sleep(10000)
-    await driver.target.acceptAlert()
-    await driver.execute('mobile: tap', {x: 139, y: 755})
-    await sleep(5000)
-    await driver.execute('mobile: activateApp', {bundleId: 'com.manulife.ap.sit.move'})
-    await sleep(5000)
-    await driver.execute('mobile: tap', {x: 139, y: 755})
-    await sleep(5000)
-    await driver.execute('mobile: tap', {x: 22, y: 62})
-    await sleep(5000)
-
-    // await driver.element({type: 'xpath', selector: '//*[@label="Profile"]'}).then(button => button.click())
-    // await driver.element({type: 'xpath', selector: '//*[@label="My Policies"]'}).then(button => button.click())
 
     await driver.init()
-
-    await driver.mainContext.setScrollingElement({type: 'xpath', selector: '//XCUIElementTypeTable'})
 
     await test({
       type: 'ios',
       tag: 'app-fully-manulife',
-      fully: true,
+      // fully: true,
+      region: {type: 'xpath', selector: `//XCUIElementTypeStaticText[@name="Connect your Apple Watch"]/..`},
       framed: true,
       wait: 1500,
       overlap: {top: 0, bottom: 40},
