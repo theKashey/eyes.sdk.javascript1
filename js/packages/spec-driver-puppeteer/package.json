@@ -56,7 +56,7 @@
     }
   },
   "dependencies": {
-    "@applitools/types": "1.5.18",
+    "@applitools/types": "1.5.19",
     "@applitools/utils": "1.3.12"
   },
   "devDependencies": {
