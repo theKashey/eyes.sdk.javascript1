@@ -66,10 +66,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed the issue with screenshots being taken on chrome-emulated devices
-    - Fixed bug when error was thrown when coded region wasn't found using selector
-    - Blank missed frames src in ufg
-    - Fix an issue when ufg related requests were not sent through the proxy
+    - 
 "@applitools/eyes-cypress":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.

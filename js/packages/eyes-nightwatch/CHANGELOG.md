@@ -11,6 +11,15 @@
 
 
 
+## 1.11.5 - 2022/10/7
+
+### Features
+### Bug fixes
+- Fixed the issue with screenshots being taken on chrome-emulated devices
+- Fixed bug when error was thrown when coded region wasn't found using selector
+- Blank missed frames src in ufg
+- Fix an issue when ufg related requests were not sent through the proxy
+
 ## 1.11.4 - 2022/9/29
 
 ### Features
