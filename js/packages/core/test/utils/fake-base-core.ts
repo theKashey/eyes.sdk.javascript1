@@ -10,6 +10,7 @@ export function makeFakeCore({hooks}: any = {}): BaseCore & EventEmitter {
     off: emitter.off.bind(emitter),
     async getAccountInfo() {
       emitter.emit('getAccountInfo')
+      await hooks?.getAccountInfo?.()
       return {}
     },
     async logEvent() {
