@@ -51,7 +51,11 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
       server: {serverUrl: settings.serverUrl, apiKey: settings.apiKey, proxy: settings.proxy},
       account,
     } as TestInfo
-    client ??= makeUFGClient({config: {...account.ufg, ...account}, concurrency: settings.renderConcurrency ?? 5, logger})
+    client ??= makeUFGClient({
+      config: {...account.ufg, ...account, proxy: settings.proxy},
+      concurrency: settings.renderConcurrency ?? 5,
+      logger,
+    })
 
     const controller = new AbortController()
 

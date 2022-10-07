@@ -13,12 +13,14 @@ Apollo SDK:
     - 
   bug-fix:
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-webdriverio":
   feature:
     - 
@@ -26,12 +28,14 @@ Apollo SDK:
     - Fixed bug when error was thrown when coded region wasn't found using selector
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-playwright":
   feature:
     - 
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
@@ -49,6 +53,7 @@ Apollo SDK:
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
@@ -64,6 +69,7 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
     - Fixed bug when error was thrown when coded region wasn't found using selector
     - Blank missed frames src in ufg
+    - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-cypress":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
