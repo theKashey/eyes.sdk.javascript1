@@ -380,7 +380,18 @@ describe('take-dom-snapshot', () => {
     ])
     mock.mockScript('dom-snapshot', function () {
       return generateSnapshotResponse({
-        cdt: 'top frame',
+        cdt: [
+          {
+            nodeType: 1,
+            nodeName: 'IFRAME',
+            attributes: [
+              {
+                name: 'src',
+                value: './topframe.html',
+              },
+            ],
+          },
+        ],
         crossFrames: [{selector: '[data-applitools-selector="123"]', index: 0}],
       })
     })
@@ -407,7 +418,18 @@ describe('take-dom-snapshot', () => {
       switch (this.name) {
         case '[data-applitools-selector="123"]':
           return generateSnapshotResponse({
-            cdt: 'inner parent frame',
+            cdt: [
+              {
+                nodeType: 1,
+                nodeName: 'IFRAME',
+                attributes: [
+                  {
+                    name: 'src',
+                    value: './innerparentframe.html',
+                  },
+                ],
+              },
+            ],
             url,
             crossFrames: [{selector: '[data-applitools-selector="456"]', index: 0}],
           })
@@ -422,7 +444,18 @@ describe('take-dom-snapshot', () => {
     const snapshot = await takeDomSnapshot({context: driver.currentContext, logger})
     assert.deepStrictEqual(snapshot.frames, [
       {
-        cdt: 'inner parent frame',
+        cdt: [
+          {
+            nodeType: 1,
+            nodeName: 'IFRAME',
+            attributes: [
+              {
+                name: 'src',
+                value: '',
+              },
+            ],
+          },
+        ],
         resourceContents: {},
         resourceUrls: [],
         frames: [],
