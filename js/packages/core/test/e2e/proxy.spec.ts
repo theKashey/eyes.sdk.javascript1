@@ -1,11 +1,11 @@
 import * as spec from '@applitools/spec-driver-webdriverio'
 import {makeCore} from '../../src/index'
-import esniffer from 'esniffer'
-import {createCertificate} from 'pem'
-import assert from 'assert'
+// import esniffer from 'esniffer'
+// import {createCertificate} from 'pem'
+// import assert from 'assert'
 
 describe.skip('proxy', () => {
-  let driver, destroyDriver, proxy
+  let driver, destroyDriver, _proxy
 
   before(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
