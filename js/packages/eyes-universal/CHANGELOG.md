@@ -11,6 +11,13 @@
 
 
 
+## 2.16.2 - 2022/10/7
+
+### Features
+### Bug fixes
+- Blank missed frames src in ufg
+- Fix an issue when ufg related requests were not sent through the proxy
+
 ## 2.16.1 - 2022/10/4
 
 ### Features

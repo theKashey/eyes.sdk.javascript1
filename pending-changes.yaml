@@ -12,8 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Blank missed frames src in ufg
-    - Fix an issue when ufg related requests were not sent through the proxy
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 
