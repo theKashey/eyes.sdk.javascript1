@@ -23,13 +23,9 @@ Apollo SDK:
     - Fixed issue with logs not being saved/written
 "@applitools/eyes-webdriverio":
   feature:
-    - Applied client's user-agent by default to resource requests in ufg mode
+    - 
   bug-fix:
-    - Fixed bug when error was thrown when coded region wasn't found using selector
-    - Fixed wrong signature of `closeBatch` function
-    - Blank missed frames src in ufg
-    - Fix an issue when ufg related requests were not sent through the proxy
-    - Fixed issue with logs not being saved/written
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Applied client's user-agent by default to resource requests in ufg mode

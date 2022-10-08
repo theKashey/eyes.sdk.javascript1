@@ -10,6 +10,17 @@
 
 
 
+## 5.36.2 - 2022/10/8
+
+### Features
+- Applied client's user-agent by default to resource requests in ufg mode
+### Bug fixes
+- Fixed bug when error was thrown when coded region wasn't found using selector
+- Fixed wrong signature of `closeBatch` function
+- Blank missed frames src in ufg
+- Fix an issue when ufg related requests were not sent through the proxy
+- Fixed issue with logs not being saved/written
+
 ## 5.36.1 - 2022/10/4
 
 ### Features
