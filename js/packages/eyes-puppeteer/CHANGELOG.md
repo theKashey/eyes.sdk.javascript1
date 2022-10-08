@@ -11,6 +11,16 @@
 
 
 
+## 1.11.4 - 2022/10/8
+
+### Features
+- Applied client's user-agent by default to resource requests in ufg mode
+### Bug fixes
+- Fixed wrong signature of `closeBatch` function
+- Blank missed frames src in ufg
+- Fix an issue when ufg related requests were not sent through the proxy
+- Fixed issue with logs not being saved/written
+
 ## 1.11.3 - 2022/10/4
 
 ### Features
