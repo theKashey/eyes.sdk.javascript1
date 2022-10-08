@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
-    - 
+    - Fixed node 12 support
 "@applitools/eyes-selenium":
   feature:
     - Applied client's user-agent by default to resource requests in ufg mode

@@ -6,8 +6,8 @@
 
     "module": "commonjs",
     "moduleResolution": "node16",
-    "target": "es2020",
-    "lib": ["es2020"],
+    "target": "es2019",
+    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string", "dom"],
     "esModuleInterop": true,
     "noImplicitAny": true,
     "downlevelIteration": true,
