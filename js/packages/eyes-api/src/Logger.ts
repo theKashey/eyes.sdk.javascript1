@@ -44,6 +44,7 @@ export class Logger {
     }
   }
 
+  /** @internal */
   getLogger() {
     if (!this._logger) this._logger = this._makeLogger()
     return this._logger
