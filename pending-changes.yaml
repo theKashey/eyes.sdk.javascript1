@@ -10,9 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Applied client's user-agent by default to resource requests in ufg mode
+    - 
   bug-fix:
-    - Fixed node 12 support
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Applied client's user-agent by default to resource requests in ufg mode
