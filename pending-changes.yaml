@@ -47,12 +47,9 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 "@applitools/eyes-puppeteer":
   feature:
-    - Applied client's user-agent by default to resource requests in ufg mode
+    - 
   bug-fix:
-    - Fixed wrong signature of `closeBatch` function
-    - Blank missed frames src in ufg
-    - Fix an issue when ufg related requests were not sent through the proxy
-    - Fixed issue with logs not being saved/written
+    - 
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
