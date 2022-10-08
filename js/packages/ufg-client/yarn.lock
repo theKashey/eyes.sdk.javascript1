@@ -86,10 +86,10 @@
     morgan "1.10.0"
     yargs "17.0.1"
 
-"@applitools/test-utils@^1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.5.1.tgz#bdba94cf9d54a1c6e17254b67410ed49530e58e3"
-  integrity sha512-L80Cx8yVG/kMDyqD9x0wENcpKbu4HrljZbhprc/OfuhhR7fzIuw7k+EDwLXrSSKxYV4gI2vBVa2J2FbJai7ayA==
+"@applitools/test-utils@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@applitools/test-utils/-/test-utils-1.5.2.tgz#1fa82254c93f70e090aaebf3dd92e830e092d3e7"
+  integrity sha512-9IG8vtgqLFCtpFEss13SpvDcN669bzFtCbQqOu8dWUa3qtzDe5MIcdnZTqWU+FhQUycvxZ9W0L5K8EK5nUC/SQ==
   dependencies:
     node-fetch "2.6.1"
 
