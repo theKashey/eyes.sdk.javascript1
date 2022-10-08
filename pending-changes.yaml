@@ -10,19 +10,19 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
     - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
     - Fixed bug when error was thrown when coded region wasn't found using selector
     - Fixed wrong signature of `closeBatch` function
@@ -30,7 +30,7 @@ Apollo SDK:
     - Fix an issue when ufg related requests were not sent through the proxy
 "@applitools/eyes-playwright":
   feature:
-    - 
+    - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg
@@ -48,7 +48,7 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 "@applitools/eyes-puppeteer":
   feature:
-    - 
+    - Applied client's user-agent by default to resource requests in ufg mode
   bug-fix:
     - Fixed wrong signature of `closeBatch` function
     - Blank missed frames src in ufg

@@ -53,6 +53,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
     let snapshots: DomSnapshot[] | AndroidVHS[] | IOSVHS[],
       snapshotUrl: string,
       snapshotTitle: string,
+      userAgent: string,
       regionToTarget: Selector | Region,
       selectorsToCalculate: {originalSelector: Selector; safeSelector: Selector}[]
     if (spec?.isDriver(target)) {
@@ -65,6 +66,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
       let cleanupGeneratedSelectors
       if (driver.isWeb) {
+        userAgent = driver.userAgent
         const generated = await generateSafeSelectors({
           context: driver.currentContext,
           elementReferences: [...(elementReferenceToTarget ? [elementReferenceToTarget] : []), ...elementReferencesToCalculate],
@@ -133,7 +135,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         const {cookies, ...snapshot} = snapshots[index] as typeof snapshots[number] & {cookies: any[]}
         const renderTargetPromise = client.createRenderTarget({
           snapshot,
-          settings: {renderer, referer: snapshotUrl, cookies, proxy: test.server.proxy, autProxy: settings.autProxy},
+          settings: {renderer, referer: snapshotUrl, cookies, proxy: test.server.proxy, autProxy: settings.autProxy, userAgent},
         })
 
         const request: RenderRequest = {
