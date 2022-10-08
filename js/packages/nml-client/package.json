@@ -54,9 +54,9 @@
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
     "@applitools/scripts": "^1.2.0",
-    "@applitools/spec-driver-selenium": "^1.4.5",
+    "@applitools/spec-driver-selenium": "^1.5.0",
     "@applitools/test-server": "^1.1.5",
-    "@applitools/test-utils": "^1.5.1",
+    "@applitools/test-utils": "^1.5.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
     "@types/selenium-webdriver": "^4.1.2",
