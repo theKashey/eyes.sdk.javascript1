@@ -81,7 +81,7 @@
     "chai": "4.2.0",
     "chai-spies": "1.0.0",
     "cookie-parser": "1.4.4",
-    "cypress": "9.0.0",
+    "cypress": "9.7.0",
     "eslint": "8.10.0",
     "eslint-plugin-mocha-no-only": "1.1.0",
     "eslint-plugin-node": "7.0.1",
