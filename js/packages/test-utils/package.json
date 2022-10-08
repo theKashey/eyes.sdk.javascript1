@@ -38,8 +38,8 @@
     "node-fetch": "2.6.1"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
-    "@applitools/scripts": "^1.1.0",
+    "@applitools/bongo": "^2.2.0",
+    "@applitools/scripts": "^1.2.0",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-mocha-no-only": "^1.1.1",
