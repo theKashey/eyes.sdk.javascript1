@@ -17,7 +17,7 @@ export class Logger {
 
   private _makeLogger() {
     return makeLogger({
-      handler: this._handler instanceof LogHandlerData ? this._handler.toJSON() : undefined,
+      handler: this._handler instanceof LogHandlerData ? this._handler.toJSON() : this._handler,
       level: this._show ? 'info' : 'silent',
       label: this._label,
     })
@@ -44,7 +44,12 @@ export class Logger {
     }
   }
 
-  getLogHandler(): LogHandlerData {
+  getLogger() {
+    if (!this._logger) this._logger = this._makeLogger()
+    return this._logger
+  }
+
+  getLogHandler(): LogHandlerData | ConsoleLogHandlerData | FileLogHandlerData {
     if (!this._handler) {
       return new NullLogHandlerData()
     } else if (!utils.types.has(this._handler, 'type')) {
@@ -56,6 +61,7 @@ export class Logger {
     }
   }
   setLogHandler(handler: LogHandler) {
+    this._show = true
     this._handler = handler
   }
 

@@ -23,16 +23,6 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = 
     configuration.apiKey = process.env.APPLITOOLS_API_KEY_SDK
   }
 
-  if (process.env.APPLITOOLS_SHOW_LOGS || showLogs) {
-    configuration.logs = {type: 'console'}
-  } else if (process.env.APPLITOOLS_SAVE_LOGS || saveLogs) {
-    const logsPath = path.resolve(
-      cwd,
-      typeof saveLogs === 'string' ? saveLogs : `./logs/${new Date().toISOString()}.log`,
-    )
-    configuration.logs = {type: 'file', filename: logsPath}
-  }
-
   if (process.env.APPLITOOLS_SAVE_DEBUG_SCREENSHOTS || saveDebugScreenshots) {
     const debugScreenshotsPath = path.resolve(
       cwd,
@@ -47,6 +37,18 @@ function setupEyes({runner, vg, showLogs, saveLogs, saveDebugScreenshots, sdk = 
 
   const eyes = new Eyes(runner)
   eyes.setConfiguration(configuration)
+
+  if (process.env.APPLITOOLS_SHOW_LOGS || showLogs) {
+    eyes.setLogHandler({type: 'console'})
+  } else if (process.env.APPLITOOLS_SAVE_LOGS || saveLogs) {
+    const logsPath = path.resolve(
+      cwd,
+      typeof saveLogs === 'string' ? saveLogs : `./logs/${new Date().toISOString()}.log`,
+    )
+    eyes.setLogHandler({type: 'file', filename: logsPath})
+    console.log('here')
+  }
+
   return eyes
 }
 

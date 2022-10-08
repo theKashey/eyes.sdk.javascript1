@@ -19,7 +19,6 @@ import {
   ChromeEmulationInfoLegacy,
 } from './RenderInfo'
 import {CutProvider} from './CutProvider'
-import {LogHandler} from './LogHandler'
 import {DebugScreenshotProvider} from './DebugScreenshotProvider'
 import {RectangleSize, RectangleSizeData} from './RectangleSize'
 import {ImageRotation, ImageRotationData} from './ImageRotation'
@@ -41,8 +40,6 @@ type ConfigurationSpec<TElement = unknown, TSelector = unknown> = {
 }
 
 export type GeneralConfiguration = {
-  /** @undocumented */
-  logs?: LogHandler
   /** @undocumented */
   debugScreenshots?: DebugScreenshotProvider
   agentId?: string
@@ -157,34 +154,6 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     for (const [key, value] of Object.entries(config)) {
       ;(this as any)[key] = value
     }
-  }
-
-  /** @undocumented */
-  get logs(): LogHandler {
-    return this._config.logs
-  }
-  /** @undocumented */
-  set logs(logs: LogHandler) {
-    this._config.logs = logs
-  }
-  /** @undocumented */
-  getShowLogs(): boolean {
-    return Boolean(this.logs)
-  }
-  /** @undocumented */
-  setShowLogs(show: boolean): this {
-    if (show) this.logs ??= {type: 'console'}
-    else this.logs = null
-    return this
-  }
-  /** @undocumented */
-  getLogHandler(): LogHandler {
-    return this.logs
-  }
-  /** @undocumented */
-  setLogHandler(handler: LogHandler): this {
-    this.logs = handler
-    return this
   }
 
   /** @undocumented */

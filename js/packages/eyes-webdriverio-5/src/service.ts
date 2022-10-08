@@ -60,7 +60,7 @@ class EyesService {
   beforeSession(config: Record<string, unknown>) {
     this._appName = this._eyes.configuration.appName
     if (config.enableEyesLogs) {
-      this._eyes.configuration.logs = {type: 'console'}
+      this._eyes.setLogHandler({type: 'console'})
     }
   }
   before() {

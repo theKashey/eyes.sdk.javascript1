@@ -18,7 +18,13 @@ import {Region} from './input/Region'
 import {OCRRegion} from './input/OCRRegion'
 import {ImageRotation, ImageRotationData} from './input/ImageRotation'
 import {CutProviderData} from './input/CutProvider'
-import {LogHandlerData, FileLogHandlerData, ConsoleLogHandlerData, NullLogHandlerData} from './input/LogHandler'
+import {
+  LogHandlerData,
+  FileLogHandlerData,
+  ConsoleLogHandlerData,
+  NullLogHandlerData,
+  LogHandler,
+} from './input/LogHandler'
 import {TextRegion} from './output/TextRegion'
 import {MatchResultData} from './output/MatchResult'
 import {TestResults, TestResultsData} from './output/TestResults'
@@ -65,7 +71,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
 
     this._runner.attach(this, this._spec)
     this._handlers.attach(this)
-    this._logger = new Logger({...this._config.logs, label: 'Eyes API'})
+    this._logger = new Logger({label: 'Eyes API'})
   }
 
   get logger() {
@@ -203,6 +209,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     this._eyes = await this._runner.openEyes({
       target: this._driver,
       config,
+      logger: this._logger.getLogger(),
       on: (name: string, data?: Record<string, any>) => {
         const globalHandlers = this._events.get('*')
         if (globalHandlers) globalHandlers.forEach(async handler => handler(name, data))
@@ -415,11 +422,11 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     this._config.setScrollRootElement(scrollRootElement)
   }
 
-  setLogHandler(handler: LogHandlerData) {
-    this._config.setLogHandler(handler)
+  setLogHandler(handler: LogHandlerData | LogHandler) {
+    this._logger.setLogHandler(handler)
   }
   getLogHandler(): LogHandlerData {
-    const handler = this._config.getLogHandler()
+    const handler = this._logger.getLogHandler()
     if (!handler) {
       return new NullLogHandlerData()
     } else if (!utils.types.has(handler, 'type')) {

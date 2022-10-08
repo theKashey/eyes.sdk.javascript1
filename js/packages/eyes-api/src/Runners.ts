@@ -1,5 +1,5 @@
 import type * as types from '@applitools/types'
-import * as utils from '@applitools/utils'
+import {type Logger} from '@applitools/logger'
 import {NewTestError} from './errors/NewTestError'
 import {DiffsFoundError} from './errors/DiffsFoundError'
 import {TestFailedError} from './errors/TestFailedError'
@@ -7,6 +7,7 @@ import {RunnerOptions, RunnerOptionsFluent} from './input/RunnerOptions'
 import {TestResultsData} from './output/TestResults'
 import {TestResultsSummaryData} from './output/TestResultsSummary'
 import {Eyes} from './Eyes'
+import * as utils from '@applitools/utils'
 
 type EyesRunnerSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = types.Core<
   TDriver,
@@ -36,6 +37,7 @@ export abstract class EyesRunner {
   async openEyes<TDriver, TElement, TSelector>(options: {
     target: TDriver
     config?: types.Config<TElement, TSelector, 'classic' | 'ufg'>
+    logger?: Logger
     on?: (name: string, data?: Record<string, any>) => void
   }): Promise<types.Eyes<TDriver, TElement, TSelector, 'classic' | 'ufg'>> {
     if (!this._manager) this._manager = await this._spec.makeManager(this.config)

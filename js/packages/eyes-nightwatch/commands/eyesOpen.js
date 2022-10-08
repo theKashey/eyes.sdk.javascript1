@@ -7,11 +7,11 @@ module.exports = class EyesOpen {
 
     let eyes = this.client.api.globals.__eyes
     if (!eyes) {
-      if (config.enableEyesLogs) {
-        config.logs = {type: 'console'}
-      }
       const runner = config.useVisualGrid ? new VisualGridRunner({testConcurrency: config.concurrency}) : undefined
       this.client.api.globals.__eyes = eyes = new Eyes(runner, config)
+      if (config.enableEyesLogs) {
+        eyes.setLogHandler({type: 'console'})
+      }
     }
 
     await eyes.open(this.client.api, appName, testName, viewportSize)

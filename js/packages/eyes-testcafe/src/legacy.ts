@@ -90,6 +90,7 @@ export function LegacyTestCafeEyesMixin<TDriver extends Driver, TElement extends
         driver = driverOrOptions
         config = configOrAppName
       }
+      if (this._testcafeConfig.showLogs) this.setLogHandler({type: 'console'})
       // driver health check, re: https://trello.com/c/xNCZNfPi
       await spec
         .executeScript(driver, () => true)
@@ -233,7 +234,6 @@ export function transformConfig<TElement, TSelector>(
     }
   }
   if (utils.types.isString(options.proxy)) config.proxy = {url: options.proxy}
-  if (options.showLogs) config.logs = {type: 'console'}
   return config
 }
 
