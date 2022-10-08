@@ -11,6 +11,13 @@
 
 
 
+## 2.16.3 - 2022/10/8
+
+### Features
+- Applied client's user-agent by default to resource requests in ufg mode
+### Bug fixes
+- Fixed node 12 support
+
 ## 2.16.2 - 2022/10/7
 
 ### Features
