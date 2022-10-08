@@ -4,7 +4,7 @@ import * as api from '@applitools/eyes-api'
 import * as spec from '@applitools/spec-driver-selenium'
 
 const sdk = makeCore({
-  agentId: `eyes-webdriverio/${require('../package.json').version}`,
+  agentId: `eyes.selenium/${require('../package.json').version}`,
   spec,
 })
 
