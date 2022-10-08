@@ -64,7 +64,7 @@ jobs:
         run: |
           if [ ${{github.event.inputs.multienv}} = true ]
           then
-            echo "::set-output name=environments::[{\"node-version\":16}, {\"node-version\":14}]"
+            echo "::set-output name=environments::[{\"node-version\":16}, {\"node-version\":14}, {\"node-version\":12}]"
           else
             echo "::set-output name=environments::[{\"node-version\":16}]"
           fi
