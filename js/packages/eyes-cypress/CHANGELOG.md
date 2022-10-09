@@ -10,6 +10,16 @@
 
 
 
+## 3.27.2 - 2022/10/9
+
+### Features
+- Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
+- Using `lazyLoad.waitingTime` as a delay between stitches by default
+- Deprecated "Content" match level value in favor of "IgnoreColors"
+### Bug fixes
+- Internal Infrastructure update
+- Fixed bug when error was thrown when coded region wasn't found using selector
+
 ## 3.27.1 - 2022/8/1
 
 ### Features
