@@ -65,12 +65,9 @@ Apollo SDK:
     - Fixed issue with logs not being saved/written
 "@applitools/eyes-cypress":
   feature:
-    - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
-    - Using `lazyLoad.waitingTime` as a delay between stitches by default
-    - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - 
   bug-fix:
-    - Internal Infrastructure update
-    - Fixed bug when error was thrown when coded region wasn't found using selector
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
