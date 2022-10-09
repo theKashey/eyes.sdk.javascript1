@@ -1,3 +1,5 @@
+import { TestResultContainer } from "@applitools/eyes-api"
+
 const testName = 'Cypress typescript test'
 
 describe(testName, () => {
@@ -22,12 +24,13 @@ describe(testName, () => {
   after(() => {
     cy.eyesGetAllTestResults().then((summary) => {
       console.log(summary.getAllResults()[0].toJSON())
+      const testResults = summary.getAllResults()[0].toJSON() as TestResultContainer
       expect(summary.getAllResults()).to.have.length(1)
-      expect(summary.getAllResults()[0].exception).to.be.null
-      expect(summary.getAllResults()[0].browserInfo).to.have.property('width')
-      expect(summary.getAllResults()[0].browserInfo).to.have.property('height')
-      expect(summary.getAllResults()[0].testResults).to.have.property('name', testName)
-      expect(summary.getAllResults()[0].testResults).to.have.property('status', 'Passed')
+      expect(testResults.exception).to.be.undefined
+      expect(testResults.browserInfo).to.have.property('width')
+      expect(testResults.browserInfo).to.have.property('height')
+      expect(testResults.testResults).to.have.property('name', testName)
+      expect(testResults.testResults).to.have.property('status', 'Passed')
     })
   })
 })
