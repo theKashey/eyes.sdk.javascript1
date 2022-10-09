@@ -16,6 +16,7 @@ const targetTestAppPath = path.resolve(__dirname, '../fixtures/testAppCopies/tes
 const {pluginRequire} = require('../../src/setup/addEyesCypressPlugin');
 const {commandsImport} = require('../../src/setup/addEyesCommands');
 const {eyesIndexContent} = require('../../src/setup/handleTypeScript');
+const {removeStyleFromText} = require('../fixtures/utils/utils');
 const binEyesSetupPath = path.resolve(__dirname, '../../bin/eyes-setup');
 
 function runSetupScript() {
@@ -79,7 +80,7 @@ describe('eyes-setup script (e2e)', () => {
     const [err, result] = await presult(runSetupScript());
     expect(err).to.be.undefined;
 
-    expect(result.stdout).to.equal(
+    expect(removeStyleFromText(result.stdout)).to.equal(
       `Setup Eyes-Cypress ${packageVersion}
 Cypress version: ${cypressVersion}
 Plugins defined.
@@ -112,7 +113,7 @@ Setup done!
     const [err, result] = await presult(runSetupScript());
     expect(err).to.be.undefined;
 
-    expect(result.stdout).to.equal(
+    expect(removeStyleFromText(result.stdout)).to.equal(
       `Setup Eyes-Cypress ${packageVersion}
 Cypress version: ${cypressVersion}
 Plugins defined.
@@ -148,7 +149,7 @@ Setup done!
     const [err, _result] = await presult(runSetupScript());
 
     expect(err).not.to.be.undefined;
-    expect(err.stdout).to.equal(
+    expect(removeStyleFromText(err.stdout)).to.equal(
       `Setup Eyes-Cypress ${packageVersion}
 Cypress version: ${cypressVersion}
 Setup error:
@@ -169,7 +170,7 @@ No configuration file found at ${cypressConfigPath}. This is usually caused by s
     const [err, _result] = await presult(runSetupScript());
 
     expect(err).not.to.be.undefined;
-    expect(err.stdout).to.equal(
+    expect(removeStyleFromText(err.stdout)).to.equal(
       `Setup Eyes-Cypress ${packageVersion}
 Cypress version: ${cypressVersion}
 Setup error:
