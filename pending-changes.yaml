@@ -15,12 +15,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - Applied client's user-agent by default to resource requests in ufg mode
+    - 
   bug-fix:
-    - Fixed wrong signature of `closeBatch` function
-    - Blank missed frames src in ufg
-    - Fix an issue when ufg related requests were not sent through the proxy
-    - Fixed issue with logs not being saved/written
+    - 
 "@applitools/eyes-webdriverio":
   feature:
     - 
