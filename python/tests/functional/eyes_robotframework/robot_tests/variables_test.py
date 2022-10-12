@@ -41,7 +41,7 @@ def get_variables(
                 desired_caps.update(
                     {
                         "automationName": "UiAutomator2",
-                        "app": "https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk",
+                        "app": "storage:filename=eyes-android-hello-world-nmg.apk",
                         "clearSystemFiles": True,
                         "noReset": True,
                     }

@@ -182,9 +182,10 @@ def test_web_desktop(data, tmp_path):
 @pytest.mark.parametrize(
     "data",
     [
-        ["android", "mobile_native"],
         ["ios", "mobile_native"],
         ["ios", "native_mobile_grid"],
+        ["android", "mobile_native"],
+        ["android", "native_mobile_grid"],
     ],
     ids=lambda d: str(d),
 )

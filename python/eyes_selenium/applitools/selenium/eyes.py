@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 
+import json
 import typing
 from typing import List, Optional, Text, Tuple, Union
 
@@ -277,7 +278,9 @@ class Eyes(object):
             "env": ios_env_caps,
         }
         # for Android
-        caps["optionalIntentArguments"] = {"--es APPLITOOLS": env_caps}
+        caps["optionalIntentArguments"] = "--es APPLITOOLS '{}'".format(
+            json.dumps(env_caps, sort_keys=True)
+        )
 
     @property
     def is_open(self):

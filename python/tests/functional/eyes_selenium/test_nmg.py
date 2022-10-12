@@ -40,19 +40,15 @@ def test_nmg_ios_basic(sauce_driver_url):
         assert all_results.passed == 1
 
 
-@pytest.mark.skip("Skip until test working build of test app is available")
 @pytest.mark.sauce
 def test_nmg_android_basic(sauce_driver_url):
     caps = {
-        "app": "https://applitools.jfrog.io/artifactory/Examples/ufg-native-example.apk",
-        "deviceName": "Google Pixel 3a XL GoogleAPI Emulator",
-        "platformVersion": "10.0",
+        "app": "storage:filename=eyes-android-hello-world-nmg.apk",
         "platformName": "Android",
-        "clearSystemFiles": True,
-        "noReset": True,
+        "platformVersion": "11.0",
+        "deviceName": "Android GoogleAPI Emulator",
+        "deviceOrientation": "portrait",
         "automationName": "UiAutomator2",
-        "name": "Pixel 3a xl (Python)",
-        "appiumVersion": "1.20.2",
     }
     Eyes.set_nmg_capabilities(caps)
     with Remote(sauce_driver_url, caps) as driver:

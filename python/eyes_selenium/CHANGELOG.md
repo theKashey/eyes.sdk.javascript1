@@ -1,3 +1,7 @@
+## [vNext]
+### Fixed
+- Incorrect `optionalIntentArguments` value in `Eyes.set_nmg_capabilities` [GH-1128](/../../pull/1128)
+
 ## [5.12.2] - 2022-10-03
 ### Updated
 - Deprecated "CONTENT" match level value in favor of "IGNORE_COLORS" [Trello 78](https://trello.com/c/hDmn5WOD)

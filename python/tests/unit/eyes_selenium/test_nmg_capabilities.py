@@ -14,12 +14,15 @@ def test_android_nmg_capabilities():
     eyes.set_nmg_capabilities(caps, API_KEY, SERVER_URL, PROXY_SETTINGS)
 
     android_args = caps["optionalIntentArguments"]
-    assert android_args
-
-    android_envs = android_args["--es APPLITOOLS"]
-    assert android_envs["NML_API_KEY"] == API_KEY
-    assert android_envs["NML_SERVER_URL"] == SERVER_URL
-    assert android_envs["NML_PROXY_URL"] == PROXY_SETTINGS.url
+    assert (
+        android_args
+        == """--es APPLITOOLS '{"NML_API_KEY": "%s", "NML_PROXY_URL": "%s", "NML_SERVER_URL": "%s"}'"""
+        % (
+            API_KEY,
+            str(PROXY_SETTINGS.url),
+            SERVER_URL,
+        )
+    )
 
 
 def test_ios_nmg_capabilities():
