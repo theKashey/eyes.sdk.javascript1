@@ -72,7 +72,7 @@ export function makeRender({
       const results = await requests.checkRenderResults({renders: batch.map(([{render}]) => render), logger})
       results.forEach((result, index) => {
         const [{render, signal, timedOutAt}, {resolve, reject}] = batch[index]
-        if (result.status === 'error' || result.error) {
+        if (result.status === 'error') {
           logger?.error(`Render with id "${render.renderId}" failed due to an error - ${result.error}`)
           reject(new Error(`Render with id "${render.renderId}" failed due to an error - ${result.error}`))
         } else if (result.status === 'rendered') {

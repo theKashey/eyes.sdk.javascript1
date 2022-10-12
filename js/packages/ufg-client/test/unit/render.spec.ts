@@ -126,6 +126,36 @@ describe('render', () => {
     await assert.rejects(renderPromise, error => error.message.startsWith('Got unexpected status'))
   })
 
+  it('does not throw if receives error without an error status', async () => {
+    const checkRenderResultsCalls = {} as Record<string, number>
+    const render = makeRender({
+      requests: {
+        async startRenders({requests}) {
+          return requests.map((_, index) => {
+            return {renderId: `${index + 1}`} as any
+          })
+        },
+        async checkRenderResults({renders}) {
+          return renders.map(render => {
+            checkRenderResultsCalls[render.renderId] ??= 0
+            checkRenderResultsCalls[render.renderId] += 1
+            return {
+              renderId: render.renderId,
+              status: checkRenderResultsCalls[render.renderId] <= 3 ? 'rendering' : 'rendered',
+              error: checkRenderResultsCalls[render.renderId] >= 2 ? 'internal error' : undefined,
+            }
+          })
+        },
+      } as UFGRequests,
+      batchingTimeout: 10,
+    })
+
+    const render1Promise = render({request: createRenderRequest('page1')})
+    const render2Promise = render({request: createRenderRequest('page2')})
+    await assert.doesNotReject(render1Promise)
+    await assert.doesNotReject(render2Promise)
+  })
+
   it('batches multiple calls in one request', async () => {
     const renderCalls = [] as RenderRequest[][]
     const render = makeRender({
