@@ -146,6 +146,7 @@ export interface AccountInfo {
     serverUrl: string // serviceUrl
     accessToken: string // accessToken
   }
+  rcaEnabled: boolean
   stitchingServiceUrl: string
   uploadUrl: string // resultsUrl
   maxImageHeight: number
@@ -171,7 +172,7 @@ export interface ImageSettings<TRegion = Region> {
   debugImages?: {path: string; prefix?: string}
 }
 
-type MatchLevel = 'None' | 'Layout1' | 'Layout' | 'Layout2' | 'Content' | 'IgnoreColors' | 'Strict' | 'Exact'
+type MatchLevel = 'None' | 'Layout' | 'Layout1' | 'Layout2' | 'Content' | 'IgnoreColors' | 'Strict' | 'Exact'
 type AccessibilityRegionType = 'IgnoreContrast' | 'RegularText' | 'LargeText' | 'BoldText' | 'GraphicalObject'
 type AccessibilityLevel = 'AA' | 'AAA'
 type AccessibilityGuidelinesVersion = 'WCAG_2_0' | 'WCAG_2_1'

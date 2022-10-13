@@ -7,7 +7,7 @@ import chalk from 'chalk'
 
 type Options<TDriver, TElement, TSelector> = {
   eyes: ClassicEyes<TDriver, TElement, TSelector> | UFGEyes<TDriver, TElement, TSelector>
-  logger: Logger
+  logger?: Logger
 }
 
 export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' | 'ufg'>({
@@ -34,7 +34,8 @@ export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' 
     settings.overlap ??= {top: 10, bottom: 50}
     settings.matchLevel ??= 'Strict'
     settings.ignoreCaret ??= true
-    settings.sendDom ??= true
+    settings.sendDom ??=
+      eyes.test.account.rcaEnabled || settings.matchLevel === 'Layout' || settings.enablePatterns || settings.useDom
     settings.useDom ??= false
     ;(settings as CheckSettings<TElement, TSelector, 'classic'>).retryTimeout ??= 2000
     settings.lazyLoad = settings.lazyLoad === true ? {} : settings.lazyLoad

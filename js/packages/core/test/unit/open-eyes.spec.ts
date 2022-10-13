@@ -2,8 +2,8 @@ import {makeFakeCore} from '../utils/fake-base-core'
 import {makeOpenEyes} from '../../src/open-eyes'
 import assert from 'assert'
 
-describe('open', () => {
-  it('should populate config from environment variables', async () => {
+describe('open-eyes', () => {
+  it('should populate settings from environment variables', async () => {
     const originalEnv = process.env
     try {
       const fakeCore = makeFakeCore({
@@ -43,19 +43,17 @@ describe('open', () => {
     }
   })
 
-  it('should populate userTestId', () => {
-    it('should populate agentRunId', async () => {
-      const fakeCore = makeFakeCore({
-        hooks: {
-          openEyes({settings}) {
-            const [testName, _random] = settings.userTestId.split('--')
-            assert.strictEqual(testName, settings.testName)
-          },
+  it('should populate userTestId', async () => {
+    const fakeCore = makeFakeCore({
+      hooks: {
+        openEyes({settings}) {
+          const [testName, _random] = settings.userTestId.split('--')
+          assert.strictEqual(testName, settings.testName)
         },
-      })
-      const openEyes = makeOpenEyes({core: fakeCore})
-
-      await openEyes({type: 'classic', settings: {testName: 'test-name'}})
+      },
     })
+    const openEyes = makeOpenEyes({core: fakeCore})
+
+    await openEyes({type: 'classic', settings: {testName: 'test-name'}})
   })
 })

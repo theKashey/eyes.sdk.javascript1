@@ -2,7 +2,7 @@ import type {Core as BaseCore} from '@applitools/core-base'
 import * as utils from '@applitools/utils'
 import EventEmitter from 'events'
 
-export function makeFakeCore({hooks}: any = {}): BaseCore & EventEmitter {
+export function makeFakeCore({hooks, account = {}}: any = {}): BaseCore & EventEmitter {
   const emitter = new EventEmitter()
   return <any>{
     on: emitter.on.bind(emitter),
@@ -28,7 +28,7 @@ export function makeFakeCore({hooks}: any = {}): BaseCore & EventEmitter {
         let aborted = false
         let closed = false
         return {
-          test: {isNew: true},
+          test: {isNew: true, account},
           get running() {
             return !closed && !aborted
           },

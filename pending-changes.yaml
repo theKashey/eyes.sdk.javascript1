@@ -10,22 +10,24 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-selenium":
   feature:
+    - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-webdriverio":
   feature:
+    - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-playwright":
   feature:
-    - 
+    - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-protractor":
@@ -41,7 +43,7 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 "@applitools/eyes-puppeteer":
   feature:
-    - 
+    - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-testcafe":
@@ -54,13 +56,14 @@ Apollo SDK:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
   feature:
+    - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-storybook":
