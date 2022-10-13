@@ -98,10 +98,24 @@ jobs:
         with:
           workflow: publish-snippets.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).snippets.version}}"}'
+  image:
+    needs: [ setup, utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).image && !failure() && !cancelled()}}
+    name: image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-image.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).image.version}}"}'
   screenshoter:
     needs:
       [
         setup,
+        image,
         logger,
         snippets,
         utils,
@@ -164,7 +178,7 @@ jobs:
 
   # CORE
   core-base:
-    needs: [ setup, logger, req, utils, test-utils ]
+    needs: [ setup, image, logger, req, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).core-base && !failure() && !cancelled()}}
     name: core-base
     runs-on: ubuntu-latest
