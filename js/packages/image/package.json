@@ -44,13 +44,13 @@
     "postversion": "bongo postversion --skip-release-notification"
   },
   "dependencies": {
-    "@applitools/utils": "1.3.12",
+    "@applitools/utils": "1.3.13",
     "jpeg-js": "0.4.4",
     "png-async": "0.9.4"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
-    "@applitools/scripts": "^1.1.0",
+    "@applitools/scripts": "^1.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
     "@types/pixelmatch": "^5.2.4",
