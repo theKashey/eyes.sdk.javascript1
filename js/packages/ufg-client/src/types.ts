@@ -201,6 +201,7 @@ export type AndroidDevice =
   | 'Galaxy Tab S8'
   | 'Xiaomi Redmi Note 11'
   | 'Xiaomi Redmi Note 11 Pro'
+  | 'Sony Xperia 10 II'
 export type AndroidVersion = 'latest' | 'latest-1'
 export type AndroidDeviceRenderer = {
   androidDeviceInfo: {

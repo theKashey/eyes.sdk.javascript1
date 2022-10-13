@@ -25,6 +25,7 @@ export enum AndroidDeviceNameEnum {
   Galaxy_Tab_S8 = 'Galaxy Tab S8',
   Xiaomi_Redmi_Note_11 = 'Xiaomi Redmi Note 11',
   Xiaomi_Redmi_Note_11_Pro = 'Xiaomi Redmi Note 11 Pro',
+  Sony_Xperia_10_II = 'Sony Xperia 10 II',
 }
 
 export type AndroidDeviceName = `${AndroidDeviceNameEnum}`

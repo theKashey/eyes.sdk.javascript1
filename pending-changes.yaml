@@ -15,12 +15,12 @@ Apollo SDK:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-playwright":
@@ -54,7 +54,7 @@ Apollo SDK:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
   feature:
-    - 
+    - Added new android device `Sony Xperia 10 II`
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently

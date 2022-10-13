@@ -4,7 +4,7 @@ export enum MatchLevelEnum {
   Layout = 'Layout',
   Layout2 = 'Layout2',
   Content = 'Content',
-  IgnoreColor = 'IgnoreColor',
+  IgnoreColors = 'IgnoreColors',
   Strict = 'Strict',
   Exact = 'Exact',
 }
