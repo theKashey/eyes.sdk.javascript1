@@ -70,7 +70,7 @@
   },
   "dependencies": {
     "@applitools/core": "1.1.5",
-    "@applitools/driver": "^1.10.5",
+    "@applitools/driver": "1.10.5",
     "@applitools/execution-grid-client": "1.1.29",
     "@applitools/eyes-sdk-core": "13.11.6",
     "@applitools/logger": "1.1.26",
