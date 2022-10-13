@@ -11,6 +11,7 @@ Apollo SDK:
 "@applitools/eyes-universal":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
+    - Increased time to spawn server process programmatically
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-selenium":
@@ -66,6 +67,7 @@ Apollo SDK:
     - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
+    - Fixed issue with universal process spawning is failing due to a timeout
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

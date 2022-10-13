@@ -14,7 +14,7 @@ export function makeServerProcess(
     const timeout = setTimeout(() => {
       reject(new Error(`Server didn't respond for 10s after being started`))
       server.kill()
-    }, 10000)
+    }, 60000)
 
     server.on('error', reject)
 
