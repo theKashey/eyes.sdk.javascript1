@@ -1,5 +1,6 @@
+import type {Size} from '@applitools/utils'
 import type * as Puppeteer from 'puppeteer'
-import {type Size, type Cookie, type DriverInfo} from '@applitools/driver'
+import {type Cookie, type DriverInfo} from '@applitools/driver'
 import * as utils from '@applitools/utils'
 
 export type Driver = Puppeteer.Page & {__applitoolsBrand?: never}

@@ -1,5 +1,6 @@
+import type {Size} from '@applitools/utils'
 import type * as Playwright from 'playwright'
-import {type Size, type Cookie, type DriverInfo} from '@applitools/driver'
+import {type Cookie, type DriverInfo} from '@applitools/driver'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
