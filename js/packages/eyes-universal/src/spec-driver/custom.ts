@@ -1,23 +1,31 @@
-import type * as types from '@applitools/types'
+import type {Region, Size} from '@applitools/utils'
+import type {Ref, ServerSocket, UniversalSpecDriver} from '../types'
+import {
+  type SpecDriver,
+  type Selector as DriverSelector,
+  type Cookie,
+  type DriverInfo,
+  type WaitOptions,
+} from '@applitools/driver'
 import * as utils from '@applitools/utils'
 
-export type Driver = types.Ref
-export type Context = types.Ref
-export type Element = types.Ref
-export type Selector = types.Selector<types.Ref>
-
-type SpecDriver = Omit<
-  types.SpecDriver<Driver, Context, Element, Selector>,
-  'transformDriver' | 'transformElement' | 'transformSelector' | 'untransformSelector'
->
+export type Driver = Ref
+export type Context = Ref
+export type Element = Ref
+export type Selector = DriverSelector<Ref>
 
 export function makeSpec(options: {
-  socket: types.ServerSocket<Driver, Context, Element, Selector>
-  commands: (keyof SpecDriver)[]
-}): types.SpecDriver<Driver, Context, Element, Selector> {
+  socket: ServerSocket<Driver, Context, Element, Selector>
+  commands: (keyof UniversalSpecDriver<Driver, Context, Element, Selector>)[]
+}): SpecDriver<Driver, Context, Element, Selector> {
   const {socket, commands} = options
 
-  const spec: Required<SpecDriver> = {
+  const spec: Required<
+    Omit<
+      SpecDriver<Driver, Context, Element, Selector>,
+      'transformDriver' | 'transformElement' | 'transformSelector' | 'untransformSelector'
+    >
+  > = {
     // #region UTILITY
     isDriver(driver: any): driver is Driver {
       return utils.types.has(driver, 'applitools-ref-id')
@@ -70,25 +78,25 @@ export function makeSpec(options: {
     async findElements(context: Context, selector: Selector, parent?: Element): Promise<Element[]> {
       return socket.request('Driver.findElements', {context, selector, parent})
     },
-    async getWindowSize(driver: Driver): Promise<types.Size> {
+    async getWindowSize(driver: Driver): Promise<Size> {
       return socket.request('Driver.getWindowSize', {driver})
     },
-    async setWindowSize(driver: Driver, size: types.Size): Promise<void> {
+    async setWindowSize(driver: Driver, size: Size): Promise<void> {
       return socket.request('Driver.setWindowSize', {driver, size})
     },
-    async getViewportSize(driver: Driver): Promise<types.Size> {
+    async getViewportSize(driver: Driver): Promise<Size> {
       return socket.request('Driver.getViewportSize', {driver})
     },
-    async setViewportSize(driver: Driver, size: types.Size): Promise<void> {
+    async setViewportSize(driver: Driver, size: Size): Promise<void> {
       return socket.request('Driver.setViewportSize', {driver, size})
     },
-    async getCookies(driver: Driver, context?: boolean): Promise<types.Cookie[]> {
+    async getCookies(driver: Driver, context?: boolean): Promise<Cookie[]> {
       return socket.request('Driver.getCookies', {driver, context})
     },
     async getCapabilities(driver: Driver): Promise<Record<string, any>> {
       return socket.request('Driver.getCapabilities', {driver})
     },
-    async getDriverInfo(driver: Driver): Promise<types.DriverInfo> {
+    async getDriverInfo(driver: Driver): Promise<DriverInfo> {
       return socket.request('Driver.getDriverInfo', {driver})
     },
     async getTitle(driver: Driver): Promise<string> {
@@ -113,7 +121,7 @@ export function makeSpec(options: {
       _context: Context,
       _selector: Selector,
       _parent?: Element,
-      _options?: types.WaitOptions,
+      _options?: WaitOptions,
     ): Promise<Element | null> {
       // do nothing
       return
@@ -135,7 +143,7 @@ export function makeSpec(options: {
     async setOrientation(driver: Driver, orientation: 'portrait' | 'landscape'): Promise<void> {
       return socket.request('Driver.setOrientation', {driver, orientation})
     },
-    async getElementRegion(driver: Driver, element: Element): Promise<types.Region> {
+    async getElementRegion(driver: Driver, element: Element): Promise<Region> {
       return socket.request('Driver.getElementRegion', {driver, element})
     },
     async getElementAttribute(driver: Driver, element: Element, attr: string): Promise<string> {
@@ -148,9 +156,15 @@ export function makeSpec(options: {
       return socket.request('Driver.performAction', {driver, steps})
     },
     /* eslint-disable @typescript-eslint/no-empty-function */
-    async getCurrentWorld(): Promise<void> {},
-    async getWorlds(): Promise<void> {},
-    async switchWorld(): Promise<void> {},
+    async getCurrentWorld(driver: Driver): Promise<string> {
+      return socket.request('Driver.getCurrentWorld', {driver})
+    },
+    async getWorlds(driver: Driver): Promise<string[]> {
+      return socket.request('Driver.getWorlds', {driver})
+    },
+    async switchWorld(driver: Driver, name: string): Promise<void> {
+      return socket.request('Driver.switchWorld', {driver, name})
+    },
     /* eslint-enable @typescript-eslint/no-empty-function*/
 
     // #endregion
@@ -158,5 +172,5 @@ export function makeSpec(options: {
 
   return commands.reduce((commands, name) => {
     return Object.assign(commands, {[name]: spec[name]})
-  }, {} as types.SpecDriver<Driver, Context, Element, Selector>)
+  }, {} as SpecDriver<Driver, Context, Element, Selector>)
 }

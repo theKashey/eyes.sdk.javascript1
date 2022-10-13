@@ -1,4 +1,3 @@
-import type {Proxy} from '@applitools/types'
 import {parse as urlToHttpOptions} from 'url' // should be replaced with `urlToHttpOptions` after supporting node >=16
 import {AbortController} from 'abort-controller'
 import {Agent as HttpsAgent} from 'https'
@@ -94,6 +93,12 @@ export type Retry = {
    * @internal
    */
   attempt?: number
+}
+
+export type Proxy = {
+  url: string
+  username?: string
+  password?: string
 }
 
 export type Hooks<TOptions extends Options = Options> = {

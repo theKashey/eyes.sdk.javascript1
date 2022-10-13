@@ -1,9 +1,3 @@
-export type Location = {x: number; y: number}
-
-export type Size = {width: number; height: number}
-
-export type Region = Location & Size
-
 export type ScreenOrientation = 'portrait' | 'landscape' | 'portrait-secondary' | 'landscape-secondary'
 
 export type Cookie = {

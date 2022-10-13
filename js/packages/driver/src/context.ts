@@ -1,4 +1,5 @@
-import type {Location, Size, Region, Cookie} from './types'
+import type {Location, Size, Region} from '@applitools/utils'
+import type {Cookie} from './types'
 import {type SpecDriver, type WaitOptions} from './spec-driver'
 import {type Driver} from './driver'
 import {type Selector} from './selector'

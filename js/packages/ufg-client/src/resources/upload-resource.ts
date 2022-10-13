@@ -1,6 +1,6 @@
 import {type Logger} from '@applitools/logger'
 import {type ContentfulResource} from './resource'
-import {type UFGRequests} from './server/requests'
+import {type UFGRequests} from '../server/requests'
 import * as utils from '@applitools/utils'
 import throat from 'throat'
 

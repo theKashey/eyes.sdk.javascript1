@@ -1,5 +1,5 @@
+import type {Size} from '@applitools/utils'
 import {type DriverInfo} from './spec-driver'
-import {type Size} from './types'
 
 type Capabilities = Record<string, any>
 

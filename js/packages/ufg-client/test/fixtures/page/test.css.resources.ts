@@ -1,5 +1,5 @@
 import {readFileSync} from 'fs'
-import {makeResource} from '../../../src/resource'
+import {makeResource} from '../../../src/resources/resource'
 
 export function makeFixtureResources({baseUrl}: {baseUrl: string}) {
   const cssName = 'test.css'

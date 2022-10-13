@@ -1,7 +1,7 @@
-import type {Renderer} from '@applitools/types'
-import type {Eyes as BaseEyes} from '@applitools/types/base'
-import type {CloseSettings, TestResult} from '@applitools/types/ufg'
+import type {CloseSettings, TestResult} from './types'
+import type {Eyes as BaseEyes} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
+import {type Renderer} from '@applitools/ufg-client'
 
 type Options = {
   storage: {renderer: Renderer; promise: Promise<{eyes: BaseEyes; renderer: Renderer}>}[]

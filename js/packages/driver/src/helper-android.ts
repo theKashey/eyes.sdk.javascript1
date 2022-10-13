@@ -1,4 +1,4 @@
-import type {Location, Region} from './types'
+import type {Location, Region} from '@applitools/utils'
 import {type SpecDriver} from './spec-driver'
 import {type Driver} from './driver'
 import {type Element} from './element'

@@ -1,4 +1,5 @@
-import type {Size, Region, Cookie} from '@applitools/types'
+import type {Size, Region} from '@applitools/utils'
+import {type Cookie, type ScreenOrientation} from '@applitools/driver'
 import * as utils from '@applitools/utils'
 
 export type Driver = Applitools.WebdriverIO.Browser & {__applitoolsBrand?: never}
@@ -335,11 +336,11 @@ export async function getSystemBars(browser: Driver): Promise<{
 }> {
   return browser.getSystemBars() as any
 }
-export async function getOrientation(browser: Driver): Promise<'portrait' | 'landscape'> {
+export async function getOrientation(browser: Driver): Promise<ScreenOrientation> {
   const orientation = await browser.getOrientation()
-  return orientation.toLowerCase() as 'portrait' | 'landscape'
+  return orientation.toLowerCase() as ScreenOrientation
 }
-export async function setOrientation(browser: Driver, orientation: 'portrait' | 'landscape') {
+export async function setOrientation(browser: Driver, orientation: ScreenOrientation) {
   return await browser.setOrientation(orientation)
 }
 export async function getElementRegion(browser: Driver, element: Element): Promise<Region> {

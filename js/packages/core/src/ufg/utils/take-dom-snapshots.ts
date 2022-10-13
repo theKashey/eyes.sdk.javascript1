@@ -1,7 +1,13 @@
-import type {Size, Renderer, ChromeEmulationDevice, IOSDevice, ScreenOrientation} from '@applitools/types'
-import type {DomSnapshot} from '@applitools/types/ufg'
+import type {Size} from '@applitools/utils'
 import {type Logger} from '@applitools/logger'
 import {type Driver} from '@applitools/driver'
+import {
+  type DomSnapshot,
+  type Renderer,
+  type ChromeEmulationDevice,
+  type IOSDevice,
+  type ScreenOrientation,
+} from '@applitools/ufg-client'
 import {takeDomSnapshot, type DomSnapshotSettings} from './take-dom-snapshot'
 import * as utils from '@applitools/utils'
 import chalk from 'chalk'

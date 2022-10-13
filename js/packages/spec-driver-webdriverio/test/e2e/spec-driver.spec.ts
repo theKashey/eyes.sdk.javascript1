@@ -1,4 +1,4 @@
-import type {Size, Cookie} from '@applitools/types'
+import {type Size, type Cookie} from '@applitools/driver'
 import assert from 'assert'
 import * as spec from '../../src'
 import * as utils from '@applitools/utils'
@@ -94,7 +94,7 @@ describe('spec driver', async () => {
     })
     it('untransformSelector(common-selector)', async () => {
       const selector = {selector: '.element', type: 'css'}
-      await untransformSelector({input: selector, expected: selector})
+      await untransformSelector({input: selector as any, expected: selector})
     })
     it('extractSelector(element)', async () => {
       await extractSelector({
@@ -246,7 +246,7 @@ describe('spec driver', async () => {
     })
     it('untransformSelector(common-selector)', async () => {
       const selector = {selector: '.element', type: 'css'}
-      await untransformSelector({input: selector, expected: selector})
+      await untransformSelector({input: selector as any, expected: selector})
     })
     it('extractSelector(element)', async () => {
       await extractSelector({
@@ -460,7 +460,7 @@ describe('spec driver', async () => {
     input,
     expected,
   }: {
-    input: spec.Selector | {selector: spec.Selector} | {type: string; selector: string} | string
+    input: spec.Selector
     expected: {type?: string; selector: string} | string | null
   }) {
     assert.deepStrictEqual(spec.untransformSelector(input), expected)
@@ -537,10 +537,10 @@ describe('spec driver', async () => {
     input,
     expected,
   }: {
-    input: {selector: spec.Selector; parent?: spec.Element}
-    expected?: spec.Element
+    input: {selector: Applitools.WebdriverIO.Selector; parent?: Applitools.WebdriverIO.Element}
+    expected?: spec.Element | null
   }) {
-    const root = (input.parent as any) ?? browser
+    const root = input.parent ?? browser
     expected = expected === undefined ? await root.$(input.selector) : expected
     const element = await spec.findElement(browser, input.selector, input.parent)
     if (element !== expected) {
@@ -551,10 +551,10 @@ describe('spec driver', async () => {
     input,
     expected,
   }: {
-    input: {selector: spec.Selector; parent?: spec.Element}
+    input: {selector: Applitools.WebdriverIO.Selector; parent?: Applitools.WebdriverIO.Element}
     expected?: spec.Element[]
   }) {
-    const root = (input.parent as any) ?? browser
+    const root = input.parent ?? browser
     expected = expected === undefined ? await root.$$(input.selector) : expected
     const elements = await spec.findElements(browser, input.selector, input.parent)
     assert.strictEqual(elements.length, (expected as any).length)

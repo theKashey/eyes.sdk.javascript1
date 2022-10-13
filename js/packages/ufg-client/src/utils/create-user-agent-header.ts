@@ -1,4 +1,4 @@
-import type {Renderer} from '@applitools/types'
+import type {Renderer} from '../types'
 import * as utils from '@applitools/utils'
 
 const userAgents = {

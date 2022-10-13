@@ -1,4 +1,5 @@
-import type {Location, Size, Region, ScreenOrientation, Cookie} from './types'
+import type {Location, Size, Region} from '@applitools/utils'
+import type {ScreenOrientation, Cookie} from './types'
 import {type Selector} from './selector'
 
 export type DriverInfo = {

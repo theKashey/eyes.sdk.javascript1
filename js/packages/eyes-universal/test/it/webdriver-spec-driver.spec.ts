@@ -1,4 +1,5 @@
-import type {Size, Cookie} from '@applitools/types'
+import type {Size} from '@applitools/utils'
+import {type Cookie} from '@applitools/driver'
 import assert from 'assert'
 import * as spec from '../../src/spec-driver/webdriver'
 import * as utils from '@applitools/utils'

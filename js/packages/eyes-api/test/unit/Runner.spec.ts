@@ -1,11 +1,11 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import {strict as assert} from 'assert'
 import * as api from '../../src'
 
 const makeSDK = require('../utils/fake-sdk')
 
 describe('Runner', () => {
-  let sdk: types.Core<any, any, any> & {history: Record<string, any>[]; settings: Record<string, any>}
+  let sdk: core.Core<any, any, any> & {history: Record<string, any>[]; settings: Record<string, any>}
   const driver = {isDriver: true}
 
   class Eyes extends api.Eyes {

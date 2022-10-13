@@ -1,4 +1,4 @@
-import type {SpecDriver} from '@applitools/types'
+import {type SpecDriver} from '@applitools/driver'
 import * as spec from './spec-driver'
 
 export * from './spec-driver'

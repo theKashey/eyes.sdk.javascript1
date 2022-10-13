@@ -1,4 +1,4 @@
-import type {Cookie} from '@applitools/types'
+import type {Cookie} from '../types'
 
 export function createCookieHeader({url, cookies = []}: {url: string; cookies: Cookie[]}) {
   const resourceUrl = new URL(url)

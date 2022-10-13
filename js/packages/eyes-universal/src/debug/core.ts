@@ -1,5 +1,5 @@
-import type * as types from '@applitools/types'
+import type {Core} from '@applitools/core/types'
 
-export function makeDebugCore<TDriver, TElement, TSelector>(): types.Core<TDriver, TElement, TSelector> {
+export function makeDebugCore<TDriver, TElement, TSelector>(): Core<TDriver, TElement, TSelector> {
   return {} as any
 }

@@ -1,7 +1,14 @@
-import type {Size, ChromeEmulationDevice, IOSDevice, ScreenOrientation} from '@applitools/types'
-import type {DomSnapshot, AndroidVHS, IOSVHS} from '@applitools/types/ufg'
+import type {Size} from '@applitools/utils'
 import {type Logger} from '@applitools/logger'
 import {type Driver} from '@applitools/driver'
+import {
+  type DomSnapshot,
+  type AndroidSnapshot,
+  type IOSSnapshot,
+  type ChromeEmulationDevice,
+  type IOSDevice,
+  type ScreenOrientation,
+} from '@applitools/ufg-client'
 import {takeDomSnapshots, type DomSnapshotsSettings} from './take-dom-snapshots'
 import {takeVHSes, type VHSesSettings} from './take-vhses'
 import {takeSnapshots as takeSnapshotsWithNml} from '@applitools/nml-client'
@@ -25,7 +32,7 @@ export async function takeSnapshots<TDriver extends Driver<unknown, unknown, unk
     getIOSDevices(): Promise<Record<IOSDevice, Record<ScreenOrientation, Size>>>
   }
   logger?: Logger
-}): Promise<DomSnapshot[] | AndroidVHS[] | IOSVHS[]> {
+}): Promise<DomSnapshot[] | AndroidSnapshot[] | IOSSnapshot[]> {
   if (driver.isWeb) {
     return takeDomSnapshots({driver, settings, hooks, provides, logger})
   } else {

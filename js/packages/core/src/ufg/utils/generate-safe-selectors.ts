@@ -1,5 +1,4 @@
-import type {Selector} from '@applitools/types'
-import {type Context, type Element} from '@applitools/driver'
+import {type Context, type Element, type Selector} from '@applitools/driver'
 import * as snippets from '@applitools/snippets'
 import * as utils from '@applitools/utils'
 

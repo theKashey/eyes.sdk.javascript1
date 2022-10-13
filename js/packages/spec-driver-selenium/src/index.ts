@@ -1,4 +1,4 @@
-import type {SpecDriver} from '@applitools/types'
+import {type SpecDriver} from '@applitools/driver'
 import * as spec from './spec-driver'
 
 if (!process.env.APPLITOOLS_SELENIUM_MAJOR_VERSION) {

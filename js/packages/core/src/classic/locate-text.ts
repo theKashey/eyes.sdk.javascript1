@@ -1,8 +1,7 @@
-import type {SpecDriver, TextRegion} from '@applitools/types'
-import type {Eyes as BaseEyes, Target as BaseTarget, LocateTextSettings as BaseLocateTextSettings} from '@applitools/types/base'
-import type {Target, LocateTextSettings} from '@applitools/types/classic'
+import type {Target, LocateTextSettings, LocateTextResult} from './types'
+import type {Eyes as BaseEyes, Target as BaseTarget, LocateTextSettings as BaseLocateTextSettings} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
-import {makeDriver} from '@applitools/driver'
+import {makeDriver, type SpecDriver} from '@applitools/driver'
 import {takeScreenshot} from '../automation/utils/take-screenshot'
 import {takeDomCapture} from './utils/take-dom-capture'
 import * as utils from '@applitools/utils'
@@ -28,7 +27,7 @@ export function makeLocateText<TDriver, TContext, TElement, TSelector>({
     target?: Target<TDriver>
     settings?: LocateTextSettings<TPattern, TElement, TSelector>
     logger?: Logger
-  } = {}): Promise<Record<TPattern, TextRegion[]>> {
+  } = {}): Promise<LocateTextResult<TPattern>> {
     logger.log('Command "check" is called with settings', settings)
     if (!spec.isDriver(target)) {
       return eyes.locateText({target, settings: settings as BaseLocateTextSettings<TPattern>, logger})

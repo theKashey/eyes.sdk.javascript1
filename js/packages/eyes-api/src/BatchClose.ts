@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
 import {ProxySettings} from './input/ProxySettings'
 
@@ -9,7 +9,7 @@ type BatchCloseOptions = {
   proxy?: ProxySettings
 }
 
-type BatchCloseSpec = Pick<types.Core<unknown, unknown, unknown>, 'closeBatch'>
+type BatchCloseSpec = Pick<core.Core<unknown, unknown, unknown>, 'closeBatch'>
 
 export function closeBatch(spec: BatchCloseSpec): (options: BatchCloseOptions) => Promise<void> {
   return (settings: BatchCloseOptions) => {

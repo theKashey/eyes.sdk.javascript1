@@ -1,5 +1,5 @@
-import type {Region} from '@applitools/types'
-import {ScreenshotSettings} from '@applitools/types/classic'
+import type {Region} from '@applitools/utils'
+import type {ScreenshotSettings} from '../../classic/types'
 import {type Logger} from '@applitools/logger'
 import {type Driver, type Element} from '@applitools/driver'
 import {takeScreenshot as legacyTakeScreenshot} from '@applitools/screenshoter'

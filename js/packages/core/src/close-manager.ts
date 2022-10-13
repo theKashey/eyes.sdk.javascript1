@@ -1,5 +1,5 @@
-import type {Eyes, CloseBatchSettings, TestResult, TestResultContainer, TestResultSummary} from '@applitools/types'
-import type {Core as BaseCore} from '@applitools/types/base'
+import type {Eyes, CloseBatchSettings, TestResult, TestResultContainer, TestResultSummary} from './types'
+import type {Core as BaseCore} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
 import {TestError} from './errors/test-error'
 import {InternalError} from './errors/internal-error'

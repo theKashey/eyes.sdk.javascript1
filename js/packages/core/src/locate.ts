@@ -1,7 +1,9 @@
-import type {Region, SpecDriver, Config, LocateSettings} from '@applitools/types'
-import type {Core as BaseCore} from '@applitools/types/base'
-import type {Screenshot} from '@applitools/types/classic'
+import type {Region} from '@applitools/utils'
+import type {Config, LocateSettings} from './types'
+import type {Core as BaseCore} from '@applitools/core-base'
+import type {Screenshot} from './classic/types'
 import {type Logger} from '@applitools/logger'
+import {type SpecDriver} from '@applitools/driver'
 import {makeCore as makeClassicCore} from './classic/core'
 import * as utils from '@applitools/utils'
 

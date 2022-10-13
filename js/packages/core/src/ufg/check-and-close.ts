@@ -1,7 +1,7 @@
-import type {SpecDriver} from '@applitools/types'
-import type {Eyes as BaseEyes} from '@applitools/types/base'
-import type {Target, TestInfo} from '@applitools/types/ufg'
+import type {Target, TestInfo} from './types'
+import type {Eyes as BaseEyes} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
+import {type SpecDriver} from '@applitools/driver'
 import {type UFGClient} from '@applitools/ufg-client'
 
 type Options<TDriver, TContext, TElement, TSelector> = {

@@ -1,6 +1,6 @@
 import {readFileSync} from 'fs'
-import {makeResource} from '../../../../src/resource'
-import {makeResourceDom} from '../../../../src/resource-dom'
+import {makeResource} from '../../../../src/resources/resource'
+import {makeResourceDom} from '../../../../src/resources/resource-dom'
 
 export function makeFixtureResource({baseUrl}: {baseUrl: string}) {
   const jpgName1 = 'smurfs.jpg'

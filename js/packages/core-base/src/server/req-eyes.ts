@@ -1,5 +1,13 @@
-import {Proxy} from '@applitools/types'
-import globalReq, {makeReq, mergeOptions, Request, type Req, type Options, type Hooks, type Fetch} from '@applitools/req'
+import globalReq, {
+  makeReq,
+  mergeOptions,
+  Request,
+  type Req,
+  type Options,
+  type Proxy,
+  type Hooks,
+  type Fetch,
+} from '@applitools/req'
 import {Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 

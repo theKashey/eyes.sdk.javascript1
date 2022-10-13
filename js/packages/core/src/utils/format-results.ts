@@ -1,4 +1,4 @@
-import type {TestResult} from '@applitools/types/base'
+import type {TestResult} from '@applitools/core-base'
 
 const OK = 'ok'
 const NOT_OK = 'not ok'

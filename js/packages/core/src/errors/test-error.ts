@@ -1,4 +1,4 @@
-import type {TestResult} from '@applitools/types/base'
+import type {TestResult} from '@applitools/core-base'
 import {CoreError} from '@applitools/core-base'
 
 export class TestError extends CoreError {

@@ -1,4 +1,4 @@
-import {type Size} from '../types'
+import type {Size} from '@applitools/utils'
 import {type DriverInfo} from '../spec-driver'
 import * as utils from '@applitools/utils'
 

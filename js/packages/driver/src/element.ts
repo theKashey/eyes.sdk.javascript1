@@ -1,4 +1,4 @@
-import type {Location, Size, Region} from './types'
+import type {Location, Size, Region} from '@applitools/utils'
 import {type SpecDriver} from './spec-driver'
 import {type Context} from './context'
 import {type Selector} from './selector'

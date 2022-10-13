@@ -1,6 +1,5 @@
-import type {Proxy} from '@applitools/types'
 import {type Logger} from '@applitools/logger'
-import {makeReq, type Req, type Options, type Hooks} from '@applitools/req'
+import {makeReq, type Req, type Options, type Proxy, type Hooks} from '@applitools/req'
 import * as utils from '@applitools/utils'
 
 export type ReqUFGConfig = {

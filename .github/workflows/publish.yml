@@ -46,19 +46,6 @@ jobs:
           release-version: ${{github.event.inputs.version}}
 
   # INTERNAL
-  types:
-    needs: [ setup ]
-    if: ${{fromJSON(needs.setup.outputs.packages).types && !failure() && !cancelled()}}
-    name: types
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v3
-      - name: Run remote workflow
-        uses: ./.github/actions/run
-        with:
-          workflow: publish-types.yml
-          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).types.version}}"}'
   utils:
     needs: [ setup ]
     if: ${{fromJSON(needs.setup.outputs.packages).utils && !failure() && !cancelled()}}
@@ -73,7 +60,7 @@ jobs:
           workflow: publish-utils.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).utils.version}}"}'
   logger:
-    needs: [ setup, types, utils ]
+    needs: [ setup, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).logger && !failure() && !cancelled()}}
     name: logger
     runs-on: ubuntu-latest
@@ -86,7 +73,7 @@ jobs:
           workflow: publish-logger.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).logger.version}}"}'
   req:
-    needs: [ setup, types, utils ]
+    needs: [ setup, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).req && !failure() && !cancelled()}}
     name: req
     runs-on: ubuntu-latest
@@ -134,7 +121,7 @@ jobs:
           workflow: publish-screenshoter.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).screenshoter.version}}"}'
   driver:
-    needs: [ setup, logger, snippets, types, utils ]
+    needs: [ setup, logger, snippets, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).driver && !failure() && !cancelled()}}
     name: driver
     runs-on: ubuntu-latest
@@ -177,7 +164,7 @@ jobs:
 
   # CORE
   core-base:
-    needs: [ setup, logger, req, types, utils, test-utils ]
+    needs: [ setup, logger, req, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).core-base && !failure() && !cancelled()}}
     name: core-base
     runs-on: ubuntu-latest
@@ -200,11 +187,11 @@ jobs:
         req,
         screenshoter,
         snippets,
-        types,
         ufg-client,
         utils,
         spec-puppeteer,
         spec-selenium,
+        spec-webdriverio,
         test-server,
         test-utils
       ]
@@ -244,16 +231,7 @@ jobs:
           workflow: publish-core-legacy.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).core-legacy.version}}"}'
   ufg-client:
-    needs:
-      [
-        setup,
-        logger,
-        req,
-        types,
-        utils,
-        test-server,
-        test-utils
-      ]
+    needs: [ setup, logger, req, utils, test-server, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).ufg-client && !failure() && !cancelled()}}
     name: ufg-client
     runs-on: ubuntu-latest
@@ -284,7 +262,6 @@ jobs:
         setup,
         logger,
         req,
-        types,
         utils,
         spec-selenium,
         test-server,
@@ -306,6 +283,7 @@ jobs:
       [
         setup,
         core,
+        driver,
         eg-client,
         core-legacy,
         logger,
@@ -313,8 +291,7 @@ jobs:
         api,
         spec-selenium,
         test-server,
-        test-utils,
-        types
+        test-utils
       ]
     if: ${{fromJSON(needs.setup.outputs.packages).universal && !failure() && !cancelled()}}
     name: universal
@@ -328,7 +305,7 @@ jobs:
           workflow: publish-universal.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).universal.version}}"}'
   api:
-    needs: [ setup, logger, types, utils ]
+    needs: [ setup, core, logger, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).api && !failure() && !cancelled()}}
     name: api
     runs-on: ubuntu-latest
@@ -343,7 +320,7 @@ jobs:
 
   # SPEC DRIVERS
   spec-playwright:
-    needs: [ setup, types, utils, test-utils ]
+    needs: [ setup, driver, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-playwright && !failure() && !cancelled()}}
     name: spec-playwright
     runs-on: ubuntu-latest
@@ -356,7 +333,7 @@ jobs:
           workflow: publish-spec-playwright.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-playwright.version}}"}'
   spec-puppeteer:
-    needs: [ setup, types, utils, test-utils ]
+    needs: [ setup, driver, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-puppeteer && !failure() && !cancelled()}}
     name: spec-puppeteer
     runs-on: ubuntu-latest
@@ -369,7 +346,7 @@ jobs:
           workflow: publish-spec-puppeteer.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-puppeteer.version}}"}'
   spec-selenium:
-    needs: [ setup, types, utils, test-utils ]
+    needs: [ setup, driver, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-selenium && !failure() && !cancelled()}}
     name: spec-selenium
     runs-on: ubuntu-latest
@@ -382,7 +359,7 @@ jobs:
           workflow: publish-spec-selenium.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-selenium.version}}"}'
   spec-webdriverio:
-    needs: [ setup, types, utils, test-utils ]
+    needs: [ setup, driver, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).spec-webdriverio && !failure() && !cancelled()}}
     name: spec-webdriverio
     runs-on: ubuntu-latest
@@ -462,7 +439,7 @@ jobs:
           workflow: publish-selenium.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).selenium.version}}"}'
   protractor:
-    needs: [ setup, api, core-legacy, types, utils, test-utils ]
+    needs: [ setup, api, core-legacy, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).protractor && !failure() && !cancelled()}}
     name: protractor
     runs-on: ubuntu-latest
@@ -475,7 +452,7 @@ jobs:
           workflow: publish-protractor.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).protractor.version}}"}'
   nightwatch:
-    needs: [ setup, api, core-legacy, types, utils, test-utils ]
+    needs: [ setup, core, driver, api, utils, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).nightwatch && !failure() && !cancelled()}}
     name: nightwatch
     runs-on: ubuntu-latest
@@ -517,7 +494,6 @@ jobs:
         logger,
         test-server,
         test-utils,
-        types,
         utils
       ]
     if: ${{fromJSON(needs.setup.outputs.packages).cypress && !failure() && !cancelled()}}

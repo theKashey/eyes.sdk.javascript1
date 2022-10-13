@@ -1,4 +1,3 @@
-import type * as types from '@applitools/types'
 import * as utils from '@applitools/utils'
 import {type Handler} from './handler'
 import {type ConsoleHandler, makeConsoleHandler} from './handler-console'
@@ -17,7 +16,7 @@ export type LoggerOptions = Omit<PrinterOptions, 'handler' | 'level' | 'colors'>
 
 export type ExtendOptions = Omit<LoggerOptions, 'handler'>
 
-export interface Logger extends Printer, types.Logger {
+export interface Logger extends Printer {
   isLogger: true
   console: Printer
   tag(name: string, value: any): void

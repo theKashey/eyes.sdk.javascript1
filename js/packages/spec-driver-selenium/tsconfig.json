@@ -21,7 +21,7 @@
       "transform": "@applitools/api-extractor",
       "afterDeclarations": true,
       "rootFile": "./index.ts",
-      "allowModules": ["@applitools/types", "selenium-webdriver"],
+      "allowModules": ["@applitools/driver", "selenium-webdriver"],
     }]
   },
   "ts-node": {"transpileOnly": true},

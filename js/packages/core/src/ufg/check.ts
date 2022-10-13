@@ -1,10 +1,11 @@
-import type {SpecDriver, Selector, Region} from '@applitools/types'
-import type {Eyes as BaseEyes} from '@applitools/types/base'
-import type {Target, TestInfo, CheckSettings, CheckResult, DomSnapshot, AndroidVHS, IOSVHS} from '@applitools/types/ufg'
+import type {Region} from '@applitools/utils'
+import type {Target, TestInfo, CheckSettings, CheckResult} from './types'
+import type {Eyes as BaseEyes} from '@applitools/core-base'
+import {type DomSnapshot, type AndroidSnapshot, type IOSSnapshot} from '@applitools/ufg-client'
 import {type AbortSignal} from 'abort-controller'
 import {type Logger} from '@applitools/logger'
-import {type UFGClient, type RenderRequest} from '@applitools/ufg-client'
-import {makeDriver} from '@applitools/driver'
+import {type UFGClient, type RenderSettings} from '@applitools/ufg-client'
+import {makeDriver, type SpecDriver, type Selector} from '@applitools/driver'
 import {takeSnapshots} from './utils/take-snapshots'
 import {waitForLazyLoad} from '../utils/wait-for-lazy-load'
 import {toBaseCheckSettings} from '../utils/to-base-check-settings'
@@ -50,7 +51,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
 
     const {elementReferencesToCalculate, elementReferenceToTarget, getBaseCheckSettings} = toBaseCheckSettings({settings})
 
-    let snapshots: DomSnapshot[] | AndroidVHS[] | IOSVHS[],
+    let snapshots: DomSnapshot[] | AndroidSnapshot[] | IOSSnapshot[],
       snapshotUrl: string,
       snapshotTitle: string,
       userAgent: string,
@@ -138,19 +139,16 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
           settings: {renderer, referer: snapshotUrl, cookies, proxy: test.server.proxy, autProxy: settings.autProxy, userAgent},
         })
 
-        const request: RenderRequest = {
-          target: null,
-          settings: {
-            ...settings,
-            region: regionToTarget,
-            type: utils.types.has(snapshot, 'cdt') ? 'web' : 'native',
-            renderer,
-            selectorsToCalculate: selectorsToCalculate.flatMap(({safeSelector}) => safeSelector ?? []),
-            includeFullPageSize: Boolean(settings.pageId),
-          },
+        const renderSettings: RenderSettings = {
+          ...settings,
+          region: regionToTarget,
+          type: utils.types.has(snapshot, 'cdt') ? 'web' : 'native',
+          renderer,
+          selectorsToCalculate: selectorsToCalculate.flatMap(({safeSelector}) => safeSelector ?? []),
+          includeFullPageSize: Boolean(settings.pageId),
         }
 
-        const {rendererId, rawEnvironment} = await client.bookRenderer({settings: request.settings})
+        const {rendererId, rawEnvironment} = await client.bookRenderer({settings: renderSettings})
         const eyes = await getEyes({rawEnvironment})
 
         try {
@@ -162,8 +160,8 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
             throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
-          request.settings.rendererId = rendererId
-          request.target = await renderTargetPromise
+          renderSettings.rendererId = rendererId
+          const renderTarget = await renderTargetPromise
 
           if (signal.aborted) {
             logger.warn('Command "check" was aborted before rendering')
@@ -173,7 +171,11 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
             throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
-          const {renderId, selectorRegions, ...baseTarget} = await client.render({request, signal})
+          const {renderId, selectorRegions, ...baseTarget} = await client.render({
+            target: renderTarget,
+            settings: renderSettings,
+            signal,
+          })
           let offset = 0
           const baseSettings = getBaseCheckSettings({
             calculatedRegions: selectorsToCalculate.map(({originalSelector, safeSelector}) => ({

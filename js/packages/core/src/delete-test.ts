@@ -1,5 +1,6 @@
-import type {MaybeArray, DeleteTestSettings} from '@applitools/types'
-import type {Core as BaseCore} from '@applitools/types/base'
+import type {MaybeArray} from '@applitools/utils'
+import type {DeleteTestSettings} from './types'
+import type {Core as BaseCore} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 

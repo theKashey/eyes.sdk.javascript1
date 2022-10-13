@@ -21,7 +21,7 @@
       "transform": "@applitools/api-extractor",
       "afterDeclarations": true,
       "rootFile": "./index.ts",
-      "allowModules": ["@applitools/types", "playwright"],
+      "allowModules": ["@applitools/driver", "playwright"],
     }]
   },
   "ts-node": {"transpileOnly": true},

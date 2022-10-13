@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type {ServerSocket} from './types'
 import type {
   Driver as CustomDriver,
   Context as CustomContext,
@@ -74,7 +74,7 @@ export async function makeServer({
     const refer = makeRefer()
     const socket = withTracker({
       debug,
-      socket: makeSocket(client, {logger: baseLogger}) as types.ServerSocket<
+      socket: makeSocket(client, {logger: baseLogger}) as ServerSocket<
         CustomDriver,
         CustomContext,
         CustomElement,

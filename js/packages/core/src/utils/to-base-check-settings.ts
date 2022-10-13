@@ -1,7 +1,8 @@
-import {Region, Selector} from '@applitools/types'
-import {CheckSettings as BaseCheckSettings} from '@applitools/types/base'
-import {CheckSettings as ClassicCheckSettings} from '@applitools/types/classic'
-import {CheckSettings as UFGCheckSettings} from '@applitools/types/ufg'
+import type {Region} from '@applitools/utils'
+import type {CheckSettings as BaseCheckSettings} from '@applitools/core-base'
+import type {CheckSettings as UFGCheckSettings} from '../ufg/types'
+import type {CheckSettings as ClassicCheckSettings} from '../ufg/types'
+import {type Selector} from '@applitools/driver'
 import * as utils from '@applitools/utils'
 
 export function toBaseCheckSettings<TElement, TSelector>({

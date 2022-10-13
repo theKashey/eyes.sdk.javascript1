@@ -127,7 +127,7 @@ export {
 } from './output/ValidationResult'
 // #endregion
 
-export type {Selector as EyesSelector} from '@applitools/types'
+export type {Selector as EyesSelector} from '@applitools/core'
 export {Logger} from './Logger'
 export {Eyes} from './Eyes'
 export {BatchClose, closeBatch} from './BatchClose'

@@ -1,5 +1,5 @@
-import type {MaybeArray} from '@applitools/types'
-import type {Target, ExtractTextSettings} from '@applitools/types/base'
+import type {Target, ExtractTextSettings} from './types'
+import {type MaybeArray} from '@applitools/utils'
 import {type Logger} from '@applitools/logger'
 import {type EyesRequests} from './server/requests'
 import {transformImage} from './utils/transform-image'

@@ -2,11 +2,13 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
+
     "outDir": "dist",
-    "declarationDir": "types",
-    "declaration": true,
-    "declarationMap": false,
     "sourceMap": false,
+
+    "declaration": true,
+    "declarationDir": "types",
+    "declarationMap": false,
 
     "module": "commonjs",
     "moduleResolution": "node16",
@@ -21,7 +23,7 @@
       "transform": "@applitools/api-extractor",
       "afterDeclarations": true,
       "rootFile": "./index.ts",
-      "allowModules": ["@applitools/types"],
+      "allowModules": ["@applitools/driver"],
       "allowGlobalNamespaces": ["Applitools"]
     }]
   },

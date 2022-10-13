@@ -1,22 +1,13 @@
+import type {UFGClient} from './types'
 import {makeLogger, type Logger} from '@applitools/logger'
-import {makeUFGRequests, type UFGRequests, type UFGRequestsConfig} from './server/requests'
-import {makeCreateRenderTarget, type CreateRenderTarget} from './create-render-target'
-import {makeBookRenderer, type BookRenderer} from './book-renderer'
-import {makeRender, type Render} from './render'
-import {makeProcessResources} from './process-resources'
-import {makeFetchResource} from './fetch-resource'
-import {makeUploadResource} from './upload-resource'
+import {makeUFGRequests, type UFGRequestsConfig} from './server/requests'
+import {makeCreateRenderTarget} from './create-render-target'
+import {makeBookRenderer} from './book-renderer'
+import {makeRender} from './render'
+import {makeProcessResources} from './resources/process-resources'
+import {makeFetchResource} from './resources/fetch-resource'
+import {makeUploadResource} from './resources/upload-resource'
 import * as utils from '@applitools/utils'
-
-export interface UFGClient {
-  createRenderTarget: CreateRenderTarget
-  bookRenderer: BookRenderer
-  render: Render
-  getChromeEmulationDevices: UFGRequests['getChromeEmulationDevices']
-  getAndroidDevices: UFGRequests['getAndroidDevices']
-  getIOSDevices: UFGRequests['getIOSDevices']
-  getCachedResourceUrls(): string[]
-}
 
 export const defaultResourceCache = new Map<string, any>()
 

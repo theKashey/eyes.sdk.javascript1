@@ -1,5 +1,5 @@
-import type {CheckSettings as BaseCheckSettings} from '@applitools/types/base'
-import type {CheckSettings} from '@applitools/types/classic'
+import type {CheckSettings} from '../types'
+import type {CheckSettings as BaseCheckSettings} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
 import {type Context} from '@applitools/driver'
 import {type Screenshot} from '../../automation/utils/take-screenshot'

@@ -1,33 +1,30 @@
+import type {Location, Size, Region} from './utility-types'
 import * as types from './types'
 import * as guard from './guard'
-
-type Location = {x: number; y: number}
-type RectangleSize = {width: number; height: number}
-type Region = Location & RectangleSize
 
 export function location(region: Region): Location {
   return {x: region.x, y: region.y}
 }
 
-export function size(region: Region): RectangleSize {
+export function size(region: Region): Size {
   return {width: region.width, height: region.height}
 }
 
-export function region(location: Location, size: RectangleSize) {
+export function region(location: Location, size: Size) {
   if (!location) location = {x: 0, y: 0}
   return {x: location.x, y: location.y, width: size.width, height: size.height}
 }
 
-export function isEmpty(size: RectangleSize): boolean
+export function isEmpty(size: Size): boolean
 export function isEmpty(region: Region): boolean
-export function isEmpty(sizeOrRegion: RectangleSize | Region): boolean {
+export function isEmpty(sizeOrRegion: Size | Region): boolean {
   return sizeOrRegion.width === 0 || sizeOrRegion.height === 0
 }
 
 export function round(region: Region): Region
-export function round(region: RectangleSize): RectangleSize
+export function round(region: Size): Size
 export function round(region: Location): Location
-export function round(target: Region | RectangleSize | Location): typeof target {
+export function round(target: Region | Size | Location): typeof target {
   const result = {...target} as any
   if (types.has(target, ['x', 'y'])) {
     result.x = Math.round(target.x)
@@ -41,9 +38,9 @@ export function round(target: Region | RectangleSize | Location): typeof target 
 }
 
 export function ceil(region: Region): Region
-export function ceil(region: RectangleSize): RectangleSize
+export function ceil(region: Size): Size
 export function ceil(region: Location): Location
-export function ceil(target: Region | RectangleSize | Location): typeof target {
+export function ceil(target: Region | Size | Location): typeof target {
   const result = {...target} as any
   if (types.has(target, ['x', 'y'])) {
     // intentionally using Math.round and not Math.ceil here, because the point is that for width and height it makes sense to use ceil, but not for x and y
@@ -58,9 +55,9 @@ export function ceil(target: Region | RectangleSize | Location): typeof target {
 }
 
 export function floor(region: Region): Region
-export function floor(region: RectangleSize): RectangleSize
+export function floor(region: Size): Size
 export function floor(region: Location): Location
-export function floor(target: Region | RectangleSize | Location): typeof target {
+export function floor(target: Region | Size | Location): typeof target {
   const result = {...target} as any
   if (types.has(target, ['x', 'y'])) {
     result.x = Math.floor(target.x)
@@ -73,14 +70,10 @@ export function floor(target: Region | RectangleSize | Location): typeof target 
   return result
 }
 
-export function rotate(size: RectangleSize, degrees: number): RectangleSize
-export function rotate(region: Region, degrees: number, size: RectangleSize): Region
-export function rotate(location: Location, degrees: number, size: RectangleSize): RectangleSize
-export function rotate(
-  target: Region | RectangleSize | Location,
-  degrees: number,
-  size?: RectangleSize,
-): typeof target {
+export function rotate(size: Size, degrees: number): Size
+export function rotate(region: Region, degrees: number, size: Size): Region
+export function rotate(location: Location, degrees: number, size: Size): Size
+export function rotate(target: Region | Size | Location, degrees: number, size?: Size): typeof target {
   degrees = (360 + degrees) % 360
   const result = {} as any
   if (types.has(target, ['width', 'height'])) {
@@ -120,9 +113,9 @@ export function rotate(
 }
 
 export function scale(region: Region, scaleRatio: number): Region
-export function scale(size: RectangleSize, scaleRatio: number): RectangleSize
+export function scale(size: Size, scaleRatio: number): Size
 export function scale(location: Location, scaleRatio: number): Location
-export function scale(target: Region | RectangleSize | Location, scaleRatio: number): typeof target {
+export function scale(target: Region | Size | Location, scaleRatio: number): typeof target {
   const result = {...target} as any
   if (types.has(target, ['x', 'y'])) {
     result.x = target.x * scaleRatio
@@ -188,10 +181,10 @@ export function contains(region: Region, locationOrRegion: Location | Region): b
 
 export function equals(region1: Region, region2: Region): boolean
 export function equals(location1: Location, location2: Location): boolean
-export function equals(size1: RectangleSize, size2: RectangleSize): boolean
+export function equals(size1: Size, size2: Size): boolean
 export function equals(
-  locationOrSizeOrRegion1: Location | RectangleSize | Region,
-  locationOrSizeOrRegion2: Location | RectangleSize | Region,
+  locationOrSizeOrRegion1: Location | Size | Region,
+  locationOrSizeOrRegion2: Location | Size | Region,
 ): boolean {
   if (types.has(locationOrSizeOrRegion1, ['x', 'y', 'width', 'height'])) {
     if (types.has(locationOrSizeOrRegion2, ['x', 'y', 'width', 'height'])) {
@@ -224,7 +217,7 @@ export function equals(
   }
 }
 
-export function divide(region: Region, size: RectangleSize, padding: {top?: number; bottom?: number} = {}): Region[] {
+export function divide(region: Region, size: Size, padding: {top?: number; bottom?: number} = {}): Region[] {
   guard.notNull(region, {name: 'region'})
   guard.notNull(size, {name: 'size'})
   guard.isNumber(size.width, {name: 'size.width', gt: 0})

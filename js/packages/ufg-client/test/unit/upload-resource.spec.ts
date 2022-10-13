@@ -1,7 +1,7 @@
 import {type UFGRequests} from '../../src/server/requests'
-import {makeUploadResource} from '../../src/upload-resource'
-import {makeResource} from '../../src/resource'
-import {makeResourceDom} from '../../src/resource-dom'
+import {makeUploadResource} from '../../src/resources/upload-resource'
+import {makeResource} from '../../src/resources/resource'
+import {makeResourceDom} from '../../src/resources/resource-dom'
 import * as utils from '@applitools/utils'
 import assert from 'assert'
 

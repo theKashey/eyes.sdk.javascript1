@@ -1,7 +1,7 @@
-import type {Renderer} from '@applitools/types'
-import type {Eyes as BaseEyes} from '@applitools/types/base'
-import type {TestResult} from '@applitools/types/ufg'
+import type {TestResult} from './types'
+import type {Eyes as BaseEyes} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
+import {type Renderer} from '@applitools/ufg-client'
 import {type AbortController} from 'abort-controller'
 import {AbortError} from '../errors/abort-error'
 

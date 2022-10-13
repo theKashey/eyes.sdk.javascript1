@@ -1,6 +1,6 @@
-import type {Core as BaseCore} from '@applitools/types/base'
-import EventEmitter from 'events'
+import type {Core as BaseCore} from '@applitools/core-base'
 import * as utils from '@applitools/utils'
+import EventEmitter from 'events'
 
 export function makeFakeCore({hooks}: any = {}): BaseCore & EventEmitter {
   const emitter = new EventEmitter()

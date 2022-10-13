@@ -1,5 +1,5 @@
 import type * as Puppeteer from 'puppeteer'
-import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import {type Size, type Cookie, type DriverInfo} from '@applitools/driver'
 import * as utils from '@applitools/utils'
 
 export type Driver = Puppeteer.Page & {__applitoolsBrand?: never}
@@ -145,7 +145,7 @@ export async function parentContext(frame: Context): Promise<Context> {
 export async function childContext(_frame: Context, element: Element): Promise<Context> {
   return element.contentFrame()
 }
-export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
+export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element | null> {
   const root = parent ?? frame
   return (
     isXpathSelector(selector) ? root.$x(selector).then(elements => elements[0]) : root.$(selector)

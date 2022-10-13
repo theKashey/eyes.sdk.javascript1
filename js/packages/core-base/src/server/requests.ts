@@ -1,4 +1,4 @@
-import type {Region, TextRegion, Mutable, MaybeArray} from '@applitools/types'
+import type {Mutable, MaybeArray, Region} from '@applitools/utils'
 import type {
   Target,
   Core,
@@ -14,10 +14,12 @@ import type {
   LogEventSettings,
   TestInfo,
   AccountInfo,
+  LocateResult,
   CheckResult,
+  LocateTextResult,
   TestResult,
   OpenSettings,
-} from '@applitools/types/base'
+} from '../types'
 import {type Fetch} from '@applitools/req'
 import {makeLogger, type Logger} from '@applitools/logger'
 import {makeReqEyes, type ReqEyes} from './req-eyes'
@@ -30,7 +32,7 @@ export interface CoreRequests extends Core {
     target: Target
     settings: LocateSettings<TLocator>
     logger?: Logger
-  }): Promise<Record<TLocator, Region[]>>
+  }): Promise<LocateResult<TLocator>>
   getAccountInfo(options: {settings: ServerSettings; logger?: Logger}): Promise<AccountInfo>
   getBatchBranches(options: {
     settings: ServerSettings & {batchId: string}
@@ -49,7 +51,7 @@ export interface EyesRequests extends Eyes {
     target: Target
     settings: LocateTextSettings<TPattern>
     logger?: Logger
-  }): Promise<Record<TPattern, TextRegion[]>>
+  }): Promise<LocateTextResult<TPattern>>
   extractText(options: {target: Target; settings: ExtractTextSettings; logger?: Logger}): Promise<string[]>
   close(options?: {settings?: CloseSettings; logger?: Logger}): Promise<TestResult[]>
   abort(options?: {logger?: Logger}): Promise<TestResult[]>
@@ -170,7 +172,7 @@ export function makeCoreRequests({
     target: Target
     settings: LocateSettings<TLocator>
     logger?: Logger
-  }): Promise<Record<TLocator, Region[]>> {
+  }): Promise<LocateResult<TLocator>> {
     const agentId = `${defaultAgentId} ${settings.agentId ? `[${settings.agentId}]` : ''}`.trim()
     const req = makeReqEyes({config: {...settings, agentId}, fetch, logger})
     logger.log('Request "locate" called for target', target, 'with settings', settings)
@@ -417,7 +419,7 @@ export function makeEyesRequests({
     target: Target
     settings: LocateTextSettings<TPattern>
     logger?: Logger
-  }): Promise<Record<TPattern, TextRegion[]>> {
+  }): Promise<LocateTextResult<TPattern>> {
     logger.log('Request "locateText" called for target', target, 'with settings', settings)
     ;[target.image, target.dom] = await Promise.all([
       upload({name: 'image', resource: target.image}),

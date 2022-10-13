@@ -1,8 +1,7 @@
+import type {RenderSettings, BookedRenderer} from './types'
 import {type Logger} from '@applitools/logger'
-import {type UFGRequests, type RenderSettings, type BookedRenderer} from './server/requests'
+import {type UFGRequests} from './server/requests'
 import * as utils from '@applitools/utils'
-
-export type BookRenderer = (options: {settings: RenderSettings}) => Promise<BookedRenderer>
 
 export function makeBookRenderer({
   requests,
@@ -12,7 +11,7 @@ export function makeBookRenderer({
   requests: UFGRequests
   batchingTimeout?: number
   logger?: Logger
-}): BookRenderer {
+}) {
   const bookedRendererWithBatching = utils.general.batchify(bookRenderers, {timeout: batchingTimeout})
 
   return function bookRenderer({settings}: {settings: RenderSettings}) {

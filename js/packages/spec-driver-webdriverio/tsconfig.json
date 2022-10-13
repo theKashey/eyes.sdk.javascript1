@@ -1,3 +1,7 @@
 {
-  "extends": "./tsconfig.v7"
+  "extends": "./tsconfig.v7",
+  "include": ["src", "test"],
+  "compilerOptions": {
+    "rootDir": "."
+  }
 }

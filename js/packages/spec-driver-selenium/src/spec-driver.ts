@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/ban-types: ["error", {"types": {"Function": false}}] */
-import type {Size, Region, Cookie, DriverInfo, WaitOptions, ScreenOrientation} from '@applitools/types'
+import type {Size, Region} from '@applitools/utils'
+import {type Cookie, type DriverInfo, type WaitOptions, type ScreenOrientation} from '@applitools/driver'
 import {Command} from 'selenium-webdriver/lib/command'
 import * as Selenium from 'selenium-webdriver'
 

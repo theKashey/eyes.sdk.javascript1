@@ -1,5 +1,4 @@
-import type {Region} from '@applitools/types'
-import type {Target, LocateSettings} from '@applitools/types/base'
+import type {Target, LocateSettings, LocateResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type CoreRequests} from './server/requests'
 import {transformImage} from './utils/transform-image'
@@ -18,7 +17,7 @@ export function makeLocate({requests, logger: defaultLogger}: Options) {
     target: Target
     settings: LocateSettings<TLocator>
     logger?: Logger
-  }): Promise<Record<TLocator, Region[]>> {
+  }): Promise<LocateResult<TLocator>> {
     logger.log('Command "locate" is called with settings', settings)
     target.image = await transformImage({image: target.image, settings})
     const results = await requests.locate({target, settings, logger})

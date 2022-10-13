@@ -1,6 +1,6 @@
-import type {Target, Config, CheckSettings, CloseSettings, TestResult} from '@applitools/types'
-import type {Eyes as ClassicEyes} from '@applitools/types/classic'
-import type {Eyes as UFGEyes} from '@applitools/types/ufg'
+import type {Target, Config, CheckSettings, CloseSettings, TestResult} from './types'
+import type {Eyes as ClassicEyes} from './classic/types'
+import type {Eyes as UFGEyes} from './ufg/types'
 import {type Logger} from '@applitools/logger'
 
 type Options<TDriver, TElement, TSelector> = {
@@ -23,8 +23,17 @@ export function makeCheckAndClose<TDriver, TElement, TSelector, TType extends 'c
     config?: Config<TElement, TSelector, TType>
     logger?: Logger
   } = {}): Promise<TestResult<TType>[]> {
-    settings = {...config?.screenshot, ...config?.check, ...config?.close, ...settings}
-    const results = await eyes.checkAndClose({target: target as any, settings, logger})
+    settings = {...config?.screenshot, ...config?.check, ...config?.close, ...settings} as CheckSettings<
+      TElement,
+      TSelector,
+      'classic'
+    > &
+      CloseSettings<'classic'>
+    const results = await (eyes as ClassicEyes<TDriver, TElement, TSelector>).checkAndClose({
+      target: target as any,
+      settings,
+      logger,
+    })
     return results
   }
 }

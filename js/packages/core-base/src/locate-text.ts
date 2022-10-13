@@ -1,5 +1,4 @@
-import type {TextRegion} from '@applitools/types'
-import type {Target, LocateTextSettings} from '@applitools/types/base'
+import type {Target, LocateTextSettings, LocateTextResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type EyesRequests} from './server/requests'
 import {transformImage} from './utils/transform-image'
@@ -18,7 +17,7 @@ export function makeLocateText({requests, logger: defaultLogger}: Options) {
     target: Target
     settings?: LocateTextSettings<TPattern>
     logger?: Logger
-  }): Promise<Record<TPattern, TextRegion[]>> {
+  }): Promise<LocateTextResult<TPattern>> {
     logger.log('Command "locateText" is called with settings', settings)
     target.image = await transformImage({image: target.image, settings})
     const results = await requests.locateText({target, settings, logger})

@@ -1,4 +1,4 @@
-import type {CloseSettings, TestResult} from '@applitools/types/base'
+import type {CloseSettings, TestResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type EyesRequests} from './server/requests'
 

@@ -1,16 +1,16 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import {TestResultContainer, TestResultContainerData} from './TestResultContainer'
 
 export type TestResultsSummary = Iterable<TestResultContainer>
 
 export class TestResultsSummaryData implements Iterable<TestResultContainerData> {
-  private _summary: types.TestResultSummary<'classic' | 'ufg'>
-  private _deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
+  private _summary: core.TestResultSummary<'classic' | 'ufg'>
+  private _deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
 
   /** @internal */
   constructor(options?: {
-    summary: types.TestResultSummary<'classic' | 'ufg'>
-    deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
+    summary: core.TestResultSummary<'classic' | 'ufg'>
+    deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
   }) {
     if (!options) return
 
@@ -39,7 +39,7 @@ export class TestResultsSummaryData implements Iterable<TestResultContainerData>
   }
 
   /** @internal */
-  toJSON(): types.TestResultContainer<'classic' | 'ufg'>[] {
+  toJSON(): core.TestResultContainer<'classic' | 'ufg'>[] {
     return this._summary?.results
   }
 

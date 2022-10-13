@@ -1,4 +1,4 @@
-import {type Core} from '@applitools/types/base'
+import type {Core} from './types'
 import {makeLogger, type Logger} from '@applitools/logger'
 import {makeCoreRequests} from './server/requests'
 import {makeOpenEyes} from './open-eyes'

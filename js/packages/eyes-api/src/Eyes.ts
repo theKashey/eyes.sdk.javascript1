@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
 import {SessionType, SessionTypeEnum} from './enums/SessionType'
 import {StitchMode, StitchModeEnum} from './enums/StitchMode'
@@ -34,7 +34,7 @@ import {SessionEventHandler, SessionEventHandlers, RemoteSessionEventHandler} fr
 import {EyesRunner, ClassicRunner} from './Runners'
 import {Logger} from './Logger'
 
-type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = types.Core<TDriver, TElement, TSelector>
+type EyesSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = core.Core<TDriver, TElement, TSelector>
 
 export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   protected static readonly _spec: EyesSpec
@@ -47,7 +47,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
   private _state: {appName?: string} = {}
   private _runner: EyesRunner
   private _driver: TDriver
-  private _eyes: types.Eyes<TDriver, TElement, TSelector, 'ufg' | 'classic'>
+  private _eyes: core.Eyes<TDriver, TElement, TSelector, 'ufg' | 'classic'>
   private _events: Map<string, Set<(...args: any[]) => any>> = new Map()
   private _handlers: SessionEventHandlers = new SessionEventHandlers()
 
@@ -230,7 +230,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this.check({name, timeout, fully})
   }
   /** @deprecated */
-  async checkFrame(element: TElement | types.Selector<TSelector> | string | number, timeout?: number, name?: string) {
+  async checkFrame(element: TElement | core.Selector<TSelector> | string | number, timeout?: number, name?: string) {
     return this.check({name, frames: [element], timeout, fully: true})
   }
   /** @deprecated */
@@ -238,7 +238,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this.check({name, region: element, timeout, fully: true})
   }
   /** @deprecated */
-  async checkElementBy(selector: types.Selector<TSelector>, timeout?: number, name?: string) {
+  async checkElementBy(selector: core.Selector<TSelector>, timeout?: number, name?: string) {
     return this.check({name, region: selector, timeout, fully: true})
   }
   /** @deprecated */
@@ -250,13 +250,13 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     return this.check({name, region: element, timeout})
   }
   /** @deprecated */
-  async checkRegionBy(selector: types.Selector<TSelector>, name?: string, timeout?: number, fully = false) {
+  async checkRegionBy(selector: core.Selector<TSelector>, name?: string, timeout?: number, fully = false) {
     return this.check({name, region: selector, timeout, fully})
   }
   /** @deprecated */
   async checkRegionInFrame(
-    frame: TElement | types.Selector<TSelector> | string | number,
-    selector: types.Selector<TSelector>,
+    frame: TElement | core.Selector<TSelector> | string | number,
+    selector: core.Selector<TSelector>,
     timeout?: number,
     name?: string,
     fully = false,
@@ -272,7 +272,7 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     if (this._config.isDisabled) return null
     if (!this.isOpen) throw new EyesError('Eyes not open')
 
-    let settings: types.CheckSettings<TElement, TSelector, 'classic' | 'ufg'>
+    let settings: core.CheckSettings<TElement, TSelector, 'classic' | 'ufg'>
     if (utils.types.isString(checkSettingsOrName)) {
       utils.guard.notNull(checkSettings, {name: 'checkSettings'})
       settings = new CheckSettingsFluent(checkSettings, this._spec).name(checkSettingsOrName).toJSON()
@@ -415,10 +415,10 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     }
   }
 
-  getScrollRootElement(): TElement | types.Selector<TSelector> {
+  getScrollRootElement(): TElement | core.Selector<TSelector> {
     return this._config.getScrollRootElement()
   }
-  setScrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>) {
+  setScrollRootElement(scrollRootElement: TElement | core.Selector<TSelector>) {
     this._config.setScrollRootElement(scrollRootElement)
   }
 

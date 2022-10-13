@@ -1,9 +1,9 @@
-import type * as types from '@applitools/types'
-import type {Socket} from '../socket'
+import type {Ref} from '../types'
+import {type Socket} from '../socket'
 
 type GroupHistory = {
-  manager: types.Ref
-  eyes: (types.Ref | Error)[]
+  manager: Ref
+  eyes: (Ref | Error)[]
 }
 
 type TestHistory = {
@@ -87,7 +87,7 @@ export function withTracker<TSocket extends Socket>(options: {
 
   return socket
 
-  function extractRefId(ref: types.Ref): string {
+  function extractRefId(ref: Ref): string {
     return ref['applitools-ref-id']
   }
 }

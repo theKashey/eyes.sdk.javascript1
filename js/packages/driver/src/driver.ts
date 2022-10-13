@@ -1,4 +1,5 @@
-import type {Size, Region, ScreenOrientation, Cookie} from './types'
+import type {Size, Region} from '@applitools/utils'
+import type {ScreenOrientation, Cookie} from './types'
 import {type Selector} from './selector'
 import {type SpecDriver, type DriverInfo} from './spec-driver'
 import {type Element} from './element'

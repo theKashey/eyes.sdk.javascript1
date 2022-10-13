@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
 import {SessionType, SessionTypeEnum} from '../enums/SessionType'
 import {StitchMode, StitchModeEnum} from '../enums/StitchMode'
@@ -23,6 +23,7 @@ import {DebugScreenshotProvider} from './DebugScreenshotProvider'
 import {RectangleSize, RectangleSizeData} from './RectangleSize'
 import {ImageRotation, ImageRotationData} from './ImageRotation'
 import {ProxySettings, ProxySettingsData} from './ProxySettings'
+import {AUTProxySettings} from './AUTProxySettings'
 import {BatchInfo, BatchInfoData} from './BatchInfo'
 import {PropertyData, PropertyDataData} from './PropertyData'
 import {ImageMatchSettings, ImageMatchSettingsData} from './ImageMatchSettings'
@@ -46,7 +47,7 @@ export type GeneralConfiguration = {
   apiKey?: string
   serverUrl?: string
   proxy?: ProxySettings
-  autProxy?: types.AutProxy
+  autProxy?: AUTProxySettings
   isDisabled?: boolean
   /** @undocumented */
   connectionTimeout?: number
@@ -97,7 +98,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   hideScrollbars?: boolean
   hideCaret?: boolean
   stitchOverlap?: number
-  scrollRootElement?: TElement | types.Selector<TSelector>
+  scrollRootElement?: TElement | core.Selector<TSelector>
   cut?: CutProvider
   rotation?: ImageRotation
   scaleRatio?: number
@@ -129,12 +130,12 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
 
   private _config: Configuration<TElement, TSelector> = {}
 
-  private _isElementReference(value: any): value is TElement | types.Selector<TSelector> {
+  private _isElementReference(value: any): value is TElement | core.Selector<TSelector> {
     const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
     return spec.isElement(value) || this._isSelectorReference(value)
   }
 
-  private _isSelectorReference(selector: any): selector is types.Selector<TSelector> {
+  private _isSelectorReference(selector: any): selector is core.Selector<TSelector> {
     const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
     return (
       spec.isSelector(selector) ||
@@ -367,16 +368,16 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     }
     return this
   }
-  get autProxy(): types.AutProxy {
+  get autProxy(): AUTProxySettings {
     return this._config.autProxy
   }
-  set autProxy(autProxy: types.AutProxy) {
+  set autProxy(autProxy: AUTProxySettings) {
     this._config.autProxy = autProxy
   }
-  getAutProxy(): types.AutProxy {
+  getAutProxy(): AUTProxySettings {
     return this.autProxy
   }
-  setAutProxy(autProxy: types.AutProxy) {
+  setAutProxy(autProxy: AUTProxySettings) {
     this.autProxy = autProxy
     return this
   }
@@ -895,10 +896,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get scrollRootElement(): TElement | types.Selector<TSelector> {
+  get scrollRootElement(): TElement | core.Selector<TSelector> {
     return this._config.scrollRootElement
   }
-  set scrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>) {
+  set scrollRootElement(scrollRootElement: TElement | core.Selector<TSelector>) {
     utils.guard.custom(scrollRootElement, value => this._isElementReference(value), {
       name: 'scrollRootElement',
       message: 'must be element or selector',
@@ -906,10 +907,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     })
     this._config.scrollRootElement = scrollRootElement
   }
-  getScrollRootElement(): TElement | types.Selector<TSelector> {
+  getScrollRootElement(): TElement | core.Selector<TSelector> {
     return this.scrollRootElement
   }
-  setScrollRootElement(scrollRootElement: TElement | types.Selector<TSelector>): this {
+  setScrollRootElement(scrollRootElement: TElement | core.Selector<TSelector>): this {
     this.scrollRootElement = scrollRootElement
     return this
   }
@@ -1119,7 +1120,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   /** @internal */
-  toJSON(): types.Config<TElement, TSelector, 'classic'> & types.Config<TElement, TSelector, 'ufg'> {
+  toJSON(): core.Config<TElement, TSelector, 'classic'> & core.Config<TElement, TSelector, 'ufg'> {
     return {
       open: dropUndefinedProperties({
         serverUrl: this.serverUrl,

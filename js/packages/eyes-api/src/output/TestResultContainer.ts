@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import {TestResults, TestResultsData} from './TestResults'
 import {
   AndroidDeviceInfo,
@@ -22,13 +22,13 @@ export type TestResultContainer = {
 }
 
 export class TestResultContainerData implements Required<TestResultContainer> {
-  private _container: types.TestResultContainer<'classic' | 'ufg'>
-  private _deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
+  private _container: core.TestResultContainer<'classic' | 'ufg'>
+  private _deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
 
   /** @internal */
   constructor(options?: {
-    container: types.TestResultContainer<'classic' | 'ufg'>
-    deleteTest: types.Core<unknown, unknown, unknown>['deleteTest']
+    container: core.TestResultContainer<'classic' | 'ufg'>
+    deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
   }) {
     if (!options) return this
     this._container = options.container
@@ -66,7 +66,7 @@ export class TestResultContainerData implements Required<TestResultContainer> {
   }
 
   /** @internal */
-  toJSON(): types.TestResultContainer<'classic' | 'ufg'> {
+  toJSON(): core.TestResultContainer<'classic' | 'ufg'> {
     return this._container
   }
 

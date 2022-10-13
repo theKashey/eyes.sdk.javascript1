@@ -1,7 +1,7 @@
-import type {Proxy, Renderer} from '@applitools/types'
-import type {ServerSettings, AndroidVHS, IOSVHS} from '@applitools/types/ufg'
+import type {ServerSettings} from '../types'
 import {type Logger} from '@applitools/logger'
 import {type Driver} from '@applitools/driver'
+import {type Renderer, type AndroidSnapshot, type IOSSnapshot} from '@applitools/ufg-client'
 import * as utils from '@applitools/utils'
 
 export type VHSesSettings = ServerSettings & {renderers: Renderer[]; waitBeforeCapture?: number}
@@ -16,7 +16,7 @@ export async function takeVHSes<TDriver extends Driver<unknown, unknown, unknown
   settings?: VHSesSettings
   hooks?: {beforeSnapshots?(): void | Promise<void>; beforeEachSnapshot?(): void | Promise<void>}
   logger: Logger
-}): Promise<AndroidVHS[] | IOSVHS[]> {
+}): Promise<AndroidSnapshot[] | IOSSnapshot[]> {
   logger.log('taking VHS')
 
   if (!driver.isAndroid && !driver.isIOS) {
@@ -123,7 +123,7 @@ export async function takeVHSes<TDriver extends Driver<unknown, unknown, unknown
   })
   await clear.click()
 
-  let snapshot: AndroidVHS | IOSVHS
+  let snapshot: AndroidSnapshot | IOSSnapshot
 
   if (driver.isAndroid) {
     snapshot = {
@@ -199,7 +199,7 @@ export async function takeVHSes<TDriver extends Driver<unknown, unknown, unknown
   }
 }
 
-function transformProxy(proxy: Proxy) {
+function transformProxy(proxy: any) {
   const url = new URL(proxy.url)
   const transformedProxy = {
     protocol: url.protocol,

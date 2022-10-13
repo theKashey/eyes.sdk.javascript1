@@ -1,4 +1,4 @@
-import {makeResourceDom} from '../../src/resource-dom'
+import {makeResourceDom} from '../../src/resources/resource-dom'
 import assert from 'assert'
 
 describe('resource-dom', () => {

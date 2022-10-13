@@ -1,6 +1,7 @@
-import type {MaybeArray, Target, Config, ExtractTextSettings} from '@applitools/types'
-import type {Eyes as ClassicEyes} from '@applitools/types/classic'
-import type {Eyes as UFGEyes} from '@applitools/types/ufg'
+import type {MaybeArray} from '@applitools/utils'
+import type {Target, Config, ExtractTextSettings} from './types'
+import type {Eyes as ClassicEyes} from './classic/types'
+import type {Eyes as UFGEyes} from './ufg/types'
 import {type Logger} from '@applitools/logger'
 import * as utils from '@applitools/utils'
 

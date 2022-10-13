@@ -70,6 +70,7 @@
   },
   "dependencies": {
     "@applitools/core": "1.1.5",
+    "@applitools/driver": "^1.10.5",
     "@applitools/execution-grid-client": "1.1.29",
     "@applitools/eyes-sdk-core": "13.11.6",
     "@applitools/logger": "1.1.26",
@@ -87,7 +88,6 @@
     "@applitools/spec-driver-selenium": "^1.5.0",
     "@applitools/test-server": "^1.1.5",
     "@applitools/test-utils": "^1.5.2",
-    "@applitools/types": "1.5.19",
     "@types/http-proxy": "^1.17.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "12",

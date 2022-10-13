@@ -1,4 +1,4 @@
-import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import {type Size, type Cookie, type DriverInfo} from '@applitools/driver'
 import type * as Nightwatch from 'nightwatch'
 import * as utils from '@applitools/utils'
 

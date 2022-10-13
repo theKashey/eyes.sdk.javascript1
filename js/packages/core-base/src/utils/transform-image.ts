@@ -1,4 +1,4 @@
-import type {ImageSettings} from '@applitools/types/base'
+import type {ImageSettings} from '../types'
 import {makeImage} from '@applitools/image'
 import * as utils from '@applitools/utils'
 

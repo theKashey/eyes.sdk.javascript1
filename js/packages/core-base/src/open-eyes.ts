@@ -1,4 +1,4 @@
-import type {OpenSettings, Eyes} from '@applitools/types/base'
+import type {OpenSettings, Eyes} from './types'
 import {type Logger} from '@applitools/logger'
 import {type CoreRequests} from './server/requests'
 import {extractBranchingTimestamp} from './utils/extract-branching-timestamp'

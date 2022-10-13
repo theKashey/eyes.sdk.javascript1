@@ -1,47 +1,27 @@
-import type {AndroidDevice, ChromeEmulationDevice, IOSDevice, Region, Renderer, Selector} from '@applitools/types'
-import type {Target as BaseTarget} from '@applitools/types/base'
-import {type ContentfulResource} from '../resource'
-import {type RenderTarget} from '../create-render-target'
+import type {
+  Selector,
+  AndroidDevice,
+  IOSDevice,
+  ChromeEmulationDevice,
+  RenderTarget,
+  RenderSettings,
+  RenderResult,
+  BookedRenderer,
+} from '../types'
+import {type ContentfulResource} from '../resources/resource'
 import {makeLogger, type Logger} from '@applitools/logger'
 import {makeReqUFG, type ReqUFGConfig} from './req-ufg'
 import * as utils from '@applitools/utils'
-
-export type RenderSettings = {
-  type: 'web' | 'native'
-  renderer: Renderer
-  rendererId?: string
-  region?: Region | Selector
-  fully?: boolean
-  selectorsToCalculate?: Selector[]
-  includeFullPageSize?: boolean
-  ufgOptions?: Record<string, any>
-  hooks?: {
-    beforeCaptureScreenshot: string
-  }
-  sendDom?: boolean
-}
 
 export type RenderRequest = {
   target: RenderTarget
   settings: RenderSettings
 }
 
-export type BookedRenderer = {
-  rendererId: string
-  rawEnvironment: Record<string, any>
-}
-
 export type StartedRender = {
   jobId: string
   renderId: string
   status: string
-}
-
-export type RenderResult = BaseTarget & {
-  renderId: string
-  status: 'rendering' | 'rendered' | 'error'
-  selectorRegions?: Region[][]
-  error?: any
 }
 
 export interface UFGRequests {

@@ -1,5 +1,5 @@
-import {makeFetchResource} from '../../src/fetch-resource'
-import {makeResource} from '../../src/resource'
+import {makeFetchResource} from '../../src/resources/fetch-resource'
+import {makeResource} from '../../src/resources/resource'
 import {testServer} from '@applitools/test-server'
 import assert from 'assert'
 

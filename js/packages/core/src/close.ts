@@ -1,6 +1,6 @@
-import type {Config, CloseSettings, TestResult} from '@applitools/types'
-import type {Eyes as ClassicEyes} from '@applitools/types/classic'
-import type {Eyes as UFGEyes} from '@applitools/types/ufg'
+import type {Config, CloseSettings, TestResult} from './types'
+import type {Eyes as ClassicEyes} from './classic/types'
+import type {Eyes as UFGEyes} from './ufg/types'
 import {type Logger} from '@applitools/logger'
 import {TestError} from './errors/test-error'
 

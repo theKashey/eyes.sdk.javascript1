@@ -1,14 +1,14 @@
-import type {AutProxy, Proxy, Cookie} from '@applitools/types'
-import type {Logger} from '@applitools/types'
-import {makeReq, Request, Response, AbortController, type Fetch, type Hooks, type AbortSignal} from '@applitools/req'
+import type {Cookie} from '../types'
+import {type Logger} from '@applitools/logger'
+import {makeReq, Request, Response, AbortController, type Fetch, type Proxy, type Hooks, type AbortSignal} from '@applitools/req'
 import {makeResource, type UrlResource, type ContentfulResource, FailedResource} from './resource'
-import {createCookieHeader} from './utils/create-cookie-header'
-import {createUserAgentHeader} from './utils/create-user-agent-header'
+import {createCookieHeader} from '../utils/create-cookie-header'
+import {createUserAgentHeader} from '../utils/create-user-agent-header'
 
 export type FetchResourceSettings = {
   referer?: string
   proxy?: Proxy
-  autProxy?: AutProxy
+  autProxy?: Proxy & {mode?: 'Allow' | 'Block'; domains?: string[]}
   cookies?: Cookie[]
   userAgent?: string
 }

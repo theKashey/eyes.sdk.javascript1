@@ -1,11 +1,11 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import {strict as assert} from 'assert'
 import * as api from '../../src'
 
 const makeSDK = require('../utils/fake-sdk')
 
 describe('CheckSettings', () => {
-  let sdk: types.Core<any, any, any> & {history: Record<string, any>[]; settings: Record<string, any>}
+  let sdk: core.Core<any, any, any> & {history: Record<string, any>[]; settings: Record<string, any>}
 
   class CheckSettings extends api.CheckSettings {
     protected static get _spec() {

@@ -1,6 +1,5 @@
-import type {Proxy} from '@applitools/types'
 import {type Logger} from '@applitools/logger'
-import globalReq, {makeReq, Response, type Req, type Options, type Hooks} from '@applitools/req'
+import globalReq, {makeReq, Response, type Req, type Options, type Proxy, type Hooks} from '@applitools/req'
 
 export type ReqBrokerConfig = {
   proxy?: Proxy

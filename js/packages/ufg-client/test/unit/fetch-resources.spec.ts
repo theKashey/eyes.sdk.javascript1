@@ -1,5 +1,5 @@
-import {makeFetchResource} from '../../src/fetch-resource'
-import {makeResource} from '../../src/resource'
+import {makeFetchResource} from '../../src/resources/fetch-resource'
+import {makeResource} from '../../src/resources/resource'
 import assert from 'assert'
 import nock from 'nock'
 

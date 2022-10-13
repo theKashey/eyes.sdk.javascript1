@@ -82,7 +82,7 @@
   ],
   "scripts": {
     "lint": "eslint '**/*.ts'",
-    "build": "ttsc --project tsconfig$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo .v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION).json",
+    "build": "ttsc --project tsconfig.$([ ! -z $APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION ] && echo v$APPLITOOLS_WEBDRIVERIO_MAJOR_VERSION || echo build).json",
     "test": "mocha ./test/**/*.spec.ts --exit --no-timeouts -r ts-node/register -r @applitools/test-utils/mocha-hooks/docker",
     "test:sanity": "yarn test",
     "test:watch": "yarn test --watch --extension ts",
@@ -103,7 +103,7 @@
     }
   },
   "dependencies": {
-    "@applitools/types": "1.5.19",
+    "@applitools/driver": "1.10.4",
     "@applitools/utils": "1.3.12"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import type {Size} from '@applitools/types'
+import {type Size} from '@applitools/driver'
 import assert from 'assert'
 import {By, locateWith} from 'selenium-webdriver'
 import * as spec from '../../src'

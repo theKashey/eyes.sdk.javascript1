@@ -1,13 +1,12 @@
-import type {SpecDriver} from '@applitools/types'
+import type {Target, CheckSettings, CloseSettings, TestResult} from './types'
 import type {
   Eyes as BaseEyes,
   Target as BaseTarget,
   CheckSettings as BaseCheckSettings,
   CloseSettings as BaseCloseSettings,
-} from '@applitools/types/base'
-import type {Target, CheckSettings, CloseSettings, TestResult} from '@applitools/types/classic'
+} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
-import {makeDriver} from '@applitools/driver'
+import {makeDriver, type SpecDriver} from '@applitools/driver'
 import {takeScreenshot} from '../automation/utils/take-screenshot'
 import {takeDomCapture} from './utils/take-dom-capture'
 import {transformCheckSettings} from './utils/transform-check-settings'

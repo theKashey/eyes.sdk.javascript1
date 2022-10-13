@@ -56,7 +56,7 @@
     }
   },
   "dependencies": {
-    "@applitools/types": "1.5.19",
+    "@applitools/driver": "1.10.4",
     "@applitools/utils": "1.3.12"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import type {Renderer} from '@applitools/types'
+import type {Renderer} from '../types'
 import {
   makeResource,
   type UrlResource,
@@ -10,8 +10,8 @@ import {
 import {type Logger} from '@applitools/logger'
 import {type FetchResource, type FetchResourceSettings} from './fetch-resource'
 import {type UploadResource} from './upload-resource'
-import {extractCssDependencyUrls} from './utils/extract-css-dependency-urls'
-import {extractSvgDependencyUrls} from './utils/extract-svg-dependency-urls'
+import {extractCssDependencyUrls} from '../utils/extract-css-dependency-urls'
+import {extractSvgDependencyUrls} from '../utils/extract-svg-dependency-urls'
 import * as utils from '@applitools/utils'
 
 export type ProcessResources = (options: {

@@ -1,10 +1,9 @@
+import type {RenderTarget, RenderSettings, RenderResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type AbortSignal} from 'abort-controller'
-import {type UFGRequests, type RenderRequest, type StartedRender, type RenderResult} from './server/requests'
+import {type UFGRequests, type StartedRender} from './server/requests'
 import * as utils from '@applitools/utils'
 import throat from 'throat'
-
-export type Render = (options: {request: RenderRequest; signal?: AbortSignal}) => Promise<RenderResult>
 
 export function makeRender({
   requests,
@@ -18,20 +17,25 @@ export function makeRender({
   timeout?: number
   batchingTimeout?: number
   logger?: Logger
-}): Render {
+}) {
   const startRenderWithBatching = utils.general.batchify(startRenders, {timeout: batchingTimeout})
   const checkRenderResultWithBatching = utils.general.batchify(checkRenderResults, {timeout: batchingTimeout})
   const renderWithConcurrency = concurrency ? throat(concurrency, render) : render
 
   return renderWithConcurrency
 
-  async function render({request, signal}: {request: RenderRequest; signal?: AbortSignal}) {
+  async function render({target, settings, signal}: {target: RenderTarget; settings: RenderSettings; signal?: AbortSignal}) {
     const timedOutAt = Date.now() + timeout
-    const render = await startRenderWithBatching(request)
+    const render = await startRenderWithBatching({target, settings})
     return checkRenderResultWithBatching({render, signal, timedOutAt})
   }
 
-  async function startRenders(batch: [RenderRequest, {resolve(result: StartedRender): void; reject(reason?: any): void}][]) {
+  async function startRenders(
+    batch: [
+      {target: RenderTarget; settings: RenderSettings},
+      {resolve(result: StartedRender): void; reject(reason?: any): void},
+    ][],
+  ) {
     try {
       const renders = await requests.startRenders({requests: batch.map(([request]) => request), logger})
 

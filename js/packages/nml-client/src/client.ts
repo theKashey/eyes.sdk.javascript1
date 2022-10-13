@@ -1,19 +1,7 @@
-import type {Selector, Renderer} from '@applitools/types'
-import type {Screenshot, ScreenshotSettings as ClassicScreenshotSettings} from '@applitools/types/classic'
-import type {AndroidVHS, IOSVHS} from '@applitools/types/ufg'
+import type {ScreenshotSettings, Screenshot, SnapshotSettings, AndroidSnapshot, IOSSnapshot} from './types'
 import {makeLogger, type Logger} from '@applitools/logger'
 import {makeReqBroker, type ReqBrokerConfig} from './req-broker'
 import * as utils from '@applitools/utils'
-
-export type ScreenshotSettings = ReqBrokerConfig &
-  ClassicScreenshotSettings<never, never> & {name?: string; selectorsToFindRegionsFor?: Selector[]}
-
-export type SnapshotSettings = ReqBrokerConfig & {
-  name?: string
-  renderers: Renderer[]
-  resourceSeparation?: boolean
-  waitBeforeCapture?: number
-}
 
 export async function takeScreenshot({
   url,
@@ -21,7 +9,7 @@ export async function takeScreenshot({
   logger,
 }: {
   url: string
-  settings: ScreenshotSettings
+  settings: ReqBrokerConfig & ScreenshotSettings
   logger?: Logger
 }): Promise<Screenshot> {
   logger = logger?.extend({label: 'nml client'}) ?? makeLogger({label: 'nml client'})
@@ -55,9 +43,9 @@ export async function takeSnapshots({
   logger,
 }: {
   url: string
-  settings: SnapshotSettings
+  settings: ReqBrokerConfig & SnapshotSettings
   logger?: Logger
-}): Promise<IOSVHS[] | AndroidVHS[]> {
+}): Promise<IOSSnapshot[] | AndroidSnapshot[]> {
   logger = logger?.extend({label: 'nml client'}) ?? makeLogger({label: 'nml client'})
   const req = makeReqBroker({config: settings, logger})
   const payload = {
@@ -72,7 +60,7 @@ export async function takeSnapshots({
       payload,
     },
   })
-  const snapshot: AndroidVHS | IOSVHS = await response.json().then(({payload}) => {
+  const snapshot: AndroidSnapshot | IOSSnapshot = await response.json().then(({payload}) => {
     const {resourceMap, metadata} = payload.result
     const platformName = resourceMap.metadata.platformName
     return {

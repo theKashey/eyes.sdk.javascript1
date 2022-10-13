@@ -1,4 +1,4 @@
-import type * as types from '@applitools/types'
+import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
 import {AccessibilityRegionType, AccessibilityRegionTypeEnum} from '../enums/AccessibilityRegionType'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
@@ -9,7 +9,7 @@ type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, 
 
 type ElementReference<TElement, TSelector> = TElement | SelectorReference<TSelector>
 
-type SelectorReference<TSelector> = types.Selector<TSelector>
+type SelectorReference<TSelector> = core.Selector<TSelector>
 
 type FrameReference<TElement, TSelector> = ElementReference<TElement, TSelector> | string | number
 
@@ -20,7 +20,7 @@ type ContextReference<TElement, TSelector> = {
 
 type CodedRegionReference<TElement, TSelector> = {
   region: RegionReference<TElement, TSelector>
-  padding?: number | types.OffsetRect
+  padding?: number | {top: number; bottom: number; let: number; right: number}
   regionId?: string
 }
 
@@ -688,7 +688,7 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   }
 
   /** @internal */
-  toJSON(): types.CheckSettings<TElement, TSelector, 'classic' | 'ufg'> {
+  toJSON(): core.CheckSettings<TElement, TSelector, 'classic' | 'ufg'> {
     return dropUndefinedProperties({
       name: this._settings.name,
       region: this._settings.region,

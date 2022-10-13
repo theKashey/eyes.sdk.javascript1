@@ -1,20 +1,17 @@
-import {type ProcessResources, type ProcessResourcesSettings, type ResourceMapping} from './process-resources'
-import {makeResource, type HashedResource} from './resource'
-import {makeResourceDom} from './resource-dom'
-import {makeResourceVhs} from './resource-vhs'
+import type {RenderTarget} from './types'
+import {type ProcessResources, type ProcessResourcesSettings, type ResourceMapping} from './resources/process-resources'
+import {makeResource, type HashedResource} from './resources/resource'
+import {makeResourceDom} from './resources/resource-dom'
+import {makeResourceVhs} from './resources/resource-vhs'
 
-export type RenderTarget = {
-  snapshot: HashedResource
-  resources: Record<string, HashedResource | {errorStatusCode: number}>
-  source?: string
-  vhsType?: string
-  vhsCompatibilityParams?: Record<string, any>
-}
-
-export type CreateRenderTarget = (options: {snapshot: any; settings?: ProcessResourcesSettings}) => Promise<RenderTarget>
-
-export function makeCreateRenderTarget({processResources}: {processResources: ProcessResources}): CreateRenderTarget {
-  return async function createRenderTarget({snapshot, settings}: {snapshot: any; settings?: ProcessResourcesSettings}) {
+export function makeCreateRenderTarget({processResources}: {processResources: ProcessResources}) {
+  return async function createRenderTarget({
+    snapshot,
+    settings,
+  }: {
+    snapshot: any
+    settings?: ProcessResourcesSettings
+  }): Promise<RenderTarget> {
     const isWeb = !!snapshot.cdt
     const processedSnapshotResources = await processSnapshotResources({snapshot, settings})
 

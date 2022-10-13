@@ -1,4 +1,4 @@
-import type {Target, CheckSettings, CloseSettings, TestResult} from '@applitools/types/base'
+import type {Target, CheckSettings, CloseSettings, TestResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type EyesRequests} from './server/requests'
 import {transformImage} from './utils/transform-image'

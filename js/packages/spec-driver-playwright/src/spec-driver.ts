@@ -1,5 +1,5 @@
 import type * as Playwright from 'playwright'
-import type {Size, Cookie, DriverInfo} from '@applitools/types'
+import {type Size, type Cookie, type DriverInfo} from '@applitools/driver'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
@@ -101,7 +101,7 @@ export async function parentContext(frame: Context): Promise<Context> {
 export async function childContext(_frame: Context, element: Element): Promise<Context> {
   return element.contentFrame()
 }
-export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element> {
+export async function findElement(frame: Context, selector: Selector, parent?: Element): Promise<Element | null> {
   if (utils.types.instanceOf<Playwright.Locator>(selector, 'Locator')) return selector.elementHandle()
   const root = parent ?? frame
   return root.$(selector)
