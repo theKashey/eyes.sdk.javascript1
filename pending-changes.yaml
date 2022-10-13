@@ -21,10 +21,9 @@ Apollo SDK:
     - Fixed issue with ufg renders failing intermittently
 "@applitools/eyes-webdriverio":
   feature:
-    - Changed default value of `sendDom` from `true` to dynamically calculated
-    - Added new android device `Sony Xperia 10 II`
+    - 
   bug-fix:
-    - Fixed issue with ufg renders failing intermittently
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
