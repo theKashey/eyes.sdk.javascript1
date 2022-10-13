@@ -10,10 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Changed default value of `sendDom` from `true` to dynamically calculated
-    - Increased time to spawn server process programmatically
+    - 
   bug-fix:
-    - Fixed issue with ufg renders failing intermittently
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
