@@ -8,6 +8,14 @@
 
 
 
+## 4.60.2 - 2022/10/13
+
+### Features
+- Changed default value of `sendDom` from `true` to dynamically calculated
+- Added new android device `Sony Xperia 10 II`
+### Bug fixes
+- Fixed issue with ufg renders failing intermittently
+
 ## 4.60.1 - 2022/10/9
 
 ### Features
