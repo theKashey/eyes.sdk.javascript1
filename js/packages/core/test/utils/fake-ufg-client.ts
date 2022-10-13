@@ -62,7 +62,7 @@ export function makeFakeClient({hooks}: any = {}): UFGClient & EventEmitter {
       try {
         await utils.general.sleep(0)
         await hooks?.render?.(options)
-        const {target, settings} = options.request
+        const {target, settings} = options
         return {
           renderId: 'render-id',
           status: 'rendered',

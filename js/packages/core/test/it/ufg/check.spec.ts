@@ -163,8 +163,8 @@ describe('check', () => {
   it('handles rendering error in one of the renderers', async () => {
     const fakeClient = makeFakeClient({
       hooks: {
-        render: async ({request}) => {
-          if (request.settings.renderer.name === 'chrome' && request.target.id === '1') {
+        render: async ({target, settings}) => {
+          if (settings.renderer.name === 'chrome' && target.id === '1') {
             await utils.general.sleep(100)
             throw new Error('chrome render failed')
           }
