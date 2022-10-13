@@ -1,4 +1,4 @@
-name: Publish - sdk core
+name: Publish - core
 
 on:
   workflow_dispatch:
