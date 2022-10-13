@@ -24,7 +24,8 @@
       "default": "./dist/index.js"
     },
     "./types": {
-      "types": "./types/types.d.ts"
+      "types": "./types/types.d.ts",
+      "default": "./dist/types.js"
     },
     "./dist/*": "./dist/*.js",
     "./package.json": "./package.json"
@@ -60,27 +61,27 @@
     }
   },
   "dependencies": {
-    "@applitools/core-base": "1.1.0",
+    "@applitools/core-base": "1.1.1",
     "@applitools/dom-capture": "11.2.0",
     "@applitools/dom-snapshot": "4.7.0",
-    "@applitools/driver": "1.10.5",
-    "@applitools/logger": "1.1.26",
-    "@applitools/nml-client": "1.3.3",
-    "@applitools/req": "1.1.10",
-    "@applitools/screenshoter": "3.6.3",
+    "@applitools/driver": "1.10.6",
+    "@applitools/logger": "1.1.27",
+    "@applitools/nml-client": "1.3.4",
+    "@applitools/req": "1.1.11",
+    "@applitools/screenshoter": "3.6.4",
     "@applitools/snippets": "2.4.5",
-    "@applitools/ufg-client": "1.0.9",
-    "@applitools/utils": "1.3.12",
+    "@applitools/ufg-client": "1.0.10",
+    "@applitools/utils": "1.3.13",
     "abort-controller": "3.0.0",
     "throat": "6.0.1"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
     "@applitools/sdk-fake-eyes-server": "^2.1.3",
-    "@applitools/spec-driver-puppeteer": "^1.1.16",
+    "@applitools/spec-driver-puppeteer": "^1.1.17",
     "@applitools/spec-driver-selenium": "^1.5.0",
-    "@applitools/spec-driver-webdriverio": "^1.4.0",
-    "@applitools/test-server": "^1.1.5",
+    "@applitools/spec-driver-webdriverio": "^1.4.1",
+    "@applitools/test-server": "^1.1.6",
     "@applitools/test-utils": "^1.5.2",
     "@types/hoxy": "^3.3.1",
     "@types/mocha": "^9.1.1",
