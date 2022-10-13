@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import chalk from 'chalk'
 import {ptimeoutWithError, presult} from './utils'
 import defaultEyes from './eyes'
