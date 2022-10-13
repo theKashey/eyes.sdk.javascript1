@@ -1,6 +1,6 @@
 {
   "name": "@applitools/ufg-client",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "homepage": "https://applitools.com",
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
@@ -52,16 +52,16 @@
   },
   "dependencies": {
     "@applitools/jsdom": "1.0.4",
-    "@applitools/logger": "1.1.26",
-    "@applitools/req": "1.1.10",
-    "@applitools/utils": "1.3.12",
+    "@applitools/logger": "1.1.27",
+    "@applitools/req": "1.1.11",
+    "@applitools/utils": "1.3.13",
     "abort-controller": "3.0.0",
     "postcss-value-parser": "4.2.0",
     "throat": "6.0.1"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
-    "@applitools/test-server": "^1.1.5",
+    "@applitools/test-server": "^1.1.6",
     "@applitools/test-utils": "^1.5.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
