@@ -54,10 +54,10 @@
     }
   },
   "dependencies": {
-    "@applitools/image": "1.0.2",
-    "@applitools/logger": "1.1.26",
-    "@applitools/req": "1.1.10",
-    "@applitools/utils": "1.3.12"
+    "@applitools/image": "1.0.3",
+    "@applitools/logger": "1.1.27",
+    "@applitools/req": "1.1.11",
+    "@applitools/utils": "1.3.13"
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
