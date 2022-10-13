@@ -68,8 +68,8 @@
     }
   },
   "dependencies": {
-    "@applitools/logger": "1.1.26",
-    "@applitools/utils": "1.3.12",
+    "@applitools/logger": "1.1.27",
+    "@applitools/utils": "1.3.13",
     "abort-controller": "3.0.0",
     "node-fetch": "2.6.7",
     "proxy-agent": "5.0.0",
