@@ -1,5 +1,4 @@
 'use strict';
-const {TestResults} = require('@applitools/visual-grid-client');
 const handleTestResults = require('./handleTestResults');
 
 function makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer}) {
@@ -17,12 +16,10 @@ function makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer}) 
           isTextTerminal: config.isTextTerminal,
         };
         const summaries = await closeManager();
-        const testResultsArr = [];
+
+        let testResults;
         for (const summary of summaries) {
-          const testResults = summary.results.map(({testResults}) => testResults);
-          for (const result of testResults) {
-            testResultsArr.push(new TestResults(result));
-          }
+          testResults = summary.results.map(({testResults}) => testResults);
         }
         if (!config.appliConfFile.dontCloseBatches) {
           await closeBatches({
@@ -34,13 +31,13 @@ function makeGlobalRunHooks({closeManager, closeBatches, closeUniversalServer}) 
         }
 
         if (config.appliConfFile.tapDirPath) {
-          await handleTestResults.handleBatchResultsFile(testResultsArr, {
+          await handleTestResults.handleBatchResultsFile(testResults, {
             tapDirPath: config.appliConfFile.tapDirPath,
             tapFileName: config.appliConfFile.tapFileName,
           });
         }
 
-        handleTestResults.printTestResults({testResults: testResultsArr, resultConfig});
+        handleTestResults.printTestResults({testResults, resultConfig});
       } finally {
         await closeUniversalServer();
       }

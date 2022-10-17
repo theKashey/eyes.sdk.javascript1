@@ -4,7 +4,7 @@ const getErrorsAndDiffs = require('./getErrorsAndDiffs');
 const {promisify} = require('util');
 const fs = require('fs');
 const writeFile = promisify(fs.writeFile);
-const {TestResultsFormatter} = require('@applitools/visual-grid-client');
+const {formatters} = require('@applitools/core');
 const {resolve} = require('path');
 
 function printTestResults(testResultsArr) {
@@ -26,10 +26,12 @@ function printTestResults(testResultsArr) {
   }
 }
 function handleBatchResultsFile(results, tapFileConfig) {
-  const formatter = new TestResultsFormatter(results);
   const fileName = tapFileConfig.tapFileName || `${new Date().toISOString()}-eyes.tap`;
   const tapFile = resolve(tapFileConfig.tapDirPath, fileName);
-  return writeFile(tapFile, formatter.asHierarchicTAPString(false, true));
+  return writeFile(
+    tapFile,
+    formatters.toHierarchicTAPString(results, {includeSubTests: false, markNewAsPassed: true}),
+  );
 }
 
 module.exports = {printTestResults, handleBatchResultsFile};

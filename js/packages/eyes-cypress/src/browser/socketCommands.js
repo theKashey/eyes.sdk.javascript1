@@ -78,19 +78,6 @@ function socketCommands(socket, refer) {
       return arg;
     }
   }
-
-  function getType(value) {
-    if (!value) return;
-    if (value.nodeType === Node.ELEMENT_NODE) {
-      return 'element';
-    } else if (
-      value.nodeType === Node.DOCUMENT_NODE ||
-      value.ownerDocument ||
-      (value.constructor && value.constructor.name === 'Window')
-    ) {
-      return 'context';
-    }
-  }
 }
 
 module.exports = {socketCommands};

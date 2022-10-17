@@ -1,6 +1,4 @@
 /// <reference types="cypress" />
-
-import type * as types from '@applitools/types'
 import type * as api from '@applitools/eyes-api'
 
 type MaybeArray<T> = T | T[]
@@ -21,14 +19,14 @@ interface CypressCheckSettings extends api.CheckSettingsPlain<Element, Selector>
   content?: MaybeArray<CypressCheckSettings['contentRegions'][number] | LegacyRegion>
   strict?: MaybeArray<CypressCheckSettings['strictRegions'][number] | LegacyRegion>
   floating?: MaybeArray<CypressCheckSettings['floatingRegions'][number] | (({element: Element} | Selector | LegacyRegion) & {maxUpOffset?: number; maxDownOffset?: number; maxLeftOffset?: number; maxRightOffset?: number})>
-  accessibility?: MaybeArray<CypressCheckSettings['accessibilityRegions'][number] | (({element: Element} | Selector | LegacyRegion) & {accessibilityType?: types.AccessibilityRegionType})>
+  accessibility?: MaybeArray<CypressCheckSettings['accessibilityRegions'][number] | (({element: Element} | Selector | LegacyRegion) & {accessibilityType?: api.AccessibilityRegionTypePlain})>
   scriptHooks?: CypressCheckSettings['hooks']
   ignoreCaret?: boolean
   ignoreDisplacements?: boolean
 }
 
 interface CypressEyesConfig extends api.ConfigurationPlain<Element, Selector> {
-  browser?: MaybeArray<CypressEyesConfig['browsersInfo'][number] | {deviceName: string; screenOrientation?: types.ScreenOrientation; name?: string}>
+  browser?: MaybeArray<CypressEyesConfig['browsersInfo'][number] | {deviceName: string; screenOrientation?: api.ScreenOrientationPlain; name?: string}>
 
   batchId?: CypressEyesConfig['batch']['id']
   batchName?: CypressEyesConfig['batch']['name']

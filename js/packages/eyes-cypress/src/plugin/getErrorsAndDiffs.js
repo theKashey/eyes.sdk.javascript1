@@ -1,19 +1,18 @@
 'use strict';
-
 function getErrorsAndDiffs(testResultsArr) {
   return testResultsArr.reduce(
     ({failed, diffs, passed}, testResults) => {
       if (testResults instanceof Error || testResults.error) {
         failed.push(testResults);
       } else {
-        const testStatus = testResults.getStatus();
+        const testStatus = testResults.status;
         if (testStatus === 'Passed') {
           passed.push(testResults);
         } else {
           if (testStatus === 'Unresolved') {
-            if (testResults.getIsNew()) {
+            if (testResults.isNew) {
               testResults.error = new Error(
-                `${testResults.getName()}. Please approve the new baseline at ${testResults.getUrl()}`,
+                `${testResults.name}. Please approve the new baseline at ${testResults.url}`,
               );
               failed.push(testResults);
             } else {

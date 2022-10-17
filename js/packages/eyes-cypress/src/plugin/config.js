@@ -1,6 +1,6 @@
 'use strict';
 const utils = require('@applitools/utils');
-const {configParams, TypeUtils} = require('@applitools/visual-grid-client');
+const {configParams} = require('./configParams');
 const DEFAULT_TEST_CONCURRENCY = 5;
 const uuid = require('uuid');
 
@@ -24,11 +24,11 @@ function makeConfig() {
     config.failCypressOnDiff = false;
   }
 
-  if (TypeUtils.isString(config.showLogs)) {
+  if (utils.types.isString(config.showLogs)) {
     config.showLogs = config.showLogs === 'true' || config.showLogs === '1';
   }
 
-  if (TypeUtils.isString(config.testConcurrency)) {
+  if (utils.types.isString(config.testConcurrency)) {
     config.testConcurrency = Number(config.testConcurrency);
   }
 

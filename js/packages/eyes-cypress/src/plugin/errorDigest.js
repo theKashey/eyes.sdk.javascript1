@@ -30,7 +30,7 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
   logger.log('errorDigest: diff errors', diffs);
   logger.log('errorDigest: test errors', failed);
 
-  const testResultsUrl = diffs.length ? colorify(diffs[0].getUrl(), 'teal') : '';
+  const testResultsUrl = diffs.length ? colorify(diffs[0].url, 'teal') : '';
   const testResultsPrefix = testResultsUrl ? 'See details at:' : '';
   const footer = testResultsUrl
     ? `\n${indent()}${colorify(testResultsPrefix)} ${testResultsUrl}`
@@ -69,9 +69,9 @@ function errorDigest({passed, failed, diffs, logger, isInteractive}) {
 }
 
 function stringifyTestResults(testResults) {
-  const hostDisplaySize = testResults.getHostDisplaySize();
-  const viewport = hostDisplaySize ? `[${hostDisplaySize}]` : '';
-  const testName = `${testResults.getName()} ${viewport}`;
+  const hostDisplaySize = testResults.hostDisplaySize;
+  const viewport = hostDisplaySize ? `[${hostDisplaySize.width}x${hostDisplaySize.height}]` : '';
+  const testName = `${testResults.name} ${viewport}`;
   return testName + (testResults.error ? ` : ${testResults.error}` : '');
 }
 

@@ -1,7 +1,6 @@
 'use strict';
 const connectSocket = require('./webSocket');
 const {makeServerProcess} = require('@applitools/eyes-universal');
-const {TestResults} = require('@applitools/visual-grid-client');
 const handleTestResults = require('./handleTestResults');
 const path = require('path');
 const fs = require('fs');
@@ -70,18 +69,14 @@ function makeStartServer({logger}) {
           socketWithUniversal.send(newMessage);
         } else if (msg.name === 'Test.printTestResults') {
           try {
-            const resultArr = [];
-            for (const result of msg.payload.testResults) {
-              resultArr.push(new TestResults(result));
-            }
             if (msg.payload.resultConfig.tapDirPath) {
-              handleTestResults.handleBatchResultsFile(resultArr, {
+              handleTestResults.handleBatchResultsFile(msg.payload.testResults, {
                 tapFileName: msg.payload.resultConfig.tapFileName,
                 tapDirPath: msg.payload.resultConfig.tapDirPath,
               });
             }
             handleTestResults.printTestResults({
-              testResults: resultArr,
+              testResults: msg.payload.testResults,
               resultConfig: msg.payload.resultConfig,
             });
             socketWithClient.send(

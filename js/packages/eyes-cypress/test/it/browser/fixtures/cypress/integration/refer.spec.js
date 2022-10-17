@@ -1,4 +1,4 @@
-/* global expect cy */
+/* global expect */
 const Refer = require('../../../../../../src/browser/refer');
 const refer = new Refer();
 
