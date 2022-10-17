@@ -12,22 +12,23 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed default values for server url and api key while executing `Core.closeBatch` and `Core.deleteTest` commands
 "@applitools/eyes-selenium":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed error that was happening when test results were deleted
 "@applitools/eyes-webdriverio":
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed error that was happening when test results were deleted
 "@applitools/eyes-playwright":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
+    - Fixed error that was happening when test results were deleted
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
@@ -44,6 +45,7 @@ Apollo SDK:
     - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
+    - Fixed error that was happening when test results were deleted
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
@@ -59,6 +61,7 @@ Apollo SDK:
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently
+    - Fixed error that was happening when test results were deleted
 "@applitools/eyes-cypress":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated

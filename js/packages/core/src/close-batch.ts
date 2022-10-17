@@ -17,13 +17,11 @@ export function makeCloseBatch({core, logger: defaultLogger}: Options) {
     settings: MaybeArray<CloseBatchSettings>
     logger?: Logger
   }): Promise<void> {
-    const defaultSettings = {} as CloseBatchSettings
-    defaultSettings.serverUrl ??= utils.general.getEnvValue('SERVER_URL') ?? 'https://eyesapi.applitools.com'
-    defaultSettings.apiKey ??= utils.general.getEnvValue('API_KEY')
+    ;(utils.types.isArray(settings) ? settings : [settings]).forEach(settings => {
+      settings.serverUrl ??= utils.general.getEnvValue('SERVER_URL') ?? 'https://eyesapi.applitools.com'
+      settings.apiKey ??= utils.general.getEnvValue('API_KEY')
+    })
 
-    settings = utils.types.isArray(settings)
-      ? settings.map(settings => ({...defaultSettings, ...settings}))
-      : {...defaultSettings, ...settings}
     await core.closeBatch({settings, logger})
   }
 }

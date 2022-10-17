@@ -334,9 +334,12 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     const deleteTest = (options: any) =>
       this._spec.deleteTest({
         ...options,
-        serverUrl: this._config.serverUrl,
-        apiKey: this._config.apiKey,
-        proxy: this._config.proxy,
+        settings: {
+          ...options.settings,
+          serverUrl: this._config.serverUrl,
+          apiKey: this._config.apiKey,
+          proxy: this._config.proxy,
+        },
       })
     try {
       const config = this._config.toJSON()
