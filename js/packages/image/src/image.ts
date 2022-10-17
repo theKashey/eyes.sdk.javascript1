@@ -249,7 +249,9 @@ async function toPng(image: any) {
       },
     })
 
-    image
+    const wrapper = new png.Image({width: image.width, height: image.height})
+    wrapper.data = image.data
+    wrapper
       .pack()
       .pipe(writable)
       .on('finish', () => resolve(buffer))

@@ -11,7 +11,7 @@ type Options = {
 export function makeCheck({requests, logger: defaultLogger}: Options) {
   return async function check({
     target,
-    settings,
+    settings = {},
     logger = defaultLogger,
   }: {
     target: Target

@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@applitools/bongo": "^2.2.0",
+    "@applitools/test-server": "^1.1.6",
     "@applitools/test-utils": "^1.5.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",

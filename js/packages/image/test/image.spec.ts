@@ -18,6 +18,12 @@ describe('image', () => {
     assert.strictEqual(image.height, 512)
   })
 
+  it('should encode jpeg image as png', async () => {
+    const actual = await makeImage('./test/fixtures/image/house.jpeg').toPng()
+    const expected = await makeImage('./test/fixtures/image/house-converted.png').toPng()
+    assert.ok(Buffer.compare(actual, expected) === 0)
+  })
+
   it('should crop by region', async () => {
     const actual = await makeImage('./test/fixtures/image/house.png')
       .crop({x: 200, y: 220, width: 200, height: 200})
