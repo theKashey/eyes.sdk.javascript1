@@ -66,6 +66,7 @@ Apollo SDK:
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
   bug-fix:
+    - Fix chrome emulation environment structure
     - Fixed issue with ufg renders failing intermittently
     - Fixed issue with universal process spawning is failing due to a timeout
 "@applitools/eyes-storybook":
