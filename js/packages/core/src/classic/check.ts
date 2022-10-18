@@ -52,6 +52,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         source: await driver.getUrl(),
         image: await screenshot.image.toPng(),
         locationInViewport: utils.geometry.location(screenshot.region),
+        isTransformed: true
       }
       baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
       if (driver.isWeb && settings.sendDom) {

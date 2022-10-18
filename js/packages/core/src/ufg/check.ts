@@ -186,6 +186,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
           baseSettings.renderId = renderId
           baseTarget.source = snapshotUrl
           baseTarget.name = snapshotTitle
+          baseTarget.isTransformed = true
 
           if (signal.aborted) {
             logger.warn('Command "check" was aborted after rendering')

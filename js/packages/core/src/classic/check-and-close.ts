@@ -49,6 +49,7 @@ export function makeCheckAndClose<TDriver, TContext, TElement, TSelector>({
       source: await driver.getUrl(),
       image: await screenshot.image.toPng(),
       locationInViewport: utils.geometry.location(screenshot.region),
+      isTransformed: true,
     }
     const baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
     if (driver.isWeb && settings.sendDom) {

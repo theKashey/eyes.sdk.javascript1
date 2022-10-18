@@ -19,7 +19,9 @@ export function makeCheck({requests, logger: defaultLogger}: Options) {
     logger?: Logger
   }): Promise<CheckResult[]> {
     logger.log('Command "check" is called with settings', settings)
-    target.image = await transformImage({image: target.image, settings})
+    if (!target.isTransformed) {
+      target.image = await transformImage({image: target.image, settings})
+    }
     return requests.check({target, settings, logger})
   }
 }

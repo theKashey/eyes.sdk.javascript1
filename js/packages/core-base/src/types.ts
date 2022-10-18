@@ -11,6 +11,8 @@ export type Target = {
   locationInViewport?: Location // location in the viewport
   locationInView?: Location // location in view/page
   fullViewSize?: Size // full size of the view/page
+  /** @internal */
+  isTransformed?: boolean
 }
 
 export interface Core<TEyes = Eyes> {

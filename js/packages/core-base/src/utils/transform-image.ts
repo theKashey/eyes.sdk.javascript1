@@ -12,7 +12,6 @@ export async function transformImage({
   settings: ImageSettings
 }): Promise<Buffer> {
   if (image instanceof URL) image = image.href
-
   if (utils.types.isString(image)) {
     const str = image // we need this var because ts-wise all our string formats checkers (isHttpUrl/isBase64) are string type guards
     if (utils.types.isHttpUrl(str)) {
