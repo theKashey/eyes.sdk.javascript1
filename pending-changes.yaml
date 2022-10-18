@@ -15,9 +15,9 @@ Apollo SDK:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - Drop support for Android 9 and Android 10 specific devices
+    - 
   bug-fix:
-    - Fixed error that was happening when test results were deleted
+    - 
 "@applitools/eyes-webdriverio":
   feature:
     - 

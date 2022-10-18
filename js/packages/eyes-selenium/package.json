@@ -1,6 +1,6 @@
 {
   "name": "@applitools/eyes-selenium",
-  "version": "4.60.2",
+  "version": "4.61.0",
   "description": "Applitools Eyes SDK for Selenium WebDriver",
   "keywords": [
     "eyes-selenium",
@@ -65,9 +65,9 @@
     }
   },
   "dependencies": {
-    "@applitools/core": "1.1.6",
-    "@applitools/eyes-api": "1.8.6",
-    "@applitools/spec-driver-selenium": "1.5.2"
+    "@applitools/core": "1.2.0",
+    "@applitools/eyes-api": "1.9.0",
+    "@applitools/spec-driver-selenium": "1.5.3"
   },
   "devDependencies": {
     "@applitools/api-extractor": "1.2.11",
