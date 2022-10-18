@@ -21,7 +21,7 @@
       "transform": "@applitools/api-extractor",
       "afterDeclarations": true,
       "rootFile": "./index.ts",
-      "allowModules": ["@applitools/types", "cypress"],
+      "allowModules": ["cypress"],
     }]
   },
   "ts-node": {"transpileOnly": true},

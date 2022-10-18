@@ -12,6 +12,7 @@ function printTestResults(testResultsArr) {
     level: testResultsArr.resultConfig.showLogs ? 'info' : 'silent',
     label: 'eyes',
   });
+  if (!testResultsArr.testResults) return;
   const {passed, failed, diffs} = getErrorsAndDiffs(testResultsArr.testResults);
   if ((failed.length || diffs.length) && !!testResultsArr.resultConfig.eyesFailCypressOnDiff) {
     throw new Error(

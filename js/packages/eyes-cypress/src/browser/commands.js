@@ -52,7 +52,7 @@ Cypress.Commands.add('eyesGetAllTestResults', () => {
       });
     };
     summary.results = summary.results.map(res => {
-      return {...res, result: res.testResults, error: res.exception};
+      return {...res, result: res.testResults, error: res.exception, renderer: res.browserInfo};
     });
     return new TestResultsSummary({summary, deleteTest});
   });

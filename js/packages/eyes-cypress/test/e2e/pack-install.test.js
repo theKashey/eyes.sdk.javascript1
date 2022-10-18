@@ -53,7 +53,7 @@ describe('package and install', () => {
   });
 
   it('compiles with ts defenition file on installed package', async () => {
-    const exampleFile = resolve(__dirname, './ts-defs.example.ts');
+    const exampleFile = resolve(__dirname, './ts-defs.example.ts --skipLibCheck true');
     try {
       await pexec(`tsc ${exampleFile} --noEmit`, {
         maxBuffer: 10000000,

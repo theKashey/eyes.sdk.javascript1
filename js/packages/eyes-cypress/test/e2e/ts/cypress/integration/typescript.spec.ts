@@ -1,5 +1,3 @@
-import { TestResultContainer } from "@applitools/eyes-api"
-
 const testName = 'Cypress typescript test'
 
 describe(testName, () => {
@@ -11,7 +9,7 @@ describe(testName, () => {
   it('basic with test results', () => {
     cy.eyesOpen({
       appName: 'Cypress typescript App',
-      testName
+      testName,
     })
     cy.eyesCheckWindow({
       target: 'window',
@@ -24,7 +22,7 @@ describe(testName, () => {
   after(() => {
     cy.eyesGetAllTestResults().then((summary) => {
       console.log(summary.getAllResults()[0].toJSON())
-      const testResults = summary.getAllResults()[0].toJSON() as TestResultContainer
+      const testResults = summary.getAllResults()[0]
       expect(summary.getAllResults()).to.have.length(1)
       expect(testResults.exception).to.be.undefined
       expect(testResults.browserInfo).to.have.property('width')
