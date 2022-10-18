@@ -120,24 +120,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
         // if the inner element region is contained in this element region, then it then could be assumed that the inner element is contained in this element
         let contentRegion = await this.driver.helper?.getContentRegion(this)
         if (!contentRegion || !this.driver.isAndroid) {
-          const nativeContentRegion = await this.getAttribute('contentSize')
-            .then(data => {
-              const contentSize = JSON.parse(data)
-              return {
-                x: contentSize.left,
-                y: contentSize.top,
-                width: contentSize.width,
-                height: this.driver.isIOS
-                  ? Math.max(contentSize.height, contentSize.scrollableOffset)
-                  : contentSize.height + contentSize.scrollableOffset,
-              }
-            })
-            .catch(err => {
-              this._logger.warn(
-                `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
-              )
-              return this._spec.getElementRegion(this.driver.target, this.target)
-            })
+          const nativeContentRegion = await this.getContentSizeFromAttribute()
           contentRegion = {
             x: nativeContentRegion.x,
             y: nativeContentRegion.y,
@@ -205,6 +188,35 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     return region
   }
 
+  async getContentSizeFromAttribute() {
+    try {
+      const data = await this.getAttribute('contentSize')
+      const contentSize = JSON.parse(data)
+      return {
+        x: contentSize.left,
+        y: contentSize.top,
+        width: contentSize.width,
+        height: this.driver.isIOS
+          ? Math.max(contentSize.height, contentSize.scrollableOffset)
+          : contentSize.height + contentSize.scrollableOffset,
+      }
+    } catch (err) {
+      this._logger.warn(`Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`)
+    }
+    const type = await this.getAttribute('type')
+    if (type === 'XCUIElementTypeScrollView') {
+      const elementRegion = await this._spec.getElementRegion(this.driver.target, this.target)
+      const [childElement] = await this.driver.elements({
+        type: 'xpath',
+        selector: '//XCUIElementTypeScrollView[1]/*', // We cannot be sure that our element is the first one
+      })
+      const childElementRegion = await this._spec.getElementRegion(this.driver.target, childElement.target)
+      return {
+        ...elementRegion,
+        height: childElementRegion.y + childElementRegion.height - elementRegion.y,
+      }
+    } else return this._spec.getElementRegion(this.driver.target, this.target)
+  }
   async getContentSize(
     options: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}} = {},
   ): Promise<Size> {
@@ -222,24 +234,7 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
           // on android extraction of this argument will perform non-deterministic touch action, so it is better to avoid it
           if (!contentRegion || !this.driver.isAndroid) {
-            const attrContentRegion = await this.getAttribute('contentSize')
-              .then(data => {
-                const contentSize = JSON.parse(data)
-                return {
-                  x: contentSize.left,
-                  y: contentSize.top,
-                  width: contentSize.width,
-                  height: this.driver.isIOS
-                    ? Math.max(contentSize.height, contentSize.scrollableOffset)
-                    : contentSize.height + contentSize.scrollableOffset,
-                }
-              })
-              .catch(err => {
-                this._logger.warn(
-                  `Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`,
-                )
-                return this._spec.getElementRegion(this.driver.target, this.target)
-              })
+            const attrContentRegion = await this.getContentSizeFromAttribute()
             this._logger.log('Extracted native content region using attribute', attrContentRegion)
             contentRegion = {
               x: attrContentRegion.x,

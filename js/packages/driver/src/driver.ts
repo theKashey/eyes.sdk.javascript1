@@ -287,6 +287,7 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
           ? await HelperIOS.make({spec: this._spec, driver: this, logger: this._logger})
           : await HelperAndroid.make({spec: this._spec, driver: this, logger: this._logger})
       }
+      this._logger.log(`Helper set to ${this._helper?.name}`)
     }
 
     this._logger.log('Combined driver info', this._driverInfo)

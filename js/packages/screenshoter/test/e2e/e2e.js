@@ -87,6 +87,7 @@ exports.makeDriver = async function makeDriver({
   deviceName,
   platformVersion,
   emulation,
+  customConfig,
   headless = true,
   ...rest
 }) {
@@ -239,7 +240,7 @@ exports.makeDriver = async function makeDriver({
     connectionRetryTimeout: 240000,
   })
 
-  const driver = await new Driver({driver: browser, spec, logger}).init()
+  const driver = await new Driver({driver: browser, spec, logger, customConfig}).init()
   if (process.env.APPLITOOLS_TEST_REMOTE === 'sauce')
     console.log(`Running on Sauce Labs at: https://app.saucelabs.com/tests/${driver.target.sessionId}`)
   return [
