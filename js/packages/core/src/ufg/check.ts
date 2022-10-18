@@ -186,7 +186,6 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
           baseSettings.renderId = renderId
           baseTarget.source = snapshotUrl
           baseTarget.name = snapshotTitle
-          baseTarget.isTransformed = true
 
           if (signal.aborted) {
             logger.warn('Command "check" was aborted after rendering')
@@ -196,7 +195,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
             throw new AbortError(`Renderer with id "${rendererId}" was aborted during one of the previous steps`)
           }
 
-          const [result] = await eyes.check({target: baseTarget, settings: baseSettings, logger})
+          const [result] = await eyes.check({target: {...baseTarget, isTransformed: true}, settings: baseSettings, logger})
 
           if (eyes.aborted) {
             logger.warn(`Renderer with id ${rendererId} was aborted during one of the previous steps`)
