@@ -10,17 +10,17 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Drop support for Android 9 and Android 10 specific devices
   bug-fix:
     - 
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Drop support for Android 9 and Android 10 specific devices
   bug-fix:
     - Fixed error that was happening when test results were deleted
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Drop support for Android 9 and Android 10 specific devices
   bug-fix:
     - Fixed error that was happening when test results were deleted
 "@applitools/eyes-playwright":
@@ -37,6 +37,7 @@ Apollo SDK:
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
     - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - Drop support for Android 9 and Android 10 specific devices
   bug-fix:
     - Fixed incorrect calculation of the target element position.
     - Fixed the issue with screenshots being taken on chrome-emulated devices
@@ -87,6 +88,7 @@ Apollo SDK:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - Drop support for Android 9 and Android 10 specific devices
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates

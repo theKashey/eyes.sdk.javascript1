@@ -31,13 +31,13 @@ describe('enums', () => {
     })
   })
 
-  // TODO unskip when grid will have all of the devices listed in the endpoint
-  describe.skip('AndroidDeviceName', () => {
+  describe('AndroidDeviceName', () => {
     const url = 'https://render-wus.applitools.com/public/android-devices'
     let expectedDeviceNames: string[]
     before(async () => {
+      const LEGACY = ['Galaxy Note 9', 'Galaxy S9', 'Galaxy S9 Plus']
       const devices = await fetch(url).then(response => response.json())
-      expectedDeviceNames = Object.keys(devices)
+      expectedDeviceNames = Object.keys(devices).filter(deviceName => !LEGACY.includes(deviceName))
     })
 
     it('should consists of allowed values', async () => {
