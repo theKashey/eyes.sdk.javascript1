@@ -70,7 +70,7 @@
     "@applitools/req": "1.1.11",
     "@applitools/screenshoter": "3.6.5",
     "@applitools/snippets": "2.4.5",
-    "@applitools/ufg-client": "1.0.10",
+    "@applitools/ufg-client": "1.1.0",
     "@applitools/utils": "1.3.13",
     "abort-controller": "3.0.0",
     "throat": "6.0.1"
