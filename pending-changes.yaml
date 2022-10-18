@@ -20,9 +20,9 @@ Apollo SDK:
     - Fixed error that was happening when test results were deleted
 "@applitools/eyes-webdriverio":
   feature:
-    - Drop support for Android 9 and Android 10 specific devices
+    - 
   bug-fix:
-    - Fixed error that was happening when test results were deleted
+    - 
 "@applitools/eyes-playwright":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated

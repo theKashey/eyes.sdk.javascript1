@@ -10,6 +10,13 @@
 
 
 
+## 5.37.0 - 2022/10/18
+
+### Features
+- Drop support for Android 9 and Android 10 specific devices
+### Bug fixes
+- Fixed error that was happening when test results were deleted
+
 ## 5.36.3 - 2022/10/13
 
 ### Features
