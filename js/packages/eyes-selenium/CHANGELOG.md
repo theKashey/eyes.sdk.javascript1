@@ -8,6 +8,13 @@
 
 
 
+## 4.61.0 - 2022/10/18
+
+### Features
+- Drop support for Android 9 and Android 10 specific devices
+### Bug fixes
+- Fixed error that was happening when test results were deleted
+
 ## 4.60.2 - 2022/10/13
 
 ### Features
