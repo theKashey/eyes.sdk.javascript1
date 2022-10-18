@@ -6,7 +6,7 @@ const {promisify: p} = require('util');
 const path = require('path');
 const {presult} = require('@applitools/functional-commons');
 const utils = require('@applitools/utils');
-const {readFileSync, writeFileSync, existsSync, rmSync, unlinkSync} = require('fs');
+const {readFileSync, writeFileSync, existsSync, rmdirSync, unlinkSync} = require('fs');
 
 const pexec = p(exec);
 const cwd = process.cwd();
@@ -38,7 +38,7 @@ describe('eyes-setup script (e2e)', () => {
 
   before(async () => {
     if (existsSync(targetTestAppPath)) {
-      rmSync(targetTestAppPath, {recursive: true});
+      rmdirSync(targetTestAppPath, {recursive: true});
     }
   });
   after(() => {
@@ -64,7 +64,7 @@ describe('eyes-setup script (e2e)', () => {
     packageJson = Object.assign({}, originalPackageJson);
   });
   afterEach(async () => {
-    rmSync(targetTestAppPath, {recursive: true});
+    rmdirSync(targetTestAppPath, {recursive: true});
     try {
       delete require.cache[require.resolve(binEyesSetupPath)];
     } catch (e) {}
