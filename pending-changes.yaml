@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed default values for server url and api key while executing `Core.closeBatch` and `Core.deleteTest` commands
+    - 
 "@applitools/eyes-selenium":
   feature:
     - 

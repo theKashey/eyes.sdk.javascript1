@@ -11,6 +11,12 @@
 
 
 
+## 2.16.5 - 2022/10/18
+
+### Features
+### Bug fixes
+- Fixed default values for server url and api key while executing `Core.closeBatch` and `Core.deleteTest` commands
+
 ## 2.16.4 - 2022/10/13
 
 ### Features
