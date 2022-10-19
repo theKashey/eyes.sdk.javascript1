@@ -10,6 +10,15 @@
 
 
 
+## 3.27.3 - 2022/10/19
+
+### Features
+- Changed default value of `sendDom` from `true` to dynamically calculated
+### Bug fixes
+- Fix chrome emulation environment structure
+- Fixed issue with ufg renders failing intermittently
+- Fixed issue with universal process spawning is failing due to a timeout
+
 ## 3.27.2 - 2022/10/9
 
 ### Features

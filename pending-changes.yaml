@@ -65,11 +65,9 @@ Apollo SDK:
     - Fixed error that was happening when test results were deleted
 "@applitools/eyes-cypress":
   feature:
-    - Changed default value of `sendDom` from `true` to dynamically calculated
+    - 
   bug-fix:
-    - Fix chrome emulation environment structure
-    - Fixed issue with ufg renders failing intermittently
-    - Fixed issue with universal process spawning is failing due to a timeout
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
