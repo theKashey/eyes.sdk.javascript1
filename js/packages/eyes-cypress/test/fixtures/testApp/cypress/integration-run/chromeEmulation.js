@@ -8,10 +8,17 @@ describe('chrome emulation', () => {
       appName: 'Hello World!',
       testName: 'chrome emulation',
       browser: [
-        {deviceName: 'Pixel 2', screenOrientation: 'portrait'},
+        {deviceName: 'iPhone X', screenOrientation: 'portrait'},
+        {deviceName: 'Pixel 2', screenOrientation: 'portrait', name: 'chrome'},
         {chromeEmulationInfo: {deviceName: 'Nexus 10', screenOrientation: 'landscape'}},
+        {
+          iosDeviceInfo: {
+            deviceName: 'iPhone XR',
+            screenOrientation: 'portrait',
+            iosVersion: 'latest',
+          },
+        },
       ],
-      // showLogs: true
     });
     cy.eyesCheckWindow('Main Page');
     cy.eyesClose();

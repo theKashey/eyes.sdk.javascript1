@@ -89,8 +89,10 @@ function eyesOpenMapValues({args, appliConfFile, testName, shouldUseBrowserHooks
 }
 
 function fillDefaultBrowserName(browser) {
-  if (!browser.name && !browser.iosDeviceInfo && !browser.chromeEmulationInfo) {
-    browser.name = 'chrome';
+  if (!browser.iosDeviceInfo && !browser.chromeEmulationInfo) {
+    if (!browser.name) {
+      browser.name = 'chrome';
+    }
     if (browser.deviceName) {
       browser = {chromeEmulationInfo: browser};
     }

@@ -67,7 +67,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix support for chrome emulation when passing browser name
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
