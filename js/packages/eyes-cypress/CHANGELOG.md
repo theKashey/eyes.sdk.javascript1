@@ -10,6 +10,12 @@
 
 
 
+## 3.27.4 - 2022/10/19
+
+### Features
+### Bug fixes
+- Fix support for chrome emulation when passing browser name
+
 ## 3.27.3 - 2022/10/19
 
 ### Features
