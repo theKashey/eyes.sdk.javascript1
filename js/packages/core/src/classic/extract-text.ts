@@ -29,7 +29,7 @@ export function makeExtractText<TDriver, TContext, TElement, TSelector>({
     settings?: MaybeArray<ExtractTextSettings<TElement, TSelector>>
     logger?: Logger
   } = {}): Promise<string[]> {
-    logger.log('Command "check" is called with settings', settings)
+    logger.log('Command "extractText" is called with settings', settings)
     if (!spec.isDriver(target)) {
       return eyes.extractText({target, settings: settings as MaybeArray<BaseExtractTextSettings>, logger})
     }

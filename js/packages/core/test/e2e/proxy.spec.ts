@@ -1,11 +1,15 @@
 import * as spec from '@applitools/spec-driver-webdriverio'
 import {makeCore} from '../../src/index'
-// import esniffer from 'esniffer'
-// import {createCertificate} from 'pem'
+import {makeProxyServer} from '../utils/proxy-server'
 // import assert from 'assert'
 
-describe.skip('proxy', () => {
-  let driver, destroyDriver, _proxy
+// 1. This test isn't reliable at the moment because it will pass even if we remove the proxy.
+// 2. The idea is to add some interception mechanism to the proxy server, and collect all of the
+//    requests that pass through the proxy to process it latter and find out if all of the communication went through the proxy
+// 3. To test that we use proxy to get the resources of the page we should serve our own page on the localhost and add a middleware
+//    that will not serve the resource without a special header, that will be added only by the proxy middleware
+describe('proxy', () => {
+  let driver, destroyDriver, proxy
 
   before(async () => {
     ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
@@ -16,26 +20,14 @@ describe.skip('proxy', () => {
   })
 
   beforeEach(async () => {
-    // await new Promise(r => {
-    //   createCertificate({days: 1, selfSigned: true}, (error, authority) => {
-    //     const proxy = esniffer.createServer({secure: {cert: authority.certificate, key: authority.serviceKey}}).listen(8080)
-    //     setTimeout(r, 5000)
-    //   })
-    // })
-    // destroyProxy = () => proxy.close()
+    proxy = await makeProxyServer({})
   })
 
   afterEach(async () => {
-    // await destroyProxy?.()
+    await proxy?.close()
   })
 
   it('ufg eyes works with proxy', async () => {
-    // console.log('proxy', proxy._server.address())
-
-    // proxy.intercept({phase: 'request'}, req => {
-    //   console.log(req.url)
-    // })
-
     await driver.url('https://applitools.com/helloworld')
 
     const core = makeCore({spec})
@@ -45,7 +37,7 @@ describe.skip('proxy', () => {
       settings: {
         appName: 'js core',
         testName: `ufg works with proxy`,
-        proxy: {url: `http://localhost:8080`},
+        proxy: {url: `http://localhost:${proxy.port}`},
         environment: {viewportSize: {width: 800, height: 600}},
       },
     })

@@ -26,7 +26,7 @@ export function makeLocate<TDriver, TContext, TElement, TSelector>({
     settings?: LocateSettings<TLocator, TElement, TSelector>
     logger?: Logger
   } = {}): Promise<LocateResult<TLocator>> {
-    logger.log('Command "check" is called with settings', settings)
+    logger.log('Command "locate" is called with settings', settings)
     if (!spec.isDriver(target)) {
       return core.locate({target, settings: settings as BaseLocateSettings<TLocator>, logger})
     }

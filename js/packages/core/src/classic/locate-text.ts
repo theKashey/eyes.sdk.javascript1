@@ -28,7 +28,7 @@ export function makeLocateText<TDriver, TContext, TElement, TSelector>({
     settings?: LocateTextSettings<TPattern, TElement, TSelector>
     logger?: Logger
   } = {}): Promise<LocateTextResult<TPattern>> {
-    logger.log('Command "check" is called with settings', settings)
+    logger.log('Command "locateText" is called with settings', settings)
     if (!spec.isDriver(target)) {
       return eyes.locateText({target, settings: settings as BaseLocateTextSettings<TPattern>, logger})
     }
