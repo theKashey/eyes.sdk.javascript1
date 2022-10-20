@@ -11,7 +11,7 @@ export function makeFakeCore({hooks, account = {}}: any = {}): BaseCore & EventE
     async getAccountInfo() {
       emitter.emit('getAccountInfo')
       await hooks?.getAccountInfo?.()
-      return {}
+      return account
     },
     async logEvent() {
       emitter.emit('logEvent')

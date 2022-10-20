@@ -13,12 +13,14 @@ Apollo SDK:
     - Drop support for Android 9 and Android 10 specific devices
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
+    - Fix dontCloseBatches mapping
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-selenium":
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+    - Fix dontCloseBatches mapping
 "@applitools/eyes-webdriverio":
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
@@ -32,6 +34,7 @@ Apollo SDK:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+    - Fix dontCloseBatches mapping
 "@applitools/eyes-protractor":
   feature:
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
@@ -52,6 +55,7 @@ Apollo SDK:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+    - Fix dontCloseBatches mapping
 "@applitools/eyes-testcafe":
   feature:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
@@ -70,11 +74,12 @@ Apollo SDK:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+    - Fix dontCloseBatches mapping
 "@applitools/eyes-cypress":
   feature:
     - 
   bug-fix:
-    - 
+    - Fix dontCloseBatches mapping
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

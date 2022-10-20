@@ -48,6 +48,7 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
     const test = {
       userTestId: settings.userTestId,
       batchId: settings.batch?.id,
+      keepBatchOpen: settings.keepBatchOpen,
       server: {serverUrl: settings.serverUrl, apiKey: settings.apiKey, proxy: settings.proxy},
       account,
     } as TestInfo
