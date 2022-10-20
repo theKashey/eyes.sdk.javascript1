@@ -470,7 +470,7 @@ export function makeEyesRequests({
           domUrl: target.dom,
           location: utils.geometry.round(target.locationInViewport),
         },
-        regions: [{left: 0, top: 0, ...target.size, expected: settings.hint}],
+        regions: [{left: 0, top: 0, ...utils.geometry.round(target.size), expected: settings.hint}],
         minMatch: settings.minMatch,
         language: settings.language,
       },

@@ -33,6 +33,12 @@ describe('requests', () => {
           },
         ]
       })
+    nock('https://localhost:3000')
+      .post('/api/sessions/running/images/text')
+      .query({apiKey: 'my0api0key'})
+      .reply((_url, body) => {
+        return [200, [JSON.stringify(body)]]
+      })
   })
 
   afterEach(() => {
@@ -82,7 +88,7 @@ describe('requests', () => {
       },
     })
 
-    assert.deepStrictEqual(JSON.parse(test.resultsUrl), {
+    assert.deepStrictEqual(JSON.parse(test.resultsUrl as any), {
       startInfo: {
         agentId: 'test-core [custom-agent]',
         agentSessionId: 'User specific test id',
@@ -129,6 +135,8 @@ describe('requests', () => {
       settings: {
         serverUrl: 'https://localhost:3000',
         apiKey: 'my0api0key',
+        appName: 'app-name',
+        testName: 'test-name',
         environment: {
           os: 'Linux',
           osInfo: 'Arch Linux',
@@ -145,9 +153,11 @@ describe('requests', () => {
       },
     })
 
-    assert.deepStrictEqual(JSON.parse(test.resultsUrl), {
+    assert.deepStrictEqual(JSON.parse(test.resultsUrl as any), {
       startInfo: {
         agentId: 'test-core',
+        appIdOrName: 'app-name',
+        scenarioIdOrName: 'test-name',
         environment: {
           bla: 'lala',
           yada: 'yada yada',
@@ -165,6 +175,7 @@ describe('requests', () => {
         apiKey: 'my0api0key',
         agentId: 'custom-agent',
         appName: 'My wonderful app',
+        testName: 'My great test',
       },
     })
 
@@ -228,7 +239,7 @@ describe('requests', () => {
       },
     })
 
-    assert.deepStrictEqual(JSON.parse(result.windowId), {
+    assert.deepStrictEqual(JSON.parse(result.windowId as any), {
       appOutput: {
         title: 'My beautiful image',
         screenshotUrl: 'https://localhost:3000/image.png',
@@ -287,6 +298,45 @@ describe('requests', () => {
         name: 'First step',
         source: 'https://localhost:8080/my-beautiful-page.html',
       },
+    })
+  })
+
+  it('extractText', async () => {
+    const requests = makeCoreRequests({agentId: 'test-core'})
+
+    const eyes = await requests.openEyes({
+      settings: {
+        serverUrl: 'https://localhost:3000',
+        apiKey: 'my0api0key',
+        agentId: 'custom-agent',
+        appName: 'My wonderful app',
+        testName: 'My great test',
+      },
+    })
+
+    const [result] = await eyes.extractText({
+      target: {
+        image: 'https://localhost:3000/image.png',
+        size: {width: 100.25, height: 200.75},
+        dom: 'https://localhost:3000/dom.json',
+        locationInViewport: {x: 10.25, y: 20.75},
+      },
+      settings: {
+        hint: 'HiNt',
+        minMatch: 0,
+        language: 'en',
+      },
+    })
+
+    assert.deepStrictEqual(JSON.parse(result as any), {
+      appOutput: {
+        screenshotUrl: 'https://localhost:3000/image.png',
+        domUrl: 'https://localhost:3000/dom.json',
+        location: {x: 10, y: 21},
+      },
+      regions: [{left: 0, top: 0, width: 100, height: 201, expected: 'HiNt'}],
+      minMatch: 0,
+      language: 'en',
     })
   })
 })
