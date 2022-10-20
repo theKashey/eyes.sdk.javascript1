@@ -11,6 +11,15 @@
 
 
 
+## 2.16.6 - 2022/10/20
+
+### Features
+- Drop support for Android 9 and Android 10 specific devices
+- Mark target element with `data-applitools-scroll` attribute before capture dom
+### Bug fixes
+- Fix dontCloseBatches mapping
+- Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+
 ## 2.16.5 - 2022/10/18
 
 ### Features
