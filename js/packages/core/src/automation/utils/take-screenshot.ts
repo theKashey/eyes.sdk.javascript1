@@ -8,6 +8,7 @@ import * as utils from '@applitools/utils'
 export type Screenshot = {
   image: any
   region: Region
+  element: Element<unknown, unknown, unknown, unknown>
   scrollingElement: Element<unknown, unknown, unknown, unknown>
   restoreState(): Promise<void>
 }

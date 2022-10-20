@@ -11,21 +11,23 @@ Apollo SDK:
 "@applitools/eyes-universal":
   feature:
     - Drop support for Android 9 and Android 10 specific devices
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-selenium":
   feature:
-    - 
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-webdriverio":
   feature:
-    - 
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-playwright":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -45,6 +47,7 @@ Apollo SDK:
 "@applitools/eyes-puppeteer":
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -61,6 +64,7 @@ Apollo SDK:
   feature:
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
+    - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently

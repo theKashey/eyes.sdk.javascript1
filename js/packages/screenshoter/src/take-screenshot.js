@@ -100,6 +100,7 @@ async function takeScreenshot({
 
   return {
     ...screenshot,
+    element: target.element,
     scrollingElement: target.scroller && target.scroller.element,
     calculatedRegions,
     async restoreState() {

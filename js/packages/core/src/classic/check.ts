@@ -57,6 +57,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
       baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
       if (driver.isWeb && settings.sendDom) {
         if (settings.fully) await screenshot.scrollingElement.setAttribute('data-applitools-scroll', 'true')
+        else screenshot.element.setAttribute('data-applitools-scroll', 'true')
         baseTarget.dom = await takeDomCapture({driver, logger}).catch(() => null)
       }
       if (settings.pageId) {

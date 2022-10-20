@@ -57,6 +57,7 @@ async function getTarget({window, context, region, fully, scrollingMode, logger}
       }
       return {
         context: elementContext,
+        element,
         region: returnRegion,
         scroller,
       }
