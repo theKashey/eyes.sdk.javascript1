@@ -77,7 +77,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fix dontCloseBatches mapping
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

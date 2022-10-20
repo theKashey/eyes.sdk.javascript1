@@ -10,6 +10,12 @@
 
 
 
+## 3.27.5 - 2022/10/20
+
+### Features
+### Bug fixes
+- Fix dontCloseBatches mapping
+
 ## 3.27.4 - 2022/10/19
 
 ### Features
