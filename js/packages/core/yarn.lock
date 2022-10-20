@@ -16,10 +16,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/core-base@1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@applitools/core-base/-/core-base-1.1.4.tgz#b4a3bca5dbd4e7e84a3c4eb3fd7cdfa5b993b71a"
-  integrity sha512-dV5mOG59Yh1G2ZYZb1tU1HgXPU1mPp7x+IVtwp2eBrikkTzhIp4feCVj4LNPJZF8Hq7YfoxHYtF6EpBg/P7trw==
+"@applitools/core-base@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@applitools/core-base/-/core-base-1.1.5.tgz#73a4065510ad8db230b95a2c4e0816234c84627c"
+  integrity sha512-OvJZIEwJs8L/Kl8+6jjHZ0c4RizemXVCBzBnNu/JhzS54cwhp7wLTowN/ZI6w4WwRgwLrUF2FNQhd4ydiomNvg==
   dependencies:
     "@applitools/image" "1.0.4"
     "@applitools/logger" "1.1.27"
@@ -58,6 +58,16 @@
   version "1.10.6"
   resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.6.tgz#7b4d71bb4a8456231931b78965c164ca14a9cddf"
   integrity sha512-fZgnDTCSd8CaiXXYyWGIaIAZisEw9Waj+SPoAi6osypvFkVQ71mynC+fkfI/B5JOEnoHYEpj4AXfiukEvq88zA==
+  dependencies:
+    "@applitools/logger" "1.1.27"
+    "@applitools/snippets" "2.4.5"
+    "@applitools/utils" "1.3.13"
+    semver "7.3.7"
+
+"@applitools/driver@1.10.7":
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.7.tgz#a1a6c40831d39f3496d19dd1e582c455a8ecc2d3"
+  integrity sha512-HaKnZ98y1PUnnT2tsHar5smPekNtxwWuEfwQFSWRp1OK5lgi+leUXtcXRROzsD1Z7kRGDuyMbqSDYINFDgWDlQ==
   dependencies:
     "@applitools/logger" "1.1.27"
     "@applitools/snippets" "2.4.5"
@@ -139,10 +149,10 @@
     node-fetch "2.6.7"
     proxy-agent "5.0.0"
 
-"@applitools/screenshoter@3.6.5":
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.6.5.tgz#845156debede010905362dd9ae84744da086f4ee"
-  integrity sha512-mPhn6LsGs8Aj0lcxMDh72EEySgqT4x5iM5Tjsr1czQ4WVmPM/xC2TN7N1CwxmS0WFgEcVpjHj9Plfr4lQqNgfg==
+"@applitools/screenshoter@3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.7.0.tgz#c2497b41c9f25e982fe469ea3407ea5ab1c9cb4f"
+  integrity sha512-d723TI4InLQi06TpVj4rP+V5OrNL9mFQr+cWv2MOMfQbuAnZETTRzvDyk97e3qoDJHAPjyQuxi81qEaxsFxhOA==
   dependencies:
     "@applitools/image" "1.0.4"
     "@applitools/logger" "1.1.27"
