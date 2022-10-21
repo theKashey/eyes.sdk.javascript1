@@ -21,6 +21,7 @@ export function makeCloseManager<TDriver, TElement, TSelector, TType extends 'cl
   }: {settings?: {throwErr?: boolean}; logger?: Logger} = {}): Promise<TestResultSummary<TType>> {
     const containers: TestResultContainer<TType>[][] = await Promise.all(
       storage.map(async ({eyes, promise}) => {
+        if (!promise) logger.warn(`The eyes with id "${eyes.test.userTestId}" are going to be auto aborted`)
         try {
           const results: TestResult<TType>[] = await (promise ?? eyes.abort({logger}))
           return results.map(result => {
