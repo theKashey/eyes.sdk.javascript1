@@ -11,6 +11,13 @@
 
 
 
+## 2.16.7 - 2022/10/22
+
+### Features
+- Added logs for command responses
+### Bug fixes
+- Fixed proxy issue with resource (screenshot/dom) uploading
+
 ## 2.16.6 - 2022/10/20
 
 ### Features
