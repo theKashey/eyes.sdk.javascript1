@@ -159,7 +159,7 @@ export function makeCoreRequests({
     })
     logger.log('Request "openEyes" finished successfully with body', test)
 
-    const upload = makeUpload({config: {uploadUrl: test.account.uploadUrl}, logger})
+    const upload = makeUpload({config: {uploadUrl: test.account.uploadUrl, proxy: settings.proxy}, logger})
 
     return makeEyesRequests({test, req, upload, logger})
   }
@@ -178,7 +178,7 @@ export function makeCoreRequests({
     logger.log('Request "locate" called for target', target, 'with settings', settings)
 
     const account = await getAccountInfoWithCache({settings})
-    const upload = makeUpload({config: {uploadUrl: account.uploadUrl}, logger})
+    const upload = makeUpload({config: {uploadUrl: account.uploadUrl, proxy: settings.proxy}, logger})
 
     target.image = await upload({name: 'image', resource: target.image})
     const response = await req('/api/locators/locate', {

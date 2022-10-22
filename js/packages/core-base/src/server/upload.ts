@@ -1,11 +1,11 @@
 import {type Logger} from '@applitools/logger'
-import {req} from '@applitools/req'
+import {req, type Proxy} from '@applitools/req'
 import {gzipSync} from 'zlib'
 import * as utils from '@applitools/utils'
 
 export type Upload = (options: {name: string; resource: Buffer | string; gzip?: boolean}) => Promise<string>
 
-export function makeUpload({config, logger}: {config: {uploadUrl: string}; logger?: Logger}): Upload {
+export function makeUpload({config, logger}: {config: {uploadUrl: string; proxy?: Proxy}; logger?: Logger}): Upload {
   return async function upload({name, resource, gzip}) {
     logger.log(`Upload called for ${name} resource`)
     if (utils.types.isNull(resource) || utils.types.isHttpUrl(resource)) return resource
@@ -19,6 +19,7 @@ export function makeUpload({config, logger}: {config: {uploadUrl: string}; logge
         'x-ms-blob-type': 'BlockBlob',
       },
       body,
+      proxy: config.proxy,
       retry: {
         limit: 5,
         timeout: 500,
@@ -27,7 +28,7 @@ export function makeUpload({config, logger}: {config: {uploadUrl: string}; logge
       },
       hooks: {
         beforeRetry({response, error, attempt}) {
-          logger.log(
+          logger.warn(
             `Upload of ${name} resource will be retried due to ${
               error ? `an error with message "${error.message}"` : `unexpected status ${response.statusText}(${response.status})`
             } in previous attempt (${attempt})`,

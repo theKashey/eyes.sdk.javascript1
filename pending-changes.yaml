@@ -10,9 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Added logs for command responses
   bug-fix:
-    - 
+    - Fixed proxy issue with resource (screenshot/dom) uploading
 "@applitools/eyes-selenium":
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom

@@ -46,4 +46,24 @@ describe('proxy', () => {
 
     await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
   })
+
+  it('classic eyes works with proxy', async () => {
+    await driver.url('https://applitools.com/helloworld')
+
+    const core = makeCore({spec})
+    const manager = await core.makeManager({type: 'classic'})
+    const eyes = await manager.openEyes({
+      target: driver,
+      settings: {
+        appName: 'js core',
+        testName: `classic works with proxy`,
+        proxy: {url: `http://localhost:${proxy.port}`},
+        environment: {viewportSize: {width: 800, height: 600}},
+      },
+    })
+
+    await eyes.check({settings: {fully: false}})
+
+    await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+  })
 })

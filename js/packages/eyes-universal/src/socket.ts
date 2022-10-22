@@ -134,8 +134,13 @@ export function makeSocket(ws?: WebSocket, {logger}: {logger?: Logger} = {}): So
       logger?.log('[COMMAND]', name, JSON.stringify(payload, null, 4))
       try {
         const result = await fn(payload)
+        logger?.log(
+          `[COMMAND] ${name} finished successfully with result`,
+          JSON.stringify(result, null, 4).slice(0, 3000),
+        )
         emit({name, key}, {result})
       } catch (error) {
+        logger?.log(`[COMMAND] ${name} failed with an error`, error)
         emit(
           {name, key},
           {

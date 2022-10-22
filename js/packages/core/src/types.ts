@@ -27,7 +27,7 @@ export interface Core<TDriver, TElement, TSelector> extends AutomationCore.Core<
   }): Promise<AutomationCore.LocateResult<TLocator>>
   makeManager<TType extends 'classic' | 'ufg' = 'classic'>(options?: {
     type: TType
-    concurrency: TType extends 'ufg' ? number : never
+    concurrency?: TType extends 'ufg' ? number : never
     agentId?: string
     logger?: Logger
   }): Promise<EyesManager<TDriver, TElement, TSelector, TType>>
