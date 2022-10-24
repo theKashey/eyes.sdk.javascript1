@@ -21,10 +21,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@1.10.6":
-  version "1.10.6"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.6.tgz#7b4d71bb4a8456231931b78965c164ca14a9cddf"
-  integrity sha512-fZgnDTCSd8CaiXXYyWGIaIAZisEw9Waj+SPoAi6osypvFkVQ71mynC+fkfI/B5JOEnoHYEpj4AXfiukEvq88zA==
+"@applitools/driver@1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.0.tgz#1276e2a099253c07696fb834fe1c9f1e9c44624a"
+  integrity sha512-yNo4ljkk5C2wJ7foqENoIgtlbW3/RpDYBT5UCjq5yTK/xfnvAlh+zUmnqGJ43w8PZj4IH7E8xLRVBVIq2Mv9oQ==
   dependencies:
     "@applitools/logger" "1.1.27"
     "@applitools/snippets" "2.4.5"
