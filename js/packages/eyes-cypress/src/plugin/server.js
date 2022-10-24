@@ -4,8 +4,10 @@ const {makeServerProcess} = require('@applitools/eyes-universal');
 const handleTestResults = require('./handleTestResults');
 const path = require('path');
 const fs = require('fs');
+const semverLt = require('semver/functions/lt');
 const {Server: HttpsServer} = require('https');
 const {Server: WSServer} = require('ws');
+const which = require('which');
 
 function makeStartServer({logger}) {
   return async function startServer() {
@@ -30,12 +32,25 @@ function makeStartServer({logger}) {
 
     wss.on('close', () => https.close());
 
+    const forkOptions = {
+      detached: true,
+    };
+
+    const cypressVersion = require('cypress/package.json').version;
+
+    // `cypress` version below `7.0.0` has an old Electron version which not support async shell process.
+    // By passing `execPath` with the node process cwd it will switch the `node` process to be the like the OS have
+    // and will not use the unsupported `Cypress Helper.app` with the not supported shell process Electron
+    if (semverLt(cypressVersion, '7.0.0')) {
+      forkOptions.execPath = await which('node');
+    }
+
     const {port: universalPort, close: closeUniversalServer} = await makeServerProcess({
       key: path.resolve(__dirname, '../pem/server.key'),
       cert: path.resolve(__dirname, '../pem/server.cert'),
-      detached: false,
       idleTimeout: 0,
       shutdownMode: 'stdin',
+      forkOptions,
     });
 
     const managers = [];
