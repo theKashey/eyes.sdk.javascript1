@@ -12,7 +12,7 @@ describe('spec driver', async () => {
       ;[contentPage, destroyPage] = await spec.build({browser: 'chromium'})
 
       backgroundPage =
-        contentPage.context().backgroundPages()[0] || (await contentPage.context().waitForEvent('backgroundpage'))
+        contentPage.context().serviceWorkers()[0] || (await contentPage.context().waitForEvent('serviceworker'))
 
       await contentPage.goto(url)
 
@@ -160,11 +160,11 @@ describe('spec driver', async () => {
     )
     const childContext = await backgroundPage.evaluate(
       async ([context]) => {
-        const [element] = await browser.tabs.executeScript(context.tabId, {
-          code: `JSON.stringify(refer.ref(document.querySelector('[src="./frame2.html"]')))`,
-          frameId: context.frameId,
+        const [{result: element}] = await browser.scripting.executeScript({
+          target: {tabId: context.tabId, frameIds: [context.frameId]},
+          func: () => refer.ref(document.querySelector('[src="./frame2.html"]')),
         })
-        return spec.childContext(context, JSON.parse(element))
+        return spec.childContext(context, element)
       },
       [{...driver, frameId: 0}],
     )
@@ -177,12 +177,29 @@ describe('spec driver', async () => {
       obj: {key: 'value', obj: {key: 0}},
       arr: [0, 1, 2, {key: 3}],
     }
-    const result = await backgroundPage.evaluate(
-      ([driver, arg]) => spec.executeScript(driver, arg => arg, arg),
+
+    const {el1, ...result1} = await backgroundPage.evaluate(
+      ([driver, arg]) => spec.executeScript(driver, arg => { return {...arg, el1:document.querySelector('body')} }, arg),
       [driver, arg],
     )
 
-    assert.deepStrictEqual(result, arg)
+    assert.deepStrictEqual(result1, arg)
+    // assert.ok(el1['applitools-ref-id'])
+
+    const {el2, tagName, ...result2} = await backgroundPage.evaluate(
+      ([driver, arg]) => spec.executeScript(driver, arg => ({...arg, tagName: document.querySelector('body').tagName}), arg),
+      [driver, {...arg, el2: el1}],
+    )
+
+    assert.deepStrictEqual(result2, arg)
+    // assert.ok(el2['applitools-ref-id'])
+    assert.strictEqual(tagName, 'BODY')
+    // assert.notDeepStrictEqual(el1, el2)
+
+    assert.rejects(
+      backgroundPage.evaluate(([driver]) => spec.executeScript(driver, () => {throw new Error("blabla")}), [driver]),
+      err => err.message === 'blabla',
+    )
   }
   async function findElement({input, expected}) {
     const root = input.parent || contentPage
@@ -202,11 +219,12 @@ describe('spec driver', async () => {
       const elementKey = await expected.evaluate(element => (element.dataset.key = 'element-key'))
       const isCorrectElement = await backgroundPage.evaluate(
         async ([context, element, elementKey]) => {
-          const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
-            code: `refer.deref(${JSON.stringify(element)}).dataset.key === '${elementKey}'`,
-            frameId: context.frameId,
+          const [{result}] = await browser.scripting.executeScript({
+            target: {tabId: context.tabId, frameIds: [context.frameId]},
+            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey,
+            args: [element, elementKey],
           })
-          return isCorrectElement
+          return result
         },
         [{...driver, frameId: 0}, element, elementKey],
       )
@@ -232,11 +250,12 @@ describe('spec driver', async () => {
       const elementKey = await expectedElement.evaluate(element => (element.dataset.key = 'element-key'))
       const isCorrectElement = await backgroundPage.evaluate(
         async ([context, element, elementKey]) => {
-          const [isCorrectElement] = await browser.tabs.executeScript(context.tabId, {
-            code: `refer.deref(${JSON.stringify(element)}).dataset.key === '${elementKey}'`,
-            frameId: context.frameId,
+          const [{result}] = await browser.scripting.executeScript({
+            target: {tabId: context.tabId, frameIds: [context.frameId]},
+            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey,
+            args: [element, elementKey],
           })
-          return isCorrectElement
+          return result
         },
         [{...driver, frameId: 0}, elements[index], elementKey],
       )
@@ -259,7 +278,7 @@ describe('spec driver', async () => {
       value: 'world',
       domain: 'google.com',
       path: '/',
-      expiry: 4025208067,
+      expiry: Math.floor((Date.now() + 60000) / 1000),
       httpOnly: true,
       secure: true,
       sameSite: 'Lax',

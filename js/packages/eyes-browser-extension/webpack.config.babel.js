@@ -20,8 +20,10 @@ export default {
     publicPath: '/assets/',
     libraryTarget: 'umd',
   },
+  target: ['webworker'],
   resolve: {
     extensions: ['.js', '.json'],
+    mainFields: ['browser', 'main'],
     alias: {
       fs: require.resolve('./src/builtins/fs.js'),
       url: require.resolve('./src/builtins/url.js'),
@@ -35,8 +37,21 @@ export default {
       path: require.resolve('path-browserify'),
       stream: require.resolve('stream-browserify'),
       zlib: require.resolve('browserify-zlib'),
+      http: require.resolve('stream-http'),
+      https: require.resolve('https-browserify'),
+      tty: require.resolve('tty-browserify'),
+      vm: false,
+      async_hooks: false,
+      canvas: require.resolve('canvas-browserify'),
+      tls: require.resolve('tls-browserify'),
+      net: false,
+      '@applitools/execution-grid-client': false,
       module: false,
       child_process: false,
+      'abort-controller': require.resolve('./src/builtins/abort-controller.js'),
+    },
+    fallback: {
+      events: require.resolve('events/'),
     },
   },
   plugins: [

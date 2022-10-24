@@ -23,6 +23,7 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
 }): Promise<DomSnapshot> {
   const driver = context.driver
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
+  const {canExecuteOnlyFunctionScripts} = driver.features
 
   const arg = {
     dontFetchResources: settings?.disableBrowserFetching,
@@ -37,13 +38,15 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
   }
   const scripts = {
     main: {
-      script: `return (${
-        isLegacyBrowser ? await getProcessPagePollForIE() : await getProcessPagePoll()
-      }).apply(null, arguments);`,
+      script: canExecuteOnlyFunctionScripts
+        ? require('@applitools/dom-snapshot').processPagePoll
+        : `return (${isLegacyBrowser ? await getProcessPagePollForIE() : await getProcessPagePoll()}).apply(null, arguments);`,
       args: [arg],
     },
     poll: {
-      script: `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
+      script: canExecuteOnlyFunctionScripts
+        ? require('@applitools/dom-snapshot').pollResult
+        : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
       args: [arg],
     },
   }

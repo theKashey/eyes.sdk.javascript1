@@ -143,7 +143,7 @@ async function link({
   await linkPackages.reduce(async (promise, linkPackage) => {
     await promise
     console.log(`Preparing ${linkPackage.name} for linking`)
-    const commands = ['yarn link']
+    const commands = ['yarn link --link-folder ../']
     if (runInstall || runBuild) commands.push('yarn install', 'npm run upgrade:framework --if-present')
     return execAsync(commands.join(' && '), {cwd: path.resolve(packagesPath, linkPackage.dirname), encoding: 'utf8'})
   }, Promise.resolve())
@@ -151,7 +151,7 @@ async function link({
   await Promise.all(
     [targetPackage, ...linkPackages].map(async targetPackage => {
       console.log(`Linking to ${targetPackage.name}`)
-      const linkCommands = linkPackages.map(linkPackage => `yarn link ${linkPackage.name}`)
+      const linkCommands = linkPackages.map(linkPackage => `yarn link --link-folder ../ ${linkPackage.name}`)
       return execAsync(linkCommands.join(' && '), {
         cwd: path.resolve(packagesPath, targetPackage.dirname),
         encoding: 'utf8',

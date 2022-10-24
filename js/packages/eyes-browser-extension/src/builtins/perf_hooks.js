@@ -1,1 +1,1 @@
-export const performance = window.performance
+export const performance = globalThis.performance

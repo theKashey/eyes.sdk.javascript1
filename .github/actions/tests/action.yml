@@ -68,7 +68,7 @@ runs:
           yarn --cwd ../scripts install
           yarn --cwd ../scripts link
           yarn link @applitools/scripts
-          npx link "${{inputs.links}}" --build --install
+          npx -p @applitools/scripts link "${{inputs.links}}" --build --install
           ls -F ./node_modules/@applitools
           echo "::endgroup::"
         fi

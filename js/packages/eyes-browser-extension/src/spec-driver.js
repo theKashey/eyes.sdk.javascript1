@@ -38,35 +38,18 @@ export function isStaleElementError(error) {
 // #region COMMANDS
 
 export async function executeScript(context, script, arg) {
-  script = utils.types.isFunction(script) ? `return (${script}).apply(null, arguments)` : script
-  const [response] = await browser.tabs.executeScript(context.tabId, {
-    frameId: context.frameId,
-    code: `JSON.stringify((function() {
-      try {
-        const fn = new Function(${JSON.stringify(script)});
-        const result = fn(refer.deref(${JSON.stringify(arg)}));
-        return {result: refer.ref(result)};
-      } catch (error) {
-        return {error: error instanceof Error ? {message: error.message, stack: error.stack} : error}
-      }
-    })())`,
+  const [{result, error}] = await browser.scripting.executeScript({
+    target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+    func: script,
+    args: [arg || null],
   })
-  const {result, error} = JSON.parse(response)
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (error) {
-        if (utils.types.has(error, ['message', 'stack'])) {
-          const err = new Error(error.message)
-          err.stack = error.stack
-          reject(err)
-        }
-        throw error
-      } else {
-        resolve(result)
-      }
-    })
-  }, 100)
+  if (error) {
+    const err = new Error(error.message)
+    err.stack = error.stack
+    throw err
+  }
+  return result
 }
 export async function mainContext(context) {
   return {...context, frameId: 0}
@@ -86,11 +69,12 @@ export async function childContext(context, element) {
         browser.runtime.onMessage.removeListener(handler)
       }
     }
-    await browser.tabs.executeScript(context.tabId, {
-      code: `refer.deref(${JSON.stringify(
-        element,
-      )}).contentWindow.postMessage({key: '${key}', isApplitools: true}, '*')`,
-      frameId: context.frameId,
+    await browser.scripting.executeScript({
+      target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+      func: (element, key) => {
+        refer.deref(element).contentWindow.postMessage({key, isApplitools: true}, '*')
+      },
+      args: [element, key],
     })
     setTimeout(() => reject(new Error('No such frame')), 5000)
   })
@@ -98,53 +82,48 @@ export async function childContext(context, element) {
   return {...context, frameId: childFrameId}
 }
 export async function findElement(context, selector, parent) {
-  if (selector.type === 'css') {
-    const [element] = await browser.tabs.executeScript(context.tabId, {
-      frameId: context.frameId,
-      code: parent
-        ? `JSON.stringify(refer.ref(refer.deref(${JSON.stringify(parent)}).querySelector('${selector.selector}')))`
-        : `JSON.stringify(refer.ref(document.querySelector('${selector.selector}')))`,
-    })
-    return JSON.parse(element)
-  } else if (selector.type === 'xpath') {
-    const [element] = await browser.tabs.executeScript(context.tabId, {
-      frameId: context.frameId,
-      code: `JSON.stringify(refer.ref(document.evaluate('${selector.selector}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue))`,
-    })
-    return JSON.parse(element)
-  }
+  const [{result}] = await browser.scripting.executeScript({
+    target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+    func: (selector, parent) => {
+      if (selector.type === 'css') {
+        const root = parent ? refer.deref(parent) : document
+        return refer.ref(root.querySelector(selector.selector))
+      } else if (selector.type === 'xpath') {
+        return refer.ref(
+          document.evaluate(selector.selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE).singleNodeValue,
+        )
+      }
+    },
+    args: [selector, parent || null],
+  })
+  return result
 }
 export async function findElements(context, selector, parent) {
-  if (selector.type === 'css') {
-    const [elements] = await browser.tabs.executeScript(context.tabId, {
-      frameId: context.frameId,
-      code: parent
-        ? `JSON.stringify(Array.from(refer.deref(${JSON.stringify(parent)}).querySelectorAll('${
-            selector.selector
-          }'), refer.ref))`
-        : `JSON.stringify(Array.from(document.querySelectorAll('${selector.selector}'), refer.ref))`,
-    })
-    return JSON.parse(elements)
-  } else if (selector.type === 'xpath') {
-    const [elements] = await browser.tabs.executeScript(context.tabId, {
-      frameId: context.frameId,
-      code: `JSON.stringify((function() {
-        const iterator = document.evaluate('${selector.selector}', document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE);
-        const elements = [];
+  const [{result}] = await browser.scripting.executeScript({
+    target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+    func: (selector, parent) => {
+      if (selector.type === 'css') {
+        const root = parent ? refer.deref(parent) : document
+        return Array.from(root.querySelectorAll(selector.selector), refer.ref)
+      } else if (selector.type === 'xpath') {
+        const iterator = document.evaluate(selector.selector, document, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE)
+        const elements = []
         for (let element = iterator.iterateNext(); element !== null; element = iterator.iterateNext()) {
-          elements.push(refer.ref(element));
+          elements.push(refer.ref(element))
         }
-        return elements;
-      })())`,
-    })
-    return JSON.parse(elements)
-  }
+        return elements
+      }
+    },
+    args: [selector, parent || null],
+  })
+  return result
 }
 export async function getWindowSize(driver) {
-  const [size] = await browser.tabs.executeScript(driver.tabId, {
-    code: 'JSON.stringify({width: window.outerWidth, height: window.outerHeight})',
+  const [{result}] = await browser.scripting.executeScript({
+    target: {tabId: driver.tabId, frameIds: [0]},
+    func: () => ({width: window.outerWidth, height: window.outerHeight}),
   })
-  return JSON.parse(size)
+  return result
 }
 export async function setWindowSize(driver, size) {
   await browser.windows.update(driver.windowId, {
@@ -190,4 +169,7 @@ export async function getUrl(driver) {
   return url
 }
 
+export async function getDriverInfo() {
+  return {features: {canExecuteOnlyFunctionScripts: true}}
+}
 // #endregion

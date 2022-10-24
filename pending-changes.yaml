@@ -133,6 +133,7 @@ eyes-browser-extension:
     - Add the ability for the SDK to lazy load the page prior to performing a check window
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - Migrate to manifest V3
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates

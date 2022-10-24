@@ -30,6 +30,7 @@ export type DriverInfo = {
   features?: {
     shadowSelector?: boolean
     allCookies?: boolean
+    canExecuteOnlyFunctionScripts?: boolean
   }
 }
 

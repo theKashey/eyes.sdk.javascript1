@@ -4,9 +4,9 @@ import {makeMessenger} from './messenger'
 import {makeRefer} from './refer'
 import * as spec from './spec-driver'
 
-window.browser = browser
-window.spec = spec
-window.sdk = makeSDK({
+globalThis.browser = browser
+globalThis.spec = spec
+globalThis.sdk = makeSDK({
   name: 'eyes.browser-extension',
   version: require('../package.json').version,
   spec,
@@ -30,13 +30,13 @@ const messenger = makeMessenger({
 })
 
 messenger.command('Core.makeManager', async (config, sender) => {
-  const manager = await window.sdk.makeManager(config)
+  const manager = await globalThis.sdk.makeManager(config)
   const managerRef = refer.ref(manager, `manager-${sender.tab.id}`)
   messenger.emit('Core.setManager', {manager: managerRef}, {tabId: sender.tab.id})
   return managerRef
 })
 messenger.command('Core.openEyes', async (config, sender) => {
-  const manager = await window.sdk.makeManager(config)
+  const manager = await globalThis.sdk.makeManager(config)
   const eyes = await manager.openEyes({
     driver: {tabId: sender.tab.id, windowId: sender.tab.windowId, frameId: sender.frameId},
     config: config.config,
@@ -47,21 +47,21 @@ messenger.command('Core.openEyes', async (config, sender) => {
   return eyesRef
 })
 messenger.command('Core.getViewportSize', async (_, sender) => {
-  return window.sdk.getViewportSize({
+  return globalThis.sdk.getViewportSize({
     driver: {tabId: sender.tab.id, windowId: sender.tab.windowId},
   })
 })
 messenger.command('Core.setViewportSize', async ({size}, sender) => {
-  return window.sdk.setViewportSize({
+  return globalThis.sdk.setViewportSize({
     driver: {tabId: sender.tab.id, windowId: sender.tab.windowId},
     size,
   })
 })
 messenger.command('Core.closeBatches', async settings => {
-  return window.sdk.closeAllBatches(settings)
+  return globalThis.sdk.closeAllBatches(settings)
 })
 messenger.command('Core.deleteTest', async settings => {
-  return window.sdk.deleteTest(settings)
+  return globalThis.sdk.deleteTest(settings)
 })
 
 messenger.command('EyesManager.openEyes', async ({manager, config, on}, sender) => {

@@ -16,6 +16,7 @@ export async function takeDomCapture<TDriver extends Driver<unknown, unknown, un
   logger: Logger
 }) {
   const isLegacyBrowser = driver.isIE || driver.isEdgeLegacy
+  const {canExecuteOnlyFunctionScripts} = driver.features
   const arg = {
     chunkByteLength:
       settings?.chunkByteLength ??
@@ -23,11 +24,15 @@ export async function takeDomCapture<TDriver extends Driver<unknown, unknown, un
   }
   const scripts = {
     main: {
-      script: `return (${isLegacyBrowser ? await getCaptureDomPollForIE() : await getCaptureDomPoll()}).apply(null, arguments);`,
+      script: canExecuteOnlyFunctionScripts
+        ? require('@applitools/dom-snapshot').captureDomPoll
+        : `return (${isLegacyBrowser ? await getCaptureDomPollForIE() : await getCaptureDomPoll()}).apply(null, arguments);`,
       args: [arg],
     },
     poll: {
-      script: `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
+      script: canExecuteOnlyFunctionScripts
+        ? require('@applitools/dom-snapshot').pollResult
+        : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
       args: [arg],
     },
   }

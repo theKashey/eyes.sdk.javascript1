@@ -8,7 +8,7 @@ export type PollScriptSettings = {
   pollTimeout: number
 }
 
-type Script = {script: string; args: any[]}
+type Script = {script: string | ((...args: any[]) => any); args: any[]}
 
 export async function executePollScript<TContext extends Context<unknown, unknown, unknown, unknown>>({
   context,

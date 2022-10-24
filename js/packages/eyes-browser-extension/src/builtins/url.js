@@ -1,1 +1,1 @@
-export const URL = window.URL
+export const URL = globalThis.URL
