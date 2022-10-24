@@ -72,7 +72,7 @@ export async function childContext(context, element) {
     await browser.scripting.executeScript({
       target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
       func: (element, key) => {
-        refer.deref(element).contentWindow.postMessage({key, isApplitools: true}, '*')
+        refer.deref(element).contentWindow.postMessage({key, isApplitools: true}, '*') // eslint-disable-line no-undef
       },
       args: [element, key],
     })
@@ -84,6 +84,7 @@ export async function childContext(context, element) {
 export async function findElement(context, selector, parent) {
   const [{result}] = await browser.scripting.executeScript({
     target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+    /* eslint-disable no-undef */
     func: (selector, parent) => {
       if (selector.type === 'css') {
         const root = parent ? refer.deref(parent) : document
@@ -94,6 +95,7 @@ export async function findElement(context, selector, parent) {
         )
       }
     },
+    /* eslint-enable no-undef */
     args: [selector, parent || null],
   })
   return result
@@ -101,6 +103,7 @@ export async function findElement(context, selector, parent) {
 export async function findElements(context, selector, parent) {
   const [{result}] = await browser.scripting.executeScript({
     target: {tabId: context.tabId, frameIds: [context.frameId || 0]},
+    /* eslint-disable no-undef */
     func: (selector, parent) => {
       if (selector.type === 'css') {
         const root = parent ? refer.deref(parent) : document
@@ -114,6 +117,7 @@ export async function findElements(context, selector, parent) {
         return elements
       }
     },
+    /* eslint-enable no-undef */
     args: [selector, parent || null],
   })
   return result

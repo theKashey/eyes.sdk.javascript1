@@ -162,7 +162,7 @@ describe('spec driver', async () => {
       async ([context]) => {
         const [{result: element}] = await browser.scripting.executeScript({
           target: {tabId: context.tabId, frameIds: [context.frameId]},
-          func: () => refer.ref(document.querySelector('[src="./frame2.html"]')),
+          func: () => refer.ref(document.querySelector('[src="./frame2.html"]')), // eslint-disable-line no-undef
         })
         return spec.childContext(context, element)
       },
@@ -179,15 +179,23 @@ describe('spec driver', async () => {
     }
 
     const {el1, ...result1} = await backgroundPage.evaluate(
-      ([driver, arg]) => spec.executeScript(driver, arg => { return {...arg, el1:document.querySelector('body')} }, arg),
+      ([driver, arg]) =>
+        spec.executeScript(
+          driver,
+          arg => {
+            return {...arg, el1: document.querySelector('body')}
+          },
+          arg,
+        ),
       [driver, arg],
     )
 
     assert.deepStrictEqual(result1, arg)
     // assert.ok(el1['applitools-ref-id'])
 
-    const {el2, tagName, ...result2} = await backgroundPage.evaluate(
-      ([driver, arg]) => spec.executeScript(driver, arg => ({...arg, tagName: document.querySelector('body').tagName}), arg),
+    const {tagName, ...result2} = await backgroundPage.evaluate(
+      ([driver, arg]) =>
+        spec.executeScript(driver, arg => ({...arg, tagName: document.querySelector('body').tagName}), arg),
       [driver, {...arg, el2: el1}],
     )
 
@@ -197,7 +205,13 @@ describe('spec driver', async () => {
     // assert.notDeepStrictEqual(el1, el2)
 
     assert.rejects(
-      backgroundPage.evaluate(([driver]) => spec.executeScript(driver, () => {throw new Error("blabla")}), [driver]),
+      backgroundPage.evaluate(
+        ([driver]) =>
+          spec.executeScript(driver, () => {
+            throw new Error('blabla')
+          }),
+        [driver],
+      ),
       err => err.message === 'blabla',
     )
   }
@@ -221,7 +235,7 @@ describe('spec driver', async () => {
         async ([context, element, elementKey]) => {
           const [{result}] = await browser.scripting.executeScript({
             target: {tabId: context.tabId, frameIds: [context.frameId]},
-            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey,
+            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey, // eslint-disable-line no-undef
             args: [element, elementKey],
           })
           return result
@@ -252,7 +266,7 @@ describe('spec driver', async () => {
         async ([context, element, elementKey]) => {
           const [{result}] = await browser.scripting.executeScript({
             target: {tabId: context.tabId, frameIds: [context.frameId]},
-            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey,
+            func: (element, elementKey) => refer.deref(element).dataset.key === elementKey, // eslint-disable-line no-undef
             args: [element, elementKey],
           })
           return result
