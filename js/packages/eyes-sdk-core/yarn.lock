@@ -26,21 +26,21 @@
     "@applitools/req" "1.1.11"
     "@applitools/utils" "1.3.13"
 
-"@applitools/core@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.2.2.tgz#444c12474512e7383f434a70c1c03fd8d26da723"
-  integrity sha512-yYcua7j3+G/+2PLNFvl9z3Bkq15e+rTjXS3qhH8p4tzkT2X00n0wMjC06shZy8b4Etfy9WKPKuKCXqWjy5Jgag==
+"@applitools/core@1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.2.3.tgz#3c72049c92d6b404d556a8511bbd4252e2ec610e"
+  integrity sha512-ippDT1zx9XEBvZ8OBhTVDVik+1mcQEL6969EZHkQUS0+svn8k3/YHtjVgROxJMlH3es9x8cel9xTtG89p+HDGw==
   dependencies:
     "@applitools/core-base" "1.1.6"
     "@applitools/dom-capture" "11.2.0"
     "@applitools/dom-snapshot" "4.7.0"
-    "@applitools/driver" "1.10.7"
+    "@applitools/driver" "1.11.0"
     "@applitools/logger" "1.1.27"
     "@applitools/nml-client" "1.3.4"
     "@applitools/req" "1.1.11"
     "@applitools/screenshoter" "3.7.0"
     "@applitools/snippets" "2.4.5"
-    "@applitools/ufg-client" "1.1.0"
+    "@applitools/ufg-client" "1.1.1"
     "@applitools/utils" "1.3.13"
     abort-controller "3.0.0"
     throat "6.0.1"
@@ -73,20 +73,10 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.10.6":
-  version "1.10.6"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.6.tgz#7b4d71bb4a8456231931b78965c164ca14a9cddf"
-  integrity sha512-fZgnDTCSd8CaiXXYyWGIaIAZisEw9Waj+SPoAi6osypvFkVQ71mynC+fkfI/B5JOEnoHYEpj4AXfiukEvq88zA==
-  dependencies:
-    "@applitools/logger" "1.1.27"
-    "@applitools/snippets" "2.4.5"
-    "@applitools/utils" "1.3.13"
-    semver "7.3.7"
-
-"@applitools/driver@1.10.7":
-  version "1.10.7"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.10.7.tgz#a1a6c40831d39f3496d19dd1e582c455a8ecc2d3"
-  integrity sha512-HaKnZ98y1PUnnT2tsHar5smPekNtxwWuEfwQFSWRp1OK5lgi+leUXtcXRROzsD1Z7kRGDuyMbqSDYINFDgWDlQ==
+"@applitools/driver@1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.0.tgz#1276e2a099253c07696fb834fe1c9f1e9c44624a"
+  integrity sha512-yNo4ljkk5C2wJ7foqENoIgtlbW3/RpDYBT5UCjq5yTK/xfnvAlh+zUmnqGJ43w8PZj4IH7E8xLRVBVIq2Mv9oQ==
   dependencies:
     "@applitools/logger" "1.1.27"
     "@applitools/snippets" "2.4.5"
@@ -208,12 +198,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
   integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
 
-"@applitools/spec-driver-selenium@1.5.3":
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.3.tgz#efc0efd1b87db490ed629d0d2e7304b9a4245439"
-  integrity sha512-6L+GiV8UpYRvfuRsE+nnNxuDvGqZsW42RL6MQNWfn+h3kjA9oowzG7ca/BXESwK2VbG1tZw78d+lAWBNc0oVpg==
+"@applitools/spec-driver-selenium@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.4.tgz#dae7e925fb138d8078256a159a2f4b7dcb68a4bb"
+  integrity sha512-ckMX2Z4Il/Ys69Ez/dyccjn0TihQSTRHMdC4YUZ8ZUISGb3E29YArVi19NqT1ezmRIPYWlCKRk0bbaa7yOPlig==
   dependencies:
-    "@applitools/driver" "1.10.6"
+    "@applitools/driver" "1.11.0"
     "@applitools/utils" "1.3.13"
 
 "@applitools/test-server@^1.1.6":
@@ -246,10 +236,10 @@
   dependencies:
     node-fetch "2.6.1"
 
-"@applitools/ufg-client@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@applitools/ufg-client/-/ufg-client-1.1.0.tgz#c5da48e38c5135e0f7f4434f772bbd14a0ebe533"
-  integrity sha512-wVzKLarbAGKlyNSbxIzj6+k62PFkUaoQGKg2dovHWvHQGEy+5Su8EpT7mOQY2fYYoompw6L05v8gq0W8R/T2bg==
+"@applitools/ufg-client@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@applitools/ufg-client/-/ufg-client-1.1.1.tgz#5d5a97b762c91ea60ad33dc552dab8bdb288973f"
+  integrity sha512-5d4ySy8rvK4enSX42yWkEPvpXr+H7XWb5cnA4aT7xwdBdSYAkJUEiI3lqHhOKwSL5issDTQQjt5xgJWLVgAfvA==
   dependencies:
     "@applitools/jsdom" "1.0.4"
     "@applitools/logger" "1.1.27"
