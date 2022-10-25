@@ -4,8 +4,13 @@ import * as https from 'https'
 import * as net from 'net'
 import * as pem from 'pem'
 
+export type ProxyServerOptions = {
+  agentId?: string
+  logger?: Logger
+}
+
 // This should eventually go to `test-server` package
-export async function makeProxyServer({logger}: {logger?: Logger} = {}) {
+export async function makeProxyServer({agentId = 'TestProxy', logger}: ProxyServerOptions = {}) {
   logger = logger?.extend({label: 'proxy-server'}) ?? makeLogger({label: 'proxy-server'})
 
   const proxyServer = await makeServer()
@@ -13,7 +18,8 @@ export async function makeProxyServer({logger}: {logger?: Logger} = {}) {
   proxyServer.on('request', (request, response) => {
     const proxyRequest = https.request(request.url, {
       method: request.method,
-      headers: request.headers,
+      headers: {...request.headers, 'x-proxy-agent': agentId},
+      rejectUnauthorized: false
     })
 
     proxyRequest.on('response', proxyResponse => {

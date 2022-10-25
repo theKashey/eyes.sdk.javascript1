@@ -2,7 +2,7 @@ import {parse as urlToHttpOptions} from 'url' // should be replaced with `urlToH
 import {AbortController} from 'abort-controller'
 import {Agent as HttpsAgent} from 'https'
 import ProxyAgent from 'proxy-agent'
-import globalFetch, {Request, Response} from 'node-fetch'
+import globalFetch, {Request, Headers, Response} from 'node-fetch'
 import * as utils from '@applitools/utils'
 
 const stop = Symbol('stop retry')
@@ -244,7 +244,10 @@ export async function req(input: string | URL | Request, options?: Options): Pro
   }
   let request = new Request(url, {
     method: options?.method ?? (input as Request).method,
-    headers: {...options?.headers, ...Object.fromEntries((input as Request).headers?.entries() ?? [])},
+    headers: {
+      ...Object.fromEntries(new Headers(options?.headers).entries()),
+      ...Object.fromEntries((input as Request).headers?.entries() ?? []),
+    },
     body:
       utils.types.isPlainObject(options?.body) || utils.types.isArray(options?.body)
         ? JSON.stringify(options.body)

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const testServer = require('../src/test-server')
+const testServer = require('../test-server')
 
 const {argv} = require('yargs').option('hbData', {corece: JSON.stringify})
 console.log('running test server', argv)

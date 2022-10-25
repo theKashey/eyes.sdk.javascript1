@@ -1,69 +1,167 @@
-import * as spec from '@applitools/spec-driver-webdriverio'
 import {makeCore} from '../../src/index'
-import {makeProxyServer} from '../utils/proxy-server'
-// import assert from 'assert'
+import {makeProxyServer, restrictNetwork} from '@applitools/test-server'
+import * as spec from '@applitools/spec-driver-webdriverio'
+import * as utils from '@applitools/utils'
 
-// 1. This test isn't reliable at the moment because it will pass even if we remove the proxy.
-// 2. The idea is to add some interception mechanism to the proxy server, and collect all of the
-//    requests that pass through the proxy to process it latter and find out if all of the communication went through the proxy
-// 3. To test that we use proxy to get the resources of the page we should serve our own page on the localhost and add a middleware
-//    that will not serve the resource without a special header, that will be added only by the proxy middleware
 describe('proxy', () => {
-  let driver, destroyDriver, proxy
+  let driver, destroyDriver, proxy, restoreNetwork
 
-  before(async () => {
-    ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
-  })
-
-  after(async () => {
-    await destroyDriver?.()
-  })
-
-  beforeEach(async () => {
-    proxy = await makeProxyServer({})
-  })
-
-  afterEach(async () => {
-    await proxy?.close()
-  })
-
-  it('ufg eyes works with proxy', async () => {
-    await driver.url('https://applitools.com/helloworld')
-
-    const core = makeCore({spec})
-    const manager = await core.makeManager({type: 'ufg', concurrency: 5})
-    const eyes = await manager.openEyes({
-      target: driver,
-      settings: {
-        appName: 'js core',
-        testName: `ufg works with proxy`,
-        proxy: {url: `http://localhost:${proxy.port}`},
-        environment: {viewportSize: {width: 800, height: 600}},
-      },
+  describe('web with proxy', () => {
+    before(async () => {
+      restoreNetwork = restrictNetwork(options => {
+        return (
+          !utils.types.has(options, 'port') ||
+          !options.host ||
+          options.host === 'localhost' ||
+          (options as any).headers?.['x-proxy-agent'] === 'TestProxy'
+        )
+      })
+      proxy = await makeProxyServer()
+      ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
     })
 
-    await eyes.check({settings: {fully: false}})
-
-    await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
-  })
-
-  it('classic eyes works with proxy', async () => {
-    await driver.url('https://applitools.com/helloworld')
-
-    const core = makeCore({spec})
-    const manager = await core.makeManager({type: 'classic'})
-    const eyes = await manager.openEyes({
-      target: driver,
-      settings: {
-        appName: 'js core',
-        testName: `classic works with proxy`,
-        proxy: {url: `http://localhost:${proxy.port}`},
-        environment: {viewportSize: {width: 800, height: 600}},
-      },
+    after(async () => {
+      await destroyDriver?.()
+      await proxy?.close()
+      await restoreNetwork?.()
     })
 
-    await eyes.check({settings: {fully: false}})
+    it('ufg works with proxy', async () => {
+      await driver.url('https://applitools.com/helloworld')
 
-    await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+      const core = makeCore({spec})
+      const manager = await core.makeManager({type: 'ufg', concurrency: 5})
+      const eyes = await manager.openEyes({
+        target: driver,
+        settings: {
+          appName: 'js core',
+          testName: `ufg works with proxy`,
+          proxy: {url: `http://localhost:${proxy.port}`},
+          environment: {viewportSize: {width: 800, height: 600}},
+        },
+      })
+
+      await eyes.check({settings: {fully: false}})
+
+      await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+    })
+
+    it('classic works with proxy', async () => {
+      await driver.url('https://applitools.com/helloworld')
+
+      const core = makeCore({spec})
+      const manager = await core.makeManager({type: 'classic'})
+      const eyes = await manager.openEyes({
+        target: driver,
+        settings: {
+          appName: 'js core',
+          testName: `classic works with proxy`,
+          proxy: {url: `http://localhost:${proxy.port}`},
+          environment: {viewportSize: {width: 800, height: 600}},
+        },
+      })
+
+      await eyes.check({settings: {fully: false}})
+
+      await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+    })
+  })
+
+  describe('web with aut proxy', () => {
+    before(async () => {
+      restoreNetwork = restrictNetwork(options => {
+        const headers = (options as any).headers
+        const accept = headers?.['Accept'] ?? headers?.['accept']
+        const acceptString = utils.types.isArray(accept) ? accept.join(', ') : accept
+        return (
+          !utils.types.has(options, 'port') ||
+          !options.host ||
+          options.host === 'localhost' ||
+          acceptString === 'application/json' ||
+          headers?.['x-proxy-agent'] === 'TestProxy'
+        )
+      })
+      proxy = await makeProxyServer()
+      ;[driver, destroyDriver] = await spec.build({browser: 'chrome'})
+    })
+
+    after(async () => {
+      await destroyDriver?.()
+      await proxy?.close()
+      await restoreNetwork?.()
+    })
+
+    it('ufg works with aut proxy', async () => {
+      await driver.url('https://applitools.com/helloworld')
+
+      const core = makeCore({spec})
+      const manager = await core.makeManager({type: 'ufg', concurrency: 5})
+      const eyes = await manager.openEyes({
+        target: driver,
+        settings: {
+          appName: 'js core',
+          testName: `ufg works with proxy`,
+          environment: {viewportSize: {width: 800, height: 600}},
+        },
+      })
+
+      await eyes.check({
+        settings: {
+          autProxy: {url: `http://localhost:${proxy.port}`},
+          fully: false,
+        },
+      })
+
+      await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+    })
+  })
+
+  describe('native with proxy', () => {
+    before(async () => {
+      restoreNetwork = restrictNetwork(options => {
+        return (
+          !utils.types.has(options, 'port') ||
+          !options.host ||
+          options.host === 'localhost' ||
+          options.host === 'ondemand.us-west-1.saucelabs.com' ||
+          (options as any).headers?.['x-proxy-agent'] === 'TestProxy'
+        )
+      })
+      proxy = await makeProxyServer()
+      ;[driver, destroyDriver] = await spec.build({
+        device: 'iPhone 12',
+        app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp-instrumented-nml-nmg-flat-caps.zip',
+        injectUFGLib: true,
+        withNML: true,
+      })
+    })
+
+    after(async () => {
+      await destroyDriver?.()
+      await proxy?.close()
+      await restoreNetwork?.()
+    })
+
+    it('ufg works with nml and proxy', async () => {
+      const core = makeCore({spec})
+      const manager = await core.makeManager({type: 'ufg', concurrency: 5})
+      const eyes = await manager.openEyes({
+        target: driver,
+        settings: {
+          serverUrl: 'https://eyesapi.applitools.com',
+          apiKey: process.env.APPLITOOLS_API_KEY,
+          proxy: {url: `http://localhost:${proxy.port}`},
+          appName: 'core app',
+          testName: 'native ufg ios nml',
+        },
+      })
+      await eyes.check({
+        settings: {
+          waitBeforeCapture: 1500,
+          renderers: [{iosDeviceInfo: {deviceName: 'iPhone 12', version: 'latest-1'}}],
+        },
+      })
+      await eyes.close({settings: {throwErr: true, updateBaselineIfNew: false}})
+    })
   })
 })
