@@ -54,7 +54,7 @@
   ],
   "scripts": {
     "lint": "eslint . --ext .js",
-    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
+    "test": "mocha --no-timeouts \"test/**/*.spec.js\"",
     "test:sanity": "yarn test:unit && yarn test:it",
     "test:unit": "mocha --no-timeouts \"test/unit/**/*.spec.js\"",
     "test:it": "mocha --no-timeouts \"test/it/**/*.spec.js\"",
