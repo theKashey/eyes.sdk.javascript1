@@ -83,7 +83,7 @@
     "@applitools/scripts": "^1.2.0",
     "@applitools/snippets": "^2.4.5",
     "@applitools/spec-driver-selenium": "1.5.4",
-    "@applitools/test-server": "^1.1.7",
+    "@applitools/test-server": "^1.1.8",
     "@applitools/test-utils": "1.5.2",
     "eslint": "^8.16.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

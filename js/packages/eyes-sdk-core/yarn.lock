@@ -206,10 +206,10 @@
     "@applitools/driver" "1.11.0"
     "@applitools/utils" "1.3.13"
 
-"@applitools/test-server@^1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.1.7.tgz#773642ae147f544a7b345357e8e298f99d321114"
-  integrity sha512-HPROnzFL9yLQYFkE2C37CpmM1qt+G7iQKn8w8ffcwstSoeNfTY6W94mr0E0bEruB+X6RIWtHGkiT/p0f/yvQFQ==
+"@applitools/test-server@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@applitools/test-server/-/test-server-1.1.8.tgz#bad383e4f579b5d8eb45d50e3e4ed0229f5cbde7"
+  integrity sha512-25AAnmFqZ2MAw+CLCMAtsCNTVPmkNgB10QencxT0EJu+DKAFUvEw2r723bL0uo7zuO0FJxfiWEYjB/cVgmdFpw==
   dependencies:
     "@applitools/logger" "1.1.27"
     "@applitools/utils" "1.3.13"
