@@ -11,6 +11,12 @@
 
 
 
+## 2.16.8 - 2022/10/26
+
+### Features
+### Bug fixes
+- Fixed error during command response logging
+
 ## 2.16.7 - 2022/10/22
 
 ### Features
