@@ -24,10 +24,12 @@ export async function transformImage({
   const mutableImage = makeImage(image)
   if (settings.normalization || settings.region) {
     await mutableImage.debug({...settings.debugImages, suffix: 'original'})
-    if (settings.normalization.scaleRatio) mutableImage.scale(settings.normalization.scaleRatio)
-    if (settings.normalization.rotation) mutableImage.scale(settings.normalization.rotation)
-    if (settings.normalization.cut) mutableImage.crop(settings.normalization.cut)
-    await mutableImage.debug({...settings.debugImages, suffix: 'normalized'})
+    if (settings.normalization) {
+      if (settings.normalization.scaleRatio) mutableImage.scale(settings.normalization.scaleRatio)
+      if (settings.normalization.rotation) mutableImage.rotate(settings.normalization.rotation)
+      if (settings.normalization.cut) mutableImage.crop(settings.normalization.cut)
+      await mutableImage.debug({...settings.debugImages, suffix: 'normalized'})
+    }
     if (settings.region) {
       mutableImage.crop(settings.region)
       await mutableImage.debug({...settings.debugImages, suffix: 'region'})
