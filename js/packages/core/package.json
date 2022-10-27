@@ -1,6 +1,6 @@
 {
   "name": "@applitools/core",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "homepage": "https://applitools.com",
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
@@ -64,12 +64,12 @@
     "@applitools/core-base": "1.1.7",
     "@applitools/dom-capture": "11.2.0",
     "@applitools/dom-snapshot": "4.7.0",
-    "@applitools/driver": "1.11.0",
+    "@applitools/driver": "1.11.1",
     "@applitools/logger": "1.1.27",
     "@applitools/nml-client": "1.3.5",
     "@applitools/req": "1.1.12",
-    "@applitools/screenshoter": "3.7.0",
-    "@applitools/snippets": "2.4.5",
+    "@applitools/screenshoter": "3.7.1",
+    "@applitools/snippets": "2.4.6",
     "@applitools/ufg-client": "1.1.2",
     "@applitools/utils": "1.3.13",
     "abort-controller": "3.0.0",
@@ -81,7 +81,7 @@
     "@applitools/spec-driver-puppeteer": "^1.1.18",
     "@applitools/spec-driver-selenium": "^1.5.4",
     "@applitools/spec-driver-webdriverio": "^1.4.2",
-    "@applitools/test-server": "^1.1.7",
+    "@applitools/test-server": "^1.1.8",
     "@applitools/test-utils": "^1.5.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "12",
