@@ -3,6 +3,10 @@ name: Publish - sdk browser extension
 on:
   workflow_dispatch:
     inputs:
+      run-tests:
+        description: run tests
+        type: boolean
+        default: true
       version:
         description: version type
         type: choice
@@ -50,6 +54,7 @@ jobs:
           npx bongo verify-changelog
   test:
     needs: [verify]
+    if: github.event.inputs.run-tests != 'false'
     name: Test
     runs-on: ubuntu-latest
     steps:
@@ -73,6 +78,9 @@ jobs:
           test-type: xvfb
   publish:
     needs: [test]
+    if: |
+      always() &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped')
     name: Publish
     runs-on: ubuntu-latest
     steps:
@@ -96,4 +104,4 @@ jobs:
         with:
           tag_name: ${{steps.version.outputs.tag}}
           files: |
-            packages/${{env.PACKAGE_DIR}}/eyes-browser-extension.zip
+            js/packages/eyes-browser-extension/eyes-browser-extension.zip
