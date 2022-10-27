@@ -34,10 +34,10 @@
     cli-table3 "0.6.0"
     yargs "15.3.1"
 
-"@applitools/snippets@2.4.5":
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
-  integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
+"@applitools/snippets@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.6.tgz#d23afdfa693fa5242733578fe065d1667ac23e2c"
+  integrity sha512-hAsAalDxaa1w2RCEx2b35D9XJIGGRlqQKzXEE6/rNr5vMtT0eYye61SST5e2PD7B4F2jJ7jRKrZd7REawoxxmg==
 
 "@applitools/test-utils@1.5.1":
   version "1.5.1"
