@@ -25,13 +25,13 @@ export async function takeDomCapture<TDriver extends Driver<unknown, unknown, un
   const scripts = {
     main: {
       script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-snapshot').captureDomPoll
+        ? require('@applitools/dom-capture').captureDomPoll
         : `return (${isLegacyBrowser ? await getCaptureDomPollForIE() : await getCaptureDomPoll()}).apply(null, arguments);`,
       args: [arg],
     },
     poll: {
       script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-snapshot').pollResult
+        ? require('@applitools/dom-capture').pollResult
         : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
       args: [arg],
     },
