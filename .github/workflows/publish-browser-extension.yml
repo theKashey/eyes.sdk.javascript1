@@ -63,13 +63,14 @@ jobs:
           always-auth: true
       - name: Setup xvfb
         shell: bash
+        working-directory: ./js/packages/eyes-browser-extension
         run: |
           sudo apt-get install -y xvfb
-          Xvfb -ac $DISPLAY -screen 0 1280x1024x16 &
       - name: Run tests
         uses: ./.github/actions/tests
         with:
           working-directory: ./js/packages/eyes-browser-extension
+          test-type: xvfb
   publish:
     needs: [test]
     name: Publish
@@ -87,7 +88,7 @@ jobs:
         id: version
         uses: ./.github/actions/publish
         with:
-          working-directory: ./js/packages/eyes-browser
+          working-directory: ./js/packages/eyes-browser-extension
           version: ${{inputs.version || github.event.inputs.version}}
           skip-npm: true
       - name: Publish to GitHub

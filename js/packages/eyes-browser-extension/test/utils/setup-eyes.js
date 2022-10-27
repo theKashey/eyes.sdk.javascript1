@@ -25,8 +25,8 @@ function setupEyes({driver, vg, ...config} = {}) {
         ...config,
       }
 
-      if (process.env.APPLITOOLS_API_KEY_SDK) {
-        configuration.apiKey = process.env.APPLITOOLS_API_KEY_SDK
+      if (process.env.APPLITOOLS_API_KEY) {
+        configuration.apiKey = process.env.APPLITOOLS_API_KEY
       }
 
       return driver.evaluate(async options => (window.__eyes = await window.__applitools.openEyes(options)), {

@@ -10,7 +10,6 @@ globalThis.sdk = makeSDK({
   name: 'eyes.browser-extension',
   version: require('../package.json').version,
   spec,
-  VisualGridClient: require('@applitools/visual-grid-client'),
 })
 
 browser.tabs.onUpdated.addListener((tabId, change) => {

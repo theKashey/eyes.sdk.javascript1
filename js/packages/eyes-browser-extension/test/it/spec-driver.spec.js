@@ -183,7 +183,7 @@ describe('spec driver', async () => {
         spec.executeScript(
           driver,
           arg => {
-            return {...arg, el1: document.querySelector('body')}
+            return {...arg}
           },
           arg,
         ),

@@ -84,4 +84,17 @@ export default {
       setImmediate: [require.resolve('core-js/features/set-immediate')],
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /@applitools\/snippets/,
+        use: ['snippet-loader'],
+      },
+    ],
+  },
+  resolveLoader: {
+    alias: {
+      'snippet-loader': path.resolve(__dirname, 'src/loader/snippet-loader.js'),
+    },
+  },
 }
