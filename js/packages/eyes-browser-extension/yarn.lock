@@ -34,20 +34,20 @@
     "@applitools/req" "1.1.12"
     "@applitools/utils" "1.3.13"
 
-"@applitools/core@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.2.4.tgz#be94a0cf85d789dca2c8875af2b62b8bc7e0428c"
-  integrity sha512-BFbmUn39XFEVKHCb/bBXFZVAb46hOl4D/6VRnC5ey5tNTdriI35/l0jWpuBnYHU6LgK+5AvG70SUTKqiFJDZPQ==
+"@applitools/core@1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@applitools/core/-/core-1.2.6.tgz#9acab2d553097937f7e80b83886af4220263d659"
+  integrity sha512-i1jEMWq67T97I63AvI29xslvTJaAA0AnzOqKzLZTDRWRUog4zyaDX5lhIuzoE0Zgj7bkm4eIcDVWB1iKw1qUrw==
   dependencies:
     "@applitools/core-base" "1.1.7"
     "@applitools/dom-capture" "11.2.0"
     "@applitools/dom-snapshot" "4.7.0"
-    "@applitools/driver" "1.11.0"
+    "@applitools/driver" "1.11.1"
     "@applitools/logger" "1.1.27"
     "@applitools/nml-client" "1.3.5"
     "@applitools/req" "1.1.12"
-    "@applitools/screenshoter" "3.7.0"
-    "@applitools/snippets" "2.4.5"
+    "@applitools/screenshoter" "3.7.1"
+    "@applitools/snippets" "2.4.6"
     "@applitools/ufg-client" "1.1.2"
     "@applitools/utils" "1.3.13"
     abort-controller "3.0.0"
@@ -91,6 +91,16 @@
     "@applitools/utils" "1.3.13"
     semver "7.3.7"
 
+"@applitools/driver@1.11.1":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.1.tgz#784ce26f2f4c0fbb0234cdb8d35056c83cbc6a10"
+  integrity sha512-HFkbEeTaBI+k5RMQFM6RjaIRCvLOrVx4UUDehnSlyfAwZIN/RMuxMcAQaiU5ZdNPf3K/+TtNjtmJoXuG8veEcQ==
+  dependencies:
+    "@applitools/logger" "1.1.27"
+    "@applitools/snippets" "2.4.6"
+    "@applitools/utils" "1.3.13"
+    semver "7.3.7"
+
 "@applitools/execution-grid-client@1.1.30":
   version "1.1.30"
   resolved "https://registry.yarnpkg.com/@applitools/execution-grid-client/-/execution-grid-client-1.1.30.tgz#6288041ee078c963689a201beda0ac7463a3be8d"
@@ -104,13 +114,13 @@
     raw-body "2.5.1"
     yargs "17.4.1"
 
-"@applitools/eyes-sdk-core@13.11.13":
-  version "13.11.13"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.11.13.tgz#f3be0eefb793eea259fad8ee58d8be1f34ee7638"
-  integrity sha512-VVc5FxUmgno82qKGROAp8XZYKBBmFKNJwF9CPgYGs4ee2I/tYcESS2mS68re3RkPmnrS2hue+KlvXOkpUdnm+g==
+"@applitools/eyes-sdk-core@13.11.14":
+  version "13.11.14"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-13.11.14.tgz#dc079d8d32467da265b91644574e9a3a60c7b7bf"
+  integrity sha512-U2FfTcbuziwQI/SOrkCv+YNcQuaUn16zh1VkO8+Pam/Mn+gJxRh4mR6kkmld2MQQiUH6G/dGbwmBhGaGAmlvTg==
   dependencies:
-    "@applitools/core" "1.2.4"
-    "@applitools/driver" "1.11.0"
+    "@applitools/core" "1.2.6"
+    "@applitools/driver" "1.11.1"
     "@applitools/execution-grid-client" "1.1.30"
     "@applitools/utils" "1.3.13"
 
@@ -189,14 +199,14 @@
     node-fetch "2.6.7"
     proxy-agent "5.0.0"
 
-"@applitools/screenshoter@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.7.0.tgz#c2497b41c9f25e982fe469ea3407ea5ab1c9cb4f"
-  integrity sha512-d723TI4InLQi06TpVj4rP+V5OrNL9mFQr+cWv2MOMfQbuAnZETTRzvDyk97e3qoDJHAPjyQuxi81qEaxsFxhOA==
+"@applitools/screenshoter@3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.7.1.tgz#a321534f7fd7f5a6f2f3eeefbdbbdb3f324e4e7d"
+  integrity sha512-J2bOpY1GTWw8A5Ry0qxjD9TA/yZhjhLUZuYw+D1wos2hT/Pg+AZ8S3dz2xjy5cYIzgzzkGuenElQYq5gfHJ5pg==
   dependencies:
     "@applitools/image" "1.0.4"
     "@applitools/logger" "1.1.27"
-    "@applitools/snippets" "2.4.5"
+    "@applitools/snippets" "2.4.6"
     "@applitools/utils" "1.3.13"
     jpeg-js "0.4.4"
     png-async "0.9.4"
@@ -230,6 +240,11 @@
   version "2.4.5"
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.5.tgz#4adcbea245b5c4d0b40413670fb709ffcf607ffa"
   integrity sha512-GoLN1wu8u5/qwdk1ozEElqmr4y7AoMQl0Ka0OzisGdx9/L7R0RzSWQCErjkf4LgKiWKK8j7lde3JT9yjxfritQ==
+
+"@applitools/snippets@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.6.tgz#d23afdfa693fa5242733578fe065d1667ac23e2c"
+  integrity sha512-hAsAalDxaa1w2RCEx2b35D9XJIGGRlqQKzXEE6/rNr5vMtT0eYye61SST5e2PD7B4F2jJ7jRKrZd7REawoxxmg==
 
 "@applitools/spec-driver-playwright@^1.3.4":
   version "1.3.4"
