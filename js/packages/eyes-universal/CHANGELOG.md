@@ -11,6 +11,12 @@
 
 
 
+## 2.16.9 - 2022/10/28
+
+### Features
+### Bug fixes
+- Fix calculation for determining coded region positions when they are inside of a check region
+
 ## 2.16.8 - 2022/10/26
 
 ### Features
