@@ -180,7 +180,7 @@ export function makeCoreRequests({
     const account = await getAccountInfoWithCache({settings})
     const upload = makeUpload({config: {uploadUrl: account.uploadUrl, proxy: settings.proxy}, logger})
 
-    target.image = await upload({name: 'image', resource: target.image})
+    target.image = await upload({name: 'image', resource: target.image as Buffer})
     const response = await req('/api/locators/locate', {
       name: 'locate',
       method: 'POST',
@@ -344,7 +344,7 @@ export function makeEyesRequests({
   }): Promise<CheckResult[]> {
     logger.log('Request "check" called for target', target, 'with settings', settings)
     ;[target.image, target.dom] = await Promise.all([
-      upload({name: 'image', resource: target.image}),
+      upload({name: 'image', resource: target.image as Buffer}),
       upload({name: 'dom', resource: target.dom, gzip: true}),
     ])
     const response = await req(`/api/sessions/running/${encodeURIComponent(test.testId)}`, {
@@ -376,7 +376,7 @@ export function makeEyesRequests({
     }
     logger.log('Request "checkAndClose" called for target', target, 'with settings', settings)
     ;[target.image, target.dom] = await Promise.all([
-      upload({name: 'image', resource: target.image}),
+      upload({name: 'image', resource: target.image as Buffer}),
       upload({name: 'dom', resource: target.dom, gzip: true}),
     ])
     const matchOptions = transformCheckOptions({target, settings})
@@ -422,7 +422,7 @@ export function makeEyesRequests({
   }): Promise<LocateTextResult<TPattern>> {
     logger.log('Request "locateText" called for target', target, 'with settings', settings)
     ;[target.image, target.dom] = await Promise.all([
-      upload({name: 'image', resource: target.image}),
+      upload({name: 'image', resource: target.image as Buffer}),
       upload({name: 'dom', resource: target.dom, gzip: true}),
     ])
     const response = await req('/api/sessions/running/images/textregions', {
@@ -458,7 +458,7 @@ export function makeEyesRequests({
   }): Promise<string[]> {
     logger.log('Request "extractText" called for target', target, 'with settings', settings)
     ;[target.image, target.dom] = await Promise.all([
-      upload({name: 'image', resource: target.image}),
+      upload({name: 'image', resource: target.image as Buffer}),
       upload({name: 'dom', resource: target.dom, gzip: true}),
     ])
     const response = await req('/api/sessions/running/images/text', {
