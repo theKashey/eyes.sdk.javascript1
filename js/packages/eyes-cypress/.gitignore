@@ -23,4 +23,3 @@ test/play/yarn.lock
 test/coverage/generic/yarn.lock
 test/play/cypress/
 !/bin
-applitools.config.js

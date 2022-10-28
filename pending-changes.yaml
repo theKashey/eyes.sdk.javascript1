@@ -75,7 +75,7 @@ Apollo SDK:
     - Fix dontCloseBatches mapping
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Add support for componenet testing and cypress config ts file
   bug-fix:
     - Fixed issue with universal not working in cypress@6
 "@applitools/eyes-storybook":

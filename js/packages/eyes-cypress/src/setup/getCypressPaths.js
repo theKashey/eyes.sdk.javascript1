@@ -12,8 +12,13 @@ function getCypressPaths({cwd, isCypress10}) {
 }
 
 function getCypressPaths10AndAbove(cwd) {
-  const cypressConfigPath = path.resolve(cwd, 'cypress.config.js');
-  if (fs.existsSync(cypressConfigPath)) {
+  const cypressConfigPath = fs.existsSync(path.resolve(cwd, 'cypress.config.js'))
+    ? path.resolve(cwd, 'cypress.config.js')
+    : fs.existsSync(path.resolve(cwd, 'cypress.config.ts'))
+    ? path.resolve(cwd, 'cypress.config.ts')
+    : undefined;
+
+  if (cypressConfigPath) {
     const configContent = fs.readFileSync(cypressConfigPath, 'utf-8');
     const supportFilePath = getSupportFilePathFromCypress10Config({cwd, configContent});
     const typeScriptFilePath = supportFilePath
@@ -27,7 +32,7 @@ function getCypressPaths10AndAbove(cwd) {
     };
   } else {
     throw new Error(
-      `No configuration file found at ${cypressConfigPath}. This is usually caused by setting up Eyes before setting up Cypress. Please run "npx cypress open" first.`,
+      `No configuration file found at ${cwd}. This is usually caused by setting up Eyes before setting up Cypress. Please run "npx cypress open" first.`,
     );
   }
 }
@@ -45,6 +50,8 @@ function getSupportFilePathFromCypress10Config({cwd, configContent}) {
       supportFilePath = path.resolve(cwd, 'cypress/support/e2e.ts');
     } else if (fs.existsSync(path.resolve(cwd, 'cypress/support/component.js'))) {
       supportFilePath = path.resolve(cwd, 'cypress/support/component.js');
+    } else if (fs.existsSync(path.resolve(cwd, 'cypress/support/component.ts'))) {
+      supportFilePath = path.resolve(cwd, 'cypress/support/component.ts');
     }
   }
   return supportFilePath;

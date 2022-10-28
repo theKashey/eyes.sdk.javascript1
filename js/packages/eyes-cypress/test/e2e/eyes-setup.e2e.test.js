@@ -32,8 +32,10 @@ describe('eyes-setup script (e2e)', () => {
     origSupportFileContent,
     typescriptFilePath,
     origCypressConfigContent,
+    origCypressConfigTSContent,
     cypressConfigPath,
     cypressJsonPath,
+    cypressConfigTSPath,
     supportFilePath;
 
   before(async () => {
@@ -56,8 +58,10 @@ describe('eyes-setup script (e2e)', () => {
 
     typescriptFilePath = path.resolve('cypress/support/index.d.ts');
     cypressConfigPath = path.resolve('cypress.config.js');
+    cypressConfigTSPath = path.resolve('cypress.config.ts');
     cypressJsonPath = path.resolve('cypress.json');
     origCypressConfigContent = readFileSync(cypressConfigPath, 'utf-8');
+    origCypressConfigTSContent = readFileSync(cypressConfigTSPath, 'utf-8');
 
     packageJsonPath = path.resolve('package.json');
     originalPackageJson = JSON.parse(readFileSync(packageJsonPath));
@@ -109,6 +113,7 @@ Setup done!
     writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
     await pexec(`npm install`);
+    unlinkSync(cypressConfigTSPath);
 
     const [err, result] = await presult(runSetupScript());
     expect(err).to.be.undefined;
@@ -145,6 +150,7 @@ Setup done!
     await pexec(`npm install`);
 
     unlinkSync(cypressConfigPath);
+    unlinkSync(cypressConfigTSPath);
 
     const [err, _result] = await presult(runSetupScript());
 
@@ -153,7 +159,7 @@ Setup done!
       `Setup Eyes-Cypress ${packageVersion}
 Cypress version: ${cypressVersion}
 Setup error:
-No configuration file found at ${cypressConfigPath}. This is usually caused by setting up Eyes before setting up Cypress. Please run "npx cypress open" first.
+No configuration file found at ${targetTestAppPath}. This is usually caused by setting up Eyes before setting up Cypress. Please run "npx cypress open" first.
 `,
     );
   });
@@ -177,5 +183,41 @@ Setup error:
 No configuration file found at ${cypressJsonPath}. This is usually caused by setting up Eyes before setting up Cypress. Please run "npx cypress open" first.
 `,
     );
+  });
+
+  it(`works for cypress version >= 10 and ts cypress config`, async () => {
+    const cypressVersion = '10.6.0';
+    packageJson.dependencies.cypress = cypressVersion;
+    writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+    await pexec(`npm install`);
+    unlinkSync(cypressJsonPath);
+    unlinkSync(cypressConfigPath);
+
+    const [err, result] = await presult(runSetupScript());
+    expect(err).to.be.undefined;
+
+    expect(removeStyleFromText(result.stdout)).to.equal(
+      `Setup Eyes-Cypress ${packageVersion}
+Cypress version: ${cypressVersion}
+Plugins defined.
+Commands defined.
+TypeScript defined.
+Setup done!
+`,
+    );
+
+    expect(readFileSync(cypressConfigTSPath).toString()).to.equal(
+      origCypressConfigTSContent.replace(/}\);\n$/, `});\n${pluginRequire}`),
+    );
+
+    expect(readFileSync(supportFilePath).toString()).to.equal(
+      origSupportFileContent.replace(
+        '\n// Import commands.js using ES2015 syntax:',
+        `${commandsImport}\n\n// Import commands.js using ES2015 syntax:`,
+      ),
+    );
+
+    expect(readFileSync(typescriptFilePath).toString()).to.equal(eyesIndexContent);
   });
 });

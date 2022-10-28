@@ -177,4 +177,85 @@ describe('pluginExport', () => {
       tapFileName: undefined,
     });
   });
+
+  it('works with ts cypress.json config', async () => {
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
+    let __module = {
+      exports: {
+        default: () => ({bla: 'blah'}),
+      },
+    };
+    pluginExport(__module);
+    const ret = await __module.exports.default(() => {}, {});
+    expect(ret).to.eql({
+      bla: 'blah',
+      eyesPort: 123,
+      eyesDisableBrowserFetching: false,
+      eyesLayoutBreakpoints: undefined,
+      eyesFailCypressOnDiff: true,
+      eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
+      eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
+      tapFileName: undefined,
+    });
+  });
+
+  it('works with e2e ts config file', async () => {
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
+    let __module = {
+      exports: {
+        default: {
+          e2e: {
+            setupNodeEvents(on, config) {},
+          },
+        },
+      },
+    };
+    pluginExport(__module);
+    const ret = await __module.exports.default.e2e.setupNodeEvents(() => {}, {});
+    expect(ret).to.eql({
+      eyesPort: 123,
+      eyesDisableBrowserFetching: false,
+      eyesLayoutBreakpoints: undefined,
+      eyesFailCypressOnDiff: true,
+      eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
+      eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
+      tapFileName: undefined,
+    });
+  });
+
+  it('works with component ts config file', async () => {
+    const pluginExport = makePluginExport({startServer, eyesConfig, globalHooks});
+    let __module = {
+      exports: {
+        default: {
+          component: {
+            setupNodeEvents(on, config) {},
+          },
+        },
+      },
+    };
+    pluginExport(__module);
+    const ret = await __module.exports.default.component.setupNodeEvents(() => {}, {});
+    expect(ret).to.eql({
+      eyesPort: 123,
+      eyesDisableBrowserFetching: false,
+      eyesLayoutBreakpoints: undefined,
+      eyesFailCypressOnDiff: true,
+      eyesIsDisabled: false,
+      eyesIsGlobalHooksSupported: false,
+      eyesBrowser: undefined,
+      eyesTestConcurrency: 5,
+      eyesWaitBeforeCapture: undefined,
+      tapDirPath: undefined,
+      tapFileName: undefined,
+    });
+  });
 });
