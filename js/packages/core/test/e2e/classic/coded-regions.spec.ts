@@ -65,21 +65,20 @@ describe('coded regions', () => {
           ignoreCaret: true,
           layoutRegions: ['#inner'],
           matchLevel: 'Strict',
-          stitchMode
+          stitchMode,
         },
       })
       const [result] = await eyes.close({settings: {updateBaselineIfNew: false}})
       const testInfo = await getTestInfo(result)
-      assert.deepStrictEqual(
-        testInfo.actualAppOutput[0].imageMatchSettings.layout,
-        [{
+      assert.deepStrictEqual(testInfo.actualAppOutput[0].imageMatchSettings.layout, [
+        {
           left: 1,
           top: 519,
           width: 200,
           height: 200,
-          regionId: '#inner'
-        }]
-      )
+          regionId: '#inner',
+        },
+      ])
     })
   }
 })
