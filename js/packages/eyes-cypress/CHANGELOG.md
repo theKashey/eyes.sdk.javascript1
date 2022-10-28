@@ -10,6 +10,13 @@
 
 
 
+## 3.27.6 - 2022/10/28
+
+### Features
+- Add support for componenet testing and cypress config ts file
+### Bug fixes
+- Fixed issue with universal not working in cypress@6
+
 ## 3.27.5 - 2022/10/20
 
 ### Features
