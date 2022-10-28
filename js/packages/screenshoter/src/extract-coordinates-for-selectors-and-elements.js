@@ -1,11 +1,6 @@
 const utils = require('@applitools/utils')
 
-async function extractCoordinatesForSelectorsAndElements({
-  regionsToCalculate,
-  screenshot,
-  context,
-  logger,
-}) {
+async function extractCoordinatesForSelectorsAndElements({regionsToCalculate, screenshot, context, logger}) {
   const codedRegionsByCoordinates = []
   if (!regionsToCalculate.length) {
     logger.log('no coded regions to calculate, done')

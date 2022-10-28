@@ -77,7 +77,7 @@ describe('calculate-screenshot-region', () => {
     )
     assert.deepStrictEqual(
       calculateScreenshotRegion({
-        preMoveOffset: {x: 0, y: 8 },
+        preMoveOffset: {x: 0, y: 8},
         postMoveOffset: {x: 58, y: 8},
         cropRegion: {x: 0, y: 0, width: 602, height: 600},
         stitchedImage: {size: {width: 602, height: 2002}},
