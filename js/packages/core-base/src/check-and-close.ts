@@ -1,7 +1,7 @@
 import type {Target, CheckSettings, CloseSettings, TestResult} from './types'
 import {type Logger} from '@applitools/logger'
 import {type EyesRequests} from './server/requests'
-import {transformImage} from './utils/transform-image'
+import {transformTarget} from './utils/transform-target'
 
 type Options = {
   requests: EyesRequests
@@ -20,7 +20,7 @@ export function makeCheckAndClose({requests, logger: defaultLogger}: Options) {
   }): Promise<TestResult[]> {
     logger.log('Command "checkAndClose" is called with settings', settings)
     if (!target.isTransformed) {
-      target.image = await transformImage({image: target.image, settings})
+      target = await transformTarget({target, settings})
     }
     const results = await requests.checkAndClose({target, settings, logger})
     return results

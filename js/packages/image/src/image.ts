@@ -178,6 +178,7 @@ export function makeImage(data: any): Image {
     },
     async toObject() {
       image = await transform(image ? await image : size, transforms)
+      size = {width: image.width, height: image.height}
       transforms = {crop: null, scale: 1, rotate: 0, modifiers: []}
       return image
     },

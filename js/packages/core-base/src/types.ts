@@ -3,7 +3,7 @@ import {type Logger} from '@applitools/logger'
 import {type Proxy} from '@applitools/req'
 
 export type Target = {
-  image: Buffer | string
+  image: Buffer | URL | string
   size?: Size
   name?: string
   source?: string
