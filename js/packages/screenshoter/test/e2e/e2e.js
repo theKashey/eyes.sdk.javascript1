@@ -65,14 +65,14 @@ exports.testCodedRegions = async function testCodedRegions({driver, ...options},
     for (const r of regions.regions) {
       result.push({
         region: {
-          x: Math.round(r.region.x),
-          y: Math.round(r.region.y),
-          width: Math.round(r.region.width),
-          height: Math.round(r.region.height),
+          x: Math.round(r.x),
+          y: Math.round(r.y),
+          width: Math.round(r.width),
+          height: Math.round(r.height),
         },
       })
     }
-    return {regions: result, commonSelector: regions.commonSelector}
+    return {regions: result, selector: regions.selector}
   })
 
   assert.deepEqual(roundedRegionsArray, expectedCoordinates)

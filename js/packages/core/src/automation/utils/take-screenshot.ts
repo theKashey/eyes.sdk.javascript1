@@ -11,6 +11,7 @@ export type Screenshot = {
   element: Element<unknown, unknown, unknown, unknown>
   scrollingElement: Element<unknown, unknown, unknown, unknown>
   restoreState(): Promise<void>
+  calculatedRegions: []
 }
 
 export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
@@ -19,7 +20,7 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
   logger,
 }: {
   driver: Driver<TDriver, TContext, TElement, TSelector>
-  settings: ScreenshotSettings<TElement, TSelector>
+  settings: ScreenshotSettings<TElement, TSelector> & {regionsToCalculate?: any[]}
   logger: Logger
 }): Promise<Screenshot> {
   return legacyTakeScreenshot({
@@ -46,5 +47,6 @@ export async function takeScreenshot<TDriver, TContext, TElement, TSelector>({
     },
     debug: settings.debugImages,
     logger,
+    regionsToCalculate: settings.regionsToCalculate,
   })
 }

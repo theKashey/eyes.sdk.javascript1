@@ -3,7 +3,7 @@ const getTarget = require('./get-target')
 const scrollIntoViewport = require('./scroll-into-viewport')
 const takeStitchedScreenshot = require('./take-stitched-screenshot')
 const takeSimpleScreenshot = require('./take-simple-screenshot')
-const extractCoodinatesForSelectorsAndElements = require('./extract-coodinates-for-selectors-and-elements')
+const extractCoordinatesForSelectorsAndElements = require('./extract-coordinates-for-selectors-and-elements')
 
 async function takeScreenshot({
   driver,
@@ -92,7 +92,12 @@ async function takeScreenshot({
 
   screenshot.image.scale(driver.viewportScale)
 
-  const calculatedRegions = await extractCoodinatesForSelectorsAndElements({regionsToCalculate, screenshot, context})
+  const calculatedRegions = await extractCoordinatesForSelectorsAndElements({
+    regionsToCalculate,
+    screenshot,
+    context,
+    logger,
+  })
 
   if (hooks && hooks.afterScreenshot) {
     await hooks.afterScreenshot({driver, scroller: target.scroller, screenshot})

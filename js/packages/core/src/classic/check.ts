@@ -4,7 +4,7 @@ import {type Logger} from '@applitools/logger'
 import {makeDriver, type SpecDriver} from '@applitools/driver'
 import {takeScreenshot} from '../automation/utils/take-screenshot'
 import {takeDomCapture} from './utils/take-dom-capture'
-import {transformCheckSettings} from './utils/transform-check-settings'
+import {toBaseCheckSettings} from '../utils/to-base-check-settings'
 import {waitForLazyLoad} from '../utils/wait-for-lazy-load'
 import * as utils from '@applitools/utils'
 
@@ -45,8 +45,13 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
     let baseTarget: BaseTarget
     let baseSettings: BaseCheckSettings
     let results: CheckResult[]
+    const {elementReferencesToCalculate, getBaseCheckSettings} = toBaseCheckSettings({settings})
     do {
-      const screenshot = await takeScreenshot({driver, settings, logger})
+      const screenshot = await takeScreenshot({
+        driver,
+        settings: {...settings, regionsToCalculate: elementReferencesToCalculate},
+        logger,
+      })
       baseTarget = {
         name: await driver.getTitle(),
         source: await driver.getUrl(),
@@ -54,7 +59,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         locationInViewport: utils.geometry.location(screenshot.region),
         isTransformed: true,
       }
-      baseSettings = await transformCheckSettings({context: driver.currentContext, screenshot, settings, logger})
+      baseSettings = getBaseCheckSettings({calculatedRegions: screenshot.calculatedRegions})
       if (driver.isWeb && settings.sendDom) {
         if (settings.fully) await screenshot.scrollingElement.setAttribute('data-applitools-scroll', 'true')
         else screenshot.element?.setAttribute('data-applitools-scroll', 'true')

@@ -1,7 +1,18 @@
 const utils = require('@applitools/utils')
 
-async function extractCoodinatesForSelectorsAndElements({regionsToCalculate, screenshot, context}) {
+async function extractCoordinatesForSelectorsAndElements({
+  regionsToCalculate,
+  screenshot,
+  context,
+  logger,
+}) {
   const codedRegionsByCoordinates = []
+  if (!regionsToCalculate.length) {
+    logger.log('no coded regions to calculate, done')
+    return codedRegionsByCoordinates
+  }
+  logger.log('calculating coordinates for coded regions that need them')
+  logger.log('regions to calculate', regionsToCalculate)
   for (const codedRegion of regionsToCalculate) {
     if (codedRegion) {
       const {region} = codedRegion.region ? codedRegion : {region: codedRegion}
@@ -21,15 +32,20 @@ async function extractCoodinatesForSelectorsAndElements({regionsToCalculate, scr
             },
             context.driver.viewportScale,
           )
-          scaledRegions.push({region: scaledRegion})
+          logger.log('scaled region', scaledRegion)
+          scaledRegions.push(scaledRegion)
         }
-        codedRegionsByCoordinates.push({regions: scaledRegions, commonSelector: elements[0].commonSelector})
+        codedRegionsByCoordinates.push({
+          regions: scaledRegions,
+          selector: elements[0].commonSelector,
+        })
       } else {
         codedRegionsByCoordinates.push({regions: []})
       }
     }
   }
+  logger.log('calculated coordinates for coded regions done', codedRegionsByCoordinates)
   return codedRegionsByCoordinates
 }
 
-module.exports = extractCoodinatesForSelectorsAndElements
+module.exports = extractCoordinatesForSelectorsAndElements

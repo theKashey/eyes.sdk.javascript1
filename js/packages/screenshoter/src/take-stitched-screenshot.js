@@ -145,6 +145,7 @@ async function takeStitchedScreenshot({
     stitchedImage.copy(image, pasteOffset)
   }
 
+  logger.verbose('restoring scroller state', scrollerState)
   await scroller.restoreState(scrollerState)
 
   await stitchedImage.debug({...debug, name: 'stitched'})
