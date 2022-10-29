@@ -105,17 +105,6 @@ def test_set_value_to_conf(conf):
     assert conf.branch_name == "branch name"
 
 
-def test_default_values_selenium_configuration():
-    conf = SeleniumConfiguration()
-
-    assert conf.disable_browser_fetching is True
-    assert conf.enable_cross_origin_rendering is True
-    assert conf.dont_use_cookies is False
-    assert conf.layout_breakpoints is None
-    assert conf.wait_before_capture is None
-    assert conf.wait_before_screenshots == 1000
-
-
 def test_set_value_to_sel_conf():
     conf = SeleniumConfiguration()
     conf.set_force_full_page_screenshot(True).set_wait_before_screenshots(

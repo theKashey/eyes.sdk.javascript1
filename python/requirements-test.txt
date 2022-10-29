@@ -1,5 +1,6 @@
 pyyaml
 mock
+pillow
 psutil
 pytest-venv==0.2.1
 pytest-xdist<3

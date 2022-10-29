@@ -12,7 +12,7 @@ def test_visual_grid_runner_creation_default():
 
         assert get_instance.mock_calls == [
             call("eyes.selenium.visualgrid.python", __version__),
-            call().core_make_manager(ManagerType.VG, 5, False),
+            call().core_make_manager(ManagerType.UFG, concurrency=5),
         ]
 
 
@@ -23,7 +23,7 @@ def test_visual_grid_runner_creation_legacy_concurrency():
 
         assert get_instance.mock_calls == [
             call("eyes.selenium.visualgrid.python", __version__),
-            call().core_make_manager(ManagerType.VG, 10, True),
+            call().core_make_manager(ManagerType.UFG, legacy_concurrency=10),
         ]
 
 
@@ -34,5 +34,5 @@ def test_visual_grid_runner_creation_test_concurrency():
 
         assert get_instance.mock_calls == [
             call("eyes.selenium.visualgrid.python", __version__),
-            call().core_make_manager(ManagerType.VG, 3, False),
+            call().core_make_manager(ManagerType.UFG, concurrency=3),
         ]

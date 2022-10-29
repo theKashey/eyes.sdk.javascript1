@@ -34,8 +34,8 @@ class CheckSettingsValues(object):
         metadata={JsonInclude.NON_NONE: True}, init=False, default=None
     )  # type: Optional[Region]
     timeout = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, default=-1
-    )  # type: Num  # milliseconds
+        metadata={JsonInclude.NON_NONE: True}, init=False, default=None
+    )  # type: Optional[int]  # milliseconds
 
     ignore_caret = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, init=False, default=None

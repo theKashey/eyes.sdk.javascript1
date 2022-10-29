@@ -164,14 +164,12 @@ class ImageMatchSettings(object):
     """
 
     match_level = attr.ib(
-        default=MatchLevel.STRICT, metadata={JsonInclude.THIS: True}
-    )  # type: MatchLevel
+        default=None, metadata={JsonInclude.THIS: True}
+    )  # type: Optional[MatchLevel]
     exact = attr.ib(
         default=None, type=ExactMatchSettings, metadata={JsonInclude.THIS: True}
     )  # type: Optional[ExactMatchSettings]
-    ignore_caret = attr.ib(
-        default=False, metadata={JsonInclude.THIS: True}
-    )  # type:bool
+    ignore_caret = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type:bool
     use_dom = attr.ib(
         default=None, metadata={JsonInclude.THIS: True}
     )  # type: Optional[bool]
@@ -179,7 +177,7 @@ class ImageMatchSettings(object):
         default=None, metadata={JsonInclude.THIS: True}
     )  # type: Optional[bool]
     ignore_displacements = attr.ib(
-        default=False, metadata={JsonInclude.THIS: True}
+        default=None, metadata={JsonInclude.THIS: True}
     )  # type:Optional[bool]
     ignore_regions = attr.ib(
         type=Region, factory=list, metadata={JsonInclude.NAME: "Ignore"}

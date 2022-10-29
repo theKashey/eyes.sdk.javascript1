@@ -10,6 +10,4 @@ def round_converter(x):
 
 def str2bool(v):
     # type: (Text) -> bool
-    if v is None:
-        return False
-    return v.lower() in ("yes", "true", "t", "1")
+    return None if v is None else v.lower() in ("yes", "true", "t", "1")

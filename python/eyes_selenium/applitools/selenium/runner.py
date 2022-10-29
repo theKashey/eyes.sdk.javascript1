@@ -30,9 +30,14 @@ class EyesRunner(object):
         # type: (ManagerType, Optional[int], Optional[bool]) -> None
         self._connection_configuration = None
         self._commands = CommandExecutor.get_instance(self.BASE_AGENT_ID, __version__)
-        self._ref = self._commands.core_make_manager(
-            manager_type, concurrency, is_legacy
-        )
+        if is_legacy:
+            self._ref = self._commands.core_make_manager(
+                manager_type, legacy_concurrency=concurrency
+            )
+        else:
+            self._ref = self._commands.core_make_manager(
+                manager_type, concurrency=concurrency
+            )
 
     @classmethod
     def get_server_info(cls):
@@ -90,7 +95,7 @@ class VisualGridRunner(EyesRunner):
         else:
             concurrency = options_or_concurrency.concurrency
             is_legacy = False
-        super(VisualGridRunner, self).__init__(ManagerType.VG, concurrency, is_legacy)
+        super(VisualGridRunner, self).__init__(ManagerType.UFG, concurrency, is_legacy)
 
 
 class ClassicRunner(EyesRunner):
@@ -104,10 +109,6 @@ def log_session_results_and_raise_exception(raise_ex, results):
     app_id_or_name = results.app_name
     if results.is_aborted:
         print("--- Test aborted.")
-        if raise_ex:
-            raise TestFailedError(results, scenario_id_or_name, app_id_or_name)
-    elif results.steps == 0:
-        print("--- Test has no checks. \n\tSee details at ", results_url)
         if raise_ex:
             raise TestFailedError(results, scenario_id_or_name, app_id_or_name)
     elif results.is_unresolved:

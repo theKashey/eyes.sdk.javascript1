@@ -16,6 +16,8 @@ from marshmallow.fields import (
 )
 from marshmallow.schema import BaseSchema, SchemaMeta, with_metaclass
 
+from applitools.core import extract_text
+
 from .. import common
 from ..common import (
     AccessibilityGuidelinesVersion,
@@ -40,9 +42,12 @@ from .schema_fields import (
     DebugScreenshots,
     ElementReference,
     Enum,
+    EnvironmentField,
     Error,
     FrameReference,
+    NormalizationField,
     RegionReference,
+    StitchOverlap,
     TargetReference,
     VisualGridOptions,
     check_error,
@@ -53,7 +58,7 @@ if t.TYPE_CHECKING:
 
     from applitools.common import config
     from applitools.common.utils.custom_types import ViewPort
-    from applitools.core import extract_text, locators
+    from applitools.core import locators
     from applitools.selenium.fluent import selenium_check_settings as cs
 
     from ..core import batch_close
@@ -82,10 +87,23 @@ class USDKSchema(with_metaclass(SchemaMeta, BaseSchema)):
         return {k: v for k, v in data.items() if self.should_keep(k, v)}
 
 
+class Size(USDKSchema):
+    width = Integer()
+    height = Integer()
+
+
 class DebugScreenshotHandler(USDKSchema):
-    save_debug_screenshots = Boolean(dump_to="save", required=True)
     debug_screenshots_path = String(dump_to="path")
     debug_screenshots_prefix = String(dump_to="prefix")
+
+
+class Environment(USDKSchema):
+    host_os = String(dump_to="os")
+    # osInfo
+    host_app = String(dump_to="hostingApp")
+    # hostingAppInfo
+    # deviceName
+    viewport_size = Nested(Size, dump_to="viewportSize")
 
 
 class DesktopBrowserRenderer(USDKSchema):
@@ -114,9 +132,7 @@ class AndroidDeviceRenderer(USDKSchema):
     screen_orientation = Enum(
         ScreenOrientation, dump_to="screenOrientation", load_from="screenOrientation"
     )
-    android_version = Enum(
-        AndroidVersion, dump_to="androidVersion", load_from="androidVersion"
-    )
+    android_version = Enum(AndroidVersion, dump_to="version", load_from="version")
 
     @post_load
     def to_python(self, data, **_):
@@ -128,7 +144,7 @@ class IosDeviceRenderer(USDKSchema):
     screen_orientation = Enum(
         ScreenOrientation, dump_to="screenOrientation", load_from="screenOrientation"
     )
-    ios_version = Enum(IosVersion, dump_to="iosVersion", load_from="iosVersion")
+    ios_version = Enum(IosVersion, dump_to="version", load_from="version")
 
     @post_load
     def to_python(self, data, **_):
@@ -146,6 +162,13 @@ class Region(USDKSchema):
         return common.geometry.Region.from_(data)
 
 
+class Offset(USDKSchema):
+    max_left_offset = Float(dump_to="left")
+    max_up_offset = Float(dump_to="top")
+    max_right_offset = Float(dump_to="right")
+    max_down_offset = Float(dump_to="bottom")
+
+
 class ContextReference(USDKSchema):
     frame = FrameReference()
     scroll_root_locator = ElementReference(dump_to="scrollRootElement")
@@ -158,9 +181,10 @@ class ImageCropRect(USDKSchema):
     left = Float()
 
 
-class Size(USDKSchema):
-    width = Integer()
-    height = Integer()
+class Normalization(USDKSchema):
+    cut_provider = Nested(ImageCropRect, dump_to="cut")
+    rotation = Integer()
+    scale_ratio = Float(dump_to="scaleRatio")
 
 
 class Batch(USDKSchema):
@@ -184,11 +208,13 @@ class StaticDriver(Schema):
     capabilities = Dict()
 
 
+class ImageTarget(USDKSchema):
+    image = String()
+
+
 class AccessibilitySettings(USDKSchema):
     level = Enum(AccessibilityLevel)
-    guidelines_version = Enum(
-        AccessibilityGuidelinesVersion, dump_to="guidelinesVersion"
-    )
+    guidelines_version = Enum(AccessibilityGuidelinesVersion, dump_to="version")
 
 
 class CodedRegionReference(USDKSchema):
@@ -199,22 +225,12 @@ class CodedRegionReference(USDKSchema):
 
 class FloatingRegionReference(USDKSchema):
     _target_path = RegionReference(dump_to="region")
-    max_up = Integer(attribute="_bounds.max_up_offset", dump_to="maxUpOffset")
-    max_down = Integer(attribute="_bounds.max_down_offset", dump_to="maxDownOffset")
-    max_left = Integer(attribute="_bounds.max_left_offset", dump_to="maxLeftOffset")
-    max_right = Integer(attribute="_bounds.max_right_offset", dump_to="maxRightOffset")
+    _bounds = Nested(Offset(), dump_to="offset")
 
 
 class AccessibilityRegionReference(USDKSchema):
     _target_path = RegionReference(dump_to="region")
     _type = Enum(AccessibilityRegionType, dump_to="type")
-
-
-class ExactMatchSettings(USDKSchema):
-    min_diff_intensity = Integer(dump_to="minDiffIntensity")
-    min_diff_width = Integer(dump_to="minDiffWidth")
-    min_diff_height = Integer(dump_to="minDiffHeight")
-    match_threshold = Float(dump_to="matchThreshold")
 
 
 class LazyLoadOptions(USDKSchema):
@@ -223,87 +239,123 @@ class LazyLoadOptions(USDKSchema):
     max_amount_to_scroll = Integer(dump_to="maxAmountToScroll")
 
 
-class MatchSettings(USDKSchema):
-    exact = Nested(ExactMatchSettings)
-    match_level = Enum(MatchLevel, dump_to="matchLevel")
-    use_dom = Boolean(dump_to="useDom")
-    enable_patterns = Boolean(dump_to="enablePatterns")
-    ignore_caret = Boolean(dump_to="ignoreCaret")
-    ignore_displacements = Boolean(dump_to="ignoreDisplacements")
-    accessibility_settings = Nested(
-        AccessibilitySettings, dump_to="accessibilitySettings"
-    )
-    ignore_regions = List(Nested(CodedRegionReference), dump_to="ignoreRegions")
-    layout_regions = List(Nested(CodedRegionReference), dump_to="layoutRegions")
-    strict_regions = List(Nested(CodedRegionReference), dump_to="strictRegions")
-    content_regions = List(Nested(CodedRegionReference), dump_to="contentRegions")
-    floating_match_settings = List(
-        Nested(FloatingRegionReference), dump_to="floatingRegions"
-    )
-    accessibility = List(
-        Nested(AccessibilityRegionReference), dump_to="accessibilityRegions"
-    )
-
-
 class EyesConfig(USDKSchema):
-    # EyesBaseConfig
-    save_debug_screenshots = DebugScreenshots(dump_to="debugScreenshots")
-    agent_id = String(dump_to="agentId")
-    api_key = String(dump_to="apiKey")
-    server_url = String(dump_to="serverUrl")
-    proxy = Nested(Proxy)
-    is_disabled = Boolean(dump_to="isDisabled")
-    _timeout = Integer(dump_to="connectionTimeout")
-    # EyesOpenConfig
-    app_name = String(dump_to="appName")
-    test_name = String(dump_to="testName")
-    viewport_size = Nested(Size, dump_to="viewportSize")
-    session_type = Enum(SessionType, dump_to="sessionType")
-    properties = List(Dict())
-    batch = Nested(Batch)
-    default_match_settings = Nested(MatchSettings, dump_to="defaultMatchSettings")
-    host_app = String(dump_to="hostApp")
-    host_os = String(dump_to="hostOS")
-    baseline_env_name = String(dump_to="baselineEnvName")
-    environment_name = String(dump_to="environmentName")
-    branch_name = String(dump_to="branchName")
-    parent_branch_name = String(dump_to="parentBranchName")
-    baseline_branch_name = String(dump_to="baselineBranchName")
-    save_failed_tests = Boolean(dump_to="saveFailedTests")
-    save_new_tests = Boolean(dump_to="saveNewTests")
-    save_diffs = Boolean(dump_to="saveDiffs")
-    dont_close_batches = Boolean(dump_to="dontCloseBatches")
-    user_test_id = String(dump_to="userTestId")
-    # EyesCheckConfig
-    send_dom = Boolean(dump_to="sendDom")
-    match_timeout = Float(dump_to="matchTimeout")
-    force_full_page_screenshot = Boolean(dump_to="forceFullPageScreenshot")
-    # EyesClassicConfig
-    wait_before_screenshots = Float(dump_to="waitBeforeScreenshots")
-    wait_before_capture = Integer(dump_to="waitBeforeCapture")
+    # region
+    # frames
+    force_full_page_screenshot = Boolean(dump_to="fully")
+    # scrollRootElement
     stitch_mode = Enum(StitchMode, dump_to="stitchMode")
     hide_scrollbars = Boolean(dump_to="hideScrollbars")
     hide_caret = Boolean(dump_to="hideCaret")
-    stitch_overlap = Integer(dump_to="stitchOverlap")
-    cut_provider = Nested(ImageCropRect, dump_to="cut")
-    rotation = Integer()
-    scale_ratio = Float(dump_to="scaleRatio")
-    # EyesUFGConfig
-    browsers_info = List(BrowserInfo(), dump_to="browsersInfo")
-    visual_grid_options = VisualGridOptions(dump_to="visualGridOptions")
+    stitch_overlap = StitchOverlap(dump_to="overlap")
+    wait_before_capture = Integer(dump_to="waitBeforeCapture")
+    # lazyLoad
+    ignore_displacements = Boolean(
+        attribute="default_match_settings.ignore_displacements",
+        dump_to="ignoreDisplacements",
+    )
+    # name
+    # pageId
+    ignore_regions = List(
+        Nested(CodedRegionReference),
+        attribute="default_match_settings.ignore_regions",
+        dump_to="ignoreRegions",
+    )
+    layout_regions = List(
+        Nested(CodedRegionReference),
+        attribute="default_match_settings.layout_regions",
+        dump_to="layoutRegions",
+    )
+
+    strict_regions = List(
+        Nested(CodedRegionReference),
+        attribute="default_match_settings.strict_regions",
+        dump_to="strictRegions",
+    )
+    content_regions = List(
+        Nested(CodedRegionReference),
+        attribute="default_match_settings.content_regions",
+        dump_to="contentRegions",
+    )
+    floating_match_settings = List(
+        Nested(FloatingRegionReference),
+        attribute="default_match_settings.floating_match_settings",
+        dump_to="floatingRegions",
+    )
+    accessibility = List(
+        Nested(AccessibilityRegionReference),
+        attribute="default_match_settings.accessibility",
+        dump_to="accessibilityRegions",
+    )
+    accessibility_settings = Nested(
+        AccessibilitySettings,
+        attribute="default_match_settings.accessibility_settings",
+        dump_to="accessibilitySettings",
+    )
+
+    match_level = Enum(
+        MatchLevel, attribute="default_match_settings.match_level", dump_to="matchLevel"
+    )
+    send_dom = Boolean(dump_to="sendDom")
+    use_dom = Boolean(attribute="default_match_settings.use_dom", dump_to="useDom")
+    enable_patterns = Boolean(
+        attribute="default_match_settings.enable_patterns", dump_to="enablePatterns"
+    )
+    ignore_caret = Boolean(
+        attribute="default_match_settings.ignore_caret", dump_to="ignoreCaret"
+    )
+    # enablePatterns
+    # ignoreCaret
+    visual_grid_options = VisualGridOptions(dump_to="ufgOptions")
     layout_breakpoints = Field(dump_to="layoutBreakpoints")
     disable_browser_fetching = Boolean(dump_to="disableBrowserFetching")
+    match_timeout = Float(dump_to="retryTimeout")
+    browsers_info = List(BrowserInfo(), dump_to="renderers")
+    # autProxy
+    normalization = NormalizationField()
+    debug_images = DebugScreenshots(dump_to="debugImages")
+
+    # wait_before_screenshots = Float(dump_to="waitBeforeScreenshots")
+
+
+class OpenSettings(USDKSchema):
+    is_disabled = Boolean(dump_to="isDisabled")
+    server_url = String(dump_to="serverUrl")
+    api_key = String(dump_to="apiKey")
+    proxy = Nested(Proxy)
+    _timeout = Integer(dump_to="connectionTimeout")
+    # removeSession
+    agent_id = String(dump_to="agentId")
+    app_name = String(dump_to="appName")
+    test_name = String(dump_to="testName")
+    # displayName
+    user_test_id = String(dump_to="userTestId")
+    session_type = Enum(SessionType, dump_to="sessionType")
+    properties = List(Dict())
+    batch = Nested(Batch)
+    dont_close_batches = Boolean(dump_to="keepBatchOpen")
+    environment_name = String(dump_to="environmentName")
+    environment = EnvironmentField()
+    branch_name = String(dump_to="branchName")
+    parent_branch_name = String(dump_to="parentBranchName")
+    baseline_env_name = String(dump_to="baselineEnvName")
+    baseline_branch_name = String(dump_to="baselineBranchName")
+    # compareWithParentBranch
+    # ignoreBaseline
+    # ignoreGitBranching
+    save_diffs = Boolean(dump_to="saveDiffs")
+    # abortIdleTestTimeout
 
 
 class CheckSettings(USDKSchema):
     name = String()
     disable_browser_fetching = Boolean(dump_to="disableBrowserFetching")
     layout_breakpoints = Field(dump_to="layoutBreakpoints")
-    visual_grid_options = VisualGridOptions(dump_to="visualGridOptions")
+    visual_grid_options = VisualGridOptions(dump_to="ufgOptions")
     script_hooks = Dict(dump_to="hooks")
     page_id = String(dump_to="pageId")
-    variation_group_id = String(dump_to="variationGroupId")
-    timeout = Integer()
+    variation_group_id = String(dump_to="userCommandId")
+    timeout = Integer(dump_to="retryTimeout")
     wait_before_capture = Integer(dump_to="waitBeforeCapture")
     lazy_load = Nested(LazyLoadOptions, dump_to="lazyLoad")
     # ScreenshotSettings
@@ -340,14 +392,20 @@ class OCRSearchSettings(USDKSchema):
     _language = String(dump_to="language")
 
 
-class OCRExtractSettings(USDKSchema):
-    target = RegionReference()
+class ExtractTextSettings(USDKSchema):
+    target = RegionReference(dump_to="region")
     _hint = String(dump_to="hint")
     _min_match = Float(dump_to="minMatch")
     _language = String(dump_to="language")
 
 
-class CloseBatchesSettings(USDKSchema):
+class CloseSettings(USDKSchema):
+    # raise_ex = Boolean(dump_to="throwErr")  # not present in config
+    save_new_tests = Boolean(dump_to="updateBaselineIfNew")
+    save_failed_tests = Boolean(dump_to="updateBaselineIfDifferent")
+
+
+class CloseBatchSettings(USDKSchema):
     _ids = List(String(), dump_to="batchIds")
     server_url = String(dump_to="serverUrl")
     api_key = String(dump_to="apiKey")
@@ -444,6 +502,18 @@ class MatchResult(Schema):
         return common.MatchResult(**data)
 
 
+class LocateTextResponse(Schema):
+    left = Integer(load_from="x")
+    top = Integer(load_from="y")
+    width = Integer()
+    height = Integer()
+    text = String()
+
+    @post_load
+    def to_python(self, data, **_):
+        return extract_text.TextRegion(**data)
+
+
 class TestResults(Schema):
     steps = Integer()
     matches = Integer()
@@ -487,9 +557,9 @@ class TestResults(Schema):
 
 
 class TestResultContainer(Schema):
-    test_results = Nested(TestResults, load_from="testResults")
-    browser_info = BrowserInfo(load_from="browserInfo")
-    exception = Error(allow_none=True)
+    test_results = Nested(TestResults, load_from="result")
+    browser_info = BrowserInfo(load_from="renderer")
+    exception = Error(allow_none=True, load_from="error")
     user_test_id = String(load_from="userTestId")
 
     @post_load
@@ -520,7 +590,10 @@ def marshal_webdriver_ref(driver):
 
 def marshal_configuration(configuration):
     # type: (config.Configuration) -> dict
-    return check_error(EyesConfig().dump(configuration))
+    open = check_error(OpenSettings().dump(configuration))
+    config = check_error(EyesConfig().dump(configuration))
+    close = check_error(CloseSettings().dump(configuration))
+    return {"open": open, "screenshot": config, "check": config, "close": close}
 
 
 def marshal_check_settings(check_settings):
@@ -539,8 +612,8 @@ def marshal_ocr_search_settings(search_settings):
 
 
 def marshal_ocr_extract_settings(extract_settings):
-    # type: (t.Tuple[extract_text.OCRRegion]) -> t.List[dict]
-    return [check_error(OCRExtractSettings().dump(s)) for s in extract_settings]
+    # type: (t.Tuple[extract_text.OCRRegion, ...]) -> t.List[dict]
+    return [check_error(ExtractTextSettings().dump(s)) for s in extract_settings]
 
 
 def marshal_viewport_size(viewport_size):
@@ -550,7 +623,7 @@ def marshal_viewport_size(viewport_size):
 
 def marshal_enabled_batch_close(close_batches):
     # type: (batch_close._EnabledBatchClose) -> dict # noqa
-    return check_error(CloseBatchesSettings().dump(close_batches))
+    return check_error(CloseBatchSettings().dump(close_batches))
 
 
 def marshal_delete_test_settings(test_results):
@@ -567,6 +640,16 @@ def demarshal_locate_result(results):
     # type: (dict) -> t.Dict[t.Text, t.List[common.Region]]
     return {
         locator_id: [check_error(Region().load(r)) for r in regions] if regions else []
+        for locator_id, regions in results.items()
+    }
+
+
+def demarshal_locate_text_result(results):
+    # type: (dict) -> t.Dict[t.Text, t.List[extract_text.TextRegion]]
+    return {
+        locator_id: [check_error(LocateTextResponse().load(r)) for r in regions]
+        if regions
+        else []
         for locator_id, regions in results.items()
     }
 

@@ -16,7 +16,7 @@ Failure = USDKFailure  # backward compatibility with eyes-selenium==5.0.0
 
 
 class ManagerType(Enum):
-    VG = "vg"
+    UFG = "ufg"
     CLASSIC = "classic"
 
 
@@ -25,7 +25,7 @@ class CommandExecutor(object):
     def create(cls, name, version):
         # type: (Text, Text) -> CommandExecutor
         commands = cls(USDKConnection.create())
-        commands.make_sdk(name, version, getcwd())
+        commands.make_core(name, version, getcwd())
         return commands
 
     @classmethod
@@ -42,41 +42,49 @@ class CommandExecutor(object):
         # type: (USDKConnection) -> None
         self._connection = connection
 
-    def make_sdk(self, name, version, cwd):
+    def make_core(self, name, version, cwd):
         # type: (Text, Text, Text) -> None
         self._connection.notification(
-            "Core.makeSDK",
+            "Core.makeCore",
             {"name": name, "version": version, "cwd": cwd, "protocol": "webdriver"},
         )
 
-    def core_make_manager(self, manager_type, concurrency=None, is_legacy=None):
-        # type: (ManagerType, Optional[int], Optional[bool]) -> dict
+    def core_make_manager(
+        self, manager_type, concurrency=None, legacy_concurrency=None, agent_id=None
+    ):
+        # type: (ManagerType, Optional[int], Optional[int], Optional[Text]) -> dict
         payload = {"type": manager_type.value}
         if concurrency is not None:
             payload["concurrency"] = concurrency
-        if is_legacy is not None:
-            payload["legacy"] = is_legacy
+        if legacy_concurrency is not None:
+            payload["legacyConcurrency"] = legacy_concurrency
+        if agent_id is not None:
+            payload["agentId"] = agent_id
         return self._checked_command("Core.makeManager", payload)
 
-    def core_get_viewport_size(self, driver):
+    def core_get_viewport_size(self, target):
         # type: (dict) -> dict
-        return self._checked_command("Core.getViewportSize", {"driver": driver})
+        return self._checked_command("Core.getViewportSize", {"target": target})
 
-    def core_set_viewport_size(self, driver, size):
+    def core_set_viewport_size(self, target, size):
         # type: (dict, dict) -> None
-        self._checked_command("Core.setViewportSize", {"driver": driver, "size": size})
+        self._checked_command("Core.setViewportSize", {"target": target, "size": size})
 
-    def core_close_batches(self, close_batches_settings):
+    def core_close_batch(self, close_batch_settings):
         # type: (dict) -> None
-        self._checked_command("Core.closeBatches", {"settings": close_batches_settings})
+        self._checked_command("Core.closeBatch", {"settings": close_batch_settings})
 
     def core_delete_test(self, close_test_settings):
         # type: (dict) -> None
         self._checked_command("Core.deleteTest", {"settings": close_test_settings})
 
-    def manager_open_eyes(self, manager, driver, config=None):
-        # type: (dict, dict, Optional[dict]) -> dict
-        payload = {"manager": manager, "driver": driver}
+    def manager_open_eyes(self, manager, target=None, settings=None, config=None):
+        # type: (dict, Optional[dict], Optional[dict], Optional[dict]) -> dict
+        payload = {"manager": manager}
+        if target is not None:
+            payload["target"] = target
+        if settings is not None:
+            payload["settings"] = settings
         if config is not None:
             payload["config"] = config
         return self._checked_command("EyesManager.openEyes", payload)
@@ -85,43 +93,54 @@ class CommandExecutor(object):
         # type: (dict, bool, float) -> List[dict]
         return self._checked_command(
             "EyesManager.closeManager",
-            {"manager": manager, "throwErr": raise_ex},
+            {"manager": manager, "settings": {"throwErr": raise_ex}},
             wait_timeout=timeout,
         )
 
-    def eyes_check(self, eyes, settings=None, config=None):
-        # type: (dict, Optional[dict], Optional[dict]) -> dict
+    def eyes_check(self, eyes, target=None, settings=None, config=None):
+        # type: (dict, Optional[dict], Optional[dict], Optional[dict]) -> dict
         payload = {"eyes": eyes}
+        if target is not None:
+            payload["target"] = target
         if settings is not None:
             payload["settings"] = settings
         if config is not None:
             payload["config"] = config
         return self._checked_command("Eyes.check", payload)
 
-    def eyes_locate(self, eyes, settings, config=None):
+    def core_locate(self, target, settings, config=None):
         # type: (dict, dict, Optional[dict]) -> dict
-        payload = {"eyes": eyes, "settings": settings}
+        payload = {"target": target, "settings": settings}
         if config:
             payload["config"] = config
-        return self._checked_command("Eyes.locate", payload)
+        return self._checked_command("Core.locate", payload)
 
-    def eyes_extract_text(self, eyes, regions, config=None):
-        # type: (dict, dict, Optional[dict]) -> List[Text]
-        payload = {"eyes": eyes, "regions": regions}
+    def eyes_extract_text(self, eyes, target, settings, config=None):
+        # type: (dict, dict, dict, Optional[dict]) -> List[Text]
+        payload = {"eyes": eyes}
+        if target:
+            payload["target"] = target
+        if settings:
+            payload["settings"] = settings
         if config:
             payload["config"] = config
         return self._checked_command("Eyes.extractText", payload)
 
-    def eyes_extract_text_regions(self, eyes, settings, config=None):
-        # type: (dict, dict, Optional[dict]) -> dict
-        payload = {"eyes": eyes, "settings": settings}
+    def eyes_locate_text(self, eyes, target=None, settings=None, config=None):
+        # type: (dict, Optional[dict], Optional[dict], Optional[dict]) -> dict
+        payload = {"eyes": eyes}
+        if target:
+            payload["target"] = target
+        if settings:
+            payload["settings"] = settings
         if config:
             payload["config"] = config
-        return self._checked_command("Eyes.extractTextRegions", payload)
+        return self._checked_command("Eyes.locateText", payload)
 
-    def eyes_close_eyes(self, eyes, wait_result):
-        # type: (dict, bool) -> List[dict]
-        return self._checked_command("Eyes.close", {"eyes": eyes}, wait_result)
+    def eyes_close_eyes(self, eyes, settings, config, wait_result):
+        # type: (dict, dict, dict, bool) -> List[dict]
+        payload = {"eyes": eyes, "settings": settings, "config": config}
+        return self._checked_command("Eyes.close", payload, wait_result)
 
     def eyes_abort_eyes(self, eyes, wait_result):
         # type: (dict, bool) -> List[dict]

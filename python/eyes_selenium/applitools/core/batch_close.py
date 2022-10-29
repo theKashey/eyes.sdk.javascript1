@@ -3,7 +3,6 @@ from typing import List, Optional, Text, Union
 import attr
 
 from applitools.common import ProxySettings
-from applitools.common.config import DEFAULT_SERVER_URL
 from applitools.common.utils import argument_guard
 from applitools.common.utils.general_utils import get_env_with_prefix
 
@@ -39,7 +38,7 @@ class _EnabledBatchClose(object):
 
         cmd = CommandExecutor.get_instance(EyesRunner.BASE_AGENT_ID, __version__)
         marshaled = marshal_enabled_batch_close(self)
-        cmd.core_close_batches(marshaled)
+        cmd.core_close_batch(marshaled)
 
 
 @attr.s
@@ -47,7 +46,7 @@ class BatchClose(object):
     api_key = attr.ib(
         factory=lambda: get_env_with_prefix("APPLITOOLS_API_KEY", None)
     )  # type: Optional[Text]
-    server_url = attr.ib(default=DEFAULT_SERVER_URL)  # type: Text
+    server_url = attr.ib(default=None)  # type: Optional[Text]
     proxy = attr.ib(default=None)  # type: Optional[ProxySettings]
 
     def set_url(self, url):

@@ -26,6 +26,7 @@ from applitools.common import (
     Region,
     ScreenOrientation,
     ServerInfo,
+    SessionType,
     TestResults,
     VisualGridOption,
 )
@@ -77,11 +78,13 @@ def test_driver_marshal():
 def test_config_marshal(monkeypatch):
     monkeypatch.setenv("APPLITOOLS_BATCH_ID", "ID1")
 
-    serializer = schema.EyesConfig()
     config = Configuration()
     config.api_key = "API KEY"
+    config.save_debug_screenshots = True
     config.set_agent_id("agent id")
     config.set_proxy(ProxySettings("host", 80, "user", "pass"))
+    config.set_server_url("https://server.url")
+    config.set_session_type(SessionType.SEQUENTIAL)
     config.set_app_name("app name")
     config.set_test_name("test name")
     config.set_viewport_size(RectangleSize(800, 600))
@@ -110,6 +113,8 @@ def test_config_marshal(monkeypatch):
     config.cut_provider = FixedCutProvider(1, 2, 3, 4)
     config.rotation = 90
     config.scale_ratio = 50
+    config.set_save_failed_tests(False)
+    config.set_save_new_tests(True)
     config.set_visual_grid_options(VisualGridOption("vo key", "vo value"))
     config.set_layout_breakpoints(1, 2, 3)
     config.add_browser(DesktopBrowserInfo(1200, 800, BrowserType.CHROME))
@@ -125,6 +130,7 @@ def test_config_marshal(monkeypatch):
         )
     )
 
+    serializer = schema.OpenSettings()
     json, errors = serializer.dump(config)
 
     assert errors == {}
@@ -137,13 +143,49 @@ def test_config_marshal(monkeypatch):
         "batch": {
             "id": "ID1",
             "name": "batch name",
-            "notifyOnCompletion": False,
             "properties": [{"name": "batch propname", "value": "batch prop value"}],
             "sequenceName": "sequence name",
             "startedAt": "2000-01-01T00:00:00Z",
         },
         "branchName": "branch name",
-        "browsersInfo": [
+        "environment": {
+            "hostingApp": "host app",
+            "os": "host os",
+            "viewportSize": {"height": 600, "width": 800},
+        },
+        "environmentName": "env name",
+        "parentBranchName": "parent branch name",
+        "properties": [{"name": "prop name", "value": "prop value"}],
+        "proxy": {
+            "password": "pass",
+            "url": "http://user:pass@host:80",
+            "username": "user",
+        },
+        "saveDiffs": True,
+        "serverUrl": "https://server.url",
+        "sessionType": "SEQUENTIAL",
+        "testName": "test name",
+        "userTestId": "user test id",
+    }
+
+    serializer = schema.EyesConfig()
+    json, errors = serializer.dump(config)
+
+    assert errors == {}
+    assert json == {
+        "accessibilitySettings": {"version": "WCAG_2_1", "level": "AA"},
+        "debugImages": {"path": "", "prefix": "screenshot_"},
+        "enablePatterns": True,
+        "fully": True,
+        "hideScrollbars": True,
+        "layoutBreakpoints": [1, 2, 3],
+        "normalization": {
+            "cut": {"bottom": 2.0, "left": 3.0, "right": 4.0, "top": 1.0},
+            "rotation": 90,
+            "scaleRatio": 50.0,
+        },
+        "overlap": {"bottom": 10},
+        "renderers": [
             {"height": 800.0, "name": "chrome", "width": 1200.0},
             {
                 "chromeEmulationInfo": {
@@ -153,7 +195,7 @@ def test_config_marshal(monkeypatch):
             },
             {
                 "androidDeviceInfo": {
-                    "androidVersion": "latest",
+                    "version": "latest",
                     "deviceName": "Pixel 6",
                     "screenOrientation": "portrait",
                 }
@@ -161,62 +203,23 @@ def test_config_marshal(monkeypatch):
             {
                 "iosDeviceInfo": {
                     "deviceName": "iPhone X",
-                    "iosVersion": "latest",
+                    "version": "latest",
                     "screenOrientation": "portrait",
                 }
             },
         ],
-        "connectionTimeout": 300000,
-        "cut": {"bottom": 2.0, "left": 3.0, "right": 4.0, "top": 1.0},
-        "debugScreenshots": {"path": "", "prefix": "screenshot_", "save": False},
-        "defaultMatchSettings": {
-            "accessibilitySettings": {"guidelinesVersion": "WCAG_2_1", "level": "AA"},
-            "enablePatterns": True,
-            "exact": {
-                "matchThreshold": 4.0,
-                "minDiffHeight": 3,
-                "minDiffIntensity": 1,
-                "minDiffWidth": 2,
-            },
-            "ignoreCaret": False,
-            "ignoreDisplacements": False,
-            "matchLevel": "Strict",
-            "useDom": True,
-        },
-        "disableBrowserFetching": True,
-        "dontCloseBatches": True,
-        "environmentName": "env name",
-        "forceFullPageScreenshot": True,
-        "hideCaret": False,
-        "hideScrollbars": True,
-        "hostApp": "host app",
-        "hostOS": "host os",
-        "isDisabled": False,
-        "layoutBreakpoints": [1, 2, 3],
-        "matchTimeout": 2000.0,
-        "parentBranchName": "parent branch name",
-        "properties": [{"name": "prop name", "value": "prop value"}],
-        "proxy": {
-            "password": "pass",
-            "url": "http://user:pass@host:80",
-            "username": "user",
-        },
-        "rotation": 90,
-        "saveDiffs": True,
-        "saveFailedTests": False,
-        "saveNewTests": True,
-        "scaleRatio": 50.0,
-        "sendDom": True,
-        "serverUrl": "https://eyesapi.applitools.com",
-        "sessionType": "SEQUENTIAL",
-        "stitchMode": "Scroll",
-        "stitchOverlap": 10,
-        "testName": "test name",
-        "userTestId": "user test id",
-        "viewportSize": {"height": 600, "width": 800},
-        "visualGridOptions": {"vo key": "vo value"},
+        "ufgOptions": {"vo key": "vo value"},
+        "useDom": True,
         "waitBeforeCapture": 1,
-        "waitBeforeScreenshots": 1000.0,
+    }
+
+    serializer = schema.CloseSettings()
+    json, errors = serializer.dump(config)
+
+    assert errors == {}
+    assert json == {
+        "updateBaselineIfDifferent": False,
+        "updateBaselineIfNew": True,
     }
 
 
@@ -286,17 +289,11 @@ def test_check_settings_marshal():
         "enablePatterns": True,
         "floatingRegions": [
             {
-                "maxDownOffset": 10,
-                "maxLeftOffset": 10,
-                "maxRightOffset": 10,
-                "maxUpOffset": 10,
+                "offset": {"bottom": 10.0, "left": 10.0, "right": 10.0, "top": 10.0},
                 "region": {"selector": "floating selector", "type": "css selector"},
             },
             {
-                "maxDownOffset": 20,
-                "maxLeftOffset": 20,
-                "maxRightOffset": 20,
-                "maxUpOffset": 20,
+                "offset": {"bottom": 20.0, "left": 20.0, "right": 20.0, "top": 20.0},
                 "region": {"height": 23.0, "width": 22.0, "x": 20.0, "y": 21.0},
             },
         ],
@@ -335,10 +332,9 @@ def test_check_settings_marshal():
         },
         "sendDom": True,
         "strictRegions": [{"region": {"elementId": "dummy id 1"}}],
-        "timeout": -1,
+        "ufgOptions": {"vo key": "vo value"},
         "useDom": True,
-        "variationGroupId": "vargroup id",
-        "visualGridOptions": {"vo key": "vo value"},
+        "userCommandId": "vargroup id",
         "waitBeforeCapture": 5,
     }
 
@@ -369,7 +365,7 @@ def test_text_region_settings_marshal():
 
 
 def test_ocrregion_marshal():
-    serializer = schema.OCRExtractSettings()
+    serializer = schema.ExtractTextSettings()
     settings_sel = OCRRegion("ocr selector").min_match(2).hint("hint")
     settings_region = OCRRegion(Region(1, 2, 3, 4))
 
@@ -379,14 +375,14 @@ def test_ocrregion_marshal():
         "hint": "hint",
         "language": "eng",
         "minMatch": 2.0,
-        "target": {"selector": "ocr selector", "type": "css selector"},
+        "region": {"selector": "ocr selector", "type": "css selector"},
     }
 
     results, errors = serializer.dump(settings_region)
     assert errors == {}
     assert results == {
         "language": "eng",
-        "target": {"height": 4.0, "width": 3.0, "x": 1.0, "y": 2.0},
+        "region": {"height": 4.0, "width": 3.0, "x": 1.0, "y": 2.0},
     }
 
 
@@ -398,12 +394,13 @@ def test_size_marshal():
 
 
 def test_enabled_batch_close_marshal():
-    serializer = schema.CloseBatchesSettings()
+    serializer = schema.CloseBatchSettings()
     settings = (
         BatchClose()
         .set_proxy(ProxySettings("host", 80, "user", "pass"))
         .set_api_key("api key")
         .set_batch_ids("batch id")
+        .set_url("https://server.url")
     )
 
     result, errors = serializer.dump(settings)
@@ -416,7 +413,7 @@ def test_enabled_batch_close_marshal():
             "url": "http://user:pass@host:80",
             "username": "user",
         },
-        "serverUrl": "https://eyesapi.applitools.com",
+        "serverUrl": "https://server.url",
     }
 
 
@@ -599,20 +596,20 @@ def test_test_results_summary_demarshal():
         {
             "results": [
                 {
-                    "testResults": {},
+                    "result": {},
                     "exception": None,
                     "userTestId": "user test id",
-                    "browserInfo": {"width": 800, "name": "chrome", "height": 600},
+                    "renderer": {"width": 800, "name": "chrome", "height": 600},
                 },
                 {
-                    "testResults": {},
+                    "result": {},
                     "exception": {
                         "message": "error message",
                         "stack": "stack",
                         "reason": "test different",
                     },
                     "userTestId": "user test id",
-                    "browserInfo": {"width": 640, "name": "firefox", "height": 480},
+                    "renderer": {"width": 640, "name": "firefox", "height": 480},
                 },
             ],
             "passed": 1,

@@ -13,7 +13,7 @@ from applitools.selenium.schema import marshal_webdriver_ref
 
 def test_usdk_commands_make_manager():
     commands = CommandExecutor(USDKConnection.create())
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
 
     mgr = commands.core_make_manager(ManagerType.CLASSIC)
 
@@ -24,7 +24,7 @@ def test_usdk_commands_open_eyes(local_chrome_driver):
     local_chrome_driver.get("https://demo.applitools.com")
     commands = CommandExecutor(USDKConnection.create())
 
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
 
     mgr = commands.core_make_manager(ManagerType.CLASSIC)
 
@@ -35,7 +35,7 @@ def test_usdk_commands_open_eyes(local_chrome_driver):
             "serverUrl": local_chrome_driver.command_executor._url,  # noqa
             "capabilities": local_chrome_driver.capabilities,
         },
-        {"appName": "a", "testName": "b"},
+        config={"open": {"appName": "a", "testName": "b"}},
     )
 
     assert "applitools-ref-id" in eyes
@@ -44,7 +44,7 @@ def test_usdk_commands_open_eyes(local_chrome_driver):
 def test_usdk_commands_set_get_viewport_size(local_chrome_driver):
     driver = marshal_webdriver_ref(local_chrome_driver)
     commands = CommandExecutor(USDKConnection.create())
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
 
     commands.core_set_viewport_size(driver, {"width": 800, "height": 600})
     returned_size = commands.core_get_viewport_size(driver)
@@ -55,21 +55,23 @@ def test_usdk_commands_set_get_viewport_size(local_chrome_driver):
 def test_usdk_commands_open_close_eyes(local_chrome_driver):
     driver = marshal_webdriver_ref(local_chrome_driver)
     commands = CommandExecutor(USDKConnection.create())
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
     mgr = commands.core_make_manager(ManagerType.CLASSIC)
     eyes = commands.manager_open_eyes(
         mgr,
         driver,
-        {
-            "appName": "USDK Test",
-            "testName": "USDK Commands open close",
-            "userTestId": "42",
+        config={
+            "open": {
+                "appName": "USDK Test",
+                "testName": "USDK Commands open close",
+                "userTestId": "42",
+            }
         },
     )
 
     assert "applitools-ref-id" in mgr
 
-    eyes_close_result = commands.eyes_close_eyes(eyes, True)
+    eyes_close_result = commands.eyes_close_eyes(eyes, {}, {}, True)
     test_result = eyes_close_result[0]
 
     assert len(eyes_close_result) == 1
@@ -86,22 +88,24 @@ def test_usdk_commands_open_close_eyes(local_chrome_driver):
         "missing": 0,
         "passed": 1,
         "unresolved": 0,
-        "results": [{"testResults": test_result, "userTestId": "42"}],
+        "results": [{"result": test_result, "userTestId": "42"}],
     }
 
 
 def test_usdk_commands_open_abort_eyes(local_chrome_driver):
     driver = marshal_webdriver_ref(local_chrome_driver)
     commands = CommandExecutor(USDKConnection.create())
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
     mgr = commands.core_make_manager(ManagerType.CLASSIC)
     eyes = commands.manager_open_eyes(
         mgr,
         driver,
-        {
-            "appName": "USDK Test",
-            "testName": "USDK Commands open abort",
-            "userTestId": "abc",
+        config={
+            "open": {
+                "appName": "USDK Test",
+                "testName": "USDK Commands open abort",
+                "userTestId": "abc",
+            }
         },
     )
 
@@ -126,8 +130,8 @@ def test_usdk_commands_open_abort_eyes(local_chrome_driver):
         "unresolved": 0,
         "results": [
             {
-                "testResults": test_result,
-                "exception": {
+                "result": test_result,
+                "error": {
                     "message": "Test 'USDK Commands open abort' of 'USDK Test' is failed! "
                     "See details at undefined",
                     "reason": "test failed",
@@ -145,23 +149,25 @@ def test_usdk_commands_open_check_close_eyes(local_chrome_driver):
         "https://applitools.github.io/demo/TestPages/SimpleTestPage"
     )
     config = {
-        "appName": "USDK Test",
-        "testName": "USDK Commands open check close",
-        "userTestId": "abc",
+        "open": {
+            "appName": "USDK Test",
+            "testName": "USDK Commands open check close",
+            "userTestId": "abc",
+        }
     }
     driver = marshal_webdriver_ref(local_chrome_driver)
     commands = CommandExecutor(USDKConnection.create())
-    commands.make_sdk("sdk_name", "sdk_version", getcwd())
+    commands.make_core("sdk_name", "sdk_version", getcwd())
     mgr = commands.core_make_manager(ManagerType.CLASSIC)
-    eyes = commands.manager_open_eyes(mgr, driver, config)
+    eyes = commands.manager_open_eyes(mgr, driver, config=config)
 
     check_result = commands.eyes_check(eyes)
 
-    eyes_close_result = commands.eyes_close_eyes(eyes, True)
+    eyes_close_result = commands.eyes_close_eyes(eyes, {}, {}, True)
     test_result = eyes_close_result[0]
 
     assert "applitools-ref-id" in mgr
-    assert check_result == {"asExpected": True, "userTestId": "abc"}
+    assert check_result == [{"asExpected": True, "userTestId": "abc"}]
     assert len(eyes_close_result) == 1
     assert test_result["appName"] == "USDK Test"
     assert test_result["name"] == "USDK Commands open check close"
@@ -176,7 +182,7 @@ def test_usdk_commands_open_check_close_eyes(local_chrome_driver):
         "missing": 0,
         "passed": 1,
         "unresolved": 0,
-        "results": [{"testResults": test_result, "userTestId": "abc"}],
+        "results": [{"result": test_result, "userTestId": "abc"}],
     }
 
 
@@ -184,6 +190,6 @@ def test_usdk_commands_error_logging(caplog):
     commands = CommandExecutor.get_instance("sdk_name", "sdk_version")
 
     with raises(USDKFailure):
-        commands.manager_open_eyes({}, {})
+        commands.manager_open_eyes({})
 
     assert "Re-raising an error received from SDK server: USDKFailure" in caplog.text

@@ -25,7 +25,7 @@ def test_set_get_scale_ratio(eyes):
 
 
 def test_match_level(eyes):
-    assert eyes.match_level == MatchLevel.STRICT
+    assert eyes.match_level is None
     eyes.match_level = MatchLevel.EXACT
     assert eyes.match_level == MatchLevel.EXACT
     assert eyes.configure.match_level == MatchLevel.EXACT
@@ -35,8 +35,8 @@ def test_match_level(eyes):
 
 
 def test_stitch_mode(eyes):
-    assert eyes.stitch_mode == StitchMode.Scroll
-    assert eyes.configure.stitch_mode == StitchMode.Scroll
+    assert eyes.stitch_mode is None
+    assert eyes.configure.stitch_mode is None
     eyes.stitch_mode = StitchMode.CSS
     assert eyes.stitch_mode == StitchMode.CSS
     assert eyes.configure.stitch_mode == StitchMode.CSS

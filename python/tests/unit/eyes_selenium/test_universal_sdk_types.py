@@ -36,7 +36,7 @@ def test_demarshal_browser_info():
             "iosDeviceInfo": {
                 "deviceName": "iPhone 12",
                 "screenOrientation": "portrait",
-                "iosVersion": "latest-1",
+                "version": "latest-1",
             }
         }
     )

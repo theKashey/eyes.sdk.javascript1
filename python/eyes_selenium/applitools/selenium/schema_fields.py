@@ -25,6 +25,7 @@ from .fluent.target_path import RegionLocator
 if t.TYPE_CHECKING:
     import enum
 
+    from applitools.common import config as cfg
     from applitools.common import ultrafastgrid as ufg
     from applitools.core.fluent import region
     from applitools.selenium.fluent import selenium_check_settings as cs
@@ -58,11 +59,24 @@ class Error(Field):
 
 
 class DebugScreenshots(Field):
-    def _serialize(self, _, __, check_settings):
-        # type: (t.Any, t.Any, cs.SeleniumCheckSettingsValues) -> dict
+    _CHECK_ATTRIBUTE = False
+
+    def _serialize(self, _, __, config):
+        # type: (t.Any, t.Any, cfg.Configuration) -> dict
         from .schema import DebugScreenshotHandler
 
-        return check_error(DebugScreenshotHandler().dump(check_settings))
+        if config.save_debug_screenshots:
+            return check_error(DebugScreenshotHandler().dump(config))
+
+
+class EnvironmentField(Field):
+    _CHECK_ATTRIBUTE = False
+
+    def _serialize(self, _, __, config):
+        # type: (t.Any, t.Any, cfg.Configuration) -> dict
+        from .schema import Environment
+
+        return check_error(Environment().dump(config))
 
 
 class VisualGridOptions(Field):
@@ -91,6 +105,22 @@ class FrameReference(Field):
             return frame.frame_name_or_id
         else:
             return frame.frame_locator.to_dict()
+
+
+class NormalizationField(Field):
+    _CHECK_ATTRIBUTE = False
+
+    def _serialize(self, _, __, config):
+        from .schema import Normalization
+
+        return check_error(Normalization().dump(config))
+
+
+class StitchOverlap(Field):
+    def _serialize(self, value, *_):
+        # type: (t.Any, int, *t.Any) -> dict
+        if value is not None:
+            return {"bottom": value}
 
 
 class TargetReference(Field):

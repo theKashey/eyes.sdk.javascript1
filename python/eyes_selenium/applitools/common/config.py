@@ -28,10 +28,7 @@ if TYPE_CHECKING:
 __all__ = ("BatchInfo", "Configuration")
 
 MINIMUM_MATCH_TIMEOUT_MS = 600
-DEFAULT_MATCH_TIMEOUT_MS = 2000  # type: int
-DEFAULT_SERVER_REQUEST_TIMEOUT_MS = 60 * 5 * 1000
 DEFAULT_ALL_TEST_RESULTS_TIMEOUT = 30 * 60  # seconds
-DEFAULT_SERVER_URL = "https://eyesapi.applitools.com"
 PROCESS_DEFAULT_BATCH_ID = str(uuid.uuid4())  # Unique per-process
 
 
@@ -180,8 +177,8 @@ class Configuration(object):
         converter=attr.converters.optional(RectangleSize.from_),
     )  # type: Optional[RectangleSize]
     session_type = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=SessionType.SEQUENTIAL
-    )  # type: SessionType
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[SessionType]
     host_app = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, default=None
     )  # type: Optional[Text]
@@ -192,23 +189,23 @@ class Configuration(object):
         metadata={JsonInclude.NON_NONE: True}, factory=list
     )  # type: List[Dict[Text, Text]]
     match_timeout = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=DEFAULT_MATCH_TIMEOUT_MS
-    )  # type: int # ms
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[int] # ms
     is_disabled = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=False
-    )  # type: bool
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[bool]
     save_new_tests = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=True
-    )  # type: bool
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[bool]
     save_failed_tests = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=False
-    )  # type: bool
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[bool]
     failure_reports = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=FailureReports.ON_CLOSE
-    )  # type: FailureReports
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[FailureReports]
     send_dom = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=True
-    )  # type: bool
+        metadata={JsonInclude.NON_NONE: True}, default=None
+    )  # type: Optional[bool]
     default_match_settings = attr.ib(
         metadata={JsonInclude.NON_NONE: True}, factory=ImageMatchSettings
     )  # type: ImageMatchSettings
@@ -220,13 +217,11 @@ class Configuration(object):
     )  # type: Optional[Text]
     server_url = attr.ib(
         metadata={JsonInclude.NON_NONE: True},
-        factory=lambda: get_env_with_prefix(
-            "APPLITOOLS_SERVER_URL", DEFAULT_SERVER_URL
-        ),
+        factory=lambda: get_env_with_prefix("APPLITOOLS_SERVER_URL"),
     )  # type: Text
-    _timeout = attr.ib(default=DEFAULT_SERVER_REQUEST_TIMEOUT_MS)  # type: int # ms
+    _timeout = attr.ib(default=None)  # type: Optional[int] # ms
     proxy = attr.ib(factory=ProxySettings.from_env)  # type: ProxySettings | None
-    save_debug_screenshots = attr.ib(default=False)  # type: bool
+    save_debug_screenshots = attr.ib(default=None)  # type: Optional[bool]
     debug_screenshots_path = attr.ib(
         converter=str, factory=lambda: get_env_with_prefix("DEBUG_SCREENSHOT_PATH", "")
     )
@@ -345,8 +340,7 @@ class Configuration(object):
     @property
     def ignore_caret(self):
         # type: () -> bool
-        ignore = self.default_match_settings.ignore_caret
-        return True if ignore is None else ignore
+        return self.default_match_settings.ignore_caret
 
     def set_ignore_caret(self, ignore_caret):
         # type: (Self, bool) -> Self
@@ -449,7 +443,7 @@ class Configuration(object):
 
     @match_timeout.validator
     def _validate1(self, attribute, value):
-        if 0 < value < MINIMUM_MATCH_TIMEOUT_MS:
+        if value is not None and 0 < value < MINIMUM_MATCH_TIMEOUT_MS:
             raise ValueError(
                 "Match timeout must be at least {} ms.".format(MINIMUM_MATCH_TIMEOUT_MS)
             )

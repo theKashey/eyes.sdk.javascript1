@@ -92,7 +92,7 @@ class Eyes(object):
             self._eyes_ref = self._commands.manager_open_eyes(
                 self._runner._ref,  # noqa
                 marshal_webdriver_ref(driver),
-                self._marshaled_configuration(),
+                config=self._marshaled_configuration(),
             )
         return driver
 
@@ -136,11 +136,12 @@ class Eyes(object):
 
         results = self._commands.eyes_check(
             self._eyes_ref,
-            marshal_check_settings(check_settings),
-            self._marshaled_configuration(),
+            settings=marshal_check_settings(check_settings),
+            config=self._marshaled_configuration(),
         )
         if results:
-            results = demarshal_match_result(results)
+            # Original API only returns one result
+            results = demarshal_match_result(results[0])
             if (
                 not results.as_expected
                 and self.configure.failure_reports is FailureReports.IMMEDIATE
@@ -157,8 +158,8 @@ class Eyes(object):
 
     def locate(self, visual_locator_settings):
         # type: (VisualLocatorSettings) -> LOCATORS_TYPE
-        results = self._commands.eyes_locate(
-            self._eyes_ref,
+        results = self._commands.core_locate(
+            marshal_webdriver_ref(self.driver),
             marshal_locate_settings(visual_locator_settings),
             self._marshaled_configuration(),
         )
@@ -168,14 +169,23 @@ class Eyes(object):
         # type: (*OCRRegion) -> List[Text]
         return self._commands.eyes_extract_text(
             self._eyes_ref,
+            marshal_webdriver_ref(self.driver),
             marshal_ocr_extract_settings(regions),
             self._marshaled_configuration(),
         )
 
+    @deprecated.attribute(
+        "The `extract_text_regions` is deprecated. Use `locate_text` instead"
+    )
     def extract_text_regions(self, config):
         # type: (TextRegionSettings) -> PATTERN_TEXT_REGIONS
-        return self._commands.eyes_extract_text_regions(
+        return self.locate_text(config)
+
+    def locate_text(self, config):
+        # type: (TextRegionSettings) -> PATTERN_TEXT_REGIONS
+        return self._commands.eyes_locate_text(
             self._eyes_ref,
+            marshal_webdriver_ref(self.driver),
             marshal_ocr_search_settings(config),
             self._marshaled_configuration(),
         )
@@ -508,7 +518,12 @@ class Eyes(object):
             return None
         if not self.is_open:
             raise EyesError("Eyes not open")
-        results = self._commands.eyes_close_eyes(self._eyes_ref, wait_result)
+        results = self._commands.eyes_close_eyes(
+            self._eyes_ref,
+            {"throwErr": raise_ex},
+            self._marshaled_configuration(),
+            wait_result,
+        )
         self._eyes_ref = None
         self._driver = None
         if wait_result:
@@ -520,7 +535,7 @@ class Eyes(object):
         return None
 
     def _abort(self, wait_result):
-        # type: (bool) -> Optional[List[TestResults]]
+        # type: (bool) -> Optional[TestResults]
         if self.configure.is_disabled:
             return None
         elif self.is_open:
@@ -528,8 +543,8 @@ class Eyes(object):
             self._eyes_ref = None
             self._driver = None
             if wait_result:
-                results = demarshal_test_results(results, self.configure)
                 if results:  # abort after close does not return results
+                    results = demarshal_test_results(results, self.configure)
                     for r in results:
                         log_session_results_and_raise_exception(False, r)
                     return results[0]  # Original interface returns just one result
