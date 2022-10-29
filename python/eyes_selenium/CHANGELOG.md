@@ -1,3 +1,9 @@
+## [vNext]
+### Fixed
+- Remove all hardcoded configuration/check settings default values so server-side defaults applied
+### Updated
+- Implemented Universal SDK v3 API
+
 ## [5.12.3] - 2022-10-13
 ### Fixed
 - Incorrect `optionalIntentArguments` value in `Eyes.set_nmg_capabilities` [GH-1128](/../../pull/1128)
