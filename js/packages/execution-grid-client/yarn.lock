@@ -43,12 +43,12 @@
     teen_process "^1.16.0"
     yargs "^17.5.1"
 
-"@applitools/logger@1.1.27":
-  version "1.1.27"
-  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.27.tgz#afeea769200349a6c4172291e98dde99bbd03301"
-  integrity sha512-lwKCNhuMfLkqxfwYhLalDg2JZNgNj6rEgD8LnozsQdfxqVXThrJb/fkdSaSeUwnF+ljJyR7fnPy+p742p66U0Q==
+"@applitools/logger@1.1.28":
+  version "1.1.28"
+  resolved "https://registry.yarnpkg.com/@applitools/logger/-/logger-1.1.28.tgz#c73039445d5428f7a1d0b105684160dc1bd611b1"
+  integrity sha512-u0Bg0i1vsi+jSA0FYDIjYu0XHKfZr+OzR1EiGJNy2jBc7AxY6dOHjvY9HD2uhg4XlGzbPF8UvSopypu5COe+0Q==
   dependencies:
-    "@applitools/utils" "1.3.13"
+    "@applitools/utils" "1.3.14"
     chalk "4.1.2"
 
 "@applitools/logger@^1.0.12":
@@ -81,10 +81,10 @@
   resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.10.tgz#307359d6f668c5fe6b3a7d213405ebe3bf2235b6"
   integrity sha512-CI/5BLB0D/aZn6uL8JJmsErI+TOHCa4Gz5Wi8sJknuPz/V9Ws6jIh9ZCTzvOCDUIp99qLJwD6TSA2BY9aMhCNw==
 
-"@applitools/utils@1.3.13":
-  version "1.3.13"
-  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.13.tgz#21bc8d1211ce9a72b47364e1131d89d51c557e87"
-  integrity sha512-UwA1skl9kzK+WrXu7WyX6A4K4TdIFZbDAcFJq2PA5fhmbviAlk4iFJtQjyopYTdY0sSh3VRSsCPr3DsbFa79AA==
+"@applitools/utils@1.3.14":
+  version "1.3.14"
+  resolved "https://registry.yarnpkg.com/@applitools/utils/-/utils-1.3.14.tgz#437ec4b9f968475c3463d1724c1dbcb9373cf96e"
+  integrity sha512-KPpj8eUd36z8K8WBloLXASV3skz0JbE1CpuR9vfJpTJJfxZwxbYRwOdrkFqnbRBY1w+9EVg2Qf0Nc4SQ6ys/3Q==
 
 "@babel/runtime@^7.0.0":
   version "7.18.6"
