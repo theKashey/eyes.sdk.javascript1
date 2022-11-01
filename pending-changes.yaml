@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fix bug that caused native apps to be classified as web when the app contains web views
 "@applitools/eyes-selenium":
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom

@@ -328,7 +328,8 @@ export async function getCurrentWorld(driver: Driver): Promise<string> {
   return driver.getContext()
 }
 export async function getWorlds(driver: Driver): Promise<string[]> {
-  return driver.getContexts()
+  const worlds = await driver.getContexts()
+  return worlds.map(world => (utils.types.isString(world) ? world : (world as any).id))
 }
 export async function switchWorld(driver: Driver, id: string): Promise<void> {
   await driver.switchContext(id)
