@@ -186,11 +186,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
   integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
 
-"@types/node@^10.11.7":
-  version "10.17.60"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
-  integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
-
 "@types/pixelmatch@^5.2.4":
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/@types/pixelmatch/-/pixelmatch-5.2.4.tgz#ca145cc5ede1388c71c68edf2d1f5190e5ddd0f6"
@@ -272,13 +267,6 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
-
-"@wokwi/bmp-ts@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@wokwi/bmp-ts/-/bmp-ts-3.0.0.tgz#826b635268f32c69784089a1b56843ffc1dfb455"
-  integrity sha512-fBoRZQEd8RHdFq4gaS6eU69fYZjqGIz8myYPLm0gJSosxqHWpge8/3+6yCyc8b8afcb/ptjSlnEVP93t00fWDQ==
-  dependencies:
-    "@types/node" "^10.11.7"
 
 acorn-jsx@^5.3.1:
   version "5.3.2"
@@ -394,19 +382,7 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bmp-js@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/bmp-js/-/bmp-js-0.1.0.tgz#e05a63f796a6c1ff25f4771ec7adadc148c07233"
-  integrity sha512-vHdS19CnY3hwiNdkaqk93DvjVLfbEcI8mys4UjuWrlX1haDmroo8o4xCzh4wD6DGV6HxRCyauwhHRqMTfERtjw==
-
-bmp-ts@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/bmp-ts/-/bmp-ts-1.0.3.tgz#97b2eea7f844259e200e2507d27726cd7f8494be"
-  integrity sha512-IQJpXxXXgb5c20mIpRrpg4zFasBjpBz912plIgmXLUkjFLjUkmevyDi7vcSL31VfJPzMGO4KnSIdULxjJ/W9FQ==
-  dependencies:
-    "@types/node" "^10.11.7"
-
-bmpimagejs@^1.0.4:
+bmpimagejs@1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/bmpimagejs/-/bmpimagejs-1.0.4.tgz#8a2deac7ea55030da553b5d3ed48de3f0b083b60"
   integrity sha512-21oKU7kbRt2OgOOj7rdiNr/yznDNUQ585plxR00rsmECcZr+6O1oCwB8OIoSHk/bDhbG8mFXIdeQuCPHgZ6QBw==
