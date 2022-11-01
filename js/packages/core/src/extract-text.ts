@@ -25,9 +25,16 @@ export function makeExtractText<TDriver, TElement, TSelector, TType extends 'cla
     config?: Config<TElement, TSelector, TType>
     logger?: Logger
   }): Promise<string[]> {
-    settings = utils.types.isArray(settings)
-      ? settings.map(settings => ({...config?.screenshot, ...settings}))
-      : {...config?.screenshot, ...settings}
+    if (utils.types.isArray(settings)) {
+      settings = settings.map(settings => {
+        settings = {...config?.screenshot, ...settings}
+        settings.autProxy ??= eyes.test.server.proxy
+        return settings
+      })
+    } else {
+      settings = {...config?.screenshot, ...settings}
+      settings.autProxy ??= eyes.test.server.proxy
+    }
     const results = await eyes.extractText({target: target as any, settings, logger})
     return results
   }

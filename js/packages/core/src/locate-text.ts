@@ -24,6 +24,7 @@ export function makeLocateText<TDriver, TElement, TSelector, TType extends 'clas
     logger?: Logger
   }): Promise<LocateTextResult<TPattern>> {
     settings = {...config?.screenshot, ...settings}
+    settings.autProxy ??= eyes.test.server.proxy
     const results = await eyes.locateText({target: target as any, settings, logger})
     return results
   }

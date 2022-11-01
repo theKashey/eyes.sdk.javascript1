@@ -13,7 +13,7 @@ import {makeDeleteTest} from './delete-test'
 import * as utils from '@applitools/utils'
 
 type Options<TDriver, TContext, TElement, TSelector> = {
-  spec: SpecDriver<TDriver, TContext, TElement, TSelector>
+  spec?: SpecDriver<TDriver, TContext, TElement, TSelector>
   concurrency?: number
   core?: BaseCore
   agentId?: string
@@ -28,15 +28,15 @@ export function makeCore<TDriver, TContext, TElement, TSelector>({
   agentId = 'core',
   cwd = process.cwd(),
   logger,
-}: Options<TDriver, TContext, TElement, TSelector>): Core<TDriver, TElement, TSelector> {
+}: Options<TDriver, TContext, TElement, TSelector> = {}): Core<TDriver, TElement, TSelector> {
   logger = logger?.extend({label: 'core'}) ?? makeLogger({label: 'core'})
   logger.log(`Core is initialized ${core ? 'with' : 'without'} custom base core`)
   core ??= makeBaseCore({agentId, cwd, logger})
 
   return utils.general.extend(core, {
-    isDriver: spec.isDriver,
-    isElement: spec.isElement,
-    isSelector: spec.isSelector,
+    isDriver: spec?.isDriver,
+    isElement: spec?.isElement,
+    isSelector: spec?.isSelector,
     getViewportSize: makeGetViewportSize({spec, logger}),
     setViewportSize: makeSetViewportSize({spec, logger}),
     locate: makeLocate({spec, core, logger}),

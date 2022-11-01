@@ -31,8 +31,8 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
     logger?: Logger
   } = {}): Promise<CheckResult[]> {
     logger.log('Command "check" is called with settings', settings)
-    if (!spec.isDriver(target)) {
-      return eyes.check({target, settings: settings as BaseCheckSettings, logger})
+    if (!spec?.isDriver(target)) {
+      return eyes.check({target: target as BaseTarget, settings: settings as BaseCheckSettings, logger})
     }
     // TODO driver custom config
     const driver = await makeDriver({spec, driver: target, logger})

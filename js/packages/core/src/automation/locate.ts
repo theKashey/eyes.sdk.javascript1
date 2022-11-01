@@ -1,5 +1,5 @@
 import type {Target, LocateSettings, LocateResult} from './types'
-import type {Core as BaseCore, LocateSettings as BaseLocateSettings} from '@applitools/core-base'
+import type {Core as BaseCore, Target as BaseTarget, LocateSettings as BaseLocateSettings} from '@applitools/core-base'
 import {type Logger} from '@applitools/logger'
 import {makeDriver, type SpecDriver} from '@applitools/driver'
 import {takeScreenshot} from './utils/take-screenshot'
@@ -22,13 +22,13 @@ export function makeLocate<TDriver, TContext, TElement, TSelector>({
     settings,
     logger = defaultLogger,
   }: {
-    target?: Target<TDriver>
+    target?: Target<TDriver> | BaseTarget
     settings?: LocateSettings<TLocator, TElement, TSelector>
     logger?: Logger
   } = {}): Promise<LocateResult<TLocator>> {
     logger.log('Command "locate" is called with settings', settings)
-    if (!spec.isDriver(target)) {
-      return core.locate({target, settings: settings as BaseLocateSettings<TLocator>, logger})
+    if (!spec?.isDriver(target)) {
+      return core.locate({target: target as BaseTarget, settings: settings as BaseLocateSettings<TLocator>, logger})
     }
     // TODO driver custom config
     const driver = await makeDriver({spec, driver: target, logger})

@@ -6,6 +6,42 @@ import * as utils from '@applitools/utils'
 describe('proxy', () => {
   let driver, destroyDriver, proxy, restoreNetwork
 
+  describe('images with proxy', () => {
+    before(async () => {
+      restoreNetwork = restrictNetwork(options => {
+        return (
+          !utils.types.has(options, 'port') ||
+          !options.host ||
+          options.host === 'localhost' ||
+          (options as any).headers?.['x-proxy-agent'] === 'TestProxy'
+        )
+      })
+      proxy = await makeProxyServer()
+    })
+
+    after(async () => {
+      await proxy?.close()
+      await restoreNetwork?.()
+    })
+
+    it('classic works with proxy', async () => {
+      const core = makeCore()
+      const manager = await core.makeManager({type: 'classic'})
+      const eyes = await manager.openEyes({
+        settings: {
+          appName: 'js core',
+          testName: `images works with proxy`,
+          proxy: {url: `http://localhost:${proxy.port}`},
+          environment: {viewportSize: {width: 800, height: 600}},
+        },
+      })
+
+      await eyes.check({target: {image: 'https://picsum.photos/500'}})
+
+      await eyes.close({settings: {throwErr: false, updateBaselineIfNew: false}})
+    })
+  })
+
   describe('web with proxy', () => {
     before(async () => {
       restoreNetwork = restrictNetwork(options => {

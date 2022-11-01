@@ -36,8 +36,12 @@ export function makeCheckAndClose<TDriver, TContext, TElement, TSelector>({
     logger?: Logger
   } = {}): Promise<TestResult[]> {
     logger.log('Command "checkAndClose" is called with settings', settings)
-    if (!spec.isDriver(target)) {
-      return eyes.checkAndClose({target, settings: settings as BaseCheckSettings & BaseCloseSettings, logger})
+    if (!spec?.isDriver(target)) {
+      return eyes.checkAndClose({
+        target: target as BaseTarget,
+        settings: settings as BaseCheckSettings & BaseCloseSettings,
+        logger,
+      })
     }
     // TODO driver custom config
     const driver = await makeDriver({spec, driver: target, logger})

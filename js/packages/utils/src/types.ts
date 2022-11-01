@@ -24,7 +24,7 @@ export function isString(value: any): value is string {
 }
 
 export function isBase64(value: any): value is string {
-  return isString(value) && /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/.test(value)
+  return isString(value) && /^[A-Za-z0-9+/]*={0,2}$/.test(value)
 }
 
 export function isHttpUrl(value: any): value is string {

@@ -171,6 +171,7 @@ export interface ImageSettings<TRegion = Region> {
     rotation?: ImageRotation
     scaleRatio?: number
   }
+  autProxy?: Proxy
   debugImages?: {path: string; prefix?: string}
 }
 

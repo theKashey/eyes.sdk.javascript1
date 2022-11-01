@@ -36,6 +36,7 @@ export function makeCheck<TDriver, TElement, TSelector, TType extends 'classic' 
     settings.ignoreCaret ??= true
     settings.sendDom ??=
       eyes.test.account.rcaEnabled || settings.matchLevel === 'Layout' || settings.enablePatterns || settings.useDom
+    settings.autProxy ??= eyes.test.server.proxy
     settings.useDom ??= false
     ;(settings as CheckSettings<TElement, TSelector, 'classic'>).retryTimeout ??= 2000
     settings.lazyLoad = settings.lazyLoad === true ? {} : settings.lazyLoad

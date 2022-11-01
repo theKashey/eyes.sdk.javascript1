@@ -3,6 +3,7 @@ import stream from 'stream'
 import path from 'path'
 import * as png from 'png-async'
 import * as jpeg from 'jpeg-js'
+import * as bmp from 'bmpimagejs'
 import * as utils from '@applitools/utils'
 
 type TransformData = {
@@ -11,6 +12,12 @@ type TransformData = {
   crop?: any
   modifiers: any[]
   added?: any
+}
+
+type RawImage = {
+  width: number
+  height: number
+  data: Buffer
 }
 
 export interface Image {
@@ -49,6 +56,9 @@ export function makeImage(data: any): Image {
     } else if (isJpegBuffer(data)) {
       image = fromJpegBuffer(data)
       size = extractJpegSize(data)
+    } else if (isBmpBuffer(data)) {
+      image = fromBmpBuffer(data)
+      size = extractBmpSize(data)
     } else {
       throw new Error('Unable to create an image abstraction from buffer with unknown data')
     }
@@ -200,6 +210,10 @@ function isJpegBuffer(buffer: Buffer) {
   return buffer.slice(6, 10).toString('ascii') === 'JFIF'
 }
 
+function isBmpBuffer(buffer: Buffer) {
+  return buffer.slice(0, 2).toString('ascii') === 'BM'
+}
+
 function extractPngSize(buffer: Buffer) {
   return {width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20)}
 }
@@ -220,11 +234,15 @@ function extractJpegSize(buffer: Buffer) {
   }
 }
 
+function extractBmpSize(buffer: Buffer) {
+  return {width: buffer.readUInt32LE(18), height: buffer.readUInt32LE(22)}
+}
+
 function fromSize(size: any) {
   return new png.Image({width: size.width, height: size.height})
 }
 
-async function fromPngBuffer(buffer: Buffer) {
+async function fromPngBuffer(buffer: Buffer): Promise<RawImage> {
   return new Promise((resolve, reject) => {
     const image = new png.Image()
 
@@ -235,8 +253,13 @@ async function fromPngBuffer(buffer: Buffer) {
   })
 }
 
-async function fromJpegBuffer(buffer: Buffer) {
+async function fromJpegBuffer(buffer: Buffer): Promise<RawImage> {
   return jpeg.decode(buffer, {tolerantDecoding: true, formatAsRGBA: true})
+}
+
+async function fromBmpBuffer(buffer: Buffer): Promise<RawImage> {
+  const image = bmp.decode(buffer)
+  return {data: Buffer.from(image.pixels), width: image.width, height: image.height}
 }
 
 async function toPng(image: any) {

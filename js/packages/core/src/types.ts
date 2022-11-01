@@ -45,13 +45,13 @@ export interface EyesManager<TDriver, TElement, TSelector, TType extends 'classi
 
 export interface ClassicEyes<TDriver, TElement, TSelector, TTarget = Target<TDriver, 'classic'>>
   extends ClassicCore.Eyes<TDriver, TElement, TSelector, TTarget> {
-  check(options: {
+  check(options?: {
     target?: TTarget
     settings?: Partial<CheckSettings<TElement, TSelector, 'classic'>>
     config?: Config<TElement, TSelector, 'classic'>
     logger?: Logger
   }): Promise<CheckResult<'classic'>[]>
-  checkAndClose(options: {
+  checkAndClose(options?: {
     target?: TTarget
     settings?: Partial<CheckSettings<TElement, TSelector, 'classic'> & CloseSettings<'classic'>>
     config?: Config<TElement, TSelector, 'classic'>
@@ -78,13 +78,13 @@ export interface ClassicEyes<TDriver, TElement, TSelector, TTarget = Target<TDri
 
 export interface UFGEyes<TDriver, TElement, TSelector, TTarget = Target<TDriver, 'ufg'>>
   extends UFGCore.Eyes<TDriver, TElement, TSelector, TTarget> {
-  check(options: {
+  check(options?: {
     target?: TTarget
     settings?: Partial<CheckSettings<TElement, TSelector, 'ufg'>>
     config?: Config<TElement, TSelector, 'ufg'>
     logger?: Logger
   }): Promise<CheckResult<'ufg'>[]>
-  checkAndClose(options: {
+  checkAndClose(options?: {
     target?: TTarget
     settings?: Partial<CheckSettings<TElement, TSelector, 'ufg'> & CloseSettings<'ufg'>>
     config?: Config<TElement, TSelector, 'ufg'>
