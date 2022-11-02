@@ -16,10 +16,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/driver@1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.2.tgz#45ace81eedbd8c238e8fc277bad353666c2fa676"
-  integrity sha512-io2zJOpCULzA8ZKZVQdW+BIHoLme0Eq0YfJKI3IyrgPyAz5IAq1k+eAkI2I8YAwmvIj0Sa/KKBL2SQ/02rUeKA==
+"@applitools/driver@1.11.3":
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.3.tgz#1a35209e44d21b2b1a81d9c7279652ce0a8f7b57"
+  integrity sha512-vu7QQG1f+YvqT3qkv+AwoNbcLbFszg+wFAkLOEbshW3iRjn7DgZLksa6w7nuSHM1IDgiPsEWtGBdLrZNZg6OWQ==
   dependencies:
     "@applitools/logger" "1.1.28"
     "@applitools/snippets" "2.4.6"
@@ -60,12 +60,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.6.tgz#d23afdfa693fa5242733578fe065d1667ac23e2c"
   integrity sha512-hAsAalDxaa1w2RCEx2b35D9XJIGGRlqQKzXEE6/rNr5vMtT0eYye61SST5e2PD7B4F2jJ7jRKrZd7REawoxxmg==
 
-"@applitools/spec-driver-selenium@^1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.5.tgz#e5fea0926f9dc629aca8e37f8503a2587ded1721"
-  integrity sha512-DXi0NZrJLxkX2gpT/vNwMnF9CZj1aaKAKKfkL0y+eYO+I/L3jUgVeRlSEWeI9psffltHNE84FZfBJOq9t16Rbw==
+"@applitools/spec-driver-selenium@^1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.6.tgz#34de803374f73e324e72f03d5d4e72c3adbefafe"
+  integrity sha512-5A8JCt1T9mo0YCcliLC5a5NmbRaMPlh8MW82o+ipVuv6THulApqa1Ur8hSga6K7U4DK/KwQGpUZZfmKVDB6zJw==
   dependencies:
-    "@applitools/driver" "1.11.2"
+    "@applitools/driver" "1.11.3"
     "@applitools/utils" "1.3.14"
 
 "@applitools/test-server@^1.1.9":
