@@ -30,8 +30,8 @@ describe('generate-safe-selectors', () => {
     assert.deepStrictEqual(
       selectors.map(selector => selector.originalSelector),
       [
-        {selector: 'element0'},
-        {selector: 'element1'},
+        {type: 'css', selector: 'element0'},
+        {type: 'css', selector: 'element1'},
         {type: 'css', selector: 'element2'},
         {type: 'css', selector: 'element3'},
         {type: 'css', selector: 'element3'},

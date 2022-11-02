@@ -28,7 +28,11 @@ export function makeFakeCore({hooks, account = {}}: any = {}): BaseCore & EventE
         let aborted = false
         let closed = false
         return {
-          test: {isNew: true, account},
+          test: {
+            isNew: true,
+            account,
+            server: {serverUrl: settings.serverUrl, apiKey: settings.apiKey, proxy: settings.proxy},
+          },
           get running() {
             return !closed && !aborted
           },
