@@ -11,6 +11,13 @@
 
 
 
+## 2.17.0 - 2022/11/2
+
+### Features
+- Added new selector extensions `child` and `fallback`
+### Bug fixes
+- Fix bug that caused native apps to be classified as web when the app contains web views
+
 ## 2.16.9 - 2022/10/28
 
 ### Features

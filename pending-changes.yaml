@@ -10,9 +10,9 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Added new selector extensions `child` and `fallback`
+    - 
   bug-fix:
-    - Fix bug that caused native apps to be classified as web when the app contains web views
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Added new selector extensions `child` and `fallback`
