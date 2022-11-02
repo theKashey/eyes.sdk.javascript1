@@ -161,6 +161,7 @@ export type IOSDevice =
   | 'iPhone 7'
   | 'iPhone SE (1st generation)'
   | 'iPad Pro (12.9-inch) (3rd generation)'
+  | 'iPad Pro (11-inch) (4th generation)'
   | 'iPad (7th generation)'
   | 'iPad (9th generation)'
   | 'iPad Air (2nd generation)'

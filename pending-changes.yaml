@@ -17,11 +17,13 @@ Apollo SDK:
   feature:
     - Added new selector extensions `child` and `fallback`
     - Mark target element with `data-applitools-scroll` attribute before capture dom
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
     - Fix dontCloseBatches mapping
 "@applitools/eyes-webdriverio":
     - Added new selector extensions `child` and `fallback`
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
@@ -31,6 +33,7 @@ Apollo SDK:
     - Added new selector extensions `child` and `fallback`
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Mark target element with `data-applitools-scroll` attribute before capture dom
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -46,6 +49,7 @@ Apollo SDK:
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
     - Deprecated "Content" match level value in favor of "IgnoreColors"
     - Drop support for Android 9 and Android 10 specific devices
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed incorrect calculation of the target element position.
     - Fixed the issue with screenshots being taken on chrome-emulated devices
@@ -54,6 +58,7 @@ Apollo SDK:
     - Added new selector extensions `child` and `fallback`
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Mark target element with `data-applitools-scroll` attribute before capture dom
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -66,6 +71,7 @@ Apollo SDK:
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
     - Deprecated "Content" match level value in favor of "IgnoreColors"
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
@@ -74,6 +80,7 @@ Apollo SDK:
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
     - Mark target element with `data-applitools-scroll` attribute before capture dom
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently
@@ -105,6 +112,7 @@ Apollo SDK:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Deprecated "Content" match level value in favor of "IgnoreColors"
     - Drop support for Android 9 and Android 10 specific devices
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
@@ -143,6 +151,7 @@ eyes-browser-extension:
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Deprecated "Content" match level value in favor of "IgnoreColors"
     - Migrate to manifest V3
+    - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
   bug-fix:
     - |
       `extractText` now supports regions that don't use hints while using `x`/`y` coordinates
