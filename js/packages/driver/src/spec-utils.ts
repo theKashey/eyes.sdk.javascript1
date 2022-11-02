@@ -2,12 +2,7 @@ import {type SpecDriver} from './spec-driver'
 import {type Selector} from './selector'
 import * as utils from '@applitools/utils'
 
-type CommonSelector<TSelector = never> = {
-  selector: TSelector | string
-  type?: string
-  shadow?: CommonSelector<TSelector> | TSelector | string
-  frame?: CommonSelector<TSelector> | TSelector | string
-}
+type CommonSelector<TSelector = never> = Exclude<Selector<TSelector>, TSelector | string>
 
 export function isSimpleCommonSelector(selector: any): selector is CommonSelector {
   return (
@@ -24,7 +19,7 @@ export function isCommonSelector<TSelector>(
   return (
     utils.types.isPlainObject(selector) &&
     utils.types.has(selector, 'selector') &&
-    Object.keys(selector).every(key => ['selector', 'type', 'frame', 'shadow'].includes(key)) &&
+    Object.keys(selector).every(key => ['selector', 'type', 'frame', 'shadow', 'child', 'fallback'].includes(key)) &&
     (utils.types.isString(selector.selector) || spec.isSelector(selector.selector))
   )
 }
@@ -66,7 +61,10 @@ export function splitSelector<TSelector>(
       activeSelector.selector = targetSelector.selector
       if (targetSelector.type) activeSelector.type = targetSelector.type
 
-      if (targetSelector.shadow) {
+      if (targetSelector.child) {
+        activeSelector = activeSelector.child = {} as CommonSelector<TSelector>
+        targetSelector = targetSelector.child
+      } else if (targetSelector.shadow) {
         activeSelector = activeSelector.shadow = {} as CommonSelector<TSelector>
         targetSelector = targetSelector.shadow
       } else if (targetSelector.frame) {
@@ -77,7 +75,7 @@ export function splitSelector<TSelector>(
         targetSelector = null
       }
     } else {
-      activeSelector.selector = targetSelector
+      activeSelector.selector = targetSelector as string | TSelector
       targetSelector = null
     }
   }

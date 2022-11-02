@@ -100,7 +100,7 @@ describe('driver', () => {
   })
 
   it('switchTo(context)', async () => {
-    const contextDocuments = []
+    const contextDocuments = [] as any[]
     contextDocuments.unshift(await driver.element('html'))
     for (const frameSelector of ['frame2', 'frame2-1', 'frame2-1-0']) {
       await driver.switchToChildContext(frameSelector)

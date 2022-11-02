@@ -10,22 +10,25 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - 
+    - Added new selector extensions `child` and `fallback`
   bug-fix:
     - Fix bug that caused native apps to be classified as web when the app contains web views
 "@applitools/eyes-selenium":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
     - Fix dontCloseBatches mapping
 "@applitools/eyes-webdriverio":
+    - Added new selector extensions `child` and `fallback`
   feature:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-playwright":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
@@ -35,6 +38,7 @@ Apollo SDK:
     - Fix dontCloseBatches mapping
 "@applitools/eyes-protractor":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
     - Added support for lazy loading views in android native apps
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
@@ -47,6 +51,7 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 "@applitools/eyes-puppeteer":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Mark target element with `data-applitools-scroll` attribute before capture dom
   bug-fix:
@@ -56,6 +61,7 @@ Apollo SDK:
     - Fix dontCloseBatches mapping
 "@applitools/eyes-testcafe":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Using `lazyLoad.waitingTime` as a delay between stitches by default
     - Added `Sony Xperia 10 II` emulation device
     - Added `iPhone 14`  and `iPhone 14 Pro Max` ios devices
@@ -64,6 +70,7 @@ Apollo SDK:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Changed default value of `sendDom` from `true` to dynamically calculated
     - Added new android device `Sony Xperia 10 II`
     - Mark target element with `data-applitools-scroll` attribute before capture dom
@@ -75,7 +82,7 @@ Apollo SDK:
     - Fix dontCloseBatches mapping
 "@applitools/eyes-cypress":
   feature:
-    - 
+    - Added new selector extensions `child` and `fallback`
   bug-fix:
     - 
 "@applitools/eyes-storybook":
@@ -85,6 +92,7 @@ Apollo SDK:
     - 
 "@applitools/eyes-webdriverio5-service":
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Support UFG for native mobile
     - Drop support for Node.js versions <=12
     - Added support for taking full screenshots of elements that are scroll by pages only
@@ -127,6 +135,7 @@ Apollo SDK:
     - Fixed the issue with screenshots being taken on chrome-emulated devices
 eyes-browser-extension:
   feature:
+    - Added new selector extensions `child` and `fallback`
     - Don't fail `eyes.open` when there is a failure to set viewport size in `UFG`.
     - Added support for taking full screenshots of elements that are scroll by pages only
     - Allowed `` values in custom properties

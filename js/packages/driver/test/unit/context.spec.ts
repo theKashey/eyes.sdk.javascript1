@@ -18,6 +18,15 @@ describe('context', () => {
         scrollPosition: {x: 21, y: 22},
         children: [
           {
+            selector: 'element1',
+            children: [
+              {
+                selector: 'element1-1',
+                children: [{selector: 'element1-1-1', name: 'element within element'}],
+              },
+            ],
+          },
+          {
             selector: 'frame1',
             frame: true,
             children: [
@@ -45,6 +54,10 @@ describe('context', () => {
                 children: [{selector: 'shadow1-1--element1', name: 'element within shadow'}],
               },
             ],
+          },
+          {
+            selector: 'fallback1',
+            name: 'fallback element',
           },
         ],
       },
@@ -93,6 +106,14 @@ describe('context', () => {
     assert.strictEqual(element.target.name, 'element within frame')
   })
 
+  it('element(child-selector)', async () => {
+    const element = await context.element({
+      selector: 'element1',
+      child: {selector: 'element1-1', child: {selector: 'element1-1-1'}},
+    })
+    assert.deepStrictEqual(element.target.name, 'element within element')
+  })
+
   it('element(shadow-selector)', async () => {
     const element = await context.element({
       selector: 'shadow1',
@@ -109,8 +130,25 @@ describe('context', () => {
     assert.deepStrictEqual(element.target.name, 'element within frame')
   })
 
+  it('element(fallback-selector)', async () => {
+    const element = await context.element({
+      selector: 'not-an-element',
+      fallback: 'fallback1',
+    })
+    assert.deepStrictEqual(element.target.name, 'fallback element')
+  })
+
   it('element(non-existent)', async () => {
     const element = await context.element('non-existent')
+
+    assert.strictEqual(element, null)
+  })
+
+  it('element(non-existent-child)', async () => {
+    const element = await context.element({
+      selector: 'element1',
+      child: {selector: 'element1-1', child: {selector: 'not-an-element'}},
+    })
 
     assert.strictEqual(element, null)
   })
@@ -133,6 +171,14 @@ describe('context', () => {
     assert.strictEqual(element, null)
   })
 
+  it('element(non-existent-fallback)', async () => {
+    const element = await context.element({
+      selector: 'not-an-element',
+      fallback: 'not-a-fallback',
+    })
+    assert.strictEqual(element, null)
+  })
+
   it('elements(selector)', async () => {
     const childContext1 = await context.context('frame1')
     const childContext11 = await childContext1.context('frame1-1')
@@ -142,6 +188,17 @@ describe('context', () => {
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 1)
     assert.strictEqual(elements[0].target.name, 'element within frame')
+  })
+
+  it('elements(child-selector)', async () => {
+    const elements = await context.elements({
+      selector: 'element1',
+      child: {selector: 'element1-1', child: {selector: 'element1-1-1'}},
+    })
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 1)
+    assert.strictEqual(elements[0].target.name, 'element within element')
   })
 
   it('elements(shadow-selector)', async () => {
@@ -155,7 +212,7 @@ describe('context', () => {
     assert.strictEqual(elements[0].target.name, 'element within shadow')
   })
 
-  it('elements(shadow-selector)', async () => {
+  it('elements(frame-selector)', async () => {
     const elements = await context.elements({
       selector: 'frame1',
       frame: {selector: 'frame1-1', frame: {selector: 'frame1-1--element1'}},
@@ -166,8 +223,29 @@ describe('context', () => {
     assert.strictEqual(elements[0].target.name, 'element within frame')
   })
 
+  it('elements(fallback-selector)', async () => {
+    const elements = await context.elements({
+      selector: 'not-an-element',
+      fallback: 'fallback1',
+    })
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 1)
+    assert.strictEqual(elements[0].target.name, 'fallback element')
+  })
+
   it('elements(non-existent)', async () => {
     const elements = await context.elements('non-existent')
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 0)
+  })
+
+  it('elements(non-existent-child)', async () => {
+    const elements = await context.elements({
+      selector: 'element1',
+      child: {selector: 'element1-1', child: {selector: 'not-an-element'}},
+    })
 
     assert.ok(Array.isArray(elements))
     assert.strictEqual(elements.length, 0)
@@ -187,6 +265,16 @@ describe('context', () => {
     const elements = await context.elements({
       selector: 'frame1',
       frame: {selector: 'frame1-non-existent', frame: {selector: 'frame1-non-existent--element1'}},
+    })
+
+    assert.ok(Array.isArray(elements))
+    assert.strictEqual(elements.length, 0)
+  })
+
+  it('elements(non-fallback-selector)', async () => {
+    const elements = await context.elements({
+      selector: 'not-an-element',
+      fallback: 'not-a-fallback',
     })
 
     assert.ok(Array.isArray(elements))
