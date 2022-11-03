@@ -31,6 +31,22 @@ export function makeClose<TDriver, TElement, TSelector, TType extends 'classic' 
         if (result.status !== 'Passed') throw new TestError(result)
       })
     }
-    return results
+    return results.length > 0
+      ? results
+      : [
+          {
+            userTestId: eyes.test.userTestId,
+            name: '',
+            steps: 0,
+            matches: 0,
+            mismatches: 0,
+            missing: 0,
+            exactMatches: 0,
+            strictMatches: 0,
+            contentMatches: 0,
+            layoutMatches: 0,
+            noneMatches: 0,
+          },
+        ]
   }
 }
