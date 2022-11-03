@@ -1,4 +1,7 @@
 ## [vNext]
+### Added
+- eyes-images package functionality implementation based on eyes-universal
+- Images can be supplied as bytes and pathlib.Path objects (only on python3)
 ### Fixed
 - Remove all hardcoded configuration/check settings default values so server-side defaults applied
 ### Updated

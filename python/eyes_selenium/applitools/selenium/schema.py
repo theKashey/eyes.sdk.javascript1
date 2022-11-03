@@ -59,6 +59,7 @@ if t.TYPE_CHECKING:
     from applitools.common import config
     from applitools.common.utils.custom_types import ViewPort
     from applitools.core import locators
+    from applitools.images import fluent as ics
     from applitools.selenium.fluent import selenium_check_settings as cs
 
     from ..core import batch_close
@@ -586,6 +587,11 @@ class TestResultsSummary(Schema):
 def marshal_webdriver_ref(driver):
     # type: (WebDriver) -> dict
     return check_error(StaticDriver().dump(driver))
+
+
+def marshal_image_target(check_settings):
+    # type: (ics.ImagesCheckSettings) -> dict
+    return check_error(ImageTarget().dump(check_settings.values))
 
 
 def marshal_configuration(configuration):
