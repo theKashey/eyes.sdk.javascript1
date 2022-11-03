@@ -1,10 +1,11 @@
 import os.path
+import re
 from subprocess import call, check_call, check_output
 
 import pytest
 
 from applitools.eyes_universal import __version__ as eyes_universal_version
-from applitools.selenium.__version__ import __version__ as eyes_selenium_version
+from applitools.images.__version__ import __version__ as eyes_images_version
 from EyesLibrary.__version__ import __version__ as eyes_robotframework_version
 
 here = os.path.dirname(__file__)
@@ -29,6 +30,12 @@ def _get_venv_package_license(venv, package):
     return check_output(cmd, env=env).decode("ascii")
 
 
+def _get_venv_packages(venv):
+    output = check_output([venv.python, "-m", "pip", "freeze"], env=env).decode("ascii")
+    pairs = [re.split("==| @ ", line) for line in output.splitlines()]
+    return dict(pairs)
+
+
 @pytest.fixture
 def eyes_universal_installed(venv):
     call([venv.python, "-m", "pip", "uninstall", "-y", "wheel"], env=env)
@@ -38,23 +45,29 @@ def eyes_universal_installed(venv):
 
 
 @pytest.fixture
-def eyes_selenium_installed(venv, eyes_universal_installed):
-    file_name = "eyes_selenium-{}-py2.py3-none-any.whl".format(eyes_selenium_version)
+def eyes_images_installed(venv, eyes_universal_installed):
+    file_name = "eyes_images-{}-py2.py3-none-any.whl".format(eyes_images_version)
+    eyes_images = os.path.join(root_dir, "eyes_images", "dist", file_name)
+    pip = [venv.python, "-m", "pip", "install"]
+    check_call(pip + [eyes_images], env=env)
+
+
+@pytest.fixture
+def eyes_selenium_installed(venv, eyes_images_installed):
+    file_name = "eyes_selenium-{}-py2.py3-none-any.whl".format(eyes_images_version)
     eyes_selenium = os.path.join(root_dir, "eyes_selenium", "dist", file_name)
     pip = [venv.python, "-m", "pip", "install"]
     check_call(pip + [eyes_selenium], env=env)
 
 
 @pytest.fixture
-def eyes_robotframework_installed(venv, eyes_universal_installed):
-    file_name = "eyes_selenium-{}-py2.py3-none-any.whl".format(eyes_selenium_version)
-    eyes_selenium = os.path.join(root_dir, "eyes_selenium", "dist", file_name)
+def eyes_robotframework_installed(venv, eyes_selenium_installed):
     file_name = "eyes_robotframework-{}-py2.py3-none-any.whl".format(
         eyes_robotframework_version
     )
     eyes_robot = os.path.join(root_dir, "eyes_robotframework", "dist", file_name)
     pip = [venv.python, "-m", "pip", "install"]
-    check_call(pip + [eyes_selenium, eyes_robot], env=env)
+    check_call(pip + [eyes_robot], env=env)
 
 
 def test_setup_eyes_universal(venv, eyes_universal_installed):
@@ -63,6 +76,8 @@ def test_setup_eyes_universal(venv, eyes_universal_installed):
     # drop post-version part, that might only be present in package version
     binary_version = ".".join(eyes_universal_version.split(".")[:3])
     assert binary_version.encode() == check_output(get_version, env=env).rstrip()
+    all_packages = _get_venv_packages(venv)
+    assert set(all_packages.keys()) == {"eyes-universal"}
 
 
 def test_eyes_universal_has_license(venv, eyes_universal_installed):
@@ -70,9 +85,26 @@ def test_eyes_universal_has_license(venv, eyes_universal_installed):
     assert "SDK LICENSE AGREEMENT" in license
 
 
+def test_setup_eyes_images(venv, eyes_images_installed):
+    assert str(venv.get_version("eyes-images")) == eyes_images_version
+    check_call([venv.python, "-c", "from applitools.images import *"], env=env)
+    all_packages = _get_venv_packages(venv)
+    assert "selenium" not in all_packages
+    assert "Appium-Python-Client" not in all_packages
+
+
+def test_eyes_images_has_license(venv, eyes_images_installed):
+    license = _get_venv_package_license(venv, "eyes-images")
+    assert "SDK LICENSE AGREEMENT" in license
+
+
 def test_setup_eyes_selenium(venv, eyes_selenium_installed):
-    assert str(venv.get_version("eyes-selenium")) == eyes_selenium_version
+    assert str(venv.get_version("eyes-selenium")) == eyes_images_version
     check_call([venv.python, "-c", "from applitools.selenium import *"], env=env)
+
+    all_packages = _get_venv_packages(venv)
+    assert "selenium" in all_packages
+    assert "Appium-Python-Client" in all_packages
 
 
 def test_eyes_selenium_has_license(venv, eyes_selenium_installed):

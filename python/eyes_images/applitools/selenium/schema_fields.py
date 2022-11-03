@@ -3,7 +3,8 @@ from __future__ import absolute_import
 import typing as t
 
 from marshmallow.fields import Dict, Field
-from selenium.common.exceptions import StaleElementReferenceException
+
+from applitools.selenium.optional_deps import StaleElementReferenceException
 
 from ..common import (
     AndroidDeviceInfo,

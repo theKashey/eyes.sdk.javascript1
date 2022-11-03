@@ -11,10 +11,9 @@ from applitools.common.utils.json_utils import JsonInclude
 from applitools.common.validators import is_list_or_tuple, is_webelement
 
 if TYPE_CHECKING:
-    from selenium.webdriver.remote.webelement import WebElement
-
     from applitools.common.utils.custom_types import BySelector
     from applitools.selenium.fluent.target_path import RegionLocator
+    from applitools.selenium.optional_deps import WebElement
 
 
 class TextRegionSettings(object):

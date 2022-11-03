@@ -1,7 +1,6 @@
 import os
 
 import pytest
-from selenium import webdriver
 from six import iteritems
 
 from applitools.common import BatchInfo, Configuration, StdoutLogger
@@ -68,6 +67,8 @@ def eyes_setup(request, eyes_class, eyes_config, eyes_runner, batch_info):
 
 @pytest.fixture
 def local_chrome_driver(request):
+    from selenium import webdriver
+
     test_page_url = request.node.get_closest_marker("test_page_url")
     test_page_url = test_page_url.args[-1] if test_page_url else None
     options = webdriver.ChromeOptions()

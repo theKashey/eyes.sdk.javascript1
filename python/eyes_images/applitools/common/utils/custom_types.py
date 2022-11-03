@@ -3,17 +3,15 @@ from __future__ import absolute_import
 from typing import TYPE_CHECKING, Dict, List, Text, Union
 
 if TYPE_CHECKING:
-    from appium.webdriver import WebElement as AppiumWebElement
-    from selenium.webdriver.remote.webelement import WebElement as SeleniumWebElement
-
     from applitools.common.geometry import RectangleSize, Region
     from applitools.core.triggers import ActionTrigger
+    from applitools.selenium.optional_deps import AppiumWebElement, WebElement
 
     ViewPort = Union[Dict[Text, int], RectangleSize]  # typedef
     CodedRegionPadding = Union[int, Dict[Text, int]]  # typedef
     Num = Union[int, float]
 
-    AnyWebElement = Union[SeleniumWebElement, AppiumWebElement]  # typedef
+    AnyWebElement = Union[WebElement, AppiumWebElement]  # typedef
 
     FrameNameOrId = Text  # typedef
     FrameIndex = int  # typedef

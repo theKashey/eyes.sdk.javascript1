@@ -4,8 +4,6 @@ import json
 import typing
 from typing import List, Optional, Text, Tuple, Union
 
-from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement
 from six import string_types
 
 from applitools.common import (
@@ -17,6 +15,7 @@ from applitools.common import (
     deprecated,
 )
 from applitools.common.selenium import Configuration
+from applitools.selenium.optional_deps import WebDriver, WebElement
 
 from ..common.utils.general_utils import get_env_with_prefix
 from .__version__ import __version__

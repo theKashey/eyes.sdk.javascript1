@@ -6,6 +6,7 @@
 - Remove all hardcoded configuration/check settings default values so server-side defaults applied
 ### Updated
 - Implemented Universal SDK v3 API
+- Changed behaviour of eyes-images: if test 'dimension' was not provided as an open argument, it is NOT calculated from first checked image size
 
 ## [5.12.3] - 2022-10-13
 ### Fixed

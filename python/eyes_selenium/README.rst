@@ -3,15 +3,16 @@ Applitools Eyes Python SDK
 |pypi version| |pypi downloads| |Black Formatter|
 
 Applitools Eyes SDK For Images and Selenium/Appium WebDrivers
+Proxy package that additionally installs `selenium` and `Appium-Python-Client` packages.
 
 Installation
 ------------
 
-Install the eyes-images SDK.
+Install the eyes-selenium SDK.
 
 ::
 
-    pip install eyes-images
+    pip install eyes-selenium
 
 Usage
 -----
@@ -32,7 +33,7 @@ Please check the applitools website for usage instructions:
 
 .. |Black Formatter| image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/ambv/black
-.. |pypi version| image:: https://img.shields.io/pypi/v/eyes-images
-   :target: https://pypi.org/project/eyes-images/
-.. |pypi downloads| image:: https://img.shields.io/pypi/dw/eyes-images
-   :target: https://pypi.org/project/eyes-images/
+.. |pypi version| image:: https://img.shields.io/pypi/v/eyes-selenium
+   :target: https://pypi.org/project/eyes-selenium/
+.. |pypi downloads| image:: https://img.shields.io/pypi/dw/eyes-selenium
+   :target: https://pypi.org/project/eyes-selenium/

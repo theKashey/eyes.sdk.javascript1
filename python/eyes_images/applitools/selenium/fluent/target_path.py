@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
 
-from selenium.webdriver.common.by import By
 from six import string_types
+
+from applitools.selenium.optional_deps import By
 
 if TYPE_CHECKING:
     from typing import Optional, Text, Union
 
-    from selenium.webdriver.remote.webelement import WebElement
+    from applitools.selenium.optional_deps import WebElement
 
 
 class PathNodeValue(object):
