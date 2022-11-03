@@ -203,60 +203,66 @@ describe('webdriver spec driver', async () => {
     })
   })
 
-  describe('native app (@mobile @native)', async () => {
+  describe('native app (@mobile @native @android)', async () => {
     before(async () => {
       ;[driver, destroyDriver] = await spec.build({
-        app: 'http://saucelabs.com/example_files/ContactManager.apk',
-        device: 'Android Emulator',
-        orientation: 'landscape',
+        app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
+        device: 'Pixel 3a XL',
       })
+      await spec.click(driver, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
+      await utils.general.sleep(5000)
     })
 
     after(async () => {
-      if (destroyDriver) await destroyDriver()
-      destroyDriver = null
+      await destroyDriver?.()
+      destroyDriver = null as any
     })
 
     it('getWindowSize()', async () => {
       await getWindowSize()
     })
     it('getOrientation()', async () => {
-      await getOrientation({expected: 'landscape'})
+      await getOrientation({expected: 'portrait'})
+    })
+    it('getCurrentWorld()', async () => {
+      await getCurrentWorld()
+    })
+    it('getWorlds()', async () => {
+      await getWorlds()
+    })
+    it('switchWorld(name)', async () => {
+      await switchWorld({input: {name: 'WEBVIEW_com.applitools.eyes.android'}})
     })
   })
 
-  describe('native (@mobile @native @webview)', async () => {
-    beforeEach(async () => {
+  describe('native app (@mobile @native @ios)', async () => {
+    before(async () => {
       ;[driver, destroyDriver] = await spec.build({
-        app: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',
-        device: 'Pixel 3a XL',
-        orientation: 'portrait',
+        app: 'https://applitools.jfrog.io/artifactory/Examples/IOSTestApp/1.9/app/IOSTestApp.zip',
+        device: 'iPhone 13',
+        capabilities: {
+          'appium:fullContextList': true,
+        },
       })
-    })
-
-    afterEach(async () => {
-      if (destroyDriver) await destroyDriver()
-      destroyDriver = null
-    })
-
-    it('getCurrentWorld', async () => {
-      const actual = await spec.getCurrentWorld(driver)
-      const expected = 'NATIVE_APP'
-      assert.deepStrictEqual(actual, expected)
-    })
-    it('getWorlds', async () => {
-      await spec.click(driver, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
+      await spec.click(driver, {using: 'accessibility id', value: 'Web view'})
       await utils.general.sleep(5000)
-      const actual = await spec.getWorlds(driver)
-      const expected = ['NATIVE_APP', 'WEBVIEW_com.applitools.eyes.android']
-      assert.deepStrictEqual(actual, expected)
+      await spec.getWorlds(driver)
+      await utils.general.sleep(5000)
     })
-    it('switchWorld(id)', async () => {
-      await spec.click(driver, {using: 'id', value: 'com.applitools.eyes.android:id/btn_web_view'})
-      await spec.switchWorld(driver, 'WEBVIEW_com.applitools.eyes.android')
-      const actual = await spec.getCurrentWorld(driver)
-      const expected = 'WEBVIEW_com.applitools.eyes.android'
-      assert.deepStrictEqual(actual, expected)
+
+    after(async () => {
+      await destroyDriver?.()
+      destroyDriver = null as any
+    })
+
+    it('getCurrentWorld()', async () => {
+      await getCurrentWorld()
+    })
+    it('getWorlds()', async () => {
+      await getWorlds()
+    })
+    it('switchWorld(name)', async () => {
+      await switchWorld({input: {name: (await spec.getWorlds(driver))[1]}})
     })
   })
 
@@ -352,6 +358,24 @@ describe('webdriver spec driver', async () => {
     } finally {
       await driver.switchToFrame(null).catch(() => null)
     }
+  }
+  async function getCurrentWorld() {
+    const actual = await spec.getCurrentWorld(driver)
+    const expected = 'NATIVE_APP'
+    assert.deepStrictEqual(actual, expected)
+  }
+  async function getWorlds() {
+    const actual = await spec.getWorlds(driver)
+    assert.deepStrictEqual(
+      actual.map(name => typeof name),
+      ['string', 'string'],
+    )
+  }
+  async function switchWorld({input}: {input: {name: string}}) {
+    await spec.switchWorld(driver, input.name)
+    const actual = await driver.getContext()
+    const expected = input.name
+    assert.deepStrictEqual(actual, expected)
   }
   async function findElement({
     input,
