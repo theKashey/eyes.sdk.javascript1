@@ -1,6 +1,6 @@
 from mock import call, patch
 
-from applitools.selenium import RunnerOptions, VisualGridRunner
+from applitools.selenium import ClassicRunner, RunnerOptions, VisualGridRunner
 from applitools.selenium.__version__ import __version__
 from applitools.selenium.command_executor import ManagerType
 
@@ -36,3 +36,9 @@ def test_visual_grid_runner_creation_test_concurrency():
             call("eyes.selenium.visualgrid.python", __version__),
             call().core_make_manager(ManagerType.UFG, concurrency=3),
         ]
+
+
+def test_runner_get_server_info():
+    server_info = ClassicRunner.get_server_info()
+
+    assert server_info.logs_dir

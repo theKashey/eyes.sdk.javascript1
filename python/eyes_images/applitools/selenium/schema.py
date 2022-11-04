@@ -681,4 +681,4 @@ def demarshal_close_manager_results(close_manager_result_dict, conf):
 
 def demarshal_server_info(info_dict):
     # type: (dict) -> common.ServerInfo
-    return check_error(ServerInfo().loads(info_dict))
+    return check_error(ServerInfo().load(info_dict))

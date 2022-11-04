@@ -4,6 +4,7 @@
 - Images can be supplied as bytes and pathlib.Path objects (only on python3)
 ### Fixed
 - Remove all hardcoded configuration/check settings default values so server-side defaults applied
+- TypeError when ClassicRunner.get_server_info is called [Trello 3060](https://trello.com/c/IAbccw9X)
 ### Updated
 - Implemented Universal SDK v3 API
 - Changed behaviour of eyes-images: if test 'dimension' was not provided as an open argument, it is NOT calculated from first checked image size
