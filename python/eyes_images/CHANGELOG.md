@@ -1,4 +1,4 @@
-## [vNext]
+## [5.13.0] - 2022-11-07
 ### Added
 - eyes-images package functionality implementation based on eyes-universal
 - Images can be supplied as bytes and pathlib.Path objects (only on python3)
