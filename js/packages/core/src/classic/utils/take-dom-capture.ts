@@ -1,10 +1,9 @@
 import {type Driver} from '@applitools/driver'
 import {type Logger} from '@applitools/logger'
 import {getCaptureDomPoll, getPollResult, getCaptureDomPollForIE, getPollResultForIE} from '@applitools/dom-capture'
-import {executePollScript, type PollScriptSettings} from '../../utils/execute-poll-script'
 import req, {type Fetch} from '@applitools/req'
 
-export type DomCaptureSettings = Partial<PollScriptSettings> & {fetch?: Fetch; chunkByteLength?: number}
+export type DomCaptureSettings = {fetch?: Fetch; executionTimeout?: number; pollTimeout?: number; chunkByteLength?: number}
 
 export async function takeDomCapture<TDriver extends Driver<unknown, unknown, unknown, unknown>>({
   driver,
@@ -23,18 +22,12 @@ export async function takeDomCapture<TDriver extends Driver<unknown, unknown, un
       (Number(process.env.APPLITOOLS_SCRIPT_RESULT_MAX_BYTE_LENGTH) || (driver.isIOS ? 100_000 : 250 * 1024 * 1024)),
   }
   const scripts = {
-    main: {
-      script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-capture').captureDomPoll
-        : `return (${isLegacyBrowser ? await getCaptureDomPollForIE() : await getCaptureDomPoll()}).apply(null, arguments);`,
-      args: [arg],
-    },
-    poll: {
-      script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-capture').pollResult
-        : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
-      args: [arg],
-    },
+    main: canExecuteOnlyFunctionScripts
+      ? require('@applitools/dom-capture').captureDomPoll
+      : `return (${isLegacyBrowser ? await getCaptureDomPollForIE() : await getCaptureDomPoll()}).apply(null, arguments);`,
+    poll: canExecuteOnlyFunctionScripts
+      ? require('@applitools/dom-capture').pollResult
+      : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
   }
 
   const url = await driver.getUrl()
@@ -44,11 +37,11 @@ export async function takeDomCapture<TDriver extends Driver<unknown, unknown, un
   return dom
 
   async function captureContextDom(context) {
-    const capture = await executePollScript({
-      context,
-      scripts,
-      settings: {executionTimeout: settings?.executionTimeout ?? 5 * 60 * 1000, pollTimeout: settings?.pollTimeout ?? 200},
-      logger,
+    const capture = await context.executePoll(scripts, {
+      main: arg,
+      poll: arg,
+      executionTimeout: settings?.executionTimeout ?? 5 * 60 * 1000,
+      pollTimeout: settings?.pollTimeout ?? 200,
     })
     if (!capture) return {}
     const raws = capture.split('\n')

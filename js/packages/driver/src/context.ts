@@ -405,6 +405,57 @@ export class Context<TDriver, TContext, TElement, TSelector> {
     }
   }
 
+  async executePoll(
+    script: ((arg: any) => any) | string | {main: ((arg: any) => any) | string; poll: ((arg: any) => any) | string},
+    arg?: any | {main: any; poll: any; executionTimeout?: number; pollTimeout?: number},
+  ): Promise<any> {
+    this._logger.log('Executing poll script')
+    const {main: mainScript, poll: pollScript} =
+      utils.types.isString(script) || utils.types.isFunction(script) ? {main: script, poll: script} : script
+    const {
+      main: mainArg,
+      poll: pollArg,
+      executionTimeout = 60000,
+      pollTimeout = 1000,
+    } = !utils.types.has(arg, ['main', 'poll']) ? {main: arg, poll: arg} : (arg as any)
+
+    let isExecutionTimedOut = false
+    const executionTimer = setTimeout(() => (isExecutionTimedOut = true), executionTimeout)
+    try {
+      let response = deserialize(await this.execute(mainScript, mainArg))
+      let chunks = ''
+      while (!isExecutionTimedOut) {
+        if (response.status === 'ERROR') {
+          throw new Error(`Error during execute poll script: '${response.error}'`)
+        } else if (response.status === 'SUCCESS') {
+          return response.value
+        } else if (response.status === 'SUCCESS_CHUNKED') {
+          chunks += response.value
+          if (response.done) return deserialize(chunks)
+        } else if (response.status === 'WIP') {
+          await utils.general.sleep(pollTimeout)
+        }
+        this._logger.log('Polling...')
+        response = deserialize(await this.execute(pollScript, pollArg))
+      }
+      throw new Error('Poll script execution is timed out')
+    } finally {
+      clearTimeout(executionTimer)
+    }
+
+    function deserialize(json) {
+      try {
+        return JSON.parse(json)
+      } catch (err) {
+        const firstChars = json.slice(0, 100)
+        const lastChars = json.slice(-100)
+        throw new Error(
+          `Response is not a valid JSON string. length: ${json.length}, first 100 chars: "${firstChars}", last 100 chars: "${lastChars}". error: ${err}`,
+        )
+      }
+    }
+  }
+
   async getContextElement(): Promise<Element<TDriver, TContext, TElement, TSelector>> {
     if (this.isMain) return null
     await this.init()

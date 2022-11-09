@@ -2,13 +2,14 @@ import {type Logger} from '@applitools/logger'
 import {type Context, type Cookie} from '@applitools/driver'
 import {type DomSnapshot} from '@applitools/ufg-client'
 import {getProcessPagePoll, getPollResult, getProcessPagePollForIE, getPollResultForIE} from '@applitools/dom-snapshot'
-import {executePollScript, type PollScriptSettings} from '../../utils/execute-poll-script'
 import * as utils from '@applitools/utils'
 
-export type DomSnapshotSettings = Partial<PollScriptSettings> & {
+export type DomSnapshotSettings = {
   disableBrowserFetching?: boolean
   skipResources?: string[]
   chunkByteLength?: number
+  executionTimeout?: number
+  pollTimeout?: number
   showLogs?: boolean
 }
 
@@ -37,18 +38,13 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
     showLogs: settings?.showLogs,
   }
   const scripts = {
-    main: {
-      script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-snapshot').processPagePoll
-        : `return (${isLegacyBrowser ? await getProcessPagePollForIE() : await getProcessPagePoll()}).apply(null, arguments);`,
-      args: [arg],
-    },
-    poll: {
-      script: canExecuteOnlyFunctionScripts
-        ? require('@applitools/dom-snapshot').pollResult
-        : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
-      args: [arg],
-    },
+    main: canExecuteOnlyFunctionScripts
+      ? require('@applitools/dom-snapshot').processPagePoll
+      : `return (${isLegacyBrowser ? await getProcessPagePollForIE() : await getProcessPagePoll()}).apply(null, arguments);`,
+
+    poll: canExecuteOnlyFunctionScripts
+      ? require('@applitools/dom-snapshot').pollResult
+      : `return (${isLegacyBrowser ? await getPollResultForIE() : await getPollResult()}).apply(null, arguments);`,
   }
   const cookies: Cookie[] = driver.features.allCookies ? await driver.getCookies().catch(() => []) : []
 
@@ -63,11 +59,11 @@ export async function takeDomSnapshot<TContext extends Context<unknown, unknown,
       cookies.push(...(await context.getCookies()))
     }
 
-    const snapshot = await executePollScript({
-      context,
-      scripts,
-      settings: {executionTimeout: settings?.executionTimeout ?? 5 * 60 * 1000, pollTimeout: settings?.pollTimeout ?? 200},
-      logger,
+    const snapshot = await context.executePoll(scripts, {
+      main: arg,
+      poll: arg,
+      executionTimeout: settings?.executionTimeout ?? 5 * 60 * 1000,
+      pollTimeout: settings?.pollTimeout ?? 200,
     })
 
     const crossFrames = extractCrossFrames({snapshot, logger})

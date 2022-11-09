@@ -121,15 +121,17 @@ export class MockDriver {
       }
       return {x: scrollingElement.scrollPosition.x, y: scrollingElement.scrollPosition.y}
     })
-    this.mockScript(snippets.getPixelRatio, () => {
-      return 1
-    })
     this.mockScript(snippets.getShadowRoot, ([element]) => {
       return element
     })
-    this.mockScript(snippets.getUserAgent, () => {
-      if (this._ua !== undefined) return this._ua
-      return this.info.isMobile ? DEFAULT_MOBILE_UA : DEFAULT_DESKTOP_UA
+    this.mockScript(snippets.getBrowserInfo, () => {
+      return JSON.stringify({
+        status: 'SUCCESS',
+        value: {
+          userAgent: this._ua !== undefined ? this._ua : this.info.isMobile ? DEFAULT_MOBILE_UA : DEFAULT_DESKTOP_UA,
+          pixelRatio: 1,
+        },
+      })
     })
     this.mockScript(snippets.getViewportSize, () => {
       return {width: this._window.rect.width, height: this._window.rect.height}

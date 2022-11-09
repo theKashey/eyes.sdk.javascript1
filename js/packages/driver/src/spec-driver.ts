@@ -21,11 +21,14 @@ export type DriverInfo = {
   navigationBarSize?: number
   isW3C?: boolean
   isChrome?: boolean
+  isChromium?: boolean
   isEmulation?: boolean
   isMobile?: boolean
   isNative?: boolean
   isAndroid?: boolean
   isIOS?: boolean
+  isMac?: boolean
+  isWindows?: boolean
   isWebView?: boolean
   features?: {
     shadowSelector?: boolean

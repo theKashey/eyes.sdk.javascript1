@@ -8,11 +8,11 @@ import {makeLogger, type Logger} from '@applitools/logger'
 import {HelperIOS} from './helper-ios'
 import {HelperAndroid} from './helper-android'
 import {parseUserAgent} from './user-agent'
+import {parseUserAgentData} from './user-agent-data'
 import {parseCapabilities} from './capabilities'
+import * as snippets from '@applitools/snippets'
 import * as utils from '@applitools/utils'
 import * as specUtils from './spec-utils'
-
-const snippets = require('@applitools/snippets')
 
 type DriverOptions<TDriver, TContext, TElement, TSelector> = {
   spec: SpecDriver<TDriver, TContext, TElement, TSelector>
@@ -125,10 +125,22 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     return this._driverInfo?.isMobile ?? false
   }
   get isIOS(): boolean {
-    return this.platformName?.toLowerCase() === 'ios'
+    return this._driverInfo?.isIOS ?? /iOS/i.test(this.platformName)
   }
   get isAndroid(): boolean {
-    return this.platformName?.toLowerCase() === 'android'
+    return this._driverInfo?.isAndroid ?? /Android/i.test(this.platformName)
+  }
+  get isMac(): boolean {
+    return this._driverInfo?.isMac ?? /mac\s?OS/i.test(this.platformName)
+  }
+  get isWindows(): boolean {
+    return this._driverInfo?.isWindows ?? /Windows/i.test(this.platformName)
+  }
+  get isChromium(): boolean {
+    return (
+      this._driverInfo?.isChromium ??
+      (/(chrome)/i.test(this.browserName) || (/edge/i.test(this.browserName) && Number(this.browserVersion) > 44))
+    )
   }
   get isIE(): boolean {
     return /(internet explorer|ie)/i.test(this.browserName)
@@ -160,23 +172,44 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
     }
 
     if (this.isWeb) {
-      this._driverInfo.pixelRatio ??= await this.execute(snippets.getPixelRatio)
-      this._driverInfo.viewportScale ??= await this.execute(snippets.getViewportScale)
-      this._driverInfo.userAgent ??= await this.execute(snippets.getUserAgent)
-      if (this._driverInfo.userAgent) {
-        const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)
-        this._driverInfo.browserName = userAgentInfo.browserName ?? this._driverInfo.browserName
-        this._driverInfo.browserVersion = userAgentInfo.browserVersion ?? this._driverInfo.browserVersion
-        if (this._driverInfo.isMobile) {
-          this._driverInfo.platformName ??= userAgentInfo.platformName
-          this._driverInfo.platformVersion ??= userAgentInfo.platformVersion
-        } else {
-          this._driverInfo.platformName = userAgentInfo.platformName ?? this._driverInfo.platformName
-          this._driverInfo.platformVersion = userAgentInfo.platformVersion ?? this._driverInfo.platformVersion
+      const browserInfo = await this.currentContext.executePoll(snippets.getBrowserInfo)
+      this._driverInfo.userAgent ??= browserInfo.userAgent
+      this._driverInfo.pixelRatio ??= browserInfo.pixelRatio
+      this._driverInfo.viewportScale ??= browserInfo.viewportScale
+
+      if (browserInfo.userAgentData) {
+        this._driverInfo.isMobile ??= this._driverInfo.isMobile
+        this._driverInfo.isChromium ??= this._driverInfo.isChromium
+        if (this.isChromium) {
+          if (this.isWindows && Number.parseInt(this.browserVersion as string) >= 107) {
+            this._driverInfo.platformVersion = browserInfo.platformVersion ?? this._driverInfo.platformVersion
+          } else if (this.isMac && Number.parseInt(this.browserVersion as string) >= 90) {
+            this._driverInfo.platformVersion = browserInfo.platformVersion ?? this._driverInfo.platformVersion
+          }
         }
       }
 
-      if (!this._driverInfo.isMobile && (this.isAndroid || this.isIOS)) {
+      if (this._driverInfo.userAgent) {
+        const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)
+        const userAgentDataInfo = browserInfo.userAgentData && parseUserAgentData(browserInfo.userAgentData)
+        this._driverInfo.browserName =
+          userAgentInfo.browserName ?? userAgentDataInfo.browserName ?? this._driverInfo.browserName
+        this._driverInfo.browserVersion =
+          userAgentInfo.browserVersion ?? userAgentDataInfo.browserVersion ?? this._driverInfo.browserVersion
+        this._driverInfo.isMobile ??= userAgentDataInfo?.isMobile
+        this._driverInfo.isChromium ??= userAgentDataInfo?.isChromium
+        if (this._driverInfo.isMobile) {
+          this._driverInfo.platformName ??= userAgentDataInfo?.platformName ?? userAgentInfo.platformName
+          this._driverInfo.platformVersion ??= userAgentDataInfo?.platformVersion ?? userAgentInfo.platformVersion
+        } else {
+          this._driverInfo.platformName =
+            userAgentDataInfo?.platformName ?? userAgentInfo.platformName ?? this._driverInfo.platformName
+          this._driverInfo.platformVersion =
+            userAgentDataInfo?.platformVersion ?? userAgentInfo.platformVersion ?? this._driverInfo.platformVersion
+        }
+      }
+
+      if (!this.isMobile && (this.isAndroid || this.isIOS)) {
         this._driverInfo.isMobile = true
         this._driverInfo.isEmulation = this._driverInfo.isChrome
       }

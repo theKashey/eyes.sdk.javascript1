@@ -1,12 +1,13 @@
 import {type Logger} from '@applitools/logger'
 import {type Driver} from '@applitools/driver'
 import {lazyLoad as lazyLoadScript} from '@applitools/snippets'
-import {executePollScript, type PollScriptSettings} from './execute-poll-script'
 
-export type LazyLoadSettings = Partial<PollScriptSettings> & {
+export type LazyLoadSettings = {
   scrollLength?: number
   waitingTime?: number
   maxAmountToScroll?: number
+  executionTimeout?: number
+  pollTimeout?: number
 }
 
 export async function waitForLazyLoad<TDriver extends Driver<unknown, unknown, unknown, unknown>>({
@@ -25,14 +26,10 @@ export async function waitForLazyLoad<TDriver extends Driver<unknown, unknown, u
     maxAmountToScroll: settings.maxAmountToScroll ?? 15000,
   }
 
-  const scripts = {
-    main: {script: lazyLoadScript, args: [[arg]]},
-    poll: {script: lazyLoadScript, args: [[]]},
-  }
-  await executePollScript({
-    context: driver.currentContext,
-    scripts,
-    settings: {executionTimeout: 5 * 60 * 1000, pollTimeout: settings.pollTimeout ?? settings.waitingTime ?? 2000},
-    logger,
+  await driver.currentContext.executePoll(lazyLoadScript, {
+    main: arg,
+    poll: undefined,
+    executionTimeout: 5 * 60 * 1000,
+    pollTimeout: settings.pollTimeout ?? settings.waitingTime ?? 2000,
   })
 }

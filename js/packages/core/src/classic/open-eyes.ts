@@ -44,8 +44,16 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
         await driver.setViewportSize(settings.environment.viewportSize)
       }
 
-      if (!settings.environment.userAgent && driver.isWeb) {
-        settings.environment.userAgent = driver.userAgent
+      if (driver.isWeb) {
+        settings.environment.userAgent ??= driver.userAgent
+
+        if (
+          driver.isChromium &&
+          ((driver.isWindows && Number.parseInt(driver.browserVersion as string) >= 107) ||
+            (driver.isMac && Number.parseInt(driver.browserVersion as string) >= 90))
+        ) {
+          settings.environment.os = `${driver.platformName} ${driver.platformVersion ?? ''}`.trim()
+        }
       }
 
       if (!settings.environment.deviceName && driver.deviceName) {
