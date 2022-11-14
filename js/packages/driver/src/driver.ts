@@ -193,9 +193,9 @@ export class Driver<TDriver, TContext, TElement, TSelector> {
         const userAgentInfo = parseUserAgent(this._driverInfo.userAgent)
         const userAgentDataInfo = browserInfo.userAgentData && parseUserAgentData(browserInfo.userAgentData)
         this._driverInfo.browserName =
-          userAgentInfo.browserName ?? userAgentDataInfo.browserName ?? this._driverInfo.browserName
+          userAgentInfo.browserName ?? userAgentDataInfo?.browserName ?? this._driverInfo.browserName
         this._driverInfo.browserVersion =
-          userAgentInfo.browserVersion ?? userAgentDataInfo.browserVersion ?? this._driverInfo.browserVersion
+          userAgentInfo.browserVersion ?? userAgentDataInfo?.browserVersion ?? this._driverInfo.browserVersion
         this._driverInfo.isMobile ??= userAgentDataInfo?.isMobile
         this._driverInfo.isChromium ??= userAgentDataInfo?.isChromium
         if (this._driverInfo.isMobile) {
