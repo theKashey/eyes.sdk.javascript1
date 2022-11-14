@@ -16,10 +16,10 @@
     node-fetch "2.6.1"
     yargs "15.0.2"
 
-"@applitools/image@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@applitools/image/-/image-1.0.7.tgz#c2751462f1f583da05f9caf03a4cd80cda77c59e"
-  integrity sha512-xZAHExWOQi9ZanjQQ57Dyp+/bH4G9jiuT0eP4Ukv+lyndnr9fJYKRRsOgDQGCA3H92qk3t+pZkdvNnOi9HSumA==
+"@applitools/image@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@applitools/image/-/image-1.0.8.tgz#aff0c905c3fe7f3b2fa24b7741e40694c6960c07"
+  integrity sha512-hVuqqgt+fIocRo+UQrcySH2zpO0v2YJ4Dp7Ljc+cKtBDW0v7rHH52+tPQhNj6zUZKWyVbplO9Lu73f+tQr7jAQ==
   dependencies:
     "@applitools/utils" "1.3.15"
     bmpimagejs "1.0.4"
