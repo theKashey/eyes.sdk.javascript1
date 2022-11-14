@@ -43,12 +43,12 @@
     "types"
   ],
   "dependencies": {
-    "@applitools/core": "1.2.0",
-    "@applitools/eyes-api": "1.9.0"
+    "@applitools/core": "1.2.9",
+    "@applitools/eyes-api": "1.10.0"
   },
   "devDependencies": {
     "@applitools/api-extractor": "^1.2.11",
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "@applitools/sdk-coverage-tests": "^2.7.0",
     "@applitools/test-utils": "^1.5.2",
     "@types/node": "12",
@@ -74,7 +74,7 @@
     "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-images'",
     "test": "yarn test:coverage",
     "test:sanity": "echo 'create sanity suite'",
-    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-images' APPLITOOLS_BATCH_ID=$(uuidgen) mocha --exit --config .mocharc.cvg.js",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-images' APPLITOOLS_BATCH_ID=$(uuidgen) mocha --exit --config .mocharc.cvg.js && ls /tmp",
     "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-images'",
     "deps": "bongo deps",
     "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='images' -f links='types test-utils core-base core eyes-api utils'",
