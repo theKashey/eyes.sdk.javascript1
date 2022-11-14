@@ -1,6 +1,7 @@
 const {mochaGrep} = require('@applitools/test-utils')
 
 const tags = [
+  'image',
   'headfull',
   'chrome',
 ]

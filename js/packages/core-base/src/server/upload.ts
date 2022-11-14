@@ -3,12 +3,13 @@ import {req, type Proxy} from '@applitools/req'
 import {gzipSync} from 'zlib'
 import * as utils from '@applitools/utils'
 
-export type Upload = (options: {name: string; resource: Buffer | string; gzip?: boolean}) => Promise<string>
+export type Upload = (options: {name: string; resource: Buffer | URL | string; gzip?: boolean}) => Promise<string>
 
 export function makeUpload({config, logger}: {config: {uploadUrl: string; proxy?: Proxy}; logger?: Logger}): Upload {
   return async function upload({name, resource, gzip}) {
     logger.log(`Upload called for ${name} resource`)
     if (utils.types.isNull(resource) || utils.types.isHttpUrl(resource)) return resource
+    else if (resource instanceof URL) return resource.href
     const url = config.uploadUrl.replace('__random__', utils.general.guid())
     const body = gzip ? gzipSync(resource) : Buffer.from(resource)
     const response = await req(url, {

@@ -56,7 +56,14 @@ export {
 } from './input/AccessibilityMatchSettings'
 export {AccessibilitySettings} from './input/AccessibilitySettings'
 export {BatchInfo as BatchInfoPlain, BatchInfoData as BatchInfo} from './input/BatchInfo'
-export {CheckSettings as CheckSettingsPlain, CheckSettingsFluent as CheckSettings, Target} from './input/CheckSettings'
+export {
+  CheckSettingsImage as CheckSettingsImagePlain,
+  CheckSettingsImageFluent as CheckSettingsImage,
+  CheckSettingsAutomation as CheckSettingsAutomationPlain,
+  CheckSettingsAutomationFluent as CheckSettingsAutomation,
+  TargetImage,
+  TargetAutomation,
+} from './input/CheckSettings'
 export {Configuration as ConfigurationPlain, ConfigurationData as Configuration} from './input/Configuration'
 export {
   CutProvider as CutProviderPlain,
@@ -127,7 +134,7 @@ export {
 } from './output/ValidationResult'
 // #endregion
 
-export type {Selector as EyesSelector} from '@applitools/core'
+export {EyesSelector} from './input/EyesSelector'
 export {Logger} from './Logger'
 export {Eyes} from './Eyes'
 export {BatchClose, closeBatch} from './BatchClose'

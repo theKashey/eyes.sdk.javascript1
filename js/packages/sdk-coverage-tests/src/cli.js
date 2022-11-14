@@ -39,6 +39,11 @@ const cli = yargs
           description: 'path to the tests overrides file (local or remote)',
           type: 'string',
         },
+        fixtures: {
+          alias: ['fixturesPath'],
+          description: 'path to the fixtures (local or remote)',
+          type: 'string',
+        },
         outDir: {
           alias: ['o', 'out', 'outPath'],
           description: 'path to save generated files',

@@ -2,6 +2,7 @@ const {mochaGrep} = require('@applitools/test-utils')
 
 const tags = {
   wd: [
+    'image',
     'headfull',
     'webdriver',
     'jsonwire',
@@ -16,7 +17,7 @@ const tags = {
     'safari',
     'all-cookies'
   ],
-  cdp: ['chrome', 'all-cookies', 'cached-selectors']
+  cdp: ['image', 'chrome', 'all-cookies', 'cached-selectors']
 }
 
 const protocol = process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL in tags ? process.env.APPLITOOLS_WEBDRIVERIO_PROTOCOL : 'wd'

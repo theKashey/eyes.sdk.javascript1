@@ -1,5 +1,6 @@
-import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
+import {EyesSelector} from './EyesSelector'
+import {CoreConfig} from '../Core'
 import {SessionType, SessionTypeEnum} from '../enums/SessionType'
 import {StitchMode, StitchModeEnum} from '../enums/StitchMode'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
@@ -98,7 +99,7 @@ export type ClassicConfiguration<TElement = unknown, TSelector = unknown> = {
   hideScrollbars?: boolean
   hideCaret?: boolean
   stitchOverlap?: number
-  scrollRootElement?: TElement | core.Selector<TSelector>
+  scrollRootElement?: TElement | EyesSelector<TSelector>
   cut?: CutProvider
   rotation?: ImageRotation
   scaleRatio?: number
@@ -130,12 +131,12 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
 
   private _config: Configuration<TElement, TSelector> = {}
 
-  private _isElementReference(value: any): value is TElement | core.Selector<TSelector> {
+  private _isElementReference(value: any): value is TElement | EyesSelector<TSelector> {
     const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
     return spec.isElement(value) || this._isSelectorReference(value)
   }
 
-  private _isSelectorReference(selector: any): selector is core.Selector<TSelector> {
+  private _isSelectorReference(selector: any): selector is EyesSelector<TSelector> {
     const spec = this._spec ?? ((this.constructor as typeof ConfigurationData)._spec as typeof this._spec)
     return (
       spec.isSelector(selector) ||
@@ -896,10 +897,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     return this
   }
 
-  get scrollRootElement(): TElement | core.Selector<TSelector> {
+  get scrollRootElement(): TElement | EyesSelector<TSelector> {
     return this._config.scrollRootElement
   }
-  set scrollRootElement(scrollRootElement: TElement | core.Selector<TSelector>) {
+  set scrollRootElement(scrollRootElement: TElement | EyesSelector<TSelector>) {
     utils.guard.custom(scrollRootElement, value => this._isElementReference(value), {
       name: 'scrollRootElement',
       message: 'must be element or selector',
@@ -907,10 +908,10 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
     })
     this._config.scrollRootElement = scrollRootElement
   }
-  getScrollRootElement(): TElement | core.Selector<TSelector> {
+  getScrollRootElement(): TElement | EyesSelector<TSelector> {
     return this.scrollRootElement
   }
-  setScrollRootElement(scrollRootElement: TElement | core.Selector<TSelector>): this {
+  setScrollRootElement(scrollRootElement: TElement | EyesSelector<TSelector>): this {
     this.scrollRootElement = scrollRootElement
     return this
   }
@@ -1120,9 +1121,9 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   }
 
   /** @internal */
-  toJSON(): core.Config<TElement, TSelector, 'classic'> & core.Config<TElement, TSelector, 'ufg'> {
+  toJSON(): CoreConfig<TElement, TSelector> {
     return {
-      open: dropUndefinedProperties({
+      open: utils.general.removeUndefinedProps({
         serverUrl: this.serverUrl,
         apiKey: this.apiKey,
         agentId: this.agentId,
@@ -1137,7 +1138,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
         batch: this.batch,
         baselineEnvName: this.baselineEnvName,
         environmentName: this.environmentName,
-        environment: dropUndefinedProperties({
+        environment: utils.general.removeUndefinedProps({
           hostingApp: this.hostApp,
           hostingAppInfo: this.hostAppInfo,
           os: this.hostOS,
@@ -1154,7 +1155,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
         saveDiffs: this.saveDiffs,
         keepBatchOpen: this.dontCloseBatches,
       }),
-      screenshot: dropUndefinedProperties({
+      screenshot: utils.general.removeUndefinedProps({
         fully: this.forceFullPageScreenshot,
         scrollRootElement: this.scrollRootElement,
         stitchMode: this.stitchMode,
@@ -1163,7 +1164,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
         overlap: !utils.types.isNull(this.stitchOverlap) ? {bottom: this.stitchOverlap} : undefined,
         waitBetweenStitches: this.waitBeforeScreenshots,
         waitBeforeCapture: this.waitBeforeCapture,
-        normalization: dropUndefinedProperties({
+        normalization: utils.general.removeUndefinedProps({
           cut: this.cut,
           rotation: this.rotation,
           scaleRatio: this.scaleRatio,
@@ -1173,7 +1174,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
             ? this.debugScreenshots
             : undefined,
       }),
-      check: dropUndefinedProperties({
+      check: utils.general.removeUndefinedProps({
         renderers: this.browsersInfo?.map(browserInfo => {
           if (utils.types.has(browserInfo, 'iosDeviceInfo')) {
             const {iosVersion, ...iosDeviceInfo} = browserInfo.iosDeviceInfo
@@ -1203,7 +1204,7 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
         floatingRegions: this.defaultMatchSettings?.floatingRegions,
         accessibilityRegions: this.defaultMatchSettings?.accessibilityRegions,
       }),
-      close: dropUndefinedProperties({
+      close: utils.general.removeUndefinedProps({
         updateBaselineIfDifferent: this.saveFailedTests,
         updateBaselineIfNew: this.saveNewTests,
       }),
@@ -1214,11 +1215,4 @@ export class ConfigurationData<TElement = unknown, TSelector = unknown>
   toString() {
     return utils.general.toString(this)
   }
-}
-
-function dropUndefinedProperties(object: Record<string, any>) {
-  return Object.entries(object).reduce(
-    (object, [key, value]) => (value !== undefined ? Object.assign(object, {[key]: value}) : object),
-    {} as any,
-  )
 }

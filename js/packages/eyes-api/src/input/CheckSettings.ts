@@ -1,140 +1,470 @@
-import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
+import {CoreCheckSettingsAutomation, CoreCheckSettingsImage} from '../Core'
+import {EyesSelector} from './EyesSelector'
+import {Image} from './Image'
 import {AccessibilityRegionType, AccessibilityRegionTypeEnum} from '../enums/AccessibilityRegionType'
 import {MatchLevel, MatchLevelEnum} from '../enums/MatchLevel'
 import {Region, LegacyRegion} from './Region'
+import {Location} from './Location'
 import {LazyLoadOptions} from './LazyLoadOptions'
 
 type RegionReference<TElement, TSelector> = Region | ElementReference<TElement, TSelector>
-
 type ElementReference<TElement, TSelector> = TElement | SelectorReference<TSelector>
-
-type SelectorReference<TSelector> = core.Selector<TSelector>
-
+type SelectorReference<TSelector> = EyesSelector<TSelector>
 type FrameReference<TElement, TSelector> = ElementReference<TElement, TSelector> | string | number
-
 type ContextReference<TElement, TSelector> = {
   frame: FrameReference<TElement, TSelector>
   scrollRootElement?: ElementReference<TElement, TSelector>
 }
 
-type CodedRegionReference<TElement, TSelector> = {
-  region: RegionReference<TElement, TSelector>
+type CodedRegion<TRegion = never> = {
+  region: Region | TRegion
   padding?: number | {top: number; bottom: number; let: number; right: number}
   regionId?: string
 }
-
-type FloatingRegionReference<TElement, TSelector> = CodedRegionReference<TElement, TSelector> & {
+type CodedFloatingRegion<TRegion = never> = CodedRegion<TRegion> & {
   offset?: {top?: number; bottom?: number; left?: number; right?: number}
 }
-
 /** @deprecated */
-type LegacyFloatingRegionReference<TElement, TSelector> = CodedRegionReference<TElement, TSelector> & {
+type LegacyCodedFloatingRegion<TRegion = never> = CodedRegion<TRegion> & {
   maxUpOffset?: number
   maxDownOffset?: number
   maxLeftOffset?: number
   maxRightOffset?: number
 }
-
-type AccessibilityRegionReference<TElement, TSelector> = CodedRegionReference<TElement, TSelector> & {
+type CodedAccessibilityRegion<TRegion = never> = CodedRegion<TRegion> & {
   type?: AccessibilityRegionType
 }
 
-type CheckSettingsSpec<TElement = unknown, TSelector = unknown> = {
-  isElement(value: any): value is TElement
-  isSelector(value: any): value is TSelector
-}
-
-export type CheckSettings<TElement, TSelector> = {
+export type CheckSettingsBase<TRegion = never> = {
   name?: string
-  region?: RegionReference<TElement, TSelector>
-  frames?: (ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>)[]
-  scrollRootElement?: ElementReference<TElement, TSelector>
-  fully?: boolean
+  region?: Region | TRegion
   matchLevel?: MatchLevel
   useDom?: boolean
   sendDom?: boolean
   enablePatterns?: boolean
   ignoreDisplacements?: boolean
+  ignoreMismatch?: boolean
   ignoreCaret?: boolean
-  ignoreRegions?: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector>)[]
-  layoutRegions?: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector>)[]
-  strictRegions?: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector>)[]
-  contentRegions?: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector>)[]
-  floatingRegions?: (
-    | FloatingRegionReference<TElement, TSelector>
-    | LegacyFloatingRegionReference<TElement, TSelector>
-    | RegionReference<TElement, TSelector>
-  )[]
-  accessibilityRegions?: (AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector>)[]
+  ignoreRegions?: (CodedRegion<TRegion> | Region | TRegion)[]
+  layoutRegions?: (CodedRegion<TRegion> | Region | TRegion)[]
+  strictRegions?: (CodedRegion<TRegion> | Region | TRegion)[]
+  contentRegions?: (CodedRegion<TRegion> | Region | TRegion)[]
+  floatingRegions?: (CodedFloatingRegion<TRegion> | LegacyCodedFloatingRegion<TRegion> | Region | TRegion)[]
+  accessibilityRegions?: (CodedAccessibilityRegion<TRegion> | Region | TRegion)[]
+  pageId?: string
+  variationGroupId?: string
+}
+
+export type CheckSettingsImage = CheckSettingsBase
+
+export type CheckSettingsAutomation<TElement, TSelector> = CheckSettingsBase<RegionReference<TElement, TSelector>> & {
+  frames?: (ContextReference<TElement, TSelector> | FrameReference<TElement, TSelector>)[]
+  webview?: boolean | string
+  scrollRootElement?: ElementReference<TElement, TSelector>
+  fully?: boolean
   disableBrowserFetching?: boolean
   layoutBreakpoints?: boolean | number[]
   visualGridOptions?: {[key: string]: any}
   hooks?: {beforeCaptureScreenshot: string}
   renderId?: string
-  pageId?: string
-  variationGroupId?: string
   timeout?: number
   waitBeforeCapture?: number
   lazyLoad?: boolean | LazyLoadOptions
-  webview?: boolean | string
 }
 
-export type Target<TElement, TSelector> = {
-  window(): CheckSettingsFluent<TElement, TSelector>
-  region(region: RegionReference<TElement, TSelector> | LegacyRegion): CheckSettingsFluent<TElement, TSelector>
-  frame(context: ContextReference<TElement, TSelector>): CheckSettingsFluent<TElement, TSelector>
-  frame(
-    frame: FrameReference<TElement, TSelector>,
-    scrollRootElement?: ElementReference<TElement, TSelector>,
-  ): CheckSettingsFluent<TElement, TSelector>
-  shadow(selector: SelectorReference<TSelector>): CheckSettingsFluent<TSelector>
-  webview(option?: string | boolean): CheckSettingsFluent<TElement, TSelector>
-}
+export class CheckSettingsBaseFluent<TRegion = never> {
+  protected _settings: CheckSettingsBase<TRegion> = {}
 
-export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
+  constructor(settings?: CheckSettingsBase<TRegion> | CheckSettingsBaseFluent<TRegion>) {
+    this._settings = utils.types.instanceOf(settings, CheckSettingsBaseFluent) ? settings.toObject() : settings ?? {}
+  }
+
+  region(region: Region | LegacyRegion | TRegion): this {
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    this._settings.region = region
+    return this
+  }
+
+  name(name: string): this {
+    this._settings.name = name
+    return this
+  }
+  withName(name: string) {
+    return this.name(name)
+  }
+
+  ignoreRegion(region: CodedRegion<TRegion> | Region | LegacyRegion | TRegion): this {
+    if (!this._settings.ignoreRegions) this._settings.ignoreRegions = []
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    this._settings.ignoreRegions.push(region)
+    return this
+  }
+  ignoreRegions(...regions: (CodedRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this {
+    regions.forEach(region => this.ignoreRegion(region))
+    return this
+  }
+  /** @deprecated */
+  ignore(region: Region | LegacyRegion | TRegion) {
+    return this.ignoreRegion(region)
+  }
+  /** @deprecated */
+  ignores(...regions: (Region | LegacyRegion | TRegion)[]): this {
+    return this.ignoreRegions(...regions)
+  }
+
+  layoutRegion(region: CodedRegion<TRegion> | Region | LegacyRegion | TRegion): this {
+    if (!this._settings.layoutRegions) this._settings.layoutRegions = []
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    this._settings.layoutRegions.push(region)
+    return this
+  }
+  layoutRegions(...regions: (CodedRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this {
+    regions.forEach(region => this.layoutRegion(region))
+    return this
+  }
+
+  strictRegion(region: CodedRegion<TRegion> | Region | LegacyRegion | TRegion): this {
+    if (!this._settings.strictRegions) this._settings.strictRegions = []
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    this._settings.strictRegions.push(region)
+    return this
+  }
+  strictRegions(...regions: (CodedRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this {
+    regions.forEach(region => this.strictRegion(region))
+    return this
+  }
+
+  contentRegion(region: CodedRegion<TRegion> | Region | LegacyRegion | TRegion): this {
+    if (!this._settings.contentRegions) this._settings.contentRegions = []
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    this._settings.contentRegions.push(region)
+    return this
+  }
+  contentRegions(...regions: (CodedRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this {
+    regions.forEach(region => this.contentRegion(region))
+    return this
+  }
+
+  floatingRegion(region: CodedFloatingRegion<TRegion>): this
+  floatingRegion(region: LegacyCodedFloatingRegion<TRegion>): this
+  floatingRegion(
+    region: Region | LegacyRegion | TRegion,
+    maxUpOffset?: number,
+    maxDownOffset?: number,
+    maxLeftOffset?: number,
+    maxRightOffset?: number,
+  ): this
+  floatingRegion(
+    region: CodedFloatingRegion<TRegion> | Region | LegacyCodedFloatingRegion<TRegion> | LegacyRegion | TRegion,
+    maxUpOffset?: number,
+    maxDownOffset?: number,
+    maxLeftOffset?: number,
+    maxRightOffset?: number,
+  ): this {
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+
+    let floatingRegion: CodedFloatingRegion<TRegion>
+    if (utils.types.has(region, 'region')) {
+      const {maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset, ...rest} = region as any
+      floatingRegion = {
+        offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
+        ...rest,
+      }
+    } else {
+      floatingRegion = {
+        region,
+        offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
+      }
+    }
+    if (!this._settings.floatingRegions) this._settings.floatingRegions = []
+    this._settings.floatingRegions.push(floatingRegion)
+    return this
+  }
+  floatingRegions(...regions: (CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this
+  floatingRegions(maxOffset: number, ...regions: (Region | LegacyRegion | TRegion)[]): this
+  floatingRegions(
+    regionOrMaxOffset: CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion | number,
+    ...regions: (CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion)[]
+  ): this {
+    let maxOffset: number
+    if (utils.types.isNumber(regionOrMaxOffset)) {
+      maxOffset = regionOrMaxOffset
+    } else {
+      this.floatingRegion(regionOrMaxOffset as CodedFloatingRegion<TRegion>)
+    }
+    regions.forEach(region => {
+      if (utils.types.has(region, 'region')) this.floatingRegion(region)
+      else this.floatingRegion(region, maxOffset, maxOffset, maxOffset, maxOffset)
+    })
+    return this
+  }
+  /** @deprecated */
+  floating(region: CodedFloatingRegion<TRegion>): this
+  /** @deprecated */
+  floating(region: Region | LegacyRegion | TRegion): this
+  floating(
+    region: CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion,
+    maxUpOffset?: number,
+    maxDownOffset?: number,
+    maxLeftOffset?: number,
+    maxRightOffset?: number,
+  ): this {
+    if (utils.types.has(region, 'region')) return this.floatingRegion(region)
+    else return this.floatingRegion(region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset)
+  }
+  /** @deprecated */
+  floatings(...regions: (CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this
+  /** @deprecated */
+  floatings(maxOffset: number, ...regions: (Region | LegacyRegion | TRegion)[]): this
+  floatings(
+    regionOrMaxOffset: CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion | number,
+    ...regions: (CodedFloatingRegion<TRegion> | Region | LegacyRegion | TRegion)[]
+  ): this {
+    return this.floatingRegions(regionOrMaxOffset as number, ...(regions as TRegion[]))
+  }
+
+  accessibilityRegion(region: CodedAccessibilityRegion<TRegion>): this
+  accessibilityRegion(region: Region | LegacyRegion | TRegion, type?: AccessibilityRegionType): this
+  accessibilityRegion(
+    region: CodedAccessibilityRegion<TRegion> | Region | LegacyRegion | TRegion,
+    type?: AccessibilityRegionType,
+  ): this {
+    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
+      region = {x: region.left, y: region.top, width: region.width, height: region.height}
+    }
+    const accessibilityRegion = utils.types.has(region, 'region') ? region : {region, type}
+    if (!this._settings.accessibilityRegions) this._settings.accessibilityRegions = []
+    this._settings.accessibilityRegions.push(accessibilityRegion)
+    return this
+  }
+  accessibilityRegions(...regions: (CodedAccessibilityRegion<TRegion> | Region | LegacyRegion | TRegion)[]): this
+  accessibilityRegions(type: AccessibilityRegionType, ...regions: (Region | LegacyRegion | TRegion)[]): this
+  accessibilityRegions(
+    regionOrType: CodedAccessibilityRegion<TRegion> | Region | LegacyRegion | TRegion | AccessibilityRegionType,
+    ...regions: (CodedAccessibilityRegion<TRegion> | Region | LegacyRegion | TRegion)[]
+  ): this {
+    let type: AccessibilityRegionType
+    if (utils.types.isEnumValue(regionOrType, AccessibilityRegionTypeEnum)) {
+      type = regionOrType
+    } else {
+      this.accessibilityRegion(regionOrType as CodedAccessibilityRegion<TRegion>)
+    }
+    regions.forEach(region => {
+      if (utils.types.has(region, 'region')) this.accessibilityRegion(region)
+      else this.accessibilityRegion(region, type)
+    })
+    return this
+  }
+
+  matchLevel(matchLevel: MatchLevel): this {
+    this._settings.matchLevel = matchLevel
+    return this
+  }
+  layout(): this {
+    this._settings.matchLevel = MatchLevelEnum.Layout
+    return this
+  }
+  exact(): this {
+    this._settings.matchLevel = MatchLevelEnum.Exact
+    return this
+  }
+  strict(): this {
+    this._settings.matchLevel = MatchLevelEnum.Strict
+    return this
+  }
+  content(): this {
+    this._settings.matchLevel = MatchLevelEnum.Content
+    return this
+  }
+
+  enablePatterns(enablePatterns = true): this {
+    this._settings.enablePatterns = enablePatterns
+    return this
+  }
+
+  ignoreDisplacements(ignoreDisplacements = true): this {
+    this._settings.ignoreDisplacements = ignoreDisplacements
+    return this
+  }
+
+  ignoreCaret(ignoreCaret = true): this {
+    this._settings.ignoreCaret = ignoreCaret
+    return this
+  }
+
+  useDom(useDom = true): this {
+    this._settings.useDom = useDom
+    return this
+  }
+
+  sendDom(sendDom = true): this {
+    this._settings.sendDom = sendDom
+    return this
+  }
+
+  pageId(pageId: string): this {
+    this._settings.pageId = pageId
+    return this
+  }
+
+  variationGroupId(variationGroupId: string): this {
+    this._settings.variationGroupId = variationGroupId
+    return this
+  }
+
   /** @internal */
-  static window(): CheckSettingsFluent {
+  toObject(): CheckSettingsBase<TRegion> {
+    return this._settings
+  }
+
+  /** @internal */
+  toString(): string {
+    return utils.general.toString(this)
+  }
+}
+
+export class CheckSettingsImageFluent extends CheckSettingsBaseFluent {
+  /** @internal */
+  static image(image: Buffer | URL | string): CheckSettingsImageFluent {
+    return new this().image(image)
+  }
+  /** @internal */
+  static buffer(imageBuffer: Buffer): CheckSettingsImageFluent {
+    return new this().image(imageBuffer)
+  }
+  /** @internal */
+  static base64(imageBase64: string): CheckSettingsImageFluent {
+    return new this().image(imageBase64)
+  }
+  /** @internal */
+  static path(imagePath: string): CheckSettingsImageFluent {
+    return new this().image(imagePath)
+  }
+  /** @internal */
+  static url(imageUrl: URL | string): CheckSettingsImageFluent {
+    return new this().image(imageUrl)
+  }
+
+  protected _target: Image
+
+  constructor(settings?: CheckSettingsImage | CheckSettingsImageFluent, target?: Image) {
+    super(settings)
+    this._target = target ?? (settings as CheckSettingsImageFluent)?._target
+  }
+
+  image(image: Buffer | URL | string): this {
+    this._target ??= {} as Image
+    this._target.image = image
+    return this
+  }
+  buffer(imageBuffer: Buffer): this {
+    return this.image(imageBuffer)
+  }
+  base64(imageBase64: Buffer): this {
+    return this.image(imageBase64)
+  }
+  path(imagePath: string): this {
+    return this.image(imagePath)
+  }
+  url(imageUrl: URL | string): this {
+    return this.image(imageUrl)
+  }
+
+  name(name: string): this {
+    this._target.name = name
+    return super.name(name)
+  }
+
+  withDom(dom: string): this {
+    this._settings.sendDom = true
+    this._target.dom = dom
+    return this
+  }
+
+  withLocation(locationInViewport: Location): this {
+    this._target.locationInViewport = locationInViewport
+    return this
+  }
+
+  /** @internal */
+  toJSON(): {target: Image; settings: CoreCheckSettingsImage} {
+    return {
+      target: this._target,
+      settings: utils.general.removeUndefinedProps({
+        name: this._settings.name,
+        region: this._settings.region,
+        matchLevel: this._settings.matchLevel,
+        useDom: this._settings.useDom,
+        sendDom: this._settings.sendDom,
+        enablePatterns: this._settings.enablePatterns,
+        ignoreDisplacements: this._settings.ignoreDisplacements,
+        ignoreCaret: this._settings.ignoreCaret,
+        ignoreRegions: this._settings.ignoreRegions,
+        layoutRegions: this._settings.layoutRegions,
+        strictRegions: this._settings.strictRegions,
+        contentRegions: this._settings.contentRegions,
+        floatingRegions: this._settings.floatingRegions,
+        accessibilityRegions: this._settings.accessibilityRegions,
+        pageId: this._settings.pageId,
+        userCommandId: this._settings.variationGroupId,
+      }),
+    }
+  }
+}
+
+type CheckSettingsAutomationSpec<TElement = unknown, TSelector = unknown> = {
+  isElement(value: any): value is TElement
+  isSelector(value: any): value is TSelector
+}
+
+export class CheckSettingsAutomationFluent<TElement = unknown, TSelector = unknown> extends CheckSettingsBaseFluent<
+  RegionReference<TElement, TSelector>
+> {
+  /** @internal */
+  static window(): CheckSettingsAutomationFluent {
     return new this()
   }
   /** @internal */
-  static region(region: unknown): CheckSettingsFluent {
+  static region(region: unknown): CheckSettingsAutomationFluent {
     return new this().region(region)
   }
   /** @internal */
-  static frame(contextOrFrame: unknown, scrollRootElement?: unknown): CheckSettingsFluent {
+  static frame(contextOrFrame: unknown, scrollRootElement?: unknown): CheckSettingsAutomationFluent {
     return new this().frame(contextOrFrame, scrollRootElement)
   }
   /** @internal */
-  static shadow(selector: unknown): CheckSettingsFluent {
+  static shadow(selector: unknown): CheckSettingsAutomationFluent {
     return new this().shadow(selector)
   }
   /** @internal */
-  static webview(option: string | boolean | null): CheckSettingsFluent {
-    return new this().webview(option)
+  static webview(webview: string | boolean | null): CheckSettingsAutomationFluent {
+    return new this().webview(webview)
   }
 
-  protected static readonly _spec: CheckSettingsSpec<any, any>
+  protected _settings: CheckSettingsAutomation<TElement, TSelector> = {}
 
-  private _spec: CheckSettingsSpec<TElement, TSelector>
+  protected static readonly _spec: CheckSettingsAutomationSpec<any, any>
+  protected _spec: CheckSettingsAutomationSpec<TElement, TSelector>
 
-  private _settings: CheckSettings<TElement, TSelector> = {}
-
-  private _isFrameReference(value: any): value is FrameReference<TSelector, TElement> {
-    return utils.types.isNumber(value) || utils.types.isString(value) || this._isElementReference(value)
-  }
-
-  private _isRegionReference(value: any): value is RegionReference<TSelector, TElement> {
-    return utils.types.has(value, ['x', 'y', 'width', 'height']) || this._isElementReference(value)
-  }
-
-  private _isElementReference(value: any): value is ElementReference<TSelector, TElement> {
-    const spec = this._spec ?? ((this.constructor as typeof CheckSettingsFluent)._spec as typeof this._spec)
+  protected _isElementReference(value: any): value is ElementReference<TSelector, TElement> {
+    const spec = this._spec ?? ((this.constructor as typeof CheckSettingsAutomationFluent)._spec as typeof this._spec)
     return spec.isElement(value) || this._isSelectorReference(value)
   }
-
-  private _isSelectorReference(selector: any): selector is SelectorReference<TSelector> {
-    const spec = this._spec ?? ((this.constructor as typeof CheckSettingsFluent)._spec as typeof this._spec)
+  protected _isSelectorReference(selector: any): selector is SelectorReference<TSelector> {
+    const spec = this._spec ?? ((this.constructor as typeof CheckSettingsAutomationFluent)._spec as typeof this._spec)
     return (
       spec.isSelector(selector) ||
       utils.types.isString(selector) ||
@@ -143,87 +473,19 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
         (utils.types.isString(selector.selector) || spec.isSelector(selector.selector)))
     )
   }
+  protected _isFrameReference(value: any): value is FrameReference<TSelector, TElement> {
+    return utils.types.isNumber(value) || utils.types.isString(value) || this._isElementReference(value)
+  }
 
   constructor(
-    settings?: CheckSettings<TElement, TSelector> | CheckSettingsFluent<TElement, TSelector>,
-    spec?: CheckSettingsSpec<TElement, TSelector>,
+    settings?: CheckSettingsAutomation<TElement, TSelector> | CheckSettingsAutomationFluent<TElement, TSelector>,
+    spec?: CheckSettingsAutomationSpec<TElement, TSelector>,
   ) {
-    if (!settings) return this
-    if (utils.types.instanceOf(settings, CheckSettingsFluent)) return settings
-
+    super(settings)
     this._spec = spec
-
-    if (settings.name) this.name(settings.name)
-    if (settings.region) this.region(settings.region)
-    if (settings.scrollRootElement) this.scrollRootElement(settings.scrollRootElement)
-    if (settings.frames) {
-      settings.frames.forEach(reference => {
-        if (!utils.types.isNull(reference)) this.frame(reference as ContextReference<TElement, TSelector>)
-      })
-    }
-    if (!utils.types.isNull(settings.fully)) this.fully(settings.fully)
-    if (settings.matchLevel) this.matchLevel(settings.matchLevel as MatchLevelEnum)
-    if (!utils.types.isNull(settings.useDom)) this.useDom(settings.useDom)
-    if (!utils.types.isNull(settings.sendDom)) this.sendDom(settings.sendDom)
-    if (!utils.types.isNull(settings.enablePatterns)) this.enablePatterns(settings.enablePatterns)
-    if (!utils.types.isNull(settings.ignoreDisplacements)) this.ignoreDisplacements(settings.ignoreDisplacements)
-    if (!utils.types.isNull(settings.ignoreCaret)) this.ignoreCaret(settings.ignoreCaret)
-    if (settings.ignoreRegions) {
-      settings.ignoreRegions.forEach(ignoreRegion => this.ignoreRegion(ignoreRegion))
-    }
-    if (settings.layoutRegions) {
-      settings.layoutRegions.forEach(layoutRegion => this.layoutRegion(layoutRegion))
-    }
-    if (settings.strictRegions) {
-      settings.strictRegions.forEach(strictRegion => this.strictRegion(strictRegion))
-    }
-    if (settings.contentRegions) {
-      settings.contentRegions.forEach(contentRegion => this.contentRegion(contentRegion))
-    }
-    if (settings.floatingRegions) {
-      settings.floatingRegions.forEach(floatingRegion =>
-        this.floatingRegion(floatingRegion as FloatingRegionReference<TElement, TSelector>),
-      )
-    }
-    if (settings.accessibilityRegions) {
-      settings.accessibilityRegions.forEach(accessibilityRegion =>
-        this.accessibilityRegion(accessibilityRegion as AccessibilityRegionReference<TElement, TSelector>),
-      )
-    }
-    if (!utils.types.isNull(settings.disableBrowserFetching))
-      this.disableBrowserFetching(settings.disableBrowserFetching)
-    if (!utils.types.isNull(settings.layoutBreakpoints)) this.layoutBreakpoints(settings.layoutBreakpoints)
-    if (settings.hooks) {
-      Object.entries(settings.hooks).forEach(([name, script]) => this.hook(name, script))
-    }
-    if (settings.visualGridOptions) {
-      Object.entries(settings.visualGridOptions).forEach(([key, value]) => this.visualGridOption(key, value))
-    }
-    if (settings.renderId) this.renderId(settings.renderId)
-    if (settings.pageId) this.pageId(settings.pageId)
-    if (settings.variationGroupId) this.variationGroupId(settings.variationGroupId)
-    if (!utils.types.isNull(settings.timeout)) this.timeout(settings.timeout)
-    if (!utils.types.isNull(settings.waitBeforeCapture)) this.waitBeforeCapture(settings.waitBeforeCapture)
-    if (!utils.types.isNull(settings.lazyLoad)) this.lazyLoad(settings.lazyLoad)
-    if (!utils.types.isNull(settings.webview)) this.webview(settings.webview)
   }
 
-  /** @undocumented */
-  name(name: string): this {
-    utils.guard.isString(name, {name: 'name'})
-    this._settings.name = name
-    return this
-  }
-  withName(name: string) {
-    return this.name(name)
-  }
-
-  region(region: RegionReference<TElement, TSelector> | LegacyRegion): this {
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    utils.guard.custom(region, value => this._isRegionReference(value), {name: 'region'})
-
+  region(region: RegionReference<TElement, TSelector>) {
     if (
       this._isSelectorReference(region) &&
       this._isSelectorReference(this._settings.region) &&
@@ -232,16 +494,12 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
       let lastSelector: any = this._settings.region
       while (lastSelector.shadow) lastSelector = lastSelector.shadow
       lastSelector.shadow = region
-    } else {
-      this._settings.region = region
+      return this
     }
-
-    return this
+    return super.region(region)
   }
 
   shadow(selector: SelectorReference<TSelector>): this {
-    utils.guard.custom(selector, value => this._isSelectorReference(value), {name: 'selector'})
-
     selector = utils.types.has(selector, 'selector') ? selector : {selector}
 
     if (!this._settings.region) {
@@ -271,256 +529,16 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
         ? {frame: contextOrFrame, scrollRootElement}
         : contextOrFrame
     if (!this._settings.frames) this._settings.frames = []
-    utils.guard.custom(context.frame, value => this._isFrameReference(value), {name: 'frame'})
-    utils.guard.custom(context.scrollRootElement, value => this._isElementReference(value), {
-      name: 'scrollRootElement',
-      strict: false,
-    })
     this._settings.frames.push(context)
     return this
   }
 
-  ignoreRegion(
-    region: RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion,
-  ): this {
-    if (!this._settings.ignoreRegions) this._settings.ignoreRegions = []
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    this._settings.ignoreRegions.push(region)
-    return this
-  }
-  ignoreRegions(
-    ...regions: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    regions.forEach(region => this.ignoreRegion(region))
-    return this
-  }
-  /** @deprecated */
-  ignore(region: RegionReference<TElement, TSelector> | LegacyRegion) {
-    return this.ignoreRegion(region)
-  }
-  /** @deprecated */
-  ignores(...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this {
-    return this.ignoreRegions(...regions)
-  }
-
-  layoutRegion(
-    region: RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion,
-  ): this {
-    if (!this._settings.layoutRegions) this._settings.layoutRegions = []
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    this._settings.layoutRegions.push(region)
-    return this
-  }
-  layoutRegions(
-    ...regions: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    regions.forEach(region => this.layoutRegion(region))
-    return this
-  }
-
-  strictRegion(
-    region: RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion,
-  ): this {
-    if (!this._settings.strictRegions) this._settings.strictRegions = []
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    this._settings.strictRegions.push(region)
-    return this
-  }
-  strictRegions(
-    ...regions: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    regions.forEach(region => this.strictRegion(region))
-    return this
-  }
-
-  contentRegion(
-    region: RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion,
-  ): this {
-    if (!this._settings.contentRegions) this._settings.contentRegions = []
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    this._settings.contentRegions.push(region)
-    return this
-  }
-  contentRegions(
-    ...regions: (RegionReference<TElement, TSelector> | CodedRegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    regions.forEach(region => this.contentRegion(region))
-    return this
-  }
-
-  floatingRegion(region: FloatingRegionReference<TElement, TSelector>): this
-  floatingRegion(region: LegacyFloatingRegionReference<TElement, TSelector>): this
-  floatingRegion(
-    region: RegionReference<TElement, TSelector> | LegacyRegion,
-    maxUpOffset?: number,
-    maxDownOffset?: number,
-    maxLeftOffset?: number,
-    maxRightOffset?: number,
-  ): this
-  floatingRegion(
-    region:
-      | FloatingRegionReference<TElement, TSelector>
-      | LegacyFloatingRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion,
-    maxUpOffset?: number,
-    maxDownOffset?: number,
-    maxLeftOffset?: number,
-    maxRightOffset?: number,
-  ): this {
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-
-    let floatingRegion: FloatingRegionReference<TElement, TSelector>
-    if (utils.types.has(region, 'region')) {
-      const {maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset, ...rest} = region as any
-      floatingRegion = {
-        offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
-        ...rest,
-      }
-    } else {
-      floatingRegion = {
-        region,
-        offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
-      }
-    }
-
-    utils.guard.custom(floatingRegion.region, value => this._isRegionReference(value), {
-      name: 'region',
-    })
-    utils.guard.isNumber(floatingRegion.offset.top, {name: 'maxUpOffset'})
-    utils.guard.isNumber(floatingRegion.offset.bottom, {name: 'maxDownOffset'})
-    utils.guard.isNumber(floatingRegion.offset.left, {name: 'maxLeftOffset'})
-    utils.guard.isNumber(floatingRegion.offset.right, {name: 'maxRightOffset'})
-    if (!this._settings.floatingRegions) this._settings.floatingRegions = []
-    this._settings.floatingRegions.push(floatingRegion)
-    return this
-  }
-  floatingRegions(
-    ...regions: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this
-  floatingRegions(maxOffset: number, ...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this
-  floatingRegions(
-    regionOrMaxOffset:
-      | FloatingRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion
-      | number,
-    ...regions: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    let maxOffset: number
-    if (utils.types.isNumber(regionOrMaxOffset)) {
-      maxOffset = regionOrMaxOffset
-    } else {
-      this.floatingRegion(regionOrMaxOffset as FloatingRegionReference<TElement, TSelector>)
-    }
-    regions.forEach(region => {
-      if (utils.types.has(region, 'region')) this.floatingRegion(region)
-      else this.floatingRegion(region, maxOffset, maxOffset, maxOffset, maxOffset)
-    })
-    return this
-  }
-  /** @deprecated */
-  floating(region: FloatingRegionReference<TElement, TSelector>): this
-  /** @deprecated */
-  floating(region: RegionReference<TElement, TSelector> | LegacyRegion): this
-  floating(
-    region: FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion,
-    maxUpOffset?: number,
-    maxDownOffset?: number,
-    maxLeftOffset?: number,
-    maxRightOffset?: number,
-  ): this {
-    if (utils.types.has(region, 'region')) return this.floatingRegion(region)
-    else return this.floatingRegion(region, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset)
-  }
-  /** @deprecated */
-  floatings(
-    ...regions: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this
-  /** @deprecated */
-  floatings(maxOffset: number, ...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]): this
-  floatings(
-    regionOrMaxOffset:
-      | FloatingRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion
-      | number,
-    ...regions: (FloatingRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this {
-    return this.floatingRegions(regionOrMaxOffset as number, ...(regions as RegionReference<TElement, TSelector>[]))
-  }
-
-  accessibilityRegion(region: AccessibilityRegionReference<TElement, TSelector>): this
-  accessibilityRegion(region: RegionReference<TElement, TSelector> | LegacyRegion, type?: AccessibilityRegionType): this
-  accessibilityRegion(
-    region: AccessibilityRegionReference<TElement, TSelector> | RegionReference<TElement, TSelector> | LegacyRegion,
-    type?: AccessibilityRegionType,
-  ): this {
-    if (utils.types.has(region, ['left', 'top', 'width', 'height'])) {
-      region = {x: region.left, y: region.top, width: region.width, height: region.height}
-    }
-    const accessibilityRegion = utils.types.has(region, 'region') ? region : {region, type}
-    utils.guard.custom(accessibilityRegion.region, value => this._isRegionReference(value), {
-      name: 'region',
-    })
-    utils.guard.isEnumValue(accessibilityRegion.type, AccessibilityRegionTypeEnum, {
-      name: 'type',
-      strict: false,
-    })
-    if (!this._settings.accessibilityRegions) this._settings.accessibilityRegions = []
-    this._settings.accessibilityRegions.push(accessibilityRegion)
-    return this
-  }
-  accessibilityRegions(
-    ...regions: (
-      | AccessibilityRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion
-    )[]
-  ): this
-  accessibilityRegions(
-    type: AccessibilityRegionType,
-    ...regions: (RegionReference<TElement, TSelector> | LegacyRegion)[]
-  ): this
-  accessibilityRegions(
-    regionOrType:
-      | AccessibilityRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion
-      | AccessibilityRegionType,
-    ...regions: (
-      | AccessibilityRegionReference<TElement, TSelector>
-      | RegionReference<TElement, TSelector>
-      | LegacyRegion
-    )[]
-  ): this {
-    let type: AccessibilityRegionType
-    if (utils.types.isEnumValue(regionOrType, AccessibilityRegionTypeEnum)) {
-      type = regionOrType
-    } else {
-      this.accessibilityRegion(regionOrType as AccessibilityRegionReference<TElement, TSelector>)
-    }
-    regions.forEach(region => {
-      if (utils.types.has(region, 'region')) this.accessibilityRegion(region)
-      else this.accessibilityRegion(region, type)
-    })
+  webview(webview?: string | boolean): this {
+    this._settings.webview = webview ?? true
     return this
   }
 
   scrollRootElement(scrollRootElement: ElementReference<TElement, TSelector>): this {
-    utils.guard.custom(scrollRootElement, value => this._isElementReference(value), {
-      name: 'scrollRootElement',
-    })
     if (this._settings.frames && this._settings.frames.length > 0) {
       const context = this._settings.frames[this._settings.frames.length - 1] as ContextReference<TElement, TSelector>
       context.scrollRootElement = scrollRootElement
@@ -530,74 +548,15 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   }
 
   fully(fully = true): this {
-    utils.guard.isBoolean(fully, {name: 'fully'})
     this._settings.fully = fully
     return this
   }
-
   /** @deprecated */
   stitchContent(stitchContent = true) {
     return this.fully(stitchContent)
   }
 
-  matchLevel(matchLevel: MatchLevel): this {
-    utils.guard.isEnumValue(matchLevel, MatchLevelEnum, {name: 'matchLevel'})
-    this._settings.matchLevel = matchLevel
-    return this
-  }
-
-  layout(): this {
-    this._settings.matchLevel = MatchLevelEnum.Layout
-    return this
-  }
-
-  exact(): this {
-    this._settings.matchLevel = MatchLevelEnum.Exact
-    return this
-  }
-
-  strict(): this {
-    this._settings.matchLevel = MatchLevelEnum.Strict
-    return this
-  }
-
-  content(): this {
-    this._settings.matchLevel = MatchLevelEnum.Content
-    return this
-  }
-
-  useDom(useDom = true): this {
-    utils.guard.isBoolean(useDom, {name: 'useDom'})
-    this._settings.useDom = useDom
-    return this
-  }
-
-  sendDom(sendDom = true): this {
-    utils.guard.isBoolean(sendDom, {name: 'sendDom'})
-    this._settings.sendDom = sendDom
-    return this
-  }
-
-  enablePatterns(enablePatterns = true): this {
-    utils.guard.isBoolean(enablePatterns, {name: 'enablePatterns'})
-    this._settings.enablePatterns = enablePatterns
-    return this
-  }
-
-  ignoreDisplacements(ignoreDisplacements = true): this {
-    utils.guard.isBoolean(ignoreDisplacements, {name: 'ignoreDisplacements'})
-    this._settings.ignoreDisplacements = ignoreDisplacements
-    return this
-  }
-
-  ignoreCaret(ignoreCaret = true): this {
-    utils.guard.isBoolean(ignoreCaret, {name: 'ignoreCaret'})
-    this._settings.ignoreCaret = ignoreCaret
-    return this
-  }
-
   disableBrowserFetching(disableBrowserFetching: boolean): this {
-    utils.guard.isBoolean(disableBrowserFetching, {name: 'disableBrowserFetching'})
     this._settings.disableBrowserFetching = disableBrowserFetching
     return this
   }
@@ -643,31 +602,16 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
   }
 
   renderId(renderId: string): this {
-    utils.guard.isString(renderId, {name: 'renderId'})
     this._settings.renderId = renderId
     return this
   }
 
-  pageId(pageId: string): this {
-    utils.guard.isString(pageId, {name: 'pageId'})
-    this._settings.pageId = pageId
-    return this
-  }
-
-  variationGroupId(variationGroupId: string): this {
-    utils.guard.isString(variationGroupId, {name: 'variationGroupId'})
-    this._settings.variationGroupId = variationGroupId
-    return this
-  }
-
   timeout(timeout: number): this {
-    utils.guard.isNumber(timeout, {name: 'timeout'})
     this._settings.timeout = timeout
     return this
   }
 
   waitBeforeCapture(waitBeforeCapture: number): this {
-    utils.guard.isNumber(waitBeforeCapture, {name: 'waitBeforeCapture'})
     this._settings.waitBeforeCapture = waitBeforeCapture
     return this
   }
@@ -677,58 +621,63 @@ export class CheckSettingsFluent<TElement = unknown, TSelector = unknown> {
     return this
   }
 
-  webview(option?: string | boolean): this {
-    this._settings.webview = option ?? true
-    return this
-  }
-
   /** @internal */
-  toObject(): CheckSettings<TElement, TSelector> {
-    return this._settings
-  }
-
-  /** @internal */
-  toJSON(): core.CheckSettings<TElement, TSelector, 'classic' | 'ufg'> {
-    return dropUndefinedProperties({
-      name: this._settings.name,
-      region: this._settings.region,
-      frames: this._settings.frames,
-      scrollRootElement: this._settings.scrollRootElement,
-      fully: this._settings.fully,
-      matchLevel: this._settings.matchLevel,
-      useDom: this._settings.useDom,
-      sendDom: this._settings.sendDom,
-      enablePatterns: this._settings.enablePatterns,
-      ignoreDisplacements: this._settings.ignoreDisplacements,
-      ignoreCaret: this._settings.ignoreCaret,
-      ignoreRegions: this._settings.ignoreRegions,
-      layoutRegions: this._settings.layoutRegions,
-      strictRegions: this._settings.strictRegions,
-      contentRegions: this._settings.contentRegions,
-      floatingRegions: this._settings.floatingRegions,
-      accessibilityRegions: this._settings.accessibilityRegions,
-      disableBrowserFetching: this._settings.disableBrowserFetching,
-      layoutBreakpoints: this._settings.layoutBreakpoints,
-      ufgOptions: this._settings.visualGridOptions,
-      hooks: this._settings.hooks,
-      pageId: this._settings.pageId,
-      lazyLoad: this._settings.lazyLoad,
-      waitBeforeCapture: this._settings.waitBeforeCapture,
-      retryTimeout: this._settings.timeout,
-      userCommandId: this._settings.variationGroupId,
-      webview: this._settings.webview,
-    })
-  }
-
-  /** @internal */
-  toString(): string {
-    return utils.general.toString(this)
+  toJSON(): {target: undefined; settings: CoreCheckSettingsAutomation<TElement, TSelector>} {
+    return {
+      target: undefined,
+      settings: utils.general.removeUndefinedProps({
+        name: this._settings.name,
+        region: this._settings.region,
+        frames: this._settings.frames,
+        webview: this._settings.webview,
+        scrollRootElement: this._settings.scrollRootElement,
+        fully: this._settings.fully,
+        matchLevel: this._settings.matchLevel,
+        useDom: this._settings.useDom,
+        sendDom: this._settings.sendDom,
+        enablePatterns: this._settings.enablePatterns,
+        ignoreDisplacements: this._settings.ignoreDisplacements,
+        ignoreCaret: this._settings.ignoreCaret,
+        ignoreRegions: this._settings.ignoreRegions,
+        layoutRegions: this._settings.layoutRegions,
+        strictRegions: this._settings.strictRegions,
+        contentRegions: this._settings.contentRegions,
+        floatingRegions: this._settings.floatingRegions,
+        accessibilityRegions: this._settings.accessibilityRegions,
+        disableBrowserFetching: this._settings.disableBrowserFetching,
+        layoutBreakpoints: this._settings.layoutBreakpoints,
+        ufgOptions: this._settings.visualGridOptions,
+        hooks: this._settings.hooks,
+        pageId: this._settings.pageId,
+        lazyLoad: this._settings.lazyLoad,
+        waitBeforeCapture: this._settings.waitBeforeCapture,
+        retryTimeout: this._settings.timeout,
+        userCommandId: this._settings.variationGroupId,
+      }),
+    }
   }
 }
 
-function dropUndefinedProperties(object: Record<string, any>) {
-  return Object.entries(object).reduce(
-    (object, [key, value]) => (value !== undefined ? Object.assign(object, {[key]: value}) : object),
-    {} as any,
-  )
+export type TargetImage = {
+  image(image: Buffer | URL | string): CheckSettingsImageFluent
+  buffer(imageBuffer: Buffer): CheckSettingsImageFluent
+  base64(imageBase64: string): CheckSettingsImageFluent
+  path(imagePath: string): CheckSettingsImageFluent
+  url(imageUrl: URL | string): CheckSettingsImageFluent
 }
+
+export type TargetAutomation<TElement, TSelector> = {
+  window(): CheckSettingsAutomationFluent<TElement, TSelector>
+  region(
+    region: RegionReference<TElement, TSelector> | LegacyRegion,
+  ): CheckSettingsAutomationFluent<TElement, TSelector>
+  frame(context: ContextReference<TElement, TSelector>): CheckSettingsAutomationFluent<TElement, TSelector>
+  frame(
+    frame: FrameReference<TElement, TSelector>,
+    scrollRootElement?: ElementReference<TElement, TSelector>,
+  ): CheckSettingsAutomationFluent<TElement, TSelector>
+  shadow(selector: SelectorReference<TSelector>): CheckSettingsAutomationFluent<TSelector>
+  webview(webview?: string | boolean): CheckSettingsAutomationFluent<TElement, TSelector>
+}
+
+export type Target<TElement, TSelector> = TargetImage & TargetAutomation<TElement, TSelector>

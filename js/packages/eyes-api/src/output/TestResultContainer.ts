@@ -1,4 +1,4 @@
-import type * as core from '@applitools/core'
+import {CoreSpec, CoreTestResultContainer} from '../Core'
 import {TestResults, TestResultsData} from './TestResults'
 import {
   AndroidDeviceInfo,
@@ -22,14 +22,11 @@ export type TestResultContainer = {
 }
 
 export class TestResultContainerData implements Required<TestResultContainer> {
-  private _container: core.TestResultContainer<'classic' | 'ufg'>
-  private _deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
+  private _container: CoreTestResultContainer
+  private _deleteTest: CoreSpec['deleteTest']
 
   /** @internal */
-  constructor(options?: {
-    container: core.TestResultContainer<'classic' | 'ufg'>
-    deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
-  }) {
+  constructor(options?: {container: CoreTestResultContainer; deleteTest: CoreSpec['deleteTest']}) {
     if (!options) return this
     this._container = options.container
     this._deleteTest = options.deleteTest
@@ -66,7 +63,7 @@ export class TestResultContainerData implements Required<TestResultContainer> {
   }
 
   /** @internal */
-  toJSON(): core.TestResultContainer<'classic' | 'ufg'> {
+  toJSON(): CoreTestResultContainer {
     return this._container
   }
 

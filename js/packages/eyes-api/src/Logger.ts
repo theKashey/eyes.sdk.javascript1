@@ -18,7 +18,7 @@ export class Logger {
   private _makeLogger() {
     return makeLogger({
       handler: this._handler instanceof LogHandlerData ? this._handler.toJSON() : this._handler,
-      level: this._show ? 'info' : 'silent',
+      level: this._show || utils.general.getEnvValue('SHOW_LOGS', 'boolean') ? 'info' : 'silent',
       label: this._label,
     })
   }

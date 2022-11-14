@@ -1,0 +1,33 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "types",
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "allowJs": true,
+
+    "module": "commonjs",
+    "moduleResolution": "node16",
+    "target": "es2019",
+    "lib": ["es2019", "es2020.promise", "es2020.bigint", "es2020.string"],
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "stripInternal": false,
+    "removeComments": false,
+    "plugins": [{
+      "transform": "@applitools/api-extractor",
+      "afterDeclarations": true,
+      "rootFile": "./index.ts",
+      "stripPrivate": true,
+      "stripProtected": true,
+      "stripInternal": true
+    }]
+  },
+  "ts-node": {
+    "transpileOnly": true
+  },
+}

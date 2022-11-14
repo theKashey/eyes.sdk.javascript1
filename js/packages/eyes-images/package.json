@@ -25,40 +25,66 @@
   "bugs": {
     "url": "https://github.com/applitools/eyes.sdk.javascript1/issues"
   },
-  "directories": {
-    "example": "./example",
-    "lib": "./lib",
-    "test": "./test"
+  "aliases": [
+    "images"
+  ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./dist/*": "./dist/*.js",
+    "./package.json": "./package.json"
   },
-  "main": "./index.js",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
   "dependencies": {
-    "@applitools/eyes-sdk-core": "12.17.4"
+    "@applitools/core": "1.2.0",
+    "@applitools/eyes-api": "1.9.0"
   },
   "devDependencies": {
+    "@applitools/api-extractor": "^1.2.11",
     "@applitools/bongo": "^2.1.6",
-    "@applitools/test-utils": "1.0.0",
-    "assert-rejects": "^1.0.0",
-    "axios": "^0.21.1",
-    "eslint": "^7.9.0",
+    "@applitools/test-utils": "^1.5.2",
+    "@types/node": "12",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",
+    "eslint-plugin-no-only-tests": "^3.0.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^4.3.7",
-    "mocha": "^8.0.1",
-    "prettier": "1.19.0"
+    "mocha": "9",
+    "mocha-multi": "^1.1.6",
+    "prettier": "2.7.1",
+    "ts-node": "^10.9.1",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.8.4"
   },
   "scripts": {
-    "lint": "eslint . --ext .js",
-    "test": "mocha --no-timeouts --parallel --jobs 15 \"test/**/*.spec.js\"",
-    "preversion": "bongo preversion && yarn test",
-    "version": "bongo version",
-    "postversion": "bongo postversion --skip-release-notification",
+    "lint": "eslint '**/*.ts'",
+    "build": "ttsc",
+    "generate:tests": "coverage-tests generate ./test/coverage/config.js --name 'eyes-images'",
+    "test": "yarn test:coverage",
+    "test:sanity": "echo 'create sanity suite'",
+    "test:coverage": "yarn generate:tests && APPLITOOLS_BATCH_NAME='JS Coverage Tests: eyes-images' APPLITOOLS_BATCH_ID=$(uuidgen) mocha --exit --config .mocharc.cvg.js",
+    "report": "coverage-tests report https://raw.githubusercontent.com/applitools/sdk.coverage.tests/master/js/config.js --name 'eyes-images'",
     "deps": "bongo deps",
-    "prepublish:setup": "echo 'no setup'"
+    "gh:test": "gh workflow run test.yml --ref $(git rev-parse --abbrev-ref HEAD) -f packages='images' -f links='types test-utils core-base core eyes-api utils'",
+    "gh:publish": "gh workflow run publish-images.yml --ref $(git rev-parse --abbrev-ref HEAD)",
+    "preversion": "bongo preversion",
+    "version": "bongo version",
+    "postversion": "bongo postversion --skip-release-notification"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">=12.13.0"
   },
   "husky": {
     "hooks": {

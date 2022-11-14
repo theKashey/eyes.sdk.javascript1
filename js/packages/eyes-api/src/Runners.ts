@@ -1,4 +1,4 @@
-import type * as core from '@applitools/core'
+import {CoreSpec, CoreEyesManager, CoreEyes, CoreConfig} from './Core'
 import {type Logger} from '@applitools/logger'
 import {NewTestError} from './errors/NewTestError'
 import {DiffsFoundError} from './errors/DiffsFoundError'
@@ -9,16 +9,10 @@ import {TestResultsSummaryData} from './output/TestResultsSummary'
 import {Eyes} from './Eyes'
 import * as utils from '@applitools/utils'
 
-type EyesRunnerSpec<TDriver = unknown, TElement = unknown, TSelector = unknown> = core.Core<
-  TDriver,
-  TElement,
-  TSelector
->
-
 export abstract class EyesRunner {
-  protected _spec: EyesRunnerSpec<unknown, unknown, unknown>
+  protected _spec: CoreSpec
 
-  private _manager: core.EyesManager<unknown, unknown, unknown, 'classic' | 'ufg'>
+  private _manager: CoreEyesManager
   private _eyes: Eyes<unknown, unknown, unknown>[] = []
 
   /** @internal */
@@ -27,7 +21,7 @@ export abstract class EyesRunner {
   /** @internal */
   attach<TDriver, TElement, TSelector>(
     eyes: Eyes<TDriver, TElement, TSelector>,
-    spec: EyesRunnerSpec<TDriver, TElement, TSelector>,
+    spec: CoreSpec<TDriver, TElement, TSelector>,
   ) {
     if (!this._spec) this._spec = spec
     this._eyes.push(eyes)
@@ -36,10 +30,10 @@ export abstract class EyesRunner {
   /** @internal */
   async openEyes<TDriver, TElement, TSelector>(options: {
     target: TDriver
-    config?: core.Config<TElement, TSelector, 'classic' | 'ufg'>
+    config?: CoreConfig<TElement, TSelector>
     logger?: Logger
     on?: (name: string, data?: Record<string, any>) => void
-  }): Promise<core.Eyes<TDriver, TElement, TSelector, 'classic' | 'ufg'>> {
+  }): Promise<CoreEyes<TDriver, TElement, TSelector>> {
     if (!this._manager) this._manager = await this._spec.makeManager(this.config)
 
     return await this._manager.openEyes(options)

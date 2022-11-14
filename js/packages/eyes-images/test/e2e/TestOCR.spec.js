@@ -2,18 +2,18 @@
 
 const fs = require('fs')
 const assert = require('assert')
-const {Eyes, ConsoleLogHandler, GeneralUtils} = require('../../index')
+const utils = require('@applitools/utils')
+const {Eyes} = require('../../dist')
 
 let /** @type {Eyes} */ eyes
 describe('EyesImages.OCR', function() {
   before(function() {
     eyes = new Eyes()
-    // eyes.setLogHandler(new ConsoleLogHandler(true))
     // eyes.setProxy('http://localhost:8888');
   })
 
   beforeEach(async function() {
-    const testName = `${this.test.title}_${GeneralUtils.randomAlphanumeric()}`
+    const testName = `${this.test.title}_${utils.general.guid()}`
     await eyes.open(this.test.parent.title, testName)
   })
 
@@ -51,9 +51,10 @@ describe('EyesImages.OCR', function() {
 
     assert.deepStrictEqual(regions, {
       applitools: [
-        {x: 428, y: 574, width: 142, height: 12, text: "'Applitools transformed on"},
-        {x: 637, y: 574, width: 176, height: 11, text: "'Applitools took us trom 30 hours"},
-        {x: 188, y: 606, width: 168, height: 12, text: "they've been singing Applitools'"},
+        {x: 141, y: 15, width: 86, height: 20, text: 'applitools'},
+        {x: 428, y: 574, width: 56, height: 12, text: "'Applitools"},
+        {x: 637, y: 574, width: 127, height: 11, text: "'Applitools took us trom"},
+        {x: 260, y: 606, width: 96, height: 12, text: "singing Applitools'"},
       ],
       customers: [{x: 560, y: 21, width: 63, height: 8, text: 'CUSTOMERS'}],
     })

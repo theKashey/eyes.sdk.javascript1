@@ -1,5 +1,5 @@
-import type * as core from '@applitools/core'
 import * as utils from '@applitools/utils'
+import {CoreSpec, CoreTestResult} from '../Core'
 import {TestResultsStatus, TestResultsStatusEnum} from '../enums/TestResultsStatus'
 import {RectangleSize, RectangleSizeData} from '../input/RectangleSize'
 import {TestAccessibilityStatus} from './TestAccessibilityStatus'
@@ -40,14 +40,11 @@ export type TestResults = {
 }
 
 export class TestResultsData implements Required<TestResults> {
-  private _result: core.TestResult<'classic' | 'ufg'> = {}
-  private readonly _deleteTest: core.Core<unknown, unknown, unknown>['deleteTest']
+  private _result: CoreTestResult = {}
+  private readonly _deleteTest: CoreSpec['deleteTest']
 
   /** @internal */
-  constructor(options?: {
-    result?: core.TestResult<'classic' | 'ufg'>
-    deleteTest?: core.Core<unknown, unknown, unknown>['deleteTest']
-  }) {
+  constructor(options?: {result?: CoreTestResult; deleteTest?: CoreSpec['deleteTest']}) {
     if (!options) return this
     this._deleteTest = options.deleteTest
     this._result = options.result
@@ -404,7 +401,7 @@ export class TestResultsData implements Required<TestResults> {
   }
 
   /** @internal */
-  toJSON(): core.TestResult<'classic' | 'ufg'> {
+  toJSON(): CoreTestResult {
     return this._result
   }
 

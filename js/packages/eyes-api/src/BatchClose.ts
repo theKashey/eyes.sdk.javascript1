@@ -1,4 +1,5 @@
-import type * as core from '@applitools/core'
+import {type Logger} from '@applitools/logger'
+import {type MaybeArray} from '@applitools/utils'
 import * as utils from '@applitools/utils'
 import {ProxySettings} from './input/ProxySettings'
 
@@ -9,7 +10,12 @@ type BatchCloseOptions = {
   proxy?: ProxySettings
 }
 
-type BatchCloseSpec = Pick<core.Core<unknown, unknown, unknown>, 'closeBatch'>
+type BatchCloseSpec = {
+  closeBatch(options: {
+    settings: MaybeArray<{serverUrl?: string; apiKey?: string; proxy?: ProxySettings; batchId: string}>
+    logger?: Logger
+  }): Promise<void>
+}
 
 export function closeBatch(spec: BatchCloseSpec): (options: BatchCloseOptions) => Promise<void> {
   return (settings: BatchCloseOptions) => {

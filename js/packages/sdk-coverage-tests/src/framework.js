@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const fs = require('fs')
 
 function getCallSite(elevation = 1) {
   const originalPrepareStackTrace = Error.prepareStackTrace
@@ -10,7 +11,7 @@ function getCallSite(elevation = 1) {
   return callSite
 }
 
-function useFramework() {
+function useFramework({fixturesPath = ''} = {}) {
   const context = {
     testsConfig: null,
     tests: {},
@@ -21,6 +22,7 @@ function useFramework() {
     api: {
       test: addTest,
       config: setConfig,
+      fixture: createFixture,
     },
   }
 
@@ -43,6 +45,14 @@ function useFramework() {
       console.log(message)
     }
     context.testsConfig = config
+  }
+
+  function createFixture(path) {
+    const fixturePath = new String(fixturesPath + path)
+    fixturePath.toPath = () => fixturePath.toString()
+    fixturePath.toBase64 = () => fs.readFileSync(fixturePath.toString()).toString('base64')
+    fixturePath.toText = () => fs.readFileSync(fixturePath.toString()).toString()
+    return fixturePath
   }
 }
 

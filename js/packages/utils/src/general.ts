@@ -85,6 +85,13 @@ export function toUriEncoding(url: string): string {
   })
 }
 
+export function removeUndefinedProps<TObject extends Record<string, any>>(object: TObject): TObject {
+  return Object.entries(object).reduce(
+    (object, [key, value]) => (value !== undefined ? Object.assign(object, {[key]: value}) : object),
+    {} as any,
+  )
+}
+
 export function absolutizeUrl(url: string, baseUrl: string): string {
   return new URL(url, baseUrl).href
 }

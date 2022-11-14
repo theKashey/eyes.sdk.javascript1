@@ -1,8 +1,8 @@
 {
   "name": "@applitools/sdk-coverage-tests",
-  "version": "2.3.20",
+  "version": "2.7.0",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.12.0"
   },
   "description": "Coverage Tests for Applitools SDKs",
   "author": "Applitools <team@applitools.com>",
@@ -40,14 +40,15 @@
     "@babel/core": "7.12.10",
     "chalk": "4.1.1",
     "handlebars": "4.7.7",
-    "node-fetch": "2.6.1",
+    "jszip": "3.10.1",
+    "node-fetch": "2.6.7",
     "prettier": "2.3.0",
     "sync-fetch": "0.3.0",
     "xml-js": "1.6.11",
     "yargs": "16.0.3"
   },
   "devDependencies": {
-    "@applitools/bongo": "^2.1.6",
+    "@applitools/bongo": "^2.2.0",
     "@typescript-eslint/parser": "4.2.0",
     "eslint": "^7.9.0",
     "eslint-plugin-mocha-no-only": "^1.1.1",

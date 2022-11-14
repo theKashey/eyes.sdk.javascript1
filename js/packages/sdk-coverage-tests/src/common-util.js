@@ -61,7 +61,7 @@ function toPascalCase(string) {
 }
 
 function loadFile(path) {
-  return isUrl(path) ? fetchSync(path).text() : fs.readFileSync(path).toString()
+  return isUrl(path) ? fetchSync(path).buffer() : fs.readFileSync(path)
 }
 
 function runCode(code, context) {
@@ -80,7 +80,7 @@ function runCode(code, context) {
 }
 
 function requireUrl(url, cache = {}) {
-  const code = loadFile(url)
+  const code = loadFile(url).toString()
   const module = {exports: {}}
   cache[url] = module
   runCode(code, {

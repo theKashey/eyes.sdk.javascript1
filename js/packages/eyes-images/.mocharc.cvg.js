@@ -1,15 +1,15 @@
 const {mochaGrep} = require('@applitools/test-utils')
 
-const tags = ['image', 'chrome', 'chromium', 'all-cookies']
+const tags = ['image']
 
 module.exports = {
   spec: [
     './test/generic/*.spec.js',
-    './node_modules/@applitools/sdk-shared/coverage-tests/custom/**/*.spec.js',
   ],
   parallel: true,
-  jobs: 10,
+  jobs: 15,
   timeout: 0,
-  reporter: 'spec-xunit-file',
+  reporter: 'mocha-multi',
+  reporterOptions: ['spec=-,xunit=coverage-test-report.xml'],
   grep: mochaGrep({tags}),
 }

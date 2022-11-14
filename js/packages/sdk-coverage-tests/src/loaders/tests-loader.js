@@ -26,11 +26,10 @@ function loadOverrides(overrides) {
   }
 }
 
-async function loadTests(path) {
-  const code = transformTests(loadFile(path))
-  const {context, api} = useFramework()
-  runCode(code, api)
-  return context
+async function loadTests(path, framework) {
+  const code = transformTests(loadFile(path).toString())
+  runCode(code, framework.api)
+  return framework.context
 }
 
 function transformTests(code) {
@@ -81,11 +80,12 @@ function transformTests(code) {
 async function testsLoader({
   tests: testsPath,
   overrides,
+  fixtures,
   ignoreSkip,
   ignoreSkipEmit,
   emitOnly = [],
 }) {
-  const {tests, testsConfig} = await loadTests(testsPath)
+  const {tests, testsConfig} = await loadTests(testsPath, useFramework({fixturesPath: fixtures}))
   const overrideTests = loadOverrides(overrides)
   const processedTests = Object.entries(tests).reduce((tests, [testName, {variants, ...test}]) => {
     test.group = testName
