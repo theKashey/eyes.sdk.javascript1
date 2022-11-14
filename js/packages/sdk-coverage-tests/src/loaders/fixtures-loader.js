@@ -8,7 +8,7 @@ const {isUrl} = require('../common-util')
 async function fixturesLoader({fixtures: fixturesPath}) {
   if (!isUrl(fixturesPath)) return fixturesPath
 
-  const localFixturePath = path.resolve(os.tmpdir(), 'fixtures')
+  const localFixturePath = path.resolve(os.homedir(), '.applitools', 'fixtures')
 
   const buffer = await (await fetch(fixturesPath)).buffer()
   const content = await zip.loadAsync(buffer, {createFolders: true})
