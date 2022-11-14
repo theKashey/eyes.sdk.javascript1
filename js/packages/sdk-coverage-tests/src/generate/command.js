@@ -20,7 +20,7 @@ async function generate(options) {
       ...options,
     }
 
-    if (config.fixturesPath && isUrl(config.fixturesPath)) {
+    if (config.fixtures && isUrl(config.fixtures)) {
       config.fixtures = await fixturesLoader(config)
     }
 
