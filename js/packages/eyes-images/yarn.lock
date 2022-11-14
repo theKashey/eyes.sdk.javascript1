@@ -185,10 +185,10 @@
     jpeg-js "0.4.4"
     png-async "0.9.4"
 
-"@applitools/sdk-coverage-tests@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.7.0.tgz#f7a7ea0d78fc891ae1f53c33a5a00fba4e9733df"
-  integrity sha512-C6fHqXKR5N/gcLF8Z/7jBW5RCtPDB1S9d1yd2iLZ25i3VnUjHTyTnciuIPgjzJoOdx8hlbrVK+av9hJsUBOpIw==
+"@applitools/sdk-coverage-tests@^2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@applitools/sdk-coverage-tests/-/sdk-coverage-tests-2.7.1.tgz#21fdbd428ce418154f0eb87ee0d4e9fd109de0e5"
+  integrity sha512-GAuk+O4u3kWl5gSM90T0j708SbZIgYxY/sY3RO3uynHo2mxj+X+JATgClvxn2tgZgy2CiTqhTasm6s7Eh9SlDA==
   dependencies:
     "@azure/storage-blob" "12.2.0-preview.1"
     "@babel/core" "7.12.10"

@@ -98,7 +98,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::Running tests"
-        if [ ! -z "${{inputs.test-type}}" ]; then npm run test:${{inputs.test-type}}; else npm run test --if-present; fi
+        if [ ! -z "${{inputs.test-type}}" ]; then npm run test:${{inputs.test-type}}; else npm run test --if-present || ls -F /tmp /tmp/fixtures; fi
         echo "::endgroup::"
 
         echo "::group::Sending reports"
