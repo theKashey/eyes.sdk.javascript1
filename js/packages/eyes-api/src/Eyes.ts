@@ -190,9 +190,6 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
     viewportSizeOrSessionType?: RectangleSize | SessionType,
     sessionType?: SessionType,
   ): Promise<TDriver | void> {
-    if (this._config.isDisabled) return this._driver
-    const config = this._config.toJSON()
-
     if (this._spec.isDriver?.(driverOrConfigOrAppName)) {
       this._driver = driverOrConfigOrAppName
     } else {
@@ -201,6 +198,10 @@ export class Eyes<TDriver = unknown, TElement = unknown, TSelector = unknown> {
       testNameOrViewportSize = configOrAppNameOrTestName as string
       configOrAppNameOrTestName = driverOrConfigOrAppName
     }
+
+    if (this._config.isDisabled) return this._driver
+
+    const config = this._config.toJSON()
 
     if (utils.types.instanceOf(configOrAppNameOrTestName, ConfigurationData)) {
       const transformedConfig = configOrAppNameOrTestName.toJSON()

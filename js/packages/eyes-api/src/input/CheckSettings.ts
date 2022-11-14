@@ -358,6 +358,7 @@ export class CheckSettingsImageFluent extends CheckSettingsBaseFluent {
     return new this().image(imageUrl)
   }
 
+  protected _settings: CheckSettingsImage
   protected _target: Image
 
   constructor(settings?: CheckSettingsImage | CheckSettingsImageFluent, target?: Image) {
@@ -454,7 +455,7 @@ export class CheckSettingsAutomationFluent<TElement = unknown, TSelector = unkno
     return new this().webview(webview)
   }
 
-  protected _settings: CheckSettingsAutomation<TElement, TSelector> = {}
+  protected _settings: CheckSettingsAutomation<TElement, TSelector>
 
   protected static readonly _spec: CheckSettingsAutomationSpec<any, any>
   protected _spec: CheckSettingsAutomationSpec<TElement, TSelector>
