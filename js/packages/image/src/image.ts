@@ -207,7 +207,7 @@ function isPngBuffer(buffer: Buffer) {
 }
 
 function isJpegBuffer(buffer: Buffer) {
-  return buffer.slice(6, 10).toString('ascii') === 'JFIF'
+  return ['JFIF', 'Exif'].includes(buffer.slice(6, 10).toString('ascii'))
 }
 
 function isBmpBuffer(buffer: Buffer) {

@@ -27,8 +27,8 @@ export async function waitForLazyLoad<TDriver extends Driver<unknown, unknown, u
   }
 
   await driver.currentContext.executePoll(lazyLoadScript, {
-    main: arg,
-    poll: undefined,
+    main: [arg],
+    poll: [],
     executionTimeout: 5 * 60 * 1000,
     pollTimeout: settings.pollTimeout ?? settings.waitingTime ?? 2000,
   })
