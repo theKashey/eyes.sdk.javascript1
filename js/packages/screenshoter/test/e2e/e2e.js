@@ -95,7 +95,7 @@ exports.makeDriver = async function makeDriver({
   console.log(`makeDriver called for worker #${process.env.MOCHA_WORKER_ID}`, workerId)
   const androidEmulatorIds = process.env.ANDROID_EMULATOR_UDID
     ? process.env.ANDROID_EMULATOR_UDID.split(',')
-    : ['emulator-5554']
+    : ['emulator-5555']
   const iosSimulatorIds = process.env.IOS_SIMULATOR_UDID ? process.env.IOS_SIMULATOR_UDID.split(',') : []
   const apps = {
     android: 'https://applitools.jfrog.io/artifactory/Examples/android/1.3/app-debug.apk',

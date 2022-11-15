@@ -203,20 +203,24 @@ export class Element<TDriver, TContext, TElement, TSelector> {
     } catch (err) {
       this._logger.warn(`Unable to get the attribute 'contentSize' due to the following error: '${err.message}'`)
     }
-    const type = await this.getAttribute('type')
-    if (type === 'XCUIElementTypeScrollView') {
-      const elementRegion = await this._spec.getElementRegion(this.driver.target, this.target)
-      const [childElement] = await this.driver.elements({
-        type: 'xpath',
-        selector: '//XCUIElementTypeScrollView[1]/*', // We cannot be sure that our element is the first one
-      })
-      const childElementRegion = await this._spec.getElementRegion(this.driver.target, childElement.target)
-      return {
-        ...elementRegion,
-        height: childElementRegion.y + childElementRegion.height - elementRegion.y,
+    if (this.driver.isIOS) {
+      const type = await this.getAttribute('type')
+      if (type === 'XCUIElementTypeScrollView') {
+        const elementRegion = await this._spec.getElementRegion(this.driver.target, this.target)
+        const [childElement] = await this.driver.elements({
+          type: 'xpath',
+          selector: '//XCUIElementTypeScrollView[1]/*', // We cannot be sure that our element is the first one
+        })
+        const childElementRegion = await this._spec.getElementRegion(this.driver.target, childElement.target)
+        return {
+          ...elementRegion,
+          height: childElementRegion.y + childElementRegion.height - elementRegion.y,
+        }
       }
-    } else return this._spec.getElementRegion(this.driver.target, this.target)
+    }
+    return this._spec.getElementRegion(this.driver.target, this.target)
   }
+
   async getContentSize(
     options: {lazyLoad?: {scrollLength?: number; waitingTime?: number; maxAmountToScroll?: number}} = {},
   ): Promise<Size> {
