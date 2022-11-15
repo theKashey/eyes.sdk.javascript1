@@ -326,11 +326,11 @@ export async function performAction(driver: Driver, steps: any[]): Promise<void>
 }
 export async function getCurrentWorld(driver: Driver): Promise<string> {
   const world = await driver.getContext()
-  return utils.types.isString(world) ? world : world.id
+  return utils.types.isString(world) ? world : (world as {id: string}).id
 }
 export async function getWorlds(driver: Driver): Promise<string[]> {
   const worlds = await driver.getContexts()
-  return worlds.map(world => (utils.types.isString(world) ? world : world.id))
+  return worlds.map(world => (utils.types.isString(world) ? world : (world as {id: string}).id))
 }
 export async function switchWorld(driver: Driver, id: string): Promise<void> {
   await driver.switchContext(id)
