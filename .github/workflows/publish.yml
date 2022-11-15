@@ -163,7 +163,7 @@ jobs:
           workflow: publish-test-utils.yml
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).test-utils.version}}"}'
   test-server:
-    needs: [ setup, utils ]
+    needs: [ setup, logger, utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).test-server && !failure() && !cancelled()}}
     name: test-server
     runs-on: ubuntu-latest
@@ -178,7 +178,16 @@ jobs:
 
   # CORE
   core-base:
-    needs: [ setup, image, logger, req, utils, test-utils ]
+    needs:
+      [
+        setup,
+        image,
+        logger,
+        req,
+        utils,
+        test-server,
+        test-utils
+      ]
     if: ${{fromJSON(needs.setup.outputs.packages).core-base && !failure() && !cancelled()}}
     name: core-base
     runs-on: ubuntu-latest
@@ -387,6 +396,19 @@ jobs:
           inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).spec-webdriverio.version}}"}'
 
   # JS SDKS
+  images:
+    needs: [ setup, core, api, test-utils ]
+    if: ${{fromJSON(needs.setup.outputs.packages).images && !failure() && !cancelled()}}
+    name: images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      - name: Run remote workflow
+        uses: ./.github/actions/run
+        with:
+          workflow: publish-images.yml
+          inputs: '{"version": "${{fromJSON(needs.setup.outputs.packages).images.version}}"}'
   playwright:
     needs: [ setup, core, api, spec-playwright, test-utils ]
     if: ${{fromJSON(needs.setup.outputs.packages).playwright && !failure() && !cancelled()}}
@@ -503,6 +525,7 @@ jobs:
     needs:
       [
         setup,
+        core,
         api,
         universal,
         logger,
