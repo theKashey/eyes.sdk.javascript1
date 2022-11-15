@@ -13,6 +13,8 @@ async function fixturesLoader({fixtures: fixturesPath}) {
   const buffer = await (await fetch(fixturesPath)).buffer()
   const content = await zip.loadAsync(buffer, {createFolders: true})
 
+  await fs.mkdir(localFixturePath, {recursive: true})
+
   for (const [filename, info] of Object.entries(content.files)) {
     const fullPath = path.join(localFixturePath, filename)
     if (info.dir) await fs.mkdir(fullPath, {recursive: true})
