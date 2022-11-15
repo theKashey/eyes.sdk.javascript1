@@ -11,6 +11,7 @@ Apollo SDK:
 "@applitools/eyes-universal":
   feature:
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - 
 "@applitools/eyes-selenium":
@@ -19,6 +20,7 @@ Apollo SDK:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
     - Fix dontCloseBatches mapping
@@ -28,6 +30,7 @@ Apollo SDK:
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Mark target element with `data-applitools-scroll` attribute before capture dom
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
 "@applitools/eyes-playwright":
@@ -37,6 +40,7 @@ Apollo SDK:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -54,6 +58,7 @@ Apollo SDK:
     - Drop support for Android 9 and Android 10 specific devices
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed incorrect calculation of the target element position.
     - Fixed the issue with screenshots being taken on chrome-emulated devices
@@ -64,6 +69,7 @@ Apollo SDK:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed issue with ufg renders failing intermittently
     - Fixed error that was happening when test results were deleted
@@ -78,6 +84,7 @@ Apollo SDK:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed incorrect calculation of the target element position.
 "@applitools/eyes-nightwatch":
@@ -88,6 +95,7 @@ Apollo SDK:
     - Mark target element with `data-applitools-scroll` attribute before capture dom
     - Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed issue with logs not being saved/written
     - Fixed issue with ufg renders failing intermittently
@@ -98,6 +106,7 @@ Apollo SDK:
   feature:
     - Added new selector extensions `child` and `fallback`
     - Use user agent metadata to improve browser environment detection logic
+    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - 
 "@applitools/eyes-storybook":

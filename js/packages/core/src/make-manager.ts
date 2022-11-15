@@ -21,7 +21,7 @@ type Options<TDriver, TContext, TElement, TSelector> = {
 export function makeMakeManager<TDriver, TContext, TElement, TSelector>({
   spec,
   core,
-  concurrency: defaultConcurrency,
+  concurrency: defaultConcurrency = utils.general.getEnvValue('CONCURRENCY', 'number'),
   agentId: defaultAgentId,
   cwd = process.cwd(),
   logger: defaultLogger,
