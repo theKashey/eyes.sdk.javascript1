@@ -72,7 +72,7 @@
     }
   },
   "dependencies": {
-    "@applitools/image": "1.0.9",
+    "@applitools/image": "1.0.10",
     "@applitools/logger": "1.1.30",
     "@applitools/snippets": "2.4.8",
     "@applitools/utils": "1.3.16",
