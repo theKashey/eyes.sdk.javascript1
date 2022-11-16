@@ -16,7 +16,7 @@ describe('Coverage Tests - ShouldSendCoddedRegionsWithPaddingWithVg', () => {
       ignore: [{region: '#ignoreRegions', padding: 20}],
       layout: [{region: '#layoutRegions', padding: {top: 20, right: 20}}],
       content: [{region: '#contentRegions', padding: {right: 20, left: 20}}],
-      strict: [{region: '#strictRegions', padding: {bottom: 20}}],
+      strict: [{selector: '#strictRegions', padding: {bottom: 20}}],
     });
     cy.eyesClose();
 

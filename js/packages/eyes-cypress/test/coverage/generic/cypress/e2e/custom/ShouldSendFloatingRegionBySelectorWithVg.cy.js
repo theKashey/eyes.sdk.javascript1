@@ -9,6 +9,7 @@ describe('Coverage tests', () => {
       testName: 'TestCheckWindowWithFloatingBySelector_Fluent_VG',
       viewportSize: {width: 700, height: 460},
     });
+
     cy.eyesCheckWindow({
       floating: [
         {
@@ -17,6 +18,17 @@ describe('Coverage tests', () => {
           maxLeftOffset: 20,
           maxRightOffset: 30,
           maxUpOffset: 3,
+        },
+        {
+          region: {
+            selector: 'body > iframe',
+          },
+          maxDownOffset: 3,
+          maxLeftOffset: 20,
+          maxRightOffset: 30,
+          maxUpOffset: 3,
+          regionId: 'floating-regionId',
+          padding: {top: 20},
         },
       ],
     });
@@ -38,6 +50,21 @@ describe('Coverage tests', () => {
           maxLeftOffset: 20,
           maxRightOffset: 30,
           regionId: '#overflowing-div',
+        },
+        undefined,
+      );
+      assert.deepStrictEqual(
+        info['actualAppOutput']['0']['imageMatchSettings']['floating']['1'],
+        {
+          left: 58,
+          top: 485,
+          width: 504,
+          height: 425,
+          maxUpOffset: 3,
+          maxDownOffset: 3,
+          maxLeftOffset: 20,
+          maxRightOffset: 30,
+          regionId: 'floating-regionId',
         },
         undefined,
       );

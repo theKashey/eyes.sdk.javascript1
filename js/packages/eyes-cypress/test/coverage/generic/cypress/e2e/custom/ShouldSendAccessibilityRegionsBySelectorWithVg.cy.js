@@ -12,7 +12,17 @@ describe('Coverage tests', () => {
       accessibilityValidation: {level: 'AAA', guidelinesVersion: 'WCAG_2_0'},
     });
     cy.eyesCheckWindow({
-      accessibility: [{accessibilityType: 'LargeText', selector: '.ignore'}],
+      accessibility: [
+        {accessibilityType: 'LargeText', selector: '.ignore'},
+        {
+          region: {
+            accessibilityType: 'LargeText',
+            selector: '#overflowing-div',
+          },
+          regionId: 'accesibility-regionId',
+          padding: {left: 5},
+        },
+      ],
     });
     cy.eyesClose();
 
@@ -34,6 +44,19 @@ describe('Coverage tests', () => {
       assert.deepStrictEqual(
         info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['0'],
         {
+          isDisabled: false,
+          type: 'LargeText',
+          left: 3,
+          top: 80,
+          width: 309,
+          height: 185,
+          regionId: 'accesibility-regionId',
+        },
+        undefined,
+      );
+      assert.deepStrictEqual(
+        info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['1'],
+        {
           type: 'LargeText',
           isDisabled: false,
           left: 10,
@@ -45,7 +68,7 @@ describe('Coverage tests', () => {
         undefined,
       );
       assert.deepStrictEqual(
-        info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['1'],
+        info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['2'],
         {
           isDisabled: false,
           type: 'LargeText',
@@ -58,7 +81,7 @@ describe('Coverage tests', () => {
         undefined,
       );
       assert.deepStrictEqual(
-        info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['2'],
+        info['actualAppOutput']['0']['imageMatchSettings']['accessibility']['3'],
         {
           isDisabled: false,
           type: 'LargeText',

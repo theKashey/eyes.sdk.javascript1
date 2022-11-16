@@ -119,6 +119,10 @@ function eyesCheckMapValues({args, refer}) {
           resRegions = [...resRegions, ...refElements(region)];
         }
       } else {
+        if (region.selector) {
+          region.region = region.selector;
+          delete region.selector;
+        }
         resRegions.push(region);
       }
     }
@@ -141,6 +145,10 @@ function eyesCheckMapValues({args, refer}) {
         for (const element of elements) {
           accessibility.push(Object.assign({}, accessabilityRegion, {region: element}));
         }
+      } else if (region.hasOwnProperty('region')) {
+        region.type = region.region.accessibilityType;
+        delete region.region.accessibilityType;
+        accessibility.push(region);
       } else {
         accessabilityRegion.region = {
           y: region.top,
@@ -174,6 +182,8 @@ function eyesCheckMapValues({args, refer}) {
         for (const element of elements) {
           floating.push(Object.assign({}, floatingRegion, {region: element}));
         }
+      } else if (region.hasOwnProperty('region')) {
+        floating.push(region);
       } else {
         floatingRegion.region = {
           y: region.top,

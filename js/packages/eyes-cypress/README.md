@@ -505,7 +505,24 @@ cy.get('some-region').then(el => {
      // will add padding of 20px to all JQuery elements at the top, button, right and left of the region
     ignore: {element: el, padding: 20},
     // will add padding for a DOM element on the top of the region
-    content: {element: el[0], padding: {top:10}}
+    content: {element: el[0], padding: {top:10}},
+    accessibility: {
+          region: {
+            accessibilityType: 'LargeText',
+            selector: 'accessibilityRegion',
+          },
+          padding: {left: 5},
+    },
+  floating:{
+          region: {
+            selector: 'floatingRegion',
+          },
+          maxDownOffset: 3,
+          maxLeftOffset: 20,
+          maxRightOffset: 30,
+          maxUpOffset: 3,
+          padding: {top: 20},
+        },
   })
 
 })
@@ -662,10 +679,27 @@ cy.get('.region.two:nth-child(2)').then(el => {
       cy.eyesCheckWindow({
         fully: false,
         ignore: [
-          {region: {type: 'css', selector: '.region.three:nth-child(3n)'}, regionId: 'region3'},
-          {type: 'xpath', selector: '//div[@class="region one"][3]'},
+          {region: {type: 'css', selector: 'ignore1'}, regionId: 'region3'},
+          {type: 'xpath', selector: 'ignore2'},
           {element: el, regionId: 'my-region-id'},
         ],
+        accessibility: [{
+            region: {
+              accessibilityType: 'LargeText',
+              selector: 'accessibilityRegion',
+            },
+            regionId: 'accesibility-regionId',
+        },],
+        floating: [{
+          region: {
+            selector: 'floatingRegion',
+          },
+          maxDownOffset: 3,
+          maxLeftOffset: 20,
+          maxRightOffset: 30,
+          maxUpOffset: 3,
+          regionId: 'floating-regionId',
+        }]
       });
 })
 ```
