@@ -119,7 +119,7 @@ function eyesCheckMapValues({args, refer}) {
           resRegions = [...resRegions, ...refElements(region)];
         }
       } else {
-        if (region.selector) {
+        if (region.selector && !region.type) {
           region.region = region.selector;
           delete region.selector;
         }
