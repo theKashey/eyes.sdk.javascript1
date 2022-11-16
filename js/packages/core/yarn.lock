@@ -54,20 +54,20 @@
     css-tree "1.0.0-alpha.39"
     pako "1.0.11"
 
-"@applitools/driver@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.4.tgz#a608b6d6ab8f0664b2257c38440789c222174d4b"
-  integrity sha512-+ZRYF4fYDvNJ0kqtVXibcTiJowmGTGdZEKP83TQLYA42yfIGSEZF28dPjZHftMM7RNACogN3DdJsGxqoeZHE4Q==
+"@applitools/driver@1.11.7":
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.7.tgz#43ba9d2abfd4c03f0668f590dbc8d4d88a38b2a7"
+  integrity sha512-8tRq49oaGRK1HkyAPN6gLyGZ59rtnlmEKtbQXs7CpSCMOYzhKNnEjJgG1NZbnsTU/1F5zErfC5AGa2851XdLqw==
   dependencies:
-    "@applitools/logger" "1.1.29"
-    "@applitools/snippets" "2.4.7"
-    "@applitools/utils" "1.3.15"
+    "@applitools/logger" "1.1.30"
+    "@applitools/snippets" "2.4.8"
+    "@applitools/utils" "1.3.16"
     semver "7.3.7"
 
-"@applitools/driver@1.11.6":
-  version "1.11.6"
-  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.6.tgz#6e9b122b06af4aeb1195d3ff7dd8179001116d05"
-  integrity sha512-zNJ0Ot5S1JJ0xrp7eIfLr67hgvLTQU4pqEnH8jjCMXLWHfEFsKkph8vU1Zya3OeTJNntEtff30HqM5o11KYWOQ==
+"@applitools/driver@1.11.8":
+  version "1.11.8"
+  resolved "https://registry.yarnpkg.com/@applitools/driver/-/driver-1.11.8.tgz#7bf4788f23f2bb1e8074240fb9322f04ce52dd33"
+  integrity sha512-f47g1LHTkhITKls5MilMWeyUENNSECK8TL4Z6z1rLRyMwYaF5Spir0lh2QIARt7mzCbF80o7omLtnRwZOPfTSA==
   dependencies:
     "@applitools/logger" "1.1.30"
     "@applitools/snippets" "2.4.8"
@@ -138,10 +138,10 @@
     "@applitools/utils" "1.3.16"
     chalk "4.1.2"
 
-"@applitools/nml-client@1.3.9":
-  version "1.3.9"
-  resolved "https://registry.yarnpkg.com/@applitools/nml-client/-/nml-client-1.3.9.tgz#d6383f25813f7a5cf868f2398278da7b5e28cca0"
-  integrity sha512-NfUZbBzTHd9vXAGE3boAEPCJyeTbut0P0LxqGrY51zW4u1TfiguPPsT677HrZIQAOJ8Xz5S1C/bZ/+d8S+eXjQ==
+"@applitools/nml-client@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.yarnpkg.com/@applitools/nml-client/-/nml-client-1.3.11.tgz#8632ffa87da9e7f5d461806d1a08dca3a3d8aaaa"
+  integrity sha512-92n2l9NxhaoTuZFPDg7tXJUrHxbbnpOj1BHEEkwL4vfCVm3ONniXDH1nxSVl7x9F/VbfY2AxGHV27SJRBuu1/Q==
   dependencies:
     "@applitools/logger" "1.1.30"
     "@applitools/req" "1.1.16"
@@ -158,10 +158,10 @@
     node-fetch "2.6.7"
     proxy-agent "5.0.0"
 
-"@applitools/screenshoter@3.7.8":
-  version "3.7.8"
-  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.7.8.tgz#806d842643ee21f4e8a074a0516f16047e45713f"
-  integrity sha512-T0EOtlJmE9zvCIQ73LQvpLx1AWREkRWjq27P4Bq+kuJ14WQhqe/EjzxIuG2i/6dmpy5BcDR+xWNnczITjwdf7Q==
+"@applitools/screenshoter@3.7.9":
+  version "3.7.9"
+  resolved "https://registry.yarnpkg.com/@applitools/screenshoter/-/screenshoter-3.7.9.tgz#1d90e5fc54620c9344c2ff8e6c3acb553b2d6c1b"
+  integrity sha512-QlgAwpFgcEBVO+V9Q40uxzOXUt8ur9ARwMeh/trgcrTBLpyL9VF1pZARTPD5ZIHx/R0ZSeLlxopET1mpMuU/2g==
   dependencies:
     "@applitools/image" "1.0.10"
     "@applitools/logger" "1.1.30"
@@ -181,39 +181,34 @@
     ua-parser-js "0.7.24"
     uuid "3.3.3"
 
-"@applitools/snippets@2.4.7":
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.7.tgz#825ce99ec38417b9999f536d953e5f39420c3ce8"
-  integrity sha512-j6t1+joLvECVhiU4k2i4xGIKVpe3tj+OprJZGGeJWHlfuk37IXFQW8Khs3JzsjLGyTbwZJMudY9m8sJnqDHiBA==
-
 "@applitools/snippets@2.4.8":
   version "2.4.8"
   resolved "https://registry.yarnpkg.com/@applitools/snippets/-/snippets-2.4.8.tgz#21295baef3951a934c59e8e0cbd7a92eca94b2d5"
   integrity sha512-YjwI0GIXy53vz+bOXd4GwHXYjrsfkyY1JX3u3wH6OblAIRANYsgNWmNVaAPubktr8f5d78fdm1sA2SD9k4G6Fg==
 
-"@applitools/spec-driver-puppeteer@^1.1.21":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-puppeteer/-/spec-driver-puppeteer-1.1.21.tgz#302363cfc534355bc3e3ed3527f7d3676e063ad3"
-  integrity sha512-u7smulbJkPeuTGGJfAKp4g6EzcdeQ2hBzEURGI/eNJ/HTwYEDpkpgVE2WGojYaYYePOQLlnuyKWKuHcgccBQEg==
+"@applitools/spec-driver-puppeteer@^1.1.22":
+  version "1.1.22"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-puppeteer/-/spec-driver-puppeteer-1.1.22.tgz#09cd31d382b4acb45c1aed46c19a4a561affd014"
+  integrity sha512-QmDGt1pQVbziHt87uPeIA41taS/NmiT5j7z2UL+8Ovnwr0kUkgHjpg1RRyJLQaICvZ6tJoYYezHipU06fByNzA==
   dependencies:
-    "@applitools/driver" "1.11.4"
-    "@applitools/utils" "1.3.15"
+    "@applitools/driver" "1.11.7"
+    "@applitools/utils" "1.3.16"
 
-"@applitools/spec-driver-selenium@^1.5.7":
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.7.tgz#cee2df4d3b5c124730a6b9ceb0d7e59cdc84903c"
-  integrity sha512-qGhg6UJxYQ/6UHGukYZI5IaHfb4dENXvMo5D7vzsLf3kOuum57D2jGQogiddEge/lQKOU13BlqWsL5Bkx0RowA==
+"@applitools/spec-driver-selenium@^1.5.8":
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-selenium/-/spec-driver-selenium-1.5.8.tgz#4f8795cc10d53b16c5f27061ffefcdf154848e3d"
+  integrity sha512-RZsClBDNUUI65PrxNME/xHiHEApzfFug99aKRSXhBBAY8ObpmIb4JUF4ihRE0ksaIH2sk2YdXNbywTOGWSAUyw==
   dependencies:
-    "@applitools/driver" "1.11.4"
-    "@applitools/utils" "1.3.15"
+    "@applitools/driver" "1.11.7"
+    "@applitools/utils" "1.3.16"
 
-"@applitools/spec-driver-webdriverio@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.4.5.tgz#3d6b562efb7b66c4463eae5a705b748ff9aa4348"
-  integrity sha512-oviaDAf2SYNKeTUh69Nb5/UOr+ibn9mYfxbU4la8JZmqhw5SdRGEuCU/hLYdqkb5VbAECIjX2/w77I3JRdz31Q==
+"@applitools/spec-driver-webdriverio@^1.4.6":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@applitools/spec-driver-webdriverio/-/spec-driver-webdriverio-1.4.6.tgz#09cd83f9973db8dd9c7f02b8b8699259d8d3a1f8"
+  integrity sha512-djwpu3GXAj7K8mASQaeXEmnbh0JZsIAEoduJemv5be0YczT7liu9WCYAHUjHqRZm5XgerNUiIn7nFD4g4hX3Sw==
   dependencies:
-    "@applitools/driver" "1.11.4"
-    "@applitools/utils" "1.3.15"
+    "@applitools/driver" "1.11.7"
+    "@applitools/utils" "1.3.16"
 
 "@applitools/test-server@^1.1.10":
   version "1.1.10"
