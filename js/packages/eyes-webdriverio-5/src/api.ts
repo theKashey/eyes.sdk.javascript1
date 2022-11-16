@@ -33,7 +33,7 @@ export class CheckSettings extends api.CheckSettingsAutomation<Element, Selector
   protected static readonly _spec = sdk
 }
 
-export const Target = api.Target as api.Target<Element, Selector>
+export const Target = {...api.Target, spec: sdk} as api.Target<Element, Selector>
 
 export class BatchClose extends api.BatchClose {
   protected static readonly _spec = sdk

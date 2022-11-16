@@ -641,35 +641,37 @@ export type TargetAutomation<TElement, TSelector> = {
 
 export type Target<TElement, TSelector> = TargetImage & TargetAutomation<TElement, TSelector>
 
-export const Target: Target<unknown, unknown> = {
+export const Target: Target<unknown, unknown> & {spec?: CheckSettingsAutomationSpec} = {
+  spec: null as CheckSettingsAutomationSpec,
+
   image(image: Buffer | URL | string): CheckSettingsImageFluent {
-    return new this().image(image)
+    return new CheckSettingsImageFluent().image(image)
   },
   buffer(imageBuffer: Buffer): CheckSettingsImageFluent {
-    return new this().image(imageBuffer)
+    return new CheckSettingsImageFluent().image(imageBuffer)
   },
   base64(imageBase64: string): CheckSettingsImageFluent {
-    return new this().image(imageBase64)
+    return new CheckSettingsImageFluent().image(imageBase64)
   },
   path(imagePath: string): CheckSettingsImageFluent {
-    return new this().image(imagePath)
+    return new CheckSettingsImageFluent().image(imagePath)
   },
   url(imageUrl: URL | string): CheckSettingsImageFluent {
-    return new this().image(imageUrl)
+    return new CheckSettingsImageFluent().image(imageUrl)
   },
   window(): CheckSettingsAutomationFluent {
-    return new this()
+    return new CheckSettingsAutomationFluent({}, this.spec)
   },
   region(region: unknown): CheckSettingsAutomationFluent {
-    return new this().region(region)
+    return new CheckSettingsAutomationFluent({}, this.spec).region(region)
   },
   frame(contextOrFrame: unknown, scrollRootElement?: unknown): CheckSettingsAutomationFluent {
-    return new this().frame(contextOrFrame, scrollRootElement)
+    return new CheckSettingsAutomationFluent({}, this.spec).frame(contextOrFrame, scrollRootElement)
   },
   shadow(selector: unknown): CheckSettingsAutomationFluent {
-    return new this().shadow(selector)
+    return new CheckSettingsAutomationFluent({}, this.spec).shadow(selector)
   },
   webview(webview: string | boolean | null): CheckSettingsAutomationFluent {
-    return new this().webview(webview)
+    return new CheckSettingsAutomationFluent({}, this.spec).webview(webview)
   },
 }

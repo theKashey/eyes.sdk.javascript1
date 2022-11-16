@@ -13,17 +13,24 @@ describe('CheckSettings', () => {
     }
   }
 
+  const Target = {
+    ...api.Target,
+    get spec() {
+      return sdk
+    },
+  }
+
   beforeEach(() => {
     sdk = makeSDK()
   })
 
   it('sets shadow selector with string', () => {
-    const checkSettings = CheckSettings.shadow('el-with-shadow').region('el')
+    const checkSettings = Target.shadow('el-with-shadow').region('el')
     assert.deepStrictEqual(checkSettings.toJSON().settings, {region: {selector: 'el-with-shadow', shadow: 'el'}})
   })
 
   it('sets shadow selector with framework selector', () => {
-    const checkSettings = CheckSettings.shadow({fakeSelector: 'el-with-shadow'}).region({fakeSelector: 'el'})
+    const checkSettings = Target.shadow({fakeSelector: 'el-with-shadow'}).region({fakeSelector: 'el'})
     assert.deepStrictEqual(checkSettings.toJSON().settings, {
       region: {
         selector: {fakeSelector: 'el-with-shadow'},
@@ -65,7 +72,7 @@ describe('CheckSettings', () => {
 
   it('set webview static', () => {
     const id = 'blah-blah'
-    const settings = CheckSettings.webview(id)
+    const settings = Target.webview(id)
     assert.equal(settings.toJSON().settings.webview, id)
   })
 })
