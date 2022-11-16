@@ -48,10 +48,10 @@ describe('eyes check mapping', () => {
       hooks: {
         beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'",
       },
-      ignoreRegions: [{selector: 'some ignore region selector'}],
-      layoutRegions: [{selector: 'some layout region selector'}],
-      strictRegions: [{selector: 'some strict region selector'}],
-      contentRegions: [{selector: 'some content region selector'}],
+      ignoreRegions: [{region: 'some ignore region selector'}],
+      layoutRegions: [{region: 'some layout region selector'}],
+      strictRegions: [{region: 'some strict region selector'}],
+      contentRegions: [{region: 'some content region selector'}],
       accessibilityRegions: [{region: 'some accessibility region selector', type: 'RegularText'}],
       floatingRegions: [
         {
