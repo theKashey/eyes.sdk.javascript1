@@ -36,10 +36,10 @@
     "@applitools/utils" "1.3.16"
     semver "7.3.7"
 
-"@applitools/image@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@applitools/image/-/image-1.0.9.tgz#539a73e479a5ff98ab62bdb161a5f822fe0d6687"
-  integrity sha512-k/iUhqm3NOD/yRXf5EiSVymX1IAWv5YUhcc7fslQw7M1A5RdIBKenxaluAzyi6E8djtjU3KZtrFludkMu7ygBg==
+"@applitools/image@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@applitools/image/-/image-1.0.10.tgz#31237cc83596561f11e679374685f53f4cc65f29"
+  integrity sha512-HmV+sHE4WoPYLtSQJG/oYtMvhjjW8Hb/N/1zs5ZpggdpkLmWf5aoUoh91UjceGVWbdDutO9/fRTb2rdArt/NPA==
   dependencies:
     "@applitools/utils" "1.3.16"
     bmpimagejs "1.0.4"
