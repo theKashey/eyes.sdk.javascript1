@@ -59,10 +59,10 @@ export class Element<TDriver, TContext, TElement, TSelector> {
 
     if (specUtils.isSimpleCommonSelector(this._selector)) {
       this._commonSelector = this._selector
-    } else if (utils.types.isString(this._selector)) {
-      this._commonSelector = {selector: this._selector}
     } else if (this._selector && this._spec.untransformSelector) {
       this._commonSelector = this._spec.untransformSelector(this._spec.transformSelector(this._selector))
+    } else if (utils.types.isString(this._selector)) {
+      this._commonSelector = {selector: this._selector}
     }
   }
 
