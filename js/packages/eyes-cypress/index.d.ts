@@ -7,7 +7,7 @@ type LegacyRegion = {left: number; top: number; width: number; height: number}
 type Selector = {selector: string; type?: 'css' | 'xpath', nodeType?: 'element' | 'shadow-root'} | 'string'
 type Element = HTMLElement | JQuery<HTMLElement>
 
-interface CypressCheckSettings extends api.CheckSettingsPlain<Element, Selector>{
+interface CypressCheckSettings extends api.CheckSettingsAutomationPlain<Element, Selector>{
   tag?: CypressCheckSettings['name']
 
   target?: 'window' | 'region'
