@@ -48,6 +48,7 @@ function useFramework({fixturesPath = ''} = {}) {
   }
 
   function createFixture(path) {
+    if (!fixturesPath) return null
     const fixturePath = new String(fixturesPath + path)
     fixturePath.toPath = () => fixturePath.toString()
     fixturePath.toBase64 = () => fs.readFileSync(fixturePath.toString()).toString('base64')

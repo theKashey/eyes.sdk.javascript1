@@ -14,7 +14,7 @@ const DEFAULT_CONFIG = {
 async function report(options) {
   const config = {
     ...DEFAULT_CONFIG,
-    ...configLoader(options),
+    ...(await configLoader(options)),
     ...options,
   }
   const cwd = process.cwd()
