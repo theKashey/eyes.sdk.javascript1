@@ -11,6 +11,13 @@
 
 
 
+## 2.17.1 - 2022/11/16
+
+### Features
+- Use user agent metadata to improve browser environment detection logic
+- Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
+### Bug fixes
+
 ## 2.17.0 - 2022/11/2
 
 ### Features

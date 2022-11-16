@@ -10,8 +10,7 @@ Apollo SDK:
       An example of how to inline `markdown code highlights`
 "@applitools/eyes-universal":
   feature:
-    - Use user agent metadata to improve browser environment detection logic
-    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
+    - 
   bug-fix:
     - 
 "@applitools/eyes-selenium":
