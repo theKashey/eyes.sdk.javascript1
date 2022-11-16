@@ -63,6 +63,7 @@ export {
   CheckSettingsAutomationFluent as CheckSettingsAutomation,
   TargetImage,
   TargetAutomation,
+  Target,
 } from './input/CheckSettings'
 export {Configuration as ConfigurationPlain, ConfigurationData as Configuration} from './input/Configuration'
 export {
