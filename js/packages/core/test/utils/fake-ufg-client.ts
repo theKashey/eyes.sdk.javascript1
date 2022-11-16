@@ -76,5 +76,8 @@ export function makeFakeClient({hooks}: any = {}): UFGClient & EventEmitter {
         emitter.emit('afterRender', options)
       }
     },
+    async getCachedResourceUrls() {
+      return []
+    },
   }
 }

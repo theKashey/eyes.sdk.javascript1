@@ -10,7 +10,12 @@ describe('check', () => {
     const core = makeCore({core: makeFakeCore(), client: makeFakeClient(), concurrency: 10})
 
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     await eyes.check({
@@ -37,7 +42,12 @@ describe('check', () => {
     const core = makeCore({core: makeFakeCore(), client: makeFakeClient(), concurrency: 10})
 
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     await eyes.check({
@@ -61,7 +71,12 @@ describe('check', () => {
     const core = makeCore({core: makeFakeCore(), client: makeFakeClient(), concurrency: 10})
 
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     const target = {
@@ -120,7 +135,12 @@ describe('check', () => {
     const core = makeCore({core: makeFakeCore(), client: makeFakeClient(), concurrency: 10})
 
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     await eyes.check({
@@ -132,7 +152,10 @@ describe('check', () => {
 
     assert.deepStrictEqual(
       results.map(result =>
-        result.stepsInfo.map((step: any) => ({asExpected: step.asExpected, locationInViewport: step.target.locationInViewport})),
+        result.stepsInfo.map((step: any) => ({
+          asExpected: step.asExpected,
+          locationInViewport: step.target.locationInViewport,
+        })),
       ),
       [[{asExpected: true, locationInViewport: {x: 1, y: 2}}]],
     )
@@ -142,19 +165,31 @@ describe('check', () => {
     const core = makeCore({core: makeFakeCore(), client: makeFakeClient(), concurrency: 10})
 
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     await eyes.check({
       target: {cdt: []},
-      settings: {name: 'good', region: {x: 3, y: 4, width: 1, height: 2}, renderers: [{width: 100, height: 100}]},
+      settings: {
+        name: 'good',
+        region: {x: 3, y: 4, width: 1, height: 2},
+        renderers: [{width: 100, height: 100}],
+      },
     })
 
     const results = await eyes.close()
 
     assert.deepStrictEqual(
       results.map(result =>
-        result.stepsInfo.map((step: any) => ({asExpected: step.asExpected, locationInViewport: step.target.locationInViewport})),
+        result.stepsInfo.map((step: any) => ({
+          asExpected: step.asExpected,
+          locationInViewport: step.target.locationInViewport,
+        })),
       ),
       [[{asExpected: true, locationInViewport: {x: 3, y: 4}}]],
     )
@@ -174,7 +209,12 @@ describe('check', () => {
     const fakeCore = makeFakeCore()
     const core = makeCore({concurrency: 2, core: fakeCore, client: fakeClient})
     const eyes = await core.openEyes({
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
 
     await eyes.check({
@@ -216,9 +256,14 @@ describe('check', () => {
     const core = makeCore({concurrency: 2, spec, core: fakeCore, client: fakeClient})
     const eyes = await core.openEyes({
       target: driver,
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
-    assert.rejects(eyes.check({}), error => {
+    await assert.rejects(eyes.check(), error => {
       return error.message === "Error during execute poll script: 'bla'"
     })
   })
@@ -232,9 +277,14 @@ describe('check', () => {
     const core = makeCore({concurrency: 2, spec, core: fakeCore, client: fakeClient})
     const eyes = await core.openEyes({
       target: driver,
-      settings: {serverUrl: 'server-url', apiKey: 'api-key', appName: 'app-name', testName: 'test-name'},
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
     })
-    assert.rejects(eyes.check({}), error => {
+    await assert.rejects(eyes.check(), error => {
       return (
         error.message ===
         `Response is not a valid JSON string. length: ${response.length}, first 100 chars: "${response.substr(
@@ -243,5 +293,46 @@ describe('check', () => {
         )}", last 100 chars: "${response.substr(-100)}". error: SyntaxError: Unexpected number in JSON at position 1`
       )
     })
+  })
+
+  it('preserves original frame after checking window', async function () {
+    const driver = new MockDriver()
+    driver.mockElements([
+      {
+        selector: 'frame1-cors',
+        frame: true,
+        children: [{selector: 'element_cors'}],
+      },
+    ])
+    driver.mockScript('dom-snapshot', async () => {
+      return JSON.stringify({
+        status: 'SUCCESS',
+        value: {
+          url: await driver.getUrl(),
+          cdt: [{nodeType: 1, nodeName: 'IFRAME', attributes: []}],
+          crossFrames: [{selector: 'frame1-cors', index: 0}],
+          frames: [],
+          resourceUrls: [],
+          blobs: [],
+        },
+      })
+    })
+    const fakeClient = makeFakeClient()
+    const fakeCore = makeFakeCore()
+    const core = makeCore({concurrency: 2, spec, core: fakeCore, client: fakeClient})
+    const eyes = await core.openEyes({
+      target: driver,
+      settings: {
+        serverUrl: 'server-url',
+        apiKey: 'api-key',
+        appName: 'app-name',
+        testName: 'test-name',
+      },
+    })
+
+    const originalDocument = await driver.findElement('html')
+    await eyes.check()
+    const resultDocument = await driver.findElement('html')
+    assert.deepStrictEqual(originalDocument, resultDocument)
   })
 })

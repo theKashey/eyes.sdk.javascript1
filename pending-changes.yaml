@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Fixed issue when current context is not being preserved in ufg mode for webdriver frameworks
 "@applitools/eyes-selenium":
   feature:
     - Added new selector extensions `child` and `fallback`
@@ -23,6 +23,7 @@ Apollo SDK:
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
     - Fix dontCloseBatches mapping
+    - Fixed issue when current context is not being preserved in ufg mode
 "@applitools/eyes-webdriverio":
   feature:
     - Added new selector extensions `child` and `fallback`
@@ -32,6 +33,7 @@ Apollo SDK:
     - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+    - Fixed issue when current context is not being preserved in ufg mode
 "@applitools/eyes-playwright":
   feature:
     - Added new selector extensions `child` and `fallback`
@@ -61,6 +63,7 @@ Apollo SDK:
   bug-fix:
     - Fixed incorrect calculation of the target element position.
     - Fixed the issue with screenshots being taken on chrome-emulated devices
+    - Fixed issue when current context is not being preserved in ufg mode
 "@applitools/eyes-puppeteer":
   feature:
     - Added new selector extensions `child` and `fallback`
@@ -101,6 +104,7 @@ Apollo SDK:
     - Fixed error that was happening when test results were deleted
     - Fixed bug that caused `extractText` to throw, due to fractional size of the target region
     - Fix dontCloseBatches mapping
+    - Fixed issue when current context is not being preserved in ufg mode
 "@applitools/eyes-cypress":
   feature:
     - Added new selector extensions `child` and `fallback`

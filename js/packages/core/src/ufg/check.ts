@@ -82,6 +82,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         }
       }
 
+      const currentContext = driver.currentContext
       snapshots = await takeSnapshots({
         driver,
         settings: {
@@ -105,6 +106,7 @@ export function makeCheck<TDriver, TContext, TElement, TSelector>({
         },
         logger,
       })
+      await currentContext.focus()
       snapshotUrl = await driver.getUrl()
       snapshotTitle = await driver.getTitle()
 

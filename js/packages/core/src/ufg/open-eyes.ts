@@ -83,7 +83,8 @@ export function makeOpenEyes<TDriver, TContext, TElement, TSelector>({
     // check with indexing and storage
     const check = utils.general.wrap(
       makeCheck({spec, getEyes, client, signal: controller.signal, test, target, logger}),
-      async (check, options) => {
+      async (check, options = {}) => {
+        options.settings ??= {}
         ;(options.settings as any).index = index++
         const results = await check(options)
         storage.push(...results.map(result => ({promise: result.promise, renderer: result.renderer})))
