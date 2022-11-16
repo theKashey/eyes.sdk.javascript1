@@ -12,7 +12,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - Fixed issue when current context is not being preserved in ufg mode for webdriver frameworks
+    - 
 "@applitools/eyes-selenium":
   feature:
     - Added new selector extensions `child` and `fallback`

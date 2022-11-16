@@ -11,6 +11,12 @@
 
 
 
+## 2.17.2 - 2022/11/16
+
+### Features
+### Bug fixes
+- Fixed issue when current context is not being preserved in ufg mode for webdriver frameworks
+
 ## 2.17.1 - 2022/11/16
 
 ### Features
