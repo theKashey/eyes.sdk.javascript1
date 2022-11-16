@@ -48,11 +48,11 @@ function useFramework({fixturesPath = ''} = {}) {
   }
 
   function createFixture(path) {
-    if (!fixturesPath) return null
     const fixturePath = new String(fixturesPath + path)
-    fixturePath.toPath = () => fixturePath.toString()
-    fixturePath.toBase64 = () => fs.readFileSync(fixturePath.toString()).toString('base64')
-    fixturePath.toText = () => fs.readFileSync(fixturePath.toString()).toString()
+    fixturePath.toPath = () => fixturesPath && fixturePath.toString()
+    fixturePath.toBase64 = () =>
+      fixturesPath && fs.readFileSync(fixturePath.toString()).toString('base64')
+    fixturePath.toText = () => fixturesPath && fs.readFileSync(fixturePath.toString()).toString()
     return fixturePath
   }
 }
