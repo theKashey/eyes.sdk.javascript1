@@ -55,7 +55,7 @@
     "postversion": "bongo postversion --skip-release-notification"
   },
   "dependencies": {
-    "@applitools/core": "1.2.11",
+    "@applitools/core": "1.2.12",
     "@applitools/logger": "1.1.30",
     "@applitools/utils": "1.3.16"
   },
