@@ -111,6 +111,8 @@ Apollo SDK:
     - Use user agent metadata to improve browser environment detection logic
     - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
   bug-fix:
+    - |
+      Support parallel run of multiple `Cypress` instances
     - Add support for regionId and padding for accessibility and floating regions
 "@applitools/eyes-storybook":
   feature:
