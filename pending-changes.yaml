@@ -102,13 +102,9 @@ Apollo SDK:
     - Fixed issue when current context is not being preserved in ufg mode
 "@applitools/eyes-cypress":
   feature:
-    - Added new selector extensions `child` and `fallback`
-    - Use user agent metadata to improve browser environment detection logic
-    - Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
+    - 
   bug-fix:
-    - |
-      Support parallel run of multiple `Cypress` instances
-    - Add support for regionId and padding for accessibility and floating regions
+    - 
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"
