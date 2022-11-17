@@ -6,8 +6,6 @@ from typing import TYPE_CHECKING, List, Optional, Text, Tuple
 
 import attr
 
-from applitools.common.utils.json_utils import JsonInclude
-
 from .accessibility import SessionAccessibilityStatus
 from .geometry import RectangleSize
 from .match import ImageMatchSettings
@@ -40,56 +38,32 @@ class TestResultsStatus(Enum):
 
 @attr.s
 class SessionUrls(object):
-    batch = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type: Text
-    session = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type: Text
+    batch = attr.ib(default=None)  # type: Text
+    session = attr.ib(default=None)  # type: Text
 
 
 @attr.s
 class StepInfo(object):
     @attr.s(repr_ns="StepInfo")
     class AppUrls(object):
-        step = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type: Text
-        step_editor = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
+        step = attr.ib(default=None)  # type: Text
+        step_editor = attr.ib(default=None)  # type: Text
 
     @attr.s(repr_ns="StepInfo")
     class ApiUrls(object):
-        baseline_image = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
-        current_image = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
-        diff_image = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
-        checkpoint_image = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
-        checkpoint_image_thumbnail = attr.ib(
-            default=None, metadata={JsonInclude.THIS: True}
-        )  # type: Text
+        baseline_image = attr.ib(default=None)  # type: Text
+        current_image = attr.ib(default=None)  # type: Text
+        diff_image = attr.ib(default=None)  # type: Text
+        checkpoint_image = attr.ib(default=None)  # type: Text
+        checkpoint_image_thumbnail = attr.ib(default=None)  # type: Text
 
-    name = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type: Text
-    is_different = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    has_baseline_image = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    has_current_image = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    has_checkpoint_image = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    api_urls = attr.ib(
-        default=None, type=ApiUrls, metadata={JsonInclude.THIS: True}
-    )  # type: ApiUrls
-    app_urls = attr.ib(
-        default=None, type=AppUrls, metadata={JsonInclude.THIS: True}
-    )  # type: AppUrls
+    name = attr.ib(default=None)  # type: Text
+    is_different = attr.ib(default=None)  # type: bool
+    has_baseline_image = attr.ib(default=None)  # type: bool
+    has_current_image = attr.ib(default=None)  # type: bool
+    has_checkpoint_image = attr.ib(default=None)  # type: bool
+    api_urls = attr.ib(default=None, type=ApiUrls)  # type: ApiUrls
+    app_urls = attr.ib(default=None, type=AppUrls)  # type: AppUrls
 
 
 @attr.s
@@ -98,117 +72,57 @@ class TestResults(object):
     Eyes test results.
     """
 
-    steps = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    matches = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    mismatches = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    missing = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    exact_matches = attr.ib(
-        default=0, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    strict_matches = attr.ib(
-        default=0, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    content_matches = attr.ib(
-        default=0, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    layout_matches = attr.ib(
-        default=0, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    none_matches = attr.ib(
-        default=0, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    is_new = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[bool]
+    steps = attr.ib(default=0)  # type: int
+    matches = attr.ib(default=0)  # type: int
+    mismatches = attr.ib(default=0)  # type: int
+    missing = attr.ib(default=0)  # type: int
+    exact_matches = attr.ib(default=0, repr=False)  # type: int
+    strict_matches = attr.ib(default=0, repr=False)  # type: int
+    content_matches = attr.ib(default=0, repr=False)  # type: int
+    layout_matches = attr.ib(default=0, repr=False)  # type: int
+    none_matches = attr.ib(default=0, repr=False)  # type: int
+    is_new = attr.ib(default=None, repr=False)  # type: Optional[bool]
 
-    url = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[Text]
+    url = attr.ib(default=None)  # type: Optional[Text]
     status = attr.ib(
         converter=lambda v: TestResultsStatus(v) if v else None,
         type=TestResultsStatus,
         default=None,
         repr=False,
-        metadata={JsonInclude.THIS: True},
     )  # type: Optional[TestResultsStatus]
 
-    name = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    secret_token = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    id = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    app_name = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    batch_name = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    batch_id = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    branch_name = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    host_os = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    host_app = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
+    name = attr.ib(default=None, repr=False)  # type: Text
+    secret_token = attr.ib(default=None, repr=False)  # type: Text
+    id = attr.ib(default=None, repr=False)  # type: Text
+    app_name = attr.ib(default=None, repr=False)  # type: Text
+    batch_name = attr.ib(default=None, repr=False)  # type: Text
+    batch_id = attr.ib(default=None, repr=False)  # type: Text
+    branch_name = attr.ib(default=None, repr=False)  # type: Text
+    host_os = attr.ib(default=None, repr=False)  # type: Text
+    host_app = attr.ib(default=None, repr=False)  # type: Text
     host_display_size = attr.ib(
-        default=None, repr=False, type=RectangleSize, metadata={JsonInclude.THIS: True}
+        default=None, repr=False, type=RectangleSize
     )  # type: RectangleSize
-    started_at = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
-    duration = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    is_different = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    is_aborted = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    is_empty = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: bool
-    app_urls = attr.ib(
-        default=None, repr=False, type=SessionUrls, metadata={JsonInclude.THIS: True}
-    )  # type: SessionUrls
-    api_urls = attr.ib(
-        default=None, repr=False, type=SessionUrls, metadata={JsonInclude.THIS: True}
-    )  # type: SessionUrls
+    started_at = attr.ib(default=None, repr=False)  # type: Text
+    duration = attr.ib(default=None, repr=False)  # type: int
+    is_different = attr.ib(default=None, repr=False)  # type: bool
+    is_aborted = attr.ib(default=None, repr=False)  # type: bool
+    is_empty = attr.ib(default=None, repr=False)  # type: bool
+    app_urls = attr.ib(default=None, repr=False, type=SessionUrls)  # type: SessionUrls
+    api_urls = attr.ib(default=None, repr=False, type=SessionUrls)  # type: SessionUrls
     steps_info = attr.ib(
-        default=None, repr=False, type=StepInfo, metadata={JsonInclude.THIS: True}
+        default=None, repr=False, type=StepInfo
     )  # type: List[StepInfo]
-    baseline_id = attr.ib(
-        default=None, repr=False, metadata={JsonInclude.THIS: True}
-    )  # type: Text
+    baseline_id = attr.ib(default=None, repr=False)  # type: Text
     default_match_settings = attr.ib(
-        default=None,
-        repr=False,
-        type=ImageMatchSettings,
-        metadata={JsonInclude.THIS: True},
+        default=None, repr=False, type=ImageMatchSettings
     )  # type: ImageMatchSettings
     accessibility_status = attr.ib(
-        default=None,
-        type=SessionAccessibilityStatus,
-        metadata={JsonInclude.THIS: True},
+        default=None, type=SessionAccessibilityStatus
     )  # type: SessionAccessibilityStatus
-    user_test_id = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[Text]
+    user_test_id = attr.ib(default=None)  # type: Optional[Text]
     _connection_config = attr.ib(
-        default=(None, None, None),
-        eq=False,
-        order=False,
-        metadata={JsonInclude.THIS: False},
-        repr=False,
+        default=(None, None, None), eq=False, order=False, repr=False
     )  # type: Tuple[Optional[Text], Optional[Text], Optional[ProxySettings]]
     __test__ = False  # avoid warnings in test frameworks
 
@@ -245,18 +159,10 @@ class TestResults(object):
 
 @attr.s(repr=False, str=False)
 class TestResultContainer(object):
-    test_results = attr.ib(
-        default=None, type=TestResults, metadata={JsonInclude.THIS: True}
-    )  # type: TestResults
-    browser_info = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[RenderBrowserInfo]
-    exception = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[Exception]
-    user_test_id = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[Text]
+    test_results = attr.ib(default=None, type=TestResults)  # type: TestResults
+    browser_info = attr.ib(default=None)  # type: Optional[RenderBrowserInfo]
+    exception = attr.ib(default=None)  # type: Optional[Exception]
+    user_test_id = attr.ib(default=None)  # type: Optional[Text]
 
     def __str__(self):
         browser_info = (
@@ -280,15 +186,15 @@ class TestResultContainer(object):
 @attr.s(repr=False, str=False)
 class TestResultsSummary(object):
     results = attr.ib(
-        factory=list, type=TestResultContainer, metadata={JsonInclude.THIS: True}
+        factory=list, type=TestResultContainer
     )  # type: List[TestResultContainer]
-    exceptions = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    passed = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    unresolved = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    failed = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    mismatches = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    missing = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    matches = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
+    exceptions = attr.ib(default=0)  # type: int
+    passed = attr.ib(default=0)  # type: int
+    unresolved = attr.ib(default=0)  # type: int
+    failed = attr.ib(default=0)  # type: int
+    mismatches = attr.ib(default=0)  # type: int
+    missing = attr.ib(default=0)  # type: int
+    matches = attr.ib(default=0)  # type: int
 
     @property
     def all_results(self):

@@ -6,7 +6,6 @@ from six import string_types as basestring
 
 from applitools.common import Region
 from applitools.common.utils import argument_guard
-from applitools.common.utils.json_utils import JsonInclude
 from applitools.common.validators import is_list_or_tuple
 
 __all__ = ("VisualLocator", "VisualLocatorSettings")
@@ -84,7 +83,7 @@ class VisualLocator(object):
 
 @attr.s
 class VisualLocatorsData(object):
-    app_name = attr.ib(metadata={JsonInclude.THIS: True})
-    image_url = attr.ib(metadata={JsonInclude.THIS: True})
-    first_only = attr.ib(metadata={JsonInclude.THIS: True})
-    locator_names = attr.ib(metadata={JsonInclude.THIS: True})
+    app_name = attr.ib()
+    image_url = attr.ib()
+    first_only = attr.ib()
+    locator_names = attr.ib()

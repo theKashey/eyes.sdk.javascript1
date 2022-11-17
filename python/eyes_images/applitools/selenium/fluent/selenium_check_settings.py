@@ -9,7 +9,6 @@ from applitools.common.accessibility import AccessibilityRegionType
 from applitools.common.geometry import AccessibilityRegion, Region
 from applitools.common.ultrafastgrid import VisualGridOption
 from applitools.common.utils import argument_guard
-from applitools.common.utils.json_utils import JsonInclude
 from applitools.common.validators import is_list_or_tuple, is_webelement
 from applitools.core.fluent import CheckSettings, CheckSettingsValues
 
@@ -53,34 +52,16 @@ class LazyLoadOptions(object):
 @attr.s
 class SeleniumCheckSettingsValues(CheckSettingsValues):
     # hide_caret = attr.ib(init=False, default=None)
-    scroll_root_locator = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, default=None
-    )  # type: RegionLocator
-    target_locator = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, default=None
-    )  # type: RegionLocator
-    frame_chain = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, factory=list
-    )  # type: List[FrameLocator]
+    scroll_root_locator = attr.ib(init=False, default=None)  # type: RegionLocator
+    target_locator = attr.ib(init=False, default=None)  # type: RegionLocator
+    frame_chain = attr.ib(init=False, factory=list)  # type: List[FrameLocator]
 
-    script_hooks = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, factory=dict
-    )  # type: dict
-    visual_grid_options = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=()
-    )  # type: Tuple[VisualGridOption]
-    disable_browser_fetching = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    ocr_region = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, default=None
-    )  # type: Optional[OCRRegion]
-    layout_breakpoints = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Union[bool, List[int]]]
-    lazy_load = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[LazyLoadOptions]
+    script_hooks = attr.ib(factory=dict)  # type: dict
+    visual_grid_options = attr.ib(default=())  # type: Tuple[VisualGridOption]
+    disable_browser_fetching = attr.ib(default=None)  # type: Optional[bool]
+    ocr_region = attr.ib(init=False, default=None)  # type: Optional[OCRRegion]
+    layout_breakpoints = attr.ib(default=None)  # type: Optional[Union[bool, List[int]]]
+    lazy_load = attr.ib(default=None)  # type: Optional[LazyLoadOptions]
 
     @property
     def size_mode(self):

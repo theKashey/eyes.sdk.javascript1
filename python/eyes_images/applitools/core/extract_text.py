@@ -7,7 +7,6 @@ from six import string_types
 from applitools.common import Region
 from applitools.common.geometry import Rectangle
 from applitools.common.utils import argument_guard
-from applitools.common.utils.json_utils import JsonInclude
 from applitools.common.validators import is_list_or_tuple, is_webelement
 
 if TYPE_CHECKING:
@@ -68,11 +67,11 @@ class TextRegionSettings(object):
 
 @attr.s(slots=True, init=False)
 class TextRegion(Rectangle):
-    left = attr.ib(metadata={JsonInclude.NAME: "x"})  # type: int
-    top = attr.ib(metadata={JsonInclude.NAME: "y"})  # type: int
-    width = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    text = attr.ib(metadata={JsonInclude.THIS: True})  # type: Text
+    left = attr.ib()  # type: int
+    top = attr.ib()  # type: int
+    width = attr.ib()  # type: int
+    height = attr.ib()  # type: int
+    text = attr.ib()  # type: Text
 
     @property
     def x(self):

@@ -6,7 +6,6 @@ from six import add_metaclass
 
 from applitools.common.geometry import RectangleSize
 from applitools.common.selenium.misc import BrowserType
-from applitools.common.utils.json_utils import JsonInclude
 
 from .config import (
     AndroidDeviceName,
@@ -39,12 +38,8 @@ class EmulationBaseInfo(object):
 
 @attr.s(hash=True, init=False)
 class ChromeEmulationInfo(EmulationBaseInfo, IRenderBrowserInfo):
-    device_name = attr.ib(
-        type=DeviceName, metadata={JsonInclude.THIS: True}
-    )  # type: DeviceName
-    screen_orientation = attr.ib(
-        type=ScreenOrientation, metadata={JsonInclude.NON_NONE: True}
-    )  # type: ScreenOrientation
+    device_name = attr.ib(type=DeviceName)  # type: DeviceName
+    screen_orientation = attr.ib(type=ScreenOrientation)  # type: ScreenOrientation
 
     def __init__(
         self,
@@ -79,15 +74,11 @@ class ChromeEmulationInfo(EmulationBaseInfo, IRenderBrowserInfo):
 
 @attr.s(hash=True, init=False)
 class IosDeviceInfo(IRenderBrowserInfo):
-    device_name = attr.ib(
-        type=IosDeviceName, metadata={JsonInclude.NAME: "name"}
-    )  # type: DeviceName
+    device_name = attr.ib(type=IosDeviceName)  # type: DeviceName
     screen_orientation = attr.ib(
-        type=ScreenOrientation, metadata={JsonInclude.NON_NONE: True}
+        type=ScreenOrientation
     )  # type: Optional[ScreenOrientation]
-    ios_version = attr.ib(
-        type=IosVersion, metadata={JsonInclude.NON_NONE: True}
-    )  # type: Optional[IosVersion]
+    ios_version = attr.ib(type=IosVersion)  # type: Optional[IosVersion]
 
     def __init__(
         self,
@@ -124,14 +115,12 @@ class IosDeviceInfo(IRenderBrowserInfo):
 
 @attr.s(hash=True)
 class AndroidDeviceInfo(IRenderBrowserInfo):
-    device_name = attr.ib(
-        type=AndroidDeviceName, metadata={JsonInclude.NON_NONE: True}
-    )  # type: AndroidDeviceName
+    device_name = attr.ib(type=AndroidDeviceName)  # type: AndroidDeviceName
     screen_orientation = attr.ib(
-        type=ScreenOrientation, metadata={JsonInclude.NON_NONE: True}, default=None
+        type=ScreenOrientation, default=None
     )  # type: Optional[ScreenOrientation]
     android_version = attr.ib(
-        type=AndroidVersion, metadata={JsonInclude.NON_NONE: True}, default=None
+        type=AndroidVersion, default=None
     )  # type: Optional[AndroidVersion]
 
 

@@ -3,7 +3,6 @@ from enum import Enum
 import attr
 
 from applitools.common import deprecated
-from applitools.common.utils.json_utils import JsonInclude
 
 
 class AccessibilityGuidelinesVersion(Enum):
@@ -18,11 +17,9 @@ class AccessibilityLevel(Enum):
 
 @attr.s(init=False)
 class AccessibilitySettings(object):
-    level = attr.ib(
-        type=AccessibilityLevel, metadata={JsonInclude.THIS: True}
-    )  # type: AccessibilityLevel
+    level = attr.ib(type=AccessibilityLevel)  # type: AccessibilityLevel
     guidelines_version = attr.ib(
-        type=AccessibilityGuidelinesVersion, metadata={JsonInclude.NAME: "version"}
+        type=AccessibilityGuidelinesVersion
     )  # type: AccessibilityGuidelinesVersion
 
     def __init__(
@@ -56,15 +53,11 @@ class AccessibilityStatus(Enum):
 
 @attr.s(init=False)
 class SessionAccessibilityStatus(object):
-    level = attr.ib(
-        type=AccessibilityLevel, metadata={JsonInclude.THIS: True}
-    )  # type: AccessibilityLevel
+    level = attr.ib(type=AccessibilityLevel)  # type: AccessibilityLevel
     version = attr.ib(
-        type=AccessibilityGuidelinesVersion, metadata={JsonInclude.THIS: True}
+        type=AccessibilityGuidelinesVersion
     )  # type: AccessibilityGuidelinesVersion
-    status = attr.ib(
-        type=AccessibilityStatus, metadata={JsonInclude.THIS: True}
-    )  # type: AccessibilityStatus
+    status = attr.ib(type=AccessibilityStatus)  # type: AccessibilityStatus
 
     def __init__(
         self,

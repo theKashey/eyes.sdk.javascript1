@@ -16,7 +16,6 @@ from applitools.common.ultrafastgrid import (
     VisualGridOption,
 )
 from applitools.common.utils import argument_guard
-from applitools.common.utils.json_utils import JsonInclude
 from applitools.common.validators import is_list_or_tuple
 
 from .misc import BrowserType, StitchMode
@@ -30,49 +29,26 @@ __all__ = ("Configuration",)
 
 @attr.s
 class Configuration(ConfigurationBase):
-    force_full_page_screenshot = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: bool
+    force_full_page_screenshot = attr.ib(default=None)  # type: bool
     wait_before_screenshots = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         default=None,
     )  # type: Optional[int]  # ms
-    stitch_mode = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[StitchMode]
-    hide_scrollbars = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: bool
-    hide_caret = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
+    stitch_mode = attr.ib(default=None)  # type: Optional[StitchMode]
+    hide_scrollbars = attr.ib(default=None)  # type: bool
+    hide_caret = attr.ib(default=None)  # type: Optional[bool]
     # Indicates that a mobile simulator is being used
-    is_simulator = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
+    is_simulator = attr.ib(default=None)  # type: Optional[bool]
 
     # Rendering Configuration
-    browsers_info = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, init=False, factory=list
-    )  # type: List[IRenderBrowserInfo]
+    browsers_info = attr.ib(init=False, factory=list)  # type: List[IRenderBrowserInfo]
     visual_grid_options = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
+        default=None
     )  # type: Optional[Tuple[VisualGridOption]]
-    disable_browser_fetching = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    enable_cross_origin_rendering = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    dont_use_cookies = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    dont_close_batches = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    layout_breakpoints = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Union[bool, List[int]]]
+    disable_browser_fetching = attr.ib(default=None)  # type: Optional[bool]
+    enable_cross_origin_rendering = attr.ib(default=None)  # type: Optional[bool]
+    dont_use_cookies = attr.ib(default=None)  # type: Optional[bool]
+    dont_close_batches = attr.ib(default=None)  # type: Optional[bool]
+    layout_breakpoints = attr.ib(default=None)  # type: Optional[Union[bool, List[int]]]
     scale_ratio = attr.ib(default=None)  # type: Optional[float]
     cut_provider = attr.ib(default=None)  # type: Optional[CutProvider]
     rotation = attr.ib(default=None)  # type: Optional[int]

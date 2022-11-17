@@ -12,7 +12,6 @@ from applitools.common.ultrafastgrid import (
     IosDeviceName,
     ScreenOrientation,
 )
-from applitools.common.utils import json_utils
 
 
 class DummyTest(namedtuple("DummyTest", ("name", "browser_info"))):

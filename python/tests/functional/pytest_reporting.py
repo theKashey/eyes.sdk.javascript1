@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import uuid
 from copy import copy
 
@@ -7,7 +8,6 @@ import pytest
 import requests
 
 from applitools.common.utils.converters import str2bool
-from applitools.common.utils.json_utils import underscore_to_camelcase
 
 REPORT_DATA = {
     "sdk": "python",
@@ -17,6 +17,10 @@ REPORT_DATA = {
     "mandatory": False,
     "results": [],
 }
+
+
+def underscore_to_camelcase(text):
+    return re.sub(r"(?!^)_([a-zA-Z])", lambda m: m.group(1).upper(), text)
 
 
 def prepare_result_data(test_name, passed, parameters):

@@ -7,7 +7,6 @@ import attr
 from .accessibility import AccessibilitySettings
 from .geometry import AccessibilityRegion, Rectangle, Region
 from .utils.general_utils import DynamicEnumGetter
-from .utils.json_utils import JsonInclude
 
 if typing.TYPE_CHECKING:
     from typing import List, Optional, Text, Union
@@ -59,32 +58,28 @@ class MatchLevel(Enum):
 @attr.s
 class MatchResult(object):
     as_expected = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
+        default=None,
     )  # type: Optional[bool]
     window_id = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
+        default=None,
     )  # type: Optional[Text]
-    screenshot = attr.ib(default=None, metadata={JsonInclude.THIS: True})
+    screenshot = attr.ib(
+        default=None,
+    )
 
 
 @attr.s(eq=False)
 class FloatingMatchSettings(Rectangle):
     _region = attr.ib()  # type: Region
     _bounds = attr.ib()  # type: FloatingBounds
-    left = attr.ib(init=False, metadata={JsonInclude.THIS: True})  # type: int
-    top = attr.ib(init=False, metadata={JsonInclude.THIS: True})  # type: int
-    width = attr.ib(init=False, metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(init=False, metadata={JsonInclude.THIS: True})  # type: int
-    max_up_offset = attr.ib(init=False, metadata={JsonInclude.THIS: True})  # type: int
-    max_down_offset = attr.ib(
-        init=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    max_left_offset = attr.ib(
-        init=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    max_right_offset = attr.ib(
-        init=False, metadata={JsonInclude.THIS: True}
-    )  # type: int
+    left = attr.ib(init=False)  # type: int
+    top = attr.ib(init=False)  # type: int
+    width = attr.ib(init=False)  # type: int
+    height = attr.ib(init=False)  # type: int
+    max_up_offset = attr.ib(init=False)  # type: int
+    max_down_offset = attr.ib(init=False)  # type: int
+    max_left_offset = attr.ib(init=False)  # type: int
+    max_right_offset = attr.ib(init=False)  # type: int
 
     def __str__(self):
         return (
@@ -137,14 +132,10 @@ class ExactMatchSettings(object):
     Encapsulates settings for the :py:class:`MatchLevel.EXACT`.
     """
 
-    min_diff_intensity = attr.ib(
-        default=0, metadata={JsonInclude.THIS: True}
-    )  # type: int
-    min_diff_width = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    min_diff_height = attr.ib(default=0, metadata={JsonInclude.THIS: True})  # type: int
-    match_threshold = attr.ib(
-        default=0, metadata={JsonInclude.THIS: True}
-    )  # type: float
+    min_diff_intensity = attr.ib(default=0)  # type: int
+    min_diff_width = attr.ib(default=0)  # type: int
+    min_diff_height = attr.ib(default=0)  # type: int
+    match_threshold = attr.ib(default=0)  # type: float
 
     @classmethod
     def create_from(cls, other):
@@ -163,42 +154,26 @@ class ImageMatchSettings(object):
     Encapsulates match settings for the a session.
     """
 
-    match_level = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[MatchLevel]
+    match_level = attr.ib(default=None)  # type: Optional[MatchLevel]
     exact = attr.ib(
-        default=None, type=ExactMatchSettings, metadata={JsonInclude.THIS: True}
+        default=None, type=ExactMatchSettings
     )  # type: Optional[ExactMatchSettings]
-    ignore_caret = attr.ib(default=None, metadata={JsonInclude.THIS: True})  # type:bool
-    use_dom = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[bool]
-    enable_patterns = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type: Optional[bool]
-    ignore_displacements = attr.ib(
-        default=None, metadata={JsonInclude.THIS: True}
-    )  # type:Optional[bool]
-    ignore_regions = attr.ib(
-        type=Region, factory=list, metadata={JsonInclude.NAME: "Ignore"}
-    )  # type: List[Region]
-    layout_regions = attr.ib(
-        type=Region, factory=list, metadata={JsonInclude.NAME: "Layout"}
-    )  # type: List[Region]
-    strict_regions = attr.ib(
-        type=Region, factory=list, metadata={JsonInclude.NAME: "Strict"}
-    )  # type: List[Region]
-    content_regions = attr.ib(
-        type=Region, factory=list, metadata={JsonInclude.NAME: "Content"}
-    )  # type: List[Region]
+    ignore_caret = attr.ib(default=None)  # type:bool
+    use_dom = attr.ib(default=None)  # type: Optional[bool]
+    enable_patterns = attr.ib(default=None)  # type: Optional[bool]
+    ignore_displacements = attr.ib(default=None)  # type:Optional[bool]
+    ignore_regions = attr.ib(type=Region, factory=list)  # type: List[Region]
+    layout_regions = attr.ib(type=Region, factory=list)  # type: List[Region]
+    strict_regions = attr.ib(type=Region, factory=list)  # type: List[Region]
+    content_regions = attr.ib(type=Region, factory=list)  # type: List[Region]
     floating_match_settings = attr.ib(
-        type=Region, factory=list, metadata={JsonInclude.NAME: "Floating"}
+        type=Region, factory=list
     )  # type: List[FloatingMatchSettings]
     accessibility = attr.ib(
-        type=AccessibilityRegion, factory=list, metadata={JsonInclude.THIS: True}
+        type=AccessibilityRegion, factory=list
     )  # type: List[AccessibilityRegion]
     accessibility_settings = attr.ib(
-        default=None, type=AccessibilitySettings, metadata={JsonInclude.THIS: True}
+        default=None, type=AccessibilitySettings
     )  # type: Optional[AccessibilitySettings]
 
     @classmethod

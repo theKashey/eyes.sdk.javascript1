@@ -16,7 +16,6 @@ from applitools.common.utils import argument_guard
 from applitools.common.utils.converters import str2bool
 from applitools.common.utils.datetime_utils import UTC
 from applitools.common.utils.general_utils import get_env_with_prefix
-from applitools.common.utils.json_utils import JsonInclude
 
 if TYPE_CHECKING:
     from typing import TYPE_CHECKING, Dict, List, Optional, Text, TypeVar
@@ -38,16 +37,12 @@ class BatchInfo(object):
     A batch of tests.
     """
 
-    name = attr.ib(metadata={JsonInclude.THIS: True})  # type: Text
-    started_at = attr.ib(metadata={JsonInclude.THIS: True})  # type: datetime
-    sequence_name = attr.ib(
-        metadata={JsonInclude.NAME: "batchSequenceName"}
-    )  # type: Optional[Text]
-    id = attr.ib(metadata={JsonInclude.THIS: True})  # type: Text
-    notify_on_completion = attr.ib(metadata={JsonInclude.NON_NONE: True})  # type: bool
-    properties = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}
-    )  # type: List[Dict[Text,Text]]
+    name = attr.ib()  # type: Text
+    started_at = attr.ib()  # type: datetime
+    sequence_name = attr.ib()  # type: Optional[Text]
+    id = attr.ib()  # type: Text
+    notify_on_completion = attr.ib()  # type: bool
+    properties = attr.ib()  # type: List[Dict[Text,Text]]
 
     def __init__(self, name=None, started_at=None, batch_sequence_name=None):
         # type: (Optional[Text], Optional[datetime], Optional[Text]) -> None
@@ -138,85 +133,44 @@ class ProxySettings(object):
 
 @attr.s
 class Configuration(object):
-    batch = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, factory=BatchInfo
-    )  # type: BatchInfo
+    batch = attr.ib(factory=BatchInfo)  # type: BatchInfo
     branch_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         factory=lambda: get_env_with_prefix("APPLITOOLS_BRANCH", None),
     )  # type: Optional[Text]
     parent_branch_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         factory=lambda: get_env_with_prefix("APPLITOOLS_PARENT_BRANCH", None),
     )  # type: Optional[Text]
     baseline_branch_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         factory=lambda: get_env_with_prefix("APPLITOOLS_BASELINE_BRANCH", None),
     )  # type: Optional[Text]
-    agent_id = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    baseline_env_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    environment_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    save_diffs = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: bool
-    app_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    test_name = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
+    agent_id = attr.ib(default=None)  # type: Optional[Text]
+    baseline_env_name = attr.ib(default=None)  # type: Optional[Text]
+    environment_name = attr.ib(default=None)  # type: Optional[Text]
+    save_diffs = attr.ib(default=None)  # type: bool
+    app_name = attr.ib(default=None)  # type: Optional[Text]
+    test_name = attr.ib(default=None)  # type: Optional[Text]
     viewport_size = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         default=None,
         converter=attr.converters.optional(RectangleSize.from_),
     )  # type: Optional[RectangleSize]
-    session_type = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[SessionType]
-    host_app = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    host_os = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
-    properties = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, factory=list
-    )  # type: List[Dict[Text, Text]]
-    match_timeout = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[int] # ms
-    is_disabled = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    save_new_tests = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    save_failed_tests = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
-    failure_reports = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[FailureReports]
-    send_dom = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[bool]
+    session_type = attr.ib(default=None)  # type: Optional[SessionType]
+    host_app = attr.ib(default=None)  # type: Optional[Text]
+    host_os = attr.ib(default=None)  # type: Optional[Text]
+    properties = attr.ib(factory=list)  # type: List[Dict[Text, Text]]
+    match_timeout = attr.ib(default=None)  # type: Optional[int] # ms
+    is_disabled = attr.ib(default=None)  # type: Optional[bool]
+    save_new_tests = attr.ib(default=None)  # type: Optional[bool]
+    save_failed_tests = attr.ib(default=None)  # type: Optional[bool]
+    failure_reports = attr.ib(default=None)  # type: Optional[FailureReports]
+    send_dom = attr.ib(default=None)  # type: Optional[bool]
     default_match_settings = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, factory=ImageMatchSettings
+        factory=ImageMatchSettings
     )  # type: ImageMatchSettings
-    stitch_overlap = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[int]
+    stitch_overlap = attr.ib(default=None)  # type: Optional[int]
     api_key = attr.ib(
         factory=lambda: get_env_with_prefix("APPLITOOLS_API_KEY", None)
     )  # type: Optional[Text]
     server_url = attr.ib(
-        metadata={JsonInclude.NON_NONE: True},
         factory=lambda: get_env_with_prefix("APPLITOOLS_SERVER_URL"),
     )  # type: Text
     _timeout = attr.ib(default=None)  # type: Optional[int] # ms
@@ -229,12 +183,8 @@ class Configuration(object):
         converter=str,
         factory=lambda: get_env_with_prefix("DEBUG_SCREENSHOT_PREFIX", "screenshot_"),
     )
-    wait_before_capture = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[int]
-    user_test_id = attr.ib(
-        metadata={JsonInclude.NON_NONE: True}, default=None
-    )  # type: Optional[Text]
+    wait_before_capture = attr.ib(default=None)  # type: Optional[int]
+    user_test_id = attr.ib(default=None)  # type: Optional[Text]
 
     @property
     def enable_patterns(self):

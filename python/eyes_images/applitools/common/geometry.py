@@ -10,7 +10,6 @@ from six import string_types as basestring
 from .accessibility import AccessibilityRegionType
 from .utils import argument_guard
 from .utils.converters import round_converter
-from .utils.json_utils import JsonInclude
 
 if TYPE_CHECKING:
     from .ultrafastgrid.render_browser_info import IRenderBrowserinfo
@@ -70,8 +69,8 @@ class DictAccessMixin(object):
 class RectangleSize(DictAccessMixin):
     """Represents a 2D size"""
 
-    width = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(metadata={JsonInclude.THIS: True})  # type:int
+    width = attr.ib()  # type: int
+    height = attr.ib()  # type:int
 
     def __init__(self, width, height):
         # type: (Num, Num) -> None
@@ -134,8 +133,8 @@ class RectangleSize(DictAccessMixin):
 class Point(DictAccessMixin):
     """A location in a two-dimensional plane."""
 
-    x = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    y = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
+    x = attr.ib()  # type: int
+    y = attr.ib()  # type: int
 
     def __init__(self, x, y):
         # type: (int, int) -> None
@@ -234,10 +233,10 @@ class Point(DictAccessMixin):
 
 @attr.s(slots=True, init=False)
 class Rectangle(DictAccessMixin):
-    left = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    top = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    width = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
+    left = attr.ib()  # type: int
+    top = attr.ib()  # type: int
+    width = attr.ib()  # type: int
+    height = attr.ib()  # type: int
 
     def __init__(
         self,
@@ -401,12 +400,12 @@ class Rectangle(DictAccessMixin):
 class AccessibilityRegion(Rectangle):
     """A rectangle identified by left,top, width, height."""
 
-    left = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    top = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    width = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
+    left = attr.ib()  # type: int
+    top = attr.ib()  # type: int
+    width = attr.ib()  # type: int
+    height = attr.ib()  # type: int
     type = attr.ib(
-        type=AccessibilityRegionType, metadata={JsonInclude.THIS: True}
+        type=AccessibilityRegionType,
     )  # type: AccessibilityRegionType
 
     def __init__(
@@ -467,14 +466,13 @@ class AccessibilityRegion(Rectangle):
 class Region(Rectangle):
     """A rectangle identified by left,top, width, height."""
 
-    left = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    top = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    width = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
-    height = attr.ib(metadata={JsonInclude.THIS: True})  # type: int
+    left = attr.ib()  # type: int
+    top = attr.ib()  # type: int
+    width = attr.ib()  # type: int
+    height = attr.ib()  # type: int
     coordinates_type = attr.ib(
         converter=CoordinatesType,
         type=CoordinatesType,
-        metadata={JsonInclude.THIS: True},
     )  # type: CoordinatesType
 
     def __init__(
