@@ -601,7 +601,19 @@ export class CheckSettingsAutomationFluent<TElement = unknown, TSelector = unkno
         layoutRegions: this._settings.layoutRegions,
         strictRegions: this._settings.strictRegions,
         contentRegions: this._settings.contentRegions,
-        floatingRegions: this._settings.floatingRegions,
+        floatingRegions:
+          this._settings.floatingRegions &&
+          this._settings.floatingRegions.map(floatingRegion => {
+            if (utils.types.has(floatingRegion, 'region')) {
+              const {maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset, ...rest} =
+                floatingRegion as LegacyCodedFloatingRegion
+              return {
+                offset: {top: maxUpOffset, bottom: maxDownOffset, left: maxLeftOffset, right: maxRightOffset},
+                ...rest,
+              }
+            }
+            return floatingRegion
+          }),
         accessibilityRegions: this._settings.accessibilityRegions,
         disableBrowserFetching: this._settings.disableBrowserFetching,
         layoutBreakpoints: this._settings.layoutBreakpoints,
