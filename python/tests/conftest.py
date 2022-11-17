@@ -1,10 +1,11 @@
 import os
-import sys
 import uuid
 import warnings
 
 # Generate APPLITOOLS_BATCH_ID for xdist run in case it was not provided externally
 os.environ["APPLITOOLS_BATCH_ID"] = os.getenv("APPLITOOLS_BATCH_ID", str(uuid.uuid4()))
+# Keep batch open after runner termination
+os.environ["APPLITOOLS_DONT_CLOSE_BATCHES"] = "true"
 
 # Outdated versions of these modules have invalid escape sequences
 # in some docstrings. To ignore these irrelevant warnings import modules early

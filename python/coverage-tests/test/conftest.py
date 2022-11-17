@@ -1,3 +1,6 @@
+import os
+import sys
+import uuid
 import warnings
 
 # Outdated versions of these modules have invalid escape sequences
@@ -13,6 +16,11 @@ with warnings.catch_warnings():
 
 from selenium.common.exceptions import WebDriverException
 
+# Generate APPLITOOLS_BATCH_ID for xdist run in case it was not provided externally
+os.environ["APPLITOOLS_BATCH_ID"] = os.getenv("APPLITOOLS_BATCH_ID", str(uuid.uuid4()))
+# Keep batch open after runner termination
+os.environ["APPLITOOLS_DONT_CLOSE_BATCHES"] = "true"
+
 from applitools.selenium import BatchInfo, Eyes, StitchMode
 
 from .browsers import *
@@ -22,7 +30,11 @@ from .sauce import pytest_collection_modifyitems, sauce_url
 
 @pytest.fixture(scope="session")
 def batch_info():
-    return BatchInfo("Python Generated tests")
+    return BatchInfo(
+        "Python {}.{} Generated tests".format(
+            sys.version_info.major, sys.version_info.minor
+        )
+    )
 
 
 @pytest.fixture(scope="function")

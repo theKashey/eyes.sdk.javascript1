@@ -1,12 +1,9 @@
 from __future__ import absolute_import
 
-import logging
 import os
-import re
 import sys
 
 import pytest
-from selenium import webdriver
 
 from applitools.selenium import Configuration, Eyes
 from applitools.selenium.__version__ import __version__
@@ -17,8 +14,12 @@ except ImportError:
     TYPE_CHECKING = False
     pass
 
-
-logger = logging.getLogger(__name__)
+os.environ["APPLITOOLS_BATCH_NAME"] = "Py{}.{}|Sel|{}|{}".format(
+    sys.version_info.major,
+    sys.version_info.minor,
+    __version__,
+    sys.platform,
+)
 
 
 @pytest.fixture
@@ -34,15 +35,6 @@ def eyes_config_base():
         .set_save_new_tests(False)
         .set_hide_caret(True)
         .set_parent_branch_name("master")
-    )
-
-
-def pytest_generate_tests(metafunc):
-    os.environ["APPLITOOLS_BATCH_NAME"] = "Py{}.{}|Sel|{}|{}".format(
-        sys.version_info.major,
-        sys.version_info.minor,
-        __version__,
-        sys.platform,
     )
 
 
