@@ -44,7 +44,7 @@ describe('parallel run', () => {
       );
       runs.push(
         pexec(
-          './node_modules/.bin/cypress run --headless --config testFiles=parallel-run-2.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
+          'xvfb-run -a ./node_modules/.bin/cypress run --headless --config testFiles=parallel-run-2.js,integrationFolder=cypress/integration-run,pluginsFile=cypress/plugins/index-run.js,supportFile=cypress/support/index-run.js',
           {
             maxBuffer: 10000000,
             timeout: 60000,
