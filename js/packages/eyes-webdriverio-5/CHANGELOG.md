@@ -10,6 +10,18 @@
 
 
 
+## 5.38.0 - 2022/11/17
+
+### Features
+- Added new selector extensions `child` and `fallback`
+- Added new iOS device - 'iPad Pro (11-inch) (4th generation)'
+- Mark target element with `data-applitools-scroll` attribute before capture dom
+- Use user agent metadata to improve browser environment detection logic
+- Use APPLITOOLS_CONCURRENCY env variable to specify concurrency
+### Bug fixes
+- Fixed bug that caused `extractText` to throw, due to fractional size of the target region
+- Fixed issue when current context is not being preserved in ufg mode
+
 ## 5.37.0 - 2022/10/18
 
 ### Features
