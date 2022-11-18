@@ -104,7 +104,7 @@ Apollo SDK:
   feature:
     - 
   bug-fix:
-    - 
+    - Handle cases where cypress report showed tests pass when differences were found
 "@applitools/eyes-storybook":
   feature:
     - Deprecated "Content" match level value in favor of "IgnoreColors"

@@ -3,7 +3,7 @@ Cypress.on('uncaught:exception', () => {});
 
 describe('Play Cypress', () => {
   it.only('Play Cypress', () => {
-    cy.visit('https://example.org', {
+    cy.visit('https://google.org', {
       failOnStatusCode: false,
     });
     cy.eyesOpen({
@@ -13,6 +13,9 @@ describe('Play Cypress', () => {
     });
     cy.eyesCheckWindow('Play Cypress');
     cy.eyesClose();
+    cy.eyesGetAllTestResults().then(summary => {
+      console.log(summary);
+    });
   });
   it('Play Cypress checkRegion', () => {
     cy.visit('https://example.org', {
