@@ -84,7 +84,10 @@ function makeStartServer({logger}) {
           socketWithUniversal.send(newMessage);
         } else if (msg.name === 'Test.printTestResults') {
           try {
-            if (msg.payload.resultConfig.tapDirPath) {
+            if (
+              msg.payload.resultConfig.tapDirPath &&
+              msg.payload.resultConfig.shouldCreateTapFile
+            ) {
               handleTestResults.handleBatchResultsFile(msg.payload.testResults, {
                 tapFileName: msg.payload.resultConfig.tapFileName,
                 tapDirPath: msg.payload.resultConfig.tapDirPath,
