@@ -11,6 +11,12 @@
 
 
 
+## 3.27.8 - 2022/11/19
+
+### Features
+### Bug fixes
+- Handle cases where cypress report showed tests pass when differences were found
+
 ## 3.27.7 - 2022/11/17
 
 ### Features
