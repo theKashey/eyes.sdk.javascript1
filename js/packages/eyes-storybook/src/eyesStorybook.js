@@ -127,6 +127,7 @@ async function eyesStorybook({
       logger,
       takeDomSnapshots: doTakeDomSnapshots,
       waitBeforeCapture,
+      reloadPagePerStory,
     });
 
     const renderStory = makeRenderStory({
@@ -134,7 +135,6 @@ async function eyesStorybook({
       testWindow,
       performance,
       timeItAsync,
-      reloadPagePerStory,
     });
 
     const renderStories = makeRenderStories({
