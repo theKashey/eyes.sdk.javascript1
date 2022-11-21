@@ -58,6 +58,13 @@ function makeGetStoryData({logger, takeDomSnapshots, waitBeforeCapture, reloadPa
       });
     }
 
+    if (eyesParameters && eyesParameters.requireIdleState) {
+        await page.waitForNetworkIdle({
+          idleTime: eyesParameters.requireIdleState
+        })
+      }
+    }
+
     logger.log(`running takeDomSnapshot(s) for story ${title}`);
 
     const domSnapshotsPromise = takeDomSnapshots({
